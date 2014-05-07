@@ -1,0 +1,6 @@
+*.sublime-project
+*.sublime-workspace
+node_modules
+public/js/*.min.js
+public/css/*.css
+.rebooted

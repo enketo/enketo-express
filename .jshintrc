@@ -1,0 +1,9 @@
+{
+	"globals": {
+		"module": false,
+		"require": false
+	},
+	"browser": false,
+	"jquery": false,
+	"sub": true //this should eventually be removed
+}

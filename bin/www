@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+var debug = require('debug')('enketo');
+var app = require('../app');
+
+var server = app.listen(app.get('port'), function() {
+	debug('Enketo server listening on port ' + server.address().port);
+	console.log('environment is ' + app.get('env'));
+});

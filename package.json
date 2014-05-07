@@ -1,0 +1,36 @@
+{
+  "name": "enketo-express",
+  "description": "A simplified version of Enketo Smart Paper that requires a constant connection to the server.",
+  "homepage": "",
+  "version": "0.0.0",
+  "main": "./bin/www",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kobotoolbox/enketo-express"
+  },
+  "contributors": [
+    "Martijn van de Rijdt"
+  ],
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "grunt test"
+  },
+  "dependencies": {
+    "express": "~4.1.x",
+    "debug": "~0.7.4",
+    "jade": "~1.3.0",
+    "morgan": "~1.0.0",
+    "body-parser": "~1.0.0"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "load-grunt-tasks": "^0.4.0",
+    "grunt-sass": "^0.12.1",
+    "grunt-nodemon": "^0.2.1",
+    "grunt-concurrent": "^0.5.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-jsbeautifier": "^0.2.7",
+    "grunt-mocha-test": "^0.10.2"
+  }
+}

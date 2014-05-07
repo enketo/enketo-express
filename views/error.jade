@@ -1,0 +1,9 @@
+extends layout
+
+block style
+  link(rel='stylesheet', href='/css/error.css') 
+
+block content
+  h1.error= message
+    span.error-status  (#{error.status})
+  pre #{error.stack}
