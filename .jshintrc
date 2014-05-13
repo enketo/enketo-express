@@ -1,8 +1,10 @@
 {
+	"strict" : true,
 	"globals": {
 		"module": false,
 		"require": false
 	},
+	"node": true,
 	"browser": false,
 	"jquery": false,
 	"sub": true,

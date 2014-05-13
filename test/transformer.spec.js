@@ -1,4 +1,8 @@
+/* global describe, require, it*/
+"use strict";
+
 var assert = require( "assert" );
+var should = require( 'should' );
 var fs = require( "fs" );
 var transformer = require( "../lib/transformer/enketo-transformer" );
 

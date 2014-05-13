@@ -1,3 +1,5 @@
+"use strict";
+
 var express = require( 'express' );
 var debug = require( 'debug' )( 'surveys-router' );
 var router = express.Router();

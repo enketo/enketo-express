@@ -1,3 +1,5 @@
+"use strict";
+
 var transformer = require( '../lib/transformer/enketo-transformer' );
 var fs = require( 'fs' );
 var Q = require( 'q' );
