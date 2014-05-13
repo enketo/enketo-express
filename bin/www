@@ -1,9 +1,26 @@
 #!/usr/bin/env node
 
-var debug = require( 'debug' )( 'server' );
-var app = require( '../app' );
+var cluster = require( 'cluster' );
+var numCPUs = require( 'os' ).cpus().length;
 
-var server = app.listen( app.get( 'port' ), function() {
-    debug( 'Enketo server listening on port ' + server.address().port );
-    console.log( 'environment is ' + app.get( 'env' ) );
-} );
+if ( cluster.isMaster ) {
+
+    // Fork workers.
+    for ( var i = 0; i < numCPUs; i++ ) {
+        cluster.fork();
+    }
+
+    cluster.on( 'exit', function( worker, code, signal ) {
+        console.log( 'Worker ' + worker.process.pid + ' passed away. Will reincarnate it now.' );
+        cluster.fork();
+    } );
+} else {
+
+    var app = require( '../app' );
+    var server = app.listen( app.get( 'port' ), function() {
+        var worker = ( cluster.worker ) ? cluster.worker.id : 'Master';
+        var msg = 'Worker ' + worker + ' ready for duty at port ' + server.address().port + '! (environment: ' + app.get( 'env' ) + ')';
+        console.log( msg );
+    } );
+
+}

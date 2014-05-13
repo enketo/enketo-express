@@ -1,4 +1,5 @@
 module.exports = function( grunt ) {
+    "use strict";
 
     grunt.initConfig( {
         pkg: grunt.file.readJSON( 'package.json' ),
@@ -15,7 +16,7 @@ module.exports = function( grunt ) {
             dev: {
                 script: 'bin/www',
                 options: {
-                    nodeArgs: [ '--debug' ],
+                    //nodeArgs: [ '--debug' ],
                     callback: function( nodemon ) {
                         nodemon.on( 'restart', function() {
                             setTimeout( function() {
@@ -25,7 +26,7 @@ module.exports = function( grunt ) {
                     },
                     env: {
                         NODE_ENV: 'development',
-                        DEBUG: '*'
+                        DEBUG: '*, -express:*'
                     }
                 }
             }
