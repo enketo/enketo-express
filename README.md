@@ -7,15 +7,16 @@ A node.js version of Enketo Smart Paper developed for KoBo Toolbox.
 
 ### How to install
 
-* install [Node.js](http://nodejs.org/) 0.10.26 or later if you don't have it already (check with `node -v`)
+* install [Node.js](http://nodejs.org/) 0.10.28 (or later but there is an issue with 1.11.13) if you don't have it already (check with `node -v`)
 * install [Grunt Client](http://gruntjs.com) 4.4.x globally with `npm install -g grunt-cli` if you don't have it already (check with `grunt --version`)
+* install libxslt and libxml2 with `(sudo) apt-get install libxml2-dev libxslt1-dev`
 * clone this repository
 * clone git submodules (I think) with `git submodule update --init --recursive`
 * install dependencies with `npm install` from the project root
 * build with `grunt` from the project root
 
 ### How to run
-* run with `node .` or `npm start` from project root
+* run with `gnode .` or `npm start` from project root
 * you can now check that the app is running by going to ....
 
 ### How to update

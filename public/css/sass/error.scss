@@ -12,4 +12,15 @@ body {
 	margin: 40px 20px 20px 20px;
 	padding: 20px;
 	border: 1px solid #f27e61;
+    position: relative;
+    font-weight: normal;
+    min-height: 100px;
+    .status-code {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        font-weight: normal;
+        font-size: 10px;
+        margin: 3px;
+    }
 }

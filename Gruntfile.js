@@ -25,7 +25,7 @@ module.exports = function( grunt ) {
                     },
                     env: {
                         NODE_ENV: 'development',
-                        DEBUG: 'enketo'
+                        DEBUG: '*'
                     }
                 }
             }
@@ -49,14 +49,14 @@ module.exports = function( grunt ) {
         },
         jsbeautifier: {
             test: {
-                src: [ "**/*.js", "!public/lib/**/*.js", "!node_modules/**/*.js" ],
+                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**" ],
                 options: {
                     config: "./.jsbeautifyrc",
                     mode: "VERIFY_ONLY"
                 }
             },
             fix: {
-                src: [ "**/*.js", "!node_modules/**/*.js" ],
+                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**" ],
                 options: {
                     config: "./.jsbeautifyrc"
                 }
@@ -66,7 +66,7 @@ module.exports = function( grunt ) {
             options: {
                 jshintrc: ".jshintrc"
             },
-            all: [ "**/*.js", "!public/lib/**/*.js", "!node_modules/**/*.js" ]
+            all: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**" ]
         },
         // Configure a mochaTest task
         mochaTest: {
@@ -74,14 +74,28 @@ module.exports = function( grunt ) {
                 options: {
                     reporter: 'spec'
                 },
-                src: [ 'test/**/*.js' ]
+                src: [ 'test/**/*.spec.js' ]
+            }
+        },
+        symlink: {
+            options: {
+
+            },
+            expanded: {
+                files: [ {
+                    overwrite: false,
+                    expand: true,
+                    cwd: 'lib/enketo-core',
+                    src: [ '*' ],
+                    dest: 'public/lib/enketo-core'
+                } ]
             }
         }
     } );
 
     require( 'load-grunt-tasks' )( grunt );
 
-    grunt.registerTask( 'default', [ 'sass' ] );
+    grunt.registerTask( 'default', [ 'test', 'sass' ] );
     grunt.registerTask( 'test', [ 'mochaTest', 'jsbeautifier:test', 'jshint' ] );
     grunt.registerTask( 'develop', [ 'concurrent:develop' ] );
 };
