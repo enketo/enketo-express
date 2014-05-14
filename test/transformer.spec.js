@@ -1,7 +1,6 @@
 /* global describe, require, it*/
 "use strict";
 
-var assert = require( "assert" );
 var should = require( 'should' );
 var fs = require( "fs" );
 var transformer = require( "../lib/transformer/enketo-transformer" );
@@ -13,11 +12,11 @@ describe( 'transformer', function() {
         it( 'without an error', function( done ) {
             transformer.transform( xform, function( error, result ) {
                 if ( error ) throw Error;
-                assert( typeof result === 'object', 'result is object' );
-                assert( !!result.form, 'result has form property' );
-                assert( !!result.instance, 'result has instance property' );
-                assert( result.form.length > 0, 'form property has length > 0' );
-                assert( result.instance.length > 0, 'instance property has length > 0' );
+                result.should.be.of.type( 'object' );
+                result.should.have.property( 'form' );
+                result.should.have.property( 'instance' );
+                result.form.should.not.be.empty;
+                result.instance.should.not.be.empty;
                 done();
             } );
         } );
@@ -30,9 +29,9 @@ describe( 'transformer', function() {
             it( 'with a parse error', function( done ) {
                 transformer.transform( xform, function( error, result ) {
                     // this seems a bit weird, may as just as well check value of error
-                    assert.throws( function() {
+                    ( function() {
                         if ( error ) throw error;
-                    }, /parse/i );
+                    } ).should.throw( /parse/i );
                     done();
                 } );
             } );
