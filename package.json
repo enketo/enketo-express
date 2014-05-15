@@ -23,7 +23,8 @@
     "morgan": "~1.0.0",
     "node_xslt": "^0.1.9",
     "q": "^1.0.1",
-    "request": "^2.34.0"
+    "request": "^2.34.0",
+    "xml2js": "^0.4.2"
   },
   "devDependencies": {
     "grunt": "^0.4.4",
