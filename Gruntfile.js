@@ -67,7 +67,7 @@ module.exports = function( grunt ) {
             options: {
                 jshintrc: ".jshintrc"
             },
-            all: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**" ]
+            all: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js" ]
         },
         // Configure a mochaTest task
         mochaTest: {
