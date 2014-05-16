@@ -11,7 +11,7 @@ if ( cluster.isMaster ) {
     }
 
     cluster.on( 'exit', function( worker, code, signal ) {
-        console.log( 'Worker ' + worker.process.pid + ' passed away. Will reincarnate it now.' );
+        console.log( 'Worker ' + worker.process.pid + ' sadly passed away. It will be reincarnated.' );
         cluster.fork();
     } );
 } else {

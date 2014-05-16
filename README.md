@@ -7,7 +7,7 @@ A node.js version of Enketo Smart Paper developed for KoBo Toolbox.
 
 ### How to install
 
-* install [Node.js](http://nodejs.org/) 0.10.28 (or later but there is an issue with 1.11.13) if you don't have it already (check with `node -v`)
+* install [Node.js](http://nodejs.org/) 0.10.x (issue with 0.11.x) if you don't have it already (check with `node -v`)
 * install [Grunt Client](http://gruntjs.com) 4.4.x globally with `npm install -g grunt-cli` if you don't have it already (check with `grunt --version`)
 * install libxslt and libxml2 with `(sudo) apt-get install libxml2-dev libxslt1-dev`
 * clone this repository
@@ -16,8 +16,8 @@ A node.js version of Enketo Smart Paper developed for KoBo Toolbox.
 * build with `grunt` from the project root
 
 ### How to run
-* run with `gnode .` or `npm start` from project root
-* you can now check that the app is running by going to ....
+* run with `node .` or `npm start` from project root
+* you can now check that the app is running by going to e.g. http://localhost:8005 (depending on your server and port set in [config.json](./config.json))
 
 ### How to update
 * update git repository with `git pull -v`
@@ -25,21 +25,21 @@ A node.js version of Enketo Smart Paper developed for KoBo Toolbox.
 * re-build with `grunt`
 
 ### Developer tools
-* install nodemon (`npm install -g nodemon`) and start app during development with `nodemon` to automatically restart the server when a file changes
+* install nodemon (`npm install -g nodemon`) to automatically restart the server when a file changes
 * the easiest way to start the app in development and debugging mode with livereload is with `grunt develop` 
 
 ### Differences with [MartijnR/enketo](https://github.com/MartijnR/enketo) 
 
-+ this one is 100% JavaScript
-+ this one is much easier to install
-+ this one will have cross-browser (media) file inputs
-- this one will not store the application in your browser for offline launch - it requires a constant connection to the server
-- this one will not store records locally in your browser - it will submit records immediately to the server
-- this one will not store draft records (see previous)
+* \+ this one is 100% JavaScript
+* \+ this one is much easier to install
+* \+ this one will have cross-browser (media) file inputs
+* \- this one will not store the application in your browser for offline launch - it requires a constant connection to the server
+* \- this one will not store records locally in your browser - it will submit records immediately to the server
+* \- this one will not store draft records (see previous)
 
-### Differences with [enketo.org](https://enketo.org)
+### Additional differences with the full-fledged service at [enketo.org](https://enketo.org)
 
-- no form authentication
-- no Grid Theme
-- no /forms app
-- no /formtester app
+* \- no form authentication
+* \- no Grid Theme
+* \- no /forms app
+* \- no /formtester app
