@@ -2,6 +2,11 @@
 
 apt-get update
 
+# install redis
+add-apt-repository -y ppa:rwky/redis
+apt-get update
+apt-get install -y redis-server
+
 # install XML prerequisites for node_xslt
 apt-get install -y libxml2-dev libxslt1-dev
 
@@ -20,5 +25,3 @@ npm install
 
 # build js and css
 grunt
-
-grunt develop
