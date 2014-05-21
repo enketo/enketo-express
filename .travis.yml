@@ -1,11 +1,11 @@
 before_install:
   - git submodule update --init --recursive
-  - sudo apt-get install libxml2-dev libxslt1-dev
+  - sudo apt-get install libxml2-dev libxslt1-dev redis-server
 language: node_js
 node_js:
   - "0.10"
 before_script:
   - npm install -g grunt-cli
-  - npm install -g mocha
+  - redis-server
 notifications:
     flowdock: 7d2ea551a0757bea5b52c496f3a7ab2e
