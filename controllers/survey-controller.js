@@ -49,7 +49,7 @@ module.exports = {
     previewBlank: function( req, res, next ) {
         res.render( 'surveys/webform', {
             type: 'preview'
-        } )
+        } );
     },
     // blank preview (with query string)
     edit: function( req, res, next ) {

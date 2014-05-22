@@ -34,7 +34,7 @@ A node.js version of Enketo Smart Paper developed for KoBo Toolbox.
 * \+ this one is 100% JavaScript
 * \+ this one is much easier to install
 * \+ this one will have cross-browser (media) file inputs
-* \- this one will not store the application in your browser for offline launch - it requires a constant connection to the server
+* \- this one will not store the application in your browser for offline launch - it requires a constant connection to the server (this server may be on a local network though)
 * \- this one will not store records locally in your browser - it will submit records immediately to the server
 * \- this one will not store draft records (see previous)
 
