@@ -16,8 +16,9 @@ router.param( 'enketo_id', function( req, res, next, id ) {
 
 router
     .get( '/:enketo_id', form.webform )
-    .get( '/preview/:enketo_id', form.webform )
-    .get( '/edit/:enketo_id', form.webform )
+    .get( '/preview/:enketo_id', form.preview )
+    .get( '/preview', form.previewBlank )
+    .get( '/edit/:enketo_id', form.edit )
     .get( '/max-size/:enketo_id', form.maxSize );
 
 module.exports = router;

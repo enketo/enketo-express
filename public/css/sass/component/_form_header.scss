@@ -1,0 +1,230 @@
+$offline-color: #d15200;
+
+.preview-header {
+    position: absolute;
+    top: -90px;
+    width: 100%;
+    z-index: 1000;
+    color: #333333;
+    opacity: 0.5;
+    margin: 0;
+}
+
+.form-header {
+    //height: 60px;
+    //min-height: 68px;
+    .branding {
+        //display: inline-block;
+        margin: 0;
+        height: 34px;
+        display: inline-table;
+        .logo-wrapper {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        img {
+            max-height: 30px;
+            max-width: 130px;
+            vertical-align: middle;
+            //margin-left: 16px;
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+        span {
+            display: inline-block;
+            color: #444444;
+            font-weight: bold;
+            font-size: 1.4em;
+            &:hover {
+                text-decoration: none;
+                opacity: 0.8;
+            }
+        }
+    }
+}
+
+.form-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    max-width: 100% !important;
+    // to make sure animation works the very first time
+    width: 34px;
+    // to make sure that it can't be set lower inline
+    min-width: 34px !important;
+    margin: 0;
+    height: 3px;
+    background-color: $offline-color;
+    z-index: 1000;
+    @include transition-slow;
+}
+
+.offline-enabled {
+    @include transition-fast;
+    display: block;
+    position: fixed;
+    top: 3px;
+    left: 0;
+    .offline-enabled-icon {
+        width: 34px;
+        height: 34px;
+        background-color: $offline-color;
+        background-image: url($images-path + "offline-enabled.png");
+        background-repeat: no-repeat;
+        opacity: 1;
+        @include transition-slow(opacity, 3s);
+        &.not-enabled {
+            height: 0;
+            opacity: 0;
+            width: 0;
+        }
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+    .queue-length {
+        cursor: pointer;
+        margin-top: 1px;
+        width: 34px;
+        min-height: 34px;
+        color: $offline-color;
+        background-color: #ffffff;
+        text-align: center;
+        padding: 9.5px 0 9.5px 0;
+        line-height: 15px;
+        font-size: 15px;
+        opacity: 1;
+        @include transition-slow(opacity, 3s);
+        &.hide {
+            opacity: 0;
+            display: none;
+        }
+        &.submitting {
+            color: #ce4f07;
+        }
+        &:hover {
+            color: green;
+        }
+    }
+}
+
+//before they have been moved to the form-header
+#form-languages {
+    display: none;
+}
+
+.form-language-selector {
+    padding-right: 20px;
+    #form-languages {
+        display: inline-block;
+    }
+}
+
+.print {
+    background: none;
+    border-radius: 0;
+    border: none;
+    padding: 7px 0 0 20px;
+    margin-right: 0;
+    float: right;
+    @include enketo-icon;
+    outline: 0;
+    &::before {
+        content: '\e60e';
+        font-size: 30px;
+    }
+    &:hover {
+        opacity: 0.7;
+    }
+    ~ .form-language-selector {
+        border-right: 1px solid #999999;
+    }
+}
+
+@media screen and (max-width: $main-breakpoint + 100px) {
+    body {
+        .main {
+            article {
+                padding-top: 70px;
+            }
+        }
+    }
+    .form-header {
+        .branding {
+            float: left;
+        }
+    }
+    .offline-enabled {
+        position: static;
+        display: inline-block;
+        float: left;
+        .offline-enabled-icon {
+            float: left;
+            margin-right: 10px;
+            display: block;
+            &.not-enabled ~ .queue-length {
+                margin-left: 0;
+            }
+        }
+        .queue-length {
+            margin-top: 0;
+            margin-left: -10px;
+            margin-right: 10px;
+            float: left;
+            display: block;
+        }
+    }
+    .or .form-logo {
+        margin-top: 45px;
+    }
+}
+
+@media screen and (max-width: $main-breakpoint) {
+    .offline-enabled {
+        .queue-length {
+            background-color: rgb(245, 245, 245);
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .form-header {
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 490px) {
+    .form-language-selector {
+        padding-right: 0;
+    }
+    .print {
+        display: none;
+        ~ .form-language-selector {
+            border-right: none;
+        }
+    }
+}
+
+@media screen and (max-width: 430px) {
+    body {
+        .main {
+            article {
+                padding-top: 90px;
+            }
+        }
+    }
+    .form-header {
+        border: none;
+    }
+    .form-language-selector {
+        padding: 0;
+        margin: 7px auto;
+        width: 100%;
+    }
+    #form-languages {
+        margin: 0;
+        width: 100%;
+    }
+}

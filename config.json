@@ -1,5 +1,8 @@
 {
     "app name": "Enketo Smart Paper for KoBoCAT",
     "openrosa server": "KoBoCAT",
-    "port": "8005"
+    "port": "8005",
+    "google analytics ua": "",
+    "google analytics domain": "www.example.org",
+    "support email": "nobody@nosupport.com"
 }

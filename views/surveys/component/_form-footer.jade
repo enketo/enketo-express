@@ -1,0 +1,22 @@
+section.form-footer
+  .content
+    fieldset.draft.question
+    .main-controls
+      a.previous-page.disabled(href="#") Back
+      if type === 'preview'
+        button#validate-form.btn.btn-primary.btn-large
+          i.glyphicon.glyphicon-ok
+          |  Validate
+      else
+        button#submit-form.btn.btn-primary.btn-large
+          i.glyphicon.glyphicon-ok
+          |  Submit
+      a.btn.btn-primary.next-page Next
+
+    if logout
+      include _logout
+    include _enketo-power
+
+    a.btn.btn-default.disabled.first-page(href="#") Return to Beginning
+    a.btn.btn-default.disabled.last-page(href="#") Go to End
+

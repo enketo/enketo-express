@@ -1,0 +1,146 @@
+.form-footer {
+    @include flex(1);
+    min-height: 210px;
+    position: relative;
+    //width: 100%;
+    // the form footer flexes to stretch down on small forms or form pages
+    // the content should be positioned at bottom of stretched element
+    .content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+    .draft {
+        width: 100%;
+        @include font-normal;
+        font-style: italic;
+        text-align: center;
+        display: block;
+        border: none;
+        flex: none;
+        padding: 0;
+        margin: 0 auto;
+        max-width: 150px;
+        label {
+            width: 100%;
+        }
+    }
+    .main-controls {
+        margin: 30px auto 60px auto;
+        width: 100%;
+        text-align: center;
+        .btn {
+            display: inline-block;
+            width: 150px;
+            position: static;
+            min-height: 32px;
+            progress {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+            }
+        }
+        .previous-page, .next-page {
+            display: none;
+        }
+        .previous-page {
+            position: absolute;
+            left: 20px;
+            bottom: 45px;
+            //color: #357ebd;
+            //border: none;
+            //@include box-shadow-none;
+       
+        }
+    }
+    .first-page, .last-page {
+        width: 50%;
+        opacity: 0.7;
+        @include border-radius(0);
+        display: none;
+        float: left;
+    }
+    .first-page {
+        &:not(:hover) {
+            border-right: none;
+        }
+        &::before {
+            @include enketo-icon;
+            content: '\e611' !important;
+            float: left;
+            color: #757474;
+        }
+    }
+    .last-page {
+        &::before {
+            @include enketo-icon;
+            content: '\e610' !important;
+            float: right;
+            color: #757474;
+        }
+    }
+    .logout {
+        width: 100%;
+        display: block;
+        margin-top: -40px;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    .enketo-power {
+        left: auto;
+        margin: -20px 0 40px 0;
+        width: 100%;
+    }
+}
+
+.pages ~ .form-footer {
+    &.end {
+        .main-controls {
+            .btn {
+                display: inline-block;
+            }
+            .previous-page {}
+            .next-page {
+                display: none;
+            }
+        }
+        .logout, .draft {
+            display: block;
+        }
+        .logout {
+            margin-bottom: 50px;
+        }
+    }
+    .main-controls {
+        .btn {
+            display: none;
+        }
+        .previous-page, .next-page {
+            display: inline-block;
+            &.disabled {
+                display: none;
+            }
+        }
+    }
+    .first-page, .last-page {
+        display: inline-block;
+    }
+    .logout, .draft {
+        display: none;
+    }
+}
+
+@media screen and (min-width: $main-breakpoint) {
+    .form-footer .enketo-power {
+        position: absolute;
+        bottom: -90px;
+        right: 5px;
+        width: auto;
+    }
+}
+
+.touch .form-footer .draft .option-wrapper > label {
+    border: none !important;
+    width: 100% !important;
+}

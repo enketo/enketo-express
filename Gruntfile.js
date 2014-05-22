@@ -34,7 +34,8 @@ module.exports = function( grunt ) {
         sass: {
             compile: {
                 files: {
-                    'public/css/error.css': 'public/css/sass/error.scss'
+                    'public/css/error.css': 'public/css/sass/error.scss',
+                    'public/css/webform_default.css': 'public/css/sass/webform_formhub.scss'
                 }
             }
         },

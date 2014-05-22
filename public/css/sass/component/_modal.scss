@@ -1,0 +1,45 @@
+.modal {
+  h3 {
+    padding: 0 0 0 0;
+    margin-bottom: 0; } }
+
+.alert{
+  .error-list{
+    margin-top: 1em;
+    font-size: 0.8em;
+    li{
+      line-height: 1.4em; } }
+  strong{
+  text-decoration: underline;} }
+
+.alert{
+	em{
+		color: #666;}
+	strong{
+		color: black;
+		font-size: 110%;
+		text-decoration: none;}
+	a{
+		text-decoration: underline;} }
+
+.overlay{
+  position:absolute;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  background: black;
+  opacity: 0.8;
+  display: none;
+}
+
+.modal-dialog {
+  input {
+    @extend .form-control;
+  }
+}
+
+
+.load-error {
+  margin: 100px 0 60px 0; } //move this??

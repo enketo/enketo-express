@@ -1,0 +1,18 @@
+@mixin font-normal {
+    font-family: 'OpenSansRegular', Arial, sans-serif;
+    font-weight: normal;
+    font-style: normal;
+}
+
+@mixin font-bold {
+    font-family: 'OpenSansBold', Arial, sans-serif;
+    font-weight: normal;
+    font-style: normal;
+}
+
+@mixin translate($x, $y) {
+    -webkit-transform: translate($x, $y);
+    -moz-transform: translate($x, $y);
+    -o-transform: translate($x, $y);
+    transform: translate($x, $y);
+}

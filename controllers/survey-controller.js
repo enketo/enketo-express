@@ -25,12 +25,37 @@ module.exports = {
         return model.get( req.enketoId )
             .then( _getForm )
             .then( function( survey ) {
+                survey.instance = JSON.stringify( survey.instance );
                 res.render( 'surveys/webform', survey );
             } )
             .catch( function( error ) {
                 debug( 'error caught!', error );
                 next( error );
             } );
+    },
+    // preview of launched form (with enketo id)
+    preview: function( req, res, next ) {
+        return model.get( req.enketoId )
+            .then( _getForm )
+            .then( function( survey ) {
+                survey.type = 'preview';
+                res.render( 'surveys/webform', survey );
+            } )
+            .catch( function( error ) {
+                debug( 'error caught!', error );
+                next( error );
+            } );
+    },
+    previewBlank: function( req, res, next ) {
+        res.render( 'surveys/webform', {
+            type: 'preview'
+        } )
+    },
+    // blank preview (with query string)
+    edit: function( req, res, next ) {
+        res.render( 'surveys/webform', {
+            type: 'preview'
+        } );
     },
     maxSize: function( req, res, next ) {
         return model.get( req.enketoId )
