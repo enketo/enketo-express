@@ -46,15 +46,15 @@ module.exports = {
                 next( error );
             } );
     },
+    // blank preview (with query string)
     previewBlank: function( req, res, next ) {
         res.render( 'surveys/webform', {
             type: 'preview'
         } );
     },
-    // blank preview (with query string)
     edit: function( req, res, next ) {
         res.render( 'surveys/webform', {
-            type: 'preview'
+            type: 'edit'
         } );
     },
     maxSize: function( req, res, next ) {

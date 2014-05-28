@@ -3,11 +3,19 @@ extends ../layout
 block style
   link(rel='stylesheet', href='/css/webform_default.css') 
 
+block script
+  if environment == "production"
+    script(src="js/webform-combined.min.js")
+  else
+    script(data-main="js/src/main-webform.js", src="lib/enketo-core/lib/require.js")
+
 block global
   script.
-      var settings = {};
-      settings['supportEmail'] = '#{supportEmail}';
-      settings['modernBrowsersURL'] = 'modern-browsers';
+    var settings = {};
+    settings['supportEmail'] = '#{supportEmail}';
+    settings['modernBrowsersURL'] = 'modern-browsers';
+  if instance
+    script.
       var modelStr = !{instance};
     
 block content
@@ -15,6 +23,8 @@ block content
     article.paper
       include component/_form-header
       !{form}
+      unless form
+        progress
       include component/_form-footer
     
   include component/_dialogs

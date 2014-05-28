@@ -33,6 +33,7 @@ app.use( express.static( path.join( __dirname, 'public' ) ) );
 // so it is accessible in all view templates
 app.use( function( req, res, next ) {
     res.locals.livereload = req.app.get( 'env' ) === 'development';
+    res.locals.environment = req.app.get( 'env' );
     res.locals.tracking = req.app.get( 'google analytics ua' ) ? req.app.get( 'google analytics ua' ) : false;
     res.locals.trackingDomain = req.app.get( 'google analytics domain' );
     res.locals.supportEmail = req.app.get( 'support email' );

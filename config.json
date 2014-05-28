@@ -2,7 +2,26 @@
     "app name": "Enketo Smart Paper for KoBoCAT",
     "openrosa server": "KoBoCAT",
     "port": "8005",
+    "support email": "nobody@nosupport.com",
     "google analytics ua": "",
     "google analytics domain": "www.example.org",
-    "support email": "nobody@nosupport.com"
+    "google_api_key": "",
+    "widgets": [
+        "enketo-widget/note/notewidget",
+        "enketo-widget/select-desktop/selectpicker",
+        "enketo-widget/select-mobile/selectpicker",
+        "enketo-widget/geo/geopicker",
+        "enketo-widget/table/tablewidget",
+        "enketo-widget/radio/radiopicker",
+        "enketo-widget/time/timepicker-extended",
+        "enketo-widget/date/datepicker-extended",
+        "enketo-widget/datetime/datetimepicker-extended",
+        "enketo-widget/mediagrid/mediagridpicker",
+        "enketo-widget/select-likert/likertitem",
+        "enketo-widget/distress/distresspicker"
+    ],
+    "tile": {
+        "source": "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "attribution": "Map data © <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors"
+    }
 }

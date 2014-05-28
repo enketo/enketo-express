@@ -29,12 +29,12 @@
     "xml2js": "^0.4.2"
   },
   "devDependencies": {
-    "mocha": "*",
     "chai": "*",
     "chai-as-promised": "*",
     "grunt": "^0.4.4",
     "grunt-concurrent": "^0.5.0",
     "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-requirejs": "^0.4.4",
     "grunt-contrib-symlink": "^0.3.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-jsbeautifier": "^0.2.7",
@@ -42,6 +42,8 @@
     "grunt-nodemon": "^0.2.1",
     "grunt-sass": "^0.12.1",
     "load-grunt-tasks": "^0.4.0",
+    "mocha": "*",
+    "rjs-build-analysis": "0.0.3",
     "should": "^3.3.1"
   }
 }

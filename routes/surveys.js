@@ -19,6 +19,7 @@ router
     .get( '/preview/:enketo_id', form.preview )
     .get( '/preview', form.previewBlank )
     .get( '/edit/:enketo_id', form.edit )
-    .get( '/max-size/:enketo_id', form.maxSize );
+    .get( '/max-size', form.maxSize )
+    .get( '/data/max_size/:enketo_id', form.maxSize ); // for backwards compatibility
 
 module.exports = router;
