@@ -3,7 +3,7 @@
 
 var should = require( 'should' );
 var fs = require( "fs" );
-var transformer = require( "../lib/transformer/enketo-transformer" );
+var transformer = require( "../lib/transformer" );
 
 describe( 'transformer', function() {
 

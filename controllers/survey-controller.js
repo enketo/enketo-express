@@ -1,9 +1,9 @@
 "use strict";
 
 var Q = require( 'q' );
-var transformer = require( '../lib/transformer/enketo-transformer' );
+var transformer = require( '../lib/transformer' );
 var fs = require( 'fs' );
-var communicator = require( '../lib/communicator/openrosa-communicator' );
+var communicator = require( '../lib/communicator' );
 var model = require( '../models/survey-model' )();
 var debug = require( 'debug' )( 'survey-controller' );
 
@@ -49,7 +49,7 @@ module.exports = {
     // preview with parameters provided by query string)
     previewFromQuery: function( req, res, next ) {
         console.log( 'req.query', req.query );
-        if ( req.query.server && req.query.id ) {
+        if ( ( req.query.server || req.query.server_url ) && ( req.query.id || req.query.form_id ) ) {
             var survey = {
                 openRosaServer: req.query.server,
                 openRosaId: req.query.id
