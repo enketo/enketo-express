@@ -51,14 +51,14 @@ module.exports = function( grunt ) {
         },
         jsbeautifier: {
             test: {
-                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**" ],
+                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!**/*.min.js" ],
                 options: {
                     config: "./.jsbeautifyrc",
                     mode: "VERIFY_ONLY"
                 }
             },
             fix: {
-                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**" ],
+                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!**/*.min.js" ],
                 options: {
                     config: "./.jsbeautifyrc"
                 }
@@ -68,7 +68,7 @@ module.exports = function( grunt ) {
             options: {
                 jshintrc: ".jshintrc"
             },
-            all: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js" ]
+            all: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js", "!**/*.min.js" ]
         },
         // Configure a mochaTest task
         mochaTest: {

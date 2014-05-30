@@ -14,7 +14,7 @@ function _getForm( survey ) {
             debug( 'going to get xform from ' + info.downloadUrl );
             return communicator.getXForm( info.downloadUrl )
                 .then( function( xform ) {
-                    debug( 'going to transform XForm now' );
+                    debug( 'going to transform XForm' );
                     return transformer.transform( xform );
                 } );
         } );
@@ -38,19 +38,49 @@ module.exports = {
         return model.get( req.enketoId )
             .then( _getForm )
             .then( function( survey ) {
+                survey.instance = JSON.stringify( survey.instance );
                 survey.type = 'preview';
                 res.render( 'surveys/webform', survey );
             } )
             .catch( function( error ) {
-                debug( 'error caught!', error );
                 next( error );
             } );
     },
-    // blank preview (with query string)
-    previewBlank: function( req, res, next ) {
-        res.render( 'surveys/webform', {
-            type: 'preview'
-        } );
+    // preview with parameters provided by query string)
+    previewFromQuery: function( req, res, next ) {
+        console.log( 'req.query', req.query );
+        if ( req.query.server && req.query.id ) {
+            var survey = {
+                openRosaServer: req.query.server,
+                openRosaId: req.query.id
+            };
+            return _getForm( survey )
+                .then( function( survey ) {
+                    survey.instance = JSON.stringify( survey.instance );
+                    survey.type = 'preview';
+                    res.render( 'surveys/webform', survey );
+                } )
+                .catch( function( error ) {
+                    next( error );
+                } );
+        } else if ( req.query.form ) {
+            return communicator.getXForm( req.query.form )
+                .then( function( xform ) {
+                    return transformer.transform( xform )
+                        .then( function( survey ) {
+                            survey.instance = JSON.stringify( survey.instance );
+                            survey.type = 'preview';
+                            res.render( 'surveys/webform', survey );
+                        } );
+                } )
+                .catch( function( error ) {
+                    next( error );
+                } );
+        } else {
+            var error = new Error( 'Require either server and id parameter or a form parameter' );
+            error.status = 400;
+            next( error );
+        }
     },
     edit: function( req, res, next ) {
         res.render( 'surveys/webform', {
