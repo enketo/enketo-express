@@ -4,7 +4,8 @@ var Q = require( 'q' );
 var transformer = require( '../lib/transformer' );
 var fs = require( 'fs' );
 var communicator = require( '../lib/communicator' );
-var model = require( '../models/survey-model' )();
+var surveyModel = require( '../models/survey-model' )();
+var instanceModel = require( '../models/instance-model' )();
 var debug = require( 'debug' )( 'survey-controller' );
 
 function _getForm( survey ) {
@@ -20,12 +21,16 @@ function _getForm( survey ) {
         } );
 }
 
+function _getInstance( survey ) {
+    return instanceModel.get( survey );
+}
+
 module.exports = {
     webform: function( req, res, next ) {
-        return model.get( req.enketoId )
+        return surveyModel.get( req.enketoId )
             .then( _getForm )
             .then( function( survey ) {
-                survey.instance = JSON.stringify( survey.instance );
+                survey.model = JSON.stringify( survey.model );
                 res.render( 'surveys/webform', survey );
             } )
             .catch( function( error ) {
@@ -35,10 +40,10 @@ module.exports = {
     },
     // preview of launched form (with enketo id)
     preview: function( req, res, next ) {
-        return model.get( req.enketoId )
+        return surveyModel.get( req.enketoId )
             .then( _getForm )
             .then( function( survey ) {
-                survey.instance = JSON.stringify( survey.instance );
+                survey.model = JSON.stringify( survey.model );
                 survey.type = 'preview';
                 res.render( 'surveys/webform', survey );
             } )
@@ -56,7 +61,7 @@ module.exports = {
             };
             return _getForm( survey )
                 .then( function( survey ) {
-                    survey.instance = JSON.stringify( survey.instance );
+                    survey.model = JSON.stringify( survey.model );
                     survey.type = 'preview';
                     res.render( 'surveys/webform', survey );
                 } )
@@ -68,7 +73,7 @@ module.exports = {
                 .then( function( xform ) {
                     return transformer.transform( xform )
                         .then( function( survey ) {
-                            survey.instance = JSON.stringify( survey.instance );
+                            survey.model = JSON.stringify( survey.model );
                             survey.type = 'preview';
                             res.render( 'surveys/webform', survey );
                         } );
@@ -77,18 +82,33 @@ module.exports = {
                     next( error );
                 } );
         } else {
-            var error = new Error( 'Require either server and id parameter or a form parameter' );
+            var error = new Error( 'Bad request. Require either server and id parameter or a form parameter' );
             error.status = 400;
             next( error );
         }
     },
     edit: function( req, res, next ) {
-        res.render( 'surveys/webform', {
-            type: 'edit'
-        } );
+
+        return surveyModel.get( req.enketoId )
+            .then( _getForm )
+            .then( function( survey ) {
+                survey.instanceId = req.query.instance_id;
+                return _getInstance( survey );
+            } )
+            .then( function( survey ) {
+                survey.model = JSON.stringify( survey.model );
+                survey.instance = JSON.stringify( survey.instance );
+                survey.type = 'edit';
+                res.render( 'surveys/webform', survey );
+            } )
+            .catch( function( error ) {
+                debug( 'error caught!', error );
+                next( error );
+            } );
+
     },
     maxSize: function( req, res, next ) {
-        return model.get( req.enketoId )
+        return surveyModel.get( req.enketoId )
             .then( communicator.getMaxSize )
             .then( function( maxSize ) {
                 res.json( {

@@ -21,30 +21,37 @@ module.exports = function( client ) {
      * @return {[type]}    [description]
      */
     function _getSurvey( id ) {
-        var deferred = Q.defer();
+        var msg, error,
+            deferred = Q.defer();
 
-        // get from db the record with key: "id:"+id
-        client.hgetall( 'id:' + id, function( error, obj ) {
-
-            if ( error ) {
-                deferred.reject( error );
-            } else if ( !obj ) {
-                error = new Error( 'Survey with this id not found.' );
-                error.status = 404;
-                debug( 'returning ', error );
-                deferred.reject( error );
-            } else if ( !obj.openRosaId || !obj.openRosaServer ) {
-                error = new Error( 'Survey information for this id is incomplete.' );
-                error.status = 406;
-                deferred.reject( error );
-            } else {
-                debug( 'object retrieved from database for id "' + id + '"', obj );
-                obj.enketoId = id;
-                // no need to wait for result of updating lastAccessed 
-                client.hset( 'id:' + id, 'lastAccessed', new Date().toISOString() );
-                deferred.resolve( obj );
-            }
-        } );
+        if ( !id ) {
+            error = new Error( new Error( 'Bad request. Form ID required' ) );
+            error.status = 400;
+            deferred.reject( error );
+        } else {
+            // get from db the record with key: "id:"+id
+            client.hgetall( 'id:' + id, function( error, obj ) {
+                if ( error ) {
+                    deferred.reject( error );
+                } else if ( !obj || obj.active === 'false' ) {
+                    msg = 'Survey with this id ' + ( !obj ? 'not found.' : 'no longer active.' );
+                    error = new Error( msg );
+                    error.status = 404;
+                    debug( 'returning ', error );
+                    deferred.reject( error );
+                } else if ( !obj.openRosaId || !obj.openRosaServer ) {
+                    error = new Error( 'Survey information for this id is incomplete.' );
+                    error.status = 406;
+                    deferred.reject( error );
+                } else {
+                    debug( 'object retrieved from database for id "' + id + '"', obj );
+                    obj.enketoId = id;
+                    // no need to wait for result of updating lastAccessed 
+                    client.hset( 'id:' + id, 'lastAccessed', new Date().toISOString() );
+                    deferred.resolve( obj );
+                }
+            } );
+        }
 
         return deferred.promise;
     }
@@ -53,51 +60,65 @@ module.exports = function( client ) {
         // set in db:
         // a) a record with key "id:"+ _createEnketoId(client.incr('surveys:counter')) and all survey info
         // b) a record with key "or:"+ _createOpenRosaKey(survey.openRosaUrl, survey.openRosaId) and the enketo_id
-        var deferred = Q.defer(),
+        var error,
+            deferred = Q.defer(),
             openRosaKey = _getOpenRosaKey( survey );
 
-        // to avoid issues with fast subsequent requests
-        if ( !pending[ openRosaKey ] ) {
-            pending[ openRosaKey ] = true;
-        } else {
-            deferred.reject( new Error( 'Sorry, busy handling the same pending request' ) );
-        }
-
         if ( !openRosaKey ) {
-            setTimeout( function() {
-                deferred.reject( new Error( 'Survey information not complete or invalid' ) );
-            }, 0 );
-            return deferred.promise;
+            error = new Error( 'Bad request. Survey information not complete or invalid' );
+            error.status = 400;
+            deferred.reject( error );
+        } else if ( pending[ openRosaKey ] ) {
+            deferred.reject( new Error( 'Sorry, busy handling the same pending request' ) );
+        } else {
+            // to avoid issues with fast subsequent requests
+            pending[ openRosaKey ] = true;
+
+            return _getEnketoId( openRosaKey )
+                .then( function( id ) {
+                    if ( id ) {
+                        survey.active = true;
+                        delete pending[ openRosaKey ];
+                        return _updateProperties( id, survey );
+                    } else {
+                        return _addSurvey( openRosaKey, survey );
+                    }
+                } )
+                .catch( function( error ) {
+                    delete pending[ openRosaKey ];
+                    deferred.reject( error );
+                } );
         }
 
-        return _getEnketoId( openRosaKey )
-            .then( function( id ) {
-                if ( id ) {
-                    return _updateServer( id, survey.openRosaServer );
-                } else {
-                    client.incr( 'survey:counter', function( error, iterator ) {
-                        id = _createEnketoId( iterator );
-                        survey.submissions = 0;
-                        survey.launchDate = new Date().toISOString();
-                        client.multi()
-                            .hmset( 'id:' + id, survey )
-                            .set( openRosaKey, id )
-                            .exec( function( error, replies ) {
-                                if ( error ) {
-                                    deferred.reject( error );
-                                } else {
-                                    deferred.resolve( id );
-                                }
-                            } );
-                    } );
-                }
-                return deferred.promise;
-            } );
-        // server, formid, submissions, launch_date, last_accessed, theme, 
+        return deferred.promise;
     }
 
     function _updateSurvey( survey ) {
+        var error,
+            deferred = Q.defer(),
+            openRosaKey = _getOpenRosaKey( survey );
 
+        if ( !openRosaKey ) {
+            error = new Error( 'Bad request. Survey information not complete or invalid' );
+            error.status = 400;
+            deferred.reject( error );
+        } else {
+            return _getEnketoId( openRosaKey )
+                .then( function( id ) {
+                    if ( id ) {
+                        return _updateProperties( id, survey );
+                    } else {
+                        error = new Error( 'Survey not found.' );
+                        error.status = 404;
+                        deferred.reject( error );
+                    }
+                } )
+                .catch( function( error ) {
+                    deferred.reject( error );
+                } );
+        }
+
+        return deferred.promise;
     }
 
     function _getOpenRosaKey( survey ) {
@@ -107,12 +128,19 @@ module.exports = function( client ) {
         return 'or:' + _cleanUrl( survey.openRosaServer ) + ',' + survey.openRosaId.trim().toLowerCase();
     }
 
-    function _updateServer( id, serverUrl ) {
-        // updates just the serverUrl in case the server makes an API call using a different HTTP(S) protocol
-        // than the one save in the enketo db
-        var deferred = Q.defer();
+    function _updateProperties( id, survey ) {
+        var deferred = Q.defer(),
+            update = {};
 
-        client.hset( 'id:' + id, serverUrl, function( error ) {
+        // create new object only including the updateable properties
+        if ( typeof survey.openRosaServer !== 'undefined' ) {
+            update.openRosaServer = survey.openRosaServer;
+        }
+        if ( typeof survey.active !== 'undefined' ) {
+            update.active = survey.active;
+        }
+
+        client.hmset( 'id:' + id, update, function( error ) {
             if ( error ) {
                 deferred.reject( error );
             } else {
@@ -123,25 +151,95 @@ module.exports = function( client ) {
         return deferred.promise;
     }
 
-    function _getEnketoId( openRosaKey ) {
-        var iterator,
+    function _addSurvey( openRosaKey, survey ) {
+        var id,
             deferred = Q.defer();
-        console.log( 'getting id for : ' + openRosaKey );
-        client.get( openRosaKey, function( error, id ) {
-            if ( error ) {
-                deferred.reject( error );
-            } else if ( id === '' ) {
-                error = new Error( "ID for this survey is missing" );
-                error.status = 406;
-                deferred.reject( error );
-            } else if ( id ) {
-                deferred.resolve( id );
-            } else {
-                deferred.resolve( null );
-            }
+
+        client.incr( 'survey:counter', function( error, iterator ) {
+            id = _createEnketoId( iterator );
+            survey.submissions = 0;
+            survey.launchDate = new Date().toISOString();
+            survey.active = true;
+            client.multi()
+                .hmset( 'id:' + id, survey )
+                .set( openRosaKey, id )
+                .exec( function( error, replies ) {
+                    delete pending[ openRosaKey ];
+                    if ( error ) {
+                        deferred.reject( error );
+                    } else {
+                        deferred.resolve( id );
+                    }
+                } );
         } );
 
         return deferred.promise;
+    }
+
+    function _getNumberOfSurveys( server ) {
+        var error,
+            deferred = Q.defer();
+
+        if ( !server ) {
+            error = new Error( 'Survey information not complete or invalid' );
+            error.status = 400;
+            deferred.reject( error );
+        } else {
+            // TODO: should probably be replaced by maintaining a set that contains
+            // only the ACTIVE surveys
+            client.keys( "or:" + _cleanUrl( server ) + "*", function( err, replies ) {
+                if ( error ) {
+                    deferred.reject( error );
+                } else if ( replies ) {
+                    debug( 'replies', replies, replies.length );
+                    deferred.resolve( replies.length );
+                } else {
+                    debug( 'no replies when obtaining number of surveys' );
+                    deferred.reject( 'no surveys' );
+                }
+            } );
+        }
+        return deferred.promise;
+    }
+
+    function _getListOfSurveys() {
+
+
+    }
+
+    function _getEnketoId( openRosaKey ) {
+        var iterator,
+            deferred = Q.defer();
+
+        if ( !openRosaKey ) {
+            var error = new Error( 'Survey information not complete or invalid' );
+            error.status = 400;
+            deferred.reject( error );
+        } else {
+            debug( 'getting id for : ' + openRosaKey );
+            client.get( openRosaKey, function( error, id ) {
+                debug( 'result', error, id );
+                if ( error ) {
+                    deferred.reject( error );
+                } else if ( id === '' ) {
+                    error = new Error( "ID for this survey is missing" );
+                    error.status = 406;
+                    deferred.reject( error );
+                } else if ( id ) {
+                    deferred.resolve( id );
+                } else {
+                    deferred.resolve( null );
+                }
+            } );
+        }
+
+        return deferred.promise;
+    }
+
+    function _getEnketoIdFromSurveyObject( survey ) {
+        var openRosaKey = _getOpenRosaKey( survey );
+
+        return _getEnketoId( openRosaKey );
     }
 
     function _createEnketoId( iterator ) {
@@ -185,6 +283,9 @@ module.exports = function( client ) {
         get: _getSurvey,
         set: _setSurvey,
         update: _updateSurvey,
-        cleanUrl: _cleanUrl
+        getId: _getEnketoIdFromSurveyObject,
+        getNumber: _getNumberOfSurveys,
+        getList: _getListOfSurveys,
+        cleanUrl: _cleanUrl,
     };
 };

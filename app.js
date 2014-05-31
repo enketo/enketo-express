@@ -6,7 +6,7 @@ var bodyParser = require( 'body-parser' );
 
 var index = require( './routes/index' );
 var surveys = require( './routes/surveys' );
-var api = require( './routes/api_v1' );
+var api = require( './routes/api' );
 var pages = require( './routes/pages' );
 var config = require( './config' );
 var logger = require( 'morgan' );
@@ -23,6 +23,9 @@ app.set( 'env', process.env.NODE_ENV || 'production' );
 // views
 app.set( 'views', path.join( __dirname, 'views' ) );
 app.set( 'view engine', 'jade' );
+
+// pretty json API responses
+app.set( 'json spaces', 4 );
 
 // middleware
 app.use( bodyParser.json() );
@@ -44,11 +47,11 @@ app.use( function( req, res, next ) {
 app.use( '/', index );
 app.use( '/', pages );
 app.use( '/', surveys );
-app.use( '/api_v1', api );
+app.use( '/api/v1', api );
 
 // catch 404 and forwarding to error handler
 app.use( function( req, res, next ) {
-    var err = new Error( 'Not Found' );
+    var err = new Error( 'Page not Found' );
     err.status = 404;
     next( err );
 } );
@@ -62,24 +65,33 @@ app.use( logger( {
 // will print stacktrace
 if ( app.get( 'env' ) === 'development' ) {
     app.use( function( err, req, res, next ) {
-        res.status( err.status || 500 );
-        res.render( 'error', {
+        var body = {
+            code: err.status,
             message: err.message,
-            error: err
-        } );
+            stack: err.stack
+        };
+        res.status( err.status || 500 );
+        if ( res.get( 'Content-type' ) === 'application/json' ) {
+            res.json( body );
+        } else {
+            res.render( 'error', body );
+        }
     } );
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use( function( err, req, res, next ) {
+    var body = {
+        code: err.status,
+        message: err.message
+    };
     res.status( err.status || 500 );
-    res.render( 'error', {
-        message: err.message,
-        error: {
-            status: err.status
-        }
-    } );
+    if ( res.get( 'Content-type' ) === 'application/json' ) {
+        res.json( body );
+    } else {
+        res.render( 'error', body );
+    }
 } );
 
 module.exports = app;

@@ -15,9 +15,9 @@ describe( 'transformer', function() {
                 .then( function( result ) {
                     result.should.be.of.type( 'object' );
                     result.should.have.property( 'form' );
-                    result.should.have.property( 'instance' );
+                    result.should.have.property( 'model' );
                     result.form.should.not.be.empty;
-                    result.instance.should.not.be.empty;
+                    result.model.should.not.be.empty;
                     done();
                 } )
                 .catch( function( error ) {

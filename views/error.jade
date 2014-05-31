@@ -5,7 +5,7 @@ block style
 
 block content
   h1.error= message
-    if error.status
-      span.status-code Error Code: #{error.status}
-  if error.stack
-    pre #{error.stack}
+    if code
+      span.status-code Error Code: #{code}
+  if stack
+    pre #{stack}

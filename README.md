@@ -1,9 +1,9 @@
 enketo-express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express.png)](https://travis-ci.org/kobotoolbox/enketo-express)
 ==============
 
-A node.js version of Enketo Smart Paper developed for KoBo Toolbox.
+A super light-weight node.js version of Enketo Smart Paper developed for KoBo Toolbox. Chock-full of badass rockstar tech.
 
-\- UNDER ACTIVE DEVELOPMENT, NOT READY TO BE USED YET \-
+\- It is functional though not yet ready for production use \-
 
 ### How to install
 

@@ -14,9 +14,12 @@ block global
     var settings = {};
     settings['supportEmail'] = '#{supportEmail}';
     settings['modernBrowsersURL'] = 'modern-browsers';
+  if model
+    script.
+      var modelStr = !{model};
   if instance
     script.
-      var modelStr = !{instance};
+      var instanceStr = !{instance};
     
 block content
   .main
