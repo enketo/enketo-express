@@ -3,9 +3,9 @@ enketo-express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express
 
 A super light-weight node.js version of Enketo Smart Paper developed for KoBo Toolbox. Chock-full of badass rockstar tech.
 
-\- It is functional though not yet ready for production use \-
+**\- Not yet ready for production use \-**
 
-### How to install
+### How to install (anywhere)
 
 * install [Node.js](http://nodejs.org/) 0.10.x (issue with 0.11.x) if you don't have it already (check with `node -v`)
 * install [Grunt Client](http://gruntjs.com) 4.4.x globally with `npm install -g grunt-cli` if you don't have it already (check with `grunt --version`)
@@ -15,6 +15,14 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 * clone git submodules (I think) with `git submodule update --init --recursive`
 * install dependencies with `npm install` from the project root
 * build with `grunt` from the project root
+
+### How to install as a local VirtualBox VM - the easy way
+1. [Install Vagrant](http://docs.vagrantup.com/v2/installation/index.html)
+2. [Install VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+3. clone enketo-express
+4. cd to enketo-express location
+5. run `vagrant up`
+6. ssh into VM with `vagrant ssh` (enketo-express is located in /vagrant)
 
 ### How to run
 * run with `node .` or `npm start` from project root
