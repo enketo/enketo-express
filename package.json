@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "body-parser": "~1.0.0",
+        "busboy": "^0.2.6",
         "debug": "~0.7.4",
         "express": "~4.1.x",
         "jade": "~1.3.0",
@@ -26,7 +27,6 @@
         "q": "^1.0.1",
         "redis": "^0.10.1",
         "request": "^2.34.0",
-        "supertest": "^0.13.0",
         "xml2js": "^0.4.2"
     },
     "devDependencies": {
@@ -44,6 +44,7 @@
         "grunt-sass": "^0.12.1",
         "load-grunt-tasks": "^0.4.0",
         "mocha": "*",
+        "supertest": "^0.13.0",
         "rjs-build-analysis": "0.0.3",
         "should": "^3.3.1"
     }

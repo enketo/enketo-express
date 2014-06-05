@@ -22,8 +22,10 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
     "use strict";
     var oRosaHelper, progress, maxSubmissionSize,
         that = this,
-        CONNECTION_URL = '/checkforconnection.php',
-        SUBMISSION_URL = '/data/submission',
+        ID = window.location.pathname.substring( window.location.pathname.lastIndexOf( '[' ) ),
+        CONNECTION_URL = '/checkforconnection',
+        SUBMISSION_URL = '/submission/' + ID,
+        MAX_SIZE_URL = '/max-size/' + ID,
         GETSURVEYURL_URL = '/api_v1/survey',
         //this.SUBMISSION_TRIES = 2;
         currentOnlineStatus = null,
@@ -68,7 +70,7 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
                     complete: function( response ) {
                         //important to check for the content of the no-cache response as it will
                         //start receiving the fallback page specified in the manifest!
-                        online = typeof response.responseText !== 'undefined' && response.responseText === 'connected';
+                        online = typeof response.responseText !== 'undefined' && /connected/.test( response.responseText );
                         _setOnlineStatus( online );
                     }
                 } );
@@ -106,6 +108,8 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
         var sameItemInQueue, sameItemSubmitted, sameItemOngoing;
         force = force || false;
         callbacks = callbacks || null;
+
+        console.debug( 'record to submit: ', record, force, callbacks );
 
         if ( !record.name || !record.instanceID || !record.formData || !record.batches || typeof record.batchIndex == 'undefined' ) {
             console.error( 'record name, instanceID, formData, batches and/or batchIndex was not defined!', record );
@@ -460,11 +464,11 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
             defaultMaxSize = 5000000,
             absoluteMaxSize = 100 * 1024 * 1024;
         if ( typeof maxSubmissionSize == 'undefined' ) {
-            $.ajax( '/data/max_size', {
+            $.ajax( MAX_SIZE_URL, {
                 type: 'GET',
                 timeout: 5 * 1000,
                 success: function( response ) {
-                    maxSize = parseInt( response, 10 ) || defaultMax;
+                    maxSize = parseInt( response, 10 ) || defaultMaxSize;
                     if ( !isNaN( maxSize ) ) {
                         // setting an absolute max corresponding to value in enketo .htaccess file
                         maxSubmissionSize = ( maxSize > absoluteMaxSize ) ? absoluteMaxSize : maxSize;

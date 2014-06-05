@@ -94,15 +94,5 @@ module.exports = {
             } )
             .catch( next );
 
-    },
-    maxSize: function( req, res, next ) {
-        return surveyModel.get( req.enketoId )
-            .then( communicator.getMaxSize )
-            .then( function( maxSize ) {
-                res.json( {
-                    maxSize: maxSize
-                } );
-            } )
-            .catch( next );
     }
 };

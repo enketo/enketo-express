@@ -32,8 +32,7 @@ app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded() );
 app.use( express.static( path.join( __dirname, 'public' ) ) );
 
-// set livereload variable before routing, 
-// so it is accessible in all view templates
+// set variables that should be accessible in all view templates
 app.use( function( req, res, next ) {
     res.locals.livereload = req.app.get( 'env' ) === 'development';
     res.locals.environment = req.app.get( 'env' );

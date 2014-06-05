@@ -83,7 +83,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 gui.confirm( message, choices );
             } else {
                 setDraftStatus( false );
-                updateActiveRecord( null );
+                //updateActiveRecord( null );
                 form.resetView();
                 form = new Form( 'form.or:eq(0)', defaultModelStr );
                 //DEBUG
@@ -114,7 +114,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 '<progress style="text-align: center;"/>', 'Submitting...', 'info' );
 
             record = {
-                'key': 'iframe_record',
+                'key': 'record',
                 'data': form.getDataStr( true, true )
             };
 
@@ -260,7 +260,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                     $button.btnBusyState( true );
                     setTimeout( function() {
                         form.validate();
-                        submitEditedRecord();
+                        submitRecord();
                         $button.btnBusyState( false );
                         return false;
                     }, 100 );
