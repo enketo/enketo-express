@@ -22,11 +22,11 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 3. clone enketo-express
 4. cd to enketo-express location
 5. run `vagrant up`
-6. ssh into VM with `vagrant ssh` (enketo-express is located in /vagrant)
+6. ssh into VM with `vagrant ssh` (enketo-express is located in /vagrant and the port is 8015)
 
 ### How to run
 * run with `node .` or `npm start` from project root
-* you can now check that the app is running by going to e.g. http://localhost:8005 (depending on your server and port set in [config.json](./config.json))
+* you can now check that the app is running by going to e.g. http://localhost:8005 (depending on your server and port set in [config.json](./config.json) or the port forwarding set up (with the default Vagrantfile the port is 8015))
 
 ### How to update
 * update git repository with `git pull -v`
