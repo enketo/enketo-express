@@ -33,7 +33,10 @@ module.exports = {
                 survey.model = JSON.stringify( survey.model );
                 res.render( 'surveys/webform', survey );
             } )
-            .catch( next );
+            .catch( function( error ) {
+                debug( 'error caught!', error );
+                next( error );
+            } );
     },
     // preview of launched form (with enketo id)
     preview: function( req, res, next ) {
@@ -44,7 +47,9 @@ module.exports = {
                 survey.type = 'preview';
                 res.render( 'surveys/webform', survey );
             } )
-            .catch( next );
+            .catch( function( error ) {
+                next( error );
+            } );
     },
     // preview with parameters provided by query string)
     previewFromQuery: function( req, res, next ) {
@@ -73,7 +78,9 @@ module.exports = {
                             res.render( 'surveys/webform', survey );
                         } );
                 } )
-                .catch( next );
+                .catch( function( error ) {
+                    next( error );
+                } );
         } else {
             var error = new Error( 'Bad request. Require either server and id parameter or a form parameter' );
             error.status = 400;
@@ -94,6 +101,22 @@ module.exports = {
                 survey.type = 'edit';
                 res.render( 'surveys/webform', survey );
             } )
-            .catch( next );
+            .catch( function( error ) {
+                debug( 'error caught!', error );
+                next( error );
+            } );
+
+    },
+    maxSize: function( req, res, next ) {
+        return surveyModel.get( req.enketoId )
+            .then( communicator.getMaxSize )
+            .then( function( maxSize ) {
+                res.json( {
+                    maxSize: maxSize
+                } );
+            } )
+            .catch( function( error ) {
+                next( error );
+            } );
     }
 };

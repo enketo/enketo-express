@@ -21,7 +21,9 @@ function _getExistingSurvey( req, res, next ) {
                 _render( 404, 'Survey not found', res );
             }
         } )
-        .catch( next );
+        .catch( function( error ) {
+            next( error );
+        } );
 }
 // note: this function could be merged with previous perhaps. The only difference is 
 // the model method called
@@ -42,7 +44,9 @@ function _getNewOrExistingSurvey( req, res, next ) {
                 _render( 404, 'Survey not found', res );
             }
         } )
-        .catch( next );
+        .catch( function( error ) {
+            next( error );
+        } );
 }
 
 
@@ -65,7 +69,9 @@ function _deactivateSurvey( req, res, next ) {
                 _render( 404, 'Survey not found', res );
             }
         } )
-        .catch( next );
+        .catch( function( error ) {
+            next( error );
+        } );
 }
 
 
@@ -85,7 +91,9 @@ function _getNumber( req, res, next ) {
                 _render( 404, 'No surveys found', res );
             }
         } )
-        .catch( next );
+        .catch( function( error ) {
+            next( error );
+        } );
 }
 
 function _getList( req, res, next ) {
@@ -109,7 +117,9 @@ function _cacheInstance( req, res, next ) {
             debug( 'edit url generated:', _generateWebformUrls( id, req ) );
             _render( 201, _generateWebformUrls( id, req ), res );
         } )
-        .catch( next );
+        .catch( function( error ) {
+            next( error );
+        } );
 }
 
 function _removeInstance( req, res, next ) {
@@ -128,7 +138,9 @@ function _removeInstance( req, res, next ) {
                 _render( 404, 'Record not found', res );
             }
         } )
-        .catch( next );
+        .catch( function( error ) {
+            next( error );
+        } );
 }
 
 function _generateWebformUrls( id, req ) {
