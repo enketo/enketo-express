@@ -33,10 +33,7 @@ module.exports = {
                 survey.model = JSON.stringify( survey.model );
                 res.render( 'surveys/webform', survey );
             } )
-            .catch( function( error ) {
-                debug( 'error caught!', error );
-                next( error );
-            } );
+            .catch( next );
     },
     // preview of launched form (with enketo id)
     preview: function( req, res, next ) {
@@ -47,9 +44,7 @@ module.exports = {
                 survey.type = 'preview';
                 res.render( 'surveys/webform', survey );
             } )
-            .catch( function( error ) {
-                next( error );
-            } );
+            .catch( next );
     },
     // preview with parameters provided by query string)
     previewFromQuery: function( req, res, next ) {
@@ -65,9 +60,7 @@ module.exports = {
                     survey.type = 'preview';
                     res.render( 'surveys/webform', survey );
                 } )
-                .catch( function( error ) {
-                    next( error );
-                } );
+                .catch( next );
         } else if ( req.query.form ) {
             return communicator.getXForm( req.query.form )
                 .then( function( xform ) {
@@ -78,9 +71,7 @@ module.exports = {
                             res.render( 'surveys/webform', survey );
                         } );
                 } )
-                .catch( function( error ) {
-                    next( error );
-                } );
+                .catch( next );
         } else {
             var error = new Error( 'Bad request. Require either server and id parameter or a form parameter' );
             error.status = 400;
@@ -101,10 +92,7 @@ module.exports = {
                 survey.type = 'edit';
                 res.render( 'surveys/webform', survey );
             } )
-            .catch( function( error ) {
-                debug( 'error caught!', error );
-                next( error );
-            } );
+            .catch( next );
 
     },
     maxSize: function( req, res, next ) {
@@ -115,8 +103,6 @@ module.exports = {
                     maxSize: maxSize
                 } );
             } )
-            .catch( function( error ) {
-                next( error );
-            } );
+            .catch( next );
     }
 };
