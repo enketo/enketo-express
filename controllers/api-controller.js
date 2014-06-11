@@ -23,32 +23,36 @@ function _getExistingSurvey( req, res, next ) {
         } )
         .catch( next );
 }
-// note: this function could be merged with previous perhaps. The only difference is 
-// the model method called
-function _getNewOrExistingSurvey( req, res, next ) {
-    var error, body;
 
-    return surveyModel
-        .set( {
+function _getNewOrExistingSurvey( req, res, next ) {
+    var error, body, status,
+        survey = {
             openRosaServer: req.param( 'server_url' ),
             openRosaId: req.param( 'form_id' )
-        } )
+        };
+
+    return surveyModel
+        .getId( survey ) // will return id only for existing && active surveys
         .then( function( id ) {
-            debug( 'id: ', id );
+            debug( 'id: ' + id );
             if ( id ) {
-                // TODO: this should actually return 201 if newly created 
+                debug( 'found id present and active' );
                 _render( 200, _generateWebformUrls( id, req ), res );
             } else {
-                _render( 404, 'Survey not found', res );
+                return surveyModel.set( survey )
+                    .then( function( id ) {
+                        if ( id ) {
+                            ( 'activated or created new id' );
+                            _render( 201, _generateWebformUrls( id, req ), res );
+                        } else {
+                            _render( 404, 'Survey not found', res );
+                        }
+                    } );
             }
         } )
         .catch( next );
 }
 
-
-// note: this could be merged with previous two perhaps. The only differences:
-// - different model method called
-// - active: false added to survey object
 function _deactivateSurvey( req, res, next ) {
     var error;
 
