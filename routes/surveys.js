@@ -22,6 +22,11 @@ router
     .get( '/edit/:enketo_id', form.edit )
     .get( '/max-size/:enketo_id', submission.maxSize )
     .post( '/submission/:enketo_id', submission.submit )
+    .all( '/submission/*', function( req, res, next ) {
+        var error = new Error( 'Not allowed' );
+        error.status = 405;
+        next( error );
+    } )
     .get( '/checkforconnection', function( req, res, next ) {
         res.status = 200;
         res.send( 'connected ' + Math.random() );

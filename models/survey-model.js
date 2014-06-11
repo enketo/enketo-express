@@ -176,6 +176,21 @@ module.exports = function( client ) {
         return deferred.promise;
     }
 
+    function _addSubmission( id ) {
+        var deferred = Q.defer();
+
+        client.multi()
+            .incr( 'submission:counter' )
+            .hincrby( 'id:' + id, 'submissions', 1 )
+            .exec( function( error, replies ) {
+                if ( error ) {
+                    deferred.reject( error );
+                } else {
+                    deferred.resolve( id );
+                }
+            } );
+    }
+
     function _getNumberOfSurveys( server ) {
         var error,
             deferred = Q.defer();
@@ -287,5 +302,6 @@ module.exports = function( client ) {
         getNumber: _getNumberOfSurveys,
         getList: _getListOfSurveys,
         cleanUrl: _cleanUrl,
+        addSubmission: _addSubmission
     };
 };

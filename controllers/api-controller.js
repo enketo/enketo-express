@@ -35,19 +35,16 @@ function _getNewOrExistingSurvey( req, res, next ) {
         .getId( survey ) // will return id only for existing && active surveys
         .then( function( id ) {
             debug( 'id: ' + id );
-            if ( id ) {
-                debug( 'found id present and active' );
-                _render( 200, _generateWebformUrls( id, req ), res );
-            } else {
-                return surveyModel.set( survey )
-                    .then( function( id ) {
-                        if ( id ) {
-                            _render( 201, _generateWebformUrls( id, req ), res );
-                        } else {
-                            _render( 404, 'Survey not found', res );
-                        }
-                    } );
-            }
+            status = ( id ) ? 200 : 201;
+            // even if id was found still call .set() method to update any properties
+            return surveyModel.set( survey )
+                .then( function( id ) {
+                    if ( id ) {
+                        _render( status, _generateWebformUrls( id, req ), res );
+                    } else {
+                        _render( 404, 'Survey not found', res );
+                    }
+                } );
         } )
         .catch( next );
 }

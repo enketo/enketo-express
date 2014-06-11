@@ -24,6 +24,10 @@ module.exports = {
                     var submissionUrl = survey.openRosaServer + '/submission';
                     return communicator.submit( submissionUrl, xmlData )
                         .then( function( code ) {
+                            if ( code === 201 ) {
+                                // asynchronously increment counters, but ignore errors
+                                surveyModel.addSubmission( req.enketoId );
+                            }
                             res.send( code );
                         } )
                         .catch( next );
