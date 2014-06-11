@@ -42,7 +42,6 @@ function _getNewOrExistingSurvey( req, res, next ) {
                 return surveyModel.set( survey )
                     .then( function( id ) {
                         if ( id ) {
-                            ( 'activated or created new id' );
                             _render( 201, _generateWebformUrls( id, req ), res );
                         } else {
                             _render( 404, 'Survey not found', res );
