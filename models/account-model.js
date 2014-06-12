@@ -1,6 +1,6 @@
 "use strict";
-var Q = require( 'Q' );
-var debug = require( 'debug' )( 'account-model' );
+var Q = require( "q" );
+var debug = require( 'debug' )( "account-model" );
 
 // TODO: find way to access app.get() without requiring it for every method call
 /**
