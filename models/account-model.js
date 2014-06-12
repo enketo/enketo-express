@@ -1,8 +1,8 @@
 "use strict";
-var Q = require( "q" );
-var debug = require( 'debug' )( "account-model" );
+var app,
+    Q = require( "q" ),
+    debug = require( 'debug' )( "account-model" );
 
-// TODO: find way to access app.get() without requiring it for every method call
 /**
  * Obtain account
  * @param  {[type]} survey [description]
@@ -11,7 +11,7 @@ var debug = require( 'debug' )( "account-model" );
 function _get( survey ) {
     var error,
         server = _getServer( survey ),
-        app = require( '../app' ),
+        app = app || require( '../app' ),
         deferred = Q.defer();
 
     if ( !server ) {
@@ -61,7 +61,7 @@ function _get( survey ) {
 function _check( survey ) {
     var error,
         server = _getServer( survey ),
-        app = require( '../app' ),
+        app = app || require( '../app' ),
         deferred = Q.defer();
 
     if ( !server ) {
@@ -82,7 +82,7 @@ function _check( survey ) {
 }
 
 function _getLinkedUrl() {
-    var app = require( '../app' ),
+    var app = app || require( '../app' ),
         linkedUrl = app.get( 'openrosa server url' );
 
     // strip http(s):// from config item
