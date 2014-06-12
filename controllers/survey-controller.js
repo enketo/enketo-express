@@ -1,13 +1,13 @@
 "use strict";
 
-var Q = require( 'q' );
-var transformer = require( '../lib/transformer' );
-var fs = require( 'fs' );
-var communicator = require( '../lib/communicator' );
-var surveyModel = require( '../models/survey-model' )();
-var instanceModel = require( '../models/instance-model' )();
-var account = require( '../models/account-model' );
-var debug = require( 'debug' )( 'survey-controller' );
+var Q = require( 'q' ),
+    transformer = require( '../lib/transformer' ),
+    fs = require( 'fs' ),
+    communicator = require( '../lib/communicator' ),
+    surveyModel = require( '../models/survey-model' )(),
+    instanceModel = require( '../models/instance-model' )(),
+    account = require( '../models/account-model' ),
+    debug = require( 'debug' )( 'survey-controller' );
 
 function _getForm( survey ) {
     debug( 'getting form info' );
@@ -50,7 +50,6 @@ module.exports = {
     },
     // preview with parameters provided by query string)
     previewFromQuery: function( req, res, next ) {
-        console.log( 'req.query', req.query );
         if ( ( req.query.server || req.query.server_url ) && ( req.query.id || req.query.form_id ) ) {
             var survey = {
                 openRosaServer: req.query.server,

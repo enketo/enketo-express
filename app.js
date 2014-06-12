@@ -1,17 +1,19 @@
 "use strict";
 
-var express = require( 'express' );
-var path = require( 'path' );
-var bodyParser = require( 'body-parser' );
+var express = require( 'express' ),
+    path = require( 'path' ),
+    bodyParser = require( 'body-parser' ),
 
-var index = require( './routes/index' );
-var surveys = require( './routes/surveys' );
-var api = require( './routes/api' );
-var pages = require( './routes/pages' );
-var config = require( './config' );
-var logger = require( 'morgan' );
+    index = require( './routes/index' ),
+    surveys = require( './routes/surveys' ),
+    api = require( './routes/api' ),
+    pages = require( './routes/pages' ),
 
-var app = express();
+    config = require( './config' ),
+    logger = require( 'morgan' ),
+    errorHandler = require( './controllers/error-handler' ),
+
+    app = express();
 
 // general 
 for ( var item in config ) {
@@ -48,49 +50,16 @@ app.use( '/', pages );
 app.use( '/', surveys );
 app.use( '/api/v1', api );
 
-// catch 404 and forwarding to error handler
-app.use( function( req, res, next ) {
-    var err = new Error( 'Page not Found' );
-    err.status = 404;
-    next( err );
-} );
-
 // logging
 app.use( logger( {
     format: ( app.get( 'env' ) === 'development' ? 'dev' : 'tiny' )
 } ) );
 
-// development error handler
-// will print stacktrace
+// error handlers
+app.use( errorHandler[ "404" ] );
 if ( app.get( 'env' ) === 'development' ) {
-    app.use( function( err, req, res, next ) {
-        var body = {
-            code: err.status,
-            message: err.message,
-            stack: err.stack
-        };
-        res.status( err.status || 500 );
-        if ( res.get( 'Content-type' ) === 'application/json' ) {
-            res.json( body );
-        } else {
-            res.render( 'error', body );
-        }
-    } );
+    app.use( errorHandler.development );
 }
-
-// production error handler
-// no stacktraces leaked to user
-app.use( function( err, req, res, next ) {
-    var body = {
-        code: err.status,
-        message: err.message
-    };
-    res.status( err.status || 500 );
-    if ( res.get( 'Content-type' ) === 'application/json' ) {
-        res.json( body );
-    } else {
-        res.render( 'error', body );
-    }
-} );
+app.use( errorHandler.production );
 
 module.exports = app;

@@ -1,10 +1,10 @@
 "use strict";
 
-var communicator = require( '../lib/communicator' );
-var surveyModel = require( '../models/survey-model' )();
-var debug = require( 'debug' )( 'submission-controller' );
-var inspect = require( 'util' ).inspect;
-var Busboy = require( 'busboy' );
+var communicator = require( '../lib/communicator' ),
+    surveyModel = require( '../models/survey-model' )(),
+    debug = require( 'debug' )( 'submission-controller' ),
+    inspect = require( 'util' ).inspect,
+    Busboy = require( 'busboy' );
 
 module.exports = {
     submit: function( req, res, next ) {

@@ -1,12 +1,12 @@
 "use strict";
 
-var transformer = require( '../lib/transformer' );
-var communicator = require( '../lib/communicator' );
-var surveyModel = require( '../models/survey-model' )();
-var instanceModel = require( '../models/instance-model' )();
-var account = require( '../models/account-model' );
-var auth = require( '../lib/basic-auth' );
-var debug = require( 'debug' )( 'api-controller' );
+var transformer = require( '../lib/transformer' ),
+    communicator = require( '../lib/communicator' ),
+    surveyModel = require( '../models/survey-model' )(),
+    instanceModel = require( '../models/instance-model' )(),
+    account = require( '../models/account-model' ),
+    auth = require( '../lib/basic-auth' ),
+    debug = require( 'debug' )( 'api-controller' );
 
 function _auth( req, res, next ) {
     // check authentication and account
