@@ -4,44 +4,11 @@ var express = require( 'express' );
 var router = express.Router();
 var api = require( '../controllers/api-controller' );
 var debug = require( 'debug' )( 'api-router' );
-var auth = require( '../lib/basic-auth' );
+
 
 router
-    .all( '*', function( req, res, next ) {
-        // check authentication and account
-        var error,
-            creds = auth( req ),
-            token = ( creds ) ? creds.name : undefined,
-            server = req.param( 'server_url' ),
-            testServer = /https?:\/\/testserver.com\/bob/,
-            linked = new RegExp( 'https?:\/\/' + req.app.get( 'openrosa server url' ) ),
-            isTest = testServer.test( server );
-
-        // set content-type to json to provide appropriate json Error responses
-        res.set( 'Content-Type', 'application/json' );
-
-        if ( !server ) {
-            error = new Error( 'Bad Request. Server URL parameter missing or not allowed' );
-            error.status = 400;
-            next( error );
-        } else if ( !linked.test( server ) && !isTest ) {
-            error = new Error( 'This server is not linked with Enketo' );
-            error.status = 404;
-            next( error );
-        } else if ( !token || ( !isTest && token !== req.app.get( 'enketo api key' ) || ( isTest && token !== 'abc' ) ) ) {
-            error = new Error( 'Invalid API key.' );
-            error.status = 401;
-            res
-                .status( error.status )
-                .set( 'WWW-Authenticate', 'Basic realm="Enter valid API key as user name"' );
-            next( error );
-        } else {
-            debug( 'valid token provided!' );
-            next();
-        }
-    } )
+    .all( '*', api.auth )
     .all( '/*/iframe', function( req, res, next ) {
-        debug( 'setting iframe to true' );
         req.iframe = true;
         next();
     } )
@@ -54,7 +21,6 @@ router
         next();
     } )
     .all( '/instance*', function( req, res, next ) {
-        debug( 'setting webform type to "edit"' );
         req.webformType = 'edit';
         next();
     } )

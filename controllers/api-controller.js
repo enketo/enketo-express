@@ -4,7 +4,36 @@ var transformer = require( '../lib/transformer' );
 var communicator = require( '../lib/communicator' );
 var surveyModel = require( '../models/survey-model' )();
 var instanceModel = require( '../models/instance-model' )();
+var account = require( '../models/account-model' );
+var auth = require( '../lib/basic-auth' );
 var debug = require( 'debug' )( 'api-controller' );
+
+function _auth( req, res, next ) {
+    // check authentication and account
+    var error,
+        creds = auth( req ),
+        key = ( creds ) ? creds.name : undefined,
+        server = req.param( 'server_url' );
+
+    // set content-type to json to provide appropriate json Error responses
+    res.set( 'Content-Type', 'application/json' );
+
+    account.get( server )
+        .then( function( account ) {
+            debug( 'account', account );
+            if ( !key || ( key !== account.key ) ) {
+                error = new Error( 'Not Allowed. Invalid API key.' );
+                error.status = 401;
+                res
+                    .status( error.status )
+                    .set( 'WWW-Authenticate', 'Basic realm="Enter valid API key as user name"' );
+                next( error );
+            } else {
+                next();
+            }
+        } )
+        .catch( next );
+}
 
 function _getExistingSurvey( req, res, next ) {
     var error, body;
@@ -179,10 +208,11 @@ function _render( status, body, res ) {
 }
 
 module.exports = {
+    auth: _auth,
     survey: {
         get: _getExistingSurvey,
         post: _getNewOrExistingSurvey,
-        delete: _deactivateSurvey,
+        "delete": _deactivateSurvey,
     },
     surveys: {
         number: {
@@ -196,6 +226,6 @@ module.exports = {
     },
     instance: {
         post: _cacheInstance,
-        delete: _removeInstance
+        "delete": _removeInstance
     }
 };

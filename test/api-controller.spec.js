@@ -18,8 +18,7 @@ var Q = require( "q" ),
 chai.use( chaiAsPromised );
 
 describe( 'api', function() {
-    var res,
-        validApiToken = 'abc',
+    var validApiToken = 'abc',
         validAuth = {
             'Authorization': 'Basic ' + new Buffer( validApiToken + ':' ).toString( 'base64' )
         },
@@ -113,22 +112,22 @@ describe( 'api', function() {
             {
                 method: 'get',
                 auth: true,
-                status: 404,
+                status: 403,
                 server: invalidServer
             }, {
                 method: 'post',
                 auth: true,
-                status: 404,
+                status: 403,
                 server: invalidServer
             }, {
                 method: 'put',
                 auth: true,
-                status: 404,
+                status: 403,
                 server: invalidServer
             }, {
                 method: 'delete',
                 auth: true,
-                status: 404,
+                status: 403,
                 server: invalidServer
             },
             //server_url not provided or empty
@@ -231,7 +230,7 @@ describe( 'api', function() {
             {
                 method: 'post',
                 auth: true,
-                status: 404,
+                status: 403,
                 server: 'https://testserver.com/notexist'
             }
         ].forEach( function( test ) {

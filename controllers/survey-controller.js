@@ -6,6 +6,7 @@ var fs = require( 'fs' );
 var communicator = require( '../lib/communicator' );
 var surveyModel = require( '../models/survey-model' )();
 var instanceModel = require( '../models/instance-model' )();
+var account = require( '../models/account-model' );
 var debug = require( 'debug' )( 'survey-controller' );
 
 function _getForm( survey ) {
@@ -28,6 +29,7 @@ function _getInstance( survey ) {
 module.exports = {
     webform: function( req, res, next ) {
         return surveyModel.get( req.enketoId )
+            .then( account.check )
             .then( _getForm )
             .then( function( survey ) {
                 survey.model = JSON.stringify( survey.model );
@@ -81,6 +83,7 @@ module.exports = {
     edit: function( req, res, next ) {
 
         return surveyModel.get( req.enketoId )
+            .then( account.check )
             .then( _getForm )
             .then( function( survey ) {
                 survey.instanceId = req.query.instance_id;

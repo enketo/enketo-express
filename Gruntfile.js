@@ -26,7 +26,7 @@ module.exports = function( grunt ) {
                     },
                     env: {
                         NODE_ENV: 'development',
-                        DEBUG: '*, -express:*'
+                        DEBUG: '*, -express:*, -send'
                     }
                 }
             }
