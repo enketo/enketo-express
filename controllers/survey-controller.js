@@ -13,12 +13,13 @@ function _getForm( survey ) {
     debug( 'getting form info' );
     return communicator.getXFormInfo( survey.openRosaServer, survey.openRosaId )
         .then( function( info ) {
-            debug( 'going to get xform from ' + info.downloadUrl );
-            return communicator.getXForm( info.downloadUrl )
-                .then( function( xform ) {
-                    debug( 'going to transform XForm' );
-                    return transformer.transform( xform );
-                } );
+            return Q.all( [
+                communicator.getXForm( info.downloadUrl ),
+                communicator.getManifest( info.manifestUrl )
+            ] ).spread( function( xform, manifest ) {
+                debug( 'going to transform XForm', typeof xform, typeof xform );
+                return transformer.transform( xform, manifest );
+            } );
         } );
 }
 
@@ -28,10 +29,12 @@ function _getInstance( survey ) {
 
 module.exports = {
     webform: function( req, res, next ) {
+        var startTime = new Date().getTime();
         return surveyModel.get( req.enketoId )
             .then( account.check )
             .then( _getForm )
             .then( function( survey ) {
+                debug( 'processing before serving took ' + ( new Date().getTime() - startTime ) / 1000 + ' seconds' );
                 survey.model = JSON.stringify( survey.model );
                 res.render( 'surveys/webform', survey );
             } )

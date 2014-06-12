@@ -8,6 +8,7 @@ var express = require( 'express' ),
     surveys = require( './routes/surveys' ),
     api = require( './routes/api' ),
     pages = require( './routes/pages' ),
+    media = require( './routes/media' ),
 
     config = require( './config' ),
     logger = require( 'morgan' ),
@@ -49,6 +50,7 @@ app.use( '/', index );
 app.use( '/', pages );
 app.use( '/', surveys );
 app.use( '/api/v1', api );
+app.use( '/media', media );
 
 // logging
 app.use( logger( {
