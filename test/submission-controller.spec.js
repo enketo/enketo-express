@@ -68,7 +68,7 @@ describe( 'submission', function() {
 
             it( 'using ' + test.method.toUpperCase() + ' of ' + test.data +
                 ' responds with ' + test.status, function( done ) {
-                    request( app )[ test.method ]( '/submission/[' + enketoId + ']' )
+                    request( app )[ test.method ]( '/submission/::' + enketoId )
                         .field( 'xml_submission_data', test.data )
                         .expect( test.status, done );
                 } );
@@ -92,14 +92,14 @@ describe( 'submission', function() {
 
         it( 'using POST of <data></data> to inactive ID responds with 404', function( done ) {
             request( app )
-                .post( '/submission/[' + enketoId + ']' )
+                .post( '/submission/::' + enketoId )
                 .field( 'xml_submission_data', '<data></data>' )
                 .expect( 404, done );
         } );
 
         it( 'using POST of <data></data> to non-existing ID responds with 404', function( done ) {
             request( app )
-                .post( '/submission/[' + nonExistingEnketoId + ']' )
+                .post( '/submission/::' + nonExistingEnketoId )
                 .field( 'xml_submission_data', '<data></data>' )
                 .expect( 404, done );
         } );
