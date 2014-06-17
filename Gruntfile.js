@@ -143,6 +143,6 @@ module.exports = function( grunt ) {
     require( 'load-grunt-tasks' )( grunt );
 
     grunt.registerTask( 'default', [ 'symlink', 'test' ] );
-    grunt.registerTask( 'test', [ 'mochaTest', 'jsbeautifier:test', 'jshint', 'sass', 'requirejs' ] );
+    grunt.registerTask( 'test', [ 'symlink', 'mochaTest', 'jsbeautifier:test', 'jshint', 'sass', 'requirejs' ] );
     grunt.registerTask( 'develop', [ 'concurrent:develop' ] );
 };

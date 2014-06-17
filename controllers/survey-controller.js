@@ -36,6 +36,7 @@ module.exports = {
             .then( function( survey ) {
                 debug( 'processing before serving took ' + ( new Date().getTime() - startTime ) / 1000 + ' seconds' );
                 survey.model = JSON.stringify( survey.model );
+                survey.iframe = !!req.query.iframe;
                 res.render( 'surveys/webform', survey );
             } )
             .catch( next );
@@ -47,6 +48,7 @@ module.exports = {
             .then( function( survey ) {
                 survey.model = JSON.stringify( survey.model );
                 survey.type = 'preview';
+                survey.iframe = !!req.query.iframe;
                 res.render( 'surveys/webform', survey );
             } )
             .catch( next );
@@ -62,6 +64,7 @@ module.exports = {
                 .then( function( survey ) {
                     survey.model = JSON.stringify( survey.model );
                     survey.type = 'preview';
+                    survey.iframe = !!req.query.iframe;
                     res.render( 'surveys/webform', survey );
                 } )
                 .catch( next );
@@ -83,7 +86,6 @@ module.exports = {
         }
     },
     edit: function( req, res, next ) {
-
         return surveyModel.get( req.enketoId )
             .then( account.check )
             .then( _getForm )
@@ -95,9 +97,31 @@ module.exports = {
                 survey.model = JSON.stringify( survey.model );
                 survey.instance = JSON.stringify( survey.instance );
                 survey.type = 'edit';
+                survey.iframe = !!req.query.iframe;
                 res.render( 'surveys/webform', survey );
             } )
             .catch( next );
+    },
+    /**
+     * Debugging view that shows underlying XForm
+     * @param  {[type]}   req  [description]
+     * @param  {[type]}   res  [description]
+     * @param  {Function} next [description]
+     * @return {[type]}        [description]
+     */
+    xform: function( req, res, next ) {
+        return surveyModel.get( req.enketoId )
+            .then( function( survey ) {
+                return communicator.getXFormInfo( survey.openRosaServer, survey.openRosaId )
+                    .then( function( info ) {
+                        return communicator.getXForm( info.downloadUrl )
+                            .then( function( xform ) {
+                                res.set( 'Content-Type', 'text/xml' );
+                                res.send( xform );
+                            } );
 
+                    } );
+            } )
+            .catch( next );
     }
 };

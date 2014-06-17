@@ -11,7 +11,9 @@ html
 
     if livereload
       script(src="//localhost:35729/livereload.js")
-  body
+
+  - var cl = (iframe) ? 'iframe' : ''
+  body(class=cl)
     block content
 
     if tracking
