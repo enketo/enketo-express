@@ -2,6 +2,7 @@
 
 module.exports = function( client ) {
     var Q = require( 'q' ),
+        utils = require( '../lib/utils' ),
         debug = require( 'debug' )( 'survey-model' ),
         pending = {},
         CHARS = "Yp8oyU0HhFQiPz9KZ1SBGvdTqCM6XDnUmkbxNOVLAsEcf5uRe347Wrtlj2awgJ";
@@ -62,7 +63,7 @@ module.exports = function( client ) {
         // b) a record with key "or:"+ _createOpenRosaKey(survey.openRosaUrl, survey.openRosaId) and the enketo_id
         var error,
             deferred = Q.defer(),
-            openRosaKey = _getOpenRosaKey( survey );
+            openRosaKey = utils.getOpenRosaKey( survey );
 
         if ( !openRosaKey ) {
             error = new Error( 'Bad request. Survey information not complete or invalid' );
@@ -96,7 +97,7 @@ module.exports = function( client ) {
     function _updateSurvey( survey ) {
         var error,
             deferred = Q.defer(),
-            openRosaKey = _getOpenRosaKey( survey );
+            openRosaKey = utils.getOpenRosaKey( survey );
 
         if ( !openRosaKey ) {
             error = new Error( 'Bad request. Survey information not complete or invalid' );
@@ -119,13 +120,6 @@ module.exports = function( client ) {
         }
 
         return deferred.promise;
-    }
-
-    function _getOpenRosaKey( survey ) {
-        if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
-            return null;
-        }
-        return 'or:' + _cleanUrl( survey.openRosaServer ) + ',' + survey.openRosaId.trim().toLowerCase();
     }
 
     function _updateProperties( id, survey ) {
@@ -202,7 +196,7 @@ module.exports = function( client ) {
         } else {
             // TODO: should probably be replaced by maintaining a set that contains
             // only the ACTIVE surveys
-            client.keys( "or:" + _cleanUrl( server ) + "*", function( err, replies ) {
+            client.keys( "or:" + utils.cleanUrl( server ) + "*", function( err, replies ) {
                 if ( error ) {
                     deferred.reject( error );
                 } else if ( replies ) {
@@ -252,7 +246,7 @@ module.exports = function( client ) {
     }
 
     function _getEnketoIdFromSurveyObject( survey ) {
-        var openRosaKey = _getOpenRosaKey( survey );
+        var openRosaKey = utils.getOpenRosaKey( survey );
 
         return _getEnketoId( openRosaKey );
     }
@@ -264,25 +258,6 @@ module.exports = function( client ) {
             id = CHARS[ 0 ] + id;
         }
         return id;
-    }
-
-    /**
-     * cleans a Server URL so it becomes useful as a db key
-     * It strips the protocol, removes a trailing slash, and converts to lowercase
-     * @param  {string} url [description]
-     * @return {string=}     [description]
-     */
-    function _cleanUrl( url ) {
-        var matches;
-        url = url.trim();
-        if ( url.lastIndexOf( '/' ) === url.length - 1 ) {
-            url = url.substring( 0, url.length - 1 );
-        }
-        matches = url.match( /https?\:\/\/(www\.)?(.+)/ );
-        if ( matches.length > 2 ) {
-            return matches[ 2 ].toLowerCase();
-        }
-        return null;
     }
 
     function _num_to_base62( n ) {
@@ -301,7 +276,6 @@ module.exports = function( client ) {
         getId: _getEnketoIdFromSurveyObject,
         getNumber: _getNumberOfSurveys,
         getList: _getListOfSurveys,
-        cleanUrl: _cleanUrl,
         addSubmission: _addSubmission
     };
 };

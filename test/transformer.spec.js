@@ -11,7 +11,9 @@ describe( 'transformer', function() {
         var xform = fs.readFileSync( './test/forms/widgets.xml' );
         it( 'without an error', function( done ) {
 
-            transformer.transform( xform )
+            transformer.transform( {
+                xform: xform
+            } )
                 .then( function( result ) {
                     result.should.be.of.type( 'object' );
                     result.should.have.property( 'form' );
@@ -35,7 +37,9 @@ describe( 'transformer', function() {
                 var errorMsg,
                     result = false;
 
-                transformer.transform( xform )
+                transformer.transform( {
+                    xform: xform
+                } )
                     .then( function( result ) {
                         result = result;
                     } )

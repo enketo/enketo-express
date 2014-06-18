@@ -2,24 +2,33 @@
 
 var Q = require( 'q' ),
     transformer = require( '../lib/transformer' ),
+    utils = require( '../lib/utils' ),
     fs = require( 'fs' ),
     communicator = require( '../lib/communicator' ),
     surveyModel = require( '../models/survey-model' )(),
     instanceModel = require( '../models/instance-model' )(),
+    cacheModel = require( '../models/cache-model' )(),
     account = require( '../models/account-model' ),
     debug = require( 'debug' )( 'survey-controller' );
 
 function _getForm( survey ) {
-    debug( 'getting form info' );
-    return communicator.getXFormInfo( survey.openRosaServer, survey.openRosaId )
-        .then( function( info ) {
-            return Q.all( [
-                communicator.getXForm( info.downloadUrl ),
-                communicator.getManifest( info.manifestUrl )
-            ] ).spread( function( xform, manifest ) {
-                debug( 'going to transform XForm', typeof xform, typeof xform );
-                return transformer.transform( xform, manifest );
-            } );
+    var deferred = Q.defer();
+
+    return communicator.getXFormInfo( survey )
+        .then( communicator.getManifest )
+        .then( cacheModel.get )
+        .then( function( cachedSurvey ) {
+            debug( 'obtained Form and Model from cache!' );
+            deferred.resolve( cachedSurvey );
+            return deferred.promise;
+        }, function( error ) {
+            if ( !error.status || ( error.status !== 404 && error.status !== 410 ) ) {
+                throw error;
+            }
+            debug( 'going to transform XForm' );
+            return communicator.getXForm( survey )
+                .then( transformer.transform )
+                .then( cacheModel.set );
         } );
 }
 
@@ -34,9 +43,9 @@ module.exports = {
             .then( account.check )
             .then( _getForm )
             .then( function( survey ) {
-                debug( 'processing before serving took ' + ( new Date().getTime() - startTime ) / 1000 + ' seconds' );
                 survey.model = JSON.stringify( survey.model );
                 survey.iframe = !!req.query.iframe;
+                debug( 'processing before serving took ' + ( new Date().getTime() - startTime ) / 1000 + ' seconds' );
                 res.render( 'surveys/webform', survey );
             } )
             .catch( next );
@@ -69,14 +78,16 @@ module.exports = {
                 } )
                 .catch( next );
         } else if ( req.query.form ) {
-            return communicator.getXForm( req.query.form )
-                .then( function( xform ) {
-                    return transformer.transform( xform )
-                        .then( function( survey ) {
-                            survey.model = JSON.stringify( survey.model );
-                            survey.type = 'preview';
-                            res.render( 'surveys/webform', survey );
-                        } );
+            return communicator.getXForm( {
+                    info: {
+                        downloadUrl: req.query.form
+                    }
+                } )
+                .then( transformer.transform )
+                .then( function( survey ) {
+                    survey.model = JSON.stringify( survey.model );
+                    survey.type = 'preview';
+                    res.render( 'surveys/webform', survey );
                 } )
                 .catch( next );
         } else {
@@ -111,16 +122,11 @@ module.exports = {
      */
     xform: function( req, res, next ) {
         return surveyModel.get( req.enketoId )
+            .then( communicator.getXFormInfo )
+            .then( communicator.getXForm )
             .then( function( survey ) {
-                return communicator.getXFormInfo( survey.openRosaServer, survey.openRosaId )
-                    .then( function( info ) {
-                        return communicator.getXForm( info.downloadUrl )
-                            .then( function( xform ) {
-                                res.set( 'Content-Type', 'text/xml' );
-                                res.send( xform );
-                            } );
-
-                    } );
+                res.set( 'Content-Type', 'text/xml' );
+                res.send( survey.xform );
             } )
             .catch( next );
     }
