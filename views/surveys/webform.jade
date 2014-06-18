@@ -20,12 +20,12 @@ block global
   if instance
     script.
       var instanceStr = !{instance};
-    
+ 
 block content
   .main
     article.paper
       include component/_form-header
-      !{form}
+      | !{form}
       unless form
         progress
       include component/_form-footer

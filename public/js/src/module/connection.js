@@ -22,10 +22,10 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
     "use strict";
     var oRosaHelper, progress, maxSubmissionSize,
         that = this,
-        ID = window.location.pathname.substring( window.location.pathname.lastIndexOf( '[' ) ),
+        ID = /\/::/.test( window.location.pathname ) ? window.location.pathname.substring( window.location.pathname.lastIndexOf( '::' ) ) : null,
         CONNECTION_URL = '/checkforconnection',
-        SUBMISSION_URL = '/submission/' + ID,
-        MAX_SIZE_URL = '/max-size/' + ID,
+        SUBMISSION_URL = ( ID ) ? '/submission/' + ID : null,
+        MAX_SIZE_URL = ( ID ) ? '/max-size/' + ID : null,
         GETSURVEYURL_URL = '/api_v1/survey',
         //this.SUBMISSION_TRIES = 2;
         currentOnlineStatus = null,
@@ -463,6 +463,7 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
             storedMaxSize = ( store ) ? store.getRecord( '__maxSize' ) : undefined,
             defaultMaxSize = 5000000,
             absoluteMaxSize = 100 * 1024 * 1024;
+
         if ( typeof maxSubmissionSize == 'undefined' ) {
             $.ajax( MAX_SIZE_URL, {
                 type: 'GET',
