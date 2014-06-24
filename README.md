@@ -3,8 +3,6 @@ enketo-express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express
 
 A super light-weight node.js version of Enketo Smart Paper developed for KoBo Toolbox. Chock-full of badass rockstar tech.
 
-**\- Not yet ready for production use \-**
-
 ### How to install (anywhere)
 
 * install [Node.js](http://nodejs.org/) 0.10.x (issue with 0.11.x) if you don't have it already (check with `node -v`)
@@ -41,7 +39,7 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 
 * \+ this one is 100% JavaScript
 * \+ this one is much easier to install
-* \+ this one will have cross-browser (media) file inputs
+* \+ this one will have cross-browser (media) file inputs (eventually)
 * \- this one will not store the application in your browser for offline launch - it requires a constant connection to the server (this server may be on a local network though)
 * \- this one will not store records locally in your browser - it will submit records immediately to the server
 * \- this one will not store draft records (see previous)
@@ -52,3 +50,11 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 * \- no Grid Theme
 * \- no /forms app
 * \- no /formtester app
+
+### License
+
+See [LICENSE](LICENSE) for this application's license.
+
+Note that some of the libraries used in this app have different licenses.
+
+The Enketo logo and Icons are trademarked by Enketo LLC. They can be used in the KoBoCAT VM only. If you are using this app to build your own web application, you are encouraged to maintain the 'powered by Enketo' form footer with the Enketo logo, but replace other images in [/public/images](/public/images) with your own or contact [Enketo LLC](mailto:info@enketo.org) to discuss the use inside your app.

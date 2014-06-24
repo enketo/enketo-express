@@ -9,6 +9,7 @@ var express = require( 'express' ),
     api = require( './routes/api' ),
     pages = require( './routes/pages' ),
     media = require( './routes/media' ),
+    favicon = require( 'serve-favicon' ),
 
     config = require( './config' ),
     logger = require( 'morgan' ),
@@ -33,6 +34,7 @@ app.set( 'json spaces', 4 );
 // middleware
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded() );
+app.use( favicon( __dirname + '/public/images/favicon.ico' ) );
 app.use( express.static( path.join( __dirname, 'public' ) ) );
 
 // set variables that should be accessible in all view templates
