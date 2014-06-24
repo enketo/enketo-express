@@ -174,7 +174,7 @@ function _generateWebformUrls( id, req ) {
             break;
         case 'edit':
             iframeUrlPart = ( req.iframe ) ? '&iframe=true' : '';
-            obj.edit_url = baseUrl + 'edit/' + idPart + '?instance=' + req.param( 'instance_id' ) + iframeUrlPart;
+            obj.edit_url = baseUrl + 'edit/' + idPart + '?instance_id=' + req.param( 'instance_id' ) + iframeUrlPart;
             break;
         case 'all':
             obj.url = baseUrl + idPart;
