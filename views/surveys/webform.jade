@@ -14,6 +14,9 @@ block global
     var settings = {};
     settings['supportEmail'] = '#{supportEmail}';
     settings['modernBrowsersURL'] = 'modern-browsers';
+  if returnUrl
+    script.
+      var returnURL = '#{returnUrl}';
   if model
     script.
       var modelStr = !{model};
