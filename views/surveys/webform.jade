@@ -5,9 +5,9 @@ block style
 
 block script
   if environment == "production"
-    script(src="js/webform-combined.min.js")
+    script(src="/js/webform-combined.min.js")
   else
-    script(data-main="js/src/main-webform.js", src="lib/enketo-core/lib/require.js")
+    script(data-main="/js/src/main-webform.js", src="/lib/enketo-core/lib/require.js")
 
 block global
   script.

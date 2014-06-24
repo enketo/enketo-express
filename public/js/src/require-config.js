@@ -3,7 +3,7 @@
  */
 
 require.config( {
-    baseUrl: "js/src/module",
+    baseUrl: "/js/src/module",
     paths: {
         "require-config": "../require-config",
         "core-lib": "../../../lib/enketo-core/lib",
