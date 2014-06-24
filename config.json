@@ -24,7 +24,8 @@
         "enketo-widget/datetime/datetimepicker-extended",
         "enketo-widget/mediagrid/mediagridpicker",
         "enketo-widget/select-likert/likertitem",
-        "enketo-widget/distress/distresspicker"
+        "enketo-widget/distress/distresspicker",
+        "../../../widget/file-online/online-filepicker"
     ],
     "tile": {
         "source": "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
