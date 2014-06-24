@@ -28,7 +28,7 @@ router
         error.status = 405;
         next( error );
     } )
-    .get( '/checkforconnection', function( req, res, next ) {
+    .get( '/connection', function( req, res, next ) {
         res.status = 200;
         res.send( 'connected ' + Math.random() );
     } );

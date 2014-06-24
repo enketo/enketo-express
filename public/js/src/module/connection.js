@@ -23,7 +23,7 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
     var oRosaHelper, progress, maxSubmissionSize,
         that = this,
         ID = /\/::/.test( window.location.pathname ) ? window.location.pathname.substring( window.location.pathname.lastIndexOf( '::' ) ) : null,
-        CONNECTION_URL = '/checkforconnection',
+        CONNECTION_URL = '/connection',
         SUBMISSION_URL = ( ID ) ? '/submission/' + ID : null,
         MAX_SIZE_URL = ( ID ) ? '/max-size/' + ID : null,
         GETSURVEYURL_URL = '/api_v1/survey',
