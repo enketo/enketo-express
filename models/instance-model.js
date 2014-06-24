@@ -81,7 +81,6 @@ module.exports = function( client ) {
         var error,
             deferred = Q.defer();
 
-
         if ( !survey || !survey.instanceId ) {
             error = new Error( 'Bad request. Survey information not complete or invalid' );
             error.status = 400;

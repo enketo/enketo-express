@@ -163,7 +163,7 @@ function _removeInstance( req, res, next ) {
 function _generateWebformUrls( id, req ) {
     var obj = {},
         baseUrl = req.protocol + '://' + req.headers.host + '/',
-        idPart = '[' + id + ']',
+        idPart = '::' + id,
         iframeUrlPart = ( req.iframe ) ? '?iframe=true' : '';
 
     req.webformType = req.webformType || 'default';
