@@ -7,7 +7,8 @@ var model,
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" ),
     redis = require( "redis" ),
-    client = redis.createClient();
+    config = require( "../config" ),
+    client = redis.createClient( config.redis.main.port, config.redis.main.host );
 
 chai.use( chaiAsPromised );
 

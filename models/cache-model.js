@@ -6,13 +6,15 @@ module.exports = function( client ) {
         debug = require( 'debug' )( 'cache-model' ),
         transformer = require( '../lib/transformer' ),
         prefix = 'ca:',
-        expiry = 30 * 24 * 60 * 60;
+        expiry = 30 * 24 * 60 * 60,
+        config = require( '../config' );
 
     // ability to pass a different (test db) client
     if ( !client ) {
-        debug( 'creating default production db client' );
-        // TODO: Use separate non-persistent redis instance for this
-        client = require( 'redis' ).createClient();
+        // TODO: would be better to use app.get('redis').cache but for some reason require('../app')
+        // only works after express server has started
+        debug( 'creating production db client for redis cache on port %s', config.redis.cache.port );
+        client = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host );
     } else {
         //console.log( 'using (test) db passed as survey-model require parameter' );
     }

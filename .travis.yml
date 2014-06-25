@@ -6,6 +6,8 @@ node_js:
   - "0.10"
 before_script:
   - npm install -g grunt-cli
+  - chmod 777 ./setup/redis/travis-redis.sh
+  - ./setup/redis/travis-redis.sh
 services:
   - redis-server
 notifications:

@@ -3,6 +3,7 @@
 module.exports = function( client ) {
     var Q = require( 'q' ),
         utils = require( '../lib/utils' ),
+        config = require( '../config' ),
         debug = require( 'debug' )( 'survey-model' ),
         pending = {},
         CHARS = "Yp8oyU0HhFQiPz9KZ1SBGvdTqCM6XDnUmkbxNOVLAsEcf5uRe347Wrtlj2awgJ";
@@ -10,8 +11,10 @@ module.exports = function( client ) {
 
     // ability to pass a different (test db) client
     if ( !client ) {
-        debug( 'creating default production db client' );
-        client = require( 'redis' ).createClient();
+        // TODO: would be better to use app.get('redis').cache but for some reason require('../app')
+        // only works after express server has started
+        debug( 'creating default production db client on port %s', config.redis.main.port );
+        client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host );
     } else {
         //console.log( 'using (test) db passed as survey-model require parameter' );
     }

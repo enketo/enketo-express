@@ -7,13 +7,14 @@ var model,
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" ),
     redis = require( "redis" ),
-    client = redis.createClient();
+    config = require( "../config" ),
+    client = redis.createClient( config.redis.main.port, config.redis.main.host );
 
 chai.use( chaiAsPromised );
 
 describe( 'Instance Model', function() {
 
-    beforeEach( function( done ) {
+    before( function( done ) {
         // select database #15 to use as the test database
         client.select( 15, function( err ) {
             if ( err ) return done( err );

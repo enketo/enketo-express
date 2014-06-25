@@ -7,13 +7,14 @@ var model, survey,
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" ),
     redis = require( "redis" ),
-    client = redis.createClient();
+    config = require( "../config" ),
+    client = redis.createClient( config.redis.cache.port, config.redis.cache.host );
 
 chai.use( chaiAsPromised );
 
 describe( 'Cache Model', function() {
 
-    before( function( done ) {
+    beforeEach( function( done ) {
         // select database #15 to use as the test database
         client.select( 15, function( err ) {
             if ( err ) return done( err );
@@ -131,7 +132,7 @@ describe( 'Cache Model', function() {
 
             return Q.all( [
                 expect( promise1 ).to.eventually.be.at.most( expiration - delayTime )
-                .and.to.be.at.least( expiration - delayTime - 10 ),
+                .and.to.be.at.least( expiration - delayTime - 100 ),
                 expect( promise2 ).to.eventually.be.at.most( expiration )
                 .and.to.be.at.least( expiration - 10 ),
             ] );

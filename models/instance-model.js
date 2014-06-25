@@ -2,13 +2,15 @@
 
 module.exports = function( client ) {
     var Q = require( 'q' ),
-        debug = require( 'debug' )( 'instance-model' );
+        debug = require( 'debug' )( 'instance-model' ),
+        config = require( '../config' );
 
     // ability to pass a different (test db) client
     if ( !client ) {
-        debug( 'creating default production db client' );
-        // Could also use a separate redis instance for instance cache
-        client = require( 'redis' ).createClient();
+        // TODO: would be better to use app.get('redis').cache but for some reason require('../app')
+        // only works after express server has started
+        debug( 'creating default production db client on port %s', config.redis.main.port );
+        client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host );
     } else {
         //console.log( 'using (test) db passed as instance-model require parameter' );
     }

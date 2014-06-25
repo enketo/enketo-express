@@ -24,7 +24,7 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 
 ### How to run
 * run with `node .` or `npm start` from project root
-* you can now check that the app is running by going to e.g. http://localhost:8005 (depending on your server and port set in [config.json](./config.json) or the port forwarding set up (with the default Vagrantfile the port is 8015))
+* you can now check that the app is running by going to e.g. http://localhost:8005 (depending on your server and port set in [config.json](./config.json) or the port forwarding set up in Vagrant (default is also 8005))
 
 ### How to update
 * update git repository with `git pull -v`

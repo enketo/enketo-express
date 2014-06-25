@@ -14,6 +14,7 @@ var express = require( 'express' ),
     config = require( './config' ),
     logger = require( 'morgan' ),
     errorHandler = require( './controllers/error-handler' ),
+    debug = require( 'debug' )( 'app' ),
 
     app = express();
 
