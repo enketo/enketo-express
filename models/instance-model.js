@@ -10,7 +10,9 @@ module.exports = function( client ) {
         // TODO: would be better to use app.get('redis').cache but for some reason require('../app')
         // only works after express server has started
         debug( 'creating default production db client on port %s', config.redis.main.port );
-        client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host );
+        client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
+            auth_pass: config.redis.main.password
+        } );
     } else {
         //console.log( 'using (test) db passed as instance-model require parameter' );
     }

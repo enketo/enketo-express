@@ -8,7 +8,9 @@ var model,
     chaiAsPromised = require( "chai-as-promised" ),
     redis = require( "redis" ),
     config = require( "../config" ),
-    client = redis.createClient( config.redis.main.port, config.redis.main.host );
+    client = redis.createClient( config.redis.main.port, config.redis.main.host, {
+        auth_pass: config.redis.main.password
+    } );
 
 chai.use( chaiAsPromised );
 
