@@ -2,12 +2,18 @@
     "app name": "Enketo Smart Paper for KoBoCAT",
     "openrosa server name": "KoBoCAT",
     "openrosa server url": "ona.io",
-    "enketo api key": "enketorules!",
+    "enketo api key": "enketorules",
     "port": "8005",
-    "support email": "nobody@nosupport.com",
-    "google analytics ua": "",
-    "google analytics domain": "www.example.org",
-    "google_api_key": "",
+    "support": {
+        "email": "info@kobotoolbox.org"
+    },
+    "google": {
+        "analytics": {
+            "ua": "",
+            "domain": ""
+        },
+        "api key": ""
+    },
     "widgets": [
         "enketo-widget/note/notewidget",
         "enketo-widget/select-desktop/selectpicker",

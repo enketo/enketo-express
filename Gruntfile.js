@@ -70,7 +70,6 @@ module.exports = function( grunt ) {
             },
             all: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js", "!**/*.min.js" ]
         },
-        // Configure a mochaTest task
         mochaTest: {
             test: {
                 options: {
@@ -104,9 +103,6 @@ module.exports = function( grunt ) {
             "webform": getWebformCompileOptions()
         },
         symlink: {
-            options: {
-
-            },
             core: {
                 files: [ {
                     overwrite: false,
@@ -115,10 +111,6 @@ module.exports = function( grunt ) {
                     src: [ '*' ],
                     dest: 'public/lib/enketo-core'
                 } ]
-            },
-            config: {
-                src: './config.json',
-                dest: 'public/config.json'
             }
         }
     } );
@@ -143,6 +135,7 @@ module.exports = function( grunt ) {
     require( 'load-grunt-tasks' )( grunt );
 
     grunt.registerTask( 'default', [ 'symlink', 'test' ] );
+    grunt.registerTask( 'compile', [ 'requirejs', 'sass' ] );
     grunt.registerTask( 'test', [ 'symlink', 'mochaTest', 'jsbeautifier:test', 'jshint', 'sass', 'requirejs' ] );
     grunt.registerTask( 'develop', [ 'concurrent:develop' ] );
 };

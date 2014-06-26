@@ -9,7 +9,7 @@ require.config( {
         "core-lib": "../../../lib/enketo-core/lib",
         "enketo-js": "../../../lib/enketo-core/src/js",
         "enketo-widget": "../../../lib/enketo-core/src/widget",
-        "enketo-config": "../../../config.json",
+        "enketo-config": "../../../client-config.json",
         "text": "../../../lib/enketo-core/lib/text/text",
         "xpath": "../../../lib/enketo-core/lib/xpath/build/xpathjs_javarosa",
         "jquery.xpath": "../../../lib/enketo-core/lib/jquery-xpath/jquery.xpath",

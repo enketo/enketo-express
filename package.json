@@ -46,7 +46,6 @@
         "load-grunt-tasks": "^0.4.0",
         "mocha": "*",
         "supertest": "^0.13.0",
-        "rjs-build-analysis": "0.0.3",
-        "should": "^3.3.1"
+        "rjs-build-analysis": "0.0.3"
     }
 }
