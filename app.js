@@ -29,7 +29,7 @@ app.set( 'env', process.env.NODE_ENV || 'production' );
 // write client-config.json file
 var clientConfig = {
     google_api_key: config.google[ 'api key' ],
-    tile: config.tile,
+    maps: config.maps,
     widgets: config.widgets
 };
 fs.writeFile( path.join( __dirname, 'public/client-config.json' ), JSON.stringify( clientConfig, null, 4 ), function( err ) {
