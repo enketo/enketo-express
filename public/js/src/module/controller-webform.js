@@ -170,7 +170,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
             instanceID = model.getInstanceID();
             // ignore files if there is no fileManager (possible when editing a record that has files)
             $fileNodes = ( fileManager ) ? model.$.find( '[type="file"]' ).removeAttr( 'type' ) : [];
-            xmlData = model.getStr( true, true );
+            xmlData = model.getStr( false, true );
 
             function basicRecordPrepped( batchesLength, batchIndex ) {
                 formData = new FormData();
