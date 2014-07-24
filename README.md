@@ -20,7 +20,13 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 3. clone enketo-express
 4. cd to enketo-express location
 5. run `vagrant up`
-6. ssh into VM with `vagrant ssh` (enketo-express is located in /vagrant and the port is 8005)
+6. ssh into VM with `vagrant ssh` (enketo-express is located in `/vagrant` and the default port is 8005)
+
+### How to configure
+* All configuration is done in [config.json](./config.json)
+* The configuration items mostly have self-explanatory names and sample values
+* The `maps` configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a tiles (array) and an attribution property)
+* The API is accessible on **http://your.enketo-express.domain/api/v1**
 
 ### How to run
 * run with `node .` or `npm start` from project root
