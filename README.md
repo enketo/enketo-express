@@ -1,6 +1,8 @@
 enketo-express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express.png)](https://travis-ci.org/kobotoolbox/enketo-express)
 ==============
 
+![Enketo Logo](public/images/logo.png "Enketo Logo")
+
 A super light-weight node.js version of Enketo Smart Paper developed for KoBo Toolbox. Chock-full of badass rockstar tech.
 
 ### How to install (anywhere)
@@ -10,7 +12,7 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 * install [Redis](http://redis.io/topics/quickstart)
 * install libxslt and libxml2 with `(sudo) apt-get install libxml2-dev libxslt1-dev`
 * clone this repository
-* clone git submodules (I think) with `git submodule update --init --recursive`
+* clone git submodules with `git submodule update --init --recursive`
 * install dependencies with `npm install` from the project root
 * build with `grunt` from the project root
 
@@ -39,7 +41,7 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 * re-build with `grunt`
 
 ### Developer tools
-* install nodemon (`npm install -g nodemon`) to automatically restart the server when a file changes
+* install [nodemon](https://github.com/remy/nodemon) to automatically restart the server when a file changes
 * the easiest way to start the app in development and debugging mode with livereload is with `grunt develop` 
 
 ### Differences with [MartijnR/enketo](https://github.com/MartijnR/enketo) 
@@ -54,9 +56,9 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 ### Additional differences with the full-fledged service at [enketo.org](https://enketo.org)
 
 * \- no form authentication
-* \- no Grid Theme
-* \- no /forms app
-* \- no /formtester app
+* \- no [Grid Theme](http://blog.enketo.org/gorgeous-grid/)
+* \- no [Forms](https://enketo.org/forms) app
+* \- no [Formtester](https://enketo.org/formtester) app
 
 ### License
 
@@ -64,4 +66,4 @@ See [LICENSE](LICENSE) for this application's license.
 
 Note that some of the libraries used in this app have different licenses.
 
-The Enketo logo and Icons are trademarked by Enketo LLC. They can be used in the KoBoCAT VM only. If you are using this app to build your own web application, you are encouraged to maintain the 'powered by Enketo' form footer with the Enketo logo, but replace other images in [/public/images](/public/images) with your own or contact [Enketo LLC](mailto:info@enketo.org) to discuss the use inside your app.
+The Enketo logo and Icons are trademarked by [Enketo LLC](https://www.linkedin.com/company/enketo-llc). They can be used in the KoBoCAT VM only. If you are using this app to build your own web application, you are encouraged to maintain the 'powered by Enketo' form footer with the Enketo logo, but replace other images in [/public/images](/public/images) with your own or contact [Enketo LLC](mailto:info@enketo.org) to discuss the use inside your app.
