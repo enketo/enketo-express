@@ -3,12 +3,12 @@ enketo-express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express
 
 ![Enketo Logo](public/images/logo.png "Enketo Logo")
 
-A super light-weight node.js version of Enketo Smart Paper developed for KoBo Toolbox. Chock-full of badass rockstar tech.
+A super light-weight node.js version of Enketo Smart Paper developed for KoBo Toolbox. Chock-full of [badass rockstar tech](https://www.youtube.com/watch?v=bzkRVzciAZg).
 
 ### How to install (anywhere)
 
 * install [Node.js](http://nodejs.org/) 0.10.x (issue with 0.11.x) if you don't have it already (check with `node -v`)
-* install [Grunt Client](http://gruntjs.com) 4.4.x globally with `npm install -g grunt-cli` if you don't have it already (check with `grunt --version`)
+* install [Grunt Client](http://gruntjs.com) 4.4.x globally with `(sudo) npm install -g grunt-cli` if you don't have it already (check with `grunt --version`)
 * install [Redis](http://redis.io/topics/quickstart)
 * install libxslt and libxml2 with `(sudo) apt-get install libxml2-dev libxslt1-dev`
 * clone this repository
@@ -28,7 +28,8 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 * All configuration is done in [config.json](./config.json)
 * The configuration items mostly have self-explanatory names and sample values
 * The `maps` configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a tiles (array) and an attribution property)
-* The API is accessible on **http://your.enketo-express.domain/api/v1**
+* The default production config includes 2 redis instances for the cache. You can **greatly simply installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you'll find the vagrant setup steps in [bootstrap.sh](./setup/bootstrap.sh) useful.
+* The API is accessible on http://your.enketo-express.domain/**api/v1**
 
 ### How to run
 * run with `node .` or `npm start` from project root
