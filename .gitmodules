@@ -1,6 +1,6 @@
 [submodule "lib/enketo-core"]
 	path = lib/enketo-core
-	url = https://github.com/MartijnR/enketo-core.git
+url=https://github.com/enketo/enketo-core.git
 [submodule "lib/enketo-xslt"]
 	path = lib/enketo-xslt
-	url = https://github.com/MartijnR/enketo-xslt.git
+url=https://github.com/enketo/enketo-xslt.git
