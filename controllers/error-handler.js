@@ -3,7 +3,7 @@
 module.exports = {
     production: function( err, req, res, next ) {
         var body = {
-            code: err.status,
+            code: err.status || 500,
             message: err.message
         };
         res.status( err.status || 500 );
@@ -15,7 +15,7 @@ module.exports = {
     },
     development: function( err, req, res, next ) {
         var body = {
-            code: err.status,
+            code: err.status || 500,
             message: err.message,
             stack: err.stack
         };
