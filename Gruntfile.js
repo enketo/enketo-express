@@ -1,5 +1,11 @@
+"use strict";
+
 module.exports = function( grunt ) {
-    "use strict";
+
+    // show elapsed time at the end
+    require( 'time-grunt' )( grunt );
+    // load all grunt tasks
+    require( 'load-grunt-tasks' )( grunt );
 
     grunt.initConfig( {
         pkg: grunt.file.readJSON( 'package.json' ),
@@ -131,8 +137,6 @@ module.exports = function( grunt ) {
             }
         };
     }
-
-    require( 'load-grunt-tasks' )( grunt );
 
     grunt.registerTask( 'default', [ 'symlink', 'test' ] );
     grunt.registerTask( 'compile', [ 'requirejs', 'sass' ] );

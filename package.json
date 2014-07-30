@@ -45,7 +45,8 @@
         "grunt-sass": "^0.12.1",
         "load-grunt-tasks": "^0.4.0",
         "mocha": "*",
+        "rjs-build-analysis": "0.0.3",
         "supertest": "^0.13.0",
-        "rjs-build-analysis": "0.0.3"
+        "time-grunt": "^0.4.0"
     }
 }
