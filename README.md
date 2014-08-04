@@ -19,7 +19,7 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 ### How to install as a local VirtualBox VM - the easy way
 1. [Install Vagrant](http://docs.vagrantup.com/v2/installation/index.html)
 2. [Install VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-3. clone enketo-express
+3. clone this repository and update git submodules (see previous section)
 4. cd to enketo-express location
 5. run `vagrant up`
 6. ssh into VM with `vagrant ssh` (enketo-express is located in `/vagrant` and the default port is 8005)
