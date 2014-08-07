@@ -17,12 +17,12 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 * build with `grunt` from the project root
 
 ### How to install as a local VirtualBox VM - the easy way
-1. [Install Vagrant](http://docs.vagrantup.com/v2/installation/index.html)
-2. [Install VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-3. clone this repository and update git submodules (see previous section)
-4. cd to enketo-express location
-5. run `vagrant up`
-6. ssh into VM with `vagrant ssh` (enketo-express is located in `/vagrant` and the default port is 8005)
+1. [Install Vagrant](http://docs.vagrantup.com/v2/installation/index.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+2. clone this repository and go to the cloned enketo-express folder
+3. run `vagrant up` and wait until it completes \* 
+4. the app should now be running on http://localhost:8006 (to stop: run `pm2 stop enketo` from VM)
+
+_\* sometimes `vagrant up` fails for reasons beyond our control - e.g. if external resources are temporarily unavailable. Try running `vagrant reload --provision` to resolve this._
 
 ### How to configure
 * All configuration is done in [config.json](./config.json)
@@ -43,7 +43,7 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 
 ### Developer tools
 * install [nodemon](https://github.com/remy/nodemon) to automatically restart the server when a file changes
-* the easiest way to start the app in development and debugging mode with livereload is with `grunt develop` 
+* the easiest way to start the app in development and debugging mode with livereload is with `grunt develop`. If you are developing using the vagrant VM, make sure to `pm2 kill` first or comment out the pm2 block at the end in the [bootstrap](/setup/bootstrap.sh) script before creating the VM.
 
 ### Differences with [MartijnR/enketo](https://github.com/MartijnR/enketo) 
 

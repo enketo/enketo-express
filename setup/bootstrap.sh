@@ -3,13 +3,18 @@
 # exit if an error occurs
 set -e
 
-apt-get update
-
 # install redis
 echo 'installing redis...'
 add-apt-repository -y ppa:rwky/redis
 apt-get update
 apt-get install -y redis-server
+
+# update repo
+echo 'updating enketo app to latest version'
+apt-get install -y git
+cd /vagrant
+git pull origin master
+git submodule update --init --recursive
 
 # further redis setup with persistence, security, logging, multiple instances, priming 
 stop redis-server
@@ -37,7 +42,7 @@ service redis-server-enketo-cache start
 # install XML prerequisites for node_xslt
 apt-get install -y libxml2-dev libxslt1-dev
 
-# install development tools, node, grunt #
+# install dependencies, development tools, node, grunt
 apt-get install -y python-software-properties python g++ make
 add-apt-repository ppa:chris-lea/node.js
 apt-get update
@@ -51,4 +56,16 @@ fi
 npm install 
 
 # build js and css
-grunt
+grunt symlink
+grunt compile
+
+# start in background and keep restarting if it fails until `pm2 stop enketo` is called
+# developers may want to comment this out
+npm install pm2@latest -g
+pm2 start bin/www -n enketo
+echo "*************************************************************************************"
+echo "***                    Enketo Express should now have started!                   ****"
+echo "***                                                                              ****"
+echo "***   You can terminate it by ssh-ing into the VM and running: pm2 stop enketo   ****"
+echo "*************************************************************************************"
+
