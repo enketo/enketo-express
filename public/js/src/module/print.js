@@ -73,8 +73,13 @@ define( [ 'jquery' ], function( $ ) {
      */
     function printForm() {
         styleToAll();
-        window.print();
-        styleReset();
+        // without the timeout, window.print may be called too early and actually
+        // use the screen style in prints (in Chrome). It was easily replicable
+        // in enketo/enketo-express and happened randomly in the enketo/enketo
+        setTimeout( function() {
+            window.print();
+            styleReset();
+        }, 50 );
     }
 
     return printForm;

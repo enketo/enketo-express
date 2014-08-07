@@ -37,7 +37,7 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 * for a production server, we can recommend using [pm2](https://github.com/unitech/pm2) to manage the node app
 
 ### How to update
-* update git repository with `git pull -v`
+* update git repository with `git pull`
 * update git submodules with `git submodule update --init --recursive`
 * re-build with `grunt`
 

@@ -1,7 +1,8 @@
 extends ../layout
 
 block style
-  link(rel='stylesheet', href='/css/webform_default.css') 
+  link(rel='stylesheet', media='all', type='text/css' href='/css/webform_default.css') 
+  link(rel='stylesheet', media='print', type='text/css' href='/css/webform_print_default.css') 
 
 block script
   if environment == "production"
