@@ -3,7 +3,7 @@
 module.exports = function( client ) {
     var Q = require( 'q' ),
         utils = require( '../lib/utils' ),
-        config = require( '../config' ),
+        config = require( '../../config/config' ),
         debug = require( 'debug' )( 'survey-model' ),
         pending = {},
         CHARS = "Yp8oyU0HhFQiPz9KZ1SBGvdTqCM6XDnUmkbxNOVLAsEcf5uRe347Wrtlj2awgJ";

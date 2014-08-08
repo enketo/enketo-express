@@ -3,7 +3,7 @@
     "description": "A simplified version of Enketo Smart Paper that requires a constant connection to the server.",
     "homepage": "",
     "version": "0.0.0",
-    "main": "./bin/www",
+    "main": "./app.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/kobotoolbox/enketo-express"
@@ -12,7 +12,7 @@
         "Martijn van de Rijdt"
     ],
     "scripts": {
-        "start": "node ./bin/www",
+        "start": "node .",
         "test": "grunt test"
     },
     "dependencies": {

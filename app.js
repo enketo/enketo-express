@@ -1,81 +1,27 @@
+#!/usr/bin/env node
+
 "use strict";
 
-var express = require( 'express' ),
-    path = require( 'path' ),
-    bodyParser = require( 'body-parser' ),
-    fs = require( 'fs' ),
+var cluster = require( 'cluster' );
+var numCPUs = require( 'os' ).cpus().length;
 
-    index = require( './routes/index' ),
-    surveys = require( './routes/surveys' ),
-    api = require( './routes/api' ),
-    pages = require( './routes/pages' ),
-    media = require( './routes/media' ),
-    favicon = require( 'serve-favicon' ),
+if ( cluster.isMaster ) {
 
-    config = require( './config' ),
-    logger = require( 'morgan' ),
-    errorHandler = require( './controllers/error-handler' ),
-    debug = require( 'debug' )( 'app' ),
+    // Fork workers.
+    for ( var i = 0; i < numCPUs; i++ ) {
+        cluster.fork();
+    }
 
-    app = express();
+    cluster.on( 'exit', function( worker, code, signal ) {
+        console.log( 'Worker ' + worker.process.pid + ' sadly passed away. It will be reincarnated.' );
+        cluster.fork();
+    } );
+} else {
 
-// general 
-for ( var item in config ) {
-    app.set( item, app.get( item ) || config[ item ] );
+    var app = require( './config/express' );
+    var server = app.listen( app.get( 'port' ), function() {
+        var worker = ( cluster.worker ) ? cluster.worker.id : 'Master';
+        var msg = 'Worker ' + worker + ' ready for duty at port ' + server.address().port + '! (environment: ' + app.get( 'env' ) + ')';
+        console.log( msg );
+    } );
 }
-app.set( 'port', process.env.PORT || app.get( "port" ) || 3000 );
-app.set( 'env', process.env.NODE_ENV || 'production' );
-
-// write client-config.json file
-var clientConfig = {
-    google_api_key: config.google[ 'api key' ],
-    maps: config.maps,
-    widgets: config.widgets
-};
-fs.writeFile( path.join( __dirname, 'public/client-config.json' ), JSON.stringify( clientConfig, null, 4 ), function( err ) {
-    if ( err ) console.error( err );
-} );
-
-// views
-app.set( 'views', path.join( __dirname, 'views' ) );
-app.set( 'view engine', 'jade' );
-
-// pretty json API responses
-app.set( 'json spaces', 4 );
-
-// middleware
-app.use( bodyParser.json() );
-app.use( bodyParser.urlencoded() );
-app.use( favicon( __dirname + '/public/images/favicon.ico' ) );
-app.use( express.static( path.join( __dirname, 'public' ) ) );
-
-// set variables that should be accessible in all view templates
-app.use( function( req, res, next ) {
-    res.locals.livereload = req.app.get( 'env' ) === 'development';
-    res.locals.environment = req.app.get( 'env' );
-    res.locals.tracking = req.app.get( 'google' ).analytics.ua ? req.app.get( 'google' ).analytics.ua : false;
-    res.locals.trackingDomain = req.app.get( 'google' ).analytics.domain;
-    res.locals.supportEmail = req.app.get( 'support' ).email;
-    next();
-} );
-
-// routing
-app.use( '/', index );
-app.use( '/', pages );
-app.use( '/', surveys );
-app.use( '/api/v1', api );
-app.use( '/media', media );
-
-// logging
-app.use( logger( {
-    format: ( app.get( 'env' ) === 'development' ? 'dev' : 'tiny' )
-} ) );
-
-// error handlers
-app.use( errorHandler[ "404" ] );
-if ( app.get( 'env' ) === 'development' ) {
-    app.use( errorHandler.development );
-}
-app.use( errorHandler.production );
-
-module.exports = app;

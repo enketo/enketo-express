@@ -25,7 +25,7 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 _\* sometimes `vagrant up` fails for reasons beyond our control - e.g. if external resources are temporarily unavailable. Try running `vagrant reload --provision` to resolve this._
 
 ### How to configure
-* All configuration is done in [config.json](./config.json)
+* All configuration is done in [config.json](./config/config.json)
 * The configuration items mostly have self-explanatory names and sample values
 * The `maps` configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a tiles (array) and an attribution property)
 * The default production config includes 2 redis instances for the cache. You can **greatly simplify installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you'll find the vagrant setup steps in [bootstrap.sh](./setup/bootstrap.sh) useful.
@@ -33,7 +33,7 @@ _\* sometimes `vagrant up` fails for reasons beyond our control - e.g. if extern
 
 ### How to run
 * run with `node .` or `npm start` from project root
-* you can now check that the app is running by going to e.g. http://localhost:8005 (depending on your server and port set in [config.json](./config.json) or the port forwarding set up in Vagrant (default is also 8005))
+* you can now check that the app is running by going to e.g. http://localhost:8005 (depending on your server and port set in [config.json](./config/config.json) or the port forwarding set up in Vagrant (default is also 8005))
 * for a production server, we can recommend using [pm2](https://github.com/unitech/pm2) to manage the node app
 
 ### How to update

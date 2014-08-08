@@ -12,8 +12,8 @@ var Q = require( "q" ),
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" ),
     request = require( 'supertest' ),
-    app = require( '../app' ),
-    surveyModel = require( '../models/survey-model' )();
+    app = require( '../config/express' ),
+    surveyModel = require( '../app/models/survey-model' )();
 
 chai.use( chaiAsPromised );
 

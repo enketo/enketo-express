@@ -7,7 +7,7 @@ module.exports = function( client ) {
         transformer = require( '../lib/transformer' ),
         prefix = 'ca:',
         expiry = 30 * 24 * 60 * 60,
-        config = require( '../config' );
+        config = require( '../../config/config' );
 
     // ability to pass a different (test db) client
     if ( !client ) {

@@ -11,7 +11,7 @@ var app,
 function _get( survey ) {
     var error,
         server = _getServer( survey ),
-        app = app || require( '../app' ),
+        app = app || require( '../../config/express' ),
         deferred = Q.defer();
 
     if ( !server ) {
@@ -61,7 +61,7 @@ function _get( survey ) {
 function _check( survey ) {
     var error,
         server = _getServer( survey ),
-        app = app || require( '../app' ),
+        app = app || require( '../../config/express' ),
         deferred = Q.defer();
 
     if ( !server ) {
@@ -82,7 +82,7 @@ function _check( survey ) {
 }
 
 function _getLinkedUrl() {
-    var app = app || require( '../app' ),
+    var app = app || require( '../../config/express' ),
         linkedUrl = app.get( 'openrosa server url' );
 
     // strip http(s):// from config item

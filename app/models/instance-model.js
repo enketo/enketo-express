@@ -3,7 +3,7 @@
 module.exports = function( client ) {
     var Q = require( 'q' ),
         debug = require( 'debug' )( 'instance-model' ),
-        config = require( '../config' );
+        config = require( '../../config/config' );
 
     // ability to pass a different (test db) client
     if ( !client ) {

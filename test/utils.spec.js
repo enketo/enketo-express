@@ -1,7 +1,7 @@
 /* global describe, require, it, beforeEach, afterEach */
 "use strict";
 
-var utils = require( '../lib/utils' ),
+var utils = require( '../app/lib/utils' ),
     chai = require( "chai" ),
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" );

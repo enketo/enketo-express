@@ -8,8 +8,8 @@ var version, xslModel, xslForm,
     libxmljs = require( "libxmljs" ),
     utils = require( '../utils' ),
     debug = require( 'debug' )( 'transformer' ),
-    xslModelPath = './lib/enketo-xslt/openrosa2xmlmodel.xsl',
-    xslFormPath = './lib/enketo-xslt/openrosa2html5form.xsl';
+    xslModelPath = './app/lib/enketo-xslt/openrosa2xmlmodel.xsl',
+    xslFormPath = './app/lib/enketo-xslt/openrosa2html5form.xsl';
 
 _setVersion();
 

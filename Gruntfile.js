@@ -9,7 +9,6 @@ module.exports = function( grunt ) {
 
     grunt.initConfig( {
         pkg: grunt.file.readJSON( 'package.json' ),
-        config: grunt.file.readJSON( 'config.json' ),
         concurrent: {
             develop: {
                 tasks: [ 'nodemon', 'watch' ],
@@ -20,7 +19,7 @@ module.exports = function( grunt ) {
         },
         nodemon: {
             dev: {
-                script: 'bin/www',
+                script: 'app.js',
                 options: {
                     //nodeArgs: [ '--debug' ],
                     callback: function( nodemon ) {
@@ -114,7 +113,7 @@ module.exports = function( grunt ) {
                 files: [ {
                     overwrite: false,
                     expand: true,
-                    cwd: 'lib/enketo-core',
+                    cwd: 'app/lib/enketo-core',
                     src: [ '*' ],
                     dest: 'public/lib/enketo-core'
                 } ]
@@ -125,7 +124,7 @@ module.exports = function( grunt ) {
 
     function getWebformCompileOptions( type ) {
         //add widgets js and widget config.json files
-        var widgets = grunt.file.readJSON( 'config.json' ).widgets;
+        var widgets = grunt.file.readJSON( './config/config.json' ).widgets;
         widgets.forEach( function( widget, index, arr ) {
             arr.push( 'text!' + widget.substr( 0, widget.lastIndexOf( '/' ) + 1 ) + 'config.json' );
         } );

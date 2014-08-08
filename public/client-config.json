@@ -1,6 +1,13 @@
 {
     "google_api_key": "",
-    "maps": [],
+    "maps": [
+        {
+            "tiles": [
+                "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ],
+            "attribution": "Map data © <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors"
+        }
+    ],
     "widgets": [
         "enketo-widget/note/notewidget",
         "enketo-widget/select-desktop/selectpicker",

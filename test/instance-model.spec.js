@@ -7,7 +7,7 @@ var model,
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" ),
     redis = require( "redis" ),
-    config = require( "../config" ),
+    config = require( "../config/config" ),
     client = redis.createClient( config.redis.main.port, config.redis.main.host, {
         auth_pass: config.redis.main.password
     } );
@@ -20,7 +20,7 @@ describe( 'Instance Model', function() {
         // select database #15 to use as the test database
         client.select( 15, function( err ) {
             if ( err ) return done( err );
-            model = require( '../models/instance-model' )( client );
+            model = require( '../app/models/instance-model' )( client );
             done();
         } );
     } );
