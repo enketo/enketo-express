@@ -11,10 +11,6 @@ block script
     script(data-main="/js/src/main-webform.js", src="/lib/enketo-core/lib/require.js")
 
 block global
-  script.
-    var settings = {};
-    settings['supportEmail'] = '#{supportEmail}';
-    settings['modernBrowsersURL'] = 'modern-browsers';
   if returnUrl
     script.
       var returnURL = '#{returnUrl}';

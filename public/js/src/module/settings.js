@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-
-define( [], function() {
+define( [ 'text!enketo-config' ], function( config ) {
     "use strict";
     var queryParams = _getAllQueryParams(),
         evaluatedSettings = [],
@@ -56,9 +55,6 @@ define( [], function() {
             q: 'entityId',
             s: 'entityId'
         }, {
-            q: 'supportEmail',
-            s: 'supportEmail'
-        }, {
             q: 'source',
             s: 'source'
         } ];
@@ -68,6 +64,12 @@ define( [], function() {
             evaluatedSettings[ obj.s ] = queryParams[ obj.q ] || settings[ obj.q ] || null;
         }
     } );
+
+    // add common configuration properties (constants)
+    config = JSON.parse( config );
+    for ( var prop in config ) {
+        evaluatedSettings[ prop ] = config[ prop ];
+    }
 
     function _getAllQueryParams() {
         var val, processedVal,

@@ -1,10 +1,9 @@
 "use strict";
 
-var express = require( 'express' );
-var router = express.Router();
-var api = require( '../controllers/api-controller' );
-var debug = require( 'debug' )( 'api-router' );
-
+var express = require( 'express' ),
+    router = express.Router(),
+    api = require( '../controllers/api-controller' ),
+    debug = require( 'debug' )( 'api-router' );
 
 router
     .all( '*', api.auth )

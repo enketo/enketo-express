@@ -21,7 +21,7 @@ function _get( survey ) {
     } else {
         if ( new RegExp( 'https?:\/\/' + _getLinkedUrl() ).test( server ) ) {
             deferred.resolve( {
-                key: app.get( 'enketo api key' )
+                key: app.get( 'linked form and data server' )[ 'api key' ]
             } );
         } else if ( /https?:\/\/testserver.com\/bob/.test( server ) ) {
             deferred.resolve( {
@@ -83,7 +83,7 @@ function _check( survey ) {
 
 function _getLinkedUrl() {
     var app = app || require( '../../config/express' ),
-        linkedUrl = app.get( 'openrosa server url' );
+        linkedUrl = app.get( 'linked form and data server' )[ 'server url' ];
 
     // strip http(s):// from config item
     if ( /https?:\/\//.test( linkedUrl ) ) {

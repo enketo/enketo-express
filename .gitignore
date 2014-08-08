@@ -4,6 +4,5 @@ node_modules
 public/js/*.min.js
 public/css/*.css
 public/lib/enketo-core
-public/client-config.json
 .rebooted
 .vagrant

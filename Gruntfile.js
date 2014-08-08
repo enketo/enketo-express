@@ -89,7 +89,7 @@ module.exports = function( grunt ) {
                 //generateSourceMaps: true,
                 preserveLicenseComments: false,
                 baseUrl: "public/js/src/module",
-                mainConfigFile: "./public/js/src/require-config.js",
+                mainConfigFile: [ "./public/js/src/require-config.js", "./public/js/src/require-build-config.js" ],
                 findNestedDependencies: true,
                 //include: [ 'core-lib/require' ],
                 optimize: "uglify2",
@@ -121,7 +121,6 @@ module.exports = function( grunt ) {
         }
     } );
 
-
     function getWebformCompileOptions( type ) {
         //add widgets js and widget config.json files
         var widgets = grunt.file.readJSON( './config/config.json' ).widgets;
@@ -138,8 +137,20 @@ module.exports = function( grunt ) {
         };
     }
 
+    grunt.registerTask( 'client-config-file', 'Temporary client-config file', function( task ) {
+        var clientConfigPath = "public/temp-client-config.json";
+        if ( task === 'create' ) {
+            var config = require( './app/controllers/config-controller' );
+            grunt.file.write( clientConfigPath, JSON.stringify( config.client() ) );
+            grunt.log.writeln( 'File ' + clientConfigPath + ' created' );
+        } else if ( task === 'remove' ) {
+            grunt.file.delete( clientConfigPath );
+            grunt.log.writeln( 'File ' + clientConfigPath + ' removed' );
+        }
+    } );
+
     grunt.registerTask( 'default', [ 'symlink', 'compile', 'test' ] );
-    grunt.registerTask( 'compile', [ 'requirejs', 'sass' ] );
-    grunt.registerTask( 'test', [ 'symlink', 'mochaTest', 'jsbeautifier:test', 'jshint', 'sass', 'requirejs' ] );
+    grunt.registerTask( 'compile', [ 'sass', 'client-config-file:create', 'requirejs', 'client-config-file:remove' ] );
+    grunt.registerTask( 'test', [ 'symlink', 'mochaTest', 'jsbeautifier:test', 'jshint', 'compile' ] );
     grunt.registerTask( 'develop', [ 'concurrent:develop' ] );
 };

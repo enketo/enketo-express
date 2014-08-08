@@ -26,16 +26,6 @@ for ( var item in config ) {
 app.set( 'port', process.env.PORT || app.get( "port" ) || 3000 );
 app.set( 'env', process.env.NODE_ENV || 'production' );
 
-// write client-config.json file
-var clientConfig = {
-    google_api_key: config.google[ 'api key' ],
-    maps: config.maps,
-    widgets: config.widgets
-};
-fs.writeFile( path.resolve( __dirname, '../public/client-config.json' ), JSON.stringify( clientConfig, null, 4 ), function( err ) {
-    if ( err ) console.error( err );
-} );
-
 // views
 app.set( 'views', path.resolve( __dirname, '../app/views' ) );
 app.set( 'view engine', 'jade' );
@@ -55,7 +45,6 @@ app.use( function( req, res, next ) {
     res.locals.environment = req.app.get( 'env' );
     res.locals.tracking = req.app.get( 'google' ).analytics.ua ? req.app.get( 'google' ).analytics.ua : false;
     res.locals.trackingDomain = req.app.get( 'google' ).analytics.domain;
-    res.locals.supportEmail = req.app.get( 'support' ).email;
     next();
 } );
 
