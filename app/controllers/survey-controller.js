@@ -1,13 +1,13 @@
 "use strict";
 
 var Q = require( 'q' ),
-    transformer = require( '../lib/transformer' ),
+    transformer = require( '../lib/enketo-transformer' ),
     utils = require( '../lib/utils' ),
     fs = require( 'fs' ),
     communicator = require( '../lib/communicator' ),
-    surveyModel = require( '../models/survey-model' )(),
-    instanceModel = require( '../models/instance-model' )(),
-    cacheModel = require( '../models/cache-model' )(),
+    surveyModel = require( '../models/survey-model' ),
+    instanceModel = require( '../models/instance-model' ),
+    cacheModel = require( '../models/cache-model' ),
     account = require( '../models/account-model' ),
     express = require( 'express' ),
     router = express.Router(),

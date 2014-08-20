@@ -1,10 +1,12 @@
 /* global describe, require, it, beforeEach, afterEach */
 "use strict";
 
+// safer to ensure this here (in addition to grunt:env:test)
+process.env.NODE_ENV = 'test';
+
 /* 
- * These tests use the special test Api Token and Server URLs defined in the API spec
- * at http://apidocs.enketo.org. They will create 1 entry in the production database, which
- * is probably not such a good idea.
+ * Some of these tests use the special test Api Token and Server URLs defined in the API spec
+ * at http://apidocs.enketo.org.
  */
 
 var Q = require( "q" ),
@@ -13,18 +15,18 @@ var Q = require( "q" ),
     chaiAsPromised = require( "chai-as-promised" ),
     request = require( 'supertest' ),
     app = require( '../config/express' ),
-    surveyModel = require( '../app/models/survey-model' )();
+    surveyModel = require( '../app/models/survey-model' );
 
 chai.use( chaiAsPromised );
 
 describe( 'api', function() {
-    var validApiToken = 'abc',
+    var validApiKey = 'abc',
         validAuth = {
-            'Authorization': 'Basic ' + new Buffer( validApiToken + ':' ).toString( 'base64' )
+            'Authorization': 'Basic ' + new Buffer( validApiKey + ':' ).toString( 'base64' )
         },
-        invalidApiToken = 'def',
+        invalidApiKey = 'def',
         invalidAuth = {
-            'Authorization': 'Basic ' + new Buffer( invalidApiToken + ':' ).toString( 'base64' )
+            'Authorization': 'Basic ' + new Buffer( invalidApiKey + ':' ).toString( 'base64' )
         },
         validServer = 'https://testserver.com/bob',
         validFormId = 'something',

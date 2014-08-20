@@ -1,9 +1,8 @@
 "use strict";
 
-var transformer = require( '../lib/transformer' ),
-    communicator = require( '../lib/communicator' ),
-    surveyModel = require( '../models/survey-model' )(),
-    instanceModel = require( '../models/instance-model' )(),
+var communicator = require( '../lib/communicator' ),
+    surveyModel = require( '../models/survey-model' ),
+    instanceModel = require( '../models/instance-model' ),
     account = require( '../models/account-model' ),
     auth = require( '../lib/basic-auth' ),
     express = require( 'express' ),

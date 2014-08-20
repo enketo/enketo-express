@@ -1,7 +1,7 @@
 "use strict";
 
 var communicator = require( '../lib/communicator' ),
-    surveyModel = require( '../models/survey-model' )(),
+    surveyModel = require( '../models/survey-model' ),
     inspect = require( 'util' ).inspect,
     Busboy = require( 'busboy' ),
     express = require( 'express' ),
@@ -35,7 +35,10 @@ function submit( req, res, next ) {
     var xmlData,
         busboy = new Busboy( {
             headers: req.headers
-        } );
+        } ),
+        paramName = req.app.get( "query parameter to pass to submission" ),
+        paramValue = req.query[ paramName ],
+        query = ( paramValue ) ? '?' + paramName + '=' + paramValue : '';
 
     busboy.on( 'field', function( fieldname, val, fieldnameTruncated, valTruncated ) {
         if ( fieldname === 'xml_submission_data' ) {
@@ -45,7 +48,7 @@ function submit( req, res, next ) {
     busboy.on( 'finish', function() {
         return surveyModel.get( req.enketoId )
             .then( function( survey ) {
-                var submissionUrl = survey.openRosaServer + '/submission';
+                var submissionUrl = survey.openRosaServer + '/submission' + query;
                 return communicator.submit( submissionUrl, xmlData )
                     .then( function( code ) {
                         if ( code === 201 ) {
