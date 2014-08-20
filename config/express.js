@@ -4,20 +4,13 @@ var express = require( 'express' ),
     path = require( 'path' ),
     bodyParser = require( 'body-parser' ),
     fs = require( 'fs' ),
-
-    index = require( '../app/routes/index' ),
-    surveys = require( '../app/routes/surveys' ),
-    api = require( '../app/routes/api' ),
-    pages = require( '../app/routes/pages' ),
-    media = require( '../app/routes/media' ),
     favicon = require( 'serve-favicon' ),
-
     config = require( './config' ),
     logger = require( 'morgan' ),
     errorHandler = require( '../app/controllers/error-handler' ),
-    debug = require( 'debug' )( 'express' ),
-
-    app = express();
+    controllersPath = path.join( __dirname, '../app/controllers' ),
+    app = express(),
+    debug = require( 'debug' )( 'express' );
 
 // general 
 for ( var item in config ) {
@@ -48,12 +41,13 @@ app.use( function( req, res, next ) {
     next();
 } );
 
-// routing
-app.use( '/', index );
-app.use( '/', pages );
-app.use( '/', surveys );
-app.use( '/api/v1', api );
-app.use( '/media', media );
+// load controllers (including routers)
+fs.readdirSync( controllersPath ).forEach( function( file ) {
+    if ( file.indexOf( '-controller.js' ) >= 0 ) {
+        debug( 'loading', file );
+        require( controllersPath + '/' + file )( app );
+    }
+} );
 
 // logging
 app.use( logger( {

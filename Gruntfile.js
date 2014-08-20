@@ -140,7 +140,7 @@ module.exports = function( grunt ) {
     grunt.registerTask( 'client-config-file', 'Temporary client-config file', function( task ) {
         var clientConfigPath = "public/temp-client-config.json";
         if ( task === 'create' ) {
-            var config = require( './app/controllers/config-controller' );
+            var config = require( './app/models/config-model' );
             grunt.file.write( clientConfigPath, JSON.stringify( config.client() ) );
             grunt.log.writeln( 'File ' + clientConfigPath + ' created' );
         } else if ( task === 'remove' ) {

@@ -6,9 +6,57 @@ var transformer = require( '../lib/transformer' ),
     instanceModel = require( '../models/instance-model' )(),
     account = require( '../models/account-model' ),
     auth = require( '../lib/basic-auth' ),
+    express = require( 'express' ),
+    router = express.Router(),
     debug = require( 'debug' )( 'api-controller' );
 
-function _auth( req, res, next ) {
+module.exports = function( app ) {
+    app.use( '/api/v1', router );
+};
+
+router
+    .all( '*', authCheck )
+    .all( '/*/iframe', function( req, res, next ) {
+        req.iframe = true;
+        next();
+    } )
+    .all( '/survey/preview*', function( req, res, next ) {
+        req.webformType = 'preview';
+        next();
+    } )
+    .all( '/survey/all*', function( req, res, next ) {
+        req.webformType = 'all';
+        next();
+    } )
+    .all( '/instance*', function( req, res, next ) {
+        req.webformType = 'edit';
+        next();
+    } )
+    .get( '/survey', getExistingSurvey )
+    .get( '/survey/iframe', getExistingSurvey )
+    .post( '/survey', getNewOrExistingSurvey )
+    .post( '/survey/iframe', getNewOrExistingSurvey )
+    .delete( '/survey', deactivateSurvey )
+    .get( '/survey/preview', getExistingSurvey )
+    .get( '/survey/preview/iframe', getExistingSurvey )
+    .post( '/survey/preview', getNewOrExistingSurvey )
+    .post( '/survey/preview/iframe', getNewOrExistingSurvey )
+    .get( '/survey/all', getExistingSurvey )
+    .post( '/survey/all', getNewOrExistingSurvey )
+    .get( '/surveys/number', getNumber )
+    .post( '/surveys/number', getNumber )
+    .get( '/surveys/list', getList )
+    .post( '/surveys/list', getList )
+    .post( '/instance', cacheInstance )
+    .post( '/instance/iframe', cacheInstance )
+    .delete( '/instance', removeInstance )
+    .all( '*', function( req, res, next ) {
+        var error = new Error( 'Not allowed' );
+        error.status = 405;
+        next( error );
+    } );
+
+function authCheck( req, res, next ) {
     // check authentication and account
     var error,
         creds = auth( req ),
@@ -35,7 +83,7 @@ function _auth( req, res, next ) {
         .catch( next );
 }
 
-function _getExistingSurvey( req, res, next ) {
+function getExistingSurvey( req, res, next ) {
     var error, body;
 
     return surveyModel
@@ -53,7 +101,7 @@ function _getExistingSurvey( req, res, next ) {
         .catch( next );
 }
 
-function _getNewOrExistingSurvey( req, res, next ) {
+function getNewOrExistingSurvey( req, res, next ) {
     var error, body, status,
         survey = {
             openRosaServer: req.param( 'server_url' ),
@@ -78,7 +126,7 @@ function _getNewOrExistingSurvey( req, res, next ) {
         .catch( next );
 }
 
-function _deactivateSurvey( req, res, next ) {
+function deactivateSurvey( req, res, next ) {
     var error;
 
     return surveyModel
@@ -98,7 +146,7 @@ function _deactivateSurvey( req, res, next ) {
 }
 
 
-function _getNumber( req, res, next ) {
+function getNumber( req, res, next ) {
     var error, body;
 
     return surveyModel
@@ -117,11 +165,11 @@ function _getNumber( req, res, next ) {
         .catch( next );
 }
 
-function _getList( req, res, next ) {
+function getList( req, res, next ) {
     _render( 500, 'This API point is not implemented yet', res );
 }
 
-function _cacheInstance( req, res, next ) {
+function cacheInstance( req, res, next ) {
     var error, body, survey;
 
     survey = {
@@ -141,7 +189,7 @@ function _cacheInstance( req, res, next ) {
         .catch( next );
 }
 
-function _removeInstance( req, res, next ) {
+function removeInstance( req, res, next ) {
     var error;
 
     return instanceModel
@@ -206,26 +254,3 @@ function _render( status, body, res ) {
         res.json( status, body );
     }
 }
-
-module.exports = {
-    auth: _auth,
-    survey: {
-        get: _getExistingSurvey,
-        post: _getNewOrExistingSurvey,
-        "delete": _deactivateSurvey,
-    },
-    surveys: {
-        number: {
-            get: _getNumber,
-            post: _getNumber
-        },
-        list: {
-            get: _getList,
-            post: _getList
-        }
-    },
-    instance: {
-        post: _cacheInstance,
-        "delete": _removeInstance
-    }
-};

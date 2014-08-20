@@ -25,7 +25,7 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
         ID = /\/::/.test( window.location.pathname ) ? window.location.pathname.substring( window.location.pathname.lastIndexOf( '::' ) ) : null,
         CONNECTION_URL = '/connection',
         SUBMISSION_URL = ( ID ) ? '/submission/' + ID : null,
-        MAX_SIZE_URL = ( ID ) ? '/max-size/' + ID : null,
+        MAX_SIZE_URL = ( ID ) ? '/submission/max-size/' + ID : null,
         GETSURVEYURL_URL = '/api_v1/survey',
         //this.SUBMISSION_TRIES = 2;
         currentOnlineStatus = null,

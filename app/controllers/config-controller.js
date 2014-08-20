@@ -1,14 +1,15 @@
 "use strict";
 
-var config = require( '../../config/config' );
+var config = require( '../models/config-model' ),
+    express = require( 'express' ),
+    router = express.Router(),
+    debug = require( 'debug' )( 'config-controller' );
 
-module.exports = {
-    client: function() {
-        return {
-            google_api_key: config.google[ 'api key' ],
-            maps: config.maps,
-            widgets: config.widgets,
-            modernBrowserURL: 'modern-browsers'
-        };
-    }
+module.exports = function( app ) {
+    app.use( '/client-config.json', router );
 };
+
+router
+    .get( '/', function( req, res, next ) {
+        res.json( config.client() );
+    } );

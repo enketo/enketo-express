@@ -2,8 +2,8 @@
 
 "use strict";
 
-var cluster = require( 'cluster' );
-var numCPUs = require( 'os' ).cpus().length;
+var cluster = require( 'cluster' ),
+    numCPUs = require( 'os' ).cpus().length;
 
 if ( cluster.isMaster ) {
 
@@ -17,7 +17,6 @@ if ( cluster.isMaster ) {
         cluster.fork();
     } );
 } else {
-
     var app = require( './config/express' );
     var server = app.listen( app.get( 'port' ), function() {
         var worker = ( cluster.worker ) ? cluster.worker.id : 'Master';
