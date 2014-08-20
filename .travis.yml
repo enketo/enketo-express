@@ -10,5 +10,3 @@ before_script:
   - ./setup/redis/travis-redis.sh
 services:
   - redis-server
-notifications:
-    flowdock: 7d2ea551a0757bea5b52c496f3a7ab2e
