@@ -1,7 +1,18 @@
 "use strict";
-var app,
-    Q = require( "q" ),
+
+var Q = require( "q" ),
+    config = require( '../../config/config' ),
+    utils = require( '../lib/utils' ),
+    pending = {},
+    client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
+        auth_pass: config.redis.main.password
+    } ),
     debug = require( 'debug' )( "account-model" );
+
+// in test environment, switch to different db
+if ( process.env.NODE_ENV === 'test' ) {
+    client.select( 15 );
+}
 
 /**
  * Obtain account
@@ -18,13 +29,19 @@ function _get( survey ) {
         error = new Error( 'Bad Request. Server URL missing' );
         error.status = 400;
         deferred.reject( error );
+    } else if ( !utils.isValidUrl( server ) ) {
+        error = new Error( 'Bad Request. Server URL is not a valid URL.' );
+        error.status = 400;
+        deferred.reject( error );
     } else {
-        if ( new RegExp( 'https?:\/\/' + _getLinkedUrl() ).test( server ) ) {
+        if ( new RegExp( 'https?:\/\/' + _getLinkedServerUrlStripped() ).test( server ) ) {
             deferred.resolve( {
+                openRosaServer: server,
                 key: app.get( 'linked form and data server' )[ 'api key' ]
             } );
         } else if ( /https?:\/\/testserver.com\/bob/.test( server ) ) {
             deferred.resolve( {
+                openRosaServer: server,
                 key: 'abc'
             } );
         } else if ( /https?:\/\/testserver.com\/noquota/.test( server ) ) {
@@ -44,24 +61,239 @@ function _get( survey ) {
             error.status = 403;
             deferred.reject( error );
         } else {
-            error = new Error( 'Forbidden. This server is not linked with Enketo' );
-            error.status = 403;
-            deferred.reject( error );
+            client.hgetall( 'ac:' + utils.cleanUrl( server ), function( error, obj ) {
+                if ( error ) {
+                    deferred.reject( error );
+                }
+                if ( !obj ) {
+                    error = new Error( 'Forbidden. This server is not linked with Enketo' );
+                    error.status = 403;
+                    deferred.reject( error );
+                } else {
+                    deferred.resolve( obj );
+                }
+            } );
         }
     }
 
     return deferred.promise;
 }
 
+/**
+ * Create an account
+ * @param  {{openRosaServer: string, key: string}} account [description]
+ * @return {[type]}        [description]
+ */
+function _set( account ) {
+    var error, dbKey,
+        deferred = Q.defer();
+
+    if ( !account.openRosaServer || !account.key ) {
+        error = new Error( 'Bad Request. Server URL and/or API key missing' );
+        error.status = 400;
+        deferred.reject( error );
+    } else if ( !utils.isValidUrl( account.openRosaServer ) ) {
+        error = new Error( 'Bad Request. Server URL is not a valid URL.' );
+        error.status = 400;
+        deferred.reject( error );
+    } else if ( !account.key || typeof account.key !== 'string' || account.key.length === 0 ) {
+        error = new Error( 'Bad Request. Account API key malformed or missing.' );
+        error.status = 400;
+        deferred.reject( error );
+    } else {
+        dbKey = 'ac:' + utils.cleanUrl( account.openRosaServer );
+        if ( pending[ dbKey ] ) {
+            error = new Error( 'Conflict. Busy handling pending request for same account' );
+            error.status = 409;
+            deferred.reject( error );
+        }
+        if ( new RegExp( 'https?:\/\/' + _getLinkedServerUrlStripped() ).test( account.openRosaServer ) ) {
+            debug( 'harcoded account!' );
+            deferred.resolve( account );
+        } else {
+
+            // to avoid issues with fast subsequent requests
+            pending[ dbKey ] = true;
+
+            client.hgetall( dbKey, function( error, obj ) {
+                debug( 'response', error, obj );
+                if ( error ) {
+                    delete pending[ dbKey ];
+                    deferred.reject( error );
+                } else if ( !obj ) {
+                    debug( 'no account exists for ' + account.openRosaServer + ', going to create one ' );
+                    client.hmset( dbKey, account, function( error ) {
+                        delete pending[ dbKey ];
+                        if ( error ) {
+                            deferred.reject( error );
+                        }
+                        account.status = 201;
+                        deferred.resolve( account );
+                    } );
+                } else if ( !obj.openRosaServer || !obj.key ) {
+                    delete pending[ dbKey ];
+                    error = new Error( 'Account information is incomplete.' );
+                    error.status = 406;
+                    deferred.reject( error );
+                } else {
+                    delete pending[ dbKey ];
+                    debug( 'account already present in db', obj );
+                    obj.status = 200;
+                    deferred.resolve( obj );
+                }
+            } );
+        }
+    }
+    return deferred.promise;
+}
+
+/**
+ * Update an account
+ * @param  {{openRosaServer: string, key: string}} account [description]
+ * @return {[type]}        [description]
+ */
+function _update( account ) {
+    var error, dbKey,
+        deferred = Q.defer();
+
+    if ( !account.openRosaServer ) {
+        error = new Error( 'Bad Request. Server URL missing' );
+        error.status = 400;
+        deferred.reject( error );
+    } else if ( !utils.isValidUrl( account.openRosaServer ) ) {
+        error = new Error( 'Bad Request. Server URL is not a valid URL.' );
+        error.status = 400;
+        deferred.reject( error );
+    } else if ( !account.key || typeof account.key !== 'string' || account.key.length === 0 ) {
+        error = new Error( 'Bad Request. Account API key malformed or missing.' );
+        error.status = 400;
+        deferred.reject( error );
+    } else {
+        if ( new RegExp( 'https?:\/\/' + _getLinkedServerUrlStripped() ).test( account.openRosaServer ) ) {
+            debug( 'harcoded account!' );
+            deferred.resolve( account );
+        } else {
+            dbKey = 'ac:' + utils.cleanUrl( account.openRosaServer );
+            client.hgetall( dbKey, function( error, obj ) {
+                if ( error ) {
+                    deferred.reject( error );
+                } else if ( !obj ) {
+                    error = new Error( 'Account Not found. Nothing to update' );
+                    error.status = 404;
+                    deferred.reject( error );
+                } else if ( utils.areOwnPropertiesEqual( obj, account ) ) {
+                    account.status = 200;
+                    deferred.resolve( account );
+                } else {
+                    client.hmset( dbKey, account, function( error ) {
+                        if ( error ) {
+                            deferred.reject( error );
+                        }
+                        account.status = 201;
+                        deferred.resolve( account );
+                    } );
+                }
+            } );
+        }
+    }
+    return deferred.promise;
+}
+
+/**
+ * Remove an account
+ * @param  {{openRosaServer: string, key: string}} account [description]
+ * @return {[type]}        [description]
+ */
+function _remove( account ) {
+    var error, dbKey,
+        deferred = Q.defer();
+
+    if ( !account.openRosaServer ) {
+        error = new Error( 'Bad Request. Server URL missing' );
+        error.status = 400;
+        deferred.reject( error );
+    } else if ( !utils.isValidUrl( account.openRosaServer ) ) {
+        error = new Error( 'Bad Request. Server URL is not a valid URL.' );
+        error.status = 400;
+        deferred.reject( error );
+    } else if ( new RegExp( 'https?:\/\/' + _getLinkedServerUrlStripped() ).test( account.openRosaServer ) ) {
+        error = new Error( 'Not Allowed. Hardcoded account cannot be removed via API.' );
+        error.status = 405;
+        deferred.reject( error );
+    } else {
+        dbKey = 'ac:' + utils.cleanUrl( account.openRosaServer );
+        client.hgetall( dbKey, function( error, obj ) {
+            if ( error ) {
+                deferred.reject( error );
+            } else if ( !obj ) {
+                error = new Error( 'Not Found. Account not present.' );
+                error.status = 404;
+                deferred.reject( error );
+            } else {
+                client.del( dbKey, function( error ) {
+                    if ( error ) {
+                        deferred.reject( error );
+                    } else {
+                        deferred.resolve( account );
+                    }
+                } );
+            }
+        } );
+    }
+
+    return deferred.promise;
+}
+
+/**
+ * Obtains a list of acccounts
+ * @return {[type]} [description]
+ */
+function _getList() {
+    var error, hardcodedAccount, multi,
+        list = [],
+
+        app = app || require( '../../config/express' ),
+        deferred = Q.defer();
+
+    hardcodedAccount = _getHardcodedAccount();
+
+    if ( hardcodedAccount ) {
+        list.push( hardcodedAccount );
+    }
+
+    client.keys( 'ac:*', function( error, accounts ) {
+        if ( error ) {
+            deferred.reject( error );
+        } else if ( accounts.length === 0 ) {
+            deferred.resolve( list );
+        } else if ( accounts.length > 0 ) {
+            multi = client.multi();
+
+            accounts.forEach( function( account ) {
+                multi.hgetall( account );
+            } );
+
+            multi.exec( function( errors, replies ) {
+                if ( errors ) {
+                    deferred.reject( errors[ 0 ] );
+                }
+                deferred.resolve( list.concat( replies ) );
+            } );
+        }
+    } );
+
+    return deferred.promise;
+}
+
 /** 
- * check if account is active and pass parameter if so
+ * Check if account is active and pass parameter if so
+ * this passes back the original survey object and therefore differs from _get!
  * @param  {[type]} survey [description]
  * @return {[type]}        [description]
  */
 function _check( survey ) {
     var error,
         server = _getServer( survey ),
-        app = app || require( '../../config/express' ),
         deferred = Q.defer();
 
     if ( !server ) {
@@ -69,21 +301,39 @@ function _check( survey ) {
         error.status = 400;
         deferred.reject( error );
     } else {
-        if ( new RegExp( 'https?:\/\/' + _getLinkedUrl() ).test( server ) ) {
+        if ( new RegExp( 'https?:\/\/' + _getLinkedServerUrlStripped() ).test( server ) ) {
             deferred.resolve( survey );
         } else {
-            error = new Error( 'Forbidden. Server not linked with Enketo.' );
-            error.status = 403;
-            deferred.reject( error );
+            client.hgetall( 'ac:' + utils.cleanUrl( server ), function( error, obj ) {
+                if ( error ) {
+                    deferred.reject( error );
+                }
+                if ( !obj ) {
+                    error = new Error( 'Forbidden. This server is not linked with Enketo' );
+                    error.status = 403;
+                    deferred.reject( error );
+                } else {
+                    deferred.resolve( survey );
+                }
+            } );
         }
     }
 
     return deferred.promise;
 }
 
-function _getLinkedUrl() {
-    var app = app || require( '../../config/express' ),
-        linkedUrl = app.get( 'linked form and data server' )[ 'server url' ];
+/**
+ * Gets the hardcoded server URL from the configuration stripped of http(s)://
+ * @return {[type]} [description]
+ */
+function _getLinkedServerUrlStripped() {
+    var linkedUrl,
+        hardcodedAccount = _getHardcodedAccount;
+
+    if ( !hardcodedAccount ) {
+        return null;
+    }
+    linkedUrl = hardcodedAccount.server_url;
 
     // strip http(s):// from config item
     if ( /https?:\/\//.test( linkedUrl ) ) {
@@ -92,6 +342,25 @@ function _getLinkedUrl() {
     return linkedUrl;
 }
 
+function _getHardcodedAccount() {
+    var app = app || require( '../../config/express' ),
+        hardcodedAccount = app.get( 'linked form and data server' );
+
+    if ( !hardcodedAccount || !hardcodedAccount[ 'server url' ] || !hardcodedAccount[ 'api key' ] ) {
+        return null;
+    }
+
+    return {
+        openRosaServer: hardcodedAccount[ 'server url' ],
+        key: hardcodedAccount[ 'api key' ]
+    };
+}
+
+/**
+ * Extracts the server from a survey object or server string
+ * @param  {string|{openRosaServer:string}} survey server string or survey object
+ * @return {[type]}        [description]
+ */
 function _getServer( survey ) {
     if ( !survey || ( typeof survey === 'object' && !survey.openRosaServer ) ) {
         return null;
@@ -101,5 +370,9 @@ function _getServer( survey ) {
 
 module.exports = {
     get: _get,
-    check: _check
+    set: _set,
+    update: _update,
+    remove: _remove,
+    check: _check,
+    getList: _getList
 };

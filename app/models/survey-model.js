@@ -75,7 +75,9 @@ module.exports = function( client ) {
             error.status = 400;
             deferred.reject( error );
         } else if ( pending[ openRosaKey ] ) {
-            deferred.reject( new Error( 'Sorry, busy handling the same pending request' ) );
+            error = new Error( 'Conflict. Busy handling pending request for same survey' );
+            error.status = 409;
+            deferred.reject( error );
         } else {
             // to avoid issues with fast subsequent requests
             pending[ openRosaKey ] = true;

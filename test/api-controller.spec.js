@@ -18,13 +18,13 @@ var Q = require( "q" ),
 chai.use( chaiAsPromised );
 
 describe( 'api', function() {
-    var validApiToken = 'abc',
+    var validApiKey = 'abc',
         validAuth = {
-            'Authorization': 'Basic ' + new Buffer( validApiToken + ':' ).toString( 'base64' )
+            'Authorization': 'Basic ' + new Buffer( validApiKey + ':' ).toString( 'base64' )
         },
-        invalidApiToken = 'def',
+        invalidApiKey = 'def',
         invalidAuth = {
-            'Authorization': 'Basic ' + new Buffer( invalidApiToken + ':' ).toString( 'base64' )
+            'Authorization': 'Basic ' + new Buffer( invalidApiKey + ':' ).toString( 'base64' )
         },
         validServer = 'https://testserver.com/bob',
         validFormId = 'something',

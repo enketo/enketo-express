@@ -11,7 +11,7 @@ chai.use( chaiAsPromised );
 describe( 'Utilities', function() {
 
     describe( 'helper to clean openRosaServer URLs', function() {
-        var urls1 = [
+        [
             "https://ona.io/enketo",
             " https://ona.io/enketo",
             "https://ona.io/enketo/",
@@ -28,13 +28,13 @@ describe( 'Utilities', function() {
             " https://www.ona.io/enketo ",
             "https://www.ona.io/enketo/ ",
             "http://www.ona.io/enketo "
-        ];
-        urls1.forEach( function( url ) {
+        ].forEach( function( url ) {
             it( 'returns clean url for ' + url, function() {
                 expect( utils.cleanUrl( url ) ).to.equal( 'ona.io/enketo' );
             } );
         } );
-        var urls2 = [
+
+        [
             "https://enketo.surveycto.com",
             " https://enketo.surveycto.com",
             "https://enketo.surveycto.com/",
@@ -51,13 +51,13 @@ describe( 'Utilities', function() {
             " https://www.enketo.surveycto.com ",
             "https://www.enketo.surveycto.com ",
             "http://www.enketo.surveycto.com "
-        ];
-        urls2.forEach( function( url ) {
+        ].forEach( function( url ) {
             it( 'returns clean url for ' + url, function() {
                 expect( utils.cleanUrl( url ) ).to.equal( 'enketo.surveycto.com' );
             } );
         } );
-        var urls3 = [
+
+        [
             "https://ENKETO.surveycto.com/PaTH",
             " https://ENKETO.surveycto.com/PaTH",
             "https://ENKETO.surveycto.com/PaTH",
@@ -74,13 +74,13 @@ describe( 'Utilities', function() {
             " https://www.ENKETO.surveycto.com/PaTH ",
             "https://www.ENKETO.surveycto.com/PaTH/ ",
             "http://www.ENKETO.surveycto.com/PaTH "
-        ];
-        urls3.forEach( function( url ) {
+        ].forEach( function( url ) {
             it( 'returns clean url with lowercased domain and path for ' + url, function() {
                 expect( utils.cleanUrl( url ) ).to.equal( 'enketo.surveycto.com/path' );
             } );
         } );
-        var urls4 = [
+
+        [
             "https://255.255.255.255/AGGREGATE",
             " https://255.255.255.255/AGGREGATE",
             "https://255.255.255.255/AGGREGATE/",
@@ -89,11 +89,45 @@ describe( 'Utilities', function() {
             " https://255.255.255.255/AGGREGATE ",
             "https://255.255.255.255/AGGREGATE/ ",
             "http://255.255.255.255/AGGREGATE "
-        ];
-        urls4.forEach( function( url ) {
+        ].forEach( function( url ) {
             it( 'returns clean IP url with lowercased path for ' + url, function() {
                 expect( utils.cleanUrl( url ) ).to.equal( '255.255.255.255/aggregate' );
             } );
+        } );
+    } );
+
+
+    describe( 'helper to test equality of 1-level deep object properties', function() {
+        [
+            [ null, undefined, null ],
+            [ null, null, true ],
+            [ "", "a", null ],
+            [ "", "", null ],
+            [ {
+                    a: 2,
+                    b: 3
+                }, {
+                    b: 3,
+                    a: 2
+                },
+                true
+            ],
+            [ {
+                    a: 2,
+                    b: 3
+                }, {
+                    b: 3,
+                    a: 2,
+                    c: "a"
+                },
+                false
+            ]
+        ].forEach( function( pair ) {
+            it( 'returns ' + pair[ 2 ] + ' when comparing ' + JSON.stringify( pair[ 0 ] ) +
+                ' with ' + JSON.stringify( pair[ 1 ] ), function() {
+                    expect( utils.areOwnPropertiesEqual( pair[ 0 ], pair[ 1 ] ) ).to.equal( pair[ 2 ] );
+                    expect( utils.areOwnPropertiesEqual( pair[ 1 ], pair[ 0 ] ) ).to.equal( pair[ 2 ] );
+                } );
         } );
     } );
 } );

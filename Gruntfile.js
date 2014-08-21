@@ -77,11 +77,14 @@ module.exports = function( grunt ) {
             all: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js", "!**/*.min.js" ]
         },
         mochaTest: {
-            test: {
+            all: {
                 options: {
                     reporter: 'spec'
                 },
                 src: [ 'test/**/*.spec.js' ]
+            },
+            account: {
+                src: [ 'test/account-*.spec.js' ]
             }
         },
         requirejs: {
@@ -118,6 +121,14 @@ module.exports = function( grunt ) {
                     dest: 'public/lib/enketo-core'
                 } ]
             }
+        },
+        env: {
+            options: {
+                //Shared Options Hash
+            },
+            test: {
+                NODE_ENV: 'test'
+            }
         }
     } );
 
@@ -151,6 +162,6 @@ module.exports = function( grunt ) {
 
     grunt.registerTask( 'default', [ 'symlink', 'compile', 'test' ] );
     grunt.registerTask( 'compile', [ 'sass', 'client-config-file:create', 'requirejs', 'client-config-file:remove' ] );
-    grunt.registerTask( 'test', [ 'symlink', 'mochaTest', 'jsbeautifier:test', 'jshint', 'compile' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'symlink', 'mochaTest', 'jsbeautifier:test', 'jshint', 'compile' ] );
     grunt.registerTask( 'develop', [ 'concurrent:develop' ] );
 };
