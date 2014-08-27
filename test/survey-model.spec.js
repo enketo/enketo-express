@@ -1,6 +1,9 @@
 /* global describe, require, it, before, after, beforeEach, afterEach */
 "use strict";
 
+// safer to ensure this here (in addition to grunt:env:test)
+process.env.NODE_ENV = 'test';
+
 var model,
     Q = require( "q" ),
     chai = require( "chai" ),
@@ -8,6 +11,7 @@ var model,
     chaiAsPromised = require( "chai-as-promised" ),
     redis = require( "redis" ),
     config = require( "../config/config" ),
+    model = require( '../app/models/survey-model' ),
     client = redis.createClient( config.redis.main.port, config.redis.main.host, {
         auth_pass: config.redis.main.password
     } );
@@ -16,25 +20,14 @@ chai.use( chaiAsPromised );
 
 describe( 'Survey Model', function() {
 
-    before( function( done ) {
-        // select database #15 to use as the test database
+    afterEach( function( done ) {
+        // select test database and flush it
         client.select( 15, function( err ) {
             if ( err ) return done( err );
-            model = require( '../app/models/survey-model' )( client );
-            done();
-        } );
-    } );
-
-    afterEach( function( done ) {
-        client.flushdb( function( err ) {
-            if ( err ) return done( err );
-            done();
-        } );
-    } );
-
-    describe( 'database and client', function() {
-        it( 'are live and operational', function() {
-            return expect( client ).to.be.ok;
+            client.flushdb( function( err ) {
+                if ( err ) return done( err );
+                done();
+            } );
         } );
     } );
 

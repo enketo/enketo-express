@@ -6,36 +6,23 @@ var model,
     chai = require( "chai" ),
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" ),
-    redis = require( "redis" ),
-    config = require( "../config/config" ),
-    client = redis.createClient( config.redis.main.port, config.redis.main.host, {
-        auth_pass: config.redis.main.password
-    } );
+    model = require( '../app/models/instance-model' ),
+    config = require( "../config/config" );
 
 chai.use( chaiAsPromised );
 
 describe( 'Instance Model', function() {
 
-    before( function( done ) {
-        // select database #15 to use as the test database
-        client.select( 15, function( err ) {
-            if ( err ) return done( err );
-            model = require( '../app/models/instance-model' )( client );
-            done();
-        } );
-    } );
-
     afterEach( function( done ) {
-        client.flushdb( function( err ) {
-            if ( err ) return done( err );
-            done();
-        } );
-    } );
-
-    describe( 'database and client', function() {
-        it( 'are live and operational', function() {
-            expect( client ).to.be.ok;
-        } );
+        model.remove( {
+            instanceId: 'someid'
+        } )
+            .then( function() {
+                done();
+            } )
+            .catch( function() {
+                done();
+            } );
     } );
 
     describe( 'set: when attempting to cache an instance', function() {

@@ -3,9 +3,11 @@
 
 /* 
  * These tests use the special test Api Token and Server URLs defined in the API spec
- * at http://apidocs.enketo.org. They will create 1 entry in the production database, which
- * is probably not such a good idea.
+ * at http://apidocs.enketo.org.
  */
+
+// safer to ensure this here (in addition to grunt:env:test)
+process.env.NODE_ENV = 'test';
 
 var Q = require( "q" ),
     chai = require( "chai" ),
@@ -13,7 +15,7 @@ var Q = require( "q" ),
     chaiAsPromised = require( "chai-as-promised" ),
     request = require( 'supertest' ),
     app = require( '../config/express' ),
-    surveyModel = require( '../app/models/survey-model' )();
+    surveyModel = require( '../app/models/survey-model' );
 
 chai.use( chaiAsPromised );
 

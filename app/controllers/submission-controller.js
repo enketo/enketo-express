@@ -1,7 +1,7 @@
 "use strict";
 
 var communicator = require( '../lib/communicator' ),
-    surveyModel = require( '../models/survey-model' )(),
+    surveyModel = require( '../models/survey-model' ),
     inspect = require( 'util' ).inspect,
     Busboy = require( 'busboy' ),
     express = require( 'express' ),
