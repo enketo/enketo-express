@@ -20,14 +20,12 @@
 
 define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store, $ ) {
     "use strict";
-    var oRosaHelper, progress, maxSubmissionSize,
+    var progress, maxSubmissionSize,
         that = this,
         ID = /\/::/.test( window.location.pathname ) ? window.location.pathname.substring( window.location.pathname.lastIndexOf( '::' ) ) : null,
         CONNECTION_URL = '/connection',
-        SUBMISSION_URL = ( ID ) ? '/submission/' + ID : null,
+        SUBMISSION_URL = ( ID ) ? '/submission/' + ID + location.search : null,
         MAX_SIZE_URL = ( ID ) ? '/submission/max-size/' + ID : null,
-        GETSURVEYURL_URL = '/api_v1/survey',
-        //this.SUBMISSION_TRIES = 2;
         currentOnlineStatus = null,
         uploadOngoingID = null,
         uploadOngoingBatchIndex = null,
@@ -37,8 +35,6 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
         },
         uploadBatchesResult = {},
         uploadQueue = [];
-
-    //init();
 
     /**
      * Initialize the connection object
@@ -56,7 +52,6 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
 
     function checkOnlineStatus() {
         var online;
-        //console.log('checking connection status');
         //navigator.onLine is totally unreliable (returns incorrect trues) on Firefox, Chrome, Safari (on OS X 10.8),
         //but I assume falses are correct
         if ( navigator.onLine ) {
@@ -81,10 +76,7 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
     }
 
     function _setOnlineStatus( newStatus ) {
-        //var oldStatus = onlineStatus;
-        //onlineStatus = online;
         if ( newStatus !== currentOnlineStatus ) {
-            console.log( 'online status changed to: ' + newStatus + ', triggering window.onlinestatuschange' );
             $( window ).trigger( 'onlinestatuschange', newStatus );
         }
         currentOnlineStatus = newStatus;
@@ -106,6 +98,7 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
      */
     function uploadRecords( record, force, callbacks ) {
         var sameItemInQueue, sameItemSubmitted, sameItemOngoing;
+
         force = force || false;
         callbacks = callbacks || null;
 
@@ -501,178 +494,6 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
         return maxSubmissionSize;
     }
 
-    function isValidURL( url ) {
-        return ( /^(https?:\/\/)(([\da-z\.\-]+)\.([a-z\.]{2,6})(:[0-9]{2,4})?|(([0-9]{1,3}\.){3}[0-9]{1,3})(:[0-9]{2,4})?)([\/\w \.\-]*)*\/?[\/\w \.\-\=\&\?]*$/ ).test( url );
-    }
-
-    function getFormlist( serverURL, callbacks ) {
-        callbacks = _getCallbacks( callbacks );
-
-        if ( !isValidURL( serverURL ) ) {
-            callbacks.error( null, 'validationerror', 'not a valid URL' );
-            return;
-        }
-        $.ajax( '/forms/get_list', {
-            type: 'GET',
-            data: {
-                server_url: serverURL
-            },
-            cache: false,
-            contentType: 'json',
-            timeout: 60 * 1000,
-            success: callbacks.success,
-            error: callbacks.error,
-            complete: callbacks.complete
-        } );
-    }
-
-    function getSurveyURL( serverURL, formId, callbacks ) {
-        callbacks = _getCallbacks( callbacks );
-
-        if ( !serverURL || !isValidURL( serverURL ) ) {
-            callbacks.error( null, 'validationerror', 'not a valid server URL' );
-            return;
-        }
-        if ( !formId || formId.length === 0 ) {
-            callbacks.error( null, 'validationerror', 'not a valid formId' );
-            return;
-        }
-        $.ajax( {
-            url: GETSURVEYURL_URL,
-            type: 'POST',
-            data: {
-                server_url: serverURL,
-                form_id: formId
-            },
-            cache: false,
-            timeout: 60 * 1000,
-            dataType: 'json',
-            success: callbacks.success,
-            error: callbacks.error,
-            complete: callbacks.complete
-        } );
-    }
-
-    /**
-     * Obtains HTML Form from an XML file or from a server url and form id
-     * @param  {?string=}                   serverURL   full server URL
-     * @param  {?string=}                   formId      form ID
-     * @param  {Blob=}                      formFile    XForm XML file
-     * @param  {?string=}                   formURL     XForm URL
-     * @param  {Object.<string, Function>=} callbacks   callbacks
-     */
-    function getTransForm( serverURL, formId, formFile, formURL, callbacks ) {
-        var formData = new FormData();
-
-        callbacks = _getCallbacks( callbacks );
-        serverURL = serverURL || null;
-        formId = formId || null;
-        formURL = formURL || null;
-        formFile = formFile || new Blob();
-
-        if ( formFile.size === 0 && ( !serverURL || !formId ) && !formURL ) {
-            callbacks.error( null, 'validationerror', 'No form file or URLs provided' );
-            return;
-        }
-        if ( formFile.size === 0 && !isValidURL( serverURL ) && !isValidURL( formURL ) ) {
-            callbacks.error( null, 'validationerror', 'Not a valid server or form url' );
-            return;
-        }
-        if ( formFile.size === 0 && !formURL && ( !formId || formId.length === 0 ) ) {
-            callbacks.error( null, 'validationerror', 'No form id provided' );
-            return;
-        }
-        //don't append if null, as FF turns null into 'null'
-        if ( serverURL ) formData.append( 'server_url', serverURL );
-        if ( formId ) formData.append( 'form_id', formId );
-        if ( formURL ) formData.append( 'form_url', formURL );
-        if ( formFile ) formData.append( 'xml_file', formFile );
-
-        console.debug( 'form file: ', formFile );
-
-        $.ajax( '/transform/get_html_form', {
-            type: 'POST',
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: 'xml',
-            data: formData,
-            success: callbacks.success,
-            error: callbacks.error,
-            complete: callbacks.complete
-        } );
-    }
-
-    function validateHTML( htmlStr, callbacks ) {
-        var content = new FormData();
-
-        callbacks = _getCallbacks( callbacks );
-
-        content.append( 'level', 'error' );
-        content.append( 'content', htmlStr );
-
-        $.ajax( '/html5validate/', {
-            type: 'POST',
-            data: content,
-            contentType: false,
-            processData: false,
-            success: callbacks.success,
-            error: callbacks.error,
-            complete: callbacks.complete
-        } );
-    }
-
-    /**
-     * Collection of helper functions for openRosa connectivity
-     * @param {*} conn [description]
-     * @constructor
-     */
-    oRosaHelper = {
-        /**
-         * Magically generates a well-formed serverURL from a type and fragment
-         * @param  {string} type    type of server or account (http, https, formhub_uni, formhub, appspot)
-         * @param  {string} frag    a user input for the given type
-         * @return {?string}        a full serverURL
-         */
-        fragToServerURL: function( type, frag ) {
-            var protocol,
-                serverURL = '';
-
-            if ( !frag ) {
-                console.log( 'nothing to do' );
-                return null;
-            }
-            console.debug( 'frag: ' + frag );
-            //always override if valid URL is entered
-            //TODO: REMOVE reference to connection
-            if ( isValidURL( frag ) ) {
-                return frag;
-            }
-
-            switch ( type ) {
-                case 'http':
-                case 'https':
-                    protocol = ( /^http(|s):\/\//.test( frag ) ) ? '' : type + '://';
-                    serverURL = protocol + frag;
-                    break;
-                case 'formhub_uni':
-                case 'formhub':
-                    serverURL = 'https://formhub.org/' + frag;
-                    break;
-                case 'appspot':
-                    serverURL = 'https://' + frag + '.appspot.com';
-                    break;
-            }
-
-            if ( !isValidURL( serverURL ) ) {
-                console.error( 'not a valid url: ' + serverURL );
-                return null;
-            }
-            console.log( 'server_url: ' + serverURL );
-            return serverURL;
-        }
-    };
-
     function _resetUploadResult() {
         uploadResult = {
             win: [],
@@ -712,15 +533,9 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
     return {
         init: init,
         uploadRecords: uploadRecords,
-        getTransForm: getTransForm,
         getUploadQueue: getUploadQueue,
         getUploadOngoingID: getUploadOngoingID,
-        validateHTML: validateHTML,
-        getFormlist: getFormlist,
-        isValidURL: isValidURL,
-        getSurveyURL: getSurveyURL,
         getMaxSubmissionSize: getMaxSubmissionSize,
-        oRosaHelper: oRosaHelper,
         // "private" but used for tests:
         _processOpenRosaResponse: _processOpenRosaResponse,
         _getUploadResult: _getUploadResult,

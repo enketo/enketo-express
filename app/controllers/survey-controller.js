@@ -1,7 +1,7 @@
 "use strict";
 
 var Q = require( 'q' ),
-    transformer = require( '../lib/transformer' ),
+    transformer = require( '../lib/enketo-transformer' ),
     utils = require( '../lib/utils' ),
     fs = require( 'fs' ),
     communicator = require( '../lib/communicator' ),

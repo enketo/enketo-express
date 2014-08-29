@@ -2,7 +2,7 @@
 
 var Q = require( 'q' ),
     utils = require( '../lib/utils' ),
-    transformer = require( '../lib/transformer' ),
+    transformer = require( '../lib/enketo-transformer' ),
     prefix = 'ca:',
     expiry = 30 * 24 * 60 * 60,
     config = require( '../../config/config' ),

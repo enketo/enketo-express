@@ -36,6 +36,7 @@
         "enketo-widget/distress/distresspicker",
         "../../../widget/file-online/online-filepicker"
     ],
+    "query parameter to pass to submission": "ecid",
     "redis": {
         "main": {
             "host": "127.0.0.1",

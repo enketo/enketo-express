@@ -6,7 +6,7 @@ var Q = require( 'q' ),
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" ),
     fs = require( "fs" ),
-    transformer = require( "../app/lib/transformer" );
+    transformer = require( "../app/lib/enketo-transformer" );
 
 describe( 'transformer', function() {
 
