@@ -48,7 +48,7 @@ An error JSON response looks like this:
  - errors: 400, 401, 404, 405
  - try `curl -X DELETE --user ocrocks: -d "server_url=https://octest.com/study1" http://localhost:8005/accounts/api/v1/account`
 
-**GET /list**
+**GET /list** and **POST /list**
 
  - 200 response with array of accounts as body
  - try `curl --user ocrocks: "http://localhost:8005/accounts/api/v1/list"`

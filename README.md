@@ -1,9 +1,9 @@
-enketo-express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express.png)](https://travis-ci.org/kobotoolbox/enketo-express)
+enketo-express [![Build Status](https://travis-ci.org/OpenClinica/enketo-express-oc.png)](https://travis-ci.org/OpenClinica/enketo-express-oc)
 ==============
 
 ![Enketo Logo](public/images/logo.png "Enketo Logo")
 
-A super light-weight node.js version of Enketo Smart Paper developed for KoBo Toolbox. Chock-full of [badass rockstar tech](https://www.youtube.com/watch?v=bzkRVzciAZg).
+A super light-weight node.js version of Enketo Smart Paper port for OpenClinica. Chock-full of [badass rockstar tech](https://www.youtube.com/watch?v=bzkRVzciAZg).
 
 ### How to install (anywhere)
 
@@ -67,4 +67,4 @@ See [LICENSE](LICENSE) for this application's license.
 
 Note that some of the libraries used in this app have different licenses.
 
-The Enketo logo and Icons are trademarked by [Enketo LLC](https://www.linkedin.com/company/enketo-llc). They can be used in the KoBoCAT VM only. If you are using this app to build your own web application, you are encouraged to maintain the 'powered by Enketo' form footer with the Enketo logo, but replace other images in [/public/images](/public/images) with your own or contact [Enketo LLC](mailto:info@enketo.org) to discuss the use inside your app.
+The Enketo logo and Icons are trademarked by [Enketo LLC](https://www.linkedin.com/company/enketo-llc). If you are using this app to build your own web application, you are encouraged to maintain the 'powered by Enketo' form footer with the Enketo logo, but replace other images in [/public/images](/public/images) with your own or contact [Enketo LLC](mailto:info@enketo.org) to discuss the use inside your app.
