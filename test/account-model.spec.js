@@ -97,7 +97,20 @@ describe( 'Account Model', function() {
             return expect( model.get( 'nonexisting' ) ).to.eventually.be.rejected;
         } );
 
-        it( 'returns the account object when survey exists', function() {
+        // the test below assumes the config.json server url does not have the http:// prefix
+        it( 'returns the hardcoded account object', function() {
+            var account = {
+                    key: config[ 'linked form and data server' ][ 'api key' ],
+                    openRosaServer: 'http://' + config[ 'linked form and data server' ][ 'server url' ]
+                },
+                getAccountPromise = model.get( account );
+            return Q.all( [
+                expect( getAccountPromise ).to.eventually.have.property( 'key' ).and.to.equal( account.key ),
+                expect( getAccountPromise ).to.eventually.have.property( 'openRosaServer' ).and.to.equal( account.openRosaServer )
+            ] );
+        } );
+
+        it( 'returns the account object when the account exists in db', function() {
             var account = {
                     key: '2342',
                     openRosaServer: 'https://octest1.com/client2'
@@ -214,6 +227,7 @@ describe( 'Account Model', function() {
                 promise = model.set( account ).then( model.getList );
 
             return Q.all( [
+                expect( hardcodedAccounts ).to.have.length( 1 ),
                 expect( promise ).to.eventually.have.length( hardcodedAccounts.length + 1 ),
                 expect( promise ).to.eventually.satisfy( function( accounts ) {
                     return accounts.every( function( account ) {

@@ -328,12 +328,12 @@ function _check( survey ) {
  */
 function _getLinkedServerUrlStripped() {
     var linkedUrl,
-        hardcodedAccount = _getHardcodedAccount;
+        hardcodedAccount = _getHardcodedAccount();
 
     if ( !hardcodedAccount ) {
         return null;
     }
-    linkedUrl = hardcodedAccount.server_url;
+    linkedUrl = hardcodedAccount.openRosaServer;
 
     // strip http(s):// from config item
     if ( /https?:\/\//.test( linkedUrl ) ) {
