@@ -3,6 +3,11 @@
 # exit if an error occurs
 set -e
 
+# If the repo directory hasn't been externally specified, default to `/vagrant`.
+ENKETO_EXPRESS_REPO_DIR=${ENKETO_EXPRESS_REPO_DIR:-"/vagrant"}
+
+ENKETO_EXPRESS_UPDATE_REPO=${ENKETO_EXPRESS_UPDATE_REPO:-"true"}
+
 # install redis
 echo 'installing redis...'
 add-apt-repository -y ppa:rwky/redis
@@ -12,26 +17,27 @@ apt-get install -y redis-server
 # update repo
 echo 'updating enketo app to latest version'
 apt-get install -y git
-cd /vagrant
-git pull origin master
+cd $ENKETO_EXPRESS_REPO_DIR
+# The next line should be commented out during development or any case where the repository was cloned via the ssh URL (i.e. git@github.com:kobotoolbox/enketo-express.git) as opposed to the HTTPS.
+[ $ENKETO_EXPRESS_UPDATE_REPO = "true" ] && git pull
 git submodule update --init --recursive
 
 # further redis setup with persistence, security, logging, multiple instances, priming 
 stop redis-server
 echo 'copying enketo redis conf...'
 mv /etc/redis/redis.conf redis-origin.conf
-cp -f /vagrant/setup/redis/conf/redis-enketo-main.conf /etc/redis/
-cp -f /vagrant/setup/redis/conf/redis-enketo-cache.conf /etc/redis/
+cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/conf/redis-enketo-main.conf /etc/redis/
+cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/conf/redis-enketo-cache.conf /etc/redis/
 chown redis:redis /var/lib/redis/
 echo 'copying enketo redis-server configs...'
 mv /etc/init/redis-server.conf /etc/init/redis-server.conf.disabled
-cp -f /vagrant/setup/redis/init/redis-server-enketo-main.conf /etc/init/
-cp -f /vagrant/setup/redis/init/redis-server-enketo-cache.conf /etc/init/
+cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/init/redis-server-enketo-main.conf /etc/init/
+cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/init/redis-server-enketo-cache.conf /etc/init/
 if [ -f "/var/lib/redis/redis.rdb"]; then
 	rm /var/lib/redis/redis.rdb
 fi
 echo 'copying enketo default redis db...'
-cp -f /vagrant/setup/redis/enketo-main.rdb /var/lib/redis/
+cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/enketo-main.rdb /var/lib/redis/
 chown redis:redis /var/lib/redis/enketo-main.rdb
 chmod 660 /var/lib/redis/enketo-main.rdb
 echo 'starting first enketo redis instance...'
@@ -48,10 +54,10 @@ add-apt-repository ppa:chris-lea/node.js
 apt-get update
 apt-get install -y nodejs
 npm install -g grunt-cli nodemon mocha
-cd /vagrant
+cd $ENKETO_EXPRESS_REPO_DIR
 # remove node_modules if exists because npm builds can be system-specific
-if [ -d "/vagrant/node_modules" ]; then
-	rm -R /vagrant/node_modules
+if [ -d "$ENKETO_EXPRESS_REPO_DIR/node_modules" ]; then
+	rm -R $ENKETO_EXPRESS_REPO_DIR/node_modules
 fi
 npm install 
 
