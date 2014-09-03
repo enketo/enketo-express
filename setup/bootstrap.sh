@@ -61,7 +61,8 @@ grunt compile
 
 # start in background and keep restarting if it fails until `pm2 stop enketo` is called
 # developers may want to comment this out
-npm install pm2@latest -g
+[ $(whoami) = "root" ] && npm install pm2@latest -g --unsafe-perm
+[ ! $(whoami) = "root" ] && npm install pm2@latest -g
 pm2 start app.js -n enketo
 echo "*************************************************************************************"
 echo "***                    Enketo Express should now have started!                   ****"
