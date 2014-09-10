@@ -33,7 +33,7 @@ echo 'copying enketo redis-server configs...'
 mv /etc/init/redis-server.conf /etc/init/redis-server.conf.disabled
 cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/init/redis-server-enketo-main.conf /etc/init/
 cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/init/redis-server-enketo-cache.conf /etc/init/
-if [ -f "/var/lib/redis/redis.rdb"]; then
+if [ -f "/var/lib/redis/redis.rdb" ]; then
 	rm /var/lib/redis/redis.rdb
 fi
 echo 'copying enketo default redis db...'
