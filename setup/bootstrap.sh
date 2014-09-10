@@ -7,6 +7,7 @@ set -e
 ENKETO_EXPRESS_REPO_DIR=${ENKETO_EXPRESS_REPO_DIR:-"/vagrant"}
 
 ENKETO_EXPRESS_UPDATE_REPO=${ENKETO_EXPRESS_UPDATE_REPO:-"true"}
+ENKETO_EXPRESS_USE_NODE_ENV=${ENKETO_EXPRESS_USE_NODE_ENV:-"false"}
 
 # install redis
 echo 'installing redis...'
@@ -50,11 +51,18 @@ apt-get install -y libxml2-dev libxslt1-dev
 
 # install dependencies, development tools, node, grunt
 apt-get install -y python-software-properties python g++ make
-add-apt-repository ppa:chris-lea/node.js
-apt-get update
-apt-get install -y nodejs
-npm install -g grunt-cli nodemon mocha
 cd $ENKETO_EXPRESS_REPO_DIR
+if [ $ENKETO_EXPRESS_USE_NODE_ENV = "true" ]; then
+    apt-get install python-pip
+    pip install nodeenv
+    nodeenv env
+    . env/bin/activate
+else
+    add-apt-repository ppa:chris-lea/node.js
+    apt-get update
+    apt-get install -y nodejs
+fi
+npm install -g grunt-cli nodemon mocha
 # remove node_modules if exists because npm builds can be system-specific
 if [ -d "$ENKETO_EXPRESS_REPO_DIR/node_modules" ]; then
 	rm -R $ENKETO_EXPRESS_REPO_DIR/node_modules
@@ -67,8 +75,11 @@ grunt compile
 
 # start in background and keep restarting if it fails until `pm2 stop enketo` is called
 # developers may want to comment this out
-[ $(whoami) = "root" ] && npm install pm2@latest -g --unsafe-perm
-[ ! $(whoami) = "root" ] && npm install pm2@latest -g
+if [ $(whoami) = "root" ]; then
+    npm install pm2@latest -g --unsafe-perm
+else
+    npm install pm2@latest -g
+fi
 pm2 start app.js -n enketo
 echo "*************************************************************************************"
 echo "***                    Enketo Express should now have started!                   ****"
