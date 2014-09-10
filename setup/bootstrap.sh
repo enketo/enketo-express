@@ -53,7 +53,7 @@ apt-get install -y libxml2-dev libxslt1-dev
 apt-get install -y python-software-properties python g++ make
 cd $ENKETO_EXPRESS_REPO_DIR
 if [ $ENKETO_EXPRESS_USE_NODE_ENV = "true" ]; then
-    apt-get install pip
+    apt-get install python-pip
     pip install nodeenv
     nodeenv env
     source env/bin/activate
