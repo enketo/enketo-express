@@ -56,7 +56,7 @@ if [ $ENKETO_EXPRESS_USE_NODE_ENV = "true" ]; then
     apt-get install python-pip
     pip install nodeenv
     nodeenv env
-    source env/bin/activate
+    . env/bin/activate
 else
     add-apt-repository ppa:chris-lea/node.js
     apt-get update
