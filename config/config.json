@@ -33,7 +33,8 @@
         "enketo-widget/mediagrid/mediagridpicker",
         "enketo-widget/select-likert/likertitem",
         "enketo-widget/distress/distresspicker",
-        "../../../widget/file-online/online-filepicker"
+        "../../../widget/file-online/online-filepicker",
+        "enketo-widget/trigger/triggerwidget"
     ],
     "query parameter to pass to submission": "",
     "redis": {
