@@ -55,7 +55,8 @@ function submit( req, res, next ) {
                             // asynchronously increment counters, but ignore errors
                             surveyModel.addSubmission( req.enketoId );
                         }
-                        res.send( code );
+                        res.status( code );
+                        res.end();
                     } )
                     .catch( next );
             } )
