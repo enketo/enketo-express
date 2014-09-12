@@ -57,14 +57,14 @@ module.exports = function( grunt ) {
         },
         jsbeautifier: {
             test: {
-                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!**/*.min.js" ],
+                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!**/*.min.js", "!public/lib/bower-components/**/*.js" ],
                 options: {
                     config: "./.jsbeautifyrc",
                     mode: "VERIFY_ONLY"
                 }
             },
             fix: {
-                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!**/*.min.js" ],
+                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!**/*.min.js", "!public/lib/bower-components/**/*.js" ],
                 options: {
                     config: "./.jsbeautifyrc"
                 }
@@ -74,7 +74,7 @@ module.exports = function( grunt ) {
             options: {
                 jshintrc: ".jshintrc"
             },
-            all: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js", "!**/*.min.js" ]
+            all: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js", "!**/*.min.js", "!public/lib/bower-components/**/*.js" ]
         },
         mochaTest: {
             all: {
@@ -94,7 +94,6 @@ module.exports = function( grunt ) {
                 baseUrl: "public/js/src/module",
                 mainConfigFile: [ "./public/js/src/require-config.js", "./public/js/src/require-build-config.js" ],
                 findNestedDependencies: true,
-                //include: [ 'core-lib/require' ],
                 optimize: "uglify2",
                 done: function( done, output ) {
                     var duplicates = require( 'rjs-build-analysis' ).duplicates( output );
@@ -143,7 +142,7 @@ module.exports = function( grunt ) {
             options: {
                 name: "../main-webform" + type,
                 out: "public/js/webform" + type + "-combined.min.js",
-                include: [ 'core-lib/require' ].concat( widgets )
+                include: [ /*'core-lib/require'*/ '../../../../public/lib/bower-components/requirejs/require' ].concat( widgets )
             }
         };
     }

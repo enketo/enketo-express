@@ -18,10 +18,10 @@
  * Deals with the main high level survey controls: saving, submitting etc.
  */
 
-define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormModel', 'jquery', 'bootstrap' ],
-    function( gui, connection, settings, Form, FormModel, $ ) {
+define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormModel', 'file-manager', 'q', 'jquery', 'bootstrap' ],
+    function( gui, connection, settings, Form, FormModel, fileManager, Q, $ ) {
         "use strict";
-        var form, $form, $formprogress, formSelector, defaultModelStr, store, fileManager;
+        var form, $form, $formprogress, formSelector, defaultModelStr, store;
 
         function init( selector, modelStr, instanceStrToEdit, options ) {
             var loadErrors, purpose;
@@ -102,7 +102,8 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
 
         function submitRecord() {
             var name, record, saveResult, redirect, beforeMsg, callbacks;
-            $form.trigger( 'beforesave' );
+
+            //$form.trigger( 'beforesave' );
             if ( !form.isValid() ) {
                 gui.alert( 'Form contains errors <br/>(please see fields marked in red)' );
                 return;
@@ -112,11 +113,6 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
 
             gui.alert( beforeMsg + '<br />' +
                 '<progress style="text-align: center;"/>', 'Submitting...', 'info' );
-
-            record = {
-                'key': 'record',
-                'data': form.getDataStr( true, true )
-            };
 
             callbacks = {
                 error: function() {
@@ -138,18 +134,23 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 complete: function() {}
             };
 
-            //connection.uploadRecords(record, true, callbacks);
-            //only upload the last one
-            prepareFormDataArray(
-                record, {
-                    success: function( formDataArr ) {
-                        connection.uploadRecords( formDataArr, true, callbacks );
-                    },
-                    error: function() {
-                        gui.alert( 'Something went wrong while trying to prepare the record(s) for uploading.', 'Record Error' );
-                    }
-                }
-            );
+            record = {
+                key: 'record',
+                data: form.getDataStr( true, true ),
+                files: fileManager.getCurrentFiles()
+            };
+
+            prepareFormDataArray( record )
+                .then( function( formDataArr ) {
+                    formDataArr.forEach( function( batch ) {
+                        console.debug( 'sending a batch' );
+                        connection.uploadRecords( batch, true, callbacks );
+                    } );
+                } )
+                .catch( function( e ) {
+                    console.log( 'error preparing submission', e );
+                    gui.alert( 'Something went wrong while trying to prepare the record(s) for uploading.', 'Record Error' );
+                } );
         }
 
         /**
@@ -159,21 +160,22 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
          */
 
         function prepareFormDataArray( record, callbacks ) {
-            var j, k, l, xmlData, formData, model, instanceID, $fileNodes, fileIndex, fileO, recordPrepped,
+            var model, instanceID, xmlData, $fileNodes,
+                deferred = Q.defer(),
                 count = 0,
                 sizes = [],
                 failedFiles = [],
                 files = [],
+                inputFiles = record.files || [],
                 batches = [];
 
             model = new FormModel( record.data );
             instanceID = model.getInstanceID();
-            // ignore files if there is no fileManager (possible when editing a record that has files)
-            $fileNodes = ( fileManager ) ? model.$.find( '[type="file"]' ).removeAttr( 'type' ) : [];
+            $fileNodes = model.$.find( '[type="file"]' ).removeAttr( 'type' );
             xmlData = model.getStr( false, true );
 
             function basicRecordPrepped( batchesLength, batchIndex ) {
-                formData = new FormData();
+                var formData = new FormData();
                 formData.append( 'xml_submission_data', xmlData );
                 return {
                     name: record.key,
@@ -186,50 +188,53 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
 
             function gatherFiles() {
                 $fileNodes.each( function() {
-                    fileO = {
-                        newName: $( this ).nodeName,
-                        fileName: $( this ).text()
-                    };
-                    fileManager.retrieveFile( instanceID, fileO, {
-                        success: function( fileObj ) {
-                            count++;
-                            files.push( fileObj );
-                            sizes.push( fileObj.file.size );
-                            if ( count == $fileNodes.length ) {
-                                distributeFiles();
-                            }
-                        },
-                        error: function( e ) {
-                            count++;
-                            failedFiles.push( fileO.fileName );
-                            console.error( 'Error occured when trying to retrieve ' + fileO.fileName + ' from local filesystem', e );
-                            if ( count == $fileNodes.length ) {
-                                distributeFiles();
-                            }
+                    var file,
+                        fileO = {
+                            newName: $( this ).nodeName,
+                            fileName: $( this ).text()
+                        };
+
+                    inputFiles.some( function( f ) {
+                        if ( f.name === fileO.fileName ) {
+                            file = f;
+                            return true;
                         }
+                        return false;
                     } );
+
+                    if ( file ) {
+                        count++;
+                        fileO.file = file;
+                        files.push( fileO );
+                        sizes.push( fileO.file.size );
+                    } else {
+                        failedFiles.push( fileO.fileName );
+                        console.error( 'Error occured when trying to retrieve ' + fileO.fileName );
+                    }
                 } );
+                distributeFiles();
             }
 
             function distributeFiles() {
-                var maxSize = connection.getMaxSubmissionSize();
+                var batchPrepped, fileIndex,
+                    batchesPrepped = [],
+                    maxSize = connection.getMaxSubmissionSize();
                 if ( files.length > 0 ) {
                     batches = divideIntoBatches( sizes, maxSize );
                     console.debug( 'splitting record into ' + batches.length + ' batches to reduce submission size ', batches );
-                    for ( k = 0; k < batches.length; k++ ) {
-                        recordPrepped = basicRecordPrepped( batches.length, k );
-                        for ( l = 0; l < batches[ k ].length; l++ ) {
+                    for ( var k = 0; k < batches.length; k++ ) {
+                        batchPrepped = basicRecordPrepped( batches.length, k );
+                        for ( var l = 0; l < batches[ k ].length; l++ ) {
                             fileIndex = batches[ k ][ l ];
-                            //console.log( 'adding file: ', files[ fileIndex ] );
-                            recordPrepped.formData.append( files[ fileIndex ].newName + '[]', files[ fileIndex ].file );
+                            batchPrepped.formData.append( files[ fileIndex ].newName + '[]', files[ fileIndex ].file );
                         }
-                        //console.log( 'returning record with formdata : ', recordPrepped );
-                        callbacks.success( recordPrepped );
+                        batchesPrepped.push( batchPrepped );
                     }
+                    deferred.resolve( batchesPrepped );
                 } else {
-                    recordPrepped = basicRecordPrepped( 1, 0 );
-                    //console.log( 'sending submission without files', recordPrepped );
-                    callbacks.success( recordPrepped );
+                    batchesPrepped.push( basicRecordPrepped( 1, 0 ) );
+                    // console.log( 'sending submission without files', batchesPrepped );
+                    deferred.resolve( batchesPrepped );
                 }
                 showErrors();
             }
@@ -238,17 +243,15 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 if ( failedFiles.length > 0 ) {
                     gui.alert( '<p>The following media files could not be retrieved: ' + failedFiles.join( ', ' ) + '. ' +
                         'The submission will go ahead and show the missing filenames in the data, but without the actual file(s).</p>' +
-                        '<p>Thanks for helping test this experimental feature. If you find out how you can reproduce this issue, ' +
-                        'please contact ' + settings.supportEmail + '.</p>',
-                        'Experimental feature failed' );
+                        '<p>please contact ' + settings.supportEmail + ' to report a bug and if possible explain how the issue can be reproduced.</p>', 'File(s) not Found' );
                 }
             }
 
-            if ( !fileManager || $fileNodes.length === 0 ) {
-                distributeFiles();
-            } else {
-                gatherFiles();
-            }
+            gatherFiles();
+            distributeFiles();
+            showErrors();
+
+            return deferred.promise;
         }
 
 

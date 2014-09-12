@@ -62,12 +62,13 @@ else
     apt-get update
     apt-get install -y nodejs
 fi
-npm install -g grunt-cli nodemon mocha
+npm install -g grunt-cli nodemon mocha bower
 # remove node_modules if exists because npm builds can be system-specific
 if [ -d "$ENKETO_EXPRESS_REPO_DIR/node_modules" ]; then
 	rm -R $ENKETO_EXPRESS_REPO_DIR/node_modules
 fi
 npm install 
+bower install --allow-root
 
 # build js and css
 grunt symlink

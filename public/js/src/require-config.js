@@ -16,9 +16,11 @@ require.config( {
         "Modernizr": "../../../lib/enketo-core/lib/Modernizr",
         "bootstrap": "../../../lib/enketo-core/lib/bootstrap",
         "bootstrap-slider": "../../../lib/enketo-core/lib/bootstrap-slider/js/bootstrap-slider",
-        "jquery": "../../../lib/enketo-core/lib/jquery",
+        "jquery": "../../../lib/bower-components/jquery/dist/jquery",
         "jquery.touchswipe": "../../../lib/enketo-core/lib/jquery-touchswipe/jquery.touchSwipe",
-        "leaflet": "../../../lib/enketo-core/lib/leaflet/leaflet"
+        "leaflet": "../../../lib/enketo-core/lib/leaflet/leaflet",
+        "file-manager": "../../../lib/enketo-core/src/js/file-manager",
+        "q": "../../../lib/bower-components/q/q"
     },
     shim: {
         "xpath": {

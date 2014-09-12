@@ -8,7 +8,7 @@ block script
   if environment == "production"
     script(src="/js/webform-combined.min.js")
   else
-    script(data-main="/js/src/main-webform.js", src="/lib/enketo-core/lib/require.js")
+    script(data-main="/js/src/main-webform.js", src="/lib/bower-components/requirejs/require.js")
 
 block global
   if returnUrl
