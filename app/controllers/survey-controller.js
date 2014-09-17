@@ -48,10 +48,13 @@ function _getForm( survey ) {
             debug( 'obtained Form and Model from cache!' );
             deferred.resolve( cachedSurvey );
             return deferred.promise;
-        }, function( error ) {
-            if ( !error.status || ( error.status !== 404 && error.status !== 410 ) ) {
+        } )
+        .catch( function( error ) {
+            // if survey.info is not there something serious happened
+            if ( !survey.info || !error.status ) {
                 throw error;
             }
+            // else attempt to transform
             debug( 'going to transform XForm' );
             return communicator.getXForm( survey )
                 .then( transformer.transform )

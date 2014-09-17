@@ -36,6 +36,7 @@ function _getMaxSize( survey ) {
 
 /**
  * Sends a request to an OpenRosa server
+ *
  * @param  { { url:string, convertToJson:boolean } } url  request options object
  * @return {?string=}    promise
  */
@@ -53,7 +54,7 @@ function _request( options ) {
         'X-OpenRosa-Version': '1.0'
     };
 
-    debug( options.url );
+    debug( 'sending request to url: ' + options.url );
 
     r = request( options, function( error, response, body ) {
         if ( error ) {
@@ -80,6 +81,7 @@ function _request( options ) {
 
 /**
  * transform XML to JSON for easier processing
+ *
  * @param  {string} xml XML string
  * @return {[type]}     promise
  */
@@ -101,6 +103,7 @@ function _xmlToJson( xml ) {
 
 /**
  * Finds the relevant form in an OpenRosa XML formList
+ *
  * @param  {string} formListXml OpenRosa XML formList
  * @param  {string} formId      Form ID to look for
  * @return {[type]}             promise
@@ -137,6 +140,7 @@ function _findFormAddInfo( formListXml, survey ) {
 /**
  * Convert arrays property values to strings, knowing that each xml node only
  * occurs once in each xform node in /formList
+ *
  * @param  {[type]} formObj [description]
  * @return {[type]}         [description]
  */
@@ -160,6 +164,7 @@ function _failHandler( deferred, error ) {
 module.exports = {
     /**
      * Gets form info
+     *
      * @param  {string}     server    OpenRosa server URL
      * @param  {string}     id        OpenRosa form ID
      * @return {[type]}               promise
@@ -172,6 +177,7 @@ module.exports = {
     },
     /**
      * Gets XForm from url
+     *
      * @param  {string}   url      URL where XForm is published
      * @return {[type]}            promise
      */
