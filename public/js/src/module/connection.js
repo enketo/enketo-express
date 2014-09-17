@@ -455,8 +455,7 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
      * @return {number} [description]
      */
     function _setMaxSubmissionSize() {
-        var maxSize,
-            storedMaxSize = ( store ) ? store.getRecord( '__maxSize' ) : undefined,
+        var storedMaxSize = ( store ) ? store.getRecord( '__maxSize' ) : undefined,
             defaultMaxSize = 5000000,
             absoluteMaxSize = 100 * 1024 * 1024;
 
@@ -464,11 +463,11 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
             $.ajax( MAX_SIZE_URL, {
                 type: 'GET',
                 timeout: 5 * 1000,
+                dataType: 'json',
                 success: function( response ) {
-                    maxSize = parseInt( response, 10 ) || defaultMaxSize;
-                    if ( !isNaN( maxSize ) ) {
+                    if ( response && response.maxSize && !isNaN( response.maxSize ) ) {
                         // setting an absolute max corresponding to value in enketo .htaccess file
-                        maxSubmissionSize = ( maxSize > absoluteMaxSize ) ? absoluteMaxSize : maxSize;
+                        maxSubmissionSize = ( response.maxSize > absoluteMaxSize ) ? absoluteMaxSize : response.maxSize;
                         // make the value available to other modules without having to add complex dependencies
                         $( document ).data( {
                             "maxSubmissionSize": maxSubmissionSize
@@ -478,11 +477,11 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
                             store.setRecord( '__maxSize', maxSubmissionSize );
                         }
                     } else {
-                        console.error( '/data/max_size return a value that is not a number' );
+                        console.error( MAX_SIZE_URL + ' returned a response that is not a number', response );
                     }
                 },
                 error: function( jqXHR ) {
-                    console.error( '/data/max_size returned an error', jqXHR );
+                    console.error( MAX_SIZE_URL + ' returned an error', jqXHR );
                 }
             } );
 

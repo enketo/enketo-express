@@ -140,124 +140,100 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 files: fileManager.getCurrentFiles()
             };
 
-            prepareFormDataArray( record )
-                .then( function( formDataArr ) {
-                    formDataArr.forEach( function( batch ) {
-                        console.debug( 'sending a batch' );
-                        connection.uploadRecords( batch, true, callbacks );
-                    } );
-                } )
-                .catch( function( e ) {
-                    console.log( 'error preparing submission', e );
-                    gui.alert( 'Something went wrong while trying to prepare the record(s) for uploading.', 'Record Error' );
-                } );
+            prepareFormDataArray( record ).forEach( function( batch ) {
+                connection.uploadRecords( batch, true, callbacks );
+            } );
         }
 
         /**
-         * Asynchronous function that builds up a form data array including media files
+         * Builds up a record array including media files, divided into batches
+         *
          * @param { { name: string, data: string } } record[ description ]
-         * @param {{success: Function, error: Function}} callbacks
          */
-
-        function prepareFormDataArray( record, callbacks ) {
-            var model, instanceID, xmlData, $fileNodes,
-                deferred = Q.defer(),
-                count = 0,
+        function prepareFormDataArray( record ) {
+            var model = new FormModel( record.data ),
+                instanceID = model.getInstanceID(),
+                $fileNodes = model.$.find( '[type="file"]' ).removeAttr( 'type' ),
+                xmlData = model.getStr( false, true ),
+                xmlSubmissionBlob = new Blob( [ xmlData ], {
+                    type: 'text/xml'
+                } ),
+                availableFiles = record.files || [],
                 sizes = [],
                 failedFiles = [],
                 files = [],
-                inputFiles = record.files || [],
-                batches = [];
+                batches = [
+                    []
+                ],
+                batchesPrepped = [],
+                maxSize = connection.getMaxSubmissionSize();
 
-            model = new FormModel( record.data );
-            instanceID = model.getInstanceID();
-            $fileNodes = model.$.find( '[type="file"]' ).removeAttr( 'type' );
-            xmlData = model.getStr( false, true );
+            $fileNodes.each( function() {
+                var file,
+                    $node = $( this ),
+                    nodeName = $node.prop( 'nodeName' ),
+                    fileName = $node.text();
 
-            function basicRecordPrepped( batchesLength, batchIndex ) {
-                var formData = new FormData();
-                // append XML as file
-                var blobParts = [ xmlData ];
-                var xmlSubmissionBlob = new Blob( blobParts, {
-                    type: 'text/xml'
+                // check if file is actually available
+                availableFiles.some( function( f ) {
+                    if ( f.name === fileName ) {
+                        file = f;
+                        return true;
+                    }
+                    return false;
                 } );
-                console.debug( 'submission blob', xmlSubmissionBlob );
-                formData.append( 'xml_submission_file', xmlSubmissionBlob );
-                return {
+
+                // add the file if it is available
+                if ( file ) {
+                    files.push( {
+                        nodeName: nodeName,
+                        file: file
+                    } );
+                    sizes.push( file.size );
+                } else {
+                    failedFiles.push( file.name );
+                    console.error( 'Error occured when trying to retrieve ' + file.name );
+                }
+            } );
+
+            if ( files.length > 0 ) {
+                batches = divideIntoBatches( sizes, maxSize );
+            }
+
+            // console.debug( 'splitting record into ' + batches.length + ' batches to reduce submission size ', batches );
+
+            batches.forEach( function( batch, index ) {
+                var batchPrepped,
+                    fd = new FormData();
+
+                fd.append( 'xml_submission_file', xmlSubmissionBlob );
+
+                // batch with XML data
+                batchPrepped = {
                     name: record.key,
                     instanceID: instanceID,
-                    formData: formData,
-                    batches: batchesLength,
-                    batchIndex: batchIndex
+                    formData: fd,
+                    batches: batches.length,
+                    batchIndex: index
                 };
-            }
 
-            function gatherFiles() {
-                $fileNodes.each( function() {
-                    var file,
-                        fileO = {
-                            newName: $( this ).prop( 'nodeName' ),
-                            fileName: $( this ).text()
-                        };
-
-                    inputFiles.some( function( f ) {
-                        if ( f.name === fileO.fileName ) {
-                            file = f;
-                            return true;
-                        }
-                        return false;
-                    } );
-
-                    if ( file ) {
-                        count++;
-                        fileO.file = file;
-                        files.push( fileO );
-                        sizes.push( fileO.file.size );
-                    } else {
-                        failedFiles.push( fileO.fileName );
-                        console.error( 'Error occured when trying to retrieve ' + fileO.fileName );
-                    }
+                // add any media files to the batch
+                batch.forEach( function( fileIndex ) {
+                    batchPrepped.formData.append( files[ fileIndex ].nodeName, files[ fileIndex ].file );
                 } );
-                distributeFiles();
+
+                // push the batch to the array
+                batchesPrepped.push( batchPrepped );
+            } );
+
+            // notify user if files could not be found, but let submission go ahead anyway
+            if ( failedFiles.length > 0 ) {
+                gui.alert( '<p>The following media files could not be retrieved: ' + failedFiles.join( ', ' ) + '. ' +
+                    'The submission will go ahead and show the missing filenames in the data, but without the actual file(s).</p>' +
+                    '<p>please contact ' + settings.supportEmail + ' to report a bug and if possible explain how the issue can be reproduced.</p>', 'File(s) not Found' );
             }
 
-            function distributeFiles() {
-                var batchPrepped, fileIndex,
-                    batchesPrepped = [],
-                    maxSize = connection.getMaxSubmissionSize();
-                if ( files.length > 0 ) {
-                    batches = divideIntoBatches( sizes, maxSize );
-                    console.debug( 'splitting record into ' + batches.length + ' batches to reduce submission size ', batches );
-                    for ( var k = 0; k < batches.length; k++ ) {
-                        batchPrepped = basicRecordPrepped( batches.length, k );
-                        for ( var l = 0; l < batches[ k ].length; l++ ) {
-                            fileIndex = batches[ k ][ l ];
-                            batchPrepped.formData.append( files[ fileIndex ].newName + '[]', files[ fileIndex ].file );
-                        }
-                        batchesPrepped.push( batchPrepped );
-                    }
-                    deferred.resolve( batchesPrepped );
-                } else {
-                    batchesPrepped.push( basicRecordPrepped( 1, 0 ) );
-                    // console.log( 'sending submission without files', batchesPrepped );
-                    deferred.resolve( batchesPrepped );
-                }
-                showErrors();
-            }
-
-            function showErrors() {
-                if ( failedFiles.length > 0 ) {
-                    gui.alert( '<p>The following media files could not be retrieved: ' + failedFiles.join( ', ' ) + '. ' +
-                        'The submission will go ahead and show the missing filenames in the data, but without the actual file(s).</p>' +
-                        '<p>please contact ' + settings.supportEmail + ' to report a bug and if possible explain how the issue can be reproduced.</p>', 'File(s) not Found' );
-                }
-            }
-
-            gatherFiles();
-            distributeFiles();
-            showErrors();
-
-            return deferred.promise;
+            return batchesPrepped;
         }
 
 

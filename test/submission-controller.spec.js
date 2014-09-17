@@ -19,7 +19,7 @@ var Q = require( "q" ),
 
 chai.use( chaiAsPromised );
 
-describe( 'submission', function() {
+describe( 'Submissions', function() {
     var enketoId,
         nonExistingEnketoId = 'nope',
         validServer = 'https://testserver.com/bob',
@@ -52,27 +52,16 @@ describe( 'submission', function() {
                 method: 'delete',
                 data: '<data></data>',
                 status: 405
-            },
-            // missing data
-            {
-                method: 'post',
-                data: "",
-                status: 400
             }
-            /*,
-            // request ok, but OpenRosa server not there
-            {
-                method: 'post',
-                data: '<data></data>',
-                status: 404
-            }*/
         ].forEach( function( test ) {
 
             it( 'using ' + test.method.toUpperCase() + ' of ' + test.data +
                 ' responds with ' + test.status, function( done ) {
+
                     request( app )[ test.method ]( '/submission/::' + enketoId )
-                        .field( 'xml_submission_data', test.data )
+                        .field( 'xml_submission_file', new Buffer( [ test.data ] ) )
                         .expect( test.status, done );
+
                 } );
         } );
 
@@ -95,14 +84,14 @@ describe( 'submission', function() {
         it( 'using POST of <data></data> to inactive ID responds with 404', function( done ) {
             request( app )
                 .post( '/submission/::' + enketoId )
-                .field( 'xml_submission_data', '<data></data>' )
+                .field( 'xml_submission_file', '<data></data>' )
                 .expect( 404, done );
         } );
 
         it( 'using POST of <data></data> to non-existing ID responds with 404', function( done ) {
             request( app )
                 .post( '/submission/::' + nonExistingEnketoId )
-                .field( 'xml_submission_data', '<data></data>' )
+                .field( 'xml_submission_file', '<data></data>' )
                 .expect( 404, done );
         } );
 
