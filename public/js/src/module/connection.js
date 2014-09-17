@@ -191,6 +191,9 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
                     cache: false,
                     contentType: false,
                     processData: false,
+                    headers: {
+                        'X-OpenRosa-Version': '1.0'
+                    },
                     //TIMEOUT TO BE TESTED WITH LARGE SIZE PAYLOADS AND SLOW CONNECTIONS...
                     timeout: 300 * 1000,
                     //beforeSend: function(){return false;},

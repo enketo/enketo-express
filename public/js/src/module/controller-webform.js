@@ -176,7 +176,13 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
 
             function basicRecordPrepped( batchesLength, batchIndex ) {
                 var formData = new FormData();
-                formData.append( 'xml_submission_data', xmlData );
+                // append XML as file
+                var blobParts = [ xmlData ];
+                var xmlSubmissionBlob = new Blob( blobParts, {
+                    type: 'text/xml'
+                } );
+                console.debug( 'submission blob', xmlSubmissionBlob );
+                formData.append( 'xml_submission_file', xmlSubmissionBlob );
                 return {
                     name: record.key,
                     instanceID: instanceID,
@@ -190,7 +196,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 $fileNodes.each( function() {
                     var file,
                         fileO = {
-                            newName: $( this ).nodeName,
+                            newName: $( this ).prop( 'nodeName' ),
                             fileName: $( this ).text()
                         };
 

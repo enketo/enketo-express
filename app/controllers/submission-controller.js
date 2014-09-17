@@ -2,8 +2,7 @@
 
 var communicator = require( '../lib/communicator' ),
     surveyModel = require( '../models/survey-model' ),
-    inspect = require( 'util' ).inspect,
-    Busboy = require( 'busboy' ),
+    request = require( 'request' ),
     express = require( 'express' ),
     router = express.Router(),
     debug = require( 'debug' )( 'submission-controller' );
@@ -31,38 +30,26 @@ router
         next( error );
     } );
 
+/** 
+ * Simply pipes well-formed request to the OpenRosa server and
+ * pipes back the response received.
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {[type]}   res  [description]
+ * @param  {Function} next [description]
+ * @return {[type]}        [description]
+ */
 function submit( req, res, next ) {
-    var xmlData,
-        busboy = new Busboy( {
-            headers: req.headers
-        } ),
-        paramName = req.app.get( "query parameter to pass to submission" ),
+    var paramName = req.app.get( "query parameter to pass to submission" ),
         paramValue = req.query[ paramName ],
         query = ( paramValue ) ? '?' + paramName + '=' + paramValue : '';
 
-    busboy.on( 'field', function( fieldname, val, fieldnameTruncated, valTruncated ) {
-        if ( fieldname === 'xml_submission_data' ) {
-            xmlData = val;
-        }
-    } );
-    busboy.on( 'finish', function() {
-        return surveyModel.get( req.enketoId )
-            .then( function( survey ) {
-                var submissionUrl = survey.openRosaServer + '/submission' + query;
-                return communicator.submit( submissionUrl, xmlData )
-                    .then( function( code ) {
-                        if ( code === 201 ) {
-                            // asynchronously increment counters, but ignore errors
-                            surveyModel.addSubmission( req.enketoId );
-                        }
-                        res.status( code );
-                        res.end();
-                    } )
-                    .catch( next );
-            } )
-            .catch( next );
-    } );
-    req.pipe( busboy );
+    surveyModel.get( req.enketoId )
+        .then( function( survey ) {
+            var submissionUrl = survey.openRosaServer + '/submission' + query;
+            req.pipe( request( submissionUrl ) ).pipe( res );
+        } )
+        .catch( next );
 }
 
 function maxSize( req, res, next ) {

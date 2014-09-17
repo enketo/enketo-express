@@ -34,31 +34,12 @@ function _getMaxSize( survey ) {
         } );
 }
 
-function _submit( url, xml, files ) {
-    var error, options,
-        deferred = Q.defer();
-
-    if ( !url || !xml ) {
-        error = new Error( 'Bad request. Required submission options missing.' );
-        error.status = 400;
-        deferred.reject( error );
-        return deferred.promise;
-    }
-
-    options = {
-        url: url,
-        method: 'post'
-    };
-
-    return _request( options, xml );
-}
-
 /**
  * Sends a request to an OpenRosa server
  * @param  { { url:string, convertToJson:boolean } } url  request options object
  * @return {?string=}    promise
  */
-function _request( options, data ) {
+function _request( options ) {
     var error, r,
         deferred = Q.defer();
 
@@ -73,6 +54,7 @@ function _request( options, data ) {
     };
 
     debug( options.url );
+
     r = request( options, function( error, response, body ) {
         if ( error ) {
             debug( 'Error occurred when requesting ' + options.url, error, response );
@@ -87,34 +69,11 @@ function _request( options, data ) {
             deferred.reject( error );
         } else if ( options.method === 'head' ) {
             deferred.resolve( response.headers );
-        } else if ( data ) {
-            // for XML submissions just pass the statuscode response
-            deferred.resolve( response.statusCode );
-        }
-        /*else if ( options.convertToJson ) {
-            debug( 'response of request to ' + options.url + ' has status code: ', response.statusCode );
-            parser.parseString( body, function( parseError, data ) {
-                if ( parseError ) {
-                    deferred.reject( new Error( parseError ) );
-                }
-                deferred.resolve( data );
-            } );
-        } */
-        else {
+        } else {
             debug( 'response of request to ' + options.url + ' has status code: ', response.statusCode );
             deferred.resolve( body );
         }
     } );
-
-    if ( data ) {
-        // fake file attachment, xml submission never touches file system
-        r.form()
-            .append( 'xml_submission_file', data, {
-                filename: 'submission.xml',
-                contentType: 'text/xml',
-                knownLength: Buffer.byteLength( data, 'utf8' )
-            } );
-    }
 
     return deferred.promise;
 }
@@ -249,6 +208,5 @@ module.exports = {
         }
         return deferred.promise;
     },
-    getMaxSize: _getMaxSize,
-    submit: _submit
+    getMaxSize: _getMaxSize
 };
