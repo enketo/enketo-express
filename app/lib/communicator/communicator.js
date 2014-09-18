@@ -6,7 +6,13 @@ var debug = require( 'debug' )( 'openrosa-communicator' );
 var parser = new require( 'xml2js' ).Parser();
 
 function _getFormList( server ) {
-    var formListUrl = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'formList' : server + '/formList';
+    var formListUrl;
+
+    if ( !server ) {
+        throw new Error( 'No server provided.' );
+    }
+
+    formListUrl = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'formList' : server + '/formList';
 
     return _request( {
         url: formListUrl

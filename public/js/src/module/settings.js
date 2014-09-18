@@ -17,13 +17,13 @@
 define( [ 'text!enketo-config' ], function( config ) {
     "use strict";
     var queryParams = _getAllQueryParams(),
-        evaluatedSettings = [],
+        settings = [],
         settingsMap = [ {
             q: 'return',
-            s: 'returnURL'
+            s: 'returnUrl'
         }, {
             q: 'returnURL',
-            s: 'returnURL'
+            s: 'returnUrl'
         }, {
             q: 'showbranch',
             s: 'showBranch'
@@ -35,21 +35,24 @@ define( [ 'text!enketo-config' ], function( config ) {
             s: 'touch'
         }, {
             q: 'server',
-            s: 'serverURL'
+            s: 'serverUrl'
         }, {
             q: 'serverURL',
-            s: 'serverURL'
+            s: 'serverUrl'
         }, {
             q: 'form',
-            s: 'formURL'
+            s: 'xformUrl'
         }, {
             q: 'id',
-            s: 'formId'
+            s: 'xformId'
         }, {
             q: 'formName',
-            s: 'formId'
+            s: 'xformId'
         }, {
             q: 'instanceId',
+            s: 'instanceId'
+        }, {
+            q: 'instance_id',
             s: 'instanceId'
         }, {
             q: 'entityId',
@@ -60,16 +63,22 @@ define( [ 'text!enketo-config' ], function( config ) {
         } ];
 
     settingsMap.forEach( function( obj, i ) {
-        if ( queryParams[ obj.q ] || ( typeof settings !== 'undefined' && settings[ obj.q ] ) ) {
-            evaluatedSettings[ obj.s ] = queryParams[ obj.q ] || settings[ obj.q ] || null;
+        if ( queryParams[ obj.q ] ) {
+            settings[ obj.s ] = queryParams[ obj.q ];
         }
     } );
 
     // add common configuration properties (constants)
     config = JSON.parse( config );
     for ( var prop in config ) {
-        evaluatedSettings[ prop ] = config[ prop ];
+        if ( config.hasOwnProperty( prop ) ) {
+            settings[ prop ] = config[ prop ];
+        }
     }
+
+    // add enketoId
+    settings.enketoIdPrefix = '::';
+    settings.enketoId = new RegExp( '\/' + settings.enketoIdPrefix ).test( window.location.pathname ) ? window.location.pathname.substring( window.location.pathname.lastIndexOf( settings.enketoIdPrefix ) + settings.enketoIdPrefix.length ) : null;
 
     function _getAllQueryParams() {
         var val, processedVal,
@@ -88,5 +97,5 @@ define( [ 'text!enketo-config' ], function( config ) {
         return params;
     }
 
-    return evaluatedSettings;
+    return settings;
 } );

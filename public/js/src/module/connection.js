@@ -15,17 +15,18 @@
  */
 
 /**
- * Deals with communication to the server
+ * Deals with communication to the server (in process of being transformed to using Promises)
  */
 
-define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store, $ ) {
+define( [ 'gui', 'settings', 'store', 'q', 'jquery' ], function( gui, settings, store, Q, $ ) {
     "use strict";
     var progress, maxSubmissionSize,
         that = this,
-        ID = /\/::/.test( window.location.pathname ) ? window.location.pathname.substring( window.location.pathname.lastIndexOf( '::' ) ) : null,
         CONNECTION_URL = '/connection',
-        SUBMISSION_URL = ( ID ) ? '/submission/' + ID + location.search : null,
-        MAX_SIZE_URL = ( ID ) ? '/submission/max-size/' + ID : null,
+        TRANSFORM_URL = '/transform/xform',
+        SUBMISSION_URL = ( settings.enketoId ) ? '/submission/' + settings.enketoIdPrefix + settings.enketoId + location.search : null,
+        INSTANCE_URL = ( settings.enketoId ) ? '/submission/' + settings.enketoIdPrefix + settings.enketoId : null,
+        MAX_SIZE_URL = ( settings.enketoId ) ? '/submission/max-size/' + settings.enketoIdPrefix + settings.enketoId : null,
         currentOnlineStatus = null,
         uploadOngoingID = null,
         uploadOngoingBatchIndex = null,
@@ -526,12 +527,63 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
         return callbacks;
     }
 
+
+    /**
+     * Obtains HTML Form and XML Model
+     *
+     * @param  {{serverUrl: ?string=, formId: ?string=, formUrl: ?string=, enketoId: ?string=}  options
+     * @return { Promise }
+     */
+    function getFormParts( props ) {
+        var deferred = Q.defer();
+
+        $.ajax( TRANSFORM_URL, {
+            type: 'POST',
+            data: props
+        } )
+            .done( function( data ) {
+                deferred.resolve( data );
+            } )
+            .fail( function( jqXHR, textStatus, errorMsg ) {
+                var error = jqXHR.responseJSON || new Error( errorMsg );
+                deferred.reject( error );
+            } );
+
+        return deferred.promise;
+    }
+
+    /**
+     * Obtains cached XML instance
+     *
+     * @param  {{serverUrl: ?string=, formId: ?string=, formUrl: ?string=, enketoId: ?string=, instanceID: string}  options
+     * @return { Promise }
+     */
+    function getExistingInstance( props ) {
+        var deferred = Q.defer();
+
+        $.ajax( INSTANCE_URL, {
+            type: 'GET',
+            data: props
+        } )
+            .done( function( data ) {
+                deferred.resolve( data );
+            } )
+            .fail( function( jqXHR, textStatus, errorMsg ) {
+                var error = jqXHR.responseJSON || new Error( errorMsg );
+                deferred.reject( error );
+            } );
+
+        return deferred.promise;
+    }
+
     return {
         init: init,
         uploadRecords: uploadRecords,
         getUploadQueue: getUploadQueue,
         getUploadOngoingID: getUploadOngoingID,
         getMaxSubmissionSize: getMaxSubmissionSize,
+        getFormParts: getFormParts,
+        getExistingInstance: getExistingInstance,
         // "private" but used for tests:
         _processOpenRosaResponse: _processOpenRosaResponse,
         _getUploadResult: _getUploadResult,

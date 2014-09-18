@@ -108,7 +108,8 @@ module.exports = function( grunt ) {
                     done();
                 }
             },
-            "webform": getWebformCompileOptions()
+            "webform": getWebformCompileOptions(),
+            "webform-edit": getWebformCompileOptions( 'edit' )
         },
         symlink: {
             core: {

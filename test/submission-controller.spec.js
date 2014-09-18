@@ -15,7 +15,13 @@ var Q = require( "q" ),
     chaiAsPromised = require( "chai-as-promised" ),
     request = require( 'supertest' ),
     app = require( '../config/express' ),
-    surveyModel = require( '../app/models/survey-model' );
+    surveyModel = require( '../app/models/survey-model' ),
+    instanceModel = require( '../app/models/instance-model' ),
+    redis = require( "redis" ),
+    config = require( "../config/config" ),
+    client = redis.createClient( config.redis.main.port, config.redis.main.host, {
+        auth_pass: config.redis.main.password
+    } );
 
 chai.use( chaiAsPromised );
 
@@ -36,15 +42,22 @@ describe( 'Submissions', function() {
         } );
     } );
 
-    describe( 'for active/existing enketo IDs', function() {
+    afterEach( function( done ) {
+        // select test database and flush it
+        client.select( 15, function( err ) {
+            if ( err ) return done( err );
+            client.flushdb( function( err ) {
+                if ( err ) return done( err );
+                done();
+            } );
+        } );
+    } );
+
+    describe( 'for active/existing Enketo IDs', function() {
 
         [
             // invalid methods
             {
-                method: 'get',
-                data: '<data></data>',
-                status: 405
-            }, {
                 method: 'put',
                 data: '<data></data>',
                 status: 405
@@ -67,7 +80,7 @@ describe( 'Submissions', function() {
 
     } );
 
-    describe( 'for inactive or non-existing enketo IDs', function() {
+    describe( 'for inactive or non-existing Enketo IDs', function() {
 
         beforeEach( function( done ) {
             // de-activate survey
@@ -96,4 +109,68 @@ describe( 'Submissions', function() {
         } );
 
     } );
+
+    describe( 'using GET (existing submissions) for an existing/active Enketo IDs', function() {
+
+        it( 'responds with 400 if no instanceID provided', function( done ) {
+            request( app ).get( '/submission/::' + enketoId )
+                .expect( 400, done );
+        } );
+
+        it( 'responds with 400 if instanceID is empty', function( done ) {
+            request( app ).get( '/submission/::' + enketoId + '?instanceId=' )
+                .expect( 400, done );
+        } );
+
+        it( 'responds with 404 if instanceID requested is not found', function( done ) {
+            request( app ).get( '/submission/::' + enketoId + '?instanceId=a' )
+                .expect( 404, done );
+        } );
+
+        describe( 'for a valid and existing instanceID that does not belong to the current form', function() {
+
+            beforeEach( function( done ) {
+                // add survey if it doesn't exist in the db
+                instanceModel.set( {
+                    openRosaServer: validServer,
+                    openRosaId: 'differentId',
+                    instanceId: 'b',
+                    returnUrl: 'example.com',
+                    instance: '<data></data>'
+                } ).then( function( s ) {
+                    done();
+                } );
+            } );
+
+            it( 'responds with 400', function( done ) {
+                request( app ).get( '/submission/::' + enketoId + '?instanceId=b' )
+                    .expect( 400, done );
+            } );
+
+        } );
+
+        describe( 'for a valid and existing instanceID that belongs to the current form', function() {
+
+            beforeEach( function( done ) {
+                // add survey if it doesn't exist in the db
+                instanceModel.set( {
+                    openRosaServer: validServer,
+                    openRosaId: validFormId,
+                    instanceId: 'c',
+                    returnUrl: 'example.com',
+                    instance: '<data></data>'
+                } ).then( function( s ) {
+                    done();
+                } );
+            } );
+
+            it( 'responds with 200', function( done ) {
+                request( app ).get( '/submission/::' + enketoId + '?instanceId=c' )
+                    .expect( 200, done );
+            } );
+
+        } );
+
+    } );
+
 } );
