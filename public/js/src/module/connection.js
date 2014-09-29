@@ -52,26 +52,20 @@ define( [ 'gui', 'settings', 'store', 'jquery' ], function( gui, settings, store
 
     function checkOnlineStatus() {
         var online;
-        //navigator.onLine is totally unreliable (returns incorrect trues) on Firefox, Chrome, Safari (on OS X 10.8),
-        //but I assume falses are correct
-        if ( navigator.onLine ) {
-            if ( !uploadOngoingID ) {
-                $.ajax( {
-                    type: 'GET',
-                    url: CONNECTION_URL,
-                    cache: false,
-                    dataType: 'json',
-                    timeout: 3000,
-                    complete: function( response ) {
-                        //important to check for the content of the no-cache response as it will
-                        //start receiving the fallback page specified in the manifest!
-                        online = typeof response.responseText !== 'undefined' && /connected/.test( response.responseText );
-                        _setOnlineStatus( online );
-                    }
-                } );
-            }
-        } else {
-            _setOnlineStatus( false );
+        if ( !uploadOngoingID ) {
+            $.ajax( {
+                type: 'GET',
+                url: CONNECTION_URL,
+                cache: false,
+                dataType: 'json',
+                timeout: 3000,
+                complete: function( response ) {
+                    //important to check for the content of the no-cache response as it will
+                    //start receiving the fallback page specified in the manifest!
+                    online = typeof response.responseText !== 'undefined' && /connected/.test( response.responseText );
+                    _setOnlineStatus( online );
+                }
+            } );
         }
     }
 
