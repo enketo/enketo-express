@@ -46,8 +46,21 @@ function submit( req, res, next ) {
 
     surveyModel.get( req.enketoId )
         .then( function( survey ) {
-            var submissionUrl = survey.openRosaServer + '/submission' + query;
-            req.pipe( request( submissionUrl ) ).pipe( res );
+            var data = '',
+                submissionUrl = survey.openRosaServer + '/submission' + query;
+
+            req.pipe( request( submissionUrl ) )
+                .on( 'data', function( chunk ) {
+                    data += chunk;
+                } )
+                .on( 'end', function() {
+                    res.send( data );
+                } )
+                .pipe( res );
+
+            // The much simpler: req.pipe( request( submissionUrl ) ).pipe( res ) without 'data' and 'end' 
+            // event handlers causes a problem in the (KoBo) VM as the response never closes (until it times out). 
+            // For some reason the response body is never piped under certain conditions. 
         } )
         .catch( next );
 }
