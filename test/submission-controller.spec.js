@@ -69,7 +69,8 @@ describe( 'Submissions', function() {
         ].forEach( function( test ) {
 
             it( 'using ' + test.method.toUpperCase() + ' of ' + test.data +
-                ' responds with ' + test.status, function( done ) {
+                ' responds with ' + test.status,
+                function( done ) {
 
                     request( app )[ test.method ]( '/submission/::' + enketoId )
                         .field( 'xml_submission_file', new Buffer( [ test.data ] ) )

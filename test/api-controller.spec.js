@@ -160,7 +160,8 @@ describe( 'api', function() {
                 server = ( typeof test.server !== 'undefined' ) ? test.server : validServer;
 
             it( test.method.toUpperCase() + ' /survey with ' + authDesc + ' authentication and ' + server +
-                ' responds with ' + test.status, function( done ) {
+                ' responds with ' + test.status,
+                function( done ) {
                     request( app )[ test.method ]( '/api/v1/survey' )
                         .set( auth )
                         .send( {
@@ -245,7 +246,8 @@ describe( 'api', function() {
                 instanceId = typeof test.instanceId !== 'undefined' ? test.instanceId : 'someUUID';
 
             it( test.method.toUpperCase() + ' /instance with ' + authDesc + ' authentication and ' + server + ', ' + id +
-                ', ' + ret + ', ' + instance + ', ' + instanceId + ' responds with ' + test.status, function( done ) {
+                ', ' + ret + ', ' + instance + ', ' + instanceId + ' responds with ' + test.status,
+                function( done ) {
                     request( app )[ test.method ]( '/api/v1/instance' )
                         .set( auth )
                         .send( {

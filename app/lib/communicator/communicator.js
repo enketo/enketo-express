@@ -207,8 +207,8 @@ module.exports = {
             deferred.resolve( survey );
         } else {
             _request( {
-                url: survey.info.manifestUrl
-            } )
+                    url: survey.info.manifestUrl
+                } )
                 .then( _xmlToJson )
                 .then( function( obj ) {
                     survey.manifest = ( obj.manifest && obj.manifest.mediaFile ) ? obj.manifest.mediaFile.map( function( file ) {

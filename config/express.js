@@ -28,7 +28,9 @@ app.set( 'json spaces', 4 );
 
 // middleware
 app.use( bodyParser.json() );
-app.use( bodyParser.urlencoded() );
+app.use( bodyParser.urlencoded( {
+    extended: false
+} ) );
 app.use( favicon( path.resolve( __dirname, '../public/images/favicon.ico' ) ) );
 app.use( express.static( path.resolve( __dirname, '../public' ) ) );
 
@@ -50,9 +52,7 @@ fs.readdirSync( controllersPath ).forEach( function( file ) {
 } );
 
 // logging
-app.use( logger( {
-    format: ( app.get( 'env' ) === 'development' ? 'dev' : 'tiny' )
-} ) );
+app.use( logger( ( app.get( 'env' ) === 'development' ? 'dev' : 'tiny' ) ) );
 
 // error handlers
 app.use( errorHandler[ "404" ] );

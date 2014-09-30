@@ -116,7 +116,7 @@ describe( 'Instance Model', function() {
         } );
 
         it( 'returns a 400 error when the instanceId property is not provided in the parameter', function() {
-            setPromise = model.set( survey ).then( model.get ),
+            setPromise = model.set( survey ).then( model.get );
             remPromise = setPromise.then( function() {
                 delete survey.instanceId;
                 return model.remove( survey );
@@ -125,7 +125,7 @@ describe( 'Instance Model', function() {
         } );
 
         it( 'returns the removed instanceId when successful', function() {
-            setPromise = model.set( survey ).then( model.get ),
+            setPromise = model.set( survey ).then( model.get );
             remPromise = setPromise.then( model.remove ),
             getPromise = remPromise.then( function() {
                 return model.get( {

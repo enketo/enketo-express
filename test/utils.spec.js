@@ -124,7 +124,8 @@ describe( 'Utilities', function() {
             ]
         ].forEach( function( pair ) {
             it( 'returns ' + pair[ 2 ] + ' when comparing ' + JSON.stringify( pair[ 0 ] ) +
-                ' with ' + JSON.stringify( pair[ 1 ] ), function() {
+                ' with ' + JSON.stringify( pair[ 1 ] ),
+                function() {
                     expect( utils.areOwnPropertiesEqual( pair[ 0 ], pair[ 1 ] ) ).to.equal( pair[ 2 ] );
                     expect( utils.areOwnPropertiesEqual( pair[ 1 ], pair[ 0 ] ) ).to.equal( pair[ 2 ] );
                 } );

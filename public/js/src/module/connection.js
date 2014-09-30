@@ -538,9 +538,9 @@ define( [ 'gui', 'settings', 'store', 'q', 'jquery' ], function( gui, settings, 
         var deferred = Q.defer();
 
         $.ajax( TRANSFORM_URL, {
-            type: 'POST',
-            data: props
-        } )
+                type: 'POST',
+                data: props
+            } )
             .done( function( data ) {
                 deferred.resolve( data );
             } )
@@ -562,9 +562,9 @@ define( [ 'gui', 'settings', 'store', 'q', 'jquery' ], function( gui, settings, 
         var deferred = Q.defer();
 
         $.ajax( INSTANCE_URL, {
-            type: 'GET',
-            data: props
-        } )
+                type: 'GET',
+                data: props
+            } )
             .done( function( data ) {
                 deferred.resolve( data );
             } )
