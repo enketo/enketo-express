@@ -1,4 +1,4 @@
-enketo-express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express.png)](https://travis-ci.org/kobotoolbox/enketo-express)
+enketo-express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express.png)](https://travis-ci.org/kobotoolbox/enketo-express) [![Dependency Status](https://david-dm.org/kobotoolbox/enketo-express.png)](https://david-dm.org/kobotoolbox/enketo-express)
 ==============
 
 ![Enketo Logo](public/images/logo.png "Enketo Logo")
