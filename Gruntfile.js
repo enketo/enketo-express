@@ -161,6 +161,6 @@ module.exports = function( grunt ) {
 
     grunt.registerTask( 'default', [ 'symlink', 'compile', 'test' ] );
     grunt.registerTask( 'compile', [ 'sass', 'client-config-file:create', 'requirejs', 'client-config-file:remove' ] );
-    grunt.registerTask( 'test', [ 'env:test', 'symlink', 'mochaTest', 'jsbeautifier:test', 'jshint', 'compile' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'symlink', 'mochaTest', /*'jsbeautifier:test'*/ , 'jshint', 'compile' ] );
     grunt.registerTask( 'develop', [ 'concurrent:develop' ] );
 };
