@@ -11,16 +11,13 @@ html
 
     block style
 
-    block script
-
     block global
-
-    if livereload
-      script(src="//localhost:35729/livereload.js")
 
   - var cl = (iframe) ? 'iframe' : ''
   body(class=cl)
     block content
+
+    block script
 
     if tracking
       script.
@@ -30,3 +27,6 @@ html
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
         ga('create', '#{tracking}', '#{trackingDomain}');
         ga('send', 'pageview');
+
+    if livereload
+      script(src="//localhost:35729/livereload.js")

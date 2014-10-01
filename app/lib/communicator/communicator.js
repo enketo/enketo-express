@@ -6,7 +6,13 @@ var debug = require( 'debug' )( 'openrosa-communicator' );
 var parser = new require( 'xml2js' ).Parser();
 
 function _getFormList( server ) {
-    var formListUrl = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'formList' : server + '/formList';
+    var formListUrl;
+
+    if ( !server ) {
+        throw new Error( 'No server provided.' );
+    }
+
+    formListUrl = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'formList' : server + '/formList';
 
     return _request( {
         url: formListUrl
@@ -201,8 +207,8 @@ module.exports = {
             deferred.resolve( survey );
         } else {
             _request( {
-                url: survey.info.manifestUrl
-            } )
+                    url: survey.info.manifestUrl
+                } )
                 .then( _xmlToJson )
                 .then( function( obj ) {
                     survey.manifest = ( obj.manifest && obj.manifest.mediaFile ) ? obj.manifest.mediaFile.map( function( file ) {

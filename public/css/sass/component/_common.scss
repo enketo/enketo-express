@@ -2,6 +2,7 @@
 @import "iframe";
 @import "modal";
 @import "feedback-bar";
+
 //@import "ad";
 
 body {
@@ -28,39 +29,12 @@ progress {
     border: 7px solid $content_border;
 }
 
-.formlist {
-    ul {
-        padding: 0;
-        margin: 0;
-        list-style: none;
-        li {
-            margin: 10px 0;
-        }
+.form__loader {
+    @include loader-image(250px);
+    margin: 170px auto 0 auto;
+    &.fail {
+        background: none;
     }
-    img {
-        display: none;
-    }
-    &.empty {
-        img {
-            width: 80%;
-            display: block;
-            margin: 40% auto;
-        }
-        p:not(.alert-error) {
-            display: none;
-        }
-    }
-}
-
-.hint {
-    display: inline-block;
-    margin-left: 5px;
-}
-
-.self-destruct-timer {
-    float: left;
-    margin-top: 5px;
-    color: $shadow;
 }
 
 .page-break {

@@ -40,7 +40,7 @@ function _getSurvey( survey ) {
                 error.status = 404;
                 deferred.reject( error );
             } else {
-                // Adding the hashes to the refernced survey object can be efficient, since this object 
+                // Adding the hashes to the referenced survey object can be efficient, since this object 
                 // is passed around. The hashes may therefore already have been calculated 
                 // when setting the cache later on.
                 // mediaHash can be "null" in Redis and null in reality so it is cast to a string

@@ -31,6 +31,7 @@ describe( 'Instance Model', function() {
         beforeEach( function() {
             survey = {
                 openRosaId: 'widgets',
+                openRosaServer: 'http://example.com',
                 instanceId: 'someid',
                 returnUrl: 'http://example.com',
                 instance: '<data></data>'
@@ -39,6 +40,16 @@ describe( 'Instance Model', function() {
 
         it( 'returns an 400 error when instanceId is missing', function() {
             delete survey.instanceId;
+            return expect( model.set( survey ) ).to.eventually.be.rejected
+                .and.to.have.property( 'status' ).that.equals( 400 );
+        } );
+        it( 'returns an 400 error when openRosaId is missing', function() {
+            delete survey.openRosaId;
+            return expect( model.set( survey ) ).to.eventually.be.rejected
+                .and.to.have.property( 'status' ).that.equals( 400 );
+        } );
+        it( 'returns an 400 error when openRosaServer is missing', function() {
+            delete survey.openRosaServer;
             return expect( model.set( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
@@ -63,6 +74,7 @@ describe( 'Instance Model', function() {
         beforeEach( function() {
             survey = {
                 openRosaId: 'widgets',
+                openRosaServer: 'http://example.com',
                 instanceId: 'someid',
                 returnUrl: 'http://example.com',
                 instance: '<data></data>'
@@ -97,13 +109,14 @@ describe( 'Instance Model', function() {
             survey = {
                 openRosaId: 'widgets',
                 instanceId: 'someid',
+                openRosaServer: 'http://example.com',
                 returnUrl: 'http://example.com',
                 instance: '<data></data>'
             };
         } );
 
         it( 'returns a 400 error when the instanceId property is not provided in the parameter', function() {
-            setPromise = model.set( survey ).then( model.get ),
+            setPromise = model.set( survey ).then( model.get );
             remPromise = setPromise.then( function() {
                 delete survey.instanceId;
                 return model.remove( survey );
@@ -112,7 +125,7 @@ describe( 'Instance Model', function() {
         } );
 
         it( 'returns the removed instanceId when successful', function() {
-            setPromise = model.set( survey ).then( model.get ),
+            setPromise = model.set( survey ).then( model.get );
             remPromise = setPromise.then( model.remove ),
             getPromise = remPromise.then( function() {
                 return model.get( {
