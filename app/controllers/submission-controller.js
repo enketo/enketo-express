@@ -39,7 +39,7 @@ router
 
 /** 
  * Simply pipes well-formed request to the OpenRosa server and
- * pipes back the response received.
+ * copies the response received.
  *
  * @param  {[type]}   req  [description]
  * @param  {[type]}   res  [description]
@@ -56,18 +56,19 @@ function submit( req, res, next ) {
             var data = '',
                 submissionUrl = survey.openRosaServer + '/submission' + query;
 
-            req.pipe( request( submissionUrl ) )
-                .on( 'data', function( chunk ) {
-                    data += chunk;
-                } )
-                .on( 'end', function() {
-                    res.send( data );
-                } )
-                .pipe( res );
+            req.pipe( request( submissionUrl, function( error, response, body ) {
+                if ( error ) {
+                    next( error );
+                } else {
+                    res.set( response.headers );
+                    res.status( response.statusCode );
+                    res.send( body );
+                }
+            } ) );
 
-            // The much simpler: req.pipe( request( submissionUrl ) ).pipe( res ) without 'data' and 'end' 
-            // event handlers causes a problem in the (KoBo) VM as the response never closes (until it times out). 
-            // For some reason the response body is never piped under certain conditions. 
+            // The much simpler: req.pipe( request( submissionUrl ) ).pipe( res ) 
+            // causes a problem in the (KoBo) VM as the response never closes (until it times out). 
+            // For some reason the response body is never piped under certain (fast) conditions. 
         } )
         .catch( next );
 }
