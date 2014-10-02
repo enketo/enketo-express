@@ -36,7 +36,6 @@ function getSurveyParts( req, res, next ) {
 
     _getSurveyParams( req.body )
         .then( function( survey ) {
-            debug( 'survey', survey, !!survey.info );
             if ( survey.info ) {
                 _getFormDirectly( survey )
                     .then( function( survey ) {
@@ -106,7 +105,6 @@ function _getSurveyParams( params ) {
             openRosaId: params.xformId
         } );
     } else if ( params.xformUrl ) {
-        debug( 'resolving with info.downloadUrl' );
         // do not check account
         deferred.resolve( {
             info: {

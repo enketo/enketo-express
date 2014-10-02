@@ -64,8 +64,8 @@ function _request( options ) {
 
     r = request( options, function( error, response, body ) {
         if ( error ) {
-            debug( 'Error occurred when requesting ' + options.url, error, response );
-            deferred.reject( new Error( error ) );
+            debug( 'Error occurred when requesting ' + options.url, error );
+            deferred.reject( error );
         } else if ( response.statusCode === 401 ) {
             error = new Error( 'Authentication required but not supported in this version of Enketo' );
             error.status = response.statusCode;
@@ -97,7 +97,7 @@ function _xmlToJson( xml ) {
     parser.parseString( xml, function( error, data ) {
         if ( error ) {
             debug( 'error parsing xml and converting to JSON' );
-            deferred.reject( new Error( error ) );
+            deferred.reject( error );
         } else {
             debug( 'succesfully converted XML to JSON' );
             deferred.resolve( data );
@@ -136,9 +136,7 @@ function _findFormAddInfo( formListXml, survey ) {
                 deferred.resolve( survey );
             }
         } )
-        .catch( function( error ) {
-            _failHandler( deferred, error );
-        } );
+        .catch( deferred.reject );
 
     return deferred.promise;
 }
@@ -159,12 +157,6 @@ function _simplifyFormObj( formObj ) {
     }
 
     return formObj;
-}
-
-function _failHandler( deferred, error ) {
-    error = error || new Error( 'Unknown Error' );
-    error = ( typeof error === 'string' ) ? new Error( error ) : error;
-    deferred.reject( error );
 }
 
 module.exports = {

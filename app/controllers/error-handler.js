@@ -1,10 +1,15 @@
 "use strict";
 
+var readableMessages = {
+    'ECONNREFUSED': 'Could not connect with Server.'
+};
+
+
 module.exports = {
     production: function( err, req, res, next ) {
         var body = {
             code: err.status || 500,
-            message: err.message
+            message: readableMessages[ err.code ] || err.message
         };
         res.status( err.status || 500 );
         if ( res.get( 'Content-type' ) === 'application/json' ) {
@@ -16,7 +21,7 @@ module.exports = {
     development: function( err, req, res, next ) {
         var body = {
             code: err.status || 500,
-            message: err.message,
+            message: readableMessages[ err.code ] || err.message,
             stack: err.stack
         };
         res.status( err.status || 500 );

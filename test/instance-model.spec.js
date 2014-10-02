@@ -15,8 +15,8 @@ describe( 'Instance Model', function() {
 
     afterEach( function( done ) {
         model.remove( {
-            instanceId: 'someid'
-        } )
+                instanceId: 'someid'
+            } )
             .then( function() {
                 done();
             } )
@@ -127,11 +127,11 @@ describe( 'Instance Model', function() {
         it( 'returns the removed instanceId when successful', function() {
             setPromise = model.set( survey ).then( model.get );
             remPromise = setPromise.then( model.remove ),
-            getPromise = remPromise.then( function() {
-                return model.get( {
-                    instanceId: survey.instanceId
+                getPromise = remPromise.then( function() {
+                    return model.get( {
+                        instanceId: survey.instanceId
+                    } );
                 } );
-            } );
 
             return Q.all( [
                 expect( setPromise ).to.eventually.have.property( 'instance' ).that.equals( survey.instance ),
