@@ -40,6 +40,7 @@ app.use( function( req, res, next ) {
     res.locals.environment = req.app.get( 'env' );
     res.locals.tracking = req.app.get( 'google' ).analytics.ua ? req.app.get( 'google' ).analytics.ua : false;
     res.locals.trackingDomain = req.app.get( 'google' ).analytics.domain;
+    res.locals.logo = req.app.get( 'logo source' );
     next();
 } );
 
