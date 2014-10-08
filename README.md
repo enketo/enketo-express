@@ -1,7 +1,7 @@
 enketo-express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express.svg)](https://travis-ci.org/kobotoolbox/enketo-express) [![Dependency Status](https://david-dm.org/kobotoolbox/enketo-express.svg)](https://david-dm.org/kobotoolbox/enketo-express)
 ==============
 
-![Enketo Logo](public/images/logo.png "Enketo Logo")
+![Enketo Logo](https://enketo.org/private_media/images/logo-black.png "Enketo Logo")
 
 A super light-weight node.js version of Enketo Smart Paper developed for KoBo Toolbox. Chock-full of [badass rockstar tech](https://www.youtube.com/watch?v=bzkRVzciAZg).
 
