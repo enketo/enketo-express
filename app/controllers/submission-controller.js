@@ -53,22 +53,30 @@ function submit( req, res, next ) {
 
     surveyModel.get( req.enketoId )
         .then( function( survey ) {
-            var data = '',
-                submissionUrl = survey.openRosaServer + '/submission' + query;
+            var submissionUrl = survey.openRosaServer + '/submission' + query,
+                submissionRequest = request( submissionUrl );
 
-            req.pipe( request( submissionUrl, function( error, response, body ) {
-                if ( error ) {
-                    next( error );
-                } else {
-                    res.set( response.headers );
-                    res.status( response.statusCode );
-                    res.send( body );
-                }
-            } ) );
+            // pipe the request
+            req.pipe( submissionRequest ).pipe( res );
 
-            // The much simpler: req.pipe( request( submissionUrl ) ).pipe( res ) 
-            // causes a problem in the (KoBo) VM as the response never closes (until it times out). 
-            // For some reason the response body is never piped under certain (fast) conditions. 
+            // The hack below is to workaround an issue in the (KoBo) VM where the response never closes (until it times out). 
+            // For some reason the response body is never piped under certain (fast | race) conditions. 
+            var raceConditionHack = function() {
+                setTimeout( function() {
+                    // if the headers have been sent (not an exact check)
+                    if ( res.headersSent ) {
+                        // the check below seems to always be true
+                        if ( req.socket && !req.socket.destroyed ) {
+                            debug( 'manually closing socket in case it is still open' );
+                            req.socket.destroy();
+                        }
+                    } else {
+                        raceConditionHack();
+                    }
+                }, 1000 );
+            };
+            raceConditionHack();
+
         } )
         .catch( next );
 }
