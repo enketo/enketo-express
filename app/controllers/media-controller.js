@@ -16,27 +16,20 @@ function _extractMediaUrl( path ) {
     if ( !path ) {
         return undefined;
     }
+    // url decode path? (done in php app)
     return path.replace( /\//, '://' );
 }
 
 function getMedia( req, res, next ) {
-    var mediaUrl = _extractMediaUrl( req.params[ 0 ] );
-    // url decode this (done in php app)?
+    var mediaUrl = _extractMediaUrl( req.url.substring( '/get/'.length ) );
 
-    request( mediaUrl )
-        .on( 'data', function( chunk ) {
-            res.write( chunk );
-        } )
-        .on( 'error', function( error ) {
-            debug( 'error retrieving media from OpenRosa server: ' + JSON.stringify( error ) );
-            if ( !error.status ) {
-                error.status = ( error.code && error.code == 'ENOTFOUND' ) ? 404 : 500;
-            }
-            next( error );
-        } )
-        .on( 'end', function() {
-            res.end();
-        } );
+    request( mediaUrl ).pipe( res ).on( 'error', function( error ) {
+        debug( 'error retrieving media from OpenRosa server: ' + JSON.stringify( error ) );
+        if ( !error.status ) {
+            error.status = ( error.code && error.code == 'ENOTFOUND' ) ? 404 : 500;
+        }
+        next( error );
+    } );
 
     // this simpler alternative does not work properly: request( mediaUrl, next ).pipe( res );
 }
