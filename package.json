@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "body-parser": "1.9.x",
+        "compression": "1.1.x",
         "debug": "2.0.x",
         "express": "4.9.x",
         "jade": "1.7.x",
