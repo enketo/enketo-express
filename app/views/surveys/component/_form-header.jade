@@ -1,8 +1,8 @@
 header.form-header
   .offline-enabled
   .form-progress
-  a.branding(href="#")
+  a.branding(href="#{logo.href || '#'}")
     .logo-wrapper
-      img(src="#{logo}", alt="logo")
+      img(src="#{logo.source}", alt="logo")
   button.print(onclick="return false;").hide
   span.form-language-selector.hide: span Choose Language
