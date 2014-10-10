@@ -96,7 +96,6 @@ function _replaceMediaSources( form, manifest ) {
 
 function _toLocalMediaUrl( url ) {
     var localUrl = '/media/get/' + url.replace( /(https?):\/\//, '$1/' );
-    localUrl = localUrl.replace( /:/, '%3A' );
 
     return localUrl;
 }
