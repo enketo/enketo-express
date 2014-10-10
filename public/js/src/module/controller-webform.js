@@ -37,7 +37,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
 
             // DEBUG
             //window.form = form;
-            window.gui = gui;
+            //window.gui = gui;
 
             //initialize form and check for load errors
             loadErrors = form.init();
@@ -45,8 +45,8 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
             if ( form.getEncryptionKey() ) {
                 console.error( 'This form requires encryption of local records but this is not supported yet in Enketo.', loadErrors );
                 loadErrors.unshift( '<strong>This form requires local encryption of records. ' +
-                    'Unfortunately this is currently not supported. ' +
-                    'You should use ODK Collect ' +
+                    'Unfortunately this not yet supported. ' +
+                    'We recommend using ODK Collect ' +
                     'for data collection with this form.</strong>'
                 );
             }
@@ -61,8 +61,6 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
             $formprogress = $( '.form-progress' );
 
             setEventHandlers();
-
-            console.log( 'controls initialized for form', form );
         }
 
         /**

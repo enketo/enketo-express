@@ -47,7 +47,7 @@
         "load-grunt-tasks": "0.6.x",
         "mocha": "*",
         "rjs-build-analysis": "0.0.x",
-        "supertest": "0.14.x",
+        "supertest": "0.13.x",
         "time-grunt": "1.0.x"
     }
 }

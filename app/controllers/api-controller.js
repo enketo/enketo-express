@@ -15,10 +15,8 @@ module.exports = function( app ) {
 
 router
     .all( '*', authCheck )
-    .all( '/*/iframe', function( req, res, next ) {
-        req.iframe = true;
-        next();
-    } )
+    .all( '*', _setDefaultsQueryParam )
+    .all( '/*/iframe', _setIframeQueryParam )
     .all( '/survey/preview*', function( req, res, next ) {
         req.webformType = 'preview';
         next();
@@ -207,31 +205,74 @@ function removeInstance( req, res, next ) {
         .catch( next );
 }
 
+function _setDefaultsQueryParam( req, res, next ) {
+    var map,
+        queryParam = '';
+
+    if ( !req.param( 'defaults' ) ) {
+        next();
+    } else {
+        map = req.param( 'defaults' );
+        for ( var prop in map ) {
+            if ( map.hasOwnProperty( prop ) ) {
+                queryParam += 'd[' + encodeURIComponent( prop ) + ']' + '=' + encodeURIComponent( map[ prop ] ) + '&';
+            }
+        }
+        req.defaultsQueryParam = queryParam.substring( 0, queryParam.length - 1 );
+        next();
+    }
+}
+
+function _setIframeQueryParam( req, res, next ) {
+    req.iframeQueryParam = 'iframe=true';
+    next();
+}
+
+function _generateQueryString( params ) {
+    var paramsJoined;
+
+    params = params || [];
+
+    paramsJoined = params.filter( function( part ) {
+        return part && part.length > 0;
+    } ).join( '&' );
+
+    return paramsJoined ? '?' + paramsJoined : '';
+}
+
 function _generateWebformUrls( id, req ) {
-    var obj = {},
+    var queryString,
+        obj = {},
         baseUrl = req.protocol + '://' + req.headers.host + '/',
-        idPart = '::' + id,
-        iframeUrlPart = ( req.iframe ) ? '?iframe=true' : '';
+        idPart = '::' + id;
 
     req.webformType = req.webformType || 'default';
 
     switch ( req.webformType ) {
         case 'preview':
-            obj.preview_url = baseUrl + 'preview/' + idPart + iframeUrlPart;
+            queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam ] );
+            obj.preview_url = baseUrl + 'preview/' + idPart + queryString;
             break;
         case 'edit':
-            iframeUrlPart = ( req.iframe ) ? '&iframe=true' : '';
-            obj.edit_url = baseUrl + 'edit/' + idPart + '?instance_id=' + req.param( 'instance_id' ) + iframeUrlPart;
+            // no defaults query parameter in edit view
+            queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.param( 'instance_id' ) ] );
+            obj.edit_url = baseUrl + 'edit/' + idPart + queryString;
             break;
         case 'all':
-            obj.url = baseUrl + idPart;
-            obj.iframe_url = obj.url + '?iframe=true';
-            obj.preview_url = baseUrl + 'preview/' + idPart;
-            obj.preview_iframe_url = obj.preview_url + '?iframe=true';
+            // non-iframe views
+            queryString = _generateQueryString( [ req.defaultsQueryParam ] );
+            obj.url = baseUrl + idPart + queryString;
+            obj.preview_url = baseUrl + 'preview/' + idPart + queryString;
+            // iframe views
+            queryString = _generateQueryString( [ 'iframe=true', req.defaultsQueryParam ] );
+            obj.iframe_url = baseUrl + idPart + queryString;
+            obj.preview_iframe_url = baseUrl + 'preview/' + idPart + queryString;
+            // enketo-legacy
             obj.subdomain = '';
             break;
         default:
-            obj.url = baseUrl + idPart + iframeUrlPart;
+            queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam ] );
+            obj.url = baseUrl + idPart + queryString;
             break;
     }
 
@@ -241,7 +282,7 @@ function _generateWebformUrls( id, req ) {
 function _render( status, body, res ) {
     if ( status === 204 ) {
         // send 204 response without a body
-        res.send( status );
+        res.status( status ).end();
     } else {
         body = body || {};
         if ( typeof body === 'string' ) {
@@ -250,6 +291,6 @@ function _render( status, body, res ) {
             };
         }
         body.code = status;
-        res.json( status, body );
+        res.status( status ).json( body );
     }
 }

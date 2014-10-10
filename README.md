@@ -7,7 +7,6 @@ A super light-weight node.js version of Enketo Smart Paper developed for KoBo To
 
 ### How to install (anywhere)
 
-
 1. Install JS prerequisites: [Node.js 0.10.x](http://nodejs.org/) (not 0.11), [Grunt Client](http://gruntjs.com), and [Bower](http://bower.io/)
 2. Install [Redis](http://redis.io/topics/quickstart)
 3. Install libxslt and libxml2 with `(sudo) apt-get install libxml2-dev libxslt1-dev`
@@ -51,18 +50,19 @@ Install [nodemon](https://github.com/remy/nodemon) to automatically restart the 
 
 The easiest way to start the app in development and debugging mode with livereload is with `grunt develop`. If you are developing using the vagrant VM, make sure to `pm2 kill` first or comment out the pm2 block at the end in the [bootstrap](/setup/bootstrap.sh) script before creating the VM.
 
-### Differences with [enketo/enketo](https://github.com/enketo/enketo) 
+### Differences with [enketo/enketo-legacy](https://github.com/enketo/enketo-legacy) 
 
 * \+ this one is 100% JavaScript
 * \+ this one is much easier to install
 * \+ this one has cross-browser (media) file inputs
-* \- this one will not store the application in your browser for offline launch - it requires a constant connection to the server (this server may be on a local network though)
-* \- this one will not store records locally in your browser - it will submit records immediately to the server
-* \- this one will not store draft records (see previous)
+* \+ this one has the ability to override default form values on launch through the API 
+* \- this one will not store the application in your browser for offline launch (yet) - it requires a constant connection to the server (this server may be on a local network though)
+* \- this one will not store records locally in your browser (yet) - it will submit records immediately to the server
+* \- this one will not store draft records (yet) (see previous)
 
 ### Additional differences with the full-fledged service at [enketo.org](https://enketo.org)
 
-* \- no form authentication
+* \- no form authentication (yet)
 * \- no [Grid Theme](http://blog.enketo.org/gorgeous-grid/)
 * \- no [Forms](https://enketo.org/forms) app
 * \- no [Formtester](https://enketo.org/formtester) app

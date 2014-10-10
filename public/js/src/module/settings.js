@@ -62,11 +62,25 @@ define( [ 'text!enketo-config' ], function( config ) {
             s: 'source'
         } ];
 
+    // rename query string parameters to settings 
     settingsMap.forEach( function( obj, i ) {
         if ( queryParams[ obj.q ] ) {
             settings[ obj.s ] = queryParams[ obj.q ];
         }
     } );
+
+    settings.defaults = {};
+    // add defaults object
+    for ( var p in queryParams ) {
+        var path, value;
+        if ( queryParams.hasOwnProperty( p ) ) {
+            if ( p.search( /d\[(.*)\]/ ) !== -1 ) {
+                path = decodeURIComponent( p.match( /d\[(.*)\]/ )[ 1 ] );
+                value = decodeURIComponent( queryParams[ p ] );
+                settings.defaults[ path ] = value;
+            }
+        }
+    }
 
     // add common configuration properties (constants)
     config = JSON.parse( config );
@@ -96,6 +110,6 @@ define( [ 'text!enketo-config' ], function( config ) {
 
         return params;
     }
-
+    console.debug( 'returning settings', settings );
     return settings;
 } );

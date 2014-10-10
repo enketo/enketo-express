@@ -31,7 +31,7 @@ app.set( 'json spaces', 4 );
 app.use( compression() );
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded( {
-    extended: false
+    extended: true
 } ) );
 app.use( favicon( path.resolve( __dirname, '../public/images/favicon.ico' ) ) );
 app.use( express.static( path.resolve( __dirname, '../public' ) ) );
