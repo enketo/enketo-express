@@ -132,59 +132,19 @@ describe( 'Cache Model', function() {
     } );
 
     describe( 'get: when attempting to obtain a cached survey', function() {
-        it( 'returns an 400 error when openRosaServer is missing', function() {
+        it( 'returns a 400 error when openRosaServer is missing', function() {
             delete survey.openRosaServer;
             return expect( model.get( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns an 400 error when openRosaId is missing', function() {
+        it( 'returns a 400 error when openRosaId is missing', function() {
             delete survey.openRosaId;
             return expect( model.get( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns an 400 error when info.hash is missing', function() {
-            delete survey.info.hash;
-            return expect( model.get( survey ) ).to.eventually.be.rejected
-                .and.to.have.property( 'status' ).that.equals( 400 );
-        } );
-        it( 'returns 404 when instance record not cached', function() {
+        it( 'returns null when instance record not cached', function() {
             survey.openRosaId = 'non-existing';
-            return expect( model.get( survey ) ).to.eventually.be.rejected
-                .and.to.have.property( 'status' ).that.equals( 404 );
-        } );
-        it( 'returns false when the cache is outdated (formHash changed)', function() {
-            var setPromise, getPromise, updatedSurvey;
-
-            updatedSurvey = JSON.parse( JSON.stringify( survey ) );
-            setPromise = model.set( survey );
-            updatedSurvey.formHash = 'something else';
-            getPromise = setPromise.then( function() {
-                return model.get( updatedSurvey );
-            } );
-
-            return Q.all( [
-                expect( setPromise ).to.eventually.deep.equal( survey ),
-                expect( getPromise ).to.eventually.to.eventually.be.rejected
-                .and.to.have.property( 'status' ).that.equals( 410 )
-            ] );
-
-        } );
-        it( 'returns false when the cache is outdated (manifest removed)', function() {
-            var setPromise, getPromise, updatedSurvey;
-
-            updatedSurvey = JSON.parse( JSON.stringify( survey ) );
-            setPromise = model.set( survey );
-            delete updatedSurvey.manifest;
-            getPromise = setPromise.then( function() {
-                return model.get( updatedSurvey );
-            } );
-
-            return Q.all( [
-                expect( setPromise ).to.eventually.deep.equal( survey ),
-                expect( getPromise ).to.eventually.to.eventually.be.rejected
-                .and.to.have.property( 'status' ).that.equals( 410 )
-            ] );
-
+            return expect( model.get( survey ) ).to.eventually.deep.equal( null );
         } );
         it( 'returns the survey object with the form and model properties when successful for item without manifest', function() {
             var promise;
@@ -205,16 +165,62 @@ describe( 'Cache Model', function() {
         } );
     } );
 
+    describe( 'check: when checking the status of a cached survey', function() {
+        it( 'returns a 400 error when info.hash is missing', function() {
+            delete survey.info.hash;
+            return expect( model.check( survey ) ).to.eventually.be.rejected
+                .and.to.have.property( 'status' ).that.equals( 400 );
+        } );
+        it( 'returns false when the cache is outdated (formHash changed)', function() {
+            var setPromise, checkPromise, updatedSurvey;
+
+            updatedSurvey = JSON.parse( JSON.stringify( survey ) );
+            setPromise = model.set( survey );
+            updatedSurvey.formHash = 'something else';
+            checkPromise = setPromise.then( function() {
+                return model.check( updatedSurvey );
+            } );
+
+            return Q.all( [
+                expect( setPromise ).to.eventually.deep.equal( survey ),
+                expect( checkPromise ).to.eventually.to.eventually.deep.equal( false )
+            ] );
+
+        } );
+        it( 'returns false when the cache is outdated (manifest removed)', function() {
+            var setPromise, checkPromise, updatedSurvey;
+
+            updatedSurvey = JSON.parse( JSON.stringify( survey ) );
+            setPromise = model.set( survey );
+            delete updatedSurvey.manifest;
+            checkPromise = setPromise.then( function() {
+                return model.check( updatedSurvey );
+            } );
+
+            return Q.all( [
+                expect( setPromise ).to.eventually.deep.equal( survey ),
+                expect( checkPromise ).to.eventually.to.eventually.deep.equal( false )
+            ] );
+
+        } );
+        it( 'returns null when instance record not cached', function() {
+            survey.openRosaId = 'non-existing';
+            return expect( model.check( survey ) ).to.eventually.deep.equal( null );
+        } );
+        it( 'returns true when the cache is existing and up-to-date', function() {
+            return expect( model.set( survey ).then( model.check ) ).to.eventually.deep.equal( true );
+        } );
+    } );
+
     describe( 'flush: when attempting to flush the cache', function() {
-        it( 'the cache becomes empty ;)', function() {
+        it( 'the cache becomes empty...', function() {
             var get1Promise = model.set( survey ).then( model.get ),
                 get2Promise = get1Promise.then( model.flush ).then( function() {
                     return model.get( survey );
                 } );
             return Q.all( [
                 expect( get1Promise ).to.eventually.have.property( 'form' ).that.equals( survey.form ),
-                expect( get2Promise ).to.eventually.be.rejected
-                .and.to.have.property( 'status' ).that.equals( 404 )
+                expect( get2Promise ).to.eventually.deep.equal( null )
             ] );
         } );
     } );

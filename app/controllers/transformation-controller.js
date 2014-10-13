@@ -43,9 +43,19 @@ function getSurveyParts( req, res, next ) {
                     } )
                     .catch( next );
             } else {
-                _getFormViaFormlist( survey )
-                    .then( function( survey ) {
-                        _respond( res, survey );
+                _getFormFromCache( survey )
+                    .then( function( result ) {
+                        if ( result ) {
+                            // immediately serve from cache without first checking for updates
+                            _respond( res, result );
+                            // update cache if necessary, asynchronously AFTER responding
+                            _updateCache( survey );
+                        } else {
+                            _updateCache( survey )
+                                .then( function( survey ) {
+                                    _respond( res, survey );
+                                } );
+                        }
                     } )
                     .catch( next );
             }
@@ -53,34 +63,29 @@ function getSurveyParts( req, res, next ) {
         .catch( next );
 }
 
-/**
- * Obtain cached instance
- * @param  {[type]} survey [description]
- * @return {[type]}        [description]
- */
-//function _getInstance( survey ) {
-//    return instanceModel.get( survey );
-//}
-
-function _getFormViaFormlist( survey ) {
-    return communicator.getXFormInfo( survey )
-        .then( communicator.getManifest )
-        .then( cacheModel.get )
-        .catch( function( error ) {
-            // it don't like this, maybe better for cachemodel to resolve
-            // with null or something
-            if ( !error.status || error.status >= 500 ) {
-                throw error;
-            }
-            return _getFormDirectly( survey )
-                .then( cacheModel.set );
-        } );
-}
-
 function _getFormDirectly( survey ) {
     debug( 'going to transform XForm' );
     return communicator.getXForm( survey )
         .then( transformer.transform );
+}
+
+function _getFormFromCache( survey ) {
+    return cacheModel.get( survey );
+}
+
+function _updateCache( survey ) {
+    return communicator.getXFormInfo( survey )
+        .then( communicator.getManifest )
+        .then( cacheModel.check )
+        .then( function( upToDate ) {
+            if ( !upToDate ) {
+                return _getFormDirectly( survey )
+                    .then( cacheModel.set );
+            }
+        } )
+        .catch( function( error ) {
+            console.error( 'Error occurred during attempt to update cache', survey, error );
+        } );
 }
 
 function _respond( res, survey ) {
