@@ -39,15 +39,15 @@ module.exports = function( grunt ) {
         sass: {
             compile: {
                 files: {
-                    'public/css/error.css': 'public/css/sass/error.scss',
-                    'public/css/webform_default.css': 'public/css/sass/webform_formhub.scss',
-                    'public/css/webform_print_default.css': 'public/css/sass/webform_print_formhub.scss'
+                    'public/css/error.css': 'app/views/styles/error.scss',
+                    'public/css/webform_default.css': 'app/views/styles/webform_formhub.scss',
+                    'public/css/webform_print_default.css': 'app/views/styles/webform_print_formhub.scss'
                 }
             }
         },
         watch: {
             sass: {
-                files: [ '.rebooted', 'config.json', 'public/css/sass/**/*.scss', 'public/lib/enketo-core/src/**/*.scss', 'views/**/*.jade' ],
+                files: [ '.rebooted', 'config.json', 'app/views/styles/**/*.scss', 'app/lib/enketo-core/src/**/*.scss', 'app/views/**/*.jade' ],
                 tasks: [ 'sass' ],
                 options: {
                     spawn: true,
@@ -123,9 +123,6 @@ module.exports = function( grunt ) {
             }
         },
         env: {
-            options: {
-                //Shared Options Hash
-            },
             test: {
                 NODE_ENV: 'test'
             }
