@@ -31,7 +31,7 @@ The `maps` configuration can include an array of Mapbox TileJSON objects (or a s
 
 The default production config includes 2 redis instances for the cache. You can **greatly simplify installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you'll find the vagrant setup steps in [bootstrap.sh](./setup/bootstrap.sh) useful.
 
-The API is accessible on **/api/v1**
+The API is accessible on **/api/v2** (v2 is backwards-compatible with enketo-legacy's v1)
 
 ### How to run
 Run with `npm start` from project root.

@@ -53,6 +53,21 @@ describe( 'api', function() {
         } );
     } );
 
+    // return string or error if it fails
+    function responseCheck( value, expected ) {
+        if ( typeof expected === 'string' ) {
+            if ( value !== expected ) {
+                return 'Response ' + value + ' not equal to ' + expected;
+            }
+        } else if ( expected instanceof RegExp ) {
+            if ( !expected.test( value ) ) {
+                return 'Response ' + value + ' not matching ' + expected;
+            }
+        } else {
+            return 'This is not a valid expected value';
+        }
+    }
+
     describe( '', function() {
 
         [
@@ -162,7 +177,7 @@ describe( 'api', function() {
             it( test.method.toUpperCase() + ' /survey with ' + authDesc + ' authentication and ' + server +
                 ' responds with ' + test.status,
                 function( done ) {
-                    request( app )[ test.method ]( '/api/v1/survey' )
+                    request( app )[ test.method ]( '/api/v2/survey' )
                         .set( auth )
                         .send( {
                             server_url: server,
@@ -248,7 +263,7 @@ describe( 'api', function() {
             it( test.method.toUpperCase() + ' /instance with ' + authDesc + ' authentication and ' + server + ', ' + id +
                 ', ' + ret + ', ' + instance + ', ' + instanceId + ' responds with ' + test.status,
                 function( done ) {
-                    request( app )[ test.method ]( '/api/v1/instance' )
+                    request( app )[ test.method ]( '/api/v2/instance' )
                         .set( auth )
                         .send( {
                             server_url: server,
@@ -260,5 +275,117 @@ describe( 'api', function() {
                         .expect( test.status, done );
                 } );
         } );
+
+
+        // test the defaults functionality
+        [
+            // defaults are optional
+            {
+                endpoint: '/survey',
+                defaults: null,
+                method: 'post',
+                status: 200,
+                res: {
+                    expected: /[^?d\[\]]+/
+                }
+            }, {
+                endpoint: '/survey',
+                defaults: '',
+                method: 'post',
+                status: 200,
+                res: {
+                    expected: /[^?d\[\]]/
+                }
+            },
+            // same for GET
+            {
+                endpoint: '/survey',
+                defaults: null,
+                method: 'get',
+                status: 200,
+                res: {
+                    expected: /[^?d\[\]]+/
+                }
+            }, {
+                endpoint: '/survey',
+                defaults: '',
+                method: 'get',
+                status: 200,
+                res: {
+                    expected: /[^?d\[\]]+/
+                }
+            },
+            // responses including url-encoded defaults queryparams
+            {
+                endpoint: '/survey',
+                defaults: {
+                    '/path/to/node': '2,3',
+                    '/path/to/other/node': 5
+                },
+                method: 'post',
+                status: 200,
+                res: {
+                    expected: /.+\?d\[%2Fpath%2Fto%2Fnode\]=2%2C3&d\[%2Fpath%2Fto%2Fother%2Fnode\]=5/
+                }
+            }, {
+                endpoint: '/survey',
+                defaults: {
+                    '/path/to/node': '[@]?'
+                },
+                method: 'post',
+                status: 200,
+                res: {
+                    expected: /.+\?d\[%2Fpath%2Fto%2Fnode\]=%5B%40%5D%3F/
+                }
+            }, {
+                endpoint: '/survey',
+                defaults: {
+                    '/path/to/node': 'one line\nanother line'
+                },
+                method: 'post',
+                status: 200,
+                res: {
+                    expected: /.+\?d\[%2Fpath%2Fto%2Fnode\]=one%20line%0Aanother%20line/
+                }
+            },
+            // /instance endpoint will ignore defaults
+            {
+                endpoint: '/instance',
+                defaults: {
+                    '/path/to/node': '2,3',
+                },
+                method: 'post',
+                status: 201,
+                res: {
+                    property: 'edit_url',
+                    expected: /[^(d\[)]+/
+                }
+            }
+        ].forEach( function( test ) {
+            it( test.method.toUpperCase() + ' ' + test.endpoint + ' default: ' + JSON.stringify( test.defaults ) +
+                ' responds with ' + test.status + ' and expected response',
+                function( done ) {
+                    var resProp = test.res.property || 'url',
+                        body = {
+                            server_url: validServer,
+                            form_id: validFormId,
+                            defaults: test.defaults
+                        };
+                    if ( test.endpoint === '/instance' ) {
+                        body.instance = '<data></data>';
+                        body.instance_id = 'someUUID';
+                        body.return_url = 'http://example.com';
+                    }
+                    request( app )[ test.method ]( '/api/v2/' + test.endpoint )
+                        .set( validAuth )
+                        .send( body )
+                        .expect( test.status )
+                        .expect( function( resp ) {
+                            return responseCheck( resp.body[ resProp ], test.res.expected );
+                        } )
+                        .end( done );
+                } );
+        } );
+
     } );
 } );

@@ -10,7 +10,7 @@ var communicator = require( '../lib/communicator' ),
     debug = require( 'debug' )( 'api-controller' );
 
 module.exports = function( app ) {
-    app.use( '/api/v1', router );
+    app.use( '/api/v2', router );
 };
 
 router
@@ -141,7 +141,6 @@ function deactivateSurvey( req, res, next ) {
         } )
         .catch( next );
 }
-
 
 function getNumber( req, res, next ) {
     var error, body;
