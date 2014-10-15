@@ -259,6 +259,8 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                         if ( !form.isValid() ) {
                             gui.alert( 'Form contains errors <br/>(please see fields marked in red)' );
                             return;
+                        } else {
+                            gui.alert( 'Form is valid!', 'OK', 'success' );
                         }
                     }, 100 );
                 }
