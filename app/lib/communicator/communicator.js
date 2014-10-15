@@ -67,7 +67,8 @@ function _request( options ) {
             debug( 'Error occurred when requesting ' + options.url, error );
             deferred.reject( error );
         } else if ( response.statusCode === 401 ) {
-            error = new Error( 'Authentication required but not supported in this version of Enketo' );
+            error = new Error( 'Authentication is required for this form. ' +
+                'Unfortunately, authentication is not yet supported in this Enketo app.' );
             error.status = response.statusCode;
             deferred.reject( error );
         } else if ( response.statusCode < 200 || response.statusCode >= 300 ) {

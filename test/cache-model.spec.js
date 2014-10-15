@@ -38,7 +38,7 @@ describe( 'Cache Model', function() {
     } );
 
     afterEach( function( done ) {
-        model.flush().then( function() {
+        model.flushAll().then( function() {
             done();
         } );
     } );
@@ -212,8 +212,30 @@ describe( 'Cache Model', function() {
         } );
     } );
 
-    describe( 'flush: when attempting to flush the cache', function() {
-        it( 'the cache becomes empty...', function() {
+    describe( 'flush(ing): when attempting to flush the cache', function() {
+        var getCacheCount = function() {
+            var deferred = Q.defer();
+            client.keys( 'ca:*', function( error, keys ) {
+                if ( error ) deferred.reject( error );
+                deferred.resolve( keys.length );
+            } );
+            return deferred.promise;
+        };
+        it( 'with flushAll, the entire cache becomes empty...', function() {
+            var count1, count2, survey2;
+            survey2 = JSON.parse( JSON.stringify( survey ) );
+            survey2.openRosaId = 'something_else';
+            count1 = model.set( survey ).then( function() {
+                model.set( survey2 );
+            } ).then( getCacheCount );
+            count2 = count1.then( model.flushAll ).then( getCacheCount );
+
+            return Q.all( [
+                expect( count1 ).to.eventually.equal( 2 ),
+                expect( count2 ).to.eventually.deep.equal( 0 )
+            ] );
+        } );
+        it( 'with flush, an individual survey cache becomes empty...', function() {
             var get1Promise = model.set( survey ).then( model.get ),
                 get2Promise = get1Promise.then( model.flush ).then( function() {
                     return model.get( survey );

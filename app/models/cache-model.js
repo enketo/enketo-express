@@ -134,10 +134,42 @@ function _setSurvey( survey ) {
 }
 
 /**
+ * Flushes the cache of a single survey
+ *
+ * @param {[type]} survey [description]
+ */
+function _flushSurvey( survey ) {
+    var obj, key, error,
+        deferred = Q.defer();
+
+    if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
+        error = new Error( 'Bad Request. Survey information to cache is not complete.' );
+        error.status = 400;
+        deferred.reject( error );
+    } else {
+        key = _getKey( survey );
+        client.del( key, function( error ) {
+            if ( error ) {
+                deferred.reject( error );
+            } else {
+                delete survey.form;
+                delete survey.model;
+                delete survey.formHash;
+                delete survey.xlsHash;
+                delete survey.mediaHash;
+                deferred.resolve( survey );
+            }
+        } );
+
+        return deferred.promise;
+    }
+}
+
+/**
  * Completely empties the cache
  * @return {[type]} [description]
  */
-function _flushCache() {
+function _flushAll() {
     var deferred = Q.defer();
 
     client.keys( prefix + '*', function( error, keys ) {
@@ -145,7 +177,13 @@ function _flushCache() {
             deferred.reject( error );
         }
         keys.forEach( function( key ) {
-            client.del( key );
+            client.del( key, function( error ) {
+                if ( error ) {
+                    deferred.reject( error );
+                } else {
+                    deferred.resolve();
+                }
+            } );
         } );
 
         deferred.resolve( true );
@@ -178,5 +216,6 @@ module.exports = {
     get: _getSurvey,
     set: _setSurvey,
     check: _isCacheUpToDate,
-    flush: _flushCache
+    flush: _flushSurvey,
+    flushAll: _flushAll
 };

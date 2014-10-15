@@ -54,7 +54,8 @@ function getSurveyParts( req, res, next ) {
                             _updateCache( survey )
                                 .then( function( survey ) {
                                     _respond( res, survey );
-                                } );
+                                } )
+                                .catch( next );
                         }
                     } )
                     .catch( next );
@@ -84,7 +85,12 @@ function _updateCache( survey ) {
             }
         } )
         .catch( function( error ) {
-            console.error( 'Error occurred during attempt to update cache', survey, error );
+            if ( error.status === 401 ) {
+                cacheModel.flush( survey );
+            } else {
+                console.error( 'Unknown Error occurred during attempt to update cache', error );
+            }
+            throw error;
         } );
 }
 
