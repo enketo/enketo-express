@@ -1,32 +1,28 @@
-#feedback-bar.alert.alert-warning
-  span.glyphicon.glyphicon-info-sign
-  button.close &times;
+#feedback-bar.alert-box.warning
+  span.icon.icon-info-circle
+  button.btn-icon-only.close &times;
 
-#dialog-alert.modal.fade(role="dialog", aria-labelledby="alert dialog", aria-hidden="true", data-keyboard="true")
-  .modal-dialog
-    .modal-content 
-      .modal-header
-        button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
-        h3
-      .modal-body
-        p
-      .modal-footer
-        span.self-destruct-timer
-        button.btn(data-dismiss="modal", aria-hidden="true") Close
+#dialog-alert.modal(role="dialog", aria-labelledby="alert dialog", aria-hidden="true", data-keyboard="true", data-reveal)
+  .modal__header
+    button.btn-icon-only.close-reveal-modal(type="button", aria-hidden="true") &times;
+    h3
+  .modal__body
+    p
+  .modal__footer
+    span.self-destruct-timer
+    button.btn.btn-default.close(type="button", aria-hidden="true") Close 
 
-#dialog-confirm.modal.fade(role="dialog", aria-labelledby="confirmation dialog", aria-hidden="true", data-keyboard="true")
-  .modal-dialog
-    .modal-content 
-      .modal-header
-        button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
-        h3
-      .modal-body
-        p.alert.alert-danger
-        p.msg
-      .modal-footer
-        span.self-destruct-timer
-        button.btn.negative Close
-        button.btn.btn-primary.positive Confirm
+#dialog-confirm.modal(role="dialog", aria-labelledby="confirmation dialog", aria-hidden="true", data-keyboard="true", data-reveal)
+  .modal__header
+    button.btn-icon-only.close-reveal-modal(type="button", aria-hidden="true") &times;
+    h3
+  .modal__body
+    p.alert-box.error
+    p.msg
+  .modal__footer
+    span.self-destruct-timer
+    button.btn.btn-default.negative(type="button", aria-hidden="true") Close
+    button.btn.btn-primary.positive(type="button", aria-hidden="true") Confirm
 
 #dialog-save.modal.fade(role="dialog", aria-labelledby="confirmation dialog", aria-hidden="true", data-keyboard="true")
   .modal-dialog

@@ -1,14 +1,13 @@
-@import "bootstrap";
+@import "foundation";
 @import "iframe";
 @import "modal";
+@import "alert";
 @import "feedback-bar";
-
-//@import "ad";
 
 body {
     background: $body-bg no-repeat;
-    font-size: $baseFontSize;
-    line-height: $baseLineHeight;
+    font-size: $base-font-size;
+    line-height: $base-line-height;
     overflow-x: hidden;
 }
 
@@ -25,10 +24,6 @@ progress {
     margin: 80px auto;
 }
 
-.paper {
-    border: 7px solid $content_border;
-}
-
 .form__loader {
     @include loader-image(250px);
     margin: 170px auto 0 auto;
@@ -37,15 +32,12 @@ progress {
     }
 }
 
-.page-break {
-    display: none;
+.loader-animation-small {
+    @include loader-image(50px);
 }
 
-//inside the submissions dialog
-.submissions {
-    background-color: #ccc;
-    font-size: 11px;
-    padding: 10px;
+.page-break {
+    display: none;
 }
 
 .log {

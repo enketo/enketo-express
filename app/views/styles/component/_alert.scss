@@ -1,0 +1,42 @@
+.alert-box {
+    width: 100%;
+    padding: 10px;
+    &.error {
+        background-color: $state-danger-bg;
+        color: $state-danger-text;
+        border: $state-danger-border;
+    }
+    &.warning {
+        background-color: $state-warning-bg;
+        color: $state-warning-text;
+        border: $state-warning-border;
+    }
+    &.success {
+        background-color: $state-success-bg;
+        color: $state-success-text;
+        border: $state-success-border;
+    }
+    &.info {
+        background-color: $state-info-bg;
+        color: $state-info-text;
+        border: $state-info-border;
+    }
+    em {
+        color: #666;
+    }
+    strong {
+        color: black;
+        font-size: 110%;
+        text-decoration: none;
+    }
+    a {
+        text-decoration: underline;
+    }
+    .error-list {
+        margin-top: 1em;
+        font-size: 0.8em;
+        li {
+            line-height: 1.4em;
+        }
+    }
+}

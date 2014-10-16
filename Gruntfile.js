@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function( grunt ) {
-
+    var JS_INCLUDE = [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js", "!**/*.min.js", "!public/lib/bower-components/**/*.js", "!app/lib/foundation/**/*.js", "!public/lib/foundation/**/*.js" ];
     // show elapsed time at the end
     require( 'time-grunt' )( grunt );
     // load all grunt tasks
@@ -57,14 +57,14 @@ module.exports = function( grunt ) {
         },
         jsbeautifier: {
             test: {
-                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!**/*.min.js", "!public/lib/bower-components/**/*.js" ],
+                src: JS_INCLUDE,
                 options: {
                     config: "./.jsbeautifyrc",
                     mode: "VERIFY_ONLY"
                 }
             },
             fix: {
-                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!**/*.min.js", "!public/lib/bower-components/**/*.js" ],
+                src: JS_INCLUDE,
                 options: {
                     config: "./.jsbeautifyrc"
                 }
@@ -74,7 +74,7 @@ module.exports = function( grunt ) {
             options: {
                 jshintrc: ".jshintrc"
             },
-            all: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js", "!**/*.min.js", "!public/lib/bower-components/**/*.js" ]
+            all: JS_INCLUDE
         },
         mochaTest: {
             all: {
@@ -120,6 +120,15 @@ module.exports = function( grunt ) {
                     src: [ '*' ],
                     dest: 'public/lib/enketo-core'
                 } ]
+            },
+            foundation: {
+                files: [ {
+                    overwrite: false,
+                    expand: true,
+                    cwd: 'app/lib/foundation',
+                    src: [ '*' ],
+                    dest: 'public/lib/foundation'
+                } ]
             }
         },
         env: {
@@ -157,7 +166,7 @@ module.exports = function( grunt ) {
         }
     } );
 
-    grunt.registerTask( 'default', [ 'symlink', 'compile', 'test' ] );
+    grunt.registerTask( 'default', [ 'symlink', 'compile' ] );
     grunt.registerTask( 'compile', [ 'sass', 'client-config-file:create', 'requirejs', 'client-config-file:remove' ] );
     grunt.registerTask( 'test', [ 'env:test', 'symlink', 'mochaTest', 'jsbeautifier:test', 'jshint', 'compile' ] );
     grunt.registerTask( 'develop', [ 'concurrent:develop' ] );

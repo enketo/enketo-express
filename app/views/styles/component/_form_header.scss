@@ -71,7 +71,7 @@ $offline-color: #d15200;
         width: 34px;
         height: 34px;
         background-color: $offline-color;
-        background-image: url($images-path + "offline-enabled.png");
+        //background-image: url($images-path + "offline-enabled.png");
         background-repeat: no-repeat;
         opacity: 1;
         @include transition-slow(opacity, 3s);
@@ -122,8 +122,9 @@ $offline-color: #d15200;
     }
 }
 
-.print {
+.form-header__button--print {
     background: none;
+    color: black;
     border-radius: 0;
     border: none;
     padding: 7px 0 0 20px;
@@ -136,6 +137,8 @@ $offline-color: #d15200;
         font-size: 30px;
     }
     &:hover {
+        color: black;
+        background: none;
         opacity: 0.7;
     }
     ~ .form-language-selector {

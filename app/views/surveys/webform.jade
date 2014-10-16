@@ -10,17 +10,6 @@ block script
     script(src="/js/webform#{suffix}-combined.min.js")
   else
     script(data-main="/js/src/main-webform#{suffix}.js", src="/lib/bower-components/requirejs/require.js")
-
-block global
-  if returnUrl
-    script.
-      var returnURL = '#{returnUrl}';
-  if model
-    script.
-      var modelStr = !{model};
-  if instance
-    script.
-      var instanceStr = !{instance};
  
 block content
   .main

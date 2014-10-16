@@ -110,6 +110,6 @@ define( [ 'text!enketo-config' ], function( config ) {
 
         return params;
     }
-    console.debug( 'returning settings', settings );
+
     return settings;
 } );

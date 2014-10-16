@@ -11,6 +11,8 @@
     min-height: 35px;
     height: auto;
     z-index: 5000;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
     p {
         position: relative;
         margin: 0 50px;
@@ -21,11 +23,11 @@
             border-top: 1px #ddd dashed;
         }
     }
-    .glyphicon-info-sign, .close {
+    .icon-info-circle, .close {
         position: absolute;
         top: 50%;
     }
-    .glyphicon-info-sign {
+    .icon-info-circle {
         margin-top: -7.5px;
         left: 20px;
     }

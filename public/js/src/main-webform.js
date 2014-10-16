@@ -5,7 +5,7 @@ require( [ 'require-config' ], function( rc ) {
         function( gui, controller, settings, connection, FormModel, $ ) {
             var $loader = $( '.form__loader' ),
                 $form = $( 'form.or' ),
-                $buttons = $( 'button.print, button#validate-form, button#submit-form' ),
+                $buttons = $( '.form-header__button--print, button#validate-form, button#submit-form' ),
                 survey = {
                     enketoId: settings.enketoId,
                     serverUrl: settings.serverUrl,

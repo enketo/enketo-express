@@ -1,24 +1,37 @@
 .modal {
+    @extend .reveal-modal;
     h3 {
         padding: 0 0 0 0;
-        margin-bottom: 0;
+        margin-top: 10px;
+        color: $text-color;
     }
-}
-
-.alert {
-    .error-list {
-        margin-top: 1em;
-        font-size: 0.8em;
-        li {
-            line-height: 1.4em;
+    &__header {
+        margin-right: 20px;
+    }
+    &__body {
+        margin-top: 40px;
+    }
+    &__footer {
+        margin-top: 40px;
+        position: relative;
+        height: 50px;
+        .btn {
+            float: right;
+            margin-bottom: 0;
+            margin-left: 30px;
+        }
+        .self-destruct-timer {
+            position: absolute;
+            bottom: 0;
+            color: $text-muted;
         }
     }
-    strong {
-        text-decoration: underline;
-    }
 }
 
-.alert {
+
+.alert-box {}
+
+/*.alert {
     em {
         color: #666;
     }
@@ -30,9 +43,9 @@
     a {
         text-decoration: underline;
     }
-}
+}*/
 
-.overlay {
+/*.overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -42,7 +55,7 @@
     background: black;
     opacity: 0.8;
     display: none;
-}
+}*/
 
 .modal-dialog {
     input {
@@ -50,14 +63,8 @@
     }
 }
 
-.self-destruct-timer {
-    float: left;
-    margin-top: 5px;
-    color: $shadow;
-}
 
 .load-error {
     margin: 100px 0 60px 0;
 }
 
-//move this??

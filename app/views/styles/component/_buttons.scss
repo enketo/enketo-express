@@ -1,0 +1,70 @@
+@mixin extend-button-variants($class) {
+    @extend #{$class};
+    &:hover {
+        @extend #{class}:hover;
+    }
+    &:focus {
+        @extend #{$class}:focus;
+    }
+    &:active,
+    &.active,
+    .open.dropdown-toggle {
+        @extend #{$class}:active;
+    }
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        &,
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+            @extend #{$class}.disabled;
+        }
+    }
+}
+
+.btn {
+    @extend .button;
+    @extend .radius;
+    &:focus, &:link, &:active, &:visited {
+        text-decoration: none;
+    }
+}
+
+.btn-default {
+    @include extend-button-variants(".secondary");
+}
+
+.btn-primary {
+    @include extend-button-variants(".button");
+}
+
+// special minimal icon-only buttons
+.btn-icon-only {
+    margin: 0 0 0 10px;
+    padding: 0;
+    color: $text-color;
+    background: none;
+    border: none;
+    @include box-shadow-none;
+    opacity: 0.7;
+    &:hover, &:focus, &:active, &.active, &:disabled, &.disabled {
+        background: none;
+        @include box-shadow-none;
+    }
+    &:hover {
+        color: $text-color;
+        opacity: 0.5;
+    }
+}
+
+// fixes (would be nice if these weren't necessary):
+
+.question .btn-default {
+    padding: 0 15px;
+}
+
+.btn-default.dropdown-toggle {
+    padding: 7px 15px;
+}

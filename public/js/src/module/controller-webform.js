@@ -18,7 +18,7 @@
  * Deals with the main high level survey controls: saving, submitting etc.
  */
 
-define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormModel', 'file-manager', 'q', 'jquery', 'bootstrap' ],
+define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormModel', 'file-manager', 'q', 'jquery' ],
     function( gui, connection, settings, Form, FormModel, fileManager, Q, $ ) {
         "use strict";
         var form, $form, $formprogress, formSelector, defaultModelStr, store;
@@ -110,7 +110,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
             beforeMsg = ( redirect ) ? 'You will be automatically redirected after submission. ' : '';
 
             gui.alert( beforeMsg + '<br />' +
-                '<progress style="text-align: center;"/>', 'Submitting...', 'info' );
+                '<div class="loader-animation-small" style="margin: 10px auto 0 auto;"/>', 'Submitting...', 'bare' );
 
             callbacks = {
                 error: function() {

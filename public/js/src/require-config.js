@@ -14,21 +14,30 @@ require.config( {
         "xpath": "../../../lib/enketo-core/lib/xpath/build/xpathjs_javarosa",
         "jquery.xpath": "../../../lib/enketo-core/lib/jquery-xpath/jquery.xpath",
         "Modernizr": "../../../lib/enketo-core/lib/Modernizr",
-        "bootstrap": "../../../lib/enketo-core/lib/bootstrap",
         "bootstrap-slider": "../../../lib/enketo-core/lib/bootstrap-slider/js/bootstrap-slider",
         "jquery": "../../../lib/bower-components/jquery/dist/jquery",
         "jquery.touchswipe": "../../../lib/enketo-core/lib/jquery-touchswipe/jquery.touchSwipe",
         "leaflet": "../../../lib/enketo-core/lib/leaflet/leaflet",
         "file-manager": "../../../lib/enketo-core/src/js/file-manager",
+        "foundation.core": "../../../lib/foundation/js/foundation/foundation",
+        "foundation.reveal": "../../../lib/foundation/js/foundation/foundation.reveal",
         "q": "../../../lib/bower-components/q/q"
     },
     shim: {
         "xpath": {
             exports: "XPathJS"
         },
-        "bootstrap": {
-            deps: [ "jquery" ],
-            exports: "jQuery.fn.popover"
+        'foundation.core': {
+            deps: [
+                'jquery',
+                'Modernizr'
+            ],
+            exports: 'Foundation'
+        },
+        'foundation.reveal': {
+            deps: [
+                'foundation.core'
+            ]
         },
         "enketo-widget/date/bootstrap3-datepicker/js/bootstrap-datepicker": {
             deps: [ "jquery" ],
@@ -48,6 +57,11 @@ require.config( {
 } );
 
 define( 'store', function() {
+    "use strict";
+    return undefined;
+} );
+
+define( 'bootstrap', function() {
     "use strict";
     return undefined;
 } );
