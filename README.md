@@ -59,6 +59,7 @@ The easiest way to start the app in development and debugging mode with liverelo
 * \- this one will not store the application in your browser for offline launch (yet) - it requires a constant connection to the server (this server may be on a local network though)
 * \- this one will not store records locally in your browser (yet) - it will submit records immediately to the server
 * \- this one will not store draft records (yet) (see previous)
+* \- missing API endpoints and corresponding views: /\*/single (single submission views), /survey__s__/\* 
 
 ### Additional differences with the full-fledged service at [enketo.org](https://enketo.org)
 
