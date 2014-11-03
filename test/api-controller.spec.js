@@ -9,7 +9,8 @@ process.env.NODE_ENV = 'test';
  * at http://apidocs.enketo.org.
  */
 
-var Q = require( "q" ),
+var v1Survey, v1Instance,
+    Q = require( "q" ),
     chai = require( "chai" ),
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" ),
@@ -68,9 +69,55 @@ describe( 'api', function() {
         }
     }
 
-    describe( '', function() {
+    function surveyTest( test ) {
+        var authDesc = test.auth === true ? 'valid' : ( test.auth === false ? 'invalid' : 'empty' ),
+            auth = test.auth === true ? validAuth : ( test.auth === false ? invalidAuth : {} ),
+            version = test.version,
+            server = ( typeof test.server !== 'undefined' ) ? test.server : validServer;
 
-        [
+        it( test.method.toUpperCase() + ' /api/v' + version + '/survey with ' + authDesc + ' authentication and ' + server +
+            ' responds with ' + test.status,
+            function( done ) {
+                request( app )[ test.method ]( '/api/v' + version + '/survey' )
+                    .set( auth )
+                    .send( {
+                        server_url: server,
+                        form_id: validFormId
+                    } )
+                    .expect( test.status, done );
+            } );
+    };
+
+    function instanceTest( test ) {
+        var authDesc = test.auth === true ? 'valid' : ( test.auth === false ? 'invalid' : 'empty' ),
+            auth = test.auth === true ? validAuth : ( test.auth === false ? invalidAuth : {} ),
+            version = test.version,
+            server = typeof test.server !== 'undefined' ? test.server : validServer,
+            id = typeof test.id !== 'undefined' ? test.id : validFormId,
+            ret = typeof test.ret !== 'undefined' ? test.ret : 'http://example.com',
+            instance = typeof test.instance !== 'undefined' ? test.instance : '<data></data>',
+            instanceId = typeof test.instanceId !== 'undefined' ? test.instanceId : 'someUUID';
+
+        it( test.method.toUpperCase() + ' /api/v' + version + '/instance with ' + authDesc + ' authentication and ' + server + ', ' + id +
+            ', ' + ret + ', ' + instance + ', ' + instanceId + ' responds with ' + test.status,
+            function( done ) {
+                request( app )[ test.method ]( '/api/v' + version + '/instance' )
+                    .set( auth )
+                    .send( {
+                        server_url: server,
+                        form_id: id,
+                        instance: instance,
+                        instance_id: instanceId,
+                        return_url: ret
+                    } )
+                    .expect( test.status, done );
+            } );
+    };
+
+    describe( 'v1', function() {
+        var version = 1;
+
+        v1Survey = [
             //valid token
             {
                 method: 'get',
@@ -169,26 +216,16 @@ describe( 'api', function() {
                 status: 400,
                 server: ''
             }
-        ].forEach( function( test ) {
-            var authDesc = test.auth === true ? 'valid' : ( test.auth === false ? 'invalid' : 'empty' ),
-                auth = test.auth === true ? validAuth : ( test.auth === false ? invalidAuth : {} ),
-                server = ( typeof test.server !== 'undefined' ) ? test.server : validServer;
+        ];
 
-            it( test.method.toUpperCase() + ' /survey with ' + authDesc + ' authentication and ' + server +
-                ' responds with ' + test.status,
-                function( done ) {
-                    request( app )[ test.method ]( '/api/v2/survey' )
-                        .set( auth )
-                        .send( {
-                            server_url: server,
-                            form_id: validFormId
-                        } )
-                        .expect( test.status, done );
-                } );
-        } );
+        v1Survey.map( function( obj ) {
+            obj.version = version;
+            return obj;
+        } ).forEach( surveyTest );
+
         // TODO: add some tests for other survey/* endpoints
 
-        [
+        v1Instance = [
             // valid token
             {
                 method: 'post',
@@ -251,31 +288,29 @@ describe( 'api', function() {
                 status: 403,
                 server: 'https://testserver.com/notexist'
             }
-        ].forEach( function( test ) {
-            var authDesc = test.auth === true ? 'valid' : ( test.auth === false ? 'invalid' : 'empty' ),
-                auth = test.auth === true ? validAuth : ( test.auth === false ? invalidAuth : {} ),
-                server = typeof test.server !== 'undefined' ? test.server : validServer,
-                id = typeof test.id !== 'undefined' ? test.id : validFormId,
-                ret = typeof test.ret !== 'undefined' ? test.ret : 'http://example.com',
-                instance = typeof test.instance !== 'undefined' ? test.instance : '<data></data>',
-                instanceId = typeof test.instanceId !== 'undefined' ? test.instanceId : 'someUUID';
+        ];
 
-            it( test.method.toUpperCase() + ' /instance with ' + authDesc + ' authentication and ' + server + ', ' + id +
-                ', ' + ret + ', ' + instance + ', ' + instanceId + ' responds with ' + test.status,
-                function( done ) {
-                    request( app )[ test.method ]( '/api/v2/instance' )
-                        .set( auth )
-                        .send( {
-                            server_url: server,
-                            form_id: id,
-                            instance: instance,
-                            instance_id: instanceId,
-                            return_url: ret
-                        } )
-                        .expect( test.status, done );
-                } );
-        } );
+        v1Instance.map( function( obj ) {
+            obj.version = version;
+            return obj;
+        } ).forEach( instanceTest );
+    } );
 
+
+    describe( 'v2', function() {
+        var version = 2;
+
+        // make sure v2 is backwards-compatible with v1
+        v1Survey.map( function( obj ) {
+            obj.version = version;
+            return obj;
+        } ).forEach( surveyTest );
+
+        // make sure v2 is backwards-compatible with v1
+        v1Instance.map( function( obj ) {
+            obj.version = version;
+            return obj;
+        } ).forEach( instanceTest );
 
         // test the defaults functionality
         [
@@ -361,11 +396,15 @@ describe( 'api', function() {
                     expected: /[^(d\[)]+/
                 }
             }
-        ].forEach( function( test ) {
-            it( test.method.toUpperCase() + ' ' + test.endpoint + ' default: ' + JSON.stringify( test.defaults ) +
+        ].map( function( obj ) {
+            obj.version = version;
+            return obj;
+        } ).forEach( function( test ) {
+            it( test.method.toUpperCase() + ' /api/v' + version + test.endpoint + ' default: ' + JSON.stringify( test.defaults ) +
                 ' responds with ' + test.status + ' and expected response',
                 function( done ) {
                     var resProp = test.res.property || 'url',
+                        version = test.version,
                         body = {
                             server_url: validServer,
                             form_id: validFormId,
@@ -376,7 +415,7 @@ describe( 'api', function() {
                         body.instance_id = 'someUUID';
                         body.return_url = 'http://example.com';
                     }
-                    request( app )[ test.method ]( '/api/v2/' + test.endpoint )
+                    request( app )[ test.method ]( '/api/v' + version + '/' + test.endpoint )
                         .set( validAuth )
                         .send( body )
                         .expect( test.status )
@@ -386,6 +425,5 @@ describe( 'api', function() {
                         .end( done );
                 } );
         } );
-
     } );
 } );

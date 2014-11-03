@@ -11,9 +11,16 @@ var communicator = require( '../lib/communicator' ),
 
 module.exports = function( app ) {
     app.use( '/api/v2', router );
+    // old enketo-legacy URL structure for migration-friendliness
+    app.use( '/api_v2', router );
 };
 
 router
+    .get( '/', function( req, res, next ) {
+        var error = new Error( 'Sorry, the documentation for API v2 has not been created yet.' );
+        error.status = 404;
+        next( error );
+    } )
     .all( '*', authCheck )
     .all( '*', _setDefaultsQueryParam )
     .all( '/*/iframe', _setIframeQueryParam )
