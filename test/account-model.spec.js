@@ -25,11 +25,16 @@ describe( 'Account Model', function() {
 
         // the test below assumes the config.json server url does not have the http:// prefix
         it( 'returns the hardcoded account object', function() {
-            var account = {
-                    key: config[ 'linked form and data server' ][ 'api key' ],
-                    openRosaServer: 'http://' + config[ 'linked form and data server' ][ 'server url' ]
-                },
-                getAccountPromise = model.get( account );
+            var account, getAccountPromise;
+
+            config[ 'linked form and data server' ][ 'server url' ] = 'example.com';
+
+            account = {
+                key: config[ 'linked form and data server' ][ 'api key' ],
+                openRosaServer: 'http://' + config[ 'linked form and data server' ][ 'server url' ]
+            };
+            getAccountPromise = model.get( account );
+
             return Q.all( [
                 expect( getAccountPromise ).to.eventually.have.property( 'key' ).and.to.equal( account.key ),
                 expect( getAccountPromise ).to.eventually.have.property( 'openRosaServer' ).and.to.equal( account.openRosaServer )
