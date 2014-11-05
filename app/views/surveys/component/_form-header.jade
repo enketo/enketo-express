@@ -1,8 +1,11 @@
 header.form-header
-  .offline-enabled
+  if (offline)
+    .offline-enabled
+      .offline-enabled__icon.not-enabled(title="This form is able to launch offline")
+      .offline-enabled__queue-length(title="Records Queued")
   .form-progress
   a.branding(href="#{logo.href || '#'}")
     .logo-wrapper
-      img(src="#{logo.source}", alt="logo")
+      img(src="#{logo.source}", alt="brand logo")
   button.form-header__button--print(onclick="return false;").hide
   span.form-language-selector.hide: span= t('form.chooseLanguage')

@@ -35,7 +35,9 @@ function getSurvey( id ) {
         client.hgetall( 'id:' + id, function( error, obj ) {
             if ( error ) {
                 deferred.reject( error );
-            } else if ( !obj || obj.active === 'false' ) {
+            } else if ( !obj || obj.active === 'false' || obj.active === false ) {
+                // currently false is stored as 'false' but in the future node_redis might convert back to false
+                // https://github.com/mranney/node_redis/issues/449
                 error = ( !obj ) ? new TError( 'error.surveyidnotfound' ) : new TError( 'error.surveyidnotactive' );
                 error.status = 404;
                 deferred.reject( error );

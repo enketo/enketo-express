@@ -1,10 +1,10 @@
 require( [ 'require-config' ], function( rc ) {
     "use strict";
     if ( console.time ) console.time( 'client loading time' );
-    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'enketo-js/FormModel', 'translator', 'jquery' ],
-        function( gui, controller, settings, connection, FormModel, t, $ ) {
+
+    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'enketo-js/FormModel', 'translator', 'utils', 'form-cache', 'q', 'jquery' ],
+        function( gui, controller, settings, connection, FormModel, t, utils, formCache, Q, $ ) {
             var $loader = $( '.form__loader' ),
-                $form = $( 'form.or' ),
                 $buttons = $( '.form-header__button--print, button#validate-form, button#submit-form' ),
                 survey = {
                     enketoId: settings.enketoId,
@@ -14,20 +14,34 @@ require( [ 'require-config' ], function( rc ) {
                     defaults: settings.defaults
                 };
 
-            connection.getFormParts( survey )
-                .then( function( result ) {
-                    if ( result.form && result.model ) {
-                        gui.swapTheme( result.theme || _getThemeFromFormStr( result.form ) )
-                            .then( function() {
-                                _init( result.form, result.model, _prepareInstance( result.model, settings.defaults ) );
-                            } );
-                    } else {
-                        throw new Error( 'Received form incomplete' );
-                    }
-                } )
-                .catch( _showErrorOrAuthenticate );
+            if ( settings.offline ) {
+                console.debug( 'in offline mode' );
+                formCache.init( survey )
+                    .then( _swapTheme )
+                    .then( _init )
+                    .then( formCache.updateMaxSubmissionSize )
+                    .then( formCache.updateMedia )
+                    .then( function( s ) {
+                        settings.maxSize = s.maxSize;
+                        console.debug( 'Form is now stored and available offline!' );
+                        // TODO show offline-capable icon in UI
+                    } )
+                    .catch( _showErrorOrAuthenticate );
+            } else {
+                console.debug( 'in online mode' );
+                connection.getFormParts( survey )
+                    .then( _swapTheme )
+                    .then( _init )
+                    .then( connection.getMaximumSubmissionSize )
+                    .then( function( maxSize ) {
+                        settings.maxSize = maxSize;
+                    } )
+                    .catch( _showErrorOrAuthenticate );
+            }
 
             function _showErrorOrAuthenticate( error ) {
+                error = ( typeof error === 'string' ) ? new Error( error ) : error;
+                console.log( 'error', error, error.stack );
                 $loader.addClass( 'fail' );
                 if ( error.status === 401 ) {
                     window.location.href = '/login?return_url=' + encodeURIComponent( window.location.href );
@@ -36,16 +50,18 @@ require( [ 'require-config' ], function( rc ) {
                 }
             }
 
-            // TODO: move to utils.js after merging offline features
-            function _getThemeFromFormStr( formStr ) {
-                var matches = formStr.match( /<\s?form .*theme-([A-z]+)/ );
-                return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
-            }
+            function _swapTheme( survey ) {
+                var deferred = Q.defer();
 
-            // TODO: move to utils.js after merging offline features
-            function _getTitleFromFormStr( formStr ) {
-                var matches = formStr.match( /<\s?h3 id="form-title">([A-z\s]+)</ );
-                return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
+                if ( survey.form && survey.model ) {
+                    gui.swapTheme( survey.theme || utils.getThemeFromFormStr( survey.form ) )
+                        .then( function() {
+                            deferred.resolve( survey );
+                        } );
+                } else {
+                    deferred.reject( new Error( 'Received form incomplete' ) );
+                }
+                return deferred.promise;
             }
 
             function _prepareInstance( modelStr, defaults ) {
@@ -69,14 +85,34 @@ require( [ 'require-config' ], function( rc ) {
                 return existingInstance;
             }
 
-            function _init( formStr, modelStr, instanceStr ) {
-                $loader[ 0 ].outerHTML = formStr;
-                $( document ).ready( function() {
-                    controller.init( 'form.or:eq(0)', modelStr, instanceStr );
-                    $form.add( $buttons ).removeClass( 'hide' );
-                    $( 'head>title' ).text( _getTitleFromFormStr( formStr ) );
-                    if ( console.timeEnd ) console.timeEnd( 'client loading time' );
-                } );
+            function _init( formParts ) {
+                var error, $form,
+                    deferred = Q.defer();
+
+                if ( formParts && formParts.form && formParts.model ) {
+                    $loader[ 0 ].outerHTML = formParts.form;
+                    $form = $( 'form.or:eq(0)' );
+
+                    $( document ).ready( function() {
+                        // TODO pass $form as first parameter?
+                        controller.init( 'form.or:eq(0)', formParts.model, _prepareInstance( formParts.model, settings.defaults ) );
+                        $form.add( $buttons ).removeClass( 'hide' );
+                        $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
+                        if ( console.timeEnd ) console.timeEnd( 'client loading time' );
+
+                        formParts.$form = $form;
+                        deferred.resolve( formParts );
+                    } );
+                } else if ( formParts ) {
+                    error = new Error( 'Form not complete.' );
+                    errors.status = 400;
+                    deferred.reject( error );
+                } else {
+                    error = new Error( 'Form not found' );
+                    error.status = 404;
+                    deferred.reject( error );
+                }
+                return deferred.promise;
             }
         } );
 } );

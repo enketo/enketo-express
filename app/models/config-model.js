@@ -11,7 +11,7 @@ module.exports = {
             googleApiKey: config.google[ 'api key' ],
             maps: config.maps,
             widgets: config.widgets,
-            modernBrowserURL: 'modern-browsers',
+            modernBrowsersURL: 'modern-browsers',
             supportEmail: config.support.email,
             themesSupported: app.get( 'themes supported' ),
             languagesSupported: app.get( 'languages supported' )

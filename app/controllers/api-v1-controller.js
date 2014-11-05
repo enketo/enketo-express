@@ -237,34 +237,36 @@ function _generateWebformUrls( id, req ) {
     var queryString,
         obj = {},
         baseUrl = req.protocol + '://' + req.headers.host + '/',
-        idPart = '::' + id;
+        idPartOnline = '::' + id,
+        idPartOffline = '#' + id,
+        offline = req.app.get( 'offline enabled' ) && !req.iframeQueryParam;
 
     req.webformType = req.webformType || 'default';
 
     switch ( req.webformType ) {
         case 'preview':
             queryString = _generateQueryString( [ req.iframeQueryParam ] );
-            obj.preview_url = baseUrl + 'preview/' + idPart + queryString;
+            obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             break;
         case 'edit':
             queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.param( 'instance_id' ), req.returnQueryParam ] );
-            obj.edit_url = baseUrl + 'edit/' + idPart + queryString;
+            obj.edit_url = baseUrl + 'edit/' + idPartOnline + queryString;
             break;
         case 'all':
             // non-iframe views
             queryString = _generateQueryString( [] );
-            obj.url = baseUrl + idPart + queryString;
-            obj.preview_url = baseUrl + 'preview/' + idPart + queryString;
+            obj.url = ( offline ) ? baseUrl + '_' + idPartOffline : baseUrl + idPartOnline + queryString;
+            obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // iframe views
             queryString = _generateQueryString( [ 'iframe=true' ] );
-            obj.iframe_url = baseUrl + idPart + queryString;
-            obj.preview_iframe_url = baseUrl + 'preview/' + idPart + queryString;
+            obj.iframe_url = baseUrl + idPartOnline + queryString;
+            obj.preview_iframe_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // enketo-legacy
             obj.subdomain = '';
             break;
         default:
             queryString = _generateQueryString( [ req.iframeQueryParam ] );
-            obj.url = baseUrl + idPart + queryString;
+            obj.url = ( offline ) ? baseUrl + '_' + idPartOffline : baseUrl + idPartOnline + queryString;
             break;
     }
 

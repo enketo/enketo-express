@@ -215,6 +215,7 @@ function _findFormAddInfo( formListXml, survey ) {
                 error = new TError( 'error.notfoundinformlist', {
                     formId: "'" + survey.openRosaId + "'"
                 } );
+                error.status = 404;
                 deferred.reject( error );
             } else {
                 debug( 'found form' );

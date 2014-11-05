@@ -26,7 +26,7 @@ define( [ 'settings', 'i18next' ], function( settings, i18next ) {
 
     options = {
         // path where language files are available
-        resGetPath: 'locales/__lng__/translation.json',
+        resGetPath: '/locales/__lng__/translation.json',
         // load a fallback language
         fallbackLng: 'en',
         // allow language override with 'lang' query parameter

@@ -4,6 +4,3 @@
 [submodule "app/lib/enketo-transformer/enketo-xslt"]
 	path = app/lib/enketo-transformer/enketo-xslt
 	url = https://github.com/enketo/enketo-xslt.git
-[submodule "app/lib/martijnr-foundation"]
-	path = app/lib/martijnr-foundation
-	url = https://github.com/MartijnR/foundation.git

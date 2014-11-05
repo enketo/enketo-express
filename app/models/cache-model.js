@@ -22,7 +22,7 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @param  {{openRosaServer: string, openRosaId: string }} survey [description]
  * @return {[type]}        [description]
  */
-function _getSurvey( survey ) {
+function getSurvey( survey ) {
     var key, error,
         deferred = Q.defer();
 
@@ -44,7 +44,45 @@ function _getSurvey( survey ) {
                 client.expire( key, expiry );
                 survey.form = cacheObj.form;
                 survey.model = cacheObj.model;
+                survey.formHash = cacheObj.formHash;
+                survey.mediaHash = cacheObj.mediaHash;
+                survey.xslHash = cacheObj.xslHash;
                 deferred.resolve( survey );
+            }
+        } );
+    }
+
+    return deferred.promise;
+}
+
+/** 
+ * Gets the hashes of an item from the cache.
+ *
+ * @param  {{openRosaServer: string, openRosaId: string }} survey [description]
+ * @return {[type]}        [description]
+ */
+function getSurveyHashes( survey ) {
+    var key, error,
+        deferred = Q.defer();
+
+    if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
+        error = new Error( 'Bad Request. Survey information to perform cache lookup is not complete.' );
+        error.status = 400;
+        deferred.reject( error );
+    } else {
+        key = _getKey( survey );
+
+        client.hmget( key, [ 'formHash', 'mediaHash', 'xslHash' ], function( error, hashArr ) {
+            if ( error ) {
+                deferred.reject( error );
+            } else if ( !hashArr ) {
+                deferred.resolve( null );
+            } else {
+                deferred.resolve( {
+                    formHash: hashArr[ 0 ],
+                    mediaHash: hashArr[ 1 ],
+                    xslHash: hashArr[ 2 ]
+                } );
             }
         } );
     }
@@ -58,7 +96,7 @@ function _getSurvey( survey ) {
  * @param  {{openRosaServer: string, openRosaId: string, info: {hash: string }}} survey [description]
  * @return {Boolean}        [description]
  */
-function _isCacheUpToDate( survey ) {
+function isCacheUpToDate( survey ) {
     var key, error,
         deferred = Q.defer();
 
@@ -96,9 +134,10 @@ function _isCacheUpToDate( survey ) {
 
 /**
  * Adds an item to the cache
+ *
  * @param {[type]} survey [description]
  */
-function _setSurvey( survey ) {
+function setSurvey( survey ) {
     var obj, key, error,
         deferred = Q.defer();
 
@@ -138,7 +177,7 @@ function _setSurvey( survey ) {
  *
  * @param {[type]} survey [description]
  */
-function _flushSurvey( survey ) {
+function flushSurvey( survey ) {
     var obj, key, error,
         deferred = Q.defer();
 
@@ -169,7 +208,7 @@ function _flushSurvey( survey ) {
  * Completely empties the cache
  * @return {[type]} [description]
  */
-function _flushAll() {
+function flushAll() {
     var deferred = Q.defer();
 
     client.keys( prefix + '*', function( error, keys ) {
@@ -213,9 +252,10 @@ function _addHashes( survey ) {
 }
 
 module.exports = {
-    get: _getSurvey,
-    set: _setSurvey,
-    check: _isCacheUpToDate,
-    flush: _flushSurvey,
-    flushAll: _flushAll
+    get: getSurvey,
+    getHashes: getSurveyHashes,
+    set: setSurvey,
+    check: isCacheUpToDate,
+    flush: flushSurvey,
+    flushAll: flushAll
 };

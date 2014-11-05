@@ -1,14 +1,21 @@
-@import "foundation";
 @import "iframe";
 @import "modal";
 @import "alert";
 @import "feedback-bar";
 
+html {
+    // For some reason a height of 100% causes the body to not extend to the bottom
+    // of the form. Setting height to auto fixes this.
+    // Both enketo-core and foundation set this to 100%, which is the common approach.
+    height: auto;
+}
+
 body {
     background: $body-bg no-repeat;
-    font-size: $base-font-size;
-    line-height: $base-line-height;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
     overflow-x: hidden;
+    margin: 0;
 }
 
 .main {

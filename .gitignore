@@ -9,3 +9,4 @@ public/lib/bower-components
 locales/en/translation_old.json
 .rebooted
 .vagrant
+.scratchpad

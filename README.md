@@ -1,4 +1,4 @@
-enketo-express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express.svg)](https://travis-ci.org/kobotoolbox/enketo-express) [![Dependency Status](https://david-dm.org/kobotoolbox/enketo-express.svg)](https://david-dm.org/kobotoolbox/enketo-express)
+enketo-express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express.svg?branch=master)](https://travis-ci.org/kobotoolbox/enketo-express) [![Dependency Status](https://david-dm.org/kobotoolbox/enketo-express.svg)](https://david-dm.org/kobotoolbox/enketo-express)
 ==============
 
 [![Enketo Logo](https://enketo.org/private_media/images/logo-black.png "Enketo Logo")](https://enketo.org)
@@ -62,15 +62,17 @@ The easiest way to start the app in development and debugging mode with liverelo
 * :white_check_mark: this one is much easier to install
 * :white_check_mark: this one has a [multi-language](#translation) user interface
 * :white_check_mark: this one has cross-browser (media) file inputs
+* :white_check_mark: this one has an improved API (v2)
+* :white_check_mark: this one has support for multiple themes in *all* form views including previews 
+* :white_check_mark: this one allows overriding a form-defined theme via the API (v2) 
 * :white_check_mark: this one has the ability to override default form values on launch through the API (v2)
 * :white_check_mark: this one has a more advanced iframeable webform view that can communicate back to the parent window, enabled through the API (v2)
 * :white_check_mark: this one has [external authentication](#authentication) support 
-* :white_check_mark: this one has support for multiple themes in *all* form views including previews 
-* :white_check_mark: this one allows overriding the theme via the API (v2) 
-* :x: this one will not store the application in your browser for offline launch (yet) - it requires a constant connection to the server (this server may be on a local network though)
-* :x: this one will not store records locally in your browser (yet) - it will submit records immediately to the server
-* :x: this one will not store draft records (yet) (see previous)
+* :white_check_mark: this one will use the `instanceName` value defined in the XForm as the default local record name
+* :x: this one will not store the application in your browser for offline launch (yet) - form loading requires a connection to the server (this server may be on a local network though)
+* :x: offline data and form definitions are still experimental - **enable offline functionality only for testing and [report bugs](https://github.com/kobotoolbox/enketo-express/issues) please**
 * :x: missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views), and "/surveys/list" 
+* :x: no export of queued records (yet)
 * :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
 * :x: no [Forms](https://enketo.org/forms) app (you do not need this)
 * :x: no [enketo-managed form authentication](#authentication) (yet)
@@ -89,9 +91,9 @@ The recommended way to customize themes is to either:
 
 ### Authentication
 
-This app does not (yet) manage [OpenRosa form authentication](https://bitbucket.org/javarosa/javarosa/wiki/AuthenticationAPI) for protected forms, i.e. it does not have a login page, does not store credentials and does not itself manage any sessions.
+This app does not (yet) manage [OpenRosa form authentication](https://bitbucket.org/javarosa/javarosa/wiki/AuthenticationAPI) for protected forms, i.e. it does not provide a login page, does not store credentials and does not manage any authenticated sessions. 
 
-It does enable the use of _external authentication_, i.e. the authentication management of your form and data server. Whenever a request (form, formlist, submission) requires authentication, enketo-express re-directs the user to a login page on the form and data server and simply passes any cookies back to that server whenever it makes a request. It is up to the form and data server to authenticate based on the cookie content. It requires any enketo-express webform page to have access to these browser cookies. This will normally require that both the form and data server as well as enketo-express have to be on the same domain (a different subdomain is possible when setting cross-domain cookies). It also requires the login page to have a mechanism for redirecting the authenticated user back, via a query string parameter.
+It does enable the use of _external authentication_, i.e. the authentication management of your form and data server. Whenever a request (form, formlist, submission) requires authentication, enketo-express re-directs the user to a login page on the form and data server and simply passes any cookies back to that server whenever it makes any subsequent request. It is up to the form and data server to authenticate based on the cookie content. This mechanism requires any enketo-express webform to have access to these browser cookies so the form/data server and Enketo Express would have to be on the same domain (a different subdomain is possible when setting cross-domain cookies). It also requires the login page to have a mechanism for redirecting the authenticated user back, via a query string parameter.
 
 To make use of external authentication set the following in [config.json](config/config.json):
 

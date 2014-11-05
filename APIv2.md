@@ -4,12 +4,20 @@ API v2 Changes
 
 This is a temporary document with quick notes on the changes of API v2 with API v1 until these can be turned into proper documentation at some point.
 
+
+# /survey endpoint
+In API v2 this always returns an **online-only** webform!
+
+# the new /survey/offline endpoint (doesn't exist in API v1)
+In API v2 this always returns an **offline-enabled** webform (if offline capability is enabled in config) as the value for offline_url. If offline capability is disabled this endpoint will return a 405 Not Allowed.
+
 # defaults
-All /survey/* endpoints now accept `defaults[]` parameters to dynamically set form defaults.
+All /survey/* endpoints, except /survey/offline, now accept `defaults[]` parameters to dynamically set form defaults.
 ```
 curl --user APIKEY: -d "server_url=https://ona.io/enketo&form_id=widgets&defaults[/widgets/text_widgets/my_string]=Hey Mark&defaults[/widgets/number_widgets/my_distress]=4" http://enk.to/api/v2/survey```
 ```
 The returned URL contains the 'feature' (and not the Database), so a single survey can be served with different default to different users.
+
 
 # postMessage
 All */iframe views now accept a `parent_window_origin` parameter to enable an iframed webform to post messages to its parent window.
@@ -38,6 +46,7 @@ All /survey/* endpoints now accept a `theme` parameter that will set the survey 
 Use the theme without the theme- prefix. E.g. for theme-grid, use the value "grid".
 
 To clear a theme from the database, send an empty theme parameter.
+
 
 # Documentation needs to make a distinction between:
 

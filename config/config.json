@@ -1,6 +1,7 @@
 {
     "app name": "Enketo Smart Paper for KoBoCAT",
     "port": "8005",
+    "offline enabled": false,
     "linked form and data server": {
         "name": "KoBoCAT",
         "server url": "kf.kobotoolbox.org",

@@ -1,58 +1,69 @@
 {
-    "name": "enketo-express",
-    "description": "A simplified version of Enketo Smart Paper that requires a constant connection to the server.",
-    "homepage": "",
-    "version": "1.5.1",
-    "main": "./app.js",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/kobotoolbox/enketo-express"
-    },
-    "contributors": [
-        "Martijn van de Rijdt"
-    ],
-    "scripts": {
-        "start": "node .",
-        "test": "grunt test"
-    },
-    "dependencies": {
-        "basic-auth": "1.0.x",
-        "body-parser": "1.x.x",
-        "compression": "1.x.x",
-        "debug": "2.x.x",
-        "express": "4.x.x",
-        "i18next": "1.7.x",
-        "jade": "1.x.x",
-        "libxmljs": "0.12.x",
-        "morgan": "1.x.x",
-        "node_xslt": "0.1.x",
-        "q": "2.0.x",
-        "redis": "0.12.x",
-        "request": "2.x.x",
-        "serve-favicon": "2.x.x",
-        "xml2js": "0.4.x"
-    },
-    "devDependencies": {
-        "chai": "*",
-        "chai-as-promised": "*",
-        "grunt": "0.4.x",
-        "grunt-concurrent": "1.0.x",
-        "grunt-contrib-jshint": "0.10.x",
-        "grunt-contrib-requirejs": "0.4.x",
-        "grunt-contrib-symlink": "0.3.x",
-        "grunt-contrib-watch": "0.6.x",
-        "grunt-env": "0.4.x",
-        "grunt-jsbeautifier": "^0.2.7",
-        "grunt-mocha-test": "0.12.x",
-        "grunt-nodemon": "0.3.x",
-        "grunt-sass": "0.x.x",
-        "grunt-shell": "1.1.x",
-        "gulp": "3.8.x",
-        "i18next-parser": "0.3.x",
-        "load-grunt-tasks": "1.x.x",
-        "mocha": "*",
-        "rjs-build-analysis": "0.0.x",
-        "supertest": "0.x.x",
-        "time-grunt": "1.0.x"
-    }
+  "name": "enketo-express",
+  "description": "A simplified version of Enketo Smart Paper that requires a constant connection to the server.",
+  "homepage": "",
+  "version": "1.5.1",
+  "main": "./app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kobotoolbox/enketo-express"
+  },
+  "contributors": [
+    "Martijn van de Rijdt"
+  ],
+  "scripts": {
+    "start": "node .",
+    "test": "grunt test"
+  },
+  "dependencies": {
+    "basic-auth": "1.0.x",
+    "body-parser": "1.x.x",
+    "compression": "1.x.x",
+    "debug": "2.x.x",
+    "express": "4.x.x",
+    "i18next": "1.7.x",
+    "jade": "1.x.x",
+    "libxmljs": "0.12.x",
+    "morgan": "1.x.x",
+    "node_xslt": "0.1.x",
+    "q": "2.0.x",
+    "redis": "0.12.x",
+    "request": "2.x.x",
+    "serve-favicon": "2.x.x",
+    "xml2js": "0.4.x"
+  },
+  "devDependencies": {
+    "chai": "1.10.x",
+    "chai-as-promised": "*",
+    "grunt": "0.4.x",
+    "grunt-concurrent": "1.0.x",
+    "grunt-contrib-jshint": "0.10.x",
+    "grunt-contrib-requirejs": "0.4.x",
+    "grunt-contrib-symlink": "0.3.x",
+    "grunt-contrib-watch": "0.6.x",
+    "grunt-env": "0.4.x",
+    "grunt-jsbeautifier": "0.2.x",
+    "grunt-karma": "0.9.x",
+    "grunt-mocha-test": "0.12.x",
+    "grunt-nodemon": "0.3.x",
+    "grunt-sass": "0.x.x",
+    "grunt-shell": "1.1.x",
+    "gulp": "3.8.x",
+    "i18next-parser": "0.3.x",
+    "karma": "0.12.x",
+    "karma-chrome-launcher": "0.1.x",
+    "karma-firefox-launcher": "0.1.x",
+    "karma-mocha": "0.1.x",
+    "karma-opera-launcher": "0.1.x",
+    "karma-phantomjs-launcher": "0.1.x",
+    "karma-requirejs": "0.2.x",
+    "karma-safari-launcher": "0.1.x",
+    "karma-sinon-chai": "^0.2.0",
+    "load-grunt-tasks": "1.x.x",
+    "mocha": "*",
+    "requirejs": "2.1.x",
+    "rjs-build-analysis": "0.0.x",
+    "supertest": "0.x.x",
+    "time-grunt": "1.0.x"
+  }
 }

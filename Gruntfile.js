@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function( grunt ) {
-    var JS_INCLUDE = [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js", "!**/*.min.js", "!public/lib/bower-components/**/*.js", "!app/lib/martijnr-foundation/**/*.js", "!public/lib/martijnr-foundation/**/*.js" ];
+    var JS_INCLUDE = [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/**/*.spec.js", "!**/*.min.js", "!public/lib/**/*.js", "!app/lib/martijnr-foundation/**/*.js" ];
     // show elapsed time at the end
     require( 'time-grunt' )( grunt );
     // load all grunt tasks
@@ -92,15 +92,31 @@ module.exports = function( grunt ) {
             },
             all: JS_INCLUDE
         },
+        // test server JS
         mochaTest: {
             all: {
                 options: {
-                    reporter: 'spec'
+                    reporter: 'dot'
                 },
-                src: [ 'test/**/*.spec.js' ]
+                src: [ 'test/server/**/*.spec.js' ]
             },
             account: {
-                src: [ 'test/account-*.spec.js' ]
+                src: [ 'test/server/account-*.spec.js' ]
+            }
+        },
+        // test client JS
+        karma: {
+            options: {
+                singleRun: true,
+                reporters: [ 'dots' ]
+            },
+            headless: {
+                configFile: 'test/client/config/headless-karma.conf.js',
+                browsers: [ 'PhantomJS' ]
+            },
+            browsers: {
+                configFile: 'test/client/config/browser-karma.conf.js',
+                browsers: [ 'Chrome', 'ChromeCanary', 'Firefox', 'Opera', /*'Safari'*/ ]
             }
         },
         requirejs: {
@@ -135,15 +151,6 @@ module.exports = function( grunt ) {
                     cwd: 'app/lib/enketo-core',
                     src: [ '*' ],
                     dest: 'public/lib/enketo-core'
-                } ]
-            },
-            foundation: {
-                files: [ {
-                    overwrite: false,
-                    expand: true,
-                    cwd: 'app/lib/martijnr-foundation',
-                    src: [ '*' ],
-                    dest: 'public/lib/martijnr-foundation'
                 } ]
             }
         },
@@ -184,6 +191,6 @@ module.exports = function( grunt ) {
 
     grunt.registerTask( 'default', [ 'symlink', 'compile' ] );
     grunt.registerTask( 'compile', [ 'sass', 'client-config-file:create', 'requirejs', 'client-config-file:remove' ] );
-    grunt.registerTask( 'test', [ 'env:test', 'symlink', 'mochaTest', 'jsbeautifier:test', 'jshint', 'compile' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'symlink', 'mochaTest', 'karma:headless', 'jsbeautifier:test', 'jshint', 'compile' ] );
     grunt.registerTask( 'develop', [ 'concurrent:develop' ] );
 };

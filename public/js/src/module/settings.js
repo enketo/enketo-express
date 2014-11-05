@@ -101,7 +101,15 @@ define( [ 'text!enketo-config' ], function( config ) {
 
     // add enketoId
     settings.enketoIdPrefix = '::';
-    settings.enketoId = new RegExp( '\/' + settings.enketoIdPrefix ).test( window.location.pathname ) ? window.location.pathname.substring( window.location.pathname.lastIndexOf( settings.enketoIdPrefix ) + settings.enketoIdPrefix.length ) : null;
+    settings.enketoId = _getEnketoId( '\/' + settings.enketoIdPrefix, window.location.pathname ) || _getEnketoId( '#', window.location.hash );
+
+    // determine whether view is offline-capable
+    settings.offline = !( new RegExp( '\/' + settings.enketoIdPrefix ).test( window.location.pathname ) ) && !!window.location.hash;
+
+    function _getEnketoId( prefix, haystack ) {
+        var id = new RegExp( prefix ).test( haystack ) ? haystack.substring( haystack.lastIndexOf( prefix ) + prefix.length ) : null;
+        return id;
+    }
 
     function _getAllQueryParams() {
         var val, processedVal,

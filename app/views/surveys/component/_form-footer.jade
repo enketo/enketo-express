@@ -1,16 +1,17 @@
 section.form-footer
   .form-footer__content
-    fieldset.draft.question
+    fieldset.draft.question.hide
+      .option-wrapper: label.select 
+        input.ignore(type="checkbox", name="draft")
+        span.option-label= t('formfooter.savedraft.label')
     .main-controls
       a.previous-page.disabled(href="#")= t('form.pages.back')
       if type === 'preview'
         button#validate-form.btn.btn-primary.hide
-          i.icon.icon-check
-          |  Validate
+          i.icon.icon-check= ' '+ t('formfooter.validate.btn')
       else
         button#submit-form.btn.btn-primary.hide
-          i.icon.icon-check
-          |  Submit
+          i.icon.icon-check= ' '+ t('formfooter.submit.btn')
       a.btn.btn-primary.next-page(href="#")= t('form.pages.next')
 
     if logout

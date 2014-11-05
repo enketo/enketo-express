@@ -37,10 +37,23 @@ router
         req.webformType = 'edit';
         next();
     } )
+    .all( '/survey/offline', function( req, res, next ) {
+        var error;
+        if ( req.app.get( 'offline enabled' ) ) {
+            req.webformType = 'offline';
+            next();
+        } else {
+            error = new Error( 'Not Allowed.' );
+            error.status = 405;
+            next( error );
+        }
+    } )
     .all( '*', _setReturnQueryParam )
     .get( '/survey', getExistingSurvey )
+    .get( '/survey/offline', getExistingSurvey )
     .get( '/survey/iframe', getExistingSurvey )
     .post( '/survey', getNewOrExistingSurvey )
+    .post( '/survey/offline', getNewOrExistingSurvey )
     .post( '/survey/iframe', getNewOrExistingSurvey )
     .delete( '/survey', deactivateSurvey )
     .get( '/survey/preview', getExistingSurvey )
@@ -57,7 +70,7 @@ router
     .post( '/instance/iframe', cacheInstance )
     .delete( '/instance', removeInstance )
     .all( '*', function( req, res, next ) {
-        var error = new Error( 'Not allowed' );
+        var error = new Error( 'Not allowed.' );
         error.status = 405;
         next( error );
     } );
@@ -101,7 +114,7 @@ function getExistingSurvey( req, res, next ) {
             if ( id ) {
                 _render( 200, _generateWebformUrls( id, req ), res );
             } else {
-                _render( 404, 'Survey not found', res );
+                _render( 404, 'Survey not found.', res );
             }
         } )
         .catch( next );
@@ -126,7 +139,7 @@ function getNewOrExistingSurvey( req, res, next ) {
                     if ( id ) {
                         _render( status, _generateWebformUrls( id, req ), res );
                     } else {
-                        _render( 404, 'Survey not found', res );
+                        _render( 404, 'Survey not found.', res );
                     }
                 } );
         } )
@@ -146,7 +159,7 @@ function deactivateSurvey( req, res, next ) {
             if ( id ) {
                 _render( 204, null, res );
             } else {
-                _render( 404, 'Survey not found', res );
+                _render( 404, 'Survey not found.', res );
             }
         } )
         .catch( next );
@@ -165,7 +178,7 @@ function getNumber( req, res, next ) {
                 }, res );
             } else {
                 // this cannot be reached I think
-                _render( 404, 'No surveys found', res );
+                _render( 404, 'No surveys found.', res );
             }
         } )
         .catch( next );
@@ -207,7 +220,7 @@ function removeInstance( req, res, next ) {
             if ( instanceId ) {
                 _render( 204, null, res );
             } else {
-                _render( 404, 'Record not found', res );
+                _render( 404, 'Record not found.', res );
             }
         } )
         .catch( next );
@@ -262,35 +275,40 @@ function _generateWebformUrls( id, req ) {
     var queryString,
         obj = {},
         baseUrl = req.protocol + '://' + req.headers.host + '/',
-        idPart = '::' + id;
+        idPartOnline = '::' + id,
+        idPartOffline = '#' + id;
 
     req.webformType = req.webformType || 'default';
 
     switch ( req.webformType ) {
         case 'preview':
             queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
-            obj.preview_url = baseUrl + 'preview/' + idPart + queryString;
+            obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             break;
         case 'edit':
             // no defaults query parameter in edit view
             queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.param( 'instance_id' ), req.parentWindowOriginParam, req.returnQueryParam ] );
-            obj.edit_url = baseUrl + 'edit/' + idPart + queryString;
+            obj.edit_url = baseUrl + 'edit/' + idPartOnline + queryString;
             break;
         case 'all':
             // non-iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam ] );
-            obj.url = baseUrl + idPart + queryString;
-            obj.preview_url = baseUrl + 'preview/' + idPart + queryString;
+            obj.url = baseUrl + idPartOnline + queryString;
+            obj.offline_url = baseUrl + '_' + idPartOffline;
+            obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // iframe views
             queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
-            obj.iframe_url = baseUrl + idPart + queryString;
-            obj.preview_iframe_url = baseUrl + 'preview/' + idPart + queryString;
+            obj.iframe_url = baseUrl + idPartOnline + queryString;
+            obj.preview_iframe_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // enketo-legacy
             obj.subdomain = '';
             break;
+        case 'offline':
+            obj.offline_url = baseUrl + '_' + idPartOffline;
+            break;
         default:
             queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
-            obj.url = baseUrl + idPart + queryString;
+            obj.url = baseUrl + idPartOnline + queryString;
             break;
     }
 

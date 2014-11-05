@@ -24,6 +24,7 @@ router.param( 'enketo_id', function( req, res, next, id ) {
 } );
 
 router
+    .get( '/_', offlineWebform )
     .get( '/:enketo_id', webform )
     .get( '/preview/:enketo_id', preview )
     .get( '/preview', preview )
@@ -34,8 +35,22 @@ router
         res.send( 'connected ' + Math.random() );
     } );
 
+function offlineWebform( req, res, next ) {
+    var error;
+
+    if ( !req.app.get( 'offline enabled' ) ) {
+        error = new Error( 'Offline functionality has not been enabled for this application.' );
+        error.status = 405;
+        next( error );
+    } else {
+        req.offline = true;
+        webform( req, res, next );
+    }
+}
+
 function webform( req, res, next ) {
     var survey = {
+        offline: !!req.offline,
         iframe: !!req.query.iframe
     };
 

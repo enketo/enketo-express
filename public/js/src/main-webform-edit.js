@@ -1,8 +1,8 @@
 require( [ 'require-config' ], function( rc ) {
     "use strict";
     if ( console.time ) console.time( 'client loading time' );
-    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'q', 'translator', 'jquery' ],
-        function( gui, controller, settings, connection, Q, t, $ ) {
+    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'q', 'translator', 'utils', 'jquery' ],
+        function( gui, controller, settings, connection, Q, t, utils, $ ) {
             var $loader = $( '.form__loader' ),
                 $form = $( 'form.or' ),
                 $buttons = $( '.form-header__button--print, button#submit-form' ),
@@ -19,9 +19,13 @@ require( [ 'require-config' ], function( rc ) {
                 connection.getExistingInstance( survey )
             ] ).then( function( responses ) {
                 if ( responses[ 0 ].form && responses[ 0 ].model && responses[ 1 ].instance ) {
-                    gui.swapTheme( responses[ 0 ].theme || _getThemeFromFormStr( responses[ 0 ].form ) )
+                    gui.swapTheme( responses[ 0 ].theme || utils.getThemeFromFormStr( responses[ 0 ].form ) )
                         .then( function() {
                             _init( responses[ 0 ].form, responses[ 0 ].model, responses[ 1 ].instance );
+                        } )
+                        .then( connection.getMaximumSubmissionSize )
+                        .then( function( maxSize ) {
+                            settings.maxSize = maxSize;
                         } );
                 } else {
                     throw new Error( t( 'error.unknown' ) );
@@ -37,24 +41,12 @@ require( [ 'require-config' ], function( rc ) {
                 }
             }
 
-            // TODO: move to utils.js after merging offline features
-            function _getThemeFromFormStr( formStr ) {
-                var matches = formStr.match( /<\s?form .*theme-([A-z]+)/ );
-                return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
-            }
-
-            // TODO: move to utils.js after merging offline features
-            function _getTitleFromFormStr( formStr ) {
-                var matches = formStr.match( /<\s?h3 id="form-title">([^<]+)</ );
-                return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
-            }
-
             function _init( formStr, modelStr, instanceStr ) {
                 $loader[ 0 ].outerHTML = formStr;
                 $( document ).ready( function() {
                     controller.init( 'form.or:eq(0)', modelStr, instanceStr );
                     $form.add( $buttons ).removeClass( 'hide' );
-                    $( 'head>title' ).text( _getTitleFromFormStr( formStr ) );
+                    $( 'head>title' ).text( utils.getTitleFromFormStr( formStr ) );
                     if ( console.timeEnd ) console.timeEnd( 'client loading time' );
                 } );
             }

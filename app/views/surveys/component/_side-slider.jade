@@ -1,0 +1,13 @@
+aside.record-list.side-slider
+	button.btn-icon-only.close(type="button", aria-hidden="true") ×
+	h3= t('record-list.title')
+	p= t('record-list.msg1')
+	progress.record-list__upload-progress
+	ul.record-list__records
+	.record-list__button-bar
+		button.record-list__button-bar__button.export.btn.btn-default(type="button", disabled)= t('record-list.export')
+		button.record-list__button-bar__button.upload.btn.btn-primary(type="button", disabled)= t('record-list.upload') 
+	p!= t('record-list.msg2', {icon: '<span class="icon icon-pencil"> </span>'})
+button.side-slider__toggle.open
+button.side-slider__toggle.close
+div.side-slider-toggle.slider-overlay

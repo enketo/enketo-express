@@ -85,7 +85,8 @@ function _replaceMediaSources( form, manifest ) {
         if ( file.filename === 'form_logo.png' ) {
             formDoc.get( '//*[@class="form-logo"]' )
                 .node( 'img' )
-                .attr( 'src', _toLocalMediaUrl( file.downloadUrl ) );
+                .attr( 'src', _toLocalMediaUrl( file.downloadUrl ) )
+                .attr( 'alt', 'form logo' );
             return true;
         }
     } );

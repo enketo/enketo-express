@@ -67,7 +67,7 @@ $offline-color: #d15200;
     position: fixed;
     top: 3px;
     left: 0;
-    .offline-enabled-icon {
+    .offline-enabled__icon {
         width: 34px;
         height: 34px;
         background-color: $offline-color;
@@ -84,7 +84,7 @@ $offline-color: #d15200;
             opacity: 0.8;
         }
     }
-    .queue-length {
+    .offline-enabled__queue-length {
         cursor: pointer;
         margin-top: 1px;
         width: 34px;

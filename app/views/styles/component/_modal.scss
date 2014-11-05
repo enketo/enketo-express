@@ -1,70 +1,60 @@
-.modal {
-    @extend .reveal-modal;
+@import "../../../../public/lib/enketo-vex/sass/vex";
+@import "../../../../public/lib/enketo-vex/sass/vex-theme-plain";
+
+.vex.vex.vex-theme-plain {
     h3 {
-        padding: 0 0 0 0;
         margin-top: 10px;
         color: $text-color;
     }
-    &__header {
-        margin-right: 20px;
+    .vex-content {
+        width: 550px;
+        border: 4px solid #ccc;
+        border-radius: 4px;
     }
-    &__body {
-        margin-top: 40px;
+    .vex-dialog-button {
+        @extend .btn;
+        margin-top: 20px !important;
+        margin-left: 30px !important;
+        margin-bottom: 0 !important;
     }
-    &__footer {
-        margin-top: 40px;
-        position: relative;
-        height: 50px;
-        .btn {
-            float: right;
-            margin-bottom: 0;
-            margin-left: 30px;
-        }
-        .self-destruct-timer {
-            position: absolute;
-            bottom: 0;
-            color: $text-muted;
-        }
+    .vex-auto-close-timer {
+        position: absolute;
+        bottom: 12px;
+        color: $text-muted;
+    }
+    .vex-dialog-input input[type=text] {
+        @extend .form-control[type=text];
+        margin-top: 20px;
     }
 }
 
-
-.alert-box {}
-
-/*.alert {
-    em {
-        color: #666;
-    }
-    strong {
-        color: black;
-        font-size: 110%;
-        text-decoration: none;
-    }
-    a {
-        text-decoration: underline;
-    }
-}*/
-
-/*.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 5;
-    background: black;
-    opacity: 0.8;
-    display: none;
-}*/
-
-.modal-dialog {
+.vex-dialog-form {
     input {
         @extend .form-control;
     }
+    fieldset {
+        margin: 20px 0;
+    }
+    legend {
+        @include font-bold;
+        font-size: 16px;
+        margin-bottom: 10px;
+        ~ label {
+            display: inline-block;
+            width: auto;
+            font-weight: normal;
+            input {
+                width: auto;
+                display: inline-block;
+                height: auto;
+                margin-right: 7px;
+            }
+            &:hover {
+                background: none;
+            }
+            + label {
+                margin-left: 20px;
+            }
+        }
+    }
 }
-
-
-.load-error {
-    margin: 100px 0 60px 0;
-}
-

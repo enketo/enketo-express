@@ -5,7 +5,7 @@
       "heading": "Alert"
     },
     "loaderror": {
-      "editadvice": "It is recommended not to use this form to edit data until this is resolved.",
+      "editadvice": "It is recommended not to edit this record until this is resolved.",
       "entryadvice": "It is recommended not to use this form for data entry until this is resolved.",
       "heading": "Loading Error",
       "msg1": "Error occured during the loading of this form.",
@@ -28,22 +28,34 @@
       "negButton": "Use it",
       "posButton": "Show options"
     },
+    "queuesubmissionsuccess": {
+      "msg": "__recordNames__ was successfully submitted",
+      "msg_plural": "__recordNames__ were successfully submitted"
+    },
+    "recordloadsuccess": {
+      "msg": "__recordName__ has been loaded"
+    },
+    "recordnotfound": {
+      "msg": "Record could not be retrieved or contained no data."
+    },
+    "recordsavesuccess": {
+      "draftmsg": "Record stored as draft.",
+      "finalmsg": "Record queued for submission."
+    },
     "submission": {
       "msg": "Submitting...",
       "redirectmsg": "You will be automatically redirected after submission."
     },
     "submissionerror": {
       "authrequiredmsg": "Authentication required. Please authenticate __here__ in a different browser tab and try again.",
-      "fnfheading": "File(s) not Found",
       "fnfmsg": [
-        "The following media files could not be retrieved: __failedFiles__. The submission will go ahead and show the missing filenames in the data, but without the actual file(s).",
+        "The following media files could not be retrieved: __failedFiles__. The submission went ahead without these files and this succeeded.",
         "Please contact __supportEmail__ to report a bug and if possible explain how the issue can be reproduced."
       ],
-      "heading": "Submission Failed",
-      "tryagainmsg": "Please try submitting again."
+      "heading": "Submission Failed"
     },
     "submissionsuccess": {
-      "heading": "Submission Successful!",
+      "heading": "Submission Successful",
       "msg": "Your data was submitted!",
       "redirectmsg": "You will now be redirected."
     },
@@ -66,6 +78,11 @@
       "negButton": "Cancel",
       "posButton": "Confirm"
     },
+    "discardcurrent": {
+      "heading": "Unsaved edits",
+      "msg": "The current form has unsaved changes. Would you like to load a record without saving changes to the form you were working on?",
+      "posButton": "Proceed without saving"
+    },
     "login": {
       "heading": "Login Required",
       "msg": [
@@ -77,20 +94,24 @@
     },
     "print": {
       "a4": "A4",
+      "heading": "Select Print Settings",
       "landscape": "Landscape",
       "letter": "Letter",
       "msg": "To prepare an optimized print, please select the print settings below",
       "orientation": "Paper Orientation",
       "portrait": "Portrait",
-      "progressheading": "Preparing...",
-      "progressmsg": "Working hard to prepare your optimized print view. Hold on!",
+      "posButton": "Prepare",
       "psize": "Paper Size",
       "reminder": "Remember to set these same print settings in the browser's print menu afterwards!"
     },
     "save": {
-      "hint": "This name allows you to easily find your draft record to finish it later. The record name will not be submitted to the server.",
+      "existingerror": "This record name or ID already exists.",
+      "hint": "This name allows you to easily find your draft record to finish it later.",
       "msg": "There are unsaved changes, would you like to continue without saving those?",
-      "name": "Record Name"
+      "name": "Record Name",
+      "posButton": "Save & Close",
+      "renamemsg": "Are you sure you want to rename __currentName__ to __newName__?",
+      "unkownerror": "An unknown error occurred when trying to save data."
     }
   },
   "contact": {
@@ -125,6 +146,18 @@
       "return": "Return to Beginning"
     }
   },
+  "formfooter": {
+    "savedraft": {
+      "btn": "Save Draft",
+      "label": "Save as Draft"
+    },
+    "submit": {
+      "btn": "Submit"
+    },
+    "validate": {
+      "btn": "Validate"
+    }
+  },
   "here": "here",
   "home": {
     "msg": "__appTitle__ is running! Please access Enketo forms from your __serverName__ installation."
@@ -140,16 +173,32 @@
       "msg2": "If you are using an outdated browser, we recommend upgrading to a recent version of one of the following excellent modern browsers:"
     }
   },
+  "prompt": {
+    "default": {
+      "heading": "Enter values"
+    }
+  },
+  "record-list": {
+    "export": "Export",
+    "msg1": "Records are stored inside your browser until they have been uploaded (even if you turn off your computer or go offline).",
+    "msg2": "Queued records, except those marked as draft __icon__, are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available. To force an upload in between automatic attempts, click Upload.",
+    "norecords": "no records queued",
+    "title": "Queue",
+    "upload": "Upload"
+  },
+  "store": {
+    "error": {
+      "notavailable": "Browser storage is required but is not available, is corrupted, or is not writeable. If you are in 'private browsing' mode please switch to regular mode, otherwise switch to another browser. (error: __error__)"
+    }
+  },
   "submission": {
     "http0": "Failed (Offline?).",
-    "http201": "Done!",
-    "http202": "Done! (duplicate)",
-    "http2xx": "Unexpected response when submitting data. ",
-    "http400": "Data server did not accept data. ",
-    "http403": "Not allowed to post data to this data server. ",
+    "http2xx": "Unexpected response when submitting data.",
+    "http400": "Data server did not accept data.",
+    "http403": "Not allowed to post data to this data server.",
     "http404": "Submission service on data server not found.",
     "http413": "Data is too large.",
     "http4xx": "Unknown submission problem on data server.",
-    "http500": "The data server for your form or the Enketo server is down. Please try again later or contact __supportEmail__ please."
+    "http500": "The data server for your form or the Enketo server is down. Please try again later or contact __supportEmail__."
   }
 }
