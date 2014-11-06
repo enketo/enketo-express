@@ -2,20 +2,20 @@
   span.icon.icon-info-circle
   button.btn-icon-only.close &times;
 
-#dialog-alert.modal(role="dialog", aria-labelledby="alert dialog", aria-hidden="true", data-keyboard="true", data-reveal)
+#dialog-alert.modal(role="dialog", aria-labelledby="dialog-alert-title", aria-hidden="true", data-keyboard="true", data-reveal)
   .modal__header
     button.btn-icon-only.close-reveal-modal(type="button", aria-hidden="true") &times;
-    h3
+    h3#dialog-alert-title
   .modal__body
     p
   .modal__footer
     span.self-destruct-timer
     button.btn.btn-default.close(type="button", aria-hidden="true") Close 
 
-#dialog-confirm.modal(role="dialog", aria-labelledby="confirmation dialog", aria-hidden="true", data-keyboard="true", data-reveal)
+#dialog-confirm.modal(role="dialog", aria-labelledby="dialog-confirm-title", aria-hidden="true", data-keyboard="true", data-reveal)
   .modal__header
     button.btn-icon-only.close-reveal-modal(type="button", aria-hidden="true") &times;
-    h3
+    h3#dialog-confirm-title
   .modal__body
     p.alert-box.error
     p.msg
@@ -24,12 +24,12 @@
     button.btn.btn-default.negative(type="button", aria-hidden="true") Close
     button.btn.btn-primary.positive(type="button", aria-hidden="true") Confirm
 
-#dialog-save.modal.fade(role="dialog", aria-labelledby="confirmation dialog", aria-hidden="true", data-keyboard="true")
+#dialog-save.modal.fade(role="dialog", aria-labelledby="dialog-save-title", aria-hidden="true", data-keyboard="true")
   .modal-dialog
     .modal-content 
       .modal-header
         button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
-        h3
+        h3#dialog-save-title
       .modal-body
         form(onsubmit="return false;")
           .alert.alert-danger
