@@ -14,7 +14,7 @@
 // reset
 @import "../../lib/enketo-core/src/sass/core/reset";
 
-// components
+// common styles
 @import "component/common";
 
 // utilities
@@ -30,6 +30,7 @@
 @import "../../lib/enketo-core/src/sass/core/layout";
 @import "component/layout_webform";
 
+// components
 //@import "component/side-slider";
 @import "component/form_formhub";
 @import "component/form_header";

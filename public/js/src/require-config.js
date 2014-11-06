@@ -60,8 +60,3 @@ define( 'store', function() {
     "use strict";
     return undefined;
 } );
-
-define( 'bootstrap', function() {
-    "use strict";
-    return undefined;
-} );

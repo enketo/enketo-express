@@ -636,7 +636,6 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', 'foundation.reve
      * Makes sure sliders that reveal the feedback bar and page have the correct css 'top' property when the header is fixed
      */
     function positionPageAndBar() {
-        console.log( 'positionPageAndBar called' );
         var fTop, pTop,
             $header = $( 'header.navbar' ),
             hHeight = $header.outerHeight() || 0,
