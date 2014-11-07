@@ -117,6 +117,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                     gui.alert( 'Please try submitting again.', 'Submission Failed' );
                 },
                 success: function() {
+                    $( document ).trigger( 'submissionsuccess' ); // since connection.processOpenRosaResponse is bypassed
                     if ( redirect ) {
                         gui.alert( 'You will now be redirected.', 'Submission Successful!', 'success' );
                         setTimeout( function() {
@@ -271,6 +272,10 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                     $formprogress.css( 'width', status + '%' );
                 }
             } );
+
+            if ( inIframe() && settings.parentWindowOrigin ) {
+                $( document ).on( 'submissionsuccess edited', postEventAsMessageToParentWindow );
+            }
         }
 
         function setDraftStatus( status ) {
@@ -280,6 +285,34 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
 
         function getDraftStatus() {
             return $( '.form-footer [name="draft"]' ).prop( 'checked' );
+        }
+
+        /** 
+         * Determines whether the page is loaded inside an iframe
+         * @return {boolean} [description]
+         */
+        function inIframe() {
+            try {
+                return window.self !== window.top;
+            } catch ( e ) {
+                return true;
+            }
+        }
+
+        /**
+         * Attempts to send a message to the parent window, useful if the webform is loaded inside an iframe.
+         * @param  {{type: string}} event
+         */
+        function postEventAsMessageToParentWindow( event ) {
+            if ( event && event.type ) {
+                try {
+                    window.parent.postMessage( JSON.stringify( {
+                        enketoEvent: event.type
+                    } ), settings.parentWindowOrigin );
+                } catch ( error ) {
+                    console.error( error );
+                }
+            }
         }
 
         /**

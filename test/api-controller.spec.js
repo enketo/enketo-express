@@ -86,7 +86,7 @@ describe( 'api', function() {
                     } )
                     .expect( test.status, done );
             } );
-    };
+    }
 
     function instanceTest( test ) {
         var authDesc = test.auth === true ? 'valid' : ( test.auth === false ? 'invalid' : 'empty' ),
@@ -112,7 +112,7 @@ describe( 'api', function() {
                     } )
                     .expect( test.status, done );
             } );
-    };
+    }
 
     describe( 'v1', function() {
         var version = 1;
@@ -312,8 +312,8 @@ describe( 'api', function() {
             return obj;
         } ).forEach( instanceTest );
 
-        // test the defaults functionality
         [
+            // TESTING THE DEFAULTS PARAMETER
             // defaults are optional
             {
                 endpoint: '/survey',
@@ -382,6 +382,16 @@ describe( 'api', function() {
                 res: {
                     expected: /.+\?d\[%2Fpath%2Fto%2Fnode\]=one%20line%0Aanother%20line/
                 }
+            }, {
+                endpoint: '/survey/all',
+                defaults: {
+                    '/path/to/node': 'one line\nanother line'
+                },
+                method: 'post',
+                status: 200,
+                res: {
+                    expected: /.+\?d\[%2Fpath%2Fto%2Fnode\]=one%20line%0Aanother%20line/
+                }
             },
             // /instance endpoint will ignore defaults
             {
@@ -395,24 +405,137 @@ describe( 'api', function() {
                     property: 'edit_url',
                     expected: /[^(d\[)]+/
                 }
-            }
+            },
+            // TESTING THE PARENTWINDOWORIGIN PARAMETER
+            // parentWindowOrigin parameter is optional
+            {
+                endpoint: '/survey/iframe',
+                parentWindowOrigin: null,
+                method: 'post',
+                status: 200,
+                res: {
+                    expected: /[^parentWindowOrigin\[\]]+/
+                }
+            }, {
+                endpoint: '/survey',
+                parentWindowOrigin: '',
+                method: 'post',
+                status: 200,
+                res: {
+                    expected: /[^parentWindowOrigin\[\]]/
+                }
+            },
+            // same for GET
+            {
+                endpoint: '/survey/iframe',
+                parentWindowOrigin: null,
+                method: 'get',
+                status: 200,
+                res: {
+                    expected: /[^parentWindowOrigin\[\]]+/
+                }
+            }, {
+                endpoint: '/survey/iframe',
+                parentWindowOrigin: '',
+                method: 'get',
+                status: 200,
+                res: {
+                    expected: /[^parentWindowOrigin\[\]]+/
+                }
+            },
+            // responses include the url-encoded parentWindowOrigin query parameter
+            {
+                endpoint: '/survey/iframe',
+                parentWindowOrigin: 'http://example.com/',
+                method: 'post',
+                status: 200,
+                res: {
+                    expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                }
+            }, {
+                endpoint: '/survey/preview/iframe',
+                parentWindowOrigin: 'http://example.com/',
+                method: 'post',
+                status: 200,
+                res: {
+                    property: 'preview_url',
+                    expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                }
+            },
+            /*{
+                endpoint: '/survey/single/iframe',
+                parentWindowOrigin: 'http://example.com/',
+                method: 'post',
+                status: 200,
+                res: {
+                    property: 'single_url',
+                    expected: /.+\?parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                }
+            },*/
+            {
+                endpoint: '/survey/all',
+                parentWindowOrigin: 'http://example.com/',
+                method: 'post',
+                status: 200,
+                res: {
+                    property: 'iframe_url',
+                    expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                }
+            }, {
+                endpoint: '/instance/iframe',
+                parentWindowOrigin: 'http://example.com/',
+                method: 'post',
+                status: 201,
+                res: {
+                    property: 'edit_url',
+                    expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                }
+            },
+            // non-iframe endpoints will ignore the parentWindowOrigin parameter
+            {
+                endpoint: '/survey',
+                parentWindowOrigin: 'http://example.com/',
+                method: 'post',
+                status: 200,
+                res: {
+                    expected: /[^parentWindowOrigin\[\]]/
+                }
+            }, {
+                endpoint: '/survey/preview',
+                parentWindowOrigin: 'http://example.com/',
+                method: 'post',
+                status: 200,
+                res: {
+                    expected: /[^parentWindowOrigin\[\]]/
+                }
+            }, {
+                endpoint: '/instance',
+                parentWindowOrigin: 'http://example.com/',
+                method: 'post',
+                status: 201,
+                res: {
+                    property: 'edit_url',
+                    expected: /[^parentWindowOrigin\[\]]/
+                }
+            },
         ].map( function( obj ) {
             obj.version = version;
             return obj;
         } ).forEach( function( test ) {
-            it( test.method.toUpperCase() + ' /api/v' + version + test.endpoint + ' default: ' + JSON.stringify( test.defaults ) +
-                ' responds with ' + test.status + ' and expected response',
+            it( test.method.toUpperCase() + ' /api/v' + version + test.endpoint + ' parentWindowOrigin: ' + test.parentWindowOrigin +
+                ' default: ' + JSON.stringify( test.defaults ) + ' responds with ' + test.status + ' and expected response',
                 function( done ) {
                     var resProp = test.res.property || 'url',
                         version = test.version,
                         body = {
                             server_url: validServer,
                             form_id: validFormId,
-                            defaults: test.defaults
+                            defaults: test.defaults,
+                            parent_window_origin: test.parentWindowOrigin
                         };
-                    if ( test.endpoint === '/instance' ) {
+                    if ( /\/instance/.test( test.endpoint ) ) {
                         body.instance = '<data></data>';
-                        body.instance_id = 'someUUID';
+                        body.instance_id = 'uuid' + Math.random();
                         body.return_url = 'http://example.com';
                     }
                     request( app )[ test.method ]( '/api/v' + version + '/' + test.endpoint )
@@ -425,5 +548,6 @@ describe( 'api', function() {
                         .end( done );
                 } );
         } );
+
     } );
 } );

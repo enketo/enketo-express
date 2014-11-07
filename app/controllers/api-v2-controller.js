@@ -23,12 +23,13 @@ router
     } )
     .all( '*', authCheck )
     .all( '*', _setDefaultsQueryParam )
-    .all( '/*/iframe', _setIframeQueryParam )
+    .all( '/*/iframe', _setIframeQueryParams )
+    .all( '/survey/all', _setIframeQueryParams )
     .all( '/survey/preview*', function( req, res, next ) {
         req.webformType = 'preview';
         next();
     } )
-    .all( '/survey/all*', function( req, res, next ) {
+    .all( '/survey/all', function( req, res, next ) {
         req.webformType = 'all';
         next();
     } )
@@ -186,7 +187,6 @@ function cacheInstance( req, res, next ) {
         .set( survey )
         .then( surveyModel.getId )
         .then( function( id ) {
-            debug( 'edit url generated:', _generateWebformUrls( id, req ) );
             _render( 201, _generateWebformUrls( id, req ), res );
         } )
         .catch( next );
@@ -229,8 +229,11 @@ function _setDefaultsQueryParam( req, res, next ) {
     }
 }
 
-function _setIframeQueryParam( req, res, next ) {
+function _setIframeQueryParams( req, res, next ) {
     req.iframeQueryParam = 'iframe=true';
+    if ( req.param( 'parent_window_origin' ) ) {
+        req.parentWindowOriginParam = 'parentWindowOrigin=' + encodeURIComponent( decodeURIComponent( req.param( 'parent_window_origin' ) ) );
+    }
     next();
 }
 
@@ -256,12 +259,12 @@ function _generateWebformUrls( id, req ) {
 
     switch ( req.webformType ) {
         case 'preview':
-            queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam ] );
+            queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
             obj.preview_url = baseUrl + 'preview/' + idPart + queryString;
             break;
         case 'edit':
             // no defaults query parameter in edit view
-            queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.param( 'instance_id' ) ] );
+            queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.param( 'instance_id' ), req.parentWindowOriginParam ] );
             obj.edit_url = baseUrl + 'edit/' + idPart + queryString;
             break;
         case 'all':
@@ -270,14 +273,14 @@ function _generateWebformUrls( id, req ) {
             obj.url = baseUrl + idPart + queryString;
             obj.preview_url = baseUrl + 'preview/' + idPart + queryString;
             // iframe views
-            queryString = _generateQueryString( [ 'iframe=true', req.defaultsQueryParam ] );
+            queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
             obj.iframe_url = baseUrl + idPart + queryString;
             obj.preview_iframe_url = baseUrl + 'preview/' + idPart + queryString;
             // enketo-legacy
             obj.subdomain = '';
             break;
         default:
-            queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam ] );
+            queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
             obj.url = baseUrl + idPart + queryString;
             break;
     }

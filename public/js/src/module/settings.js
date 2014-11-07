@@ -60,6 +60,9 @@ define( [ 'text!enketo-config' ], function( config ) {
         }, {
             q: 'source',
             s: 'source'
+        }, {
+            q: 'parentWindowOrigin',
+            s: 'parentWindowOrigin'
         } ];
 
     // rename query string parameters to settings 
