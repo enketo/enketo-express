@@ -349,7 +349,7 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', 'foundation.reve
         heading = heading || 'Alert';
         level = level || 'error';
         cls = ( level === 'normal' ) ? '' : 'alert-box ' + level;
-        open = $alert.hasClass('open');
+        open = $alert.hasClass( 'open' );
 
         // write content into alert dialog
         $alert.find( '.modal__header h3' ).text( heading );
@@ -386,8 +386,8 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', 'foundation.reve
         $alert.foundation( 'reveal', 'open' );
 
         // the .css('top', '') is a hack to fix an issue that occurs sometimes when gui.alert is called when it is already open
-        if (open){
-            $alert.css('top', '');
+        if ( open ) {
+            $alert.css( 'top', '' );
         }
 
         /* sample test code (for console):

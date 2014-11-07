@@ -89,7 +89,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 form.init();
                 $form = form.getView().$;
                 $formprogress = $( '.form-progress' );
-                $( 'button#delete-form' ).button( 'disable' );
+                //$( 'button#delete-form' ).button( 'disable' );
             }
         }
 
