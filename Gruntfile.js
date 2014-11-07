@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function( grunt ) {
-    var JS_INCLUDE = [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js", "!**/*.min.js", "!public/lib/bower-components/**/*.js", "!app/lib/foundation/**/*.js", "!public/lib/foundation/**/*.js" ];
+    var JS_INCLUDE = [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js", "!**/*.min.js", "!public/lib/bower-components/**/*.js", "!app/lib/martijnr-foundation/**/*.js", "!public/lib/martijnr-foundation/**/*.js" ];
     // show elapsed time at the end
     require( 'time-grunt' )( grunt );
     // load all grunt tasks
