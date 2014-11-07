@@ -19,8 +19,8 @@ require.config( {
         "jquery.touchswipe": "../../../lib/enketo-core/lib/jquery-touchswipe/jquery.touchSwipe",
         "leaflet": "../../../lib/enketo-core/lib/leaflet/leaflet",
         "file-manager": "../../../lib/enketo-core/src/js/file-manager",
-        "foundation.core": "../../../lib/foundation/js/foundation/foundation",
-        "foundation.reveal": "../../../lib/foundation/js/foundation/foundation.reveal",
+        "foundation.core": "../../../lib/martijnr-foundation/js/foundation/foundation",
+        "foundation.reveal": "../../../lib/martijnr-foundation/js/foundation/foundation.reveal",
         "q": "../../../lib/bower-components/q/q"
     },
     shim: {

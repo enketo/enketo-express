@@ -343,12 +343,13 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', 'foundation.reve
      * @param {number=} duration duration in secondsafter which dialog should self-destruct
      */
     function alert( message, heading, level, duration ) {
-        var cls, timer, timeout,
+        var cls, timer, timeout, open,
             $alert = $( '#dialog-alert' );
 
         heading = heading || 'Alert';
         level = level || 'error';
         cls = ( level === 'normal' ) ? '' : 'alert-box ' + level;
+        open = $alert.hasClass('open');
 
         // write content into alert dialog
         $alert.find( '.modal__header h3' ).text( heading );
@@ -383,6 +384,11 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', 'foundation.reve
 
         // instantiate modal
         $alert.foundation( 'reveal', 'open' );
+
+        // the .css('top', '') is a hack to fix an issue that occurs sometimes when gui.alert is called when it is already open
+        if (open){
+            $alert.css('top', '');
+        }
 
         /* sample test code (for console):
 

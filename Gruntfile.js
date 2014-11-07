@@ -125,9 +125,9 @@ module.exports = function( grunt ) {
                 files: [ {
                     overwrite: false,
                     expand: true,
-                    cwd: 'app/lib/foundation',
+                    cwd: 'app/lib/martijnr-foundation',
                     src: [ '*' ],
-                    dest: 'public/lib/foundation'
+                    dest: 'public/lib/martijnr-foundation'
                 } ]
             }
         },
