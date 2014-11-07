@@ -1,16 +1,23 @@
 .iframe {
-	.paper {
-		border-radius: 0;
-		border: none } 
-	.print {
-		display: none; 
-	~ .form-language-selector{
-		border-right: none; 
-		padding-right: 0; } } }
+    .paper {
+        border-radius: 0;
+        border: none;
+    }
+    .form-header__button--print {
+        display: none;
+        ~ .form-language-selector {
+            border-right: none;
+            padding-right: 0;
+        }
+    }
+}
 
 .edit .paper .branding {
-  display: none; }
+    display: none;
+}
 
-@media screen and (max-width: 720px){
-  body.edit .form-header {
-    border-bottom: none; } }
+@media screen and (max-width: 720px) {
+    body.edit .form-header {
+        border-bottom: none;
+    }
+}
