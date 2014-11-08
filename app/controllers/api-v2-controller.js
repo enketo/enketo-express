@@ -215,18 +215,18 @@ function _setDefaultsQueryParam( req, res, next ) {
     var map,
         queryParam = '';
 
-    if ( !req.param( 'defaults' ) ) {
-        next();
-    } else {
+    if ( req.param( 'defaults' ) ) {
         map = req.param( 'defaults' );
         for ( var prop in map ) {
             if ( map.hasOwnProperty( prop ) ) {
-                queryParam += 'd[' + encodeURIComponent( prop ) + ']' + '=' + encodeURIComponent( map[ prop ] ) + '&';
+                queryParam += 'd[' + encodeURIComponent( decodeURIComponent( prop ) ) + ']' + '=' +
+                    encodeURIComponent( decodeURIComponent( map[ prop ] ) ) + '&';
             }
         }
         req.defaultsQueryParam = queryParam.substring( 0, queryParam.length - 1 );
-        next();
     }
+
+    next();
 }
 
 function _setIframeQueryParams( req, res, next ) {
