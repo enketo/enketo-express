@@ -69,48 +69,41 @@ describe( 'api', function() {
         }
     }
 
-    function surveyTest( test ) {
+    function testResponse( test ) {
         var authDesc = test.auth === true ? 'valid' : ( test.auth === false ? 'invalid' : 'empty' ),
             auth = test.auth === true ? validAuth : ( test.auth === false ? invalidAuth : {} ),
             version = test.version,
-            server = ( typeof test.server !== 'undefined' ) ? test.server : validServer;
-
-        it( test.method.toUpperCase() + ' /api/v' + version + '/survey with ' + authDesc + ' authentication and ' + server +
-            ' responds with ' + test.status,
-            function( done ) {
-                request( app )[ test.method ]( '/api/v' + version + '/survey' )
-                    .set( auth )
-                    .send( {
-                        server_url: server,
-                        form_id: validFormId
-                    } )
-                    .expect( test.status, done );
-            } );
-    }
-
-    function instanceTest( test ) {
-        var authDesc = test.auth === true ? 'valid' : ( test.auth === false ? 'invalid' : 'empty' ),
-            auth = test.auth === true ? validAuth : ( test.auth === false ? invalidAuth : {} ),
-            version = test.version,
-            server = typeof test.server !== 'undefined' ? test.server : validServer,
+            server = ( typeof test.server !== 'undefined' ) ? test.server : validServer,
             id = typeof test.id !== 'undefined' ? test.id : validFormId,
             ret = typeof test.ret !== 'undefined' ? test.ret : 'http://example.com',
             instance = typeof test.instance !== 'undefined' ? test.instance : '<data></data>',
-            instanceId = typeof test.instanceId !== 'undefined' ? test.instanceId : 'someUUID';
+            instanceId = typeof test.instanceId !== 'undefined' ? test.instanceId : 'someUUID:' + Math.random(),
+            endpoint = test.endpoint,
+            resProp = ( test.res && test.res.property ) ? test.res.property : 'url';
 
-        it( test.method.toUpperCase() + ' /api/v' + version + '/instance with ' + authDesc + ' authentication and ' + server + ', ' + id +
-            ', ' + ret + ', ' + instance + ', ' + instanceId + ' responds with ' + test.status,
+        it( test.method.toUpperCase() + ' /api/v' + version + endpoint + ' with ' + authDesc + ' authentication and ' + server + ', ' +
+            id + ', ' + ret + ', ' + instance + ', ' + instanceId +
+            ' parentWindowOrigin: ' + test.parentWindowOrigin + ', ' + ' defaults: ' + JSON.stringify( test.defaults ) +
+            ' responds with ' + test.status,
             function( done ) {
-                request( app )[ test.method ]( '/api/v' + version + '/instance' )
+                request( app )[ test.method ]( '/api/v' + version + endpoint )
                     .set( auth )
                     .send( {
                         server_url: server,
                         form_id: id,
                         instance: instance,
                         instance_id: instanceId,
-                        return_url: ret
+                        return_url: ret,
+                        defaults: test.defaults,
+                        parent_window_origin: test.parentWindowOrigin
                     } )
-                    .expect( test.status, done );
+                    .expect( test.status )
+                    .expect( function( resp ) {
+                        if ( test.res && test.res.expected ) {
+                            return responseCheck( resp.body[ resProp ], test.res.expected );
+                        }
+                    } )
+                    .end( done );
             } );
     }
 
@@ -220,8 +213,9 @@ describe( 'api', function() {
 
         v1Survey.map( function( obj ) {
             obj.version = version;
+            obj.endpoint = '/survey';
             return obj;
-        } ).forEach( surveyTest );
+        } ).forEach( testResponse );
 
         // TODO: add some tests for other survey/* endpoints
 
@@ -230,12 +224,14 @@ describe( 'api', function() {
             {
                 method: 'post',
                 auth: true,
+                instanceId: 'AAA',
                 status: 201
             },
             // already being edited
             {
                 method: 'post',
                 auth: true,
+                instanceId: 'AAA',
                 status: 405
             },
             // invalid parameters
@@ -292,8 +288,9 @@ describe( 'api', function() {
 
         v1Instance.map( function( obj ) {
             obj.version = version;
+            obj.endpoint = '/instance';
             return obj;
-        } ).forEach( instanceTest );
+        } ).forEach( testResponse );
     } );
 
 
@@ -304,13 +301,16 @@ describe( 'api', function() {
         v1Survey.map( function( obj ) {
             obj.version = version;
             return obj;
-        } ).forEach( surveyTest );
+        } ).forEach( testResponse );
 
         // make sure v2 is backwards-compatible with v1
         v1Instance.map( function( obj ) {
             obj.version = version;
+            if ( obj.instanceId === 'AAA' ) {
+                obj.instanceId = 'BBB';
+            }
             return obj;
-        } ).forEach( instanceTest );
+        } ).forEach( testResponse );
 
         [
             // TESTING THE DEFAULTS PARAMETER
@@ -519,35 +519,10 @@ describe( 'api', function() {
                 }
             },
         ].map( function( obj ) {
+            obj.auth = true;
             obj.version = version;
             return obj;
-        } ).forEach( function( test ) {
-            it( test.method.toUpperCase() + ' /api/v' + version + test.endpoint + ' parentWindowOrigin: ' + test.parentWindowOrigin +
-                ' default: ' + JSON.stringify( test.defaults ) + ' responds with ' + test.status + ' and expected response',
-                function( done ) {
-                    var resProp = test.res.property || 'url',
-                        version = test.version,
-                        body = {
-                            server_url: validServer,
-                            form_id: validFormId,
-                            defaults: test.defaults,
-                            parent_window_origin: test.parentWindowOrigin
-                        };
-                    if ( /\/instance/.test( test.endpoint ) ) {
-                        body.instance = '<data></data>';
-                        body.instance_id = 'uuid' + Math.random();
-                        body.return_url = 'http://example.com';
-                    }
-                    request( app )[ test.method ]( '/api/v' + version + '/' + test.endpoint )
-                        .set( validAuth )
-                        .send( body )
-                        .expect( test.status )
-                        .expect( function( resp ) {
-                            return responseCheck( resp.body[ resProp ], test.res.expected );
-                        } )
-                        .end( done );
-                } );
-        } );
+        } ).forEach( testResponse );
 
     } );
 } );
