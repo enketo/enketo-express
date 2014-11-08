@@ -234,6 +234,17 @@ describe( 'api', function() {
                 instanceId: 'AAA',
                 status: 405
             },
+            // test return url in response
+            {
+                method: 'post',
+                auth: true,
+                ret: 'http://enke.to',
+                status: 201,
+                res: {
+                    property: 'edit_url',
+                    expected: /.+\?.*returnUrl=http%3A%2F%2Fenke.to/
+                }
+            },
             // invalid parameters
             {
                 method: 'post',

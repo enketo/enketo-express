@@ -25,6 +25,9 @@ define( [ 'text!enketo-config' ], function( config ) {
             q: 'returnURL',
             s: 'returnUrl'
         }, {
+            q: 'returnUrl',
+            s: 'returnUrl'
+        }, {
             q: 'showbranch',
             s: 'showBranch'
         }, {
@@ -38,6 +41,9 @@ define( [ 'text!enketo-config' ], function( config ) {
             s: 'serverUrl'
         }, {
             q: 'serverURL',
+            s: 'serverUrl'
+        }, {
+            q: 'serverUrl',
             s: 'serverUrl'
         }, {
             q: 'form',

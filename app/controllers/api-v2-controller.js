@@ -37,6 +37,7 @@ router
         req.webformType = 'edit';
         next();
     } )
+    .all( '*', _setReturnQueryParam )
     .get( '/survey', getExistingSurvey )
     .get( '/survey/iframe', getExistingSurvey )
     .post( '/survey', getNewOrExistingSurvey )
@@ -237,6 +238,13 @@ function _setIframeQueryParams( req, res, next ) {
     next();
 }
 
+function _setReturnQueryParam( req, res, next ) {
+    if ( req.param( 'return_url' ) && ( req.webformType === 'edit' || req.webformType === 'single' ) ) {
+        req.returnQueryParam = 'returnUrl=' + encodeURIComponent( decodeURIComponent( req.param( 'return_url' ) ) );
+    }
+    next();
+}
+
 function _generateQueryString( params ) {
     var paramsJoined;
 
@@ -264,7 +272,7 @@ function _generateWebformUrls( id, req ) {
             break;
         case 'edit':
             // no defaults query parameter in edit view
-            queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.param( 'instance_id' ), req.parentWindowOriginParam ] );
+            queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.param( 'instance_id' ), req.parentWindowOriginParam, req.returnQueryParam ] );
             obj.edit_url = baseUrl + 'edit/' + idPart + queryString;
             break;
         case 'all':
