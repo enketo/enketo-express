@@ -1,6 +1,6 @@
 require( [ 'require-config' ], function( rc ) {
     "use strict";
-    console.time( 'client loading time' );
+    if ( console.time ) console.time( 'client loading time' );
     require( [ 'gui', 'controller-webform', 'settings', 'connection', 'enketo-js/FormModel', 'jquery' ],
         function( gui, controller, settings, connection, FormModel, $ ) {
             var $loader = $( '.form__loader' ),
@@ -55,7 +55,7 @@ require( [ 'require-config' ], function( rc ) {
                 $( document ).ready( function() {
                     controller.init( 'form.or:eq(0)', modelStr, instanceStr );
                     $form.add( $buttons ).removeClass( 'hide' );
-                    console.timeEnd( 'client loading time' );
+                    if ( console.timeEnd ) console.timeEnd( 'client loading time' );
                 } );
             }
         } );
