@@ -67,7 +67,6 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
          * Controller function to reset to a blank form. Checks whether all changes have been saved first
          * @param  {boolean=} confirmed Whether unsaved changes can be discarded and lost forever
          */
-
         function resetForm( confirmed ) {
             var message, choices;
 
@@ -94,10 +93,10 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
         }
 
         /**
-         * Used to submit a form with data that was loaded by POST. This function does not save the record in localStorage
+         * Used to submit a form.
+         * This function does not save the record in localStorage
          * and is not used in offline-capable views.
          */
-
         function submitRecord() {
             var name, record, saveResult, redirect, beforeMsg, callbacks;
 
@@ -113,8 +112,13 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 '<div class="loader-animation-small" style="margin: 10px auto 0 auto;"/>', 'Submitting...', 'bare' );
 
             callbacks = {
-                error: function() {
-                    gui.alert( 'Please try submitting again.', 'Submission Failed' );
+                error: function( jqXHR ) {
+                    console.debug( 'request object with error', jqXHR );
+                    if ( jqXHR.status === 401 ) {
+                        gui.alert( 'Authentication required. Please <a href="/login" target="_blank">authenticate in a different browser tab</a> and try again.', 'Submission Failed' );
+                    } else {
+                        gui.alert( 'Please try submitting again.', 'Submission Failed' );
+                    }
                 },
                 success: function() {
                     $( document ).trigger( 'submissionsuccess' ); // since connection.processOpenRosaResponse is bypassed

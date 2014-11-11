@@ -32,10 +32,11 @@ router
  * @return {[type]}        [description]
  */
 function getSurveyParts( req, res, next ) {
-    debug( 'params', req.body );
-
     _getSurveyParams( req.body )
         .then( function( survey ) {
+            // for external authentication, pass the cookie(s)
+            survey.cookie = req.headers.cookie;
+
             if ( survey.info ) {
                 _getFormDirectly( survey )
                     .then( function( survey ) {
@@ -65,7 +66,6 @@ function getSurveyParts( req, res, next ) {
 }
 
 function _getFormDirectly( survey ) {
-    debug( 'going to transform XForm' );
     return communicator.getXForm( survey )
         .then( transformer.transform );
 }

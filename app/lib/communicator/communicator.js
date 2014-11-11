@@ -5,39 +5,117 @@ var Q = require( 'q' );
 var debug = require( 'debug' )( 'openrosa-communicator' );
 var parser = new require( 'xml2js' ).Parser();
 
-function _getFormList( server ) {
+/**
+ * Gets form info
+ *
+ * @param  {*}     survey  survey object
+ * @return {[type]}               promise
+ */
+function getXFormInfo( survey ) {
     var formListUrl;
 
-    if ( !server ) {
+    if ( !survey.openRosaServer ) {
         throw new Error( 'No server provided.' );
     }
 
-    formListUrl = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'formList' : server + '/formList';
+    formListUrl = ( survey.openRosaServer.lastIndexOf( '/' ) === survey.openRosaServer.length - 1 ) ? survey.openRosaServer + 'formList' : survey.openRosaServer + '/formList';
 
     return _request( {
-        url: formListUrl
+        url: formListUrl,
+        headers: {
+            cookie: survey.cookie
+        }
+    } ).then( function( formListXml ) {
+        return _findFormAddInfo( formListXml, survey );
     } );
 }
 
-function _getHeaders( url ) {
-    var options = {
-        method: 'head',
-        url: url,
-    };
+/**
+ * Gets XForm from url
+ *
+ * @param  {*}    survey  survey object
+ * @return {[type]}         promise
+ */
+function getXForm( survey ) {
+    var deferred = Q.defer();
 
-    return _request( options );
+    return _request( {
+        url: survey.info.downloadUrl,
+        headers: {
+            cookie: survey.cookie
+        }
+    } ).then( function( xform ) {
+        survey.xform = xform;
+        deferred.resolve( survey );
+        return deferred.promise;
+    } );
 }
 
-function _getMaxSize( survey ) {
-    var server, submissionUrl;
+
+/**
+ * Obtains the XForm manifest
+ *
+ * @param  {[type]} survey survey object
+ * @return {[type]}        promise
+ */
+function getManifest( survey ) {
+    var error,
+        deferred = Q.defer();
+
+    if ( !survey.info.manifestUrl ) {
+        // a manifest is optional
+        deferred.resolve( survey );
+    } else {
+        _request( {
+                url: survey.info.manifestUrl,
+                headers: {
+                    cookie: survey.cookie
+                }
+            } )
+            .then( _xmlToJson )
+            .then( function( obj ) {
+                survey.manifest = ( obj.manifest && obj.manifest.mediaFile ) ? obj.manifest.mediaFile.map( function( file ) {
+                    return _simplifyFormObj( file );
+                } ) : [];
+                deferred.resolve( survey );
+            } );
+
+    }
+    return deferred.promise;
+}
+
+
+/**
+ * Checks the maximum acceptable submission size the server accepts
+ * @param  {[type]} survey survey object
+ * @return {[type]}        promise
+ */
+function getMaxSize( survey ) {
+    var server, submissionUrl, options;
 
     server = survey.openRosaServer;
     submissionUrl = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'submission' : server + '/submission';
 
-    return _getHeaders( submissionUrl )
+    options = {
+        url: submissionUrl,
+        headers: {
+            cookie: survey.cookie
+        }
+    };
+
+    return _getHeaders( options )
         .then( function( headers ) {
             return headers[ 'x-openrosa-accept-content-length' ] || headers[ 'X-Openrosa-Accept-Content-Length' ] || 5 * 1024 * 1024;
         } );
+}
+
+function _getFormList( survey ) {
+
+}
+
+function _getHeaders( options ) {
+    options.method = 'head';
+    return _request( options );
 }
 
 /**
@@ -56,9 +134,13 @@ function _request( options ) {
         deferred.reject( error );
     }
 
-    options.headers = {
-        'X-OpenRosa-Version': '1.0'
-    };
+    // set headers
+    options.headers = options.headers || {};
+    options[ 'X-OpenRosa-Version' ] = '1.0';
+    if ( !options.headers.cookie ) {
+        // remove undefined cookie
+        delete options.headers.cookie;
+    }
 
     debug( 'sending request to url: ' + options.url );
 
@@ -161,57 +243,8 @@ function _simplifyFormObj( formObj ) {
 }
 
 module.exports = {
-    /**
-     * Gets form info
-     *
-     * @param  {string}     server    OpenRosa server URL
-     * @param  {string}     id        OpenRosa form ID
-     * @return {[type]}               promise
-     */
-    getXFormInfo: function( survey ) {
-        return _getFormList( survey.openRosaServer )
-            .then( function( formListXml ) {
-                return _findFormAddInfo( formListXml, survey );
-            } );
-    },
-    /**
-     * Gets XForm from url
-     *
-     * @param  {string}   url      URL where XForm is published
-     * @return {[type]}            promise
-     */
-    getXForm: function( survey ) {
-        var deferred = Q.defer();
-
-        return _request( {
-            url: survey.info.downloadUrl
-        } ).then( function( xform ) {
-            survey.xform = xform;
-            deferred.resolve( survey );
-            return deferred.promise;
-        } );
-    },
-    getManifest: function( survey ) {
-        var error,
-            deferred = Q.defer();
-
-        if ( !survey.info.manifestUrl ) {
-            // a manifest is optional
-            deferred.resolve( survey );
-        } else {
-            _request( {
-                    url: survey.info.manifestUrl
-                } )
-                .then( _xmlToJson )
-                .then( function( obj ) {
-                    survey.manifest = ( obj.manifest && obj.manifest.mediaFile ) ? obj.manifest.mediaFile.map( function( file ) {
-                        return _simplifyFormObj( file );
-                    } ) : [];
-                    deferred.resolve( survey );
-                } );
-
-        }
-        return deferred.promise;
-    },
-    getMaxSize: _getMaxSize
+    getXFormInfo: getXFormInfo,
+    getXForm: getXForm,
+    getManifest: getManifest,
+    getMaxSize: getMaxSize
 };

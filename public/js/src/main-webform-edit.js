@@ -23,11 +23,15 @@ require( [ 'require-config' ], function( rc ) {
                 } else {
                     throw new Error( 'An unknown error occured.' );
                 }
-            } ).catch( _showError );
+            } ).catch( _showErrorOrAuthenticate );
 
-            function _showError( error ) {
+            function _showErrorOrAuthenticate( error ) {
                 $loader.addClass( 'fail' );
-                gui.alert( error.message, 'Something went wrong' );
+                if ( error.status === 401 ) {
+                    window.location.href = '/login?return_url=' + encodeURIComponent( window.location.href );
+                } else {
+                    gui.alert( error.message, 'Something went wrong' );
+                }
             }
 
             function _init( formStr, modelStr, instanceStr ) {

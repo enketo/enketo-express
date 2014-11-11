@@ -25,13 +25,15 @@ _\* sometimes `vagrant up` fails for reasons beyond our control - e.g. if extern
 
 ### How to configure
 
-All configuration is done in [config.json](./config/config.json). The configuration items mostly have self-explanatory names and sample values
+All configuration is done in [config.json](./config/config.json). The configuration items have self-explanatory names and helpful sample values. After editing the configuration, the app will need to be restarted.
 
 The `maps` configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a tiles (array) and an attribution property)
 
 The default production config includes 2 redis instances for the cache. You can **greatly simplify installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you'll find the vagrant setup steps in [bootstrap.sh](./setup/bootstrap.sh) useful.
 
-The API is accessible on **/api/v2** (v2 is backwards-compatible with enketo-legacy's v1)
+To configure external authentication see [this section](#authentication).
+
+The API is accessible on **/api/v2** (v2 is backwards-compatible with enketo-legacy's v1).
 
 ### How to run
 Run with `npm start` from project root.
@@ -55,18 +57,38 @@ The easiest way to start the app in development and debugging mode with liverelo
 * \+ this one is 100% JavaScript
 * \+ this one is much easier to install
 * \+ this one has cross-browser (media) file inputs
-* \+ this one has the ability to override default form values on launch through the API 
+* \+ this one has the ability to override default form values on launch through the API (v2)
+* \+ this one has a more advanced iframeable webform view that can communicate back to the parent window, enabled through the API (v2)
+* \+ this one has [external authentication](#authentication) support 
 * \- this one will not store the application in your browser for offline launch (yet) - it requires a constant connection to the server (this server may be on a local network though)
 * \- this one will not store records locally in your browser (yet) - it will submit records immediately to the server
 * \- this one will not store draft records (yet) (see previous)
-* \- missing API endpoints and corresponding views: /\*/single (single submission views), /survey__s__/\* 
+* \- missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views), and "/survey__s__/" 
 
 ### Additional differences with the full-fledged service at [enketo.org](https://enketo.org)
 
-* \- no form authentication (yet)
-* \- no [Grid Theme](http://blog.enketo.org/gorgeous-grid/)
+* \- no [enketo-managed form authentication](#authentication) (yet)
+* \- no [Grid Theme](http://blog.enketo.org/gorgeous-grid/) (yet)
 * \- no [Forms](https://enketo.org/forms) app
-* \- no [Formtester](https://enketo.org/formtester) app
+* \- no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
+
+
+### Authentication
+
+This app does not (yet) manage [OpenRosa form authentication](https://bitbucket.org/javarosa/javarosa/wiki/AuthenticationAPI) for protected forms, i.e. it does not have a login page, does not store credentials and does not itself manage any sessions.
+
+It does enable the use of _external authentication_, i.e. the authentication management of your form and data server. Whenever a request (form, formlist, submission) requires authentication, enketo-express re-directs the user to a login page on the form and data server and simply passes any cookies back to that server whenever it makes a request. It is up to the form and data server to authenticate based on the cookie content. It requires any enketo-express webform page to have access to these browser cookies. This will normally require that both the form and data server as well as enketo-express have to be on the same domain (a different subdomain is possible when setting cross-domain cookies). It also requires the login page to have a mechanism for redirecting the authenticated user back, via a query string parameter.
+
+To make use of external authentication set the following in [config.json](config/config.json):
+
+* linked form and data server -> authentication -> managed by enketo -> __false__
+* linked form and data server -> authentication -> external login url that sets cookie -> e.g. http://example.com/login?return={RETURNURL}, where {RETURNURL} will be set by enketo.
+
+
+### Funding
+
+The development of this application was funded by [KoBo Toolbox (Harvard Humanitarian Inititive)](https://kobotoolbox.org), [iMMAP](http://immap.org), [OpenClinica](https://openclinica.com), and [Enketo LLC](https://enketo.org). The [Enketo-core](https://github.com/enketo/enketo-core) library this application was built around also obtained significant funding from [SEL (Columbia University)](http://modi.mech.columbia.edu/), the [Santa Fe Institute](http://www.santafe.edu/), and the [HRP project](http://www.who.int/reproductivehealth/topics/mhealth/en/). 
+
 
 ### License
 

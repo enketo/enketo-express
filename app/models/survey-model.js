@@ -153,11 +153,16 @@ function _addSurvey( openRosaKey, survey ) {
 
     client.incr( 'survey:counter', function( error, iterator ) {
         id = _createEnketoId( iterator );
-        survey.submissions = 0;
-        survey.launchDate = new Date().toISOString();
-        survey.active = true;
         client.multi()
-            .hmset( 'id:' + id, survey )
+            .hmset( 'id:' + id, {
+                // explicitly set the properties that need to be saved
+                // this will avoid accidentally saving e.g. transformation results and cookies
+                openRosaServer: survey.openRosaServer,
+                openRosaId: survey.openRosaId,
+                submissions: 0,
+                launchDate: new Date().toISOString(),
+                active: true,
+            } )
             .set( openRosaKey, id )
             .exec( function( error, replies ) {
                 delete pending[ openRosaKey ];

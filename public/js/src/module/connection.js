@@ -546,6 +546,7 @@ define( [ 'gui', 'settings', 'store', 'q', 'jquery' ], function( gui, settings, 
             } )
             .fail( function( jqXHR, textStatus, errorMsg ) {
                 var error = jqXHR.responseJSON || new Error( errorMsg );
+                error.status = jqXHR.status;
                 deferred.reject( error );
             } );
 
