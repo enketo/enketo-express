@@ -136,7 +136,7 @@ function _request( options ) {
 
     // set headers
     options.headers = options.headers || {};
-    options[ 'X-OpenRosa-Version' ] = '1.0';
+    options.headers[ 'X-OpenRosa-Version' ] = '1.0';
     if ( !options.headers.cookie ) {
         // remove undefined cookie
         delete options.headers.cookie;
