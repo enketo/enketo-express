@@ -3,13 +3,6 @@
         border-radius: 0;
         border: none;
     }
-    .form-header__button--print {
-        display: none;
-        ~ .form-language-selector {
-            border-right: none;
-            padding-right: 0;
-        }
-    }
 }
 
 .edit .paper .branding {
