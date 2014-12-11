@@ -17,15 +17,16 @@ if ( process.env.NODE_ENV === 'test' ) {
 }
 
 /** 
- * Gets an item from the cache
- * @param  {{openRosaServer: string, openRosaId: string, info: {hash: string}}} survey [description]
+ * Gets an item from the cache.
+ *
+ * @param  {{openRosaServer: string, openRosaId: string }} survey [description]
  * @return {[type]}        [description]
  */
 function _getSurvey( survey ) {
     var key, error,
         deferred = Q.defer();
 
-    if ( !survey || !survey.openRosaServer || !survey.openRosaId || !survey.info.hash ) {
+    if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
         error = new Error( 'Bad Request. Survey information to perform cache lookup is not complete.' );
         error.status = 400;
         deferred.reject( error );
@@ -36,26 +37,55 @@ function _getSurvey( survey ) {
             if ( error ) {
                 deferred.reject( error );
             } else if ( !cacheObj ) {
-                error = new Error( 'Not Found. Cache no dey.' );
-                error.status = 404;
-                deferred.reject( error );
+                deferred.resolve( null );
             } else {
-                // Adding the hashes to the refernced survey object can be efficient, since this object 
+                // form is 'actively used' so we're resetting the cache expiry
+                debug( 'cache is up to date and used, resetting expiry' );
+                client.expire( key, expiry );
+                survey.form = cacheObj.form;
+                survey.model = cacheObj.model;
+                deferred.resolve( survey );
+            }
+        } );
+    }
+
+    return deferred.promise;
+}
+
+/**
+ * Checks if cache is present and up to date
+ *
+ * @param  {{openRosaServer: string, openRosaId: string, info: {hash: string }}} survey [description]
+ * @return {Boolean}        [description]
+ */
+function _isCacheUpToDate( survey ) {
+    var key, error,
+        deferred = Q.defer();
+
+    if ( !survey || !survey.openRosaServer || !survey.openRosaId || !survey.info.hash ) {
+        error = new Error( 'Bad Request. Survey information to perform cache check is not complete.' );
+        error.status = 400;
+        deferred.reject( error );
+    } else {
+        key = _getKey( survey );
+
+        client.hgetall( key, function( error, cacheObj ) {
+            if ( error ) {
+                deferred.reject( error );
+            } else if ( !cacheObj ) {
+                debug( 'cache is missing' );
+                deferred.resolve( null );
+            } else {
+                // Adding the hashes to the referenced survey object can be efficient, since this object 
                 // is passed around. The hashes may therefore already have been calculated 
                 // when setting the cache later on.
                 // mediaHash can be "null" in Redis and null in reality so it is cast to a string
                 _addHashes( survey );
                 if ( cacheObj.formHash !== survey.formHash || cacheObj.mediaHash !== String( survey.mediaHash ) || cacheObj.xslHash !== survey.xslHash ) {
-                    debug( survey.mediaHash, cacheObj.mediaHash );
-                    error = new Error( 'Obsolete.' );
-                    error.status = 410;
-                    deferred.reject( error );
+                    debug( 'cache is obsolete' );
+                    deferred.resolve( false );
                 } else {
-                    // form is 'actively used' so we're resetting the cache expiry
-                    client.expire( key, expiry );
-                    survey.form = cacheObj.form;
-                    survey.model = cacheObj.model;
-                    deferred.resolve( survey );
+                    deferred.resolve( true );
                 }
             }
         } );
@@ -92,6 +122,7 @@ function _setSurvey( survey ) {
             if ( error ) {
                 deferred.reject( error );
             } else {
+                debug( 'cache has been updated' );
                 // expire in 30 days
                 client.expire( key, expiry );
                 deferred.resolve( survey );
@@ -103,10 +134,42 @@ function _setSurvey( survey ) {
 }
 
 /**
+ * Flushes the cache of a single survey
+ *
+ * @param {[type]} survey [description]
+ */
+function _flushSurvey( survey ) {
+    var obj, key, error,
+        deferred = Q.defer();
+
+    if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
+        error = new Error( 'Bad Request. Survey information to cache is not complete.' );
+        error.status = 400;
+        deferred.reject( error );
+    } else {
+        key = _getKey( survey );
+        client.del( key, function( error ) {
+            if ( error ) {
+                deferred.reject( error );
+            } else {
+                delete survey.form;
+                delete survey.model;
+                delete survey.formHash;
+                delete survey.xlsHash;
+                delete survey.mediaHash;
+                deferred.resolve( survey );
+            }
+        } );
+
+        return deferred.promise;
+    }
+}
+
+/**
  * Completely empties the cache
  * @return {[type]} [description]
  */
-function _flushCache() {
+function _flushAll() {
     var deferred = Q.defer();
 
     client.keys( prefix + '*', function( error, keys ) {
@@ -114,7 +177,13 @@ function _flushCache() {
             deferred.reject( error );
         }
         keys.forEach( function( key ) {
-            client.del( key );
+            client.del( key, function( error ) {
+                if ( error ) {
+                    deferred.reject( error );
+                } else {
+                    deferred.resolve();
+                }
+            } );
         } );
 
         deferred.resolve( true );
@@ -146,5 +215,7 @@ function _addHashes( survey ) {
 module.exports = {
     get: _getSurvey,
     set: _setSurvey,
-    flush: _flushCache
+    check: _isCacheUpToDate,
+    flush: _flushSurvey,
+    flushAll: _flushAll
 };

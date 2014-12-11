@@ -21,7 +21,7 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @param  {string} id [description]
  * @return {[type]}    [description]
  */
-function _getSurvey( id ) {
+function getSurvey( id ) {
     var msg, error,
         deferred = Q.defer();
 
@@ -57,7 +57,7 @@ function _getSurvey( id ) {
     return deferred.promise;
 }
 
-function _setSurvey( survey ) {
+function setSurvey( survey ) {
     // set in db:
     // a) a record with key "id:"+ _createEnketoId(client.incr('surveys:counter')) and all survey info
     // b) a record with key "or:"+ _createOpenRosaKey(survey.openRosaUrl, survey.openRosaId) and the enketo_id
@@ -96,7 +96,7 @@ function _setSurvey( survey ) {
     return deferred.promise;
 }
 
-function _updateSurvey( survey ) {
+function updateSurvey( survey ) {
     var error,
         deferred = Q.defer(),
         openRosaKey = utils.getOpenRosaKey( survey );
@@ -153,11 +153,16 @@ function _addSurvey( openRosaKey, survey ) {
 
     client.incr( 'survey:counter', function( error, iterator ) {
         id = _createEnketoId( iterator );
-        survey.submissions = 0;
-        survey.launchDate = new Date().toISOString();
-        survey.active = true;
         client.multi()
-            .hmset( 'id:' + id, survey )
+            .hmset( 'id:' + id, {
+                // explicitly set the properties that need to be saved
+                // this will avoid accidentally saving e.g. transformation results and cookies
+                openRosaServer: survey.openRosaServer,
+                openRosaId: survey.openRosaId,
+                submissions: 0,
+                launchDate: new Date().toISOString(),
+                active: true,
+            } )
             .set( openRosaKey, id )
             .exec( function( error, replies ) {
                 delete pending[ openRosaKey ];
@@ -172,7 +177,7 @@ function _addSurvey( openRosaKey, survey ) {
     return deferred.promise;
 }
 
-function _addSubmission( id ) {
+function addSubmission( id ) {
     var deferred = Q.defer();
 
     client.multi()
@@ -187,7 +192,7 @@ function _addSubmission( id ) {
         } );
 }
 
-function _getNumberOfSurveys( server ) {
+function getNumberOfSurveys( server ) {
     var error,
         deferred = Q.defer();
 
@@ -213,7 +218,7 @@ function _getNumberOfSurveys( server ) {
     return deferred.promise;
 }
 
-function _getListOfSurveys() {
+function getListOfSurveys() {
 
 
 }
@@ -247,7 +252,7 @@ function _getEnketoId( openRosaKey ) {
     return deferred.promise;
 }
 
-function _getEnketoIdFromSurveyObject( survey ) {
+function getEnketoIdFromSurveyObject( survey ) {
     var openRosaKey = utils.getOpenRosaKey( survey );
 
     return _getEnketoId( openRosaKey );
@@ -271,11 +276,11 @@ function _num_to_base62( n ) {
 }
 
 module.exports = {
-    get: _getSurvey,
-    set: _setSurvey,
-    update: _updateSurvey,
-    getId: _getEnketoIdFromSurveyObject,
-    getNumber: _getNumberOfSurveys,
-    getList: _getListOfSurveys,
-    addSubmission: _addSubmission
+    get: getSurvey,
+    set: setSurvey,
+    update: updateSurvey,
+    getId: getEnketoIdFromSurveyObject,
+    getNumber: getNumberOfSurveys,
+    getList: getListOfSurveys,
+    addSubmission: addSubmission
 };

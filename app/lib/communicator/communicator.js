@@ -5,60 +5,126 @@ var Q = require( 'q' );
 var debug = require( 'debug' )( 'openrosa-communicator' );
 var parser = new require( 'xml2js' ).Parser();
 
-function _getFormList( server ) {
-    var formListUrl = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'formList' : server + '/formList';
+/**
+ * Gets form info
+ *
+ * @param  {*}     survey  survey object
+ * @return {[type]}               promise
+ */
+function getXFormInfo( survey ) {
+    var formListUrl;
+
+    if ( !survey.openRosaServer ) {
+        throw new Error( 'No server provided.' );
+    }
+
+    formListUrl = ( survey.openRosaServer.lastIndexOf( '/' ) === survey.openRosaServer.length - 1 ) ? survey.openRosaServer + 'formList' : survey.openRosaServer + '/formList';
 
     return _request( {
-        url: formListUrl
+        url: formListUrl,
+        headers: {
+            cookie: survey.cookie
+        }
+    } ).then( function( formListXml ) {
+        return _findFormAddInfo( formListXml, survey );
     } );
 }
 
-function _getHeaders( url ) {
-    var options = {
-        method: 'head',
-        url: url,
-    };
+/**
+ * Gets XForm from url
+ *
+ * @param  {*}    survey  survey object
+ * @return {[type]}         promise
+ */
+function getXForm( survey ) {
+    var deferred = Q.defer();
 
-    return _request( options );
+    return _request( {
+        url: survey.info.downloadUrl,
+        headers: {
+            cookie: survey.cookie
+        }
+    } ).then( function( xform ) {
+        survey.xform = xform;
+        deferred.resolve( survey );
+        return deferred.promise;
+    } );
 }
 
-function _getMaxSize( survey ) {
-    var server, submissionUrl;
+
+/**
+ * Obtains the XForm manifest
+ *
+ * @param  {[type]} survey survey object
+ * @return {[type]}        promise
+ */
+function getManifest( survey ) {
+    var error,
+        deferred = Q.defer();
+
+    if ( !survey.info.manifestUrl ) {
+        // a manifest is optional
+        deferred.resolve( survey );
+    } else {
+        _request( {
+                url: survey.info.manifestUrl,
+                headers: {
+                    cookie: survey.cookie
+                }
+            } )
+            .then( _xmlToJson )
+            .then( function( obj ) {
+                survey.manifest = ( obj.manifest && obj.manifest.mediaFile ) ? obj.manifest.mediaFile.map( function( file ) {
+                    return _simplifyFormObj( file );
+                } ) : [];
+                deferred.resolve( survey );
+            } );
+
+    }
+    return deferred.promise;
+}
+
+
+/**
+ * Checks the maximum acceptable submission size the server accepts
+ * @param  {[type]} survey survey object
+ * @return {[type]}        promise
+ */
+function getMaxSize( survey ) {
+    var server, submissionUrl, options;
 
     server = survey.openRosaServer;
     submissionUrl = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'submission' : server + '/submission';
 
-    return _getHeaders( submissionUrl )
+    options = {
+        url: submissionUrl,
+        headers: {
+            cookie: survey.cookie
+        }
+    };
+
+    return _getHeaders( options )
         .then( function( headers ) {
             return headers[ 'x-openrosa-accept-content-length' ] || headers[ 'X-Openrosa-Accept-Content-Length' ] || 5 * 1024 * 1024;
         } );
 }
 
-function _submit( url, xml, files ) {
-    var error, options,
-        deferred = Q.defer();
+function _getFormList( survey ) {
 
-    if ( !url || !xml ) {
-        error = new Error( 'Bad request. Required submission options missing.' );
-        error.status = 400;
-        deferred.reject( error );
-        return deferred.promise;
-    }
+}
 
-    options = {
-        url: url,
-        method: 'post'
-    };
-
-    return _request( options, xml );
+function _getHeaders( options ) {
+    options.method = 'head';
+    return _request( options );
 }
 
 /**
  * Sends a request to an OpenRosa server
+ *
  * @param  { { url:string, convertToJson:boolean } } url  request options object
  * @return {?string=}    promise
  */
-function _request( options, data ) {
+function _request( options ) {
     var error, r,
         deferred = Q.defer();
 
@@ -68,17 +134,23 @@ function _request( options, data ) {
         deferred.reject( error );
     }
 
-    options.headers = {
-        'X-OpenRosa-Version': '1.0'
-    };
+    // set headers
+    options.headers = options.headers || {};
+    options.headers[ 'X-OpenRosa-Version' ] = '1.0';
+    if ( !options.headers.cookie ) {
+        // remove undefined cookie
+        delete options.headers.cookie;
+    }
 
-    debug( options.url );
+    debug( 'sending request to url: ' + options.url );
+
     r = request( options, function( error, response, body ) {
         if ( error ) {
-            debug( 'Error occurred when requesting ' + options.url, error, response );
-            deferred.reject( new Error( error ) );
+            debug( 'Error occurred when requesting ' + options.url, error );
+            deferred.reject( error );
         } else if ( response.statusCode === 401 ) {
-            error = new Error( 'Authentication required but not supported in this version of Enketo' );
+            error = new Error( 'Authentication is required for this form. ' +
+                'Unfortunately, authentication is not yet supported in this Enketo app.' );
             error.status = response.statusCode;
             deferred.reject( error );
         } else if ( response.statusCode < 200 || response.statusCode >= 300 ) {
@@ -87,40 +159,18 @@ function _request( options, data ) {
             deferred.reject( error );
         } else if ( options.method === 'head' ) {
             deferred.resolve( response.headers );
-        } else if ( data ) {
-            // for XML submissions just pass the statuscode response
-            deferred.resolve( response.statusCode );
-        }
-        /*else if ( options.convertToJson ) {
-            debug( 'response of request to ' + options.url + ' has status code: ', response.statusCode );
-            parser.parseString( body, function( parseError, data ) {
-                if ( parseError ) {
-                    deferred.reject( new Error( parseError ) );
-                }
-                deferred.resolve( data );
-            } );
-        } */
-        else {
+        } else {
             debug( 'response of request to ' + options.url + ' has status code: ', response.statusCode );
             deferred.resolve( body );
         }
     } );
-
-    if ( data ) {
-        // fake file attachment, xml submission never touches file system
-        r.form()
-            .append( 'xml_submission_file', data, {
-                filename: 'submission.xml',
-                contentType: 'text/xml',
-                knownLength: Buffer.byteLength( data, 'utf8' )
-            } );
-    }
 
     return deferred.promise;
 }
 
 /**
  * transform XML to JSON for easier processing
+ *
  * @param  {string} xml XML string
  * @return {[type]}     promise
  */
@@ -130,7 +180,7 @@ function _xmlToJson( xml ) {
     parser.parseString( xml, function( error, data ) {
         if ( error ) {
             debug( 'error parsing xml and converting to JSON' );
-            deferred.reject( new Error( error ) );
+            deferred.reject( error );
         } else {
             debug( 'succesfully converted XML to JSON' );
             deferred.resolve( data );
@@ -142,6 +192,7 @@ function _xmlToJson( xml ) {
 
 /**
  * Finds the relevant form in an OpenRosa XML formList
+ *
  * @param  {string} formListXml OpenRosa XML formList
  * @param  {string} formId      Form ID to look for
  * @return {[type]}             promise
@@ -168,9 +219,7 @@ function _findFormAddInfo( formListXml, survey ) {
                 deferred.resolve( survey );
             }
         } )
-        .catch( function( error ) {
-            _failHandler( deferred, error );
-        } );
+        .catch( deferred.reject );
 
     return deferred.promise;
 }
@@ -178,6 +227,7 @@ function _findFormAddInfo( formListXml, survey ) {
 /**
  * Convert arrays property values to strings, knowing that each xml node only
  * occurs once in each xform node in /formList
+ *
  * @param  {[type]} formObj [description]
  * @return {[type]}         [description]
  */
@@ -192,63 +242,9 @@ function _simplifyFormObj( formObj ) {
     return formObj;
 }
 
-function _failHandler( deferred, error ) {
-    error = error || new Error( 'Unknown Error' );
-    error = ( typeof error === 'string' ) ? new Error( error ) : error;
-    deferred.reject( error );
-}
-
 module.exports = {
-    /**
-     * Gets form info
-     * @param  {string}     server    OpenRosa server URL
-     * @param  {string}     id        OpenRosa form ID
-     * @return {[type]}               promise
-     */
-    getXFormInfo: function( survey ) {
-        return _getFormList( survey.openRosaServer )
-            .then( function( formListXml ) {
-                return _findFormAddInfo( formListXml, survey );
-            } );
-    },
-    /**
-     * Gets XForm from url
-     * @param  {string}   url      URL where XForm is published
-     * @return {[type]}            promise
-     */
-    getXForm: function( survey ) {
-        var deferred = Q.defer();
-
-        return _request( {
-            url: survey.info.downloadUrl
-        } ).then( function( xform ) {
-            survey.xform = xform;
-            deferred.resolve( survey );
-            return deferred.promise;
-        } );
-    },
-    getManifest: function( survey ) {
-        var error,
-            deferred = Q.defer();
-
-        if ( !survey.info.manifestUrl ) {
-            // a manifest is optional
-            deferred.resolve( survey );
-        } else {
-            _request( {
-                url: survey.info.manifestUrl
-            } )
-                .then( _xmlToJson )
-                .then( function( obj ) {
-                    survey.manifest = ( obj.manifest && obj.manifest.mediaFile ) ? obj.manifest.mediaFile.map( function( file ) {
-                        return _simplifyFormObj( file );
-                    } ) : [];
-                    deferred.resolve( survey );
-                } );
-
-        }
-        return deferred.promise;
-    },
-    getMaxSize: _getMaxSize,
-    submit: _submit
+    getXFormInfo: getXFormInfo,
+    getXForm: getXForm,
+    getManifest: getManifest,
+    getMaxSize: getMaxSize
 };

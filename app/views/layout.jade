@@ -3,6 +3,11 @@ html
   head
     title= title
 
+    meta(charset="utf-8")
+    meta(name="author", content="Martijn van de Rijdt (Enketo LLC)")
+    meta(name="viewport",content="width=device-width, initial-scale=1.0")
+    meta(name="apple-mobile-web-app-capable", content="yes")
+
     link(rel="shortcut icon", sizes="256x256", href="/images/icon_256x256.png")
     link(rel="apple-touch-icon", sizes="152x152", href="/images/icon_76x76@2x.png")
     link(rel="apple-touch-icon", sizes="120x120", href="/images/icon_60x60@2x.png")
@@ -11,16 +16,13 @@ html
 
     block style
 
-    block script
-
     block global
-
-    if livereload
-      script(src="//localhost:35729/livereload.js")
 
   - var cl = (iframe) ? 'iframe' : ''
   body(class=cl)
     block content
+
+    block script
 
     if tracking
       script.
@@ -30,3 +32,6 @@ html
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
         ga('create', '#{tracking}', '#{trackingDomain}');
         ga('send', 'pageview');
+
+    if livereload
+      script(src="//localhost:35729/livereload.js")

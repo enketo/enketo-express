@@ -7,6 +7,7 @@ var express = require( 'express' ),
     favicon = require( 'serve-favicon' ),
     config = require( './config' ),
     logger = require( 'morgan' ),
+    compression = require( 'compression' ),
     errorHandler = require( '../app/controllers/error-handler' ),
     controllersPath = path.join( __dirname, '../app/controllers' ),
     app = express(),
@@ -27,8 +28,11 @@ app.set( 'view engine', 'jade' );
 app.set( 'json spaces', 4 );
 
 // middleware
+app.use( compression() );
 app.use( bodyParser.json() );
-app.use( bodyParser.urlencoded() );
+app.use( bodyParser.urlencoded( {
+    extended: true
+} ) );
 app.use( favicon( path.resolve( __dirname, '../public/images/favicon.ico' ) ) );
 app.use( express.static( path.resolve( __dirname, '../public' ) ) );
 
@@ -38,6 +42,7 @@ app.use( function( req, res, next ) {
     res.locals.environment = req.app.get( 'env' );
     res.locals.tracking = req.app.get( 'google' ).analytics.ua ? req.app.get( 'google' ).analytics.ua : false;
     res.locals.trackingDomain = req.app.get( 'google' ).analytics.domain;
+    res.locals.logo = req.app.get( 'logo' );
     next();
 } );
 
@@ -50,9 +55,7 @@ fs.readdirSync( controllersPath ).forEach( function( file ) {
 } );
 
 // logging
-app.use( logger( {
-    format: ( app.get( 'env' ) === 'development' ? 'dev' : 'tiny' )
-} ) );
+app.use( logger( ( app.get( 'env' ) === 'development' ? 'dev' : 'tiny' ) ) );
 
 // error handlers
 app.use( errorHandler[ "404" ] );

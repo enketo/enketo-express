@@ -4,5 +4,7 @@ node_modules
 public/js/*.min.js
 public/css/*.css
 public/lib/enketo-core
+public/lib/martijnr-foundation
+public/lib/bower-components
 .rebooted
 .vagrant

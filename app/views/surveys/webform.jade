@@ -5,21 +5,11 @@ block style
   link(rel='stylesheet', media='print', type='text/css' href='/css/webform_print_default.css') 
 
 block script
+  - var suffix = (type && type == "edit") ? "-edit" : ""
   if environment == "production"
-    script(src="/js/webform-combined.min.js")
+    script(src="/js/webform#{suffix}-combined.min.js")
   else
-    script(data-main="/js/src/main-webform.js", src="/lib/enketo-core/lib/require.js")
-
-block global
-  if returnUrl
-    script.
-      var returnURL = '#{returnUrl}';
-  if model
-    script.
-      var modelStr = !{model};
-  if instance
-    script.
-      var instanceStr = !{instance};
+    script(data-main="/js/src/main-webform#{suffix}.js", src="/lib/bower-components/requirejs/require.js")
  
 block content
   .main
@@ -27,7 +17,7 @@ block content
       include component/_form-header
       | !{form}
       unless form
-        progress
+        div.form__loader
       include component/_form-footer
     
   include component/_dialogs

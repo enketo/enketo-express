@@ -1,6 +1,7 @@
 "use strict";
 
-var Q = require( "q" ),
+var hardcodedAccount,
+    Q = require( "q" ),
     config = require( '../../config/config' ),
     utils = require( '../lib/utils' ),
     pending = {},
@@ -21,6 +22,7 @@ if ( process.env.NODE_ENV === 'test' ) {
  */
 function _get( survey ) {
     var error,
+        hardcodedAccount = _getHardcodedAccount(),
         server = _getServer( survey ),
         app = app || require( '../../config/express' ),
         deferred = Q.defer();
@@ -34,10 +36,10 @@ function _get( survey ) {
         error.status = 400;
         deferred.reject( error );
     } else {
-        if ( new RegExp( 'https?:\/\/' + _getLinkedServerUrlStripped() ).test( server ) ) {
+        if ( hardcodedAccount && _isAllowed( hardcodedAccount, server ) ) {
             deferred.resolve( {
                 openRosaServer: server,
-                key: app.get( 'linked form and data server' )[ 'api key' ]
+                key: hardcodedAccount.key
             } );
         } else if ( /https?:\/\/testserver.com\/bob/.test( server ) ) {
             deferred.resolve( {
@@ -107,7 +109,7 @@ function _set( account ) {
             error.status = 409;
             deferred.reject( error );
         }
-        if ( new RegExp( 'https?:\/\/' + _getLinkedServerUrlStripped() ).test( account.openRosaServer ) ) {
+        if ( hardcodedAccount && _isAllowed( hardcodedAccount, account.openRosaServer ) ) {
             debug( 'harcoded account!' );
             deferred.resolve( account );
         } else {
@@ -169,7 +171,7 @@ function _update( account ) {
         error.status = 400;
         deferred.reject( error );
     } else {
-        if ( new RegExp( 'https?:\/\/' + _getLinkedServerUrlStripped() ).test( account.openRosaServer ) ) {
+        if ( hardcodedAccount && _isAllowed( hardcodedAccount, account.openRosaServer ) ) {
             debug( 'harcoded account!' );
             deferred.resolve( account );
         } else {
@@ -216,7 +218,7 @@ function _remove( account ) {
         error = new Error( 'Bad Request. Server URL is not a valid URL.' );
         error.status = 400;
         deferred.reject( error );
-    } else if ( new RegExp( 'https?:\/\/' + _getLinkedServerUrlStripped() ).test( account.openRosaServer ) ) {
+    } else if ( hardcodedAccount && _isAllowed( hardcodedAccount, account.openRosaServer ) ) {
         error = new Error( 'Not Allowed. Hardcoded account cannot be removed via API.' );
         error.status = 405;
         deferred.reject( error );
@@ -285,6 +287,8 @@ function _getList() {
     return deferred.promise;
 }
 
+
+
 /** 
  * Check if account is active and pass parameter if so
  * this passes back the original survey object and therefore differs from _get!
@@ -293,6 +297,7 @@ function _getList() {
  */
 function _check( survey ) {
     var error,
+        hardcodedAccount = _getHardcodedAccount(),
         server = _getServer( survey ),
         deferred = Q.defer();
 
@@ -301,7 +306,7 @@ function _check( survey ) {
         error.status = 400;
         deferred.reject( error );
     } else {
-        if ( new RegExp( 'https?:\/\/' + _getLinkedServerUrlStripped() ).test( server ) ) {
+        if ( hardcodedAccount && _isAllowed( hardcodedAccount, server ) ) {
             deferred.resolve( survey );
         } else {
             client.hgetall( 'ac:' + utils.cleanUrl( server ), function( error, obj ) {
@@ -323,36 +328,53 @@ function _check( survey ) {
 }
 
 /**
- * Gets the hardcoded server URL from the configuration stripped of http(s)://
- * @return {[type]} [description]
+ * Checks if the provided serverUrl is part of the allowed 'linked' OpenRosa Server
+ * @param { {openRosaServer:string, key:string}} account object
+ * @param { string} serverUrl
+ * @return { boolean } [description]
  */
-function _getLinkedServerUrlStripped() {
-    var linkedUrl,
-        hardcodedAccount = _getHardcodedAccount();
-
-    if ( !hardcodedAccount ) {
-        return null;
-    }
-    linkedUrl = hardcodedAccount.openRosaServer;
-
-    // strip http(s):// from config item
-    if ( /https?:\/\//.test( linkedUrl ) ) {
-        linkedUrl = linkedUrl.substring( linkedUrl.indexOf( '://' ) + 3 );
-    }
-    return linkedUrl;
+function _isAllowed( account, serverUrl ) {
+    return account.openRosaServer === '' || new RegExp( 'https?:\/\/' + _stripProtocol( account.openRosaServer ) ).test( serverUrl );
 }
 
-function _getHardcodedAccount() {
-    var app = app || require( '../../config/express' ),
-        hardcodedAccount = app.get( 'linked form and data server' );
+/**
+ * Strips http(s):// from the provided url
+ * @return {[type]} stripped url
+ */
+function _stripProtocol( url ) {
+    if ( !url ) {
+        return null;
+    }
 
-    if ( !hardcodedAccount || !hardcodedAccount[ 'server url' ] || !hardcodedAccount[ 'api key' ] ) {
+    // strip http(s):// 
+    if ( /https?:\/\//.test( url ) ) {
+        url = url.substring( url.indexOf( '://' ) + 3 );
+    }
+    return url;
+}
+
+/**
+ * Obtains the hardcoded account from the config
+ * @return {[type]} [description]
+ */
+function _getHardcodedAccount() {
+    var app, linkedServer;
+
+    if ( hardcodedAccount ) {
+        return hardcodedAccount;
+    }
+
+    app = require( '../../config/express' );
+    linkedServer = app.get( 'linked form and data server' );
+
+    // check if configuration is acceptable
+    if ( !linkedServer || typeof linkedServer[ 'server url' ] === 'undefined' || typeof linkedServer[ 'api key' ] === 'undefined' ) {
         return null;
     }
 
     return {
-        openRosaServer: hardcodedAccount[ 'server url' ],
-        key: hardcodedAccount[ 'api key' ]
+        openRosaServer: linkedServer[ 'server url' ],
+        key: linkedServer[ 'api key' ]
     };
 }
 
