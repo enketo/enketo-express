@@ -1,5 +1,5 @@
 enketo-express [![Build Status](https://travis-ci.org/OpenClinica/enketo-express-oc.svg)](https://travis-ci.org/OpenClinica/enketo-express-oc)
- [![Dependency Status](https://david-dm.org/kobotoolbox/enketo-express-oc.svg)](https://david-dm.org/kobotoolbox/enketo-express-oc)
+ [![Dependency Status](https://david-dm.org/kobotoolbox/enketo-express-oc.svg)](https://david-dm.org/OpenClinica/enketo-express-oc)
 
 [![Enketo Logo](https://enketo.org/private_media/images/logo-black.png "Enketo Logo")](https://enketo.org)
 
