@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function( grunt ) {
-
+    var JS_INCLUDE = [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js", "!**/*.min.js", "!public/lib/bower-components/**/*.js", "!app/lib/martijnr-foundation/**/*.js", "!public/lib/martijnr-foundation/**/*.js" ];
     // show elapsed time at the end
     require( 'time-grunt' )( grunt );
     // load all grunt tasks
@@ -31,7 +31,7 @@ module.exports = function( grunt ) {
                     },
                     env: {
                         NODE_ENV: 'development',
-                        DEBUG: '*, -express:*, -send'
+                        DEBUG: '*, -express:*, -send, -compression'
                     }
                 }
             }
@@ -39,15 +39,15 @@ module.exports = function( grunt ) {
         sass: {
             compile: {
                 files: {
-                    'public/css/error.css': 'public/css/sass/error.scss',
-                    'public/css/webform_default.css': 'public/css/sass/webform_formhub.scss',
-                    'public/css/webform_print_default.css': 'public/css/sass/webform_print_formhub.scss'
+                    'public/css/error.css': 'app/views/styles/error.scss',
+                    'public/css/webform_default.css': 'app/views/styles/webform_formhub.scss',
+                    'public/css/webform_print_default.css': 'app/views/styles/webform_print_formhub.scss'
                 }
             }
         },
         watch: {
             sass: {
-                files: [ '.rebooted', 'config.json', 'public/css/sass/**/*.scss', 'public/lib/enketo-core/src/**/*.scss', 'views/**/*.jade' ],
+                files: [ '.rebooted', 'config.json', 'app/views/styles/**/*.scss', 'app/lib/enketo-core/src/**/*.scss', 'app/views/**/*.jade' ],
                 tasks: [ 'sass' ],
                 options: {
                     spawn: true,
@@ -57,14 +57,14 @@ module.exports = function( grunt ) {
         },
         jsbeautifier: {
             test: {
-                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!**/*.min.js" ],
+                src: JS_INCLUDE,
                 options: {
                     config: "./.jsbeautifyrc",
                     mode: "VERIFY_ONLY"
                 }
             },
             fix: {
-                src: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!**/*.min.js" ],
+                src: JS_INCLUDE,
                 options: {
                     config: "./.jsbeautifyrc"
                 }
@@ -74,7 +74,7 @@ module.exports = function( grunt ) {
             options: {
                 jshintrc: ".jshintrc"
             },
-            all: [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js", "!**/*.min.js" ]
+            all: JS_INCLUDE
         },
         mochaTest: {
             all: {
@@ -94,7 +94,6 @@ module.exports = function( grunt ) {
                 baseUrl: "public/js/src/module",
                 mainConfigFile: [ "./public/js/src/require-config.js", "./public/js/src/require-build-config.js" ],
                 findNestedDependencies: true,
-                //include: [ 'core-lib/require' ],
                 optimize: "uglify2",
                 done: function( done, output ) {
                     var duplicates = require( 'rjs-build-analysis' ).duplicates( output );
@@ -109,7 +108,8 @@ module.exports = function( grunt ) {
                     done();
                 }
             },
-            "webform": getWebformCompileOptions()
+            "webform": getWebformCompileOptions(),
+            "webform-edit": getWebformCompileOptions( 'edit' )
         },
         symlink: {
             core: {
@@ -120,12 +120,18 @@ module.exports = function( grunt ) {
                     src: [ '*' ],
                     dest: 'public/lib/enketo-core'
                 } ]
+            },
+            foundation: {
+                files: [ {
+                    overwrite: false,
+                    expand: true,
+                    cwd: 'app/lib/martijnr-foundation',
+                    src: [ '*' ],
+                    dest: 'public/lib/martijnr-foundation'
+                } ]
             }
         },
         env: {
-            options: {
-                //Shared Options Hash
-            },
             test: {
                 NODE_ENV: 'test'
             }
@@ -143,7 +149,7 @@ module.exports = function( grunt ) {
             options: {
                 name: "../main-webform" + type,
                 out: "public/js/webform" + type + "-combined.min.js",
-                include: [ 'core-lib/require' ].concat( widgets )
+                include: [ /*'core-lib/require'*/ '../../../../public/lib/bower-components/requirejs/require' ].concat( widgets )
             }
         };
     }
@@ -160,7 +166,7 @@ module.exports = function( grunt ) {
         }
     } );
 
-    grunt.registerTask( 'default', [ 'symlink', 'compile', 'test' ] );
+    grunt.registerTask( 'default', [ 'symlink', 'compile' ] );
     grunt.registerTask( 'compile', [ 'sass', 'client-config-file:create', 'requirejs', 'client-config-file:remove' ] );
     grunt.registerTask( 'test', [ 'env:test', 'symlink', 'mochaTest', 'jsbeautifier:test', 'jshint', 'compile' ] );
     grunt.registerTask( 'develop', [ 'concurrent:develop' ] );

@@ -18,10 +18,10 @@
  * Deals with the main high level survey controls: saving, submitting etc.
  */
 
-define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormModel', 'jquery', 'bootstrap' ],
-    function( gui, connection, settings, Form, FormModel, $ ) {
+define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormModel', 'file-manager', 'q', 'jquery' ],
+    function( gui, connection, settings, Form, FormModel, fileManager, Q, $ ) {
         "use strict";
-        var form, $form, $formprogress, formSelector, defaultModelStr, store, fileManager;
+        var form, $form, $formprogress, formSelector, defaultModelStr, store;
 
         function init( selector, modelStr, instanceStrToEdit, options ) {
             var loadErrors, purpose;
@@ -37,7 +37,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
 
             // DEBUG
             //window.form = form;
-            window.gui = gui;
+            //window.gui = gui;
 
             //initialize form and check for load errors
             loadErrors = form.init();
@@ -45,8 +45,8 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
             if ( form.getEncryptionKey() ) {
                 console.error( 'This form requires encryption of local records but this is not supported yet in Enketo.', loadErrors );
                 loadErrors.unshift( '<strong>This form requires local encryption of records. ' +
-                    'Unfortunately this is currently not supported. ' +
-                    'You should use ODK Collect ' +
+                    'Unfortunately this not yet supported. ' +
+                    'We recommend using ODK Collect ' +
                     'for data collection with this form.</strong>'
                 );
             }
@@ -61,15 +61,12 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
             $formprogress = $( '.form-progress' );
 
             setEventHandlers();
-
-            console.log( 'controls initialized for form', form );
         }
 
         /**
          * Controller function to reset to a blank form. Checks whether all changes have been saved first
          * @param  {boolean=} confirmed Whether unsaved changes can be discarded and lost forever
          */
-
         function resetForm( confirmed ) {
             var message, choices;
 
@@ -91,18 +88,19 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 form.init();
                 $form = form.getView().$;
                 $formprogress = $( '.form-progress' );
-                $( 'button#delete-form' ).button( 'disable' );
+                //$( 'button#delete-form' ).button( 'disable' );
             }
         }
 
         /**
-         * Used to submit a form with data that was loaded by POST. This function does not save the record in localStorage
+         * Used to submit a form.
+         * This function does not save the record in localStorage
          * and is not used in offline-capable views.
          */
-
         function submitRecord() {
             var name, record, saveResult, redirect, beforeMsg, callbacks;
-            $form.trigger( 'beforesave' );
+
+            //$form.trigger( 'beforesave' );
             if ( !form.isValid() ) {
                 gui.alert( 'Form contains errors <br/>(please see fields marked in red)' );
                 return;
@@ -111,18 +109,19 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
             beforeMsg = ( redirect ) ? 'You will be automatically redirected after submission. ' : '';
 
             gui.alert( beforeMsg + '<br />' +
-                '<progress style="text-align: center;"/>', 'Submitting...', 'info' );
-
-            record = {
-                'key': 'record',
-                'data': form.getDataStr( true, true )
-            };
+                '<div class="loader-animation-small" style="margin: 10px auto 0 auto;"/>', 'Submitting...', 'bare' );
 
             callbacks = {
-                error: function() {
-                    gui.alert( 'Please try submitting again.', 'Submission Failed' );
+                error: function( jqXHR ) {
+                    console.debug( 'request object with error', jqXHR );
+                    if ( jqXHR.status === 401 ) {
+                        gui.alert( 'Authentication required. Please <a href="/login" target="_blank">authenticate in a different browser tab</a> and try again.', 'Submission Failed' );
+                    } else {
+                        gui.alert( 'Please try submitting again.', 'Submission Failed' );
+                    }
                 },
                 success: function() {
+                    $( document ).trigger( 'submissionsuccess' ); // since connection.processOpenRosaResponse is bypassed
                     if ( redirect ) {
                         gui.alert( 'You will now be redirected.', 'Submission Successful!', 'success' );
                         setTimeout( function() {
@@ -138,117 +137,106 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 complete: function() {}
             };
 
-            //connection.uploadRecords(record, true, callbacks);
-            //only upload the last one
-            prepareFormDataArray(
-                record, {
-                    success: function( formDataArr ) {
-                        connection.uploadRecords( formDataArr, true, callbacks );
-                    },
-                    error: function() {
-                        gui.alert( 'Something went wrong while trying to prepare the record(s) for uploading.', 'Record Error' );
-                    }
-                }
-            );
+            record = {
+                key: 'record',
+                data: form.getDataStr( true, true ),
+                files: fileManager.getCurrentFiles()
+            };
+
+            prepareFormDataArray( record ).forEach( function( batch ) {
+                connection.uploadRecords( batch, true, callbacks );
+            } );
         }
 
         /**
-         * Asynchronous function that builds up a form data array including media files
+         * Builds up a record array including media files, divided into batches
+         *
          * @param { { name: string, data: string } } record[ description ]
-         * @param {{success: Function, error: Function}} callbacks
          */
-
-        function prepareFormDataArray( record, callbacks ) {
-            var j, k, l, xmlData, formData, model, instanceID, $fileNodes, fileIndex, fileO, recordPrepped,
-                count = 0,
+        function prepareFormDataArray( record ) {
+            var model = new FormModel( record.data ),
+                instanceID = model.getInstanceID(),
+                $fileNodes = model.$.find( '[type="file"]' ).removeAttr( 'type' ),
+                xmlData = model.getStr( false, true ),
+                xmlSubmissionBlob = new Blob( [ xmlData ], {
+                    type: 'text/xml'
+                } ),
+                availableFiles = record.files || [],
                 sizes = [],
                 failedFiles = [],
                 files = [],
-                batches = [];
+                batches = [
+                    []
+                ],
+                batchesPrepped = [],
+                maxSize = connection.getMaxSubmissionSize();
 
-            model = new FormModel( record.data );
-            instanceID = model.getInstanceID();
-            // ignore files if there is no fileManager (possible when editing a record that has files)
-            $fileNodes = ( fileManager ) ? model.$.find( '[type="file"]' ).removeAttr( 'type' ) : [];
-            xmlData = model.getStr( false, true );
+            $fileNodes.each( function() {
+                var file,
+                    $node = $( this ),
+                    nodeName = $node.prop( 'nodeName' ),
+                    fileName = $node.text();
 
-            function basicRecordPrepped( batchesLength, batchIndex ) {
-                formData = new FormData();
-                formData.append( 'xml_submission_data', xmlData );
-                return {
+                // check if file is actually available
+                availableFiles.some( function( f ) {
+                    if ( f.name === fileName ) {
+                        file = f;
+                        return true;
+                    }
+                    return false;
+                } );
+
+                // add the file if it is available
+                if ( file ) {
+                    files.push( {
+                        nodeName: nodeName,
+                        file: file
+                    } );
+                    sizes.push( file.size );
+                } else {
+                    failedFiles.push( file.name );
+                    console.error( 'Error occured when trying to retrieve ' + file.name );
+                }
+            } );
+
+            if ( files.length > 0 ) {
+                batches = divideIntoBatches( sizes, maxSize );
+            }
+
+            // console.debug( 'splitting record into ' + batches.length + ' batches to reduce submission size ', batches );
+
+            batches.forEach( function( batch, index ) {
+                var batchPrepped,
+                    fd = new FormData();
+
+                fd.append( 'xml_submission_file', xmlSubmissionBlob );
+
+                // batch with XML data
+                batchPrepped = {
                     name: record.key,
                     instanceID: instanceID,
-                    formData: formData,
-                    batches: batchesLength,
-                    batchIndex: batchIndex
+                    formData: fd,
+                    batches: batches.length,
+                    batchIndex: index
                 };
-            }
 
-            function gatherFiles() {
-                $fileNodes.each( function() {
-                    fileO = {
-                        newName: $( this ).nodeName,
-                        fileName: $( this ).text()
-                    };
-                    fileManager.retrieveFile( instanceID, fileO, {
-                        success: function( fileObj ) {
-                            count++;
-                            files.push( fileObj );
-                            sizes.push( fileObj.file.size );
-                            if ( count == $fileNodes.length ) {
-                                distributeFiles();
-                            }
-                        },
-                        error: function( e ) {
-                            count++;
-                            failedFiles.push( fileO.fileName );
-                            console.error( 'Error occured when trying to retrieve ' + fileO.fileName + ' from local filesystem', e );
-                            if ( count == $fileNodes.length ) {
-                                distributeFiles();
-                            }
-                        }
-                    } );
+                // add any media files to the batch
+                batch.forEach( function( fileIndex ) {
+                    batchPrepped.formData.append( files[ fileIndex ].nodeName, files[ fileIndex ].file );
                 } );
+
+                // push the batch to the array
+                batchesPrepped.push( batchPrepped );
+            } );
+
+            // notify user if files could not be found, but let submission go ahead anyway
+            if ( failedFiles.length > 0 ) {
+                gui.alert( '<p>The following media files could not be retrieved: ' + failedFiles.join( ', ' ) + '. ' +
+                    'The submission will go ahead and show the missing filenames in the data, but without the actual file(s).</p>' +
+                    '<p>please contact ' + settings.supportEmail + ' to report a bug and if possible explain how the issue can be reproduced.</p>', 'File(s) not Found' );
             }
 
-            function distributeFiles() {
-                var maxSize = connection.getMaxSubmissionSize();
-                if ( files.length > 0 ) {
-                    batches = divideIntoBatches( sizes, maxSize );
-                    console.debug( 'splitting record into ' + batches.length + ' batches to reduce submission size ', batches );
-                    for ( k = 0; k < batches.length; k++ ) {
-                        recordPrepped = basicRecordPrepped( batches.length, k );
-                        for ( l = 0; l < batches[ k ].length; l++ ) {
-                            fileIndex = batches[ k ][ l ];
-                            //console.log( 'adding file: ', files[ fileIndex ] );
-                            recordPrepped.formData.append( files[ fileIndex ].newName + '[]', files[ fileIndex ].file );
-                        }
-                        //console.log( 'returning record with formdata : ', recordPrepped );
-                        callbacks.success( recordPrepped );
-                    }
-                } else {
-                    recordPrepped = basicRecordPrepped( 1, 0 );
-                    //console.log( 'sending submission without files', recordPrepped );
-                    callbacks.success( recordPrepped );
-                }
-                showErrors();
-            }
-
-            function showErrors() {
-                if ( failedFiles.length > 0 ) {
-                    gui.alert( '<p>The following media files could not be retrieved: ' + failedFiles.join( ', ' ) + '. ' +
-                        'The submission will go ahead and show the missing filenames in the data, but without the actual file(s).</p>' +
-                        '<p>Thanks for helping test this experimental feature. If you find out how you can reproduce this issue, ' +
-                        'please contact ' + settings.supportEmail + '.</p>',
-                        'Experimental feature failed' );
-                }
-            }
-
-            if ( !fileManager || $fileNodes.length === 0 ) {
-                distributeFiles();
-            } else {
-                gatherFiles();
-            }
+            return batchesPrepped;
         }
 
 
@@ -276,6 +264,8 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                         if ( !form.isValid() ) {
                             gui.alert( 'Form contains errors <br/>(please see fields marked in red)' );
                             return;
+                        } else {
+                            gui.alert( 'Form is valid!', 'OK', 'success' );
                         }
                     }, 100 );
                 }
@@ -286,6 +276,10 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                     $formprogress.css( 'width', status + '%' );
                 }
             } );
+
+            if ( inIframe() && settings.parentWindowOrigin ) {
+                $( document ).on( 'submissionsuccess edited', postEventAsMessageToParentWindow );
+            }
         }
 
         function setDraftStatus( status ) {
@@ -295,6 +289,34 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
 
         function getDraftStatus() {
             return $( '.form-footer [name="draft"]' ).prop( 'checked' );
+        }
+
+        /** 
+         * Determines whether the page is loaded inside an iframe
+         * @return {boolean} [description]
+         */
+        function inIframe() {
+            try {
+                return window.self !== window.top;
+            } catch ( e ) {
+                return true;
+            }
+        }
+
+        /**
+         * Attempts to send a message to the parent window, useful if the webform is loaded inside an iframe.
+         * @param  {{type: string}} event
+         */
+        function postEventAsMessageToParentWindow( event ) {
+            if ( event && event.type ) {
+                try {
+                    window.parent.postMessage( JSON.stringify( {
+                        enketoEvent: event.type
+                    } ), settings.parentWindowOrigin );
+                } catch ( error ) {
+                    console.error( error );
+                }
+            }
         }
 
         /**

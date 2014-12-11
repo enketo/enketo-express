@@ -1,0 +1,16 @@
+.iframe {
+    .paper {
+        border-radius: 0;
+        border: none;
+    }
+}
+
+.edit .paper .branding {
+    display: none;
+}
+
+@media screen and (max-width: 720px) {
+    body.edit .form-header {
+        border-bottom: none;
+    }
+}

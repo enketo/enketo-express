@@ -8,7 +8,8 @@ module.exports = {
             google_api_key: config.google[ 'api key' ],
             maps: config.maps,
             widgets: config.widgets,
-            modernBrowserURL: 'modern-browsers'
+            modernBrowserURL: 'modern-browsers',
+            supportEmail: config.support.email
         };
     }
 };

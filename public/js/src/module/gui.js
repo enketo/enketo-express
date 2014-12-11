@@ -18,7 +18,7 @@
  * Deals with the main GUI elements (but not the survey form)
  */
 
-define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', ], function( Modernizr, settings, printForm, $ ) {
+define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', 'foundation.reveal' ], function( Modernizr, settings, printForm, $ ) {
     "use strict";
 
     var nav, pages, updateStatus, feedbackBar,
@@ -339,31 +339,36 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', ], function( Mod
      *
      * @param {string} message
      * @param {string=} heading
-     * @param {string=} level bootstrap css class or normal (no styling)
+     * @param {string=} level css class or normal (no styling) ('alert', 'info', 'warning', 'error', 'success')
      * @param {number=} duration duration in secondsafter which dialog should self-destruct
      */
     function alert( message, heading, level, duration ) {
-        var cls, timer,
+        var cls, timer, timeout, open,
             $alert = $( '#dialog-alert' );
 
         heading = heading || 'Alert';
-        level = level || 'danger';
-        cls = ( level === 'normal' ) ? '' : 'alert alert-' + level;
+        level = level || 'error';
+        cls = ( level === 'normal' ) ? '' : 'alert-box ' + level;
+        open = $alert.hasClass( 'open' );
 
-        //write content into alert dialog
-        $alert.find( '.modal-header h3' ).text( heading );
-        $alert.find( '.modal-body p' ).removeClass().addClass( cls ).html( message ).capitalizeStart();
+        // write content into alert dialog
+        $alert.find( '.modal__header h3' ).text( heading );
+        $alert.find( '.modal__body p' ).removeClass().addClass( cls ).html( message ).capitalizeStart();
+        $alert.find( '.self-destruct-timer' ).text( '' );
 
-        $alert.modal( {
-            keyboard: true,
-            show: true
+        // close handler for close button
+        $alert.find( '.close' ).one( 'click', function() {
+            $alert.foundation( 'reveal', 'close' );
         } );
 
-        $alert.on( 'hidden.bs.modal', function() {
-            $alert.find( '.modal-header h3, .modal-body p' ).html( '' );
+        // cleanup after close
+        $alert.one( 'close', function() {
+            $alert.find( '.modal__header h3, .modal__body p' ).html( '' );
             clearInterval( timer );
+            clearTimeout( timeout );
         } );
 
+        // add countdown timer
         if ( typeof duration === 'number' ) {
             var left = duration;
             $alert.find( '.self-destruct-timer' ).text( left );
@@ -371,14 +376,24 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', ], function( Mod
                 left--;
                 $alert.find( '.self-destruct-timer' ).text( left );
             }, 1000 );
-            setTimeout( function() {
+            timeout = setTimeout( function() {
                 clearInterval( timer );
-                $alert.find( '.close' ).click();
+                $alert.foundation( 'reveal', 'close' );
             }, duration * 1000 );
         }
 
+        // instantiate modal
+        $alert.foundation( 'reveal', 'open' );
+
+        // the .css('top', '') is a hack to fix an issue that occurs sometimes when gui.alert is called when it is already open
+        if ( open ) {
+            $alert.css( 'top', '' );
+        }
+
         /* sample test code (for console):
-         * gui.alert('What did you just do???', 'Obtrusive alert dialog');
+
+        gui.alert('What did you just do???', 'Obtrusive alert dialog');
+
          */
     }
 
@@ -393,7 +408,7 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', ], function( Mod
      *   @param {number=} duration duration in seconds after which dialog should self-destruct
      */
     function confirm( texts, choices, values, duration ) {
-        var msg, heading, errorMsg, closeFn, dialogName, $dialog, timer;
+        var msg, heading, errorMsg, closeFn, dialogName, $dialog, timer, timeout;
 
         if ( typeof texts === 'string' ) {
             msg = texts;
@@ -416,84 +431,90 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', ], function( Mod
         $dialog = $( '#dialog-' + dialogName );
 
         //write content into confirmation dialog
-        $dialog.find( '.modal-header h3' ).text( heading );
-        $dialog.find( '.modal-body .msg' ).html( msg ).capitalizeStart();
-        $dialog.find( '.modal-body .alert-danger' ).html( errorMsg ).show();
+        $dialog.find( '.modal__header h3' ).text( heading );
+        $dialog.find( '.modal__body .msg' ).html( msg ).capitalizeStart();
+        $dialog.find( '.modal__body .error' ).html( errorMsg ).show();
         if ( !errorMsg ) {
-            $dialog.find( '.modal-body .alert-danger' ).hide();
+            $dialog.find( '.modal__body .error' ).hide();
         }
         $dialog.find( 'input, select, textarea' ).each( function() {
             var name = $( this ).attr( 'name' );
             $( this ).val( values[ name ] || '' );
         } );
 
-        //instantiate dialog
-        $dialog.modal( 'show' );
-
-        //set eventhanders
-        $dialog.on( 'shown.bs.modal', function() {
+        // before handler
+        $dialog.one( 'open', function() {
             choices.beforeAction.call();
         } );
 
-        $dialog.find( 'button.positive' ).on( 'click', function() {
+        // close handler for close button
+        $dialog.find( '.close' ).one( 'click', function() {
+            $dialog.foundation( 'reveal', 'close' );
+        } );
+
+        // cleanup after close
+        $dialog.one( 'close', function() {
+            $dialog.find( '.modal__header h3, .modal__body .msg, .modal__body .error, .modal__footer .btn' ).text( '' );
+            clearInterval( timer );
+            clearTimeout( timeout );
+        } );
+
+        $dialog.find( 'button.positive' ).one( 'click', function() {
             var values = {};
-            $( this ).closest( '.modal-dialog' ).find( 'input, select, textarea' ).each( function() {
+            $( this ).closest( '.modal' ).find( 'input, select, textarea' ).each( function() {
                 if ( $( this ).attr( 'name' ) ) {
                     values[ $( this ).attr( 'name' ) ] = $( this ).val().trim();
                 }
             } );
-            $dialog.modal( 'hide' );
-            reset();
+            $dialog.foundation( 'reveal', 'close' );
             choices.posAction.call( undefined, values );
         } ).text( choices.posButton );
 
-        $dialog.find( 'button.negative' ).on( 'click', function() {
-            $dialog.modal( 'hide' );
-            reset();
+        $dialog.find( 'button.negative' ).one( 'click', function() {
+            $dialog.foundation( 'reveal', 'close' );
             choices.negAction.call();
         } ).text( choices.negButton );
 
-        function reset() {
-            console.log( 'confirm dialog reset called' );
-            //remove eventhandlers
-            $dialog.off( 'shown hidden hide' );
-            // temp workaround or fix for multiple modals when repeatedly attempting to save a record under and existing name)
-            $( 'body>.modal-backdrop' ).remove();
-
-            $dialog.find( 'button.positive, button.negative' ).off( 'click' );
-            $dialog.find( '.modal-body .msg, .modal-body .alert-danger, button' ).text( '' );
-        }
-
+        // add countdown timer
         if ( typeof duration === 'number' ) {
-            var left = duration.toString();
+            var left = duration;
             $dialog.find( '.self-destruct-timer' ).text( left );
             timer = setInterval( function() {
                 left--;
                 $dialog.find( '.self-destruct-timer' ).text( left );
             }, 1000 );
-            setTimeout( function() {
+            timeout = setTimeout( function() {
                 clearInterval( timer );
-                $dialog.find( '.close' ).click();
+                $dialog.foundation( 'reveal', 'close' );
             }, duration * 1000 );
         }
 
+        // instantiate dialog
+        $dialog.foundation( 'reveal', 'open' );
+
         /* sample test code (for console):
 
-		gui.confirm({
-			msg: 'This is an obtrusive confirmation dialog asking you to make a decision',
-			heading: 'Please confirm this action',
-			errorMsg: 'Oh man, you messed up big time!'
-		},{
-			posButton: 'Confirmeer',
-			negButton: 'Annuleer',
-			posAction: function(){console.log('you just did something positive!')},
-			negAction: function(){console.log('you did something negative')},
-			beforeAction: function(){console.log('doing some preparatory work')}
-		})
+        gui.confirm( {
+            msg: 'This is an obtrusive confirmation dialog asking you to make a decision',
+            heading: 'Please confirm this action',
+            errorMsg: 'Oh man, you messed up big time!'
+        }, {
+            posButton: 'Confirmeer',
+            negButton: 'Annuleer',
+            posAction: function() {
+                console.log( 'you just did something positive!' )
+            },
+            negAction: function() {
+                console.log( 'you did something negative' )
+            },
+            beforeAction: function() {
+                console.log( 'doing some preparatory work' )
+            }
+        }, null, 100 );
 
 		gui.confirm('confirm this please');
 
-	 */
+	   */
     }
 
 
@@ -621,7 +642,6 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', ], function( Mod
      * Makes sure sliders that reveal the feedback bar and page have the correct css 'top' property when the header is fixed
      */
     function positionPageAndBar() {
-        console.log( 'positionPageAndBar called' );
         var fTop, pTop,
             $header = $( 'header.navbar' ),
             hHeight = $header.outerHeight() || 0,
@@ -684,9 +704,7 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', ], function( Mod
         $target.find( 'ul' ).empty().append( listHTML );
     }
 
-    //$( document ).ready( function() {
     init();
-    //} );
 
     return {
         alert: alert,

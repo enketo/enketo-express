@@ -1,6 +1,0 @@
-{
-				"name": "onlineFilepicker",
-				"stylesheet": "online-filepicker.scss",
-				"selector": "input[type=\"file\"]",
-				"options": {}
-}

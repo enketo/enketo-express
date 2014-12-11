@@ -17,13 +17,16 @@
 define( [ 'text!enketo-config' ], function( config ) {
     "use strict";
     var queryParams = _getAllQueryParams(),
-        evaluatedSettings = [],
+        settings = [],
         settingsMap = [ {
             q: 'return',
-            s: 'returnURL'
+            s: 'returnUrl'
         }, {
             q: 'returnURL',
-            s: 'returnURL'
+            s: 'returnUrl'
+        }, {
+            q: 'returnUrl',
+            s: 'returnUrl'
         }, {
             q: 'showbranch',
             s: 'showBranch'
@@ -35,21 +38,27 @@ define( [ 'text!enketo-config' ], function( config ) {
             s: 'touch'
         }, {
             q: 'server',
-            s: 'serverURL'
+            s: 'serverUrl'
         }, {
             q: 'serverURL',
-            s: 'serverURL'
+            s: 'serverUrl'
+        }, {
+            q: 'serverUrl',
+            s: 'serverUrl'
         }, {
             q: 'form',
-            s: 'formURL'
+            s: 'xformUrl'
         }, {
             q: 'id',
-            s: 'formId'
+            s: 'xformId'
         }, {
             q: 'formName',
-            s: 'formId'
+            s: 'xformId'
         }, {
             q: 'instanceId',
+            s: 'instanceId'
+        }, {
+            q: 'instance_id',
             s: 'instanceId'
         }, {
             q: 'entityId',
@@ -57,19 +66,42 @@ define( [ 'text!enketo-config' ], function( config ) {
         }, {
             q: 'source',
             s: 'source'
+        }, {
+            q: 'parentWindowOrigin',
+            s: 'parentWindowOrigin'
         } ];
 
+    // rename query string parameters to settings 
     settingsMap.forEach( function( obj, i ) {
-        if ( queryParams[ obj.q ] || ( typeof settings !== 'undefined' && settings[ obj.q ] ) ) {
-            evaluatedSettings[ obj.s ] = queryParams[ obj.q ] || settings[ obj.q ] || null;
+        if ( queryParams[ obj.q ] ) {
+            settings[ obj.s ] = queryParams[ obj.q ];
         }
     } );
+
+    settings.defaults = {};
+    // add defaults object
+    for ( var p in queryParams ) {
+        var path, value;
+        if ( queryParams.hasOwnProperty( p ) ) {
+            if ( p.search( /d\[(.*)\]/ ) !== -1 ) {
+                path = decodeURIComponent( p.match( /d\[(.*)\]/ )[ 1 ] );
+                value = decodeURIComponent( queryParams[ p ] );
+                settings.defaults[ path ] = value;
+            }
+        }
+    }
 
     // add common configuration properties (constants)
     config = JSON.parse( config );
     for ( var prop in config ) {
-        evaluatedSettings[ prop ] = config[ prop ];
+        if ( config.hasOwnProperty( prop ) ) {
+            settings[ prop ] = config[ prop ];
+        }
     }
+
+    // add enketoId
+    settings.enketoIdPrefix = '::';
+    settings.enketoId = new RegExp( '\/' + settings.enketoIdPrefix ).test( window.location.pathname ) ? window.location.pathname.substring( window.location.pathname.lastIndexOf( settings.enketoIdPrefix ) + settings.enketoIdPrefix.length ) : null;
 
     function _getAllQueryParams() {
         var val, processedVal,
@@ -88,5 +120,5 @@ define( [ 'text!enketo-config' ], function( config ) {
         return params;
     }
 
-    return evaluatedSettings;
+    return settings;
 } );
