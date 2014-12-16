@@ -18,7 +18,7 @@
  * Deals with the main GUI elements (but not the survey form)
  */
 
-define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', 'foundation.reveal' ], function( Modernizr, settings, printForm, $ ) {
+define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation.reveal' ], function( Modernizr, Q, settings, printForm, $ ) {
     "use strict";
 
     var nav, pages, updateStatus, feedbackBar,
@@ -149,6 +149,31 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', 'foundation.reve
         $( '.ad .close' ).on( 'click', function() {
             $( this ).closest( '.ad' ).remove();
         } );
+    }
+
+    function swapTheme( theme ) {
+        var deferred = Q.defer();
+        if ( !theme ) {
+            console.log( 'No theme defined in form or database. Keeping default theme.' );
+            deferred.resolve();
+        } else if ( settings.themesSupported.some( function( supportedTheme ) {
+                return theme === supportedTheme;
+            } ) ) {
+            var $currentStyleSheet = $( 'link[rel=stylesheet][media=all][href*=theme-]' ),
+                $currentPrintStyleSheet = $( 'link[rel=stylesheet][media=print][href*=theme-]' ),
+                $newStyleSheet = $( '<link rel="stylesheet" media="all" href="/css/theme-' + theme + '.css"/>' ),
+                $newPrintStyleSheet = '<link rel="stylesheet" media="print" href="/css/theme-' + theme + '.print.css"/>';
+
+            $newStyleSheet.on( 'load', function() {
+                deferred.resolve();
+            } );
+            $currentStyleSheet.replaceWith( $newStyleSheet );
+            $currentPrintStyleSheet.replaceWith( $newPrintStyleSheet );
+        } else {
+            console.log( 'Theme "' + theme + '" is not supported. Keeping default theme.' );
+            deferred.resolve();
+        }
+        return deferred.promise;
     }
 
     nav = {
@@ -712,6 +737,7 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', 'foundation.reve
         feedback: feedback,
         updateStatus: updateStatus,
         pages: pages,
+        swapTheme: swapTheme,
         fillHeight: fillHeight,
         confirmLogin: confirmLogin,
         showLoadErrors: showLoadErrors,

@@ -77,6 +77,17 @@ The easiest way to start the app in development and debugging mode with liverelo
 * :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
 
 
+### Themes
+
+The default theme can be set in [config.json](config/config.json). The default theme can be overridden in [the form definition](http://xlsform.org/#grid). 
+
+The recommended way to customize themes is to either:
+
+ * Send a pull request for changes to the existing themes, or
+ * Contact Enketo LLC for a quote to make changes to existing themes or to create a new theme, or
+ * Create your own theme in your own enketo-express port and add your custom theme in its own folder [here](app/views/styles). No other changes are required. A succesful rebuild with `grunt`, and your theme will become active when the app starts. The advantage of using this method instead of editing the existing themes, is that you will not have any merge conflicts when you update your port!
+
+
 ### Authentication
 
 This app does not (yet) manage [OpenRosa form authentication](https://bitbucket.org/javarosa/javarosa/wiki/AuthenticationAPI) for protected forms, i.e. it does not have a login page, does not store credentials and does not itself manage any sessions.

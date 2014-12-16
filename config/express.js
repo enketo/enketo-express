@@ -1,6 +1,7 @@
 "use strict";
 
-var express = require( 'express' ),
+var themesSupported = [],
+    express = require( 'express' ),
     path = require( 'path' ),
     bodyParser = require( 'body-parser' ),
     fs = require( 'fs' ),
@@ -10,6 +11,7 @@ var express = require( 'express' ),
     compression = require( 'compression' ),
     errorHandler = require( '../app/controllers/error-handler' ),
     controllersPath = path.join( __dirname, '../app/controllers' ),
+    themePath = path.join( __dirname, '../public/css' ),
     app = express(),
     debug = require( 'debug' )( 'express' );
 
@@ -27,6 +29,17 @@ app.set( 'view engine', 'jade' );
 // pretty json API responses
 app.set( 'json spaces', 4 );
 
+// detect supported themes
+if ( fs.existsSync( themePath ) ) {
+    fs.readdirSync( themePath ).forEach( function( file ) {
+        var matches = file.match( /^theme-([A-z]+)\.css$/ );
+        if ( matches && matches.length > 1 ) {
+            themesSupported.push( matches[ 1 ] );
+        }
+    } );
+}
+app.set( 'themes supported', themesSupported );
+
 // middleware
 app.use( compression() );
 app.use( bodyParser.json() );
@@ -43,6 +56,7 @@ app.use( function( req, res, next ) {
     res.locals.tracking = req.app.get( 'google' ).analytics.ua ? req.app.get( 'google' ).analytics.ua : false;
     res.locals.trackingDomain = req.app.get( 'google' ).analytics.domain;
     res.locals.logo = req.app.get( 'logo' );
+    res.locals.defaultTheme = req.app.get( 'default theme' ).replace( 'theme-', '' ) || 'kobo';
     next();
 } );
 

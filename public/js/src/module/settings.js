@@ -17,7 +17,7 @@
 define( [ 'text!enketo-config' ], function( config ) {
     "use strict";
     var queryParams = _getAllQueryParams(),
-        settings = [],
+        settings = {},
         settingsMap = [ {
             q: 'return',
             s: 'returnUrl'
@@ -71,15 +71,15 @@ define( [ 'text!enketo-config' ], function( config ) {
             s: 'parentWindowOrigin'
         } ];
 
-    // rename query string parameters to settings 
+    // rename query string parameters to settings, but only if they do not exist already
     settingsMap.forEach( function( obj, i ) {
-        if ( queryParams[ obj.q ] ) {
+        if ( queryParams[ obj.q ] && typeof settings[ obj.s ] === 'undefined' ) {
             settings[ obj.s ] = queryParams[ obj.q ];
         }
     } );
 
-    settings.defaults = {};
     // add defaults object
+    settings.defaults = {};
     for ( var p in queryParams ) {
         var path, value;
         if ( queryParams.hasOwnProperty( p ) ) {
@@ -91,7 +91,7 @@ define( [ 'text!enketo-config' ], function( config ) {
         }
     }
 
-    // add common configuration properties (constants)
+    // add common app configuration constants
     config = JSON.parse( config );
     for ( var prop in config ) {
         if ( config.hasOwnProperty( prop ) ) {

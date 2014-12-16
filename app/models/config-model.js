@@ -1,15 +1,19 @@
 "use strict";
 
-var config = require( '../../config/config' );
+var config = require( '../../config/config' ),
+    debug = require( 'debug' )( 'config-model' );
 
 module.exports = {
     client: function() {
+        var app = require( '../../config/express' );
+
         return {
             googleApiKey: config.google[ 'api key' ],
             maps: config.maps,
             widgets: config.widgets,
             modernBrowserURL: 'modern-browsers',
-            supportEmail: config.support.email
+            supportEmail: config.support.email,
+            themesSupported: app.get( 'themes supported' )
         };
     }
 };
