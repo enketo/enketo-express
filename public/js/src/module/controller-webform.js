@@ -123,6 +123,9 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 success: function() {
                     $( document ).trigger( 'submissionsuccess' ); // since connection.processOpenRosaResponse is bypassed
                     if ( redirect ) {
+                        // scroll to top to potentially work around an issue where the alert modal is not positioned correctly
+                        // https://github.com/kobotoolbox/enketo-express/issues/116
+                        window.scrollTo( 0, 0 );
                         gui.alert( 'You will now be redirected.', 'Submission Successful!', 'success' );
                         setTimeout( function() {
                             location.href = settings.returnURL;
