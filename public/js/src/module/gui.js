@@ -80,7 +80,7 @@ define( [ 'Modernizr', 'settings', 'print', 'jquery', 'plugin', 'foundation.reve
             $( 'body' ).removeClass( 'show-side-slider' );
         } );
 
-        $( 'button.print' ).on( 'click', function() {
+        $( '.form-header__button--print' ).on( 'click', function() {
             printForm();
         } );
 
