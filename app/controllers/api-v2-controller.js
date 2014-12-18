@@ -111,7 +111,8 @@ function getNewOrExistingSurvey( req, res, next ) {
     var error, body, status,
         survey = {
             openRosaServer: req.param( 'server_url' ),
-            openRosaId: req.param( 'form_id' )
+            openRosaId: req.param( 'form_id' ),
+            theme: req.param( 'theme' )
         };
 
     return surveyModel

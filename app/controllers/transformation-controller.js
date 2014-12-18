@@ -99,7 +99,8 @@ function _respond( res, survey ) {
     res.send( {
         form: survey.form,
         // previously this was JSON.stringified, not sure why
-        model: survey.model
+        model: survey.model,
+        theme: survey.theme
     } );
 }
 
