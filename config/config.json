@@ -11,6 +11,7 @@
             "external login url that sets cookie": "http://example.com/login?return={RETURNURL}"
         }
     },
+    "default theme": "kobo",
     "support": {
         "email": "info@kobotoolbox.org"
     },

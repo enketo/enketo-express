@@ -38,11 +38,14 @@ module.exports = function( grunt ) {
         },
         sass: {
             compile: {
-                files: {
-                    'public/css/error.css': 'app/views/styles/error.scss',
-                    'public/css/webform_default.css': 'app/views/styles/webform_formhub.scss',
-                    'public/css/webform_print_default.css': 'app/views/styles/webform_print_formhub.scss'
-                }
+                cwd: 'app/views/styles',
+                dest: 'public/css',
+                expand: true,
+                outputStyle: 'compressed',
+                src: '**/*.scss',
+                ext: '.css',
+                flatten: true,
+                extDot: 'last'
             }
         },
         watch: {
