@@ -1,0 +1,10 @@
+$body-bg: #f0f0f0;
+
+// KoBo blue
+$brand-primary-color: #f58220;
+$repeat-bg: lighten($brand-primary-color, 50%);
+
+// ZURB Foundation library customization
+$primary-color: $brand-primary-color;
+$secondary-color: white;
+$button-border-width: 1px;

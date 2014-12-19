@@ -63,18 +63,20 @@ The easiest way to start the app in development and debugging mode with liverelo
 * :white_check_mark: this one has the ability to override default form values on launch through the API (v2)
 * :white_check_mark: this one has a more advanced iframeable webform view that can communicate back to the parent window, enabled through the API (v2)
 * :white_check_mark: this one has [external authentication](#authentication) support 
+* :white_check_mark: this one has support for multiple themes in *all* form views including previews 
+* :white_check_mark: this allows overriding the theme via the API (v2) 
 * :x: this one will not store the application in your browser for offline launch (yet) - it requires a constant connection to the server (this server may be on a local network though)
 * :x: this one will not store records locally in your browser (yet) - it will submit records immediately to the server
 * :x: this one will not store draft records (yet) (see previous)
-* :x: missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views), and "/survey__s__/" 
+* :x: missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views), and "/surveys/list" 
+* :x: no [Forms](https://enketo.org/forms) app
+* :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
 
 
 ### Additional differences with the full-fledged service at [enketo.org](https://enketo.org)
 
 * :x: no [enketo-managed form authentication](#authentication) (yet)
 * :x: no [Grid Theme](http://blog.enketo.org/gorgeous-grid/) (yet)
-* :x: no [Forms](https://enketo.org/forms) app
-* :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
 
 
 ### Themes
@@ -85,7 +87,7 @@ The recommended way to customize themes is to either:
 
  * Send a pull request for changes to the existing themes, or
  * Contact Enketo LLC for a quote to make changes to existing themes or to create a new theme, or
- * Create your own theme in your own enketo-express port and add your custom theme in its own folder [here](app/views/styles). No other changes are required. A succesful rebuild with `grunt`, and your theme will become active when the app starts. The advantage of using this method instead of editing the existing themes, is that you will not have any merge conflicts when you update your port!
+ * Create your own theme in your own enketo-express port and add your custom theme in its own folder [here](app/views/styles). No other changes are required. A succesful rebuild with `grunt`, and your theme will become active when the app starts. The advantage of using this method instead of editing the existing themes, is that you will not have any merge conflicts when you update your port! Add a print-specific version of your theme and use the same filenaming convention as the built-in themes.
 
 
 ### Authentication
