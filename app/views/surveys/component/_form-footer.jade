@@ -1,15 +1,15 @@
 section.form-footer
-  .content
+  .form-footer__content
     fieldset.draft.question
     .main-controls
       a.previous-page.disabled(href="#") Back
       if type === 'preview'
-        button#validate-form.btn.btn-primary.btn-large.hide
-          i.glyphicon.glyphicon-ok
+        button#validate-form.btn.btn-primary.hide
+          i.icon.icon-check
           |  Validate
       else
-        button#submit-form.btn.btn-primary.btn-large.hide
-          i.glyphicon.glyphicon-ok
+        button#submit-form.btn.btn-primary.hide
+          i.icon.icon-check
           |  Submit
       a.btn.btn-primary.next-page Next
 
