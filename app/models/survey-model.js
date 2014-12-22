@@ -2,6 +2,7 @@
 
 var Q = require( 'q' ),
     utils = require( '../lib/utils' ),
+    TError = require( '../lib/custom-error' ).TranslatedError,
     config = require( '../../config/config' ),
     client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
         auth_pass: config.redis.main.password
@@ -35,10 +36,8 @@ function getSurvey( id ) {
             if ( error ) {
                 deferred.reject( error );
             } else if ( !obj || obj.active === 'false' ) {
-                msg = 'Survey with this id ' + ( !obj ? 'not found.' : 'no longer active.' );
-                error = new Error( msg );
+                error = ( !obj ) ? new TError( 'error.surveyidnotfound' ) : new TError( 'error.surveyidnotactive' );
                 error.status = 404;
-                debug( 'returning ', error );
                 deferred.reject( error );
             } else if ( !obj.openRosaId || !obj.openRosaServer ) {
                 error = new Error( 'Survey information for this id is incomplete.' );

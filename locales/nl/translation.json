@@ -1,0 +1,144 @@
+{
+    "alert": {
+        "default": {
+            "button": "Sluit af",
+            "heading": "Let op"
+        },
+        "loaderror": {
+            "editadvice": "Het is aanbevolen deze enquete niet te gebruiken voor het wijzigen van informatie totdat dit opgelost is.",
+            "entryadvice": "Het is aanbevolen deze enquete niet te gebruiken voor het invoeren van informatie totdat dit opgelost is.",
+            "heading": "Laad Fout",
+            "msg1": "Er is een fout opgetreden tijdens het laden van deze enquete.",
+            "msg2": "Contacteer __emailLink__ met de link naar dit form en de fout beschrijving hieronder:",
+            "heading_plural": "Laad fouten",
+            "msg1_plural": "Er zijn fouten opgetreden tijdens het laden van dit form.",
+            "msg2_plural": "Contacteer __emailLink__ met de link naar deze enquete met de fout beschrijvingen hieronder:"
+        },
+        "offlinesupported": {
+            "heading": "Enquete werkt offline!",
+            "msg": [
+                "Deze enquete kan nu geladen en gebruikt worden zonder een Internet verbinding op dit apparaat. Bookmark het om het makkelijk te kunnen vinden offline.",
+                "Records worden automatisch opgeslagen in de browser en toegevoegd aan de wachtlijst. Als de app online is worden de records automatisch verzonden - één voor één.",
+                "Alleen nadat een record succesvol verzonden is, wordt het verwijderd van de wachtlijst. Je kunt je browser en apparaat veilig afsluiten met records in de wachtlijst. Deze zullen er nog steeds zijn, de volgend keer deze enquete geladen wordt."
+            ]
+        },
+        "offlineunsupported": {
+            "heading": "App kan niet offline opstarten",
+            "msg": "Het opstarten van deze app offline is niet ondersteund in deze browser. Je kunt de enquete gebruiken zonder deze functie of opties bekijken om dit op te lossen.",
+            "negButton": "Gebruik het",
+            "posButton": "Laat opties zien"
+        },
+        "submission": {
+            "msg": "Verzending gaande...",
+            "redirectmsg": "Je wordt automatisch doorverzonden als de verzending compleet is."
+        },
+        "submissionerror": {
+            "authrequiredmsg": "Identificiéring noodzakelijk. Aub identificeer __here__ in een nieuwe browser tab en probeer opnieuw.",
+            "fnfheading": "Bestand(en) niet gevonden",
+            "fnfmsg": [
+                "De volgende media bestanden konden niet gevonden worden: __failedFiles__. The verzending zal doorgaan zonder deze bestanden en zal de missende bestandsnamen laten zien in het record(s).",
+                "Contacteer __supportEmail__ aub om een 'bug' te rapporteren en indien mogelijk beschrijf hoe het probleem kan worden gereproduceerd. "
+            ],
+            "heading": "Verzenden Niet Succesvol",
+            "tryagainmsg": "Probeer opnieuw te verzenden."
+        },
+        "submissionsuccess": {
+            "heading": "Verzending Succesvol!",
+            "msg": "De records zijn verzonden!",
+            "redirectmsg": "Je wordt nu doorgestuurd."
+        },
+        "validationerror": {
+            "msg": "De enquete bevat fouten. Zie de vragen die rood gekleurd zijn."
+        },
+        "validationsuccess": {
+            "heading": "OK",
+            "msg": "The enquete is geldig!"
+        },
+        "xpatherror": {
+            "heading": "Formula fout",
+            "msg": "Er is een formule evaluatie fout opgetreden. Contacteer __emailLink__ met deze fout beschrijving:"
+        }
+    },
+    "confirm": {
+        "default": {
+            "heading": "Weet je het zeker?",
+            "msg": "Confirmeer deze aktie",
+            "negButton": "Annuleer",
+            "posButton": "Confirmeer"
+        },
+        "login": {
+            "heading": "Login Noodzakelijk",
+            "msg": [
+                "Je moet inloggen om de data van de wachtlijst te kunnen verzenden. Als je dit nu wilt doen, wordt je doorgestuurd en verlies je informatie die nog nog niet opgeslagen is.",
+                "Wil je nu inloggen of later?"
+            ],
+            "negButton": "Later",
+            "posButton": "Log nu in"
+        },
+        "save": {
+            "hint": "Deze naam maak het makkelijk om het record te kunnen vinden later. De record naam wordt niet verzonden naar de server.",
+            "msg": "Er zijn niet-opgeslagen veranderingen gemaakt. Wil je doorgaan zonder deze te bewaren?",
+            "name": "Record Naam"
+        }
+    },
+    "contact": {
+        "admin": "Contacteer de enquete administrateur aub.",
+        "support": "Contacteer __supportEmail__ aub."
+    },
+    "enketo": {
+        "power": "Powered by"
+    },
+    "error": {
+        "code": "Fout Code: __code__",
+        "econnrefused": "Kon niet verbinden met de Server",
+        "encryptionnotsupported": "De informatie verzameld met deze enquete dient versleuteld te worden. Helaas is dit nog niet ondersteund. We bevelen aan om ODK Collect te gebruiken voor deze enquete.",
+        "instancenotfound": "Record niet gevonden. Het kan verlopen zijn.",
+        "invalidediturl": "Niet een geldig edit URL",
+        "notfoundinformlist": "Enquete met ID __formId__ niet gevonden in /formList",
+        "pagenotfound": "Pagina niet gevonden",
+        "surveyidnotactive": "Enquete met dit ID is niet langer aktief",
+        "surveyidnotfound": "Enquete met dit ID niet gevonden",
+        "unknown": "Een onbekende fout is opgetreden"
+    },
+    "feedback": {
+        "header": "Informatie"
+    },
+    "form": {
+        "chooseLanguage": "Kies een Taal",
+        "logout": "log uit",
+        "pages": {
+            "back": "Terug",
+            "end": "Ga naar het Einde",
+            "next": "Volgende",
+            "return": "Terug naar het Begin"
+        }
+    },
+    "here": "hier",
+    "home": {
+        "msg": "__appTitle__ werkt! De Enketo enquetes zijn vanaf de __serverName__ installatie toegankelijk."
+    },
+    "page": {
+        "modernbrowsers": {
+            "heading": "Moderne Browsers",
+            "ie": {
+                "heading": "Waarom geen liefde voor die nare ouderwetse versies van Internet Explorer?",
+                "msg": "We begrijpen dat sommige mensen, vooral degenen die werken voor een grote bureaucratie, geen toegang hebben tot the laatste en best browsers. Aangezien we weten hoe fantastisch het Web kan zijn, zijn we empatisch met de gebruikers in zo'n situatie. Normaal, zouden we proberen om hier een oplossing voor te vinden voor de populairste ouderwetse browsers. Alleen in dit geval niet omdat Enketo gebouwd is naar aanleiding van een aantal hele nieuwe technologien. Helaas hebben gebruikers met oudere browsers hierdoor pech."
+            },
+            "msg1": "Au! Sorry, je bent hier waarschijnlijk heen gestuurd omdat je browser te ouderwets is of misschien belangrijke functies heeft uitgeschakeld in 'prive mode'.",
+            "msg2": "Als je een ouderwetse browser gebruikt, raden wij aan om deze te vervangen of up-te-daten met een van de volgende prima moderne browsers:"
+        }
+    },
+    "submission": {
+        "http0": "Gefaald (Offline?)",
+        "http200": "Data server wilde het record niet accepteren.",
+        "http201": "Klaar!",
+        "http202": "Klaar! (duplikaat)",
+        "http2xx": "Onverwacht antwoord tijdens record verzending.",
+        "http400": "Data server wilde het record niet accepteren.",
+        "http403": "Niet toegestaan om records te verzenden naar deze server.",
+        "http404": "Ontvangst service niet gevonden op data server.",
+        "http413": "Record is te groot.",
+        "http4xx": "Onbekend ontvangst probleem op de data server.",
+        "http500": "De data server voor deze enquete is niet bereikbaar. Probeer het later nog een keer of contacteer __supportEmail__."
+    }
+}

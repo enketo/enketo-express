@@ -34,8 +34,8 @@
         form(onsubmit="return false;")
           .alert.alert-danger
           label
-            span Record Name
-            span.or-hint.active This name allows you to easily find your draft record to finish it later. The record name will not be submitted to the server.
+            span= t('confirm.save.name')
+            span.or-hint.active= t('confirm.save.hint') 
             input(name="record-name", type="text", required="required")
       .modal-footer
         span.self-destruct-timer

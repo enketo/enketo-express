@@ -51,6 +51,7 @@ For a production server, we recommend using [pm2](https://github.com/unitech/pm2
 
 ### Developer tools
 Install [nodemon](https://github.com/remy/nodemon) to automatically restart the server when a file changes.
+Install [gulp](http://gulpjs.com/) to automatically update the translation keys.
 
 The easiest way to start the app in development and debugging mode with livereload is with `grunt develop`. If you are developing using the vagrant VM, make sure to `pm2 kill` first or comment out the pm2 block at the end in the [bootstrap](/setup/bootstrap.sh) script before creating the VM.
 
@@ -104,7 +105,7 @@ To make use of external authentication set the following in [config.json](config
 
 ### Funding
 
-The development of this application was funded by [KoBo Toolbox (Harvard Humanitarian Inititive)](https://kobotoolbox.org), [iMMAP](http://immap.org), [OpenClinica](https://openclinica.com), and [Enketo LLC](https://enketo.org). The [Enketo-core](https://github.com/enketo/enketo-core) library (the form engine + themes) used in this application obtained significant funding from [SEL (Columbia University)](http://modi.mech.columbia.edu/), the [Santa Fe Institute](http://www.santafe.edu/), and the [HRP project](http://www.who.int/reproductivehealth/topics/mhealth/en/). 
+The development of this application was funded by [KoBo Toolbox (Harvard Humanitarian Initiative)](https://kobotoolbox.org), [iMMAP](http://immap.org), [OpenClinica](https://openclinica.com), and [Enketo LLC](https://enketo.org). The [Enketo-core](https://github.com/enketo/enketo-core) library (the form engine + themes) used in this application obtained significant funding from [SEL (Columbia University)](http://modi.mech.columbia.edu/), the [Santa Fe Institute](http://www.santafe.edu/), and the [HRP project](http://www.who.int/reproductivehealth/topics/mhealth/en/). 
 
 
 ### License

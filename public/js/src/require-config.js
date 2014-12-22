@@ -21,7 +21,8 @@ require.config( {
         "file-manager": "../../../lib/enketo-core/src/js/file-manager",
         "foundation.core": "../../../lib/martijnr-foundation/js/foundation/foundation",
         "foundation.reveal": "../../../lib/martijnr-foundation/js/foundation/foundation.reveal",
-        "q": "../../../lib/bower-components/q/q"
+        "q": "../../../lib/bower-components/q/q",
+        "i18next": "../../../lib/bower-components/i18next/i18next.amd"
     },
     shim: {
         "xpath": {

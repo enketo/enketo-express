@@ -1,0 +1,143 @@
+{
+  "alert": {
+    "default": {
+      "button": "Close",
+      "heading": "Alert"
+    },
+    "loaderror": {
+      "editadvice": "It is recommended not to use this form to edit data until this is resolved.",
+      "entryadvice": "It is recommended not to use this form for data entry until this is resolved.",
+      "heading": "Loading Error",
+      "msg1": "Error occured during the loading of this form.",
+      "msg2": "Please contact __emailLink__ with the link to this page and the error message below:",
+      "heading_plural": "Loading Errors",
+      "msg1_plural": "Errors occurred during the loading of this form.",
+      "msg2_plural": "Please contact __emailLink__ with the link to this page and the error messages below:"
+    },
+    "offlinesupported": {
+      "heading": "Form works offline!",
+      "msg": [
+        "This form can now be loaded and used without an Internet connection on this device. Bookmark it for easy offline access.",
+        "Records are automatically stored and queued in your browser until an Internet connection is available. When the app is online, records will be automatically submitted - one by one.",
+        "Only after a record has been succesfully submitted, it will be removed from the queue. You can safely close down your browser and device with items in the queue. They will still be there next time you load the form."
+      ]
+    },
+    "offlineunsupported": {
+      "heading": "Application cannot launch offline",
+      "msg": "Offline application launch is not supported by your browser. You can use the survey without this feature or see options for resolving this.",
+      "negButton": "Use it",
+      "posButton": "Show options"
+    },
+    "submission": {
+      "msg": "Submitting...",
+      "redirectmsg": "You will be automatically redirected after submission."
+    },
+    "submissionerror": {
+      "authrequiredmsg": "Authentication required. Please authenticate __here__ in a different browser tab and try again.",
+      "fnfheading": "File(s) not Found",
+      "fnfmsg": [
+        "The following media files could not be retrieved: __failedFiles__. The submission will go ahead and show the missing filenames in the data, but without the actual file(s).",
+        "Please contact __supportEmail__ to report a bug and if possible explain how the issue can be reproduced."
+      ],
+      "heading": "Submission Failed",
+      "tryagainmsg": "Please try submitting again."
+    },
+    "submissionsuccess": {
+      "heading": "Submission Successful!",
+      "msg": "Your data was submitted!",
+      "redirectmsg": "You will now be redirected."
+    },
+    "validationerror": {
+      "msg": "Form contains errors. Please see fields marked in red."
+    },
+    "validationsuccess": {
+      "heading": "OK",
+      "msg": "Form is valid!"
+    },
+    "xpatherror": {
+      "heading": "Formula Error",
+      "msg": "A formula evaluation error occurred. Please contact __emailLink__ with this error:"
+    }
+  },
+  "confirm": {
+    "default": {
+      "heading": "Are you sure?",
+      "msg": "Please confirm this action",
+      "negButton": "Cancel",
+      "posButton": "Confirm"
+    },
+    "login": {
+      "heading": "Login Required",
+      "msg": [
+        "In order to submit your queued data, you need to login. If you want to do this now, you will be redirected, and loose unsaved information.",
+        "Would you like to login now or later?"
+      ],
+      "negButton": "Later",
+      "posButton": "Log in now"
+    },
+    "save": {
+      "hint": "This name allows you to easily find your draft record to finish it later. The record name will not be submitted to the server.",
+      "msg": "There are unsaved changes, would you like to continue without saving those?",
+      "name": "Record Name"
+    }
+  },
+  "contact": {
+    "admin": "Contact the survey administrator please.",
+    "support": "Contact __supportEmail__ please.'"
+  },
+  "enketo": {
+    "power": "Powered by"
+  },
+  "error": {
+    "code": "Error Code: __code__",
+    "econnrefused": "Could not connect with Server",
+    "encryptionnotsupported": "This form requires local encryption of records. Unfortunately this not yet supported. We recommend using ODK Collect for data collection with this form.",
+    "instancenotfound": "Record not present. It may have expired.",
+    "invalidediturl": "Not a valid edit URL",
+    "notfoundinformlist": "Form with ID __formId__ not found in /formList",
+    "pagenotfound": "Page not Found",
+    "surveyidnotactive": "Survey with this ID no longer active",
+    "surveyidnotfound": "Survey with this ID not found",
+    "unknown": "An unknown error occured"
+  },
+  "feedback": {
+    "header": "Information"
+  },
+  "form": {
+    "chooseLanguage": "Choose Language",
+    "logout": "log out",
+    "pages": {
+      "back": "Back",
+      "end": "Go to End",
+      "next": "Next",
+      "return": "Return to Beginning"
+    }
+  },
+  "here": "here",
+  "home": {
+    "msg": "__appTitle__ is running! Please access Enketo forms from your __serverName__ installation."
+  },
+  "page": {
+    "modernbrowsers": {
+      "heading": "Modern Browsers",
+      "ie": {
+        "heading": "Why no love for those evil outdated versions of Internet Explorer?",
+        "msg": "We understand that some people, especially those working for large bureaucracies, do not have access to the latest and greatest browsers. Since we know how great the web could be with the right tools, we have great empathy for users in that unfortunate situation. Normally, we would try to provide workarounds to support some populair outdated browsers. However, the reason Enketo exists is the availability of some very fancy cutting-edge technologies. Unfortunately, users of older browsers are therefore out of luck."
+      },
+      "msg1": "Ouch! Sorry, you were probably sent here because your browser is outdated or perhaps it has its key features disabled by using 'private browsing' mode.",
+      "msg2": "If you are using an outdated browser, we recommend upgrading to a recent version of one of the following excellent modern browsers:"
+    }
+  },
+  "submission": {
+    "http0": "Failed (Offline?).",
+    "http201": "Done!",
+    "http202": "Done! (duplicate)",
+    "http2xx": "Unexpected response when submitting data. ",
+    "http400": "Data server did not accept data. ",
+    "http403": "Not allowed to post data to this data server. ",
+    "http404": "Submission service on data server not found.",
+    "http413": "Data is too large.",
+    "http4xx": "Unknown submission problem on data server.",
+    "http500": "The data server for your form or the Enketo server is down. Please try again later or contact __supportEmail__ please."
+  }
+}

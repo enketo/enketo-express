@@ -1,8 +1,8 @@
 require( [ 'require-config' ], function( rc ) {
     "use strict";
     if ( console.time ) console.time( 'client loading time' );
-    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'enketo-js/FormModel', 'jquery' ],
-        function( gui, controller, settings, connection, FormModel, $ ) {
+    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'enketo-js/FormModel', 'translator', 'jquery' ],
+        function( gui, controller, settings, connection, FormModel, t, $ ) {
             var $loader = $( '.form__loader' ),
                 $form = $( 'form.or' ),
                 $buttons = $( '.form-header__button--print, button#validate-form, button#submit-form' ),
@@ -22,7 +22,7 @@ require( [ 'require-config' ], function( rc ) {
                                 _init( result.form, result.model, _prepareInstance( result.model, settings.defaults ) );
                             } );
                     } else {
-                        throw new Error( 'Form not complete.' );
+                        throw new Error( 'Received form incomplete' );
                     }
                 } )
                 .catch( _showErrorOrAuthenticate );
@@ -32,7 +32,7 @@ require( [ 'require-config' ], function( rc ) {
                 if ( error.status === 401 ) {
                     window.location.href = '/login?return_url=' + encodeURIComponent( window.location.href );
                 } else {
-                    gui.alert( error.message, 'Something went wrong' );
+                    gui.alert( error.message, t( 'alert.loaderror.heading' ) );
                 }
             }
 

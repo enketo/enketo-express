@@ -6,5 +6,6 @@ public/css/*.css
 public/lib/enketo-core
 public/lib/martijnr-foundation
 public/lib/bower-components
+locales/en/translation_old.json
 .rebooted
 .vagrant

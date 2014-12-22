@@ -56,6 +56,19 @@ module.exports = function( grunt ) {
                     spawn: true,
                     livereload: true
                 }
+            },
+            language: {
+                files: [ 'app/views/**/*.jade', 'app/controllers/**/*.js', 'app/models/**/*.js', 'public/js/src/**/*.js' ],
+                tasks: [ 'shell:translation' ]
+            }
+        },
+        shell: {
+            translation: {
+                command: [
+                    'cd locales',
+                    'gulp',
+                    'cd ..'
+                ].join( '&&' )
             }
         },
         jsbeautifier: {

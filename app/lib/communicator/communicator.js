@@ -1,9 +1,10 @@
 "use strict";
 
-var request = require( 'request' );
-var Q = require( 'q' );
-var debug = require( 'debug' )( 'openrosa-communicator' );
-var parser = new require( 'xml2js' ).Parser();
+var request = require( 'request' ),
+    TError = require( '../custom-error' ).TranslatedError,
+    Q = require( 'q' ),
+    debug = require( 'debug' )( 'openrosa-communicator' ),
+    parser = new require( 'xml2js' ).Parser();
 
 /**
  * Gets form info
@@ -198,7 +199,7 @@ function _xmlToJson( xml ) {
  * @return {[type]}             promise
  */
 function _findFormAddInfo( formListXml, survey ) {
-    var found, index,
+    var found, index, error,
         deferred = Q.defer();
 
     debug( 'looking for form object with id "' + survey.openRosaId + '" in formlist' );
@@ -211,7 +212,10 @@ function _findFormAddInfo( formListXml, survey ) {
                 return xform.formID.toString() === survey.openRosaId;
             } );
             if ( !found ) {
-                deferred.reject( new Error( 'Form with ID ' + survey.openRosaId + ' not found in /formList' ) );
+                error = new TError( 'error.notfoundinformlist', {
+                    formId: "'" + survey.openRosaId + "'"
+                } );
+                deferred.reject( error );
             } else {
                 debug( 'found form' );
                 survey.info = _simplifyFormObj( formListObj.xforms.xform[ index ] );

@@ -13,7 +13,8 @@ module.exports = {
             widgets: config.widgets,
             modernBrowserURL: 'modern-browsers',
             supportEmail: config.support.email,
-            themesSupported: app.get( 'themes supported' )
+            themesSupported: app.get( 'themes supported' ),
+            languagesSupported: app.get( 'languages supported' )
         };
     }
 };

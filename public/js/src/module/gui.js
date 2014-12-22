@@ -18,7 +18,7 @@
  * Deals with the main GUI elements (but not the survey form)
  */
 
-define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation.reveal' ], function( Modernizr, Q, settings, printForm, $ ) {
+define( [ 'Modernizr', 'q', 'settings', 'print', 'translator', 'jquery', 'plugin', 'foundation.reveal' ], function( Modernizr, Q, settings, printForm, t, $ ) {
     "use strict";
 
     var nav, pages, updateStatus, feedbackBar,
@@ -91,14 +91,8 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
         } );
 
         $( '.offline-enabled-icon' ).on( 'click', function() {
-            var msg = "<p>This form can now be loaded and used without an Internet connection on this device. " +
-                "Bookmark it for easy offline access." +
-                "<p>Records are automatically stored and queued on your computer until an Internet connection is available. " +
-                "When the app is online, records will be automatically submitted - one by one.</p>" +
-                "<p>Only after a record has been succesfully submitted, it will be removed from the queue. " +
-                "You can safely close down your browser and computer with items in the queue. " +
-                "They will still be there next time you load the form.</p>";
-            alert( msg, 'Form works offline!', 'normal' );
+            var msg = t( 'alert.offlinesupported.msg' );
+            alert( msg, t( 'alert.offlinesupported.heading' ), 'normal' );
         } );
 
         // capture all internal links to navigation menu items (except the links in the navigation menu itself)
@@ -140,10 +134,12 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
         } );
 
         $( document ).on( 'xpatherror', function( ev, error ) {
-            var email = settings[ 'supportEmail' ];
-            alert( 'A formula evaluation error occurred. Please contact ' +
-                '<a href="mailto:' + email + '?subject=xpath errors for: ' + location.href + '&body=' + error + '" target="_blank" >' + email + '</a>' +
-                ' with this error:<ul class="error-list"><li>' + error + '</li></ul>', 'Formula Error' );
+            var email = settings[ 'supportEmail' ],
+                link = '<a href="mailto:' + email + '?subject=xpath errors for: ' + location.href + '&body=' + error + '" target="_blank" >' + email + '</a>';
+
+            alert( t( 'alert.xpatherror.msg', {
+                emailLink: link
+            } ) + '<ul class="error-list"><li>' + error + '</li></ul>', t( 'alert.xpatherror.heading' ) );
         } );
 
         $( '.ad .close' ).on( 'click', function() {
@@ -343,7 +339,7 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
      * @param {Object=} choices  choices to show - defaults to simple Close button, ignored in feedback bar for now
      */
     function feedback( message, duration, heading, choices ) {
-        heading = heading || 'Information';
+        heading = heading || t( 'feedback.header' );
         //if ($('header').css('position') === 'fixed'){
         if ( !Modernizr.touch ) {
             feedbackBar.show( message, duration );
@@ -368,18 +364,20 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
      * @param {number=} duration duration in secondsafter which dialog should self-destruct
      */
     function alert( message, heading, level, duration ) {
-        var cls, timer, timeout, open,
+        var cls, timer, timeout, open, button,
             $alert = $( '#dialog-alert' );
 
-        heading = heading || 'Alert';
+        heading = heading || t( 'alert.default.heading' );
         level = level || 'error';
         cls = ( level === 'normal' ) ? '' : 'alert-box ' + level;
         open = $alert.hasClass( 'open' );
+        button = t( 'alert.default.button' );
 
         // write content into alert dialog
         $alert.find( '.modal__header h3' ).text( heading );
-        $alert.find( '.modal__body p' ).removeClass().addClass( cls ).html( message ).capitalizeStart();
+        $alert.find( '.modal__body p' ).removeClass().addClass( cls ).html( message );
         $alert.find( '.self-destruct-timer' ).text( '' );
+        $alert.find( 'button.close' ).text( button );
 
         // close handler for close button
         $alert.find( '.close' ).one( 'click', function() {
@@ -441,14 +439,14 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
             msg = texts.msg;
         }
 
-        msg = msg || 'Please confirm action';
-        heading = texts.heading || 'Are you sure?';
+        msg = msg || t( 'confirm.default.msg' );
+        heading = texts.heading || t( 'confirm.default.heading' );
         errorMsg = texts.errorMsg || '';
         dialogName = texts.dialog || 'confirm';
         values = values || {};
         choices = choices || {};
-        choices.posButton = choices.posButton || 'Confirm';
-        choices.negButton = choices.negButton || 'Cancel';
+        choices.posButton = choices.posButton || t( 'confirm.default.posButton' );
+        choices.negButton = choices.negButton || t( 'confirm.default.negButton' );
         choices.posAction = choices.posAction || function() {};
         choices.negAction = choices.negAction || function() {};
         choices.beforeAction = choices.beforeAction || function() {};
@@ -457,7 +455,7 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
 
         //write content into confirmation dialog
         $dialog.find( '.modal__header h3' ).text( heading );
-        $dialog.find( '.modal__body .msg' ).html( msg ).capitalizeStart();
+        $dialog.find( '.modal__body .msg' ).html( msg );
         $dialog.find( '.modal__body .error' ).html( errorMsg ).show();
         if ( !errorMsg ) {
             $dialog.find( '.modal__body .error' ).hide();
@@ -550,22 +548,20 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
      * @param  {string=} serverURL serverURL for which authentication is required
      */
     function confirmLogin( msg, serverURL ) {
-        msg = msg || '<p>In order to submit your queued data, you need to login. If you want to do this now, you will be redirected,' +
-            ' and loose unsaved information.</p><p>Would you like to login now or later?</p>';
+        msg = msg || t( 'confirm.login.msg' );
         serverURL = serverURL || settings.serverURL;
 
         confirm( {
             msg: msg,
-            heading: 'Login Required'
+            heading: t( 'confirm.login.heading' )
         }, {
-            posButton: 'Log in now',
-            negButton: 'Later',
+            posButton: t( 'confirm.login.posButton' ),
+            negButton: t( 'confirm.login.negButton' ),
             posAction: function() {
-                var search = '?server=' + encodeURIComponent( serverURL ) + '&return=' + encodeURIComponent( location.href );
-                search += ( settings.formId ) ? '&id=' + settings.formId : '';
+                var search = '?return_url=' + encodeURIComponent( location.href );
                 search += ( settings.touch ) ? '&touch=' + settings.touch : '';
                 search += ( settings.debug ) ? '&debug=' + settings.debug : '';
-                location.href = location.protocol + '//' + location.host + '/authenticate' + search;
+                location.href = location.protocol + '//' + location.host + '/login' + search;
             },
             negAction: function() {
                 console.log( 'login cancelled' );
@@ -579,31 +575,38 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
      * @param  {Array.<string>} loadErrors  load error messagesg
      * @param  {string=}        advice  a string with advice
      */
-    function showLoadErrors( loadErrors, advice ) {
-        var errorStringHTML = '<ul class="error-list"><li>' + loadErrors.join( '</li><li>' ) + '</li></ul',
+    function alertLoadErrors( loadErrors, advice ) {
+        var errorStringHTML = '<ul class="error-list"><li>' + loadErrors.join( '</li><li>' ) + '</li></ul>',
             errorStringEmail = '* ' + loadErrors.join( '* ' ),
-            s = ( loadErrors.length > 1 ) ? 's' : '',
-            email = settings[ 'supportEmail' ];
+            email = settings[ 'supportEmail' ],
+            link = '<a href="mailto:' + email + '?subject=loading errors for: ' + location.href + '&body=' + errorStringEmail + '" target="_blank" >' + email + '</a>',
+            params = {
+                emailLink: link,
+                count: loadErrors.length
+            };
+
         advice = advice || '';
-        alert( '<p>Error' + s + ' occured during the loading of this form. ' + advice + '</p><br/><p>' +
-            'Please contact <a href="mailto:' + email +
-            '?subject=loading errors for: ' + location.href + '&body=' + errorStringEmail + '" target="_blank" >' + email + '</a>' +
-            ' with the link to this page and the error message' + s + ' below:</p>' + errorStringHTML, 'Loading Error' + s );
+
+        alert(
+            '<p>' +
+            t( 'alert.loaderror.msg1', params ) + ' ' + advice + '</p><p>' +
+            t( 'alert.loaderror.msg2', params ) +
+            '</p>' + errorStringHTML, t( 'alert.loaderror.heading', params )
+        );
     }
 
-    function showCacheUnsupported() {
-        var message = 'Offline application launch is not supported by your browser. ' +
-            'You can use the form without this feature or see options for resolving this',
+    function alertCacheUnsupported() {
+        var message = t( 'alert.offlineunsupported.msg' ),
             choices = {
-                posButton: 'Show options',
-                negButton: 'Use it',
+                posButton: t( 'alert.offlineunsupported.posButton' ),
+                negButton: t( 'alert.offlineunsupported.negButton' ),
                 posAction: function() {
                     window.location = settings[ 'modernBrowsersURL' ];
                 }
             };
         confirm( {
             msg: message,
-            heading: 'Application cannot launch offline'
+            heading: t( 'alert.offlineunsupported.heading' )
         }, choices );
     }
 
@@ -740,8 +743,8 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
         swapTheme: swapTheme,
         fillHeight: fillHeight,
         confirmLogin: confirmLogin,
-        showLoadErrors: showLoadErrors,
-        showCacheUnsupported: showCacheUnsupported,
+        alertLoadErrors: alertLoadErrors,
+        alertCacheUnsupported: alertCacheUnsupported,
         parseFormlist: parseFormlist
     };
 } );

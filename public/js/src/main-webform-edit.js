@@ -1,8 +1,8 @@
 require( [ 'require-config' ], function( rc ) {
     "use strict";
     if ( console.time ) console.time( 'client loading time' );
-    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'q', 'jquery' ],
-        function( gui, controller, settings, connection, Q, $ ) {
+    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'q', 'translator', 'jquery' ],
+        function( gui, controller, settings, connection, Q, t, $ ) {
             var $loader = $( '.form__loader' ),
                 $form = $( 'form.or' ),
                 $buttons = $( '.form-header__button--print, button#submit-form' ),
@@ -24,7 +24,7 @@ require( [ 'require-config' ], function( rc ) {
                             _init( responses[ 0 ].form, responses[ 0 ].model, responses[ 1 ].instance );
                         } );
                 } else {
-                    throw new Error( 'An unknown error occured.' );
+                    throw new Error( t( 'error.unknown' ) );
                 }
             } ).catch( _showErrorOrAuthenticate );
 
@@ -33,7 +33,7 @@ require( [ 'require-config' ], function( rc ) {
                 if ( error.status === 401 ) {
                     window.location.href = '/login?return_url=' + encodeURIComponent( window.location.href );
                 } else {
-                    gui.alert( error.message, 'Something went wrong' );
+                    gui.alert( error.message, t( 'alert.loaderror.heading' ) );
                 }
             }
 

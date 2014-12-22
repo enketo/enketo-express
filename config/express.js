@@ -1,6 +1,7 @@
 "use strict";
 
 var themesSupported = [],
+    languagesSupported = [],
     express = require( 'express' ),
     path = require( 'path' ),
     bodyParser = require( 'body-parser' ),
@@ -8,10 +9,12 @@ var themesSupported = [],
     favicon = require( 'serve-favicon' ),
     config = require( './config' ),
     logger = require( 'morgan' ),
+    i18n = require( 'i18next' ),
     compression = require( 'compression' ),
     errorHandler = require( '../app/controllers/error-handler' ),
     controllersPath = path.join( __dirname, '../app/controllers' ),
     themePath = path.join( __dirname, '../public/css' ),
+    languagePath = path.join( __dirname, '../locales' ),
     app = express(),
     debug = require( 'debug' )( 'express' );
 
@@ -40,14 +43,38 @@ if ( fs.existsSync( themePath ) ) {
 }
 app.set( 'themes supported', themesSupported );
 
+// detect supported languages
+languagesSupported = fs.readdirSync( languagePath ).filter( function( file ) {
+    return fs.statSync( path.join( languagePath, file ) ).isDirectory();
+} );
+app.set( 'languages supported', languagesSupported );
+
+// setup i18next
+i18n.init( {
+    // don't bother with these routes
+    ignoreRoutes: [ 'css/', 'fonts/', 'images/', 'js/', 'lib/' ],
+    // only attemp to translate the supported languages
+    supportedLngs: app.get( 'languages supported' ),
+    // allow query string lang override
+    detectLngQS: 'lang',
+    // fallback language
+    fallbackLng: 'en',
+    // don't use cookies, always detect 
+    useCookie: false
+} );
+// make i18n apphelper available in jade templates
+i18n.registerAppHelper( app );
+
 // middleware
 app.use( compression() );
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded( {
     extended: true
 } ) );
+app.use( i18n.handle );
 app.use( favicon( path.resolve( __dirname, '../public/images/favicon.ico' ) ) );
 app.use( express.static( path.resolve( __dirname, '../public' ) ) );
+app.use( '/locales', express.static( path.resolve( __dirname, '../locales' ) ) );
 
 // set variables that should be accessible in all view templates
 app.use( function( req, res, next ) {

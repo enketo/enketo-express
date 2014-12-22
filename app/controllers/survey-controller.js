@@ -2,6 +2,7 @@
 
 var Q = require( 'q' ),
     utils = require( '../lib/utils' ),
+    TError = require( '../lib/custom-error' ).TranslatedError,
     communicator = require( '../lib/communicator' ),
     surveyModel = require( '../models/survey-model' ),
     express = require( 'express' ),
@@ -60,7 +61,7 @@ function edit( req, res, next ) {
     if ( req.query.instance_id ) {
         res.render( 'surveys/webform', survey );
     } else {
-        error = new Error( 'Not a valid edit URL' );
+        error = new TError( 'error.invalidediturl' );
         error.status = 400;
         next( error );
     }

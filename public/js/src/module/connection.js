@@ -18,12 +18,13 @@
  * Deals with communication to the server (in process of being transformed to using Promises)
  */
 
-define( [ 'gui', 'settings', 'store', 'q', 'jquery' ], function( gui, settings, store, Q, $ ) {
+define( [ 'gui', 'settings', 'store', 'q', 'translator', 'jquery' ], function( gui, settings, store, Q, t, $ ) {
     "use strict";
     var progress, maxSubmissionSize,
         that = this,
         CONNECTION_URL = '/connection',
-        TRANSFORM_URL = '/transform/xform',
+        // location.search is added to pass the lang= parameter, in case this is used to override browser/system locale
+        TRANSFORM_URL = '/transform/xform' + location.search,
         SUBMISSION_URL = ( settings.enketoId ) ? '/submission/' + settings.enketoIdPrefix + settings.enketoId + location.search : null,
         INSTANCE_URL = ( settings.enketoId ) ? '/submission/' + settings.enketoIdPrefix + settings.enketoId : null,
         MAX_SIZE_URL = ( settings.enketoId ) ? '/submission/max-size/' + settings.enketoIdPrefix + settings.enketoId : null,
@@ -292,61 +293,63 @@ define( [ 'gui', 'settings', 'store', 'q', 'jquery' ], function( gui, settings, 
             msg = '',
             names = [],
             level = 'error',
-            contactSupport = 'Contact ' + settings[ 'supportEmail' ] + ' please.',
-            contactAdmin = 'Contact the survey administrator please.',
-            serverDown = 'Sorry, the data server for your form or the Enketo server is down. Please try again later or contact ' + settings[ 'supportEmail' ] + ' please.',
+            supportEmailObj = {
+                supportEmail: settings.supportEmail
+            },
+            contactSupport = t( 'contact.support', supportEmailObj ),
+            contactAdmin = t( 'contact.admin' ),
             statusMap = {
                 0: {
                     success: false,
-                    msg: ( typeof jrDataStrToEdit !== 'undefined' ) ? "Failed (offline?). Please try again." : "Failed (offline?)."
+                    msg: t( 'submission.http0' )
                 },
                 200: {
                     success: false,
-                    msg: "Data server did not accept data. " + contactSupport
+                    msg: t( 'submission.http2xx' ) + contactSupport
                 },
                 201: {
                     success: true,
-                    msg: "Done!"
+                    msg: t( 'submission.http201' )
                 },
                 202: {
                     success: true,
-                    msg: "Done! (duplicate)"
+                    msg: t( 'submission.http202' )
                 },
                 '2xx': {
                     success: false,
-                    msg: "Unknown error occurred when submitting data. " + contactSupport
+                    msg: t( 'submission.http2xx' ) + contactSupport
                 },
                 400: {
                     success: false,
-                    msg: "Data server did not accept data. " + contactAdmin
+                    msg: t( 'submission.http400' ) + contactAdmin
                 },
                 403: {
                     success: false,
-                    msg: "Not allowed to post data to this data server. " + contactAdmin
+                    msg: t( 'submission.http403' ) + contactAdmin
                 },
                 404: {
                     success: false,
-                    msg: "Submission service on data server not found."
+                    msg: t( 'submission.http404' )
                 },
                 '4xx': {
                     success: false,
-                    msg: "Unknown submission problem on data server."
+                    msg: t( 'submission.http4xx' )
                 },
                 413: {
                     success: false,
-                    msg: "Data is too large. Please contact " + settings[ 'supportEmail' ] + "."
+                    msg: t( 'submission.http413' ) + contactSupport
                 },
                 500: {
                     success: false,
-                    msg: serverDown
+                    msg: t( 'submission.http500', supportEmailObj )
                 },
                 503: {
                     success: false,
-                    msg: serverDown
+                    msg: t( 'submission.http500', supportEmailObj )
                 },
                 '5xx': {
                     success: false,
-                    msg: serverDown
+                    msg: t( 'submission.http500', supportEmailObj )
                 }
             };
 

@@ -18,13 +18,13 @@
  * Deals with the main high level survey controls: saving, submitting etc.
  */
 
-define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormModel', 'file-manager', 'q', 'jquery' ],
-    function( gui, connection, settings, Form, FormModel, fileManager, Q, $ ) {
+define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormModel', 'file-manager', 'q', 'translator', 'jquery' ],
+    function( gui, connection, settings, Form, FormModel, fileManager, Q, t, $ ) {
         "use strict";
         var form, $form, $formprogress, formSelector, defaultModelStr, store;
 
         function init( selector, modelStr, instanceStrToEdit, options ) {
-            var loadErrors, purpose;
+            var loadErrors, advice;
 
             formSelector = selector;
             defaultModelStr = modelStr;
@@ -43,18 +43,13 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
             loadErrors = form.init();
 
             if ( form.getEncryptionKey() ) {
-                console.error( 'This form requires encryption of local records but this is not supported yet in Enketo.', loadErrors );
-                loadErrors.unshift( '<strong>This form requires local encryption of records. ' +
-                    'Unfortunately this not yet supported. ' +
-                    'We recommend using ODK Collect ' +
-                    'for data collection with this form.</strong>'
-                );
+                loadErrors.unshift( '<strong>' + t( 'error.encryptionnotsupported' ) + '</strong>' );
             }
 
             if ( loadErrors.length > 0 ) {
                 console.error( 'load errors:', loadErrors );
-                purpose = ( instanceStrToEdit ) ? 'to edit data' : 'for data entry';
-                gui.showLoadErrors( loadErrors, 'It is recommended <strong>not to use this form</strong> ' + purpose + ' until this is resolved.' );
+                advice = ( instanceStrToEdit ) ? t( 'alert.loaderror.editadvice' ) : t( 'alert.loaderror.entryadvice' );
+                gui.alertLoadErrors( loadErrors, advice );
             }
 
             $form = form.getView().$;
@@ -71,7 +66,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
             var message, choices;
 
             if ( !confirmed && form.getEditStatus() ) {
-                message = 'There are unsaved changes, would you like to continue <strong>without</strong> saving those?';
+                message = t( 'confirm.save.msg' );
                 choices = {
                     posAction: function() {
                         resetForm( true );
@@ -83,8 +78,6 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 //updateActiveRecord( null );
                 form.resetView();
                 form = new Form( 'form.or:eq(0)', defaultModelStr );
-                //DEBUG
-                window.form = form;
                 form.init();
                 $form = form.getView().$;
                 $formprogress = $( '.form-progress' );
@@ -98,26 +91,28 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
          * and is not used in offline-capable views.
          */
         function submitRecord() {
-            var name, record, saveResult, redirect, beforeMsg, callbacks;
+            var name, record, saveResult, redirect, beforeMsg, callbacks, authLink;
 
             //$form.trigger( 'beforesave' );
             if ( !form.isValid() ) {
-                gui.alert( 'Form contains errors <br/>(please see fields marked in red)' );
+                gui.alert( t( 'alert.validationerror.msg' ) );
                 return;
             }
             redirect = ( typeof settings !== 'undefined' && typeof settings[ 'returnURL' ] !== 'undefined' && settings[ 'returnURL' ] ) ? true : false;
-            beforeMsg = ( redirect ) ? 'You will be automatically redirected after submission. ' : '';
+            beforeMsg = ( redirect ) ? t( 'alert.submission.redirectmsg' ) : '';
+            authLink = '<a href="/login" target="_blank">' + t( 'here' ) + '</a>';
 
             gui.alert( beforeMsg + '<br />' +
-                '<div class="loader-animation-small" style="margin: 10px auto 0 auto;"/>', 'Submitting...', 'bare' );
+                '<div class="loader-animation-small" style="margin: 10px auto 0 auto;"/>', t( 'alert.submission.msg' ), 'bare' );
 
             callbacks = {
                 error: function( jqXHR ) {
-                    console.debug( 'request object with error', jqXHR );
                     if ( jqXHR.status === 401 ) {
-                        gui.alert( 'Authentication required. Please <a href="/login" target="_blank">authenticate in a different browser tab</a> and try again.', 'Submission Failed' );
+                        gui.alert( t( 'alert.submissionerror.authrequiredmsg', {
+                            here: authLink
+                        } ), t( 'alert.submissionerror.heading' ) );
                     } else {
-                        gui.alert( 'Please try submitting again.', 'Submission Failed' );
+                        gui.alert( t( 'alert.submissionerror.tryagainmsg' ), t( 'alert.submissionerror.heading' ) );
                     }
                 },
                 success: function() {
@@ -126,14 +121,14 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                         // scroll to top to potentially work around an issue where the alert modal is not positioned correctly
                         // https://github.com/kobotoolbox/enketo-express/issues/116
                         window.scrollTo( 0, 0 );
-                        gui.alert( 'You will now be redirected.', 'Submission Successful!', 'success' );
+                        gui.alert( t( 'alert.submissionsuccess.redirectmsg' ), t( 'alert.submissionsuccess.heading' ), 'success' );
                         setTimeout( function() {
                             location.href = settings.returnURL;
                         }, 1500 );
                     }
                     //also use for iframed forms
                     else {
-                        gui.alert( 'Your data was submitted!', 'Submission Successful!', 'success' );
+                        gui.alert( t( 'alert.submissionsuccess.msg' ), t( 'alert.submissionsuccess.heading' ), 'success' );
                         resetForm( true );
                     }
                 },
@@ -234,9 +229,10 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
 
             // notify user if files could not be found, but let submission go ahead anyway
             if ( failedFiles.length > 0 ) {
-                gui.alert( '<p>The following media files could not be retrieved: ' + failedFiles.join( ', ' ) + '. ' +
-                    'The submission will go ahead and show the missing filenames in the data, but without the actual file(s).</p>' +
-                    '<p>please contact ' + settings.supportEmail + ' to report a bug and if possible explain how the issue can be reproduced.</p>', 'File(s) not Found' );
+                gui.alert( t( 'alert.submissionerror.fnfmsg', {
+                    failedFiles: failedFiles.join( ', ' ),
+                    supportEmail: settings.supportEmail
+                } ), t( 'alert.submissionerror.fnfheading' ) );
             }
 
             return batchesPrepped;
@@ -265,10 +261,10 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                         form.validate();
                         $button.btnBusyState( false );
                         if ( !form.isValid() ) {
-                            gui.alert( 'Form contains errors <br/>(please see fields marked in red)' );
+                            gui.alert( t( 'alert.validationerror.msg' ) );
                             return;
                         } else {
-                            gui.alert( 'Form is valid!', 'OK', 'success' );
+                            gui.alert( t( 'alert.validationsuccess.msg' ), t( 'alert.validationsuccess.heading' ), 'success' );
                         }
                     }, 100 );
                 }

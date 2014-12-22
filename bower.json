@@ -16,7 +16,8 @@
     ],
     "dependencies": {
         "q": "1.0.1",
-        "jquery": "~2.1.1",
-        "requirejs": "~2.1.15"
+        "jquery": "~2.1.2",
+        "requirejs": "~2.1.15",
+        "i18next": "~1.7.7"
     }
 }
