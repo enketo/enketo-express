@@ -74,7 +74,7 @@ function setSurvey( survey ) {
         error.status = 409;
         deferred.reject( error );
     } else {
-        // to avoid issues with fast subsequent requests
+        // to avoid issues with fast consecutive requests
         pending[ openRosaKey ] = true;
 
         return _getEnketoId( openRosaKey )
@@ -135,6 +135,9 @@ function _updateProperties( id, survey ) {
     if ( typeof survey.active !== 'undefined' ) {
         update.active = survey.active;
     }
+    // always update the theme, which will delete it if the theme parameter is missing
+    // avoid storing undefined as string 'undefined'
+    update.theme = survey.theme || '';
 
     client.hmset( 'id:' + id, update, function( error ) {
         if ( error ) {
@@ -162,6 +165,8 @@ function _addSurvey( openRosaKey, survey ) {
                 submissions: 0,
                 launchDate: new Date().toISOString(),
                 active: true,
+                // avoid storing string 'undefined'
+                theme: survey.theme || ''
             } )
             .set( openRosaKey, id )
             .exec( function( error, replies ) {
