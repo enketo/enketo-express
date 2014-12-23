@@ -17,7 +17,10 @@ require( [ 'require-config' ], function( rc ) {
             connection.getFormParts( survey )
                 .then( function( result ) {
                     if ( result.form && result.model ) {
-                        _init( result.form, result.model, _prepareInstance( result.model, settings.defaults ) );
+                        gui.swapTheme( result.theme || _getThemeFromFormStr( result.form ) )
+                            .then( function() {
+                                _init( result.form, result.model, _prepareInstance( result.model, settings.defaults ) );
+                            } );
                     } else {
                         throw new Error( 'Form not complete.' );
                     }
@@ -31,6 +34,12 @@ require( [ 'require-config' ], function( rc ) {
                 } else {
                     gui.alert( error.message, 'Something went wrong' );
                 }
+            }
+
+            // TODO: move to utils.js after merging offline features
+            function _getThemeFromFormStr( formStr ) {
+                var matches = formStr.match( /<\s?form .*theme-([A-z]+)/ );
+                return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
             }
 
             function _prepareInstance( modelStr, defaults ) {

@@ -42,35 +42,52 @@ You can now check that the app is running by going to e.g. http://localhost:8005
 
 For a production server, we recommend using [pm2](https://github.com/unitech/pm2) to manage the node app.
 
+
 ### How to update
 * update git repository with `git pull`
 * update git submodules with `git submodule update --init --recursive`
 * re-build with `grunt`
+
 
 ### Developer tools
 Install [nodemon](https://github.com/remy/nodemon) to automatically restart the server when a file changes.
 
 The easiest way to start the app in development and debugging mode with livereload is with `grunt develop`. If you are developing using the vagrant VM, make sure to `pm2 kill` first or comment out the pm2 block at the end in the [bootstrap](/setup/bootstrap.sh) script before creating the VM.
 
+
 ### Differences with [enketo/enketo-legacy](https://github.com/enketo/enketo-legacy) 
 
-* \+ this one is 100% JavaScript
-* \+ this one is much easier to install
-* \+ this one has cross-browser (media) file inputs
-* \+ this one has the ability to override default form values on launch through the API (v2)
-* \+ this one has a more advanced iframeable webform view that can communicate back to the parent window, enabled through the API (v2)
-* \+ this one has [external authentication](#authentication) support 
-* \- this one will not store the application in your browser for offline launch (yet) - it requires a constant connection to the server (this server may be on a local network though)
-* \- this one will not store records locally in your browser (yet) - it will submit records immediately to the server
-* \- this one will not store draft records (yet) (see previous)
-* \- missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views), and "/survey__s__/" 
+* :white_check_mark: this one is 100% JavaScript
+* :white_check_mark: this one is much easier to install
+* :white_check_mark: this one has cross-browser (media) file inputs
+* :white_check_mark: this one has the ability to override default form values on launch through the API (v2)
+* :white_check_mark: this one has a more advanced iframeable webform view that can communicate back to the parent window, enabled through the API (v2)
+* :white_check_mark: this one has [external authentication](#authentication) support 
+* :white_check_mark: this one has support for multiple themes in *all* form views including previews 
+* :white_check_mark: this allows overriding the theme via the API (v2) 
+* :x: this one will not store the application in your browser for offline launch (yet) - it requires a constant connection to the server (this server may be on a local network though)
+* :x: this one will not store records locally in your browser (yet) - it will submit records immediately to the server
+* :x: this one will not store draft records (yet) (see previous)
+* :x: missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views), and "/surveys/list" 
+* :x: no [Forms](https://enketo.org/forms) app
+* :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
+
 
 ### Additional differences with the full-fledged service at [enketo.org](https://enketo.org)
 
-* \- no [enketo-managed form authentication](#authentication) (yet)
-* \- no [Grid Theme](http://blog.enketo.org/gorgeous-grid/) (yet)
-* \- no [Forms](https://enketo.org/forms) app
-* \- no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
+* :x: no [enketo-managed form authentication](#authentication) (yet)
+* :x: no [Grid Theme](http://blog.enketo.org/gorgeous-grid/) (yet)
+
+
+### Themes
+
+The default theme can be set in [config.json](config/config.json). The default theme can be overridden in [the form definition](http://xlsform.org/#grid). 
+
+The recommended way to customize themes is to either:
+
+ * Send a pull request for changes to the existing themes, or
+ * Contact Enketo LLC for a quote to make changes to existing themes or to create a new theme, or
+ * Create your own theme in your own enketo-express port and add your custom theme in its own folder [here](app/views/styles). No other changes are required. A succesful rebuild with `grunt`, and your theme will become active when the app starts. The advantage of using this method instead of editing the existing themes, is that you will not have any merge conflicts when you update your port! Add a print-specific version of your theme and use the same filenaming convention as the built-in themes.
 
 
 ### Authentication
@@ -87,12 +104,12 @@ To make use of external authentication set the following in [config.json](config
 
 ### Funding
 
-The development of this application was funded by [KoBo Toolbox (Harvard Humanitarian Inititive)](https://kobotoolbox.org), [iMMAP](http://immap.org), [OpenClinica](https://openclinica.com), and [Enketo LLC](https://enketo.org). The [Enketo-core](https://github.com/enketo/enketo-core) library this application was built around also obtained significant funding from [SEL (Columbia University)](http://modi.mech.columbia.edu/), the [Santa Fe Institute](http://www.santafe.edu/), and the [HRP project](http://www.who.int/reproductivehealth/topics/mhealth/en/). 
+The development of this application was funded by [KoBo Toolbox (Harvard Humanitarian Inititive)](https://kobotoolbox.org), [iMMAP](http://immap.org), [OpenClinica](https://openclinica.com), and [Enketo LLC](https://enketo.org). The [Enketo-core](https://github.com/enketo/enketo-core) library (the form engine + themes) used in this application obtained significant funding from [SEL (Columbia University)](http://modi.mech.columbia.edu/), the [Santa Fe Institute](http://www.santafe.edu/), and the [HRP project](http://www.who.int/reproductivehealth/topics/mhealth/en/). 
 
 
 ### License
 
-See [LICENSE](LICENSE) for this application's license.
+See [the license document](LICENSE) for this application's license.
 
 Note that some of the libraries used in this app have different licenses.
 

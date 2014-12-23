@@ -28,7 +28,7 @@ define( [ 'jquery' ], function( $ ) {
      */
     function getPrintStyleSheet() {
         var sheet, media;
-        // document.styleSheets is an Object not an Array!
+        // document.styleSheets is an Object not an Array
         for ( var i in document.styleSheets ) {
             sheet = document.styleSheets[ i ];
             console.log( 'checking prop', i, sheet );
@@ -67,19 +67,11 @@ define( [ 'jquery' ], function( $ ) {
         $( '.back-to-screen-view' ).off( 'click' ).remove();
     }
 
-
     /**
      * Prints the form after first setting page breaks (every time it is called)
      */
     function printForm() {
-        styleToAll();
-        // without the timeout, window.print may be called too early and actually
-        // use the screen style in prints (in Chrome). It was easily replicable
-        // in enketo/enketo-express and happened randomly in the enketo/enketo
-        setTimeout( function() {
-            window.print();
-            styleReset();
-        }, 50 );
+        window.print();
     }
 
     return printForm;

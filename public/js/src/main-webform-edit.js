@@ -19,7 +19,10 @@ require( [ 'require-config' ], function( rc ) {
                 connection.getExistingInstance( survey )
             ] ).then( function( responses ) {
                 if ( responses[ 0 ].form && responses[ 0 ].model && responses[ 1 ].instance ) {
-                    _init( responses[ 0 ].form, responses[ 0 ].model, responses[ 1 ].instance );
+                    gui.swapTheme( responses[ 0 ].theme || _getThemeFromFormStr( responses[ 0 ].form ) )
+                        .then( function() {
+                            _init( responses[ 0 ].form, responses[ 0 ].model, responses[ 1 ].instance );
+                        } );
                 } else {
                     throw new Error( 'An unknown error occured.' );
                 }
@@ -32,6 +35,12 @@ require( [ 'require-config' ], function( rc ) {
                 } else {
                     gui.alert( error.message, 'Something went wrong' );
                 }
+            }
+
+            // TODO: move to utils.js after merging offline features
+            function _getThemeFromFormStr( formStr ) {
+                var matches = formStr.match( /<\s?form .*theme-([A-z]+)/ );
+                return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
             }
 
             function _init( formStr, modelStr, instanceStr ) {
