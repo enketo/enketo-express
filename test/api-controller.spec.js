@@ -82,8 +82,8 @@ describe( 'api', function() {
             resProp = ( test.res && test.res.property ) ? test.res.property : 'url';
 
         it( test.method.toUpperCase() + ' /api/v' + version + endpoint + ' with ' + authDesc + ' authentication and ' + server + ', ' +
-            id + ', ' + ret + ', ' + instance + ', ' + instanceId +
-            ' parentWindowOrigin: ' + test.parentWindowOrigin + ', ' + ' defaults: ' + JSON.stringify( test.defaults ) +
+            id + ', ' + ret + ', ' + instance + ', ' + instanceId + ', ' + test.theme +
+            ', parentWindowOrigin: ' + test.parentWindowOrigin + ', defaults: ' + JSON.stringify( test.defaults ) +
             ' responds with ' + test.status,
             function( done ) {
                 request( app )[ test.method ]( '/api/v' + version + endpoint )
@@ -217,7 +217,7 @@ describe( 'api', function() {
             return obj;
         } ).forEach( testResponse );
 
-        // TODO: add some tests for other survey/* endpoints
+        // TODO: add some tests for other /survey/* and /surveys/number endpoints
 
         v1Instance = [
             // valid token
@@ -324,7 +324,7 @@ describe( 'api', function() {
         } ).forEach( testResponse );
 
         [
-            // TESTING THE DEFAULTS PARAMETER
+            // TESTING THE DEFAULTS[] PARAMETER
             // defaults are optional
             {
                 endpoint: '/survey',
@@ -417,7 +417,7 @@ describe( 'api', function() {
                     expected: /[^(d\[)]+/
                 }
             },
-            // TESTING THE PARENTWINDOWORIGIN PARAMETER
+            // TESTING THE PARENT_WINDOW_ORIGIN PARAMETER
             // parentWindowOrigin parameter is optional
             {
                 endpoint: '/survey/iframe',
@@ -529,6 +529,15 @@ describe( 'api', function() {
                     expected: /[^parentWindowOrigin\[\]]/
                 }
             },
+            // TESTING THE THEME PARAMETER
+            // theme parameter is optional
+            {
+                endpoint: '/survey',
+                theme: 'gorgeous',
+                method: 'post',
+                status: 200
+            },
+
         ].map( function( obj ) {
             obj.auth = true;
             obj.version = version;

@@ -2,10 +2,9 @@
     @include flex(1);
     min-height: 210px;
     position: relative;
-    //width: 100%;
     // the form footer flexes to stretch down on small forms or form pages
     // the content should be positioned at bottom of stretched element
-    .content {
+    &__content {
         position: absolute;
         bottom: 0;
         left: 0;
@@ -48,10 +47,6 @@
             position: absolute;
             left: 20px;
             bottom: 45px;
-            //color: #357ebd;
-            //border: none;
-            //@include box-shadow-none;
-       
         }
     }
     .first-page, .last-page {
@@ -59,6 +54,8 @@
         opacity: 0.7;
         @include border-radius(0);
         display: none;
+        padding: 9px;
+        margin-bottom: 0;
         float: left;
     }
     .first-page {
