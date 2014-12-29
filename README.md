@@ -29,7 +29,7 @@ All configuration is done in [config.json](./config/config.json). The configurat
 
 The `maps` configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a tiles (array) and an attribution property)
 
-The default production config includes 2 redis instances for the cache. You can **greatly simplify installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you'll find the vagrant setup steps in [bootstrap.sh](./setup/bootstrap.sh) useful.
+The default production configuration includes 2 redis instances for the cache. You can **greatly simplify installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you'll find the vagrant setup steps in [bootstrap.sh](./setup/bootstrap.sh) useful.
 
 To configure external authentication see [this section](#authentication).
 
@@ -44,8 +44,8 @@ For a production server, we recommend using [pm2](https://github.com/unitech/pm2
 
 
 ### How to update
-* update git repository with `git pull`
-* update git submodules with `git submodule update --init --recursive`
+* update git repository with `git pull && git submodule update --init --recursive`
+* update dependencies with `npm update && bower update`
 * re-build with `grunt`
 
 
@@ -60,6 +60,7 @@ The easiest way to start the app in development and debugging mode with liverelo
 
 * :white_check_mark: this one is 100% JavaScript
 * :white_check_mark: this one is much easier to install
+* :white_check_mark: this one has a multi-language user interface (send a message if you would like to add a language)
 * :white_check_mark: this one has cross-browser (media) file inputs
 * :white_check_mark: this one has the ability to override default form values on launch through the API (v2)
 * :white_check_mark: this one has a more advanced iframeable webform view that can communicate back to the parent window, enabled through the API (v2)
@@ -101,6 +102,22 @@ To make use of external authentication set the following in [config.json](config
 
 * linked form and data server -> authentication -> managed by enketo -> __false__
 * linked form and data server -> authentication -> external login url that sets cookie -> e.g. http://example.com/login?return={RETURNURL}, where {RETURNURL} will be set by enketo.
+
+
+### Security
+
+There are two potential security issues to be aware of, both of should be resolved by running this application on **https** with a valid SSL certificate.
+
+API security is mainly arranged by the secret API key set up in [config.json](config/config.json). This API key is sent in **cleartext** to Enketo by the form/data server (such as ODK Aggregate) and can easily be intercepted and read _if the transport is not secure_. Somebody could start using your Enketo Express installation for their own form/data server, or obtain the URLs of your forms. Using secure (https) transport mitigates against this hazard. Security increases as well by populating the _server url_ in [config.json](config/config.json). Also, don't forget to change your API key when you start running Enketo Express in production.
+
+Form authentication ... \[to follow as it is not relevant yet\]
+
+
+### Translation
+
+The user interface was translated by: Martijn van de Rijdt (Dutch), ... 
+
+_Send a message if you'd like to contribute! We use an easy web interface provided by Transifex._
 
 
 ### Funding

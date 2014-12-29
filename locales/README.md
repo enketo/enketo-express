@@ -7,9 +7,11 @@ Install [i18next-parser](https://github.com/i18next/i18next-parser) and [gulp](h
 
 ### 1. Update translation keys from code 
 
-Create an updated locales/en/translation.json by running `gulp` **from the /locales folder**. 
+The translation keys in [locales/en/translation.json](locales/en/translation.json) will be continuously updated with `grunt develop`. You can also do this manually by running gulp from locales/.
 
 ### 2. Update English strings for new keys (or for existing keys)
+
+Easiest is to manually edit the English strings in [locales/en/translation.json](locales/en/translation.json). A piece of text can be divided into paragraphs by splitting it up into an array. 
 
 ### 3. Update Transifex resource 
 
@@ -17,7 +19,7 @@ This can also be done manually if the translations should be finished by the tim
 
 ### 4. Get translation work done
 
-For missing keys the English translation will be used as a fallback, which makes this less super urgent.
+For missing keys the English translation will be used as a fallback, which makes translation updates a little less urgent.
 
 ### 5. Update translations in repo
 
