@@ -16,6 +16,7 @@
         "test": "grunt test"
     },
     "dependencies": {
+        "basic-auth": "1.0.x",
         "body-parser": "1.x.x",
         "compression": "1.x.x",
         "debug": "2.x.x",
