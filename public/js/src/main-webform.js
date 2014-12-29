@@ -42,6 +42,12 @@ require( [ 'require-config' ], function( rc ) {
                 return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
             }
 
+            // TODO: move to utils.js after merging offline features
+            function _getTitleFromFormStr( formStr ) {
+                var matches = formStr.match( /<\s?h3 id="form-title">([A-z\s]+)</ );
+                return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
+            }
+
             function _prepareInstance( modelStr, defaults ) {
                 var model, init,
                     existingInstance = null;
@@ -68,6 +74,7 @@ require( [ 'require-config' ], function( rc ) {
                 $( document ).ready( function() {
                     controller.init( 'form.or:eq(0)', modelStr, instanceStr );
                     $form.add( $buttons ).removeClass( 'hide' );
+                    $( 'head>title' ).text( _getTitleFromFormStr( formStr ) );
                     if ( console.timeEnd ) console.timeEnd( 'client loading time' );
                 } );
             }

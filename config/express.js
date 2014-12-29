@@ -84,6 +84,7 @@ app.use( function( req, res, next ) {
     res.locals.trackingDomain = req.app.get( 'google' ).analytics.domain;
     res.locals.logo = req.app.get( 'logo' );
     res.locals.defaultTheme = req.app.get( 'default theme' ).replace( 'theme-', '' ) || 'kobo';
+    res.locals.title = req.app.get( 'app name' );
     next();
 } );
 
