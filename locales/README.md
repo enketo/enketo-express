@@ -1,4 +1,4 @@
-Translation workflow
+Translation workflow (for developers)
 ========
 
 ### Requirements
@@ -7,15 +7,15 @@ Install [i18next-parser](https://github.com/i18next/i18next-parser) and [gulp](h
 
 ### 1. Update translation keys from code 
 
-The translation keys in [locales/en/translation.json](locales/en/translation.json) will be continuously updated with `grunt develop`. You can also do this manually by running gulp from locales/.
+The translation keys in [locales/en/translation.json](en/translation.json) will be continuously updated with `grunt develop`. You can also do this manually by running `gulp` from locales/.
 
 ### 2. Update English strings for new keys (or for existing keys)
 
-Easiest is to manually edit the English strings in [locales/en/translation.json](locales/en/translation.json). A piece of text can be divided into paragraphs by splitting it up into an array. 
+The easiest is to manually edit the English strings in [locales/en/translation.json](en/translation.json). A piece of text can be divided into paragraphs by splitting it up into an array. A plural form can be added by adding the same key with `_plural` appended to it (there are more advanced plural options too, see [i18next doc](http://i18next.com/pages/doc_features.html))
 
 ### 3. Update Transifex resource 
 
-This can also be done manually if the translations should be finished by the time the new keys are merged in master. It is also done automatically by Transfix as soon as the new /locales/en/translation.json is merged in master.
+This can be done manually if the translations should be finished before the new keys are merged in master. It is also done automatically by Transifex as soon as the new /locales/en/translation.json is merged in master.
 
 ### 4. Get translation work done
 

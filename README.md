@@ -60,7 +60,7 @@ The easiest way to start the app in development and debugging mode with liverelo
 
 * :white_check_mark: this one is 100% JavaScript
 * :white_check_mark: this one is much easier to install
-* :white_check_mark: this one has a multi-language user interface (send a message if you would like to add a language)
+* :white_check_mark: this one has a [multi-language](#translation) user interface
 * :white_check_mark: this one has cross-browser (media) file inputs
 * :white_check_mark: this one has the ability to override default form values on launch through the API (v2)
 * :white_check_mark: this one has a more advanced iframeable webform view that can communicate back to the parent window, enabled through the API (v2)
