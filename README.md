@@ -66,13 +66,13 @@ The easiest way to start the app in development and debugging mode with liverelo
 * :white_check_mark: this one has a more advanced iframeable webform view that can communicate back to the parent window, enabled through the API (v2)
 * :white_check_mark: this one has [external authentication](#authentication) support 
 * :white_check_mark: this one has support for multiple themes in *all* form views including previews 
-* :white_check_mark: this allows overriding the theme via the API (v2) 
+* :white_check_mark: this one allows overriding the theme via the API (v2) 
 * :x: this one will not store the application in your browser for offline launch (yet) - it requires a constant connection to the server (this server may be on a local network though)
 * :x: this one will not store records locally in your browser (yet) - it will submit records immediately to the server
 * :x: this one will not store draft records (yet) (see previous)
 * :x: missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views), and "/surveys/list" 
-* :x: no [Forms](https://enketo.org/forms) app
 * :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
+* :x: no [Forms](https://enketo.org/forms) app (you do not need this)
 
 
 ### Additional differences with the full-fledged service at [enketo.org](https://enketo.org)
