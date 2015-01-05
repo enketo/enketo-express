@@ -8,7 +8,7 @@ This is a temporary document with quick notes on the changes of API v2 with API 
 All /survey/* endpoints now accept `defaults[]` parameters to dynamically set form defaults.
 ```
 curl --user APIKEY: -d "server_url=https://ona.io/enketo&form_id=widgets&defaults[/widgets/text_widgets/my_string]=Hey Mark&defaults[/widgets/number_widgets/my_distress]=4" http://enk.to/api/v2/survey```
-
+```
 The returned URL contains the 'feature' (and not the Database), so a single survey can be served with different default to different users.
 
 # postMessage
