@@ -56,7 +56,7 @@ Install [gulp](http://gulpjs.com/) to automatically update the translation keys.
 The easiest way to start the app in development and debugging mode with livereload is with `grunt develop`. If you are developing using the vagrant VM, make sure to `pm2 kill` first or comment out the pm2 block at the end in the [bootstrap](/setup/bootstrap.sh) script before creating the VM.
 
 
-### Differences with [enketo/enketo-legacy](https://github.com/enketo/enketo-legacy) 
+### Differences with [enketo/enketo-legacy](https://github.com/enketo/enketo-legacy) (and [enketo.org](https://enketo.org))
 
 * :white_check_mark: this one is 100% JavaScript
 * :white_check_mark: this one is much easier to install
@@ -73,12 +73,7 @@ The easiest way to start the app in development and debugging mode with liverelo
 * :x: missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views), and "/surveys/list" 
 * :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
 * :x: no [Forms](https://enketo.org/forms) app (you do not need this)
-
-
-### Additional differences with the full-fledged service at [enketo.org](https://enketo.org)
-
 * :x: no [enketo-managed form authentication](#authentication) (yet)
-* :x: no [Grid Theme](http://blog.enketo.org/gorgeous-grid/) (yet)
 
 
 ### Themes

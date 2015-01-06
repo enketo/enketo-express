@@ -75,6 +75,18 @@
       "negButton": "Later",
       "posButton": "Log in now"
     },
+    "print": {
+      "a4": "A4",
+      "landscape": "Landscape",
+      "letter": "Letter",
+      "msg": "To prepare an optimized print, please select the print settings below",
+      "orientation": "Paper Orientation",
+      "portrait": "Portrait",
+      "progressheading": "Preparing...",
+      "progressmsg": "Working hard to prepare your optimized print view. Hold on!",
+      "psize": "Paper Size",
+      "reminder": "Remember to set these same print settings in the browser's print menu afterwards!"
+    },
     "save": {
       "hint": "This name allows you to easily find your draft record to finish it later. The record name will not be submitted to the server.",
       "msg": "There are unsaved changes, would you like to continue without saving those?",

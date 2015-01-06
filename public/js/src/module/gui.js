@@ -81,7 +81,7 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'translator', 'jquery', 'plugin
         } );
 
         $( '.form-header__button--print' ).on( 'click', function() {
-            printForm();
+            printForm( confirm );
         } );
 
         $( '.side-slider-toggle' ).on( 'click', function() {
@@ -450,19 +450,24 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'translator', 'jquery', 'plugin
         choices.posAction = choices.posAction || function() {};
         choices.negAction = choices.negAction || function() {};
         choices.beforeAction = choices.beforeAction || function() {};
+        choices.afterAction = choices.afterAction || function() {};
 
         $dialog = $( '#dialog-' + dialogName );
 
-        //write content into confirmation dialog
+        // write content into confirmation dialog
         $dialog.find( '.modal__header h3' ).text( heading );
         $dialog.find( '.modal__body .msg' ).html( msg );
         $dialog.find( '.modal__body .error' ).html( errorMsg ).show();
         if ( !errorMsg ) {
             $dialog.find( '.modal__body .error' ).hide();
         }
+
+        // set input field defaults if provided
         $dialog.find( 'input, select, textarea' ).each( function() {
             var name = $( this ).attr( 'name' );
-            $( this ).val( values[ name ] || '' );
+            if ( typeof values[ name ] !== 'undefined' ) {
+                $( this ).val( values[ name ] );
+            }
         } );
 
         // before handler
@@ -470,29 +475,34 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'translator', 'jquery', 'plugin
             choices.beforeAction.call();
         } );
 
-        // close handler for close button
-        $dialog.find( '.close' ).one( 'click', function() {
-            $dialog.foundation( 'reveal', 'close' );
-        } );
-
         // cleanup after close
         $dialog.one( 'close', function() {
             $dialog.find( '.modal__header h3, .modal__body .msg, .modal__body .error, .modal__footer .btn' ).text( '' );
             clearInterval( timer );
             clearTimeout( timeout );
+            choices.afterAction.call();
         } );
 
+        // positive response listener
         $dialog.find( 'button.positive' ).one( 'click', function() {
-            var values = {};
-            $( this ).closest( '.modal' ).find( 'input, select, textarea' ).each( function() {
-                if ( $( this ).attr( 'name' ) ) {
-                    values[ $( this ).attr( 'name' ) ] = $( this ).val().trim();
+            var $el,
+                $frm = $dialog.find( '.modal__body form' ),
+                values = {};
+
+            $.each( $frm.serializeArray(), function( _, kv ) {
+                if ( values.hasOwnProperty( kv.name ) ) {
+                    values[ kv.name ] = $.makeArray( values[ kv.name ] );
+                    values[ kv.name ].push( kv.value );
+                } else {
+                    values[ kv.name ] = kv.value;
                 }
             } );
+
             $dialog.foundation( 'reveal', 'close' );
             choices.posAction.call( undefined, values );
         } ).text( choices.posButton );
 
+        // negative response listener
         $dialog.find( 'button.negative' ).one( 'click', function() {
             $dialog.foundation( 'reveal', 'close' );
             choices.negAction.call();

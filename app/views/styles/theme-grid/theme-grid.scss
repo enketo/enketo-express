@@ -1,0 +1,37 @@
+// fonts
+@import "../component/fonts";
+
+// variables
+@import "../../../lib/enketo-core/src/sass/grid/variables";
+@import "../../../lib/enketo-core/src/sass/core/variables";
+
+// mixins, in the right order
+@import "../../../lib/enketo-core/src/sass/core/mixins";
+@import "../../../lib/enketo-core/src/sass/formhub/mixins";
+@import "../../../lib/enketo-core/src/sass/grid/mixins";
+@import "../component/mixins";
+
+// reset
+@import "../../../lib/enketo-core/src/sass/core/reset";
+
+// common styles
+@import "../component/common";
+
+// utilities
+@import "../../../lib/enketo-core/src/sass/core/utilities";
+
+// icons
+@import "../component/icons";
+
+// buttons
+@import "../component/buttons";
+
+// layout
+@import "../../../lib/enketo-core/src/sass/core/layout";
+@import "../../../lib/enketo-core/src/sass/core/pages";
+
+// components
+//@import "component/side-slider";
+@import "form-grid";
+@import "../component/form_header";
+@import "../component/form_footer";
