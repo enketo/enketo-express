@@ -1,8 +1,16 @@
 {
   "alert": {
+    "appupdated": {
+      "heading": "App Updated!",
+      "msg": "A new version of this application has been downloaded. Refresh this page to load the updated version."
+    },
     "default": {
       "button": "Close",
       "heading": "Alert"
+    },
+    "formupdated": {
+      "heading": "Form Updated!",
+      "msg": "A new version of this form has been downloaded. Refresh this page to load the updated version."
     },
     "loaderror": {
       "editadvice": "It is recommended not to edit this record until this is resolved.",
@@ -171,6 +179,10 @@
       },
       "msg1": "Ouch! Sorry, you were probably sent here because your browser is outdated or perhaps it has its key features disabled by using 'private browsing' mode.",
       "msg2": "If you are using an outdated browser, we recommend upgrading to a recent version of one of the following excellent modern browsers:"
+    },
+    "offline": {
+      "heading": "Cannot access requested page",
+      "msg1": "This page is only accessible when the browser has an Internet connection and the server is accessible (unless the page does not exist of course)."
     }
   },
   "prompt": {
@@ -200,5 +212,6 @@
     "http413": "Data is too large.",
     "http4xx": "Unknown submission problem on data server.",
     "http500": "The data server for your form or the Enketo server is down. Please try again later or contact __supportEmail__."
-  }
+  },
+  "version": "version:"
 }

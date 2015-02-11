@@ -71,7 +71,7 @@ $offline-color: #d15200;
         width: 34px;
         height: 34px;
         background-color: $offline-color;
-        //background-image: url($images-path + "offline-enabled.png");
+        background-image: url("/images/offline-enabled.png");
         background-repeat: no-repeat;
         opacity: 1;
         @include transition-slow(opacity, 3s);
@@ -79,6 +79,7 @@ $offline-color: #d15200;
             height: 0;
             opacity: 0;
             width: 0;
+            background: none;
         }
         &:hover {
             opacity: 0.8;

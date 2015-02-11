@@ -246,7 +246,7 @@ describe( 'api', function() {
                 status: 200,
                 res: {
                     property: 'url',
-                    expected: /\/_#[A-z0-9]{4}/
+                    expected: /\/_\/#[A-z0-9]{4}/
                 },
                 offline: true
             } );
@@ -416,7 +416,7 @@ describe( 'api', function() {
                 status: 200,
                 res: {
                     property: 'offline_url',
-                    expected: /\/_#[A-z0-9]{4}/
+                    expected: /\/_\/#[A-z0-9]{4}/
                 },
                 offline: true
             },

@@ -8,6 +8,8 @@ aside.record-list.side-slider
 		button.record-list__button-bar__button.export.btn.btn-default(type="button", disabled)= t('record-list.export')
 		button.record-list__button-bar__button.upload.btn.btn-primary(type="button", disabled)= t('record-list.upload') 
 	p!= t('record-list.msg2', {icon: '<span class="icon icon-pencil"> </span>'})
+	p.side-slider__app-version= t('version') + ' '
+		span.side-slider__app-version__value
 button.side-slider__toggle.open
 button.side-slider__toggle.close
 div.side-slider-toggle.slider-overlay

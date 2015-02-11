@@ -2,8 +2,8 @@ require( [ 'require-config' ], function( rc ) {
     "use strict";
     if ( console.time ) console.time( 'client loading time' );
 
-    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'enketo-js/FormModel', 'translator', 'utils', 'form-cache', 'q', 'jquery' ],
-        function( gui, controller, settings, connection, FormModel, t, utils, formCache, Q, $ ) {
+    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'enketo-js/FormModel', 'translator', 'utils', 'form-cache', 'application-cache', 'q', 'jquery' ],
+        function( gui, controller, settings, connection, FormModel, t, utils, formCache, applicationCache, Q, $ ) {
             var $loader = $( '.form__loader' ),
                 $buttons = $( '.form-header__button--print, button#validate-form, button#submit-form' ),
                 survey = {
@@ -13,6 +13,8 @@ require( [ 'require-config' ], function( rc ) {
                     xformUrl: settings.xformUrl,
                     defaults: settings.defaults
                 };
+            // workaround for issue with compiled JS in IE11. For some reason promise-by-Q.js is not loaded before db.js....
+            if ( !window.Promise ) window.Promise = Q.Promise;
 
             if ( settings.offline ) {
                 console.debug( 'in offline mode' );
@@ -23,8 +25,9 @@ require( [ 'require-config' ], function( rc ) {
                     .then( formCache.updateMedia )
                     .then( function( s ) {
                         settings.maxSize = s.maxSize;
-                        console.debug( 'Form is now stored and available offline!' );
-                        // TODO show offline-capable icon in UI
+                        _setFormCacheEventHandlers();
+                        _setApplicationCacheEventHandlers();
+                        applicationCache.init();
                     } )
                     .catch( _showErrorOrAuthenticate );
             } else {
@@ -48,6 +51,29 @@ require( [ 'require-config' ], function( rc ) {
                 } else {
                     gui.alert( error.message, t( 'alert.loaderror.heading' ) );
                 }
+            }
+
+            function _setApplicationCacheEventHandlers() {
+                $( document )
+                    .on( 'offlinelaunchcapable', function() {
+                        console.log( 'This form is fully offline-capable!' );
+                        gui.updateStatus.offlineCapable( true );
+                        connection.getManifestVersion( $( 'html' ).attr( 'manifest' ) )
+                            .then( gui.updateStatus.applicationVersion );
+                    } )
+                    .on( 'offlinelaunchincapable', function() {
+                        console.error( 'This form cannot (or can no longer) launch offline.' );
+                        gui.updateStatus.offlineCapable( false );
+                    } )
+                    .on( 'applicationupdated', function() {
+                        gui.feedback( t( 'alert.appupdated.msg' ), 20, t( 'alert.appupdated.heading' ) );
+                    } );
+            }
+
+            function _setFormCacheEventHandlers() {
+                $( document ).on( 'formupdated', function() {
+                    gui.feedback( t( 'alert.formupdated.msg' ), 20, t( 'alert.formupdated.heading' ) );
+                } );
             }
 
             function _swapTheme( survey ) {

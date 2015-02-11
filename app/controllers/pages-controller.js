@@ -18,4 +18,9 @@ router
         res.render( 'pages/modern-browsers', {
             title: "Modern Browsers"
         } );
+    } )
+    .get( '/offline', function( req, res ) {
+        res.render( 'pages/offline', {
+            title: "Offline"
+        } );
     } );

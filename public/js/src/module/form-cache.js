@@ -23,9 +23,6 @@ define( [ 'store', 'connection', 'q' ], function( store, connection, Q ) {
 
     var hash;
 
-    // DEBUG
-    // window.store = store;
-
     function init( survey ) {
         return store.init()
             .then( function() {
@@ -243,8 +240,8 @@ define( [ 'store', 'connection', 'q' ], function( store, connection, Q ) {
                         .then( function( result ) {
                             // set the hash so that subsequent update checks won't redownload the form
                             hash = result.hash;
-                            // TODO notify user to refresh or trigger event on form
                             console.debug( 'Survey is now updated in the store. Need to refresh.' );
+                            $( document ).trigger( 'formupdated' );
                         } );
                 }
             } )

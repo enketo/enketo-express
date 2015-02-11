@@ -297,7 +297,7 @@ function _generateWebformUrls( id, req ) {
             // non-iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam ] );
             obj.url = baseUrl + idPartOnline + queryString;
-            obj.offline_url = baseUrl + '_' + idPartOffline;
+            obj.offline_url = baseUrl + '_/' + idPartOffline;
             obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // iframe views
             queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
@@ -307,7 +307,7 @@ function _generateWebformUrls( id, req ) {
             obj.subdomain = '';
             break;
         case 'offline':
-            obj.offline_url = baseUrl + '_' + idPartOffline;
+            obj.offline_url = baseUrl + '_/' + idPartOffline;
             break;
         default:
             queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );

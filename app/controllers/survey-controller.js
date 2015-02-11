@@ -43,14 +43,14 @@ function offlineWebform( req, res, next ) {
         error.status = 405;
         next( error );
     } else {
-        req.offline = true;
+        req.manifest = '/_/manifest.appcache';
         webform( req, res, next );
     }
 }
 
 function webform( req, res, next ) {
     var survey = {
-        offline: !!req.offline,
+        manifest: req.manifest,
         iframe: !!req.query.iframe
     };
 

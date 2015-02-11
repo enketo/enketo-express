@@ -325,7 +325,8 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'jquery' ], func
      * @return { Promise }
      */
     function getFormParts( props ) {
-        var deferred = Q.defer();
+        var error,
+            deferred = Q.defer();
 
         $.ajax( TRANSFORM_URL, {
                 type: 'POST',
@@ -341,7 +342,10 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'jquery' ], func
                 deferred.resolve( data );
             } )
             .fail( function( jqXHR, textStatus, errorMsg ) {
-                var error = jqXHR.responseJSON || new Error( errorMsg );
+                if ( jqXHR.responseJSON && jqXHR.responseJSON.message && /ENOTFOUND/.test( jqXHR.responseJSON.message ) ) {
+                    jqXHR.responseJSON.message = 'Form could not be retrieved from server.';
+                }
+                error = jqXHR.responseJSON || new Error( errorMsg );
                 error.status = jqXHR.status;
                 deferred.reject( error );
             } );
@@ -376,8 +380,39 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'jquery' ], func
         return deferred.promise;
     }
 
+    /**
+     * Extracts version from manifest
+     * JQuery ajax doesn't support manifest format reponses, so we're going native here.
+     *
+     * @return {Promise} [description]
+     */
+    function getManifestVersion( manifestUrl ) {
+        var matches,
+            deferred = Q.defer(),
+            xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function() {
+            if ( this.readyState == 4 && this.status == 200 ) {
+                if ( ( matches = this.response.match( /version:\s?([^\n]+)\n/ ) ) ) {
+                    deferred.resolve( matches[ 1 ] );
+                } else {
+                    deferred.reject( new Error( 'No version found in manifest' ) );
+                }
+            }
+            // TODO: add fail handler
+        };
+
+        xhr.open( 'GET', manifestUrl );
+        xhr.responseType = 'text';
+        xhr.send();
+
+        return deferred.promise;
+    }
+
+
     function getFormPartsHash( props ) {
-        var deferred = Q.defer();
+        var error,
+            deferred = Q.defer();
 
         $.ajax( TRANSFORM_HASH_URL, {
                 type: 'POST',
@@ -389,7 +424,7 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'jquery' ], func
                 deferred.resolve( data.hash );
             } )
             .fail( function( jqXHR, textStatus, errorMsg ) {
-                var error = jqXHR.responseJSON || new Error( errorMsg );
+                error = new Error( errorMsg );
                 error.status = jqXHR.status;
                 deferred.reject( error );
             } );
@@ -429,6 +464,7 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'jquery' ], func
         getFormParts: getFormParts,
         getFormPartsHash: getFormPartsHash,
         getFile: getFile,
-        getExistingInstance: getExistingInstance
+        getExistingInstance: getExistingInstance,
+        getManifestVersion: getManifestVersion
     };
 } );

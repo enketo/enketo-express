@@ -256,7 +256,7 @@ function _generateWebformUrls( id, req ) {
         case 'all':
             // non-iframe views
             queryString = _generateQueryString( [] );
-            obj.url = ( offline ) ? baseUrl + '_' + idPartOffline : baseUrl + idPartOnline + queryString;
+            obj.url = ( offline ) ? baseUrl + '_/' + idPartOffline : baseUrl + idPartOnline + queryString;
             obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // iframe views
             queryString = _generateQueryString( [ 'iframe=true' ] );
@@ -267,7 +267,7 @@ function _generateWebformUrls( id, req ) {
             break;
         default:
             queryString = _generateQueryString( [ req.iframeQueryParam ] );
-            obj.url = ( offline ) ? baseUrl + '_' + idPartOffline : baseUrl + idPartOnline + queryString;
+            obj.url = ( offline ) ? baseUrl + '_/' + idPartOffline : baseUrl + idPartOnline + queryString;
             break;
     }
 

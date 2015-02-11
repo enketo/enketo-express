@@ -82,7 +82,7 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'translator', 'vex.dialog.custo
             $body.toggleClass( 'show-side-slider' );
         } );
 
-        $( '.offline-enabled-icon' ).on( 'click', function() {
+        $( '.offline-enabled__icon' ).on( 'click', function() {
             var msg = t( 'alert.offlinesupported.msg' );
             alert( msg, t( 'alert.offlinesupported.heading' ), 'normal' );
         } );
@@ -382,12 +382,15 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'translator', 'vex.dialog.custo
      * @type {Object}
      */
     updateStatus = {
-        offlineLaunch: function( offlineCapable ) {
+        offlineCapable: function( offlineCapable ) {
             if ( offlineCapable ) {
-                $( '.offline-enabled-icon.not-enabled' ).removeClass( 'not-enabled' );
+                $( '.offline-enabled__icon.not-enabled' ).removeClass( 'not-enabled' );
             } else {
-                $( '.offline-enabled-icon' ).addClass( 'not-enabled' );
+                $( '.offline-enabled__icon' ).addClass( 'not-enabled' );
             }
+        },
+        applicationVersion: function( version ) {
+            $( '.side-slider__app-version__value' ).text( version );
         }
     };
 

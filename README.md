@@ -69,8 +69,7 @@ The easiest way to start the app in development and debugging mode with liverelo
 * :white_check_mark: this one has a more advanced iframeable webform view that can communicate back to the parent window, enabled through the API (v2)
 * :white_check_mark: this one has [external authentication](#authentication) support 
 * :white_check_mark: this one will use the `instanceName` value defined in the XForm as the default local record name
-* :x: this one will not store the application in your browser for offline launch (yet) - form loading requires a connection to the server (this server may be on a local network though)
-* :x: offline data and form definitions are still experimental - **enable offline functionality only for testing and [report bugs](https://github.com/kobotoolbox/enketo-express/issues) please**
+* :x: offline forms are still experimental - **enable offline functionality only for testing and [report bugs](https://github.com/kobotoolbox/enketo-express/issues) please**
 * :x: missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views), and "/surveys/list" 
 * :x: no export of queued records (yet)
 * :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)

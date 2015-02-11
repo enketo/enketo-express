@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-define( [ 'settings', 'i18next' ], function( settings, i18next ) {
+define( [ 'settings', 'i18next', 'jquery' ], function( settings, i18next, $ ) {
     "use strict";
     var options;
 
@@ -26,7 +26,7 @@ define( [ 'settings', 'i18next' ], function( settings, i18next ) {
 
     options = {
         // path where language files are available
-        resGetPath: '/locales/__lng__/translation.json',
+        // resGetPath: '/locales/__lng__/translation.json',
         // load a fallback language
         fallbackLng: 'en',
         // allow language override with 'lang' query parameter
@@ -38,7 +38,18 @@ define( [ 'settings', 'i18next' ], function( settings, i18next ) {
         // always use htmlLineParagrahs post processor
         postProcess: 'htmlParagraphs',
         // don't use cookies, always detect
-        useCookie: false
+        useCookie: false,
+        // use custom loader to avoid query string timestamp (messes up applicationCache)
+        customLoad: function( lng, ns, options, loadComplete ) {
+            // load the file for given language and namespace
+            $.get( '/locales/__lng__/translation.json'.replace( '__lng__', lng ) )
+                .done( function( data ) {
+                    loadComplete( null, data );
+                } )
+                .fail( function( error ) {
+                    loadComplete( error );
+                } );
+        }
     };
 
     i18next.init( options );

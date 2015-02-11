@@ -66,6 +66,18 @@ $slider-width: 240px;
             }
         }
     }
+    &__app-version{
+        margin-top: 40px;
+        color: #666;
+        font-size: 10px;
+        text-align: center;
+        border-top: #666 solid 1px;
+        padding: 2px 0;
+        &:hover {
+            color: white;
+            font-weight: bold;
+        }
+    }
 }
 
 .show-side-slider {
