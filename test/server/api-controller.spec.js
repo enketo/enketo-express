@@ -80,7 +80,8 @@ describe( 'api', function() {
             instanceId = typeof test.instanceId !== 'undefined' ? test.instanceId : 'someUUID:' + Math.random(),
             endpoint = test.endpoint,
             resProp = ( test.res && test.res.property ) ? test.res.property : 'url',
-            offlineEnabled = !!test.offline;
+            offlineEnabled = !!test.offline,
+            dataSendMethod = ( test.method === 'get' ) ? 'query' : 'send';
 
         it( test.method.toUpperCase() + ' /api/v' + version + endpoint + ' with ' + authDesc + ' authentication and ' + server + ', ' +
             id + ', ' + ret + ', ' + instance + ', ' + instanceId + ', ' + test.theme +
@@ -88,9 +89,9 @@ describe( 'api', function() {
             ' responds with ' + test.status,
             function( done ) {
                 app.set( 'offline enabled', offlineEnabled );
+
                 request( app )[ test.method ]( '/api/v' + version + endpoint )
-                    .set( auth )
-                    .send( {
+                    .set( auth )[ dataSendMethod ]( {
                         server_url: server,
                         form_id: id,
                         instance: instance,
@@ -112,7 +113,7 @@ describe( 'api', function() {
     describe( 'v1', function() {
         var version = 1;
 
-        describe( '/survey endpoint responses', function() {
+        describe( '', function() {
             v1Survey = [
                 //valid token
                 {
@@ -263,7 +264,7 @@ describe( 'api', function() {
 
         // TODO: add some tests for other /survey/* and /surveys/number endpoints
 
-        describe( '/instance endpoint responses', function() {
+        describe( '', function() {
             v1Instance = [
                 // valid token
                 {
@@ -354,7 +355,7 @@ describe( 'api', function() {
     describe( 'v2', function() {
         var version = 2;
 
-        describe( 'v1-compatible /survey endpoint responses', function() {
+        describe( 'v1-compatible ', function() {
             // make sure v2 is backwards-compatible with v1
             v1Survey.map( function( obj ) {
                 obj.version = version;
@@ -362,7 +363,7 @@ describe( 'api', function() {
             } ).forEach( testResponse );
         } );
 
-        describe( 'v1-compatible /instance endpoint responses', function() {
+        describe( 'v1-compatible ', function() {
             // make sure v2 is backwards-compatible with v1
             v1Instance.map( function( obj ) {
                 obj.version = version;

@@ -80,7 +80,7 @@ function authCheck( req, res, next ) {
     var error,
         creds = auth( req ),
         key = ( creds ) ? creds.name : undefined,
-        server = req.param( 'server_url' );
+        server = req.body.server_url || req.query.server_url;
 
     // set content-type to json to provide appropriate json Error responses
     res.set( 'Content-Type', 'application/json' );
@@ -107,8 +107,8 @@ function getExistingSurvey( req, res, next ) {
 
     return surveyModel
         .getId( {
-            openRosaServer: req.param( 'server_url' ),
-            openRosaId: req.param( 'form_id' )
+            openRosaServer: req.query.server_url,
+            openRosaId: req.query.form_id
         } )
         .then( function( id ) {
             if ( id ) {
@@ -123,9 +123,9 @@ function getExistingSurvey( req, res, next ) {
 function getNewOrExistingSurvey( req, res, next ) {
     var error, body, status,
         survey = {
-            openRosaServer: req.param( 'server_url' ),
-            openRosaId: req.param( 'form_id' ),
-            theme: req.param( 'theme' )
+            openRosaServer: req.body.server_url || req.query.server_url,
+            openRosaId: req.body.form_id || req.query.form_id,
+            theme: req.body.theme || req.query.theme
         };
 
     return surveyModel
@@ -151,8 +151,8 @@ function deactivateSurvey( req, res, next ) {
 
     return surveyModel
         .update( {
-            openRosaServer: req.param( 'server_url' ),
-            openRosaId: req.param( 'form_id' ),
+            openRosaServer: req.body.server_url,
+            openRosaId: req.body.form_id,
             active: false
         } )
         .then( function( id ) {
@@ -169,7 +169,7 @@ function getNumber( req, res, next ) {
     var error, body;
 
     return surveyModel
-        .getNumber( req.param( 'server_url' ) )
+        .getNumber( req.body.server_url || req.query.server_url )
         .then( function( number ) {
             if ( number ) {
                 _render( 200, {
@@ -192,11 +192,11 @@ function cacheInstance( req, res, next ) {
     var error, body, survey;
 
     survey = {
-        openRosaServer: req.param( 'server_url' ),
-        openRosaId: req.param( 'form_id' ),
-        instance: req.param( 'instance' ),
-        instanceId: req.param( 'instance_id' ),
-        returnUrl: req.param( 'return_url' )
+        openRosaServer: req.body.server_url,
+        openRosaId: req.body.form_id,
+        instance: req.body.instance,
+        instanceId: req.body.instance_id,
+        returnUrl: req.body.return_url
     };
     instanceModel
         .set( survey )
@@ -212,9 +212,9 @@ function removeInstance( req, res, next ) {
 
     return instanceModel
         .remove( {
-            openRosaServer: req.param( 'server_url' ),
-            openRosaId: req.param( 'form_id' ),
-            instanceId: req.param( 'instance_id' )
+            openRosaServer: req.body.server_url,
+            openRosaId: req.body.form_id,
+            instanceId: req.body.instance_id
         } )
         .then( function( instanceId ) {
             if ( instanceId ) {
@@ -227,11 +227,10 @@ function removeInstance( req, res, next ) {
 }
 
 function _setDefaultsQueryParam( req, res, next ) {
-    var map,
-        queryParam = '';
+    var queryParam = '',
+        map = req.body.defaults || req.query.defaults;
 
-    if ( req.param( 'defaults' ) ) {
-        map = req.param( 'defaults' );
+    if ( map ) {
         for ( var prop in map ) {
             if ( map.hasOwnProperty( prop ) ) {
                 queryParam += 'd[' + encodeURIComponent( decodeURIComponent( prop ) ) + ']' + '=' +
@@ -245,16 +244,20 @@ function _setDefaultsQueryParam( req, res, next ) {
 }
 
 function _setIframeQueryParams( req, res, next ) {
+    var parentWindowOrigin = req.body.parent_window_origin || req.query.parent_window_origin;
+
     req.iframeQueryParam = 'iframe=true';
-    if ( req.param( 'parent_window_origin' ) ) {
-        req.parentWindowOriginParam = 'parentWindowOrigin=' + encodeURIComponent( decodeURIComponent( req.param( 'parent_window_origin' ) ) );
+    if ( parentWindowOrigin ) {
+        req.parentWindowOriginParam = 'parentWindowOrigin=' + encodeURIComponent( decodeURIComponent( parentWindowOrigin ) );
     }
     next();
 }
 
 function _setReturnQueryParam( req, res, next ) {
-    if ( req.param( 'return_url' ) && ( req.webformType === 'edit' || req.webformType === 'single' ) ) {
-        req.returnQueryParam = 'returnUrl=' + encodeURIComponent( decodeURIComponent( req.param( 'return_url' ) ) );
+    var returnUrl = req.body.return_url || req.query.return_url;
+
+    if ( returnUrl && ( req.webformType === 'edit' || req.webformType === 'single' ) ) {
+        req.returnQueryParam = 'returnUrl=' + encodeURIComponent( decodeURIComponent( returnUrl ) );
     }
     next();
 }
@@ -287,7 +290,7 @@ function _generateWebformUrls( id, req ) {
             break;
         case 'edit':
             // no defaults query parameter in edit view
-            queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.param( 'instance_id' ), req.parentWindowOriginParam, req.returnQueryParam ] );
+            queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.body.instance_id, req.parentWindowOriginParam, req.returnQueryParam ] );
             obj.edit_url = baseUrl + 'edit/' + idPartOnline + queryString;
             break;
         case 'all':
