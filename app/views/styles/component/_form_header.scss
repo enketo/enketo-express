@@ -164,7 +164,7 @@ $offline-color: #d15200;
         position: static;
         display: inline-block;
         float: left;
-        .offline-enabled-icon {
+        &__icon {
             float: left;
             margin-right: 10px;
             display: block;
@@ -172,7 +172,7 @@ $offline-color: #d15200;
                 margin-left: 0;
             }
         }
-        .queue-length {
+        &__queue-length {
             margin-top: 0;
             margin-left: -10px;
             margin-right: 10px;
