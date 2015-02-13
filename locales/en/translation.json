@@ -1,4 +1,7 @@
 {
+  "advanced": {
+    "flushdb": "Clear Storage"
+  },
   "alert": {
     "appupdated": {
       "heading": "App Updated!",
@@ -85,6 +88,15 @@
       "msg": "Please confirm this action",
       "negButton": "Cancel",
       "posButton": "Confirm"
+    },
+    "deleteall": {
+      "heading": "PANIC!",
+      "msg": [
+        "This will remove all your queued data and all your forms from the browser storage. Data will be lost forever. Use this only as a last resort if the browser storage seems corrupt.",
+        "The page will reload. If you see an error you may have to repeat this action.",
+        "Are you sure you want to do this?"
+      ],
+      "posButton": ""
     },
     "discardcurrent": {
       "heading": "Unsaved edits",

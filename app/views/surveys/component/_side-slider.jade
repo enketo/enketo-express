@@ -10,6 +10,8 @@ aside.record-list.side-slider
 	p!= t('record-list.msg2', {icon: '<span class="icon icon-pencil"> </span>'})
 	p.side-slider__app-version= t('version') + ' '
 		span.side-slider__app-version__value
+	p.side-slider__advanced.hide
+		button.side-slider__advanced__button.flush-db.btn.btn-default(type="button")= t('advanced.flushdb')
 button.side-slider__toggle.open
 button.side-slider__toggle.close
 div.side-slider-toggle.slider-overlay

@@ -95,6 +95,11 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'translator', 'vex.dialog.custo
                 emailLink: link
             } ) + '<ul class="error-list"><li>' + error + '</li></ul>', t( 'alert.xpatherror.heading' ) );
         } );
+
+        $( '.side-slider__app-version' ).on( 'click', function() {
+            console.debug( 'toggling' );
+            $( '.side-slider__advanced' ).toggleClass( 'hide' );
+        } );
     }
 
     function swapTheme( theme ) {

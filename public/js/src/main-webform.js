@@ -2,8 +2,8 @@ require( [ 'require-config' ], function( rc ) {
     "use strict";
     if ( console.time ) console.time( 'client loading time' );
 
-    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'enketo-js/FormModel', 'translator', 'utils', 'form-cache', 'application-cache', 'q', 'jquery' ],
-        function( gui, controller, settings, connection, FormModel, t, utils, formCache, applicationCache, Q, $ ) {
+    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'enketo-js/FormModel', 'translator', 'store', 'utils', 'form-cache', 'application-cache', 'q', 'jquery' ],
+        function( gui, controller, settings, connection, FormModel, t, store, utils, formCache, applicationCache, Q, $ ) {
             var $loader = $( '.form__loader' ),
                 $buttons = $( '.form-header__button--print, button#validate-form, button#submit-form' ),
                 survey = {
@@ -13,6 +13,9 @@ require( [ 'require-config' ], function( rc ) {
                     xformUrl: settings.xformUrl,
                     defaults: settings.defaults
                 };
+
+            _setEmergencyHandlers();
+
             // workaround for issue with compiled JS in IE11. For some reason promise-by-Q.js is not loaded before db.js....
             if ( !window.Promise ) window.Promise = Q.Promise;
 
@@ -73,6 +76,25 @@ require( [ 'require-config' ], function( rc ) {
             function _setFormCacheEventHandlers() {
                 $( document ).on( 'formupdated', function() {
                     gui.feedback( t( 'alert.formupdated.msg' ), 20, t( 'alert.formupdated.heading' ) );
+                } );
+            }
+
+            /**
+             * Advanced/emergency handlers that should always be activated even if form loading fails.
+             */
+            function _setEmergencyHandlers() {
+                $( '.side-slider__advanced__button.flush-db' ).on( 'click', function() {
+                    gui.confirm( {
+                        msg: t( 'confirm.deleteall.msg' ),
+                        heading: t( 'confirm.deleteall.heading' )
+                    }, {
+                        posButton: t( 'confirm.deleteall.posButton' ),
+                        posAction: function() {
+                            store.flush().then( function() {
+                                location.reload();
+                            } );
+                        }
+                    } );
                 } );
             }
 

@@ -78,6 +78,13 @@ $slider-width: 240px;
             font-weight: bold;
         }
     }
+    &__advanced {
+        &__button {
+            width: 100%;
+            padding: 10px;
+            height: 40px;
+        }
+    }
 }
 
 .show-side-slider {
