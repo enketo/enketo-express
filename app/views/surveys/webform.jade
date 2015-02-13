@@ -1,5 +1,8 @@
 extends ../layout
 
+block redirect
+  <!--[if lt IE 10 ]><script>window.location = '/modern-browsers';</script><![endif]-->
+
 block style
   link(rel='stylesheet', media='all', type='text/css' href='/css/theme-#{defaultTheme}.css') 
   link(rel='stylesheet', media='print', type='text/css' href='/css/theme-#{defaultTheme}.print.css') 
