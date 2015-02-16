@@ -6,6 +6,7 @@ var Q = require( 'q' ),
     surveyModel = require( '../models/survey-model' ),
     cacheModel = require( '../models/cache-model' ),
     account = require( '../models/account-model' ),
+    user = require( '../models/user-model' ),
     express = require( 'express' ),
     router = express.Router(),
     debug = require( 'debug' )( 'transformation-controller' );
@@ -34,8 +35,11 @@ router
 function getSurveyParts( req, res, next ) {
     _getSurveyParams( req.body )
         .then( function( survey ) {
+
             // for external authentication, pass the cookie(s)
             survey.cookie = req.headers.cookie;
+            // for OpenRosa authentication, add the credentials
+            survey.credentials = user.getCredentials( req );
 
             if ( survey.info ) {
                 _getFormDirectly( survey )
@@ -44,7 +48,8 @@ function getSurveyParts( req, res, next ) {
                     } )
                     .catch( next );
             } else {
-                _getFormFromCache( survey )
+                _authenticate( survey )
+                    .then( _getFormFromCache )
                     .then( function( result ) {
                         if ( result ) {
                             // immediately serve from cache without first checking for updates
@@ -95,6 +100,10 @@ function _getFormDirectly( survey ) {
         .then( transformer.transform );
 }
 
+function _authenticate( survey ) {
+    return communicator.authenticate( survey );
+}
+
 function _getFormFromCache( survey ) {
     return cacheModel.get( survey );
 }
@@ -114,7 +123,6 @@ function _updateCache( survey ) {
             }
         } )
         .catch( function( error ) {
-
             if ( error.status === 401 || error.status === 404 ) {
                 cacheModel.flush( survey );
             } else {
@@ -126,6 +134,9 @@ function _updateCache( survey ) {
 }
 
 function _respond( res, survey ) {
+
+    delete survey.credentials;
+
     res.status( 200 );
     res.send( {
         form: survey.form,

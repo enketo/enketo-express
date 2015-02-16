@@ -63,6 +63,7 @@ The easiest way to start the app in development and debugging mode with liverelo
 * :white_check_mark: this one can be hosted on a local webserver
 * :white_check_mark: this one has a [multi-language](#translation) user interface
 * :white_check_mark: this one has cross-browser (media) file inputs
+* :white_check_mark: this one has better security of user credentials
 * :white_check_mark: this one has an improved API (v2)
 * :white_check_mark: this one has support for multiple themes in *all* form views including previews 
 * :white_check_mark: this one allows overriding a form-defined theme via the API (v2) 
@@ -75,7 +76,6 @@ The easiest way to start the app in development and debugging mode with liverelo
 * :x: no export of queued records (yet)
 * :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
 * :x: no [Forms](https://enketo.org/forms) app (you do not need this)
-* :x: no [enketo-managed form authentication](#authentication) (yet)
 
 
 ### Themes
@@ -107,7 +107,7 @@ There are two potential security issues to be aware of, both of should be resolv
 
 API security is mainly arranged by the secret API key set up in [config.json](config/config.json). This API key is sent in **cleartext** to Enketo by the form/data server (such as ODK Aggregate) and can easily be intercepted and read _if the transport is not secure_. Somebody could start using your Enketo Express installation for their own form/data server, or obtain the URLs of your forms. Using secure (https) transport mitigates against this hazard. Security increases as well by populating the _server url_ in [config.json](config/config.json). Also, don't forget to change your API key when you start running Enketo Express in production.
 
-Form authentication ... \[to follow as it is not relevant yet\]
+Form authentication is only secure when Enketo is running on **https**. To avoid leaking form server credentials, authentication is automatically disabled when the app is accessed in a 'production' environment on 'http'. If you **have to** to run the app on http in a production environment, you can bypass this security by setting `"allow insecure transport": true` in config/config.json. The only use case this would be acceptable in is when running the app on a local protected network (e.g. in the KoBo VM).
 
 
 ### Translation
@@ -129,3 +129,7 @@ See [the license document](LICENSE) for this application's license.
 Note that some of the libraries used in this app have different licenses.
 
 The Enketo logo and Icons are trademarked by [Enketo LLC](https://www.linkedin.com/company/enketo-llc). They can be used in the KoBoCAT VM only. If you are using this app to build your own web application, you are encouraged to maintain the 'powered by Enketo' form footer with the Enketo logo, but replace other images in [/public/images](/public/images) with your own or contact [Enketo LLC](mailto:info@enketo.org) to discuss the use inside your app.
+
+### Change log
+
+See [CHANGELOG](./CHANGELOG.md)

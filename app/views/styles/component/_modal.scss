@@ -24,7 +24,13 @@
     }
     .vex-dialog-input input[type=text] {
         @extend .form-control[type=text];
-        margin-top: 20px;
+    }
+    .vex-dialog-input input[type=checkbox],
+    .vex-dialog-input input[type=radio] {
+        margin-right: 10px;
+    }
+    .or-hint.active {
+        margin-bottom: 10px;
     }
 }
 

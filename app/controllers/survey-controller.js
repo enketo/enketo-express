@@ -5,6 +5,7 @@ var Q = require( 'q' ),
     TError = require( '../lib/custom-error' ).TranslatedError,
     communicator = require( '../lib/communicator' ),
     surveyModel = require( '../models/survey-model' ),
+    userModel = require( '../models/user-model' ),
     express = require( 'express' ),
     router = express.Router(),
     debug = require( 'debug' )( 'survey-controller' );
@@ -24,6 +25,7 @@ router.param( 'enketo_id', function( req, res, next, id ) {
 } );
 
 router
+    .get( '*', loggedInCheck )
     .get( '/_', offlineWebform )
     .get( '/:enketo_id', webform )
     .get( '/preview/:enketo_id', preview )
@@ -34,6 +36,11 @@ router
         res.status = 200;
         res.send( 'connected ' + Math.random() );
     } );
+
+function loggedInCheck( req, res, next ) {
+    req.logout = !!userModel.getCredentials( req );
+    next();
+}
 
 function offlineWebform( req, res, next ) {
     var error;
@@ -49,32 +56,35 @@ function offlineWebform( req, res, next ) {
 }
 
 function webform( req, res, next ) {
-    var survey = {
+    var options = {
         manifest: req.manifest,
-        iframe: !!req.query.iframe
+        iframe: !!req.query.iframe,
+        logout: req.logout
     };
 
-    res.render( 'surveys/webform', survey );
+    res.render( 'surveys/webform', options );
 }
 
 function preview( req, res, next ) {
-    var survey = {
+    var options = {
         type: 'preview',
-        iframe: !!req.query.iframe
+        iframe: !!req.query.iframe,
+        logout: req.logout
     };
 
-    res.render( 'surveys/webform', survey );
+    res.render( 'surveys/webform', options );
 }
 
 function edit( req, res, next ) {
     var error,
-        survey = {
+        options = {
             type: 'edit',
-            iframe: !!req.query.iframe
+            iframe: !!req.query.iframe,
+            logout: req.logout
         };
 
     if ( req.query.instance_id ) {
-        res.render( 'surveys/webform', survey );
+        res.render( 'surveys/webform', options );
     } else {
         error = new TError( 'error.invalidediturl' );
         error.status = 400;
@@ -91,6 +101,10 @@ function edit( req, res, next ) {
  */
 function xform( req, res, next ) {
     return surveyModel.get( req.enketoId )
+        .then( function( survey ) {
+            survey.credentials = userModel.getCredentials( req );
+            return survey;
+        } )
         .then( communicator.getXFormInfo )
         .then( communicator.getXForm )
         .then( function( survey ) {

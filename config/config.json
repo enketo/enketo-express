@@ -8,9 +8,11 @@
         "api key": "enketorules",
         "authentication": {
             "managed by enketo": true,
+            "allow insecure transport": false,
             "external login url that sets cookie": "http://example.com/login?return={RETURNURL}"
         }
     },
+    "encryption key": "s0m3v3rys3cr3tk3y",
     "default theme": "kobo",
     "support": {
         "email": "info@kobotoolbox.org"

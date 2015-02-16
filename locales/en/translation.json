@@ -25,6 +25,10 @@
       "msg1_plural": "Errors occurred during the loading of this form.",
       "msg2_plural": "Please contact __emailLink__ with the link to this page and the error messages below:"
     },
+    "logout": {
+      "heading": "Logged Out",
+      "msg": "You have been logged out."
+    },
     "offlinesupported": {
       "heading": "Form works offline!",
       "msg": [
@@ -96,7 +100,7 @@
         "The page will reload. If you see an error you may have to repeat this action.",
         "Are you sure you want to do this?"
       ],
-      "posButton": ""
+      "posButton": "Delete All"
     },
     "discardcurrent": {
       "heading": "Unsaved edits",
@@ -200,6 +204,13 @@
   "prompt": {
     "default": {
       "heading": "Enter values"
+    },
+    "login": {
+      "heading": "Enter your __server__ credentials",
+      "password": "Password",
+      "remember": "Remember on this computer",
+      "submit": "Submit",
+      "username": "Username"
     }
   },
   "record-list": {

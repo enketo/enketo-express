@@ -5,6 +5,7 @@ var themesSupported = [],
     express = require( 'express' ),
     path = require( 'path' ),
     bodyParser = require( 'body-parser' ),
+    cookieParser = require( 'cookie-parser' ),
     fs = require( 'fs' ),
     favicon = require( 'serve-favicon' ),
     config = require( './config' ),
@@ -24,6 +25,7 @@ for ( var item in config ) {
 }
 app.set( 'port', process.env.PORT || app.get( "port" ) || 3000 );
 app.set( 'env', process.env.NODE_ENV || 'production' );
+app.set( 'authentication cookie name', '__enketo' );
 
 // views
 app.set( 'views', path.resolve( __dirname, '../app/views' ) );
@@ -71,6 +73,7 @@ app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded( {
     extended: true
 } ) );
+app.use( cookieParser( app.get( 'encryption key' ) ) );
 app.use( i18n.handle );
 app.use( favicon( path.resolve( __dirname, '../public/images/favicon.ico' ) ) );
 app.use( express.static( path.resolve( __dirname, '../public' ) ) );

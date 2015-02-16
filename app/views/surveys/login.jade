@@ -1,0 +1,27 @@
+extends ../layout
+
+block style
+  link(rel='stylesheet', media='all', type='text/css' href='/css/theme-#{defaultTheme}.css') 
+  link(rel='stylesheet', media='print', type='text/css' href='/css/theme-#{defaultTheme}.print.css') 
+ 
+block content
+  .vex.vex-theme-plain
+    .vex-overlay
+    .vex-content
+      form(method="post").vex-dialog-form
+        h3= t('prompt.login.heading', {server: server})
+        input(type="hidden", name="_csrf", value=csrfToken)
+        .vex-dialog-input
+          label
+            span= t('prompt.login.username')
+            input(type="text", name="username", required)
+        .vex-dialog-input
+          label 
+            span= t('prompt.login.password') 
+            input(type="password", name="password", required)
+        .vex-dialog-input
+          label 
+            input(type="checkbox", name="remember", value="true")
+            span= t('prompt.login.remember')
+        .vex-dialog-buttons
+          button(type="submit").btn.btn-primary.small.vex-dialog-button.vex-last= t('prompt.login.submit')

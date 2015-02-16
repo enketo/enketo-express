@@ -1,6 +1,7 @@
 "use strict";
 
-var request = require( 'request' ),
+var user = require( '../models/user-model' ),
+    request = require( 'request' ),
     express = require( 'express' ),
     router = express.Router(),
     debug = require( 'debug' )( 'media-controller' );
@@ -20,11 +21,17 @@ function _extractMediaUrl( path ) {
 }
 
 function getMedia( req, res, next ) {
-    var mediaUrl = _extractMediaUrl( req.url.substring( '/get/'.length ) );
+    var options = {
+            url: _extractMediaUrl( req.url.substring( '/get/'.length ) )
+        },
+        auth = user.getCredentials( req );
 
-    debug( 'media Url to be loaded', mediaUrl );
+    if ( auth ) {
+        options.auth = auth;
+        options.auth.sendImmediately = false;
+    }
 
-    request( mediaUrl ).pipe( res ).on( 'error', function( error ) {
+    request.get( options ).pipe( res ).on( 'error', function( error ) {
         debug( 'error retrieving media from OpenRosa server: ' + JSON.stringify( error ) );
         if ( !error.status ) {
             error.status = ( error.code && error.code == 'ENOTFOUND' ) ? 404 : 500;

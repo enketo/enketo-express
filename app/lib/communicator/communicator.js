@@ -1,6 +1,8 @@
 "use strict";
 
 var request = require( 'request' ),
+    Auth = require( 'request/lib/auth' ).Auth,
+    //wwwAuth = require( 'www-authenticate' ),
     TError = require( '../custom-error' ).TranslatedError,
     Q = require( 'q' ),
     debug = require( 'debug' )( 'openrosa-communicator' ),
@@ -19,10 +21,9 @@ function getXFormInfo( survey ) {
         throw new Error( 'No server provided.' );
     }
 
-    formListUrl = ( survey.openRosaServer.lastIndexOf( '/' ) === survey.openRosaServer.length - 1 ) ? survey.openRosaServer + 'formList' : survey.openRosaServer + '/formList';
-
     return _request( {
-        url: formListUrl,
+        url: getFormListUrl( survey.openRosaServer ),
+        auth: survey.credentials,
         headers: {
             cookie: survey.cookie
         }
@@ -42,6 +43,7 @@ function getXForm( survey ) {
 
     return _request( {
         url: survey.info.downloadUrl,
+        auth: survey.credentials,
         headers: {
             cookie: survey.cookie
         }
@@ -69,6 +71,7 @@ function getManifest( survey ) {
     } else {
         _request( {
                 url: survey.info.manifestUrl,
+                auth: survey.credentials,
                 headers: {
                     cookie: survey.cookie
                 }
@@ -99,22 +102,78 @@ function getMaxSize( survey ) {
 
     options = {
         url: submissionUrl,
+        auth: survey.credentials,
         headers: {
             cookie: survey.cookie
         }
     };
 
-    return _getHeaders( options )
-        .then( function( headers ) {
-            return headers[ 'x-openrosa-accept-content-length' ] || headers[ 'X-Openrosa-Accept-Content-Length' ] || 5 * 1024 * 1024;
+    return _headRequest( options )
+        .then( function( response ) {
+            return response.headers[ 'x-openrosa-accept-content-length' ] || 5 * 1024 * 1024;
         } );
 }
 
-function _getFormList( survey ) {
+function authenticate( survey ) {
+    var options = {
+        url: getFormListUrl( survey.openRosaServer ),
+        auth: survey.credentials
+    };
 
+    return _headRequest( options )
+        .then( function() {
+            debug( 'successful (authenticated if it was necessary)' );
+            return survey;
+        } );
 }
 
-function _getHeaders( options ) {
+function getAuthHeader( url, credentials ) {
+    var auth, authHeader,
+        deferred = Q.defer(),
+        options = {
+            url: url,
+            method: 'head',
+            headers: {
+                'X-OpenRosa-Version': '1.0'
+            }
+        };
+
+    var req = request( options, function( error, response ) {
+        if ( response.statusCode === 401 ) {
+            auth = new Auth( req );
+            auth.hasAuth = true;
+            auth.user = credentials.user;
+            auth.pass = credentials.pass;
+            auth.method = 'POST';
+            // TODO: THIS WILL BREAK IN FUTURE request/request module UPDATE
+            // to be changed to auth.onResponse(response) and some variable changes above
+            authHeader = auth.response( auth.method, url, response.headers );
+
+            // alternatively with www-authenticate
+            //var onWwwAuthenticate = wwwAuth( credentials.user, credentials.pass );
+            //var authenticator = onWwwAuthenticate( response.headers[ 'www-authenticate' ] );
+            //if ( authenticator.err ) deferred.reject( authenticator.err );
+            //var authHeader2 = authenticator.authorize( 'POST', url );
+            //debug( 'authHeader created by www-authenticate module', authHeader2 );
+
+            deferred.resolve( authHeader );
+        } else {
+            deferred.resolve( null );
+        }
+    } );
+
+    return deferred.promise;
+}
+
+function getFormListUrl( server ) {
+    return ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'formList' : server + '/formList';
+}
+
+function getSubmissionUrl( server ) {
+    return ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'submission' : server + '/submission';
+}
+
+function _headRequest( options ) {
     options.method = 'head';
     return _request( options );
 }
@@ -122,7 +181,7 @@ function _getHeaders( options ) {
 /**
  * Sends a request to an OpenRosa server
  *
- * @param  { { url:string, convertToJson:boolean } } url  request options object
+ * @param  { * } url  request options object
  * @return {?string=}    promise
  */
 function _request( options ) {
@@ -142,24 +201,35 @@ function _request( options ) {
         // remove undefined cookie
         delete options.headers.cookie;
     }
+    // set Authorization header
+    if ( !options.auth ) {
+        delete options.auth;
+    } else {
+        // check first is DIGEST or BASIC is required
+        options.auth.sendImmediately = false;
+        //debug( 'authenticating with', options.auth );
+    }
+
+    // due to bug https://github.com/request/request/issues/1412, we won't pass method as an option (temporarily)
+    var method = options.method || 'get';
+    delete options.method;
 
     debug( 'sending request to url: ' + options.url );
 
-    r = request( options, function( error, response, body ) {
+    r = request[ method ]( options, function( error, response, body ) {
         if ( error ) {
             debug( 'Error occurred when requesting ' + options.url, error );
             deferred.reject( error );
         } else if ( response.statusCode === 401 ) {
-            error = new Error( 'Authentication is required for this form. ' +
-                'Unfortunately, authentication is not yet supported in this Enketo app.' );
+            error = new Error( 'Forbidden. Authorization Required.' );
             error.status = response.statusCode;
             deferred.reject( error );
         } else if ( response.statusCode < 200 || response.statusCode >= 300 ) {
             error = new Error( 'Request to ' + options.url + ' failed.' );
             error.status = response.statusCode;
             deferred.reject( error );
-        } else if ( options.method === 'head' ) {
-            deferred.resolve( response.headers );
+        } else if ( method === 'head' ) {
+            deferred.resolve( response );
         } else {
             debug( 'response of request to ' + options.url + ' has status code: ', response.statusCode );
             deferred.resolve( body );
@@ -251,5 +321,9 @@ module.exports = {
     getXFormInfo: getXFormInfo,
     getXForm: getXForm,
     getManifest: getManifest,
-    getMaxSize: getMaxSize
+    getMaxSize: getMaxSize,
+    authenticate: authenticate,
+    getAuthHeader: getAuthHeader,
+    getFormListUrl: getFormListUrl,
+    getSubmissionUrl: getSubmissionUrl
 };
