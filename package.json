@@ -2,7 +2,7 @@
     "name": "enketo-express",
     "description": "A simplified version of Enketo Smart Paper that requires a constant connection to the server.",
     "homepage": "",
-    "version": "1.6.0",
+    "version": "1.7.0",
     "main": "./app.js",
     "repository": {
         "type": "git",
