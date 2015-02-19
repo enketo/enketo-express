@@ -52,16 +52,20 @@ function login( req, res, next ) {
 }
 
 function logout( req, res, next ) {
-    res.clearCookie( req.app.get( 'authentication cookie name' ) );
-    res.render( 'surveys/logout' );
+    res
+        .clearCookie( req.app.get( 'authentication cookie name' ) )
+        .clearCookie( '__enketo_meta_uid' )
+        .render( 'surveys/logout' );
 }
 
 function setToken( req, res, next ) {
-    var token, options, secure,
+    var token, authOptions, uidOptions, secure,
+        username = req.body.username.trim(),
+        maxAge = 30 * 24 * 60 * 60 * 1000,
         returnUrl = req.query.return_url || '';
 
     token = jwt.encode( {
-        user: req.body.username.trim(),
+        user: username,
         pass: req.body.password
     }, req.app.get( 'encryption key' ) );
 
@@ -69,20 +73,28 @@ function setToken( req, res, next ) {
     // This is double because the check in login() already ensures the login screen isn't even shown.
     secure = ( req.protocol === 'production' && !req.app.get( 'linked form and data server' ).authentication[ 'allow insecure transport' ] );
 
-    options = {
+    authOptions = {
         secure: secure,
         signed: true,
         httpOnly: true,
         path: '/'
     };
 
+    uidOptions = {
+        signed: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        path: '/'
+    };
+
     if ( req.body.remember ) {
-        options.maxAge = 30 * 24 * 60 * 60 * 1000;
+        authOptions.maxAge = maxAge;
+        uidOptions.maxAge = maxAge;
     }
 
     // store the token in a cookie on the client
     res
-        .cookie( req.app.get( 'authentication cookie name' ), token, options );
+        .cookie( req.app.get( 'authentication cookie name' ), token, authOptions )
+        .cookie( '__enketo_meta_uid', username, uidOptions );
 
     if ( returnUrl ) {
         res.redirect( returnUrl );
