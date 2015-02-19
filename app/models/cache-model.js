@@ -105,6 +105,16 @@ function isCacheUpToDate( survey ) {
         error.status = 400;
         deferred.reject( error );
     } else {
+        // clean up the survey object to make sure no artefacts of cached survey are present
+        survey = {
+            openRosaServer: survey.openRosaServer,
+            openRosaId: survey.openRosaId,
+            info: {
+                hash: survey.info.hash
+            },
+            manifest: survey.manifest
+        };
+
         key = _getKey( survey );
 
         client.hgetall( key, function( error, cacheObj ) {

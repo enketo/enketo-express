@@ -182,7 +182,9 @@ describe( 'Cache Model', function() {
 
             updatedSurvey = JSON.parse( JSON.stringify( survey ) );
             setPromise = model.set( survey );
-            updatedSurvey.formHash = 'something else';
+            updatedSurvey.info = {
+                hash: 'something else'
+            };
             checkPromise = setPromise.then( function() {
                 return model.check( updatedSurvey );
             } );

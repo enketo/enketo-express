@@ -33,6 +33,8 @@ router
  * @return {[type]}        [description]
  */
 function getSurveyParts( req, res, next ) {
+    var surveyBare;
+
     _getSurveyParams( req.body )
         .then( function( survey ) {
 
@@ -40,6 +42,8 @@ function getSurveyParts( req, res, next ) {
             survey.cookie = req.headers.cookie;
             // for OpenRosa authentication, add the credentials
             survey.credentials = user.getCredentials( req );
+            // store a copy of the bare survey object
+            surveyBare = JSON.parse( JSON.stringify( survey ) );
 
             if ( survey.info ) {
                 _getFormDirectly( survey )
@@ -56,9 +60,9 @@ function getSurveyParts( req, res, next ) {
                             _respond( res, result );
                             // update cache if necessary, asynchronously AFTER responding
                             // This is the ONLY mechanism by with an online-only form will be updated
-                            _updateCache( survey );
+                            _updateCache( surveyBare );
                         } else {
-                            _updateCache( survey )
+                            _updateCache( surveyBare )
                                 .then( function( survey ) {
                                     _respond( res, survey );
                                 } )
