@@ -92,7 +92,7 @@ function _getManifestString( version, resources ) {
         resources.join( '\n' ) + '\n' +
         '\n' +
         'FALLBACK:\n' +
-        '/ /offline\n' +
+        '/_ /offline\n' +
         '\n' +
         'NETWORK:\n' +
         '*\n';

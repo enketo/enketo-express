@@ -7,11 +7,11 @@ var manifest = require( '../models/manifest-model' ),
     debug = require( 'debug' )( 'manifest-controller' );
 
 module.exports = function( app ) {
-    app.use( '/', router );
+    app.use( '/_/manifest.appcache*', router );
 };
 
 router
-    .get( '/_/manifest.appcache*', function( req, res, next ) {
+    .get( '*', function( req, res, next ) {
         getManifest( req, res )
             .then( function( manifestContent ) {
                 res

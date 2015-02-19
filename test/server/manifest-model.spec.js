@@ -32,7 +32,7 @@ describe( 'Manifest Model', function() {
         it( 'includes the relevant manifest sections', function() {
             expect( result ).to.contain( 'CACHE MANIFEST' );
             expect( result ).to.contain( 'CACHE:' );
-            expect( result ).to.contain( 'FALLBACK:\n/ /offline' );
+            expect( result ).to.contain( 'FALLBACK:\n/_ /offline' );
             expect( result ).to.contain( 'NETWORK:\n*' );
         } );
 
