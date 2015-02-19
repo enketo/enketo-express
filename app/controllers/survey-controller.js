@@ -62,7 +62,7 @@ function webform( req, res, next ) {
         logout: req.logout
     };
 
-    res.render( 'surveys/webform', options );
+    _renderWebform( req, res, next, options );
 }
 
 function preview( req, res, next ) {
@@ -72,7 +72,7 @@ function preview( req, res, next ) {
         logout: req.logout
     };
 
-    res.render( 'surveys/webform', options );
+    _renderWebform( req, res, next, options );
 }
 
 function edit( req, res, next ) {
@@ -84,12 +84,24 @@ function edit( req, res, next ) {
         };
 
     if ( req.query.instance_id ) {
-        res.render( 'surveys/webform', options );
+        _renderWebform( req, res, next, options );
     } else {
         error = new TError( 'error.invalidediturl' );
         error.status = 400;
         next( error );
     }
+}
+
+function _renderWebform( req, res, next, options ) {
+    var deviceId = req.signedCookies[ '__enketo_meta_deviceid' ] || req.hostname + ':' + utils.randomString( 16 ),
+        cookieOptions = {
+            signed: true,
+            maxAge: 10 * 365 * 24 * 60 * 60 * 1000
+        };
+
+    res
+        .cookie( '__enketo_meta_deviceid', deviceId, cookieOptions )
+        .render( 'surveys/webform', options );
 }
 
 /**
@@ -108,8 +120,9 @@ function xform( req, res, next ) {
         .then( communicator.getXFormInfo )
         .then( communicator.getXForm )
         .then( function( survey ) {
-            res.set( 'Content-Type', 'text/xml' );
-            res.send( survey.xform );
+            res
+                .set( 'Content-Type', 'text/xml' )
+                .send( survey.xform );
         } )
         .catch( next );
 }

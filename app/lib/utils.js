@@ -8,12 +8,12 @@ var crypto = require( 'crypto' ),
  * @param  {[type]} survey [description]
  * @return {[type]}        [description]
  */
-function _getOpenRosaKey( survey, prefix ) {
+function getOpenRosaKey( survey, prefix ) {
     if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
         return null;
     }
     prefix = prefix || 'or:';
-    return prefix + _cleanUrl( survey.openRosaServer ) + ',' + survey.openRosaId.trim().toLowerCase();
+    return prefix + cleanUrl( survey.openRosaServer ) + ',' + survey.openRosaId.trim().toLowerCase();
 }
 
 /**
@@ -22,7 +22,7 @@ function _getOpenRosaKey( survey, prefix ) {
  * @param  {string} url [description]
  * @return {string=}     [description]
  */
-function _cleanUrl( url ) {
+function cleanUrl( url ) {
     var matches;
     url = url.trim();
     if ( url.lastIndexOf( '/' ) === url.length - 1 ) {
@@ -35,20 +35,32 @@ function _cleanUrl( url ) {
     return null;
 }
 
-function _isValidUrl( url ) {
+function isValidUrl( url ) {
     var validUrl = /^(https?:\/\/)(([\da-z\.\-]+)\.([a-z\.]{2,6})|(([0-9]{1,3}\.){3}[0-9]{1,3})|localhost)(:(102[4-9]|10[3-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-4][0-8]{4}|490[0-9]{2}|491[0-4][0-9]|4915[0-1]))?([\/\w \.\-]*)*\/?[\/\w \.\-\=\&\?]*$/;
     return validUrl.test( url );
 }
 
-function _md5( message ) {
+function md5( message ) {
     var hash = crypto.createHash( 'md5' );
     hash.update( message );
     return hash.digest( 'hex' );
 }
 
+function randomString( howMany, chars ) {
+    chars = chars || "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+    var rnd = crypto.randomBytes( howMany ),
+        value = new Array( howMany ),
+        len = chars.length;
+
+    for ( var i = 0; i < howMany; i++ ) {
+        value[ i ] = chars[ rnd[ i ] % len ];
+    }
+
+    return value.join( '' );
+}
 
 // not recursive, only goes one property level deep
-function _areOwnPropertiesEqual( a, b ) {
+function areOwnPropertiesEqual( a, b ) {
     var prop,
         results = [];
 
@@ -75,9 +87,10 @@ function _areOwnPropertiesEqual( a, b ) {
 }
 
 module.exports = {
-    getOpenRosaKey: _getOpenRosaKey,
-    cleanUrl: _cleanUrl,
-    isValidUrl: _isValidUrl,
-    md5: _md5,
-    areOwnPropertiesEqual: _areOwnPropertiesEqual
+    getOpenRosaKey: getOpenRosaKey,
+    cleanUrl: cleanUrl,
+    isValidUrl: isValidUrl,
+    md5: md5,
+    randomString: randomString,
+    areOwnPropertiesEqual: areOwnPropertiesEqual
 };
