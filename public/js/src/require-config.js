@@ -22,7 +22,7 @@ require.config( {
         "i18next": "../../../lib/bower-components/i18next/i18next.amd",
         "print": "../../../lib/enketo-core/src/js/print",
         "db": "../../../lib/martijnr-db.js/src/db",
-        "vex": "../../../lib/enketo-vex/js/vex",
+        "vex": "../../../lib/bower-components/vex/js/vex",
     },
     shim: {
         "xpath": {
