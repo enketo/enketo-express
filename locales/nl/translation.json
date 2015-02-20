@@ -1,11 +1,19 @@
 {
     "alert": {
+        "appupdated": {
+            "heading": "App Bijgewerkt!",
+            "msg": "Een nieuwe versie van deze applicatie is gedownload. Vernieuw deze pagina om de bijgewerkte versie te laden."
+        },
         "default": {
-            "button": "Sluit af",
+            "button": "Sluit",
             "heading": "Let op"
         },
+        "formupdated": {
+            "heading": "Enquete Bijgewerkt!",
+            "msg": "Een nieuwe versie van deze enquete is gedownload. Vernieuw deze pagina om de bijgewerkte versie te laden."
+        },
         "loaderror": {
-            "editadvice": "Het is aanbevolen deze enquete niet te gebruiken voor het wijzigen van informatie totdat dit opgelost is.",
+            "editadvice": "Het is aanbevolen dit record niet te verander totdat dit opgelost it.",
             "entryadvice": "Het is aanbevolen deze enquete niet te gebruiken voor het invoeren van informatie totdat dit opgelost is.",
             "heading": "Laad Fout",
             "msg1": "Er is een fout opgetreden tijdens het laden van deze enquete.",
@@ -28,19 +36,31 @@
             "negButton": "Gebruik het",
             "posButton": "Laat opties zien"
         },
+        "queuesubmissionsuccess": {
+            "msg": "__recordNames__ was succesvol verzonden",
+            "msg_plural": "__recordNames__ zijn succesvol verzonden"
+        },
+        "recordloadsuccess": {
+            "msg": "__recordName__ is geladen"
+        },
+        "recordnotfound": {
+            "msg": "Record kon niet geladen worden of was leeg."
+        },
+        "recordsavesuccess": {
+            "draftmsg": "Record opgeslagen als draft.",
+            "finalmsg": "Record aan lijst toegevoegd."
+        },
         "submission": {
             "msg": "Verzending gaande...",
             "redirectmsg": "Je wordt automatisch doorverzonden als de verzending compleet is."
         },
         "submissionerror": {
             "authrequiredmsg": "Identificiéring noodzakelijk. Aub identificeer __here__ in een nieuwe browser tab en probeer opnieuw.",
-            "fnfheading": "Bestand(en) niet gevonden",
             "fnfmsg": [
-                "De volgende media bestanden konden niet gevonden worden: __failedFiles__. The verzending zal doorgaan zonder deze bestanden en zal de missende bestandsnamen laten zien in het record(s).",
+                "De volgende media bestanden konden niet gevonden worden: __failedFiles__. De verzending is doorgegaan en gelukt zonder deze bestanden.",
                 "Contacteer __supportEmail__ aub om een 'bug' te rapporteren en indien mogelijk beschrijf hoe het probleem kan worden gereproduceerd. "
             ],
-            "heading": "Verzenden Niet Succesvol",
-            "tryagainmsg": "Probeer opnieuw te verzenden."
+            "heading": "Verzenden Niet Succesvol"
         },
         "submissionsuccess": {
             "heading": "Verzending Succesvol!",
@@ -66,6 +86,11 @@
             "negButton": "Annuleer",
             "posButton": "Confirmeer"
         },
+        "discardcurrent": {
+            "heading": "Niet opgeslagen edits",
+            "msg": "Er zijn niet-opgeslagen veranderingen gemaakt. Wil je een nieuw record laden zonder deze verandering te bewaren?",
+            "posButton": "Ga verder zonder op te slaan"
+        },
         "login": {
             "heading": "Login Noodzakelijk",
             "msg": [
@@ -75,10 +100,26 @@
             "negButton": "Later",
             "posButton": "Log nu in"
         },
+        "print": {
+            "a4": "A4",
+            "heading": "Selecteer Print Instellingen",
+            "landscape": "Landscape",
+            "letter": "Letter (US)",
+            "msg": "Vul the informatie hieronder in om een geoptimaliseerde print versie voor te bereiden.",
+            "orientation": "Papier Orientatie",
+            "portrait": "Portrait",
+            "posButton": "Bereid Voor",
+            "psize": "Papier Formaat",
+            "reminder": "Denk er aan om dezelfde settings te gebruiken in het print menu hierna!"
+        },
         "save": {
-            "hint": "Deze naam maak het makkelijk om het record te kunnen vinden later. De record naam wordt niet verzonden naar de server.",
+            "existingerror": "Deze record naam of ID bestaat al.",
+            "hint": "Deze naam dient om makkelijk het opgeslagen bestand te kunnen vinden om het later compleet te maken.",
             "msg": "Er zijn niet-opgeslagen veranderingen gemaakt. Wil je doorgaan zonder deze te bewaren?",
-            "name": "Record Naam"
+            "name": "Record Naam",
+            "posButton": "Sla Op & Sluit",
+            "renamemsg": "Weet je zeker dat je __currentName__ naar __newName__ wilt veranderen?",
+            "unkownerror": "Een onbekende fout trad op tijdens het opslaan."
         }
     },
     "contact": {
@@ -113,6 +154,18 @@
             "return": "Terug naar het Begin"
         }
     },
+    "formfooter": {
+        "savedraft": {
+            "btn": "Sla Op als Draft",
+            "label": "Sla Op als Draft"
+        },
+        "submit": {
+            "btn": "Verzend"
+        },
+        "validate": {
+            "btn": "Valideer"
+        }
+    },
     "here": "hier",
     "home": {
         "msg": "__appTitle__ werkt! De Enketo enquetes zijn vanaf de __serverName__ installatie toegankelijk."
@@ -126,13 +179,32 @@
             },
             "msg1": "Au! Sorry, je bent hier waarschijnlijk heen gestuurd omdat je browser te ouderwets is of misschien belangrijke functies heeft uitgeschakeld in 'prive mode'.",
             "msg2": "Als je een ouderwetse browser gebruikt, raden wij aan om deze te vervangen of up-te-daten met een van de volgende prima moderne browsers:"
+        },
+        "offline": {
+            "heading": "Kan de verzochte pagina niet laden.",
+            "msg1": "Deze pagine is alleen bereikbaar als de browser een Internet verbinding heeft en de server beschikbaar is (tenzij de pagina niet bestaat)."
+        }
+    },
+    "prompt": {
+        "default": {
+            "heading": "Vul waardes in"
+        }
+    },
+    "record-list": {
+        "export": "Exporteer",
+        "msg1": "Records worden in je browser opgeslagen totdat ze verzonden zijn (zelfs als je het apparaat uitzet of geen Internet verbinding hebt).",
+        "msg2": "Opgeslagen records, behalve degene die als draft __icon__ gemarkeerd, worden automatisch verzonden in de achtergrond, elke 5 minuten als deze pagina open is en een Internet verbinding aanwezig is. Om een verzending te forceren tussen automatische pogingen in, klik op Verzend. ",
+        "norecords": "geen records aanwezig",
+        "title": "Records",
+        "upload": "Verzend"
+    },
+    "store": {
+        "error": {
+            "notavailable": "Browser opslag is benodigd maar niet beschikbaar, kapot, of niet beschrijfbaar. Als je in 'prive´ browsing' mode zit, schakel over naar de normale mode. Of probeer een ander browser. (fout: __error__)"
         }
     },
     "submission": {
         "http0": "Gefaald (Offline?)",
-        "http200": "Data server wilde het record niet accepteren.",
-        "http201": "Klaar!",
-        "http202": "Klaar! (duplikaat)",
         "http2xx": "Onverwacht antwoord tijdens record verzending.",
         "http400": "Data server wilde het record niet accepteren.",
         "http403": "Niet toegestaan om records te verzenden naar deze server.",
@@ -140,5 +212,6 @@
         "http413": "Record is te groot.",
         "http4xx": "Onbekend ontvangst probleem op de data server.",
         "http500": "De data server voor deze enquete is niet bereikbaar. Probeer het later nog een keer of contacteer __supportEmail__."
-    }
+    },
+    "version": "versie:"
 }
