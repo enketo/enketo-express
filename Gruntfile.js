@@ -148,9 +148,9 @@ module.exports = function( grunt ) {
                 files: [ {
                     overwrite: false,
                     expand: true,
-                    cwd: 'app/lib/enketo-core',
-                    src: [ '*' ],
-                    dest: 'public/lib/enketo-core'
+                    cwd: 'app/lib/',
+                    src: [ 'enketo-core' ],
+                    dest: 'public/lib/'
                 } ]
             }
         },
