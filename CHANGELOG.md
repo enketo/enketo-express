@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Updated
 - Configuration now done with local config.json that overrides default (rename existing config/config.json before updating!)
 - Dutch translation
+- Authentication documentation
 
 ##### Fixed
 - In media input widget, when media is too large, record is still populated with file name.
