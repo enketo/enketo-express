@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Authentication documentation
 
 ##### Fixed
+- Installation with Vagrant
 - In media input widget, when media is too large, record is still populated with file name.
 
 [1.7.0] - 2015-02-19

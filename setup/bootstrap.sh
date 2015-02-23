@@ -20,13 +20,13 @@ echo 'updating enketo app to latest version'
 apt-get install -y git
 cd $ENKETO_EXPRESS_REPO_DIR
 # The next line should be commented out during development or any case where the repository was cloned via the ssh URL (i.e. git@github.com:kobotoolbox/enketo-express.git) as opposed to the HTTPS.
-[ $ENKETO_EXPRESS_UPDATE_REPO = "true" ] && git pull
-git submodule update --init --recursive
+#[ $ENKETO_EXPRESS_UPDATE_REPO = "true" ] && git pull
+#git submodule update --init --recursive
 
 # further redis setup with persistence, security, logging, multiple instances, priming 
 stop redis-server
 echo 'copying enketo redis conf...'
-mv /etc/redis/redis.conf redis-origin.conf
+mv /etc/redis/redis.conf /etc/redis/redis-origin.conf
 cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/conf/redis-enketo-main.conf /etc/redis/
 cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/conf/redis-enketo-cache.conf /etc/redis/
 chown redis:redis /var/lib/redis/
@@ -47,6 +47,7 @@ echo 'starting second enketo redis instance...'
 service redis-server-enketo-cache start
 
 # install XML prerequisites for node_xslt
+echo 'installing libxml2 and libxslt'
 apt-get install -y libxml2-dev libxslt1-dev
 
 # install dependencies, development tools, node, grunt
@@ -69,6 +70,12 @@ if [ -d "$ENKETO_EXPRESS_REPO_DIR/node_modules" ]; then
 fi
 npm install 
 bower install --allow-root
+
+# create a configuration file by copying the default unless it already exists
+echo 'copying default configuration unless config.json already exists'
+if [ -f "$ENKETO_EXPRESS_REPO_DIR/config/config.json"]; then
+    cp config/default-config.json config/config.json
+fi
 
 # build js and css
 grunt symlink
