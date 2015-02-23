@@ -3,7 +3,7 @@
 var Q = require( 'q' ),
     utils = require( '../lib/utils' ),
     TError = require( '../lib/custom-error' ).TranslatedError,
-    config = require( '../../config/config' ),
+    config = require( './config-model' ).server,
     client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
         auth_pass: config.redis.main.password
     } ),

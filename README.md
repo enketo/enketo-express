@@ -12,8 +12,9 @@ A super light-weight node.js version of Enketo Smart Paper. Chock-full of [badas
 3. Install libxslt and libxml2 with `(sudo) apt-get install libxml2-dev libxslt1-dev`
 4. Clone this repository
 5. Clone git submodules with `git submodule update --init --recursive`
-6. install dependencies with `npm install` and `bower install` from the project root
-7. Build with `grunt` from the project root
+6. Install dependencies with `npm install` and `bower install` from the project root
+7. Create a configuration file config/config.json to override values in the [default config](./config/default-config.json) with `cp config/default-config.json config/config.json`
+8. Build with `grunt` from the project root
 
 ### How to install as a local VirtualBox VM - the easy way
 1. Install [Vagrant](http://docs.vagrantup.com/v2/installation/index.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
@@ -25,7 +26,7 @@ _\* sometimes `vagrant up` fails for reasons beyond our control - e.g. if extern
 
 ### How to configure
 
-All configuration is done in [config.json](./config/config.json). The configuration items have self-explanatory names and helpful sample values. After editing the configuration, the app will need to be restarted.
+All configuration is done in config/config.json. Strictly speaking, this file only has to contain the [default properties](./config/default-config.json) that you'd like to override, but it might be safer to include all properties. The configuration items have self-explanatory names and helpful sample values. After editing the configuration, the app will need to be restarted.
 
 The `maps` configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a tiles (array) and an attribution property)
 
@@ -33,21 +34,21 @@ The default production configuration includes 2 redis instances for the cache. Y
 
 To configure external authentication see [this section](#authentication).
 
-The API is accessible on **/api/v2** (v2 is backwards-compatible with enketo-legacy's v1).
+The API is accessible on **/api/v2** and **/api/v1**.
 
 ### How to run
 Run with `npm start` from project root.
 
-You can now check that the app is running by going to e.g. http://localhost:8005 (depending on your server and port set in [config.json](./config/config.json) or the port forwarding set up in Vagrant (default is 8006))
+You can now check that the app is running by going to e.g. http://localhost:8005 (depending on your server and port set in config/config.json or the port forwarding set up in Vagrant (default is 8006))
 
-For a production server, we recommend using [pm2](https://github.com/unitech/pm2) to manage the node app.
+For a production server, we recommend using [pm2](https://github.com/unitech/pm2) or [forever](https://github.com/foreverjs/forever) to manage the node app.
 
 
 ### How to update
 * update git repository with `git pull && git submodule update --init --recursive`
 * update dependencies with `npm update && bower update`
 * re-build with `grunt`
-
+* restart app
 
 ### Developer tools
 Install [nodemon](https://github.com/remy/nodemon) to automatically restart the server when a file changes.
@@ -80,7 +81,7 @@ The easiest way to start the app in development and debugging mode with liverelo
 
 ### Themes
 
-The default theme can be set in [config.json](config/config.json). The default theme can be overridden in [the form definition](http://xlsform.org/#grid). 
+The default theme can be set in config/config.json. The default theme can be overridden in [the form definition](http://xlsform.org/#grid). 
 
 The recommended way to customize themes is to either:
 
@@ -105,7 +106,7 @@ To make use of external authentication set the following in [config.json](config
 
 There are two potential security issues to be aware of, both of should be resolved by running this application on **https** with a valid SSL certificate.
 
-API security is mainly arranged by the secret API key set up in [config.json](config/config.json). This API key is sent in **cleartext** to Enketo by the form/data server (such as ODK Aggregate) and can easily be intercepted and read _if the transport is not secure_. Somebody could start using your Enketo Express installation for their own form/data server, or obtain the URLs of your forms. Using secure (https) transport mitigates against this hazard. Security increases as well by populating the _server url_ in [config.json](config/config.json). Also, don't forget to change your API key when you start running Enketo Express in production.
+API security is mainly arranged by the secret API key set up in config/config.json. This API key is sent in **cleartext** to Enketo by the form/data server (such as ODK Aggregate) and can easily be intercepted and read _if the transport is not secure_. Somebody could start using your Enketo Express installation for their own form/data server, or obtain the URLs of your forms. Using secure (https) transport mitigates against this hazard. Security increases as well by populating the _server url_ in config/config.json. Also, don't forget to change your API key when you start running Enketo Express in production.
 
 Form authentication is only secure when Enketo is running on **https**. To avoid leaking form server credentials, authentication is automatically disabled when the app is accessed in a 'production' environment on 'http'. If you **have to** to run the app on http in a production environment, you can bypass this security by setting `"allow insecure transport": true` in config/config.json. The only use case this would be acceptable in is when running the app on a local protected network (e.g. in the KoBo VM).
 

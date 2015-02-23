@@ -1,7 +1,7 @@
 "use strict";
 
 var Q = require( 'q' ),
-    config = require( '../../config/config' ),
+    config = require( './config-model' ).server,
     TError = require( '../lib/custom-error' ).TranslatedError,
     utils = require( '../lib/utils' ),
     client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {

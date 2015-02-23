@@ -7,6 +7,8 @@ public/lib/enketo-core
 public/lib/martijnr-foundation
 public/lib/bower-components
 locales/en/translation_old.json
+config/config.json
 .rebooted
 .vagrant
 .scratchpad
+

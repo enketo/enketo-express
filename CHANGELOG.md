@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [Unreleased]
 -----------
 ##### Updated
+- Configuration now done with local config.json that overrides default (rename existing config/config.json before updating!)
 - Dutch translation
 
 ##### Fixed

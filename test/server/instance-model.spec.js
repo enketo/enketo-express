@@ -7,7 +7,7 @@ var model,
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" ),
     model = require( '../../app/models/instance-model' ),
-    config = require( "../../config/config" );
+    config = require( "../../app/models/config-model" ).server;
 
 chai.use( chaiAsPromised );
 

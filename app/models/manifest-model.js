@@ -5,7 +5,7 @@ var libxml = require( "libxmljs" ),
     path = require( 'path' ),
     fs = require( 'fs' ),
     Q = require( 'q' ),
-    config = require( '../../config/config' ),
+    config = require( './config-model' ).server,
     client = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
         auth_pass: config.redis.cache.password
     } ),

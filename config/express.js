@@ -8,14 +8,12 @@ var themesSupported = [],
     cookieParser = require( 'cookie-parser' ),
     fs = require( 'fs' ),
     favicon = require( 'serve-favicon' ),
-    config = require( './config' ),
+    config = require( '../app/models/config-model' ).server,
     logger = require( 'morgan' ),
     i18n = require( 'i18next' ),
     compression = require( 'compression' ),
     errorHandler = require( '../app/controllers/error-handler' ),
     controllersPath = path.join( __dirname, '../app/controllers' ),
-    themePath = path.join( __dirname, '../public/css' ),
-    languagePath = path.join( __dirname, '../locales' ),
     app = express(),
     debug = require( 'debug' )( 'express' );
 
@@ -33,23 +31,6 @@ app.set( 'view engine', 'jade' );
 
 // pretty json API responses
 app.set( 'json spaces', 4 );
-
-// detect supported themes
-if ( fs.existsSync( themePath ) ) {
-    fs.readdirSync( themePath ).forEach( function( file ) {
-        var matches = file.match( /^theme-([A-z]+)\.css$/ );
-        if ( matches && matches.length > 1 ) {
-            themesSupported.push( matches[ 1 ] );
-        }
-    } );
-}
-app.set( 'themes supported', themesSupported );
-
-// detect supported languages
-languagesSupported = fs.readdirSync( languagePath ).filter( function( file ) {
-    return fs.statSync( path.join( languagePath, file ) ).isDirectory();
-} );
-app.set( 'languages supported', languagesSupported );
 
 // setup i18next
 i18n.init( {

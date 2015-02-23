@@ -18,7 +18,7 @@ var Q = require( "q" ),
     surveyModel = require( '../../app/models/survey-model' ),
     instanceModel = require( '../../app/models/instance-model' ),
     redis = require( "redis" ),
-    config = require( "../../config/config" ),
+    config = require( "../../app/models/config-model" ).server,
     client = redis.createClient( config.redis.main.port, config.redis.main.host, {
         auth_pass: config.redis.main.password
     } );

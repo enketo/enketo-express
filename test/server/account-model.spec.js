@@ -11,7 +11,7 @@ var model,
     chaiAsPromised = require( "chai-as-promised" ),
     app = require( '../../config/express' ),
     model = require( '../../app/models/account-model' ),
-    config = require( "../../config/config" );
+    config = require( "../../app/models/config-model" ).server;
 
 chai.use( chaiAsPromised );
 

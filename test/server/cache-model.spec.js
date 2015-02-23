@@ -10,7 +10,7 @@ var model, survey,
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" ),
     redis = require( "redis" ),
-    config = require( "../../config/config" ),
+    config = require( "../../app/models/config-model" ).server,
     client = redis.createClient( config.redis.cache.port, config.redis.cache.host, {
         auth_pass: config.redis.cache.password
     } ),
