@@ -18,7 +18,7 @@ if ( process.env.NODE_ENV === 'test' ) {
 }
 
 function getManifest( html, lang ) {
-    var hash, version, doc, resources, app, themesSupported, date,
+    var hash, version, doc, resources, themesSupported, date,
         manifestKey = 'ma:' + lang + '_manifest',
         versionKey = 'ma:' + lang + '_version',
         deferred = Q.defer();
@@ -34,8 +34,7 @@ function getManifest( html, lang ) {
             debug( 'building manifest from scratch' );
             doc = libxml.parseHtml( html );
             resources = [];
-            app = require( '../../config/express' );
-            themesSupported = app.get( 'themes supported' ) || [];
+            themesSupported = config[ 'themes supported' ] || [];
 
             // href attributes of link elements
             resources = resources.concat( _getLinkHrefs( doc ) );
