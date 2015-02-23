@@ -161,14 +161,12 @@ module.exports = function( grunt ) {
         }
     } );
 
-
-    // determine all widget js resources
-    var widgetResources = [].concat( require( './app/models/config-model' ).server.widgets );
-    widgetResources.forEach( function( widget, index, arr ) {
-        arr.push( 'text!' + widget.substr( 0, widget.lastIndexOf( '/' ) + 1 ) + 'config.json' );
-    } );
-
     function getWebformCompileOptions( type ) {
+        // determine all widget js resources
+        var widgetResources = [].concat( require( './app/models/config-model' ).server.widgets );
+        widgetResources.forEach( function( widget, index, arr ) {
+            arr.push( 'text!' + widget.substr( 0, widget.lastIndexOf( '/' ) + 1 ) + 'config.json' );
+        } );
         type = ( type ) ? '-' + type : '';
         return {
             options: {
