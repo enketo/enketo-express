@@ -50,7 +50,7 @@ module.exports = function( grunt ) {
         },
         watch: {
             sass: {
-                files: [ '.rebooted', 'config.json', 'app/views/styles/**/*.scss', 'app/lib/enketo-core/src/**/*.scss', 'app/views/**/*.jade' ],
+                files: [ '.rebooted', 'config/config.json', 'app/views/styles/**/*.scss', 'app/lib/enketo-core/src/**/*.scss', 'app/views/**/*.jade' ],
                 tasks: [ 'sass' ],
                 options: {
                     spawn: true,
@@ -161,18 +161,20 @@ module.exports = function( grunt ) {
         }
     } );
 
+
+    // determine all widget js resources
+    var widgetResources = [].concat( require( './app/models/config-model' ).server.widgets );
+    widgetResources.forEach( function( widget, index, arr ) {
+        arr.push( 'text!' + widget.substr( 0, widget.lastIndexOf( '/' ) + 1 ) + 'config.json' );
+    } );
+
     function getWebformCompileOptions( type ) {
-        //add widgets js and widget config.json files
-        var widgets = grunt.file.readJSON( './config/config.json' ).widgets;
-        widgets.forEach( function( widget, index, arr ) {
-            arr.push( 'text!' + widget.substr( 0, widget.lastIndexOf( '/' ) + 1 ) + 'config.json' );
-        } );
         type = ( type ) ? '-' + type : '';
         return {
             options: {
                 name: "../main-webform" + type,
                 out: "public/js/webform" + type + "-combined.min.js",
-                include: [ /*'core-lib/require'*/ '../../../../public/lib/bower-components/requirejs/require' ].concat( widgets )
+                include: [ '../../../../public/lib/bower-components/requirejs/require' ].concat( widgetResources )
             }
         };
     }
