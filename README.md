@@ -13,10 +13,11 @@ A super light-weight node.js version of Enketo Smart Paper. Chock-full of [badas
 4. Clone this repository
 5. Clone git submodules with `git submodule update --init --recursive`
 6. Install dependencies with `npm install` and `bower install` from the project root
-7. Create a configuration file config/config.json to override values in the [default config](./config/default-config.json) with `cp config/default-config.json config/config.json`
+7. Create config/config.json to override values in the [default config](./config/default-config.json). Start with `cp config/default-config.json config/config.json`
 8. Build with `grunt` from the project root
 
 ### How to install as a local VirtualBox VM - the easy way
+
 1. Install [Vagrant](http://docs.vagrantup.com/v2/installation/index.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Clone this repository 
 3. Run `vagrant up` from the enketo-express folder and wait until it completes \* 
@@ -94,7 +95,11 @@ The recommended way to customize themes is to either:
 
 This app can manage [OpenRosa form authentication](https://bitbucket.org/javarosa/javarosa/wiki/AuthenticationAPI) for protected forms, i.e. it is possible to log in to forms with credentials set in your OpenRosa Server (e.g. Aggregate/KoBo/Ona), just like in ODK Collect. 
 
-It also enables the use of _external authentication_, i.e. the authentication management of your form and data server. Whenever a request (form, formlist, submission) requires authentication, enketo-express re-directs the user to a login page on the form and data server and simply passes any cookies back to that server whenever it makes any subsequent request. It is up to the form and data server to authenticate based on the cookie content. This mechanism requires any enketo-express webform to have access to these browser cookies so the form/data server and Enketo Express would have to be on the same domain (a different subdomain is possible when setting cross-domain cookies). It also requires the login page to have a mechanism for redirecting the authenticated user back, via a query string parameter.
+To make use of OpenRosa form authentication, set the following in config/config.json:
+
+* linked form and data server -> authentication -> managed by enketo -> true
+
+Alternatively, you could make use of _external authentication_, i.e. the authentication management of your form and data server. Whenever a request (form, formlist, submission) requires authentication, enketo-express re-directs the user to a login page on the form and data server and simply passes any cookies back to that server whenever it makes any subsequent request. It is up to the form and data server to authenticate based on the cookie content. This mechanism requires any enketo-express webform to have access to these browser cookies so the form/data server and Enketo Express would have to be on the same domain (a different subdomain is possible when setting cross-domain cookies). It also requires the login page to have a mechanism for redirecting the authenticated user back, via a query string parameter.
 
 To make use of external authentication set the following in config/config.json:
 
@@ -106,9 +111,9 @@ To make use of external authentication set the following in config/config.json:
 
 There are two potential security issues to be aware of, both of should be resolved by running this application on **https** with a valid SSL certificate.
 
-API security is mainly arranged by the secret API key set up in config/config.json. This API key is sent in **cleartext** to Enketo by the form/data server (such as ODK Aggregate) and can easily be intercepted and read _if the transport is not secure_. Somebody could start using your Enketo Express installation for their own form/data server, or obtain the URLs of your forms. Using secure (https) transport mitigates against this hazard. Security increases as well by populating the _server url_ in config/config.json. Also, don't forget to change your API key when you start running Enketo Express in production.
+_API security_ is mainly arranged by the secret API key set up in config/config.json. This API key is sent in **cleartext** to Enketo by the form/data server (such as ODK Aggregate) and can easily be intercepted and read _if the transport is not secure_. Somebody could start using your Enketo Express installation for their own form/data server, or obtain the URLs of your forms. Using secure (https) transport mitigates against this hazard. Security increases as well by populating the _server url_ in config/config.json. Also, don't forget to change your API key when you start running Enketo Express in production.
 
-Form authentication is only secure when Enketo is running on **https**. To avoid leaking form server credentials, authentication is automatically disabled when the app is accessed in a 'production' environment on 'http'. If you **have to** to run the app on http in a production environment, you can bypass this security by setting `"allow insecure transport": true` in config/config.json. The only use case this would be acceptable in is when running the app on a local protected network (e.g. in the KoBo VM).
+_Form authentication_ is only secure when Enketo is running on **https**. To avoid leaking form server credentials, authentication is automatically disabled when the app is accessed in a 'production' environment on 'http'. If you **have to** to run the app on http in a production environment, you can bypass this security by setting `"allow insecure transport": true` in config/config.json. The only use case this would be acceptable in is when running the app on a local protected network (e.g. in the KoBo VM).
 
 
 ### Translation
@@ -127,10 +132,10 @@ The development of this application was funded by [KoBo Toolbox (Harvard Humanit
 
 See [the license document](LICENSE) for this application's license.
 
-Note that some of the libraries used in this app have different licenses.
+Note that some of the libraries used in this app have different license. In particular note [this one](https://github.com/enketo/enketo-xpathjs).
 
 The Enketo logo and Icons are trademarked by [Enketo LLC](https://www.linkedin.com/company/enketo-llc). They can be used in the KoBoCAT VM only. If you are using this app to build your own web application, you are encouraged to maintain the 'powered by Enketo' form footer with the Enketo logo, but replace other images in [/public/images](/public/images) with your own or contact [Enketo LLC](mailto:info@enketo.org) to discuss the use inside your app.
 
 ### Change log
 
-See [CHANGELOG](./CHANGELOG.md)
+See [change log](./CHANGELOG.md)

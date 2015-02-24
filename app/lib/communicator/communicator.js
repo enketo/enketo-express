@@ -120,7 +120,7 @@ function authenticate( survey ) {
         auth: survey.credentials
     };
 
-    return _headRequest( options )
+    return _request( options )
         .then( function() {
             debug( 'successful (authenticated if it was necessary)' );
             return survey;
