@@ -44,7 +44,10 @@ require( [ 'require-config' ], function( rc ) {
             function _init( formStr, modelStr, instanceStr ) {
                 $loader[ 0 ].outerHTML = formStr;
                 $( document ).ready( function() {
-                    controller.init( 'form.or:eq(0)', modelStr, instanceStr );
+                    controller.init( 'form.or:eq(0)', {
+                        modelStr: modelStr,
+                        instanceStr: instanceStr
+                    } );
                     $form.add( $buttons ).removeClass( 'hide' );
                     $( 'head>title' ).text( utils.getTitleFromFormStr( formStr ) );
                     if ( console.timeEnd ) console.timeEnd( 'client loading time' );

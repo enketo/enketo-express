@@ -1,4 +1,4 @@
-define( [ 'q' ], function( Q ) {
+define( [ 'papaparse', 'q' ], function( Papa, Q ) {
     "use strict";
 
     //var hasArrayBufferView = new Blob( [ new Uint8Array( 100 ) ] ).size == 100;
@@ -74,7 +74,6 @@ define( [ 'q' ], function( Q ) {
         return deferred.promise;
     }
 
-
     function getThemeFromFormStr( formStr ) {
         var matches = formStr.match( /<\s?form .*theme-([A-z]+)/ );
         return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
@@ -86,10 +85,51 @@ define( [ 'q' ], function( Q ) {
         return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
     }
 
+    function csvToXml( csv ) {
+        var xmlStr,
+            result = Papa.parse( csv ),
+            rows = result.data,
+            headers = rows.shift();
+
+        if ( result.errors.length ) {
+            throw result.errors[ 0 ];
+        }
+
+        // trim the headers
+        headers = headers.map( function( header ) {
+            return header.trim();
+        } );
+
+        // check if headers are valid XML node names
+        headers.every( _throwInvalidXmlNodeName );
+
+        // create an XML string
+        xmlStr = '<root>' +
+            rows.map( function( row ) {
+                return '<item>' + row.map( function( value, index ) {
+                    return '<{n}>{v}</{n}>'.replace( /{n}/g, headers[ index ] ).replace( /{v}/g, value.trim() );
+                } ).join( '' ) + '</item>';
+            } ).join( '' ) +
+            '</root>';
+
+        return xmlStr;
+    }
+
+    function _throwInvalidXmlNodeName( name ) {
+        // Note: this is more restrictive than XML spec.
+        // We cannot accept namespaces prefixes because there is no way of knowing the namespace uri in CSV.
+        if ( /^(?!xml)[A-Za-z._][A-Za-z0-9._]*$/.test( name ) ) {
+            return true;
+        } else {
+            throw new Error( 'CSV column heading "' + name + '" cannot be turned into a valid XML element' );
+        }
+    }
+
     return {
         blobToDataUri: blobToDataUri,
         dataUriToBlob: dataUriToBlob,
         getThemeFromFormStr: getThemeFromFormStr,
-        getTitleFromFormStr: getTitleFromFormStr
+        getTitleFromFormStr: getTitleFromFormStr,
+        csvToXml: csvToXml
     };
 } );

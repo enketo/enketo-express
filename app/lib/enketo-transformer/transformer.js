@@ -36,12 +36,13 @@ function _transform( survey ) {
             result.form = _stripRoot( transformer.transform( formStylesheet, doc, [ 'wtf', 'why' ] ) );
 
             instanceStylesheet = transformer.readXsltString( xslModel );
-            survey.model = _stripRoot( transformer.transform( instanceStylesheet, doc, [ 'wtf', 'why' ] ) );
+            result.model = _stripRoot( transformer.transform( instanceStylesheet, doc, [ 'wtf', 'why' ] ) );
 
             xsltEndTime = new Date().getTime();
             debug( 'form and instance XSLT transformation took ' + ( xsltEndTime - startTime ) / 1000 + ' seconds' );
 
             survey.form = _replaceMediaSources( result.form, survey.manifest );
+            survey.model = _replaceMediaSources( result.model, survey.manifest );
             debug( 'post-processing transformation result took ' + ( new Date().getTime() - xsltEndTime ) / 1000 + ' seconds' );
 
             deferred.resolve( survey );
@@ -60,19 +61,19 @@ function _stripRoot( xml ) {
     return xmlDoc.root().get( '*' ).toString( false );
 }
 
-function _replaceMediaSources( form, manifest ) {
-    var formDoc;
+function _replaceMediaSources( xmlStr, manifest ) {
+    var doc;
 
     if ( !manifest ) {
-        return form;
+        return xmlStr;
     }
 
-    formDoc = libxmljs.parseXml( form );
+    doc = libxmljs.parseXml( xmlStr );
 
-    // iterate through each media element
-    formDoc.find( '//*[@src]' ).forEach( function( mediaEl ) {
+    // iterate through each element with a src attribute
+    doc.find( '//*[@src]' ).forEach( function( mediaEl ) {
         manifest.some( function( file ) {
-            if ( file.filename === mediaEl.attr( 'src' ).value() ) {
+            if ( new RegExp( 'jr://(images|video|audio|file|file-csv)/' + file.filename ).test( mediaEl.attr( 'src' ).value() ) ) {
                 mediaEl.attr( 'src', _toLocalMediaUrl( file.downloadUrl ) );
                 return true;
             }
@@ -82,8 +83,9 @@ function _replaceMediaSources( form, manifest ) {
 
     // add form logo if existing in manifest
     manifest.some( function( file ) {
-        if ( file.filename === 'form_logo.png' ) {
-            formDoc.get( '//*[@class="form-logo"]' )
+        var formLogoEl = doc.get( '//*[@class="form-logo"]' );
+        if ( file.filename === 'form_logo.png' && formLogoEl ) {
+            formLogoEl
                 .node( 'img' )
                 .attr( 'src', _toLocalMediaUrl( file.downloadUrl ) )
                 .attr( 'alt', 'form logo' );
@@ -92,7 +94,7 @@ function _replaceMediaSources( form, manifest ) {
     } );
 
     //TODO: probably result in selfclosing tags for empty elements where not allowed in HTML. Check this.
-    return formDoc.toString();
+    return doc.toString();
 }
 
 function _toLocalMediaUrl( url ) {

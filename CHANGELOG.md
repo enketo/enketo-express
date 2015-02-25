@@ -2,9 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+##### Added
+- Support for external instance sources, CSV and XML
+
 [1.7.1] - 2015-02-27
 -----------
-##### Updated
+##### Changed
 - Configuration now done with local config.json that overrides default (rename existing config/config.json before updating!)
 - Dutch translation
 - Authentication documentation
