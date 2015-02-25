@@ -24,6 +24,9 @@ module.exports = function( config ) {
                 pattern: 'public/lib/bower-components/q/q.js',
                 included: false
             }, {
+                pattern: 'public/lib/bower-components/papaparse/papaparse.js',
+                included: false
+            }, {
                 pattern: 'public/lib/martijnr-db.js/src/db.js',
                 included: false
             }, {

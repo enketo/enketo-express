@@ -5,6 +5,10 @@ define( [ 'utils' ], function( utils ) {
 
     describe( 'Client Utilities', function() {
 
+        /**
+         * Once Blobs are supported in Node.js these can move to utils.spec.js
+         */
+
         describe( 'blob <-> dataURI conversion', function() {
 
             var aBlob1 = new Blob( [ '<a id="a"><b id="b">hey!</b></a>' ], {

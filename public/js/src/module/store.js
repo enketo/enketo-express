@@ -269,7 +269,8 @@ define( [ 'db', 'q', 'utils', 'translator' ], function( db, Q, utils, t ) {
                         hash: survey.hash,
                         theme: survey.theme,
                         resources: resourceKeys,
-                        maxSize: survey.maxSize
+                        maxSize: survey.maxSize,
+                        externalData: survey.externalData
                     } );
                 } )
                 .then( function() {
@@ -436,15 +437,6 @@ define( [ 'db', 'q', 'utils', 'translator' ], function( db, Q, utils, t ) {
                 return file.name;
             } );
 
-            console.debug( 'going to add new record', {
-                instanceId: record.instanceId,
-                enketoId: record.enketoId,
-                name: record.name,
-                xml: record.xml,
-                files: fileKeys,
-                updated: new Date().getTime(),
-                draft: record.draft
-            } );
             return server.records.add( {
                     instanceId: record.instanceId,
                     enketoId: record.enketoId,

@@ -21,19 +21,16 @@
 define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormModel', 'file-manager', 'q', 'translator', 'records-queue', 'jquery' ],
     function( gui, connection, settings, Form, FormModel, fileManager, Q, t, records, $ ) {
         "use strict";
-        var form, $formprogress, formSelector, defaultModelStr;
+        var form, formSelector, formData, $formprogress;
 
-        function init( selector, modelStr, instanceStrToEdit, options ) {
+        function init( selector, data ) {
             var loadErrors, advice;
-
-            formSelector = selector;
-            defaultModelStr = modelStr;
-            options = options || {};
-            instanceStrToEdit = instanceStrToEdit || null;
 
             connection.init();
 
-            form = new Form( formSelector, defaultModelStr, instanceStrToEdit );
+            formSelector = selector;
+            formData = data;
+            form = new Form( formSelector, formData );
 
             // DEBUG
             // window.form = form;
@@ -53,7 +50,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
 
             if ( loadErrors.length > 0 ) {
                 console.error( 'load errors:', loadErrors );
-                advice = ( instanceStrToEdit ) ? t( 'alert.loaderror.editadvice' ) : t( 'alert.loaderror.entryadvice' );
+                advice = ( formData.instanceStr ) ? t( 'alert.loaderror.editadvice' ) : t( 'alert.loaderror.entryadvice' );
                 gui.alertLoadErrors( loadErrors, advice );
             }
 
@@ -80,7 +77,10 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
             } else {
                 _setDraftStatus( false );
                 form.resetView();
-                form = new Form( formSelector, defaultModelStr );
+                form = new Form( formSelector, {
+                    modelStr: formData.modelStr,
+                    external: formData.external
+                } );
                 form.init();
                 // formreset event will update the form media:
                 form.getView().$.trigger( 'formreset' );
@@ -118,7 +118,12 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                             return gui.alert( t( 'alert.recordnotfound.msg' ) );
                         }
                         form.resetView();
-                        form = new Form( formSelector, defaultModelStr, record.xml, true );
+                        form = new Form( formSelector, {
+                            modelStr: formData.modelStr,
+                            instanceStr: record.xml,
+                            external: formData.external,
+                            unsubmitted: true
+                        } );
                         loadErrors = form.init();
                         // formreset event will update the form media:
                         form.getView().$.trigger( 'formreset' );

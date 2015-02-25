@@ -18,7 +18,7 @@
  * Deals with communication to the server (in process of being transformed to using Promises)
  */
 
-define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'jquery' ], function( settings, Q, t, FormModel, $ ) {
+define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'utils', 'jquery' ], function( settings, Q, t, FormModel, utils, $ ) {
     "use strict";
     var that = this,
         currentOnlineStatus = null,
@@ -319,7 +319,7 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'jquery' ], func
 
 
     /**
-     * Obtains HTML Form and XML Model
+     * Obtains HTML Form, XML Model and External Instances
      *
      * @param  {{serverUrl: ?string=, formId: ?string=, formUrl: ?string=, enketoId: ?string=}  options
      * @return { Promise }
@@ -339,7 +339,10 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'jquery' ], func
             } )
             .done( function( data ) {
                 data.enketoId = props.enketoId;
-                deferred.resolve( data );
+                //deferred.resolve( data );
+                _getExternalData( data )
+                    .then( deferred.resolve )
+                    .catch( deferred.reject );
             } )
             .fail( function( jqXHR, textStatus, errorMsg ) {
                 if ( jqXHR.responseJSON && jqXHR.responseJSON.message && /ENOTFOUND/.test( jqXHR.responseJSON.message ) ) {
@@ -353,13 +356,47 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'jquery' ], func
         return deferred.promise;
     }
 
+    function _getExternalData( survey ) {
+        var doc, deferred,
+            tasks = [];
+
+        try {
+            doc = $.parseXML( survey.model );
+
+            survey.externalData = $( doc ).find( 'instance[id][src]' ).map( function( index, el ) {
+                return {
+                    id: el.id,
+                    src: $( el ).attr( 'src' )
+                };
+            } ).get();
+
+            survey.externalData.forEach( function( instance ) {
+                tasks.push( _getDataFile( instance.src ).then( function( data ) {
+                    // if CSV file, transform to XML
+                    instance.xmlStr = ( instance.src.indexOf( '.csv' ) === instance.src.length - 4 ) ? utils.csvToXml( data ) : data;
+                    return instance;
+                } ) );
+            } );
+        } catch ( e ) {
+            deferred = Q.defer();
+            deferred.reject( e );
+            return deferred.promise;
+        }
+
+        return Q.all( tasks )
+            .then( function() {
+                return survey;
+            } );
+    }
+
+
     /**
-     * Obtains a media/data file
+     * Obtains a media file
      * JQuery ajax doesn't support blob responses, so we're going native here.
      *
      * @return {Promise} [description]
      */
-    function getFile( url ) {
+    function getMediaFile( url ) {
         var deferred = Q.defer(),
             xhr = new XMLHttpRequest();
 
@@ -376,6 +413,26 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'jquery' ], func
         xhr.open( 'GET', url );
         xhr.responseType = 'blob';
         xhr.send();
+
+        return deferred.promise;
+    }
+
+    /**
+     * Obtains a data/text file
+     *
+     * @return {Promise} [description]
+     */
+    function _getDataFile( url ) {
+        var deferred = Q.defer();
+
+        $.get( url )
+            .done( function( data ) {
+                deferred.resolve( data );
+            } )
+            .fail( function( jqXHR, textStatus, errorMsg ) {
+                var error = jqXHR.responseJSON || new Error( errorMsg );
+                deferred.reject( error );
+            } );
 
         return deferred.promise;
     }
@@ -408,7 +465,6 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'jquery' ], func
 
         return deferred.promise;
     }
-
 
     function getFormPartsHash( props ) {
         var error,
@@ -463,7 +519,7 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'jquery' ], func
         getOnlineStatus: getOnlineStatus,
         getFormParts: getFormParts,
         getFormPartsHash: getFormPartsHash,
-        getFile: getFile,
+        getMediaFile: getMediaFile,
         getExistingInstance: getExistingInstance,
         getManifestVersion: getManifestVersion
     };

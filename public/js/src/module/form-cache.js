@@ -147,7 +147,7 @@ define( [ 'store', 'connection', 'q' ], function( store, connection, Q ) {
 
         _getElementsGroupedBySrc( survey.$form ).forEach( function( elements ) {
             var src = elements[ 0 ].dataset.offlineSrc;
-            requests.push( connection.getFile( src ) );
+            requests.push( connection.getMediaFile( src ) );
         } );
 
         return Q.all( requests )

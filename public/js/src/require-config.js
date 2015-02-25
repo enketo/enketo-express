@@ -23,6 +23,7 @@ require.config( {
         "print": "../../../lib/enketo-core/src/js/print",
         "db": "../../../lib/martijnr-db.js/src/db",
         "vex": "../../../lib/bower-components/vex/js/vex",
+        "papaparse": "../../../lib/bower-components/papaparse/papaparse",
     },
     shim: {
         "xpath": {
@@ -42,6 +43,10 @@ require.config( {
         "leaflet": {
             exports: "L"
         },
-        "db": [ 'promise-by-Q' ]
+        "papaparse": {
+            exports: "Papa"
+        },
+        "db": [ 'promise-by-Q' ],
+
     }
 } );
