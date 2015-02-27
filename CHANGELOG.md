@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.7.1] - 2015-02-27
 -----------
 ##### Updated
 - Configuration now done with local config.json that overrides default (rename existing config/config.json before updating!)
@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Installation with Vagrant.
 - In media input widget, when media is too large, record is still populated with file name.
 - Broken form retrieval with formhub servers.
+- Error message 'ECONNREFUSED' not correctly changed to human-readable message. 
 
 [1.7.0] - 2015-02-19
 -----------
