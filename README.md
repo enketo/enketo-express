@@ -109,7 +109,7 @@ To make use of external authentication set the following in config/config.json:
 
 ### Security
 
-There are two potential security issues to be aware of, both of should be resolved by running this application on **https** with a valid SSL certificate.
+There are two major security considerations to be aware of. Both of these result in the need to run this application on **https** with a valid SSL certificate.
 
 _API security_ is mainly arranged by the secret API key set up in config/config.json. This API key is sent in **cleartext** to Enketo by the form/data server (such as ODK Aggregate) and can easily be intercepted and read _if the transport is not secure_. Somebody could start using your Enketo Express installation for their own form/data server, or obtain the URLs of your forms. Using secure (https) transport mitigates against this hazard. Security increases as well by populating the _server url_ in config/config.json. Also, don't forget to change your API key when you start running Enketo Express in production.
 
@@ -118,7 +118,7 @@ _Form authentication_ is only secure when Enketo is running on **https**. To avo
 
 ### Translation
 
-The user interface was translated by: Martijn van de Rijdt (Dutch), ... 
+The user interface was translated by: Luis Molina (Spanish), Martijn van de Rijdt (Dutch), ... 
 
 _Send a message if you'd like to contribute! We use an easy web interface provided by Transifex._
 
