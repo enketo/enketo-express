@@ -5,7 +5,7 @@ var Q = require( 'q' ),
     transformer = require( '../lib/enketo-transformer' ),
     prefix = 'ca:',
     expiry = 30 * 24 * 60 * 60,
-    config = require( '../../config/config' ),
+    config = require( './config-model' ).server,
     client = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
         auth_pass: config.redis.cache.password
     } ),
