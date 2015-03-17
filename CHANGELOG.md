@@ -2,10 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.1] - 2015-03-17
+------------
+##### Fixed
+- Installation with Vagrant failed
+- Local Redis configuration was ignored
+
 [1.8.0] - 2015-03-09
+-----------
 ##### Added
 - Support for external instance sources, CSV and XML
-- Added Spanish
+- Spanish language
 
 [1.7.1] - 2015-02-27
 -----------

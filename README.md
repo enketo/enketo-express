@@ -21,7 +21,8 @@ A super light-weight node.js version of Enketo Smart Paper. Chock-full of [badas
 1. Install [Vagrant](http://docs.vagrantup.com/v2/installation/index.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Clone this repository 
 3. Run `vagrant up` from the enketo-express folder and wait until it completes \* 
-4. The app should now be running on http://localhost:8006 (to stop: run `pm2 stop enketo` from VM)
+4. The app should now be running on [localhost:8006](http://localhost:8006). You can test the API with:
+```curl --user enketorules: -d "server_url=https://ona.io/enketo&form_id=widgets" http://localhost:8006/api/v2/survey```.
 
 _\* sometimes `vagrant up` fails for reasons beyond our control - e.g. if external resources are temporarily unavailable. Try running `vagrant reload --provision` to resolve this._
 
