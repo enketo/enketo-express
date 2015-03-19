@@ -1,7 +1,7 @@
 "use strict";
 
 var Q = require( 'q' ),
-    transformer = require( '../lib/enketo-transformer' ),
+    transformer = require( 'enketo-transformer' ),
     communicator = require( '../lib/communicator' ),
     surveyModel = require( '../models/survey-model' ),
     cacheModel = require( '../models/cache-model' ),

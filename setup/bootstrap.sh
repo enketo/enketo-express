@@ -74,7 +74,7 @@ fi
 npm install
 bower install --allow-root
 
-# create a configuration file by copying the default unless it already exists
+# create a local configuration file unless it already exists
 echo 'copying custom configuration unless config.json already exists'
 if [ ! -f "$ENKETO_EXPRESS_REPO_DIR/config/config.json" ]; then
     cp setup/config/config.json config/config.json

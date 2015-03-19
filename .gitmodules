@@ -1,6 +1,3 @@
 [submodule "app/lib/enketo-core"]
 	path = app/lib/enketo-core
 	url = https://github.com/enketo/enketo-core.git
-[submodule "app/lib/enketo-transformer/enketo-xslt"]
-	path = app/lib/enketo-transformer/enketo-xslt
-	url = https://github.com/enketo/enketo-xslt.git
