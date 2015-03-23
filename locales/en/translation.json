@@ -97,6 +97,7 @@
       "heading": "PANIC!",
       "msg": [
         "This will remove all your queued data and all your forms from the browser storage. Data will be lost forever. Use this only as a last resort if the browser storage seems corrupt.",
+        "Close all other Enketo browser tabs first.",
         "The page will reload. If you see an error you may have to repeat this action.",
         "Are you sure you want to do this?"
       ],
@@ -185,6 +186,15 @@
   "here": "here",
   "home": {
     "msg": "__appTitle__ is running! Please access Enketo forms from your __serverName__ installation."
+  },
+  "langs": {
+    "ar": "Arabic",
+    "en": "English",
+    "es": "Spanish",
+    "he": "Hebrew",
+    "nl": "Dutch",
+    "supported": "Languages supported: ",
+    "sw": "Swahili"
   },
   "page": {
     "modernbrowsers": {

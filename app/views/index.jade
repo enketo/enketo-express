@@ -2,3 +2,18 @@ extends layout
 
 block content
   p= t("home.msg", {appTitle: title, serverName: openrosa})
+
+  p= t("langs.supported")
+    each val in languages
+      if val === "en"
+        span= t("langs.en") + ', '
+      else if val === "ar"
+        span= t("langs.ar") + ', '
+      else if val === "es" 
+        span= t("langs.es") + ', '
+      else if val === "sw"
+        span= t("langs.sw") + ', '
+      else if val === "nl"
+        span= t("langs.nl") + ', '
+      else if val === "he" 
+        span= t("langs.he") + '.'
