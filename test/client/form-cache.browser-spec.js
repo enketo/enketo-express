@@ -33,7 +33,6 @@ require( [ 'form-cache', 'connection', 'q', 'jquery' ], function( formCache, con
                 } );
                 return deferred.promise;
             } );
-            console.error( 'connection', connection );
             getFileSpy = sandbox.stub( connection, 'getMediaFile', function( url ) {
                 var deferred = Q.defer();
                 deferred.resolve( {
