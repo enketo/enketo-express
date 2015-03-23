@@ -145,6 +145,10 @@ define( [ 'store', 'connection', 'gui', 'q', 'settings', 'translator' ], functio
                             // get the whole record including files
                             return store.record.get( record.instanceId )
                                 .then( function( record ) {
+                                    // convert record.files to a simple <File> array
+                                    record.files = record.files.map( function( object ) {
+                                        return object.item;
+                                    } );
                                     uploadProgress.update( record.instanceId, 'ongoing', '', successes.length + fails.length, records.length );
                                     return connection.uploadRecord( record );
                                 } )

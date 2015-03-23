@@ -576,7 +576,7 @@ define( [ 'db', 'q', 'utils', 'translator' ], function( db, Q, utils, t ) {
              * for testing purposes, but not actually used as a public function in Enketo.
              *
              * @param  {string}                     instanceId  instanceId that is part of the record (meta>instancID)
-             * @param  {{item:Blob, name:string}}   file        file object
+             * @param  {{item:Blob, name:string }}   file        file object
              * @return {Promise}
              */
             update: function( instanceId, file ) {
@@ -619,6 +619,7 @@ define( [ 'db', 'q', 'utils', 'translator' ], function( db, Q, utils, t ) {
 
     /**
      * Obtains a file from a specified table
+     *
      * @param  {string} table database table name
      * @param  {string} id    Enketo id of the survey
      * @param  {string} key   unique key of the file (url or fileName)
@@ -661,7 +662,7 @@ define( [ 'db', 'q', 'utils', 'translator' ], function( db, Q, utils, t ) {
      *
      * @param  {string} table database table name
      * @param  {string} id    Enketo id of the survey
-     * @param  {{url:string, name: string, item: Blob}} The new file (url or name property)
+     * @param  {{(url:string | name: string), item: Blob}} The new file (url or name property)
      * @return {Promise]}       [description]
      */
     function _updateFile( table, id, file ) {
