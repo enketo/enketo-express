@@ -11,7 +11,7 @@ var url1 = '/path/to/source.png',
 define( 'connection', function() {
     return {
         getFormParts: function( survey ) {},
-        getFile: function( url ) {}
+        getMediaFile: function( url ) {}
     };
 } );
 
@@ -33,7 +33,8 @@ require( [ 'form-cache', 'connection', 'q', 'jquery' ], function( formCache, con
                 } );
                 return deferred.promise;
             } );
-            getFileSpy = sandbox.stub( connection, 'getFile', function( url ) {
+            console.error( 'connection', connection );
+            getFileSpy = sandbox.stub( connection, 'getMediaFile', function( url ) {
                 var deferred = Q.defer();
                 deferred.resolve( {
                     url: url,
@@ -66,7 +67,7 @@ require( [ 'form-cache', 'connection', 'q', 'jquery' ], function( formCache, con
                     .then( done, done );
             } );
 
-            it( 'will call connection.getFile to obtain form resources', function( done ) {
+            it( 'will call connection.getMediaFile to obtain form resources', function( done ) {
                 survey.enketoId = '20';
                 formCache.init( survey )
                     .then( function( result ) {
