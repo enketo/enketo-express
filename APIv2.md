@@ -20,7 +20,7 @@ The returned URL contains the 'feature' (and not the Database), so a single surv
 
 
 # postMessage
-All */iframe views now accept a `parent_window_origin` parameter to enable an iframed webform to post messages to its parent window.
+All */iframe endpoints now accept a `parent_window_origin` parameter to enable an iframed webform to post messages to its parent window.
 
 Messages currently supported are:
 
@@ -36,7 +36,7 @@ and
 
 demo: http://enketo.github.io/enketo-iframe-demo/
 
-The returned URL contains the 'feature' (and not the Database), so a single survey can be iframed on multiple domains by making multiple different API calls.
+The returned URL contains the 'feature' (and it is not stored in Enketo's Database), so a single survey can be iframed on multiple domains by making multiple different API calls.
 
 
 # theme-swapping
