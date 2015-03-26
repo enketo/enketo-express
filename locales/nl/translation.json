@@ -1,4 +1,7 @@
 {
+    "advanced": {
+        "flushdb": "Verwijder Opslag"
+    },
     "alert": {
         "appupdated": {
             "heading": "App Bijgewerkt!",
@@ -21,6 +24,10 @@
             "heading_plural": "Laad fouten",
             "msg1_plural": "Er zijn fouten opgetreden tijdens het laden van dit form.",
             "msg2_plural": "Contacteer __emailLink__ met de link naar deze enquete met de fout beschrijvingen hieronder:"
+        },
+        "logout": {
+            "heading": "Uitgelogd",
+            "msg": "Je bent uitgelogd."
         },
         "offlinesupported": {
             "heading": "Enquete werkt offline!",
@@ -85,6 +92,16 @@
             "msg": "Confirmeer deze aktie",
             "negButton": "Annuleer",
             "posButton": "Confirmeer"
+        },
+        "deleteall": {
+            "heading": "PANIEK!",
+            "msg": [
+                "Dit verwijderd all de opgeslagen records en alle enquetes uit de browser. De records zullen voor altijd verloren gaan. Gebruik dit alleen als noodoplossing als de browser opslag corrupt lijkt te zijn.",
+                "Sluit eerst alle andere Enketo browser tabs.",
+                "De pagine zal zich herladen. Als er een fout opduikt kan het zijn dat je deze aktie moet herhalen.",
+                "Weet je zeker dat je dit wilt doen?"
+            ],
+            "posButton": "Verwijder Alles"
         },
         "discardcurrent": {
             "heading": "Niet opgeslagen edits",
@@ -170,6 +187,15 @@
     "home": {
         "msg": "__appTitle__ werkt! De Enketo enquetes zijn vanaf de __serverName__ installatie toegankelijk."
     },
+    "langs": {
+        "ar": "Arabisch",
+        "en": "Engels",
+        "es": "Spaans",
+        "he": "Hebreeuws",
+        "nl": "Nederlands",
+        "supported": "Talen ondersteund:",
+        "sw": "Swahili"
+    },
     "page": {
         "modernbrowsers": {
             "heading": "Moderne Browsers",
@@ -188,6 +214,13 @@
     "prompt": {
         "default": {
             "heading": "Vul waardes in"
+        },
+        "login": {
+            "heading": "Vul je __server__ gegevens in.",
+            "password": "Wachtwoord",
+            "remember": "Onthoud op deze computer",
+            "submit": "Verzend",
+            "username": "Gebruikersnaam"
         }
     },
     "record-list": {
