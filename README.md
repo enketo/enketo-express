@@ -119,7 +119,7 @@ _Form authentication_ is only secure when Enketo is running on **https**. To avo
 
 ### Translation
 
-The user interface was translated by: Luis Molina (Spanish), Martijn van de Rijdt (Dutch), ... 
+The user interface was translated by: Wasilis Mandratzis-Walz (German), Luis Molina (Spanish), Martijn van de Rijdt (Dutch), ... 
 
 _Send a message if you'd like to contribute! We use an easy web interface provided by Transifex._
 
