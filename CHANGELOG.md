@@ -3,11 +3,19 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
+---------------
+
+[1.8.3] - 2015-04-08
+---------------
 ##### Added
 - German language
 - Greek language
 
 ##### Changed
+- Much faster form validation
+
+##### Fixed
+- Not showing 'save as draft' in pages mode
 
 [1.8.2] - 2015-03-23
 ##### Added
