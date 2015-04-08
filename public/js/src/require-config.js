@@ -11,7 +11,7 @@ require.config( {
         "enketo-widget": "../../../lib/enketo-core/src/widget",
         "enketo-config": "../../../client-config.json",
         "text": "../../../lib/enketo-core/lib/text/text",
-        "xpath": "../../../lib/enketo-core/lib/xpath/build/xpathjs_javarosa",
+        "xpath": "../../../lib/enketo-core/lib/xpath/build/enketo-xpathjs",
         "jquery.xpath": "../../../lib/enketo-core/lib/jquery-xpath/jquery.xpath",
         "Modernizr": "../../../lib/enketo-core/lib/Modernizr",
         "bootstrap-slider": "../../../lib/enketo-core/lib/bootstrap-slider/js/bootstrap-slider",
