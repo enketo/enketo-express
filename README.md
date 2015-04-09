@@ -7,9 +7,9 @@ A super light-weight node.js version of Enketo Smart Paper. Chock-full of [badas
 
 ### How to install (anywhere)
 
-1. Install JS prerequisites: [Node.js 0.10.x](http://nodejs.org/) (not 0.11), [Grunt Client](http://gruntjs.com), and [Bower](http://bower.io/)
+1. Install JS prerequisites: [Node.js 0.10.x](http://nodejs.org/) (newer version [not supported yet](https://github.com/bsuh/node_xslt/issues/24)), [Grunt Client](http://gruntjs.com), [Bower](http://bower.io/), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
 2. Install [Redis](http://redis.io/topics/quickstart)
-3. Install libxslt and libxml2 with `(sudo) apt-get install libxml2-dev libxslt1-dev`
+3. Install libxslt, libxml2, (build-essentials)  with `(sudo) apt-get install libxml2-dev libxslt1-dev build-essentials`
 4. Clone this repository
 5. Clone git submodules with `git submodule update --init --recursive`
 6. Install dependencies with `npm install` and `bower install` from the project root

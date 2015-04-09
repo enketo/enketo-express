@@ -4,6 +4,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------
+##### Changed
+- Allow empty Google Analytics domain in configuration
+
+##### Fixed
+- Authentication not working on https (reverse proxy)
+- API URLs not returning https (reverse proxy)
 
 [1.8.3] - 2015-04-08
 ---------------
