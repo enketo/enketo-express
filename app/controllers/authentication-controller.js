@@ -39,7 +39,7 @@ function login( req, res, next ) {
             error.status = 500;
             next( error );
         }
-    } else if ( req.app.get( 'env' ) !== 'production' || req.protocol === 'https' || req.app.get( 'linked form and data server' ).authentication[ 'allow insecure transport' ] ) {
+    } else if ( req.app.get( 'env' ) !== 'production' || req.protocol === 'https' || req.headers[ 'x-forwarded-proto' ] === 'https' || req.app.get( 'linked form and data server' ).authentication[ 'allow insecure transport' ] ) {
         res.render( 'surveys/login', {
             csrfToken: req.csrfToken(),
             server: req.app.get( 'linked form and data server' ).name
