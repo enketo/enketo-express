@@ -372,8 +372,8 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'utils', 'jquery
 
             survey.externalData.forEach( function( instance ) {
                 tasks.push( _getDataFile( instance.src ).then( function( data ) {
-                    // if CSV file, transform to XML
-                    instance.xmlStr = ( instance.src.indexOf( '.csv' ) === instance.src.length - 4 ) ? utils.csvToXml( data ) : data;
+                    // if CSV file, transform to XML String
+                    instance.xmlStr = ( typeof data === 'string' ) ? utils.csvToXml( data ) : ( new XMLSerializer() ).serializeToString( data );
                     return instance;
                 } ) );
             } );

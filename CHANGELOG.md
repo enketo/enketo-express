@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------
+##### Fixed
+- reliance on .csv extension for external data broke broke Aggregate support
 
 [1.8.4] - 2015-04-09
 ---------------
