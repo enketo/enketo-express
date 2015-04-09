@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------
+
+[1.8.4] - 2015-04-09
+---------------
 ##### Changed
 - Allow empty Google Analytics domain in configuration
 
