@@ -1,6 +1,6 @@
 {
     "name": "enketo-express",
-    "version": "1.8.4",
+    "version": "1.8.5",
     "homepage": "https://github.com/kobotoolbox/enketo-express",
     "authors": [
         "Martijn van de Rijdt <martijn@enketo.org>"

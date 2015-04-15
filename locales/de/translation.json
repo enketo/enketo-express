@@ -23,7 +23,7 @@
             "msg2": "Bitte senden Sie eine E-Mail mit der Adresse dieser Seite und die untenstehende Fehlermeldung an __emailLink__.",
             "heading_plural": "Ladefehler",
             "msg1_plural": "Fehler beim Laden des Formulars aufgetreten.",
-            "msg2_plural": "Bitte senden Sie eine E-Mail mit der Adresse dieser Seite und die untenstehende Fehlermeldung an __emailLink__."
+            "msg2_plural": "Bitte senden Sie eine E-Mail mit der Adresse dieser Seite und die untenstehende Fehlermeldungen an __emailLink__."
         },
         "logout": {
             "heading": "Abmelden",
@@ -111,7 +111,7 @@
         "login": {
             "heading": "Anmeldung erforderlich",
             "msg": [
-                "Um die Daten die sich in der Warteschlange befinden zu senden müssen Sie sich anmelden. Wenn Sie dies jetzt tun wollen, werden Sie weitergeleitet und verlieren nicht-gespeicherte Informationen.",
+                "Um Ihre Daten in der Warteschlange einzureichen, müssen Sie sich anmelden. Wenn Sie dies jetzt tun wollen, werden Sie weitergeleitet und verlieren nicht gespeicherte Informationen.",
                 "Möchten Sie sich jetzt oder später anmelden?"
             ],
             "negButton": "später",
@@ -189,12 +189,19 @@
     },
     "langs": {
         "ar": "Arabisch",
+        "de": "Deutsch",
+        "el": "Griechisch",
         "en": "Englisch",
         "es": "Spanisch",
         "he": "Hebräisch",
+        "hi": "Indisch",
+        "km": "Khmer",
         "nl": "Niederländisch",
+        "ro": "Rumänisch",
         "supported": "Unterstützte Sprachen:",
-        "sw": "Suaheli"
+        "sw": "Suaheli",
+        "th": "Thailändisch",
+        "vi": "Vietnamesisch"
     },
     "page": {
         "modernbrowsers": {

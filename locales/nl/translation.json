@@ -111,7 +111,7 @@
         "login": {
             "heading": "Login Noodzakelijk",
             "msg": [
-                "Je moet inloggen om de data van de wachtlijst te kunnen verzenden. Als je dit nu wilt doen, wordt je doorgestuurd en verlies je informatie die nog nog niet opgeslagen is.",
+                "Om de records te kunnen verzenden dient ingelogd te worden. Als je dit nu wilt doen wordt je doorgestuurd en gaat de on-opgeslagen information verloren.",
                 "Wil je nu inloggen of later?"
             ],
             "negButton": "Later",
@@ -189,12 +189,19 @@
     },
     "langs": {
         "ar": "Arabisch",
+        "de": "Duits",
+        "el": "Grieks",
         "en": "Engels",
         "es": "Spaans",
         "he": "Hebreeuws",
+        "hi": "Hindi",
+        "km": "Khmer",
         "nl": "Nederlands",
+        "ro": "Roemeens",
         "supported": "Talen ondersteund:",
-        "sw": "Swahili"
+        "sw": "Swahili",
+        "th": "Thai",
+        "vi": "Vietnamees"
     },
     "page": {
         "modernbrowsers": {

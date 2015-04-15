@@ -4,7 +4,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------
+
+[1.8.5] - 2015-04-15
+---------------------
+##### Added
+- Arabic language (left-to-right still)
+
+##### Changed
+- text and number inputs in Grid Theme now displayed in full cell width
+- updated Greek, German, and Dutch language
+
 ##### Fixed
+- geowidget not displayed displayed in full width in pages mode with Grid Theme
+- hide/show input fields button in Geo Widgets in Grid Theme not clickable after clicking show
 - remove existing content form external instances to enable ODK Validate hack
 - reliance on .csv extension for external data broke broke Aggregate support
 
