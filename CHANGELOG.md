@@ -2,8 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.8.6] - 2015-04-15
 ---------------
+#### Fixed
+- broken submissions
 
 [1.8.5] - 2015-04-15
 ---------------------
