@@ -30,13 +30,16 @@ _\* sometimes `vagrant up` fails for reasons beyond our control - e.g. if extern
 
 All configuration is done in config/config.json. Strictly speaking, this file only has to contain the [default properties](./config/default-config.json) that you'd like to override, but it might be safer to include all properties. The configuration items have self-explanatory names and helpful sample values. After editing the configuration, the app will need to be restarted.
 
-The `maps` configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a tiles (array) and an attribution property)
-
 The default production configuration includes 2 redis instances for the cache. You can **greatly simplify installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you'll find the vagrant setup steps in [bootstrap.sh](./setup/bootstrap.sh) useful.
 
-To configure external authentication see [this section](#authentication).
+For detailed guidance on each configuration item, see [this document](./config/README.md).
 
-The API is accessible on **/api/v2** and **/api/v1**.
+To configure your own custom external authentication also see [this section](#authentication).
+
+
+### API
+
+The API is accessible on **/api/v2** and **/api/v1**. Only API v1 is [properly documented](http://apidocs.enketo.org) at the moment. This [temporary note](APIv2.md) describes the changes introduced by API v2.
 
 ### How to run
 Run with `npm start` from project root.
@@ -104,7 +107,7 @@ Alternatively, you could make use of _external authentication_, i.e. the authent
 
 To make use of external authentication set the following in config/config.json:
 
-* linked form and data server -> authentication -> managed by enketo -> __false__
+* linked form and data server -> authentication -> managed by enketo -> `false`
 * linked form and data server -> authentication -> external login url that sets cookie -> e.g. http://example.com/login?return={RETURNURL}, where {RETURNURL} will be set by enketo.
 
 
