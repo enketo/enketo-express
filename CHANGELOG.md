@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+------------------
+#### Fixed
+- all forms with logic broken in Internet Explorer
+- loading existing records with multiple repeat clones only loads first repeat
+
 [1.8.6] - 2015-04-15
 ---------------
 #### Fixed
