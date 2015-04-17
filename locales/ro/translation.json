@@ -1,0 +1,257 @@
+{
+    "advanced": {
+        "flushdb": "Ștergeți Memoria"
+    },
+    "alert": {
+        "appupdated": {
+            "heading": "Aplicația a fost actualizată!",
+            "msg": "O nouă versiune a acestei aplicații a fost descărcată. Dați refresh acestei pagini pentru a încărca conținutul actualizat."
+        },
+        "default": {
+            "button": "Închide",
+            "heading": "Alertă"
+        },
+        "formupdated": {
+            "heading": "Formular actualizat!",
+            "msg": "O nouă versiune a acestui formular a fost descărcată. Dați refresh acestei pagini pentru a încărca conținutul actualizat."
+        },
+        "loaderror": {
+            "editadvice": "Este recomandat să nu editați această înregistrare până când nu este rezolvată această problemă.",
+            "entryadvice": "Este recomandat să nu folosiți acest formular pentru înregistrarea datelor până când nu este rezolvată această problemă.",
+            "heading": "Eroare de Încărcare",
+            "msg1": "Au apărut erori în timpul încărcării acestui formular.",
+            "msg2": "Contactați __emailLink__ cu adresa acestei pagini și cu mesajul de eroare de mai jos:",
+            "heading_plural": "Erori la Încărcare",
+            "msg1_plural": "Au fost erori în timpul încărcări acestui formular.",
+            "msg2_plural": "Contactați __emailLink__ cu linkul de la această pagină și mesajul de eroare de mai jos:"
+        },
+        "logout": {
+            "heading": "Deconectat",
+            "msg": "Ați fost deconectat(ă)."
+        },
+        "offlinesupported": {
+            "heading": "Formularul funcționează offline!",
+            "msg": [
+                "Acest formular acum poate să fie încărcat și folosit și fără o conexiune la internet pe acest dispozitiv. Adăugați la pagini favorite pentru accesul din modul offline.",
+                "Înregistrările sunt salvate și puse în coadă în navigatorul dvs până când va fi disponibilă o conexiune Internet. Atunci când aplicația va fi online, înregistrările vor fi trimise în mod automat - una câte una.",
+                "O înregistrare va fi ștearsă din coadă numai după ce a fost trimisă cu succes. Puteți închide navigatorul și aparatul în siguranță, înregistrările vor rămâne în coadă. Vor fi aici data viitoare când veți lansa formularul."
+            ]
+        },
+        "offlineunsupported": {
+            "heading": "Aplicația nu poate fi lansată offline",
+            "msg": "Navigatorul dvs nu permite lansarea aplicației în mod offline. Puteți folosi sondajul fără această funcționalitate sau puteți vedea opțiunile pentru a rezolva această problemă",
+            "negButton": "Folosește",
+            "posButton": "Arată opțiuni"
+        },
+        "queuesubmissionsuccess": {
+            "msg": "__recordNames__ a fost trimis cu succes",
+            "msg_plural": "__recordNames__ au fost trimise cu succes"
+        },
+        "recordloadsuccess": {
+            "msg": "__recordName__ a fost încărcat"
+        },
+        "recordnotfound": {
+            "msg": "Înregistrarea nu a putut fi găsită sau nu conțiune nicio informație."
+        },
+        "recordsavesuccess": {
+            "draftmsg": "Înregistrare salvată ca Proiect",
+            "finalmsg": "Înregistrare pusă în coadă pentru a fi trimisă."
+        },
+        "submission": {
+            "msg": "Se trimite...",
+            "redirectmsg": "Veți fi redirecționat automat după trimitere."
+        },
+        "submissionerror": {
+            "authrequiredmsg": "Autentificare necesară. Autentificați-vă __here__ într-o filă (tab) diferită și încercați din nou.",
+            "fnfmsg": [
+                "Următoarele fișiere media nu au putut fi recuperate: __failedFiles__. Transmiterea a continuat fără aceste fișiere, și a reușit.",
+                "Contactați __supportEmail__ pentru a raporta o eroare și, dacă este posibil, descrieți cum poate fi reprodusă eroarea."
+            ],
+            "heading": "Transmiterea a eșuat"
+        },
+        "submissionsuccess": {
+            "heading": "Transmitere reușită",
+            "msg": "Informațiile au fost transmise!",
+            "redirectmsg": "Veți fi redirecționat(ă)."
+        },
+        "validationerror": {
+            "msg": "Formularul conține erori. Verificați câmpurile marcate cu roșu."
+        },
+        "validationsuccess": {
+            "heading": "OK",
+            "msg": "Formularul este valid!"
+        },
+        "xpatherror": {
+            "heading": "Eroare în formulă",
+            "msg": "O eroare de evaluare de formulă a avut loc. Contactați __emailLink__ cu această eroare:"
+        }
+    },
+    "confirm": {
+        "default": {
+            "heading": "Sunteți sigur(ă)?",
+            "msg": "Sunteți rugat(ă) să confirmați această acțiune",
+            "negButton": "Anulați",
+            "posButton": "Confirmați"
+        },
+        "deleteall": {
+            "heading": "PANICĂ!",
+            "msg": [
+                "Această opțiune va șterge toate datele și formularele din memoria navigatorului. Aceste date vor fi pierdute pentru totdeauna. Folosiți această opțiune numai ca ultimă instanță dacă memoria navigatorului pare coruptă.",
+                "Mai întâi închideți toate filele (taburi) în care rulează Enketo.",
+                "Pagina va fi reîncărcată. Dacă observați o eroare este posibil să trebuiască să repetați această acțiune.",
+                "Sunteți sigur(ă)?"
+            ],
+            "posButton": "Ștergeți Tot"
+        },
+        "discardcurrent": {
+            "heading": "Există înregistrări care nu au fost salvate",
+            "msg": "Formularul curent are schimbări nesalvate. Doriți să încărcați o nouă înregistrare fără să salvați schimbările la formularul la care lucrați?",
+            "posButton": "Continuare fără înregistrare"
+        },
+        "login": {
+            "heading": "Autentificare Necesară",
+            "msg": [
+                "Pentru a transmite informațiile din coadă, trebuie să vă autentificați. Dacă doriți să faceți asta acum, veți fi redirecționat(ă), și veți pierde toate informațiile nesalvate.",
+                "Doriți să vă autentificați acum sau mai târziu?"
+            ],
+            "negButton": "Mai târziu",
+            "posButton": "Conectați-vă acum"
+        },
+        "print": {
+            "a4": "A4",
+            "heading": "Alegeți Setările de Imprimare",
+            "landscape": "Peisaj",
+            "letter": "Format de hârtie „letter”",
+            "msg": "Pentru a pregăti o imprimare optimizată, selectați setările de imprimare de mai jos",
+            "orientation": "Orientarea Paginii",
+            "portrait": "Portret",
+            "posButton": "Pregătește",
+            "psize": "Dimensiune Hârtie",
+            "reminder": "Nu uitați să folosiți aceleași setări de imprimare în meniul de imprimare al navigatorului!"
+        },
+        "save": {
+            "existingerror": "Acest nume sau ID de înregistrare există deja.",
+            "hint": "Acest nume vă permite să găsiți în mod ușor versiunea incompletă a formularului, pentru a-l completa mai târziu.",
+            "msg": "Există schimbări nesalvate, doriți să continuați fără să salvați?",
+            "name": "Numele Înregistrării",
+            "posButton": "Salvează și Închide",
+            "renamemsg": "Sigur vreți să schimbați numele din __currentName__ în __newName__?",
+            "unkownerror": "O eroare necunoscută s-a petrecut în timpul salvării datelor."
+        }
+    },
+    "contact": {
+        "admin": "Sunteți rugat(ă) să contactați administratorul sondajului.",
+        "support": "Contactați __supportEmail__.'"
+    },
+    "enketo": {
+        "power": "Powered by"
+    },
+    "error": {
+        "code": "Cod Eroare: __code__",
+        "econnrefused": "Nu s-a putut realiza conexiunea cu Server-ul",
+        "encryptionnotsupported": "Acest formular necesită criptarea locala a înregistrărilor. Din păcate această funcționalitate nu este încă inclusă. Recomandăm să folosiți ODK Collect pentru a înregistra date cu acest formular.",
+        "instancenotfound": "Înregistrarea nu poate fi găsită. Este posibil că a expirat.",
+        "invalidediturl": "Nu este un URL valid",
+        "notfoundinformlist": "Formularul cu ID __formId__ nu a fost găsit în /formList",
+        "pagenotfound": "Pagina nu a fost găsită",
+        "surveyidnotactive": "Sondajul cu acest ID nu mai este activ",
+        "surveyidnotfound": "Sondajul cu acest ID nu a fost găsit",
+        "unknown": "O eroare necunoscută s-a petrecut"
+    },
+    "feedback": {
+        "header": "Informație"
+    },
+    "form": {
+        "chooseLanguage": "Alegeți Limba",
+        "logout": "deconectare",
+        "pages": {
+            "back": "Înapoi",
+            "end": "Mergi la Sfârșit",
+            "next": "Urmator",
+            "return": "Înapoi la Început"
+        }
+    },
+    "formfooter": {
+        "savedraft": {
+            "btn": "Salvează Proiect",
+            "label": "Salvează ca Proiect"
+        },
+        "submit": {
+            "btn": "Trimite"
+        },
+        "validate": {
+            "btn": "Validați"
+        }
+    },
+    "here": "aici",
+    "home": {
+        "msg": "__appTitle__ rulează! Accesați Enketo forms din instalarea dvs __serverName__."
+    },
+    "langs": {
+        "ar": "Arabă",
+        "de": "Germană",
+        "el": "Greacă",
+        "en": "Engleză",
+        "es": "Spaniolă",
+        "he": "Ebraică",
+        "hi": "Hindusă",
+        "km": "Khmer",
+        "nl": "Olandeză",
+        "ro": "Română",
+        "supported": "Limbi susținute:",
+        "sw": "Swahili",
+        "th": "Tailandeză",
+        "vi": "Vietnameză"
+    },
+    "page": {
+        "modernbrowsers": {
+            "heading": "Navigatoare Moderne",
+            "ie": {
+                "heading": "De ce nu iubește nimeni versiunile învechite de Internet Explorer?",
+                "msg": "Înțelegem că unii oameni, mai ales cei care lucrează în organizații mari, nu au acces la cele mai recente și grozave navigatoare. Deoarece știm cât de grozav poate să fie internetul cu uneltele potrivite, simțim o empatie deosebită pentru utilizatorii care se regăsesc în această situație nefericită. În mod normal, am încerca să punem la dispoziție soluții pentru a susține unele navigatoare populare dar învechite. Totuși, Enketo depinde de unele tehnologii de ultimă oră. Din păcate, utilizatorii de navigatoare vechi nu au noroc."
+            },
+            "msg1": "Vai! Ne pare rău, ați fost trimis(ă) aici deoarece navigatorul dvs este învechit, sau poate pentru că unele funcționalități esențiale au fost dezactivate deoarece folosiți modul de navigare privat.",
+            "msg2": "Dacă folosiți un navigator învechit, vă recomandăm să actualizați la o versiune recentă a unuia dintre următoarele navigatoare moderne excelente:"
+        },
+        "offline": {
+            "heading": "Pagina cerută nu poate fi accesată",
+            "msg1": "Această pagină este disponibilă numai atunci când navigatorul este contectat la internet și serverul este accesibil (dacă pagina există, desigur)."
+        }
+    },
+    "prompt": {
+        "default": {
+            "heading": "Introduceți valorile"
+        },
+        "login": {
+            "heading": "Introduceți acreditările __server__",
+            "password": "Parolă",
+            "remember": "Memorează pe acest calculator",
+            "submit": "Trimite",
+            "username": "Nume utilizator"
+        }
+    },
+    "record-list": {
+        "export": "Exportă",
+        "msg1": "Înregistrările sunt salvate în navigatorul dvs până când au fost încărcate (chiar dacă vă deconectați de la internet sau închideți calculatorul).",
+        "msg2": "Înregistrările puse în coadă, cu excepția celor marcate drept Proiect __icon__, sunt încărcate în mod automat, la fiecare 5 minute atunci când pagina este deschisă și o conexiune internet este disponibilă. Dacă doriți să încărcați între aceste rutine automate, apăsați Încărcați.",
+        "norecords": "nicio înregistrare nu este în coadă",
+        "title": "Coadă",
+        "upload": "Încarcă"
+    },
+    "store": {
+        "error": {
+            "notavailable": "Memoria navigatorului este necesară dar nu este disponibilă, este coruptă, sau nu există permisiune să fie scrisă. Dacă sunteți în modul de navigare 'privat', schimbați la modul normal, sau folosiți un alt navigator. (eroare: __error__)"
+        }
+    },
+    "submission": {
+        "http0": "Eșuat (offline?).",
+        "http2xx": "Răspuns neașteptat în timpul încărcării informațiilor.",
+        "http400": "Serverul de date nu a acceptat informațiile.",
+        "http403": "Nu este permisă transmiterea de informații către acest server de date.",
+        "http404": "Serviciu de trimitere nu a fost găsit pe serverul de date.",
+        "http413": "Informațiile au o dimensiune prea mare.",
+        "http4xx": "Problemă necunoscută în timpul transmiterii către serverul de date.",
+        "http500": "Serverul de date pentru formularul dvs sau serverul Enketo este căzut. Vă rugăm încercați mai târziu sau contactați __supportEmail__."
+    },
+    "version": "versiune:"
+}

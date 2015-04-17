@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ------------------
+#### Added
+- Italian language
+- Romanian language
+
 #### Fixed
 - all forms with logic broken in Internet Explorer
 - loading existing records with multiple repeat clones only loads first repeat
