@@ -2,7 +2,7 @@ Configuration
 ==============
 
 All configuration is done in config/config.json. **Leave config/default-config.json unchanged.** 
-Recommended way to start is to copy config/default-config.json and rename it to config/default-config.json (`cp config/default-config.json config/config.json`).
+Recommended way to start is to copy config/default-config.json and rename it to config/config.json (`cp config/default-config.json config/config.json`).
 
 The **bold items are required**. Others are optional.
 
@@ -38,7 +38,7 @@ The theme to use if the survey has no user-or-api-defined theme. Values could be
 * api key: The Google API key that is used for geolocation (in the geo widgets' search box). Can be obtained [here](https://console.developers.google.com/project). Make sure to enable the _GeoCoding API_ service. If you are using Google Maps layers, the same API key is used. Make sure to enable the _Google Maps JavaScript API v3_ service as well in that case (see next item).
 
 #### maps
-The `maps` configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a tiles (array) and an attribution property). You can also mix and match Google Maps layers. Below is an example of a mix of two map layers provided by MapBox and Google maps.
+The `maps` configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a tiles (array) and an attribution property). You can also mix and match Google Maps layers. Below is an example of a mix of two map layers provided by OSM (in TileJSON format) and Google maps.
 
 ```
 [ {
