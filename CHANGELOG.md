@@ -2,44 +2,45 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.8.7] - 2015-04-17
 ------------------
 #### Added
 - Italian language
 - Romanian language
 
 #### Fixed
-- all forms with logic broken in Internet Explorer
-- loading existing records with multiple repeat clones only loads first repeat
+- All forms with logic broken in Internet Explorer.
+- When existing instance with multiple repeats is loaded, only the first repeat is created and populated.
+- XML nodenames ending with hyphen or underscore failed to be found.
 
 [1.8.6] - 2015-04-15
 ---------------
 #### Fixed
-- broken submissions
+- Broken submissions.
 
 [1.8.5] - 2015-04-15
 ---------------------
 ##### Added
-- Arabic language (left-to-right still)
+- Arabic language (left-to-right still).
 
 ##### Changed
-- text and number inputs in Grid Theme now displayed in full cell width
-- updated Greek, German, and Dutch language
+- Text and number inputs in Grid Theme now displayed in full cell width.
+- Updated Greek, German, and Dutch language.
 
 ##### Fixed
-- geowidget not displayed displayed in full width in pages mode with Grid Theme
-- hide/show input fields button in Geo Widgets in Grid Theme not clickable after clicking show
-- remove existing content form external instances to enable ODK Validate hack
-- reliance on .csv extension for external data broke broke Aggregate support
+- Geowidget not displayed displayed in full width in pages mode with Grid Theme.
+- Hide/show input fields button in Geo Widgets in Grid Theme not clickable after clicking show.
+- Remove existing content form external instances to enable ODK Validate hack.
+- Reliance on .csv extension for external data broke broke Aggregate support.
 
 [1.8.4] - 2015-04-09
 ---------------
 ##### Changed
-- Allow empty Google Analytics domain in configuration
+- Allow empty Google Analytics domain in configuration.
 
 ##### Fixed
-- Authentication not working on https (reverse proxy)
-- API URLs not returning https (reverse proxy)
+- Authentication not working on https (reverse proxy).
+- API URLs not returning https (reverse proxy).
 
 [1.8.3] - 2015-04-08
 ---------------
@@ -48,23 +49,23 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Greek language
 
 ##### Changed
-- Much faster form validation
+- Much faster form validation.
 
 ##### Fixed
-- Not showing 'save as draft' in pages mode
+- Not showing 'save as draft' in pages mode.
 
 [1.8.2] - 2015-03-23
 ##### Added
-- Show supported languages on front page
+- Show supported languages on front page.
 
 ##### Fixed
-- Media files not submitted in offline-enabled views
+- Media files not submitted in offline-enabled views.
 
 [1.8.1] - 2015-03-17
 ------------
 ##### Fixed
-- Installation with Vagrant failed
-- Local Redis configuration was ignored
+- Installation with Vagrant failed.
+- Local Redis configuration was ignored.
 
 [1.8.0] - 2015-03-09
 -----------
@@ -75,7 +76,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [1.7.1] - 2015-02-27
 -----------
 ##### Changed
-- Configuration now done with local config.json that overrides default (rename existing config/config.json before updating!)
+- Configuration now done with local config.json that overrides default (rename existing config/config.json before updating!).
 - Dutch translation
 - Authentication documentation
 
