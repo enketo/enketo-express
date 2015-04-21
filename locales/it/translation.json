@@ -5,7 +5,7 @@
     "alert": {
         "appupdated": {
             "heading": "App Aggiornata!",
-            "msg": "&Egrave; disponibile una nuova versione di questo form. Aggiorna la pagina per caricarla."
+            "msg": "&Egrave; disponibile una nuova versione di questo modulo. Aggiorna la pagina per caricarla."
         },
         "default": {
             "button": "Chiudi",
@@ -13,16 +13,16 @@
         },
         "formupdated": {
             "heading": "Modulo Aggiornato!",
-            "msg": "&Egrave; disponibile una nuova versione di questo form. Aggiorna la pagina per caricarla."
+            "msg": "&Egrave; disponibile una nuova versione di questo modulo. Aggiorna la pagina per caricarlo."
         },
         "loaderror": {
             "editadvice": "Si raccomanda di non editare questo record finch&egrave; non si risolve",
             "entryadvice": "Si raccomanda di non utilizzare questo modulo per l'immissione di dati finchè non viene risolto .",
             "heading": "Errore caricamento",
-            "msg1": "Si è verificato un errore durante il caricamento del form.",
+            "msg1": "Si &egrave; verificato un errore durante il caricamento del modulo.",
             "msg2": "Perfavore contattare__emailLink__ con il link della pagina e il messaggio di errore:",
             "heading_plural": "Caricamento Errori",
-            "msg1_plural": "Si è verificato un' errore durante il caricamento del form.",
+            "msg1_plural": "Si &egrave; verificato un' errore durante il caricamento del form.",
             "msg2_plural": "Perfavore contattare  __emailLink__ con il link di questa pagina e il messaggio di errore:"
         },
         "logout": {
@@ -30,28 +30,28 @@
             "msg": "Ti sei disconnesso"
         },
         "offlinesupported": {
-            "heading": "Form offline!",
+            "heading": "Modulo offline!",
             "msg": [
-                "Questo form può essere caricato e usato senza connessione internet su questo device.Crea un segnalibro per un facile accesso offline.",
-                "I record sono memorizzati automaticamente e accodati nel tuo browser finchè non sarà disponibile una connessione a Internet . Quando l'applicazione sarà online , i record verranno inviati automaticamente - uno per uno .",
-                "Dopo essere inviato con successo, il record verrà rimosso dalla coda. Puoi chiudere tranquillamente il browser e il dispositivo con gli elementi nella coda . Saranno ricaricati al prossimo accesso."
+                "Questo form pu&ograve; essere caricato e usato senza connessione internet su questo device.Crea un segnalibro per un facile accesso offline.",
+                "I record sono memorizzati automaticamente e accodati nel tuo browser finch&egrave; non sar&agrave; disponibile una connessione a Internet . Quando l'applicazione sar&agrave; online , i record verranno inviati automaticamente - uno per uno .",
+                "Dopo essere inviato con successo, il record verr&agrave; rimosso dalla coda. Puoi chiudere tranquillamente il browser e il dispositivo con gli elementi nella coda . Saranno ricaricati al prossimo accesso."
             ]
         },
         "offlineunsupported": {
-            "heading": "L' applicazione non può essere eseguita offline.",
-            "msg": "Impossibile eseguire l' applicazione offline nel browser. È possibile utilizzare il sondaggio senza questa funzione o visualizzare le opzioni per risolvere .",
+            "heading": "L' applicazione non pu&ograve; essere eseguita offline.",
+            "msg": "Impossibile eseguire l' applicazione offline nel browser. &Egrave; possibile utilizzare il sondaggio senza questa funzione o visualizzare le opzioni per risolvere .",
             "negButton": "Usa",
             "posButton": "Mostra opzioni"
         },
         "queuesubmissionsuccess": {
-            "msg": "__recordNames__ è stato caricato con successo",
+            "msg": "__recordNames__ &egrave; stato caricato con successo",
             "msg_plural": "__recordNames__ sono stati inviati con successo."
         },
         "recordloadsuccess": {
-            "msg": "__recordName__ è stato caricato"
+            "msg": "__recordName__ &egrave; stato caricato"
         },
         "recordnotfound": {
-            "msg": "Il Record non può essere recuperato o non conteneva dati."
+            "msg": "Il Record non pu&ograve; essere recuperato o non conteneva dati."
         },
         "recordsavesuccess": {
             "draftmsg": "Record salvato come bozza.",
@@ -59,7 +59,7 @@
         },
         "submission": {
             "msg": "Invio...",
-            "redirectmsg": "Sarai automaticamenti reindirizzato dopo l' invio."
+            "redirectmsg": "Sarai automaticamente reindirizzato dopo l' invio."
         },
         "submissionerror": {
             "authrequiredmsg": "Autenticazione richiesta. Perfavore autenticati __here__ in un' altra scheda del browser e riprova.",
@@ -75,7 +75,7 @@
             "redirectmsg": "Stai per essere reindirizzato."
         },
         "validationerror": {
-            "msg": "Il form contiene errori. Perfavore controlla i campi contrassegnati in rosso."
+            "msg": "Il modulo contiene errori. Perfavore controlla i campi contrassegnati in rosso."
         },
         "validationsuccess": {
             "heading": "OK",
@@ -96,16 +96,16 @@
         "deleteall": {
             "heading": "PANIC!",
             "msg": [
-                "Questo eliminerà tutti i dati in coda e tutti i moduli dal browser. I dati saranno persi per sempre . Utilizzare solo come ultima risorsa , se la memoria del browser sembra corrotta .",
+                "Questo eliminer&agrave; tutti i dati in coda e tutti i moduli dal browser. I dati saranno persi per sempre . Utilizzare solo come ultima risorsa , se la memoria del browser sembra corrotta .",
                 "Chiudere prima tutte le altre schede del browser Enketo .",
-                "La pagina verrà ricaricata. Se ci sono errori, ripeti l' operazione.",
+                "La pagina verr&agrave; ricaricata. Se ci sono errori, ripeti l' operazione.",
                 "Sei sicuro di volerlo fare ?"
             ],
             "posButton": "Cancella tutto"
         },
         "discardcurrent": {
             "heading": "Modifiche non salvate",
-            "msg": "Il form corrente contiene modifiche non salvate. Vuoi caricare un record senza salvare le modifiche del modulo a cui stavi lavorando ?",
+            "msg": "Il modulo corrente contiene modifiche non salvate. Vuoi caricare un record senza salvare le modifiche del modulo a cui stavi lavorando ?",
             "posButton": "Procedi senza salvare"
         },
         "login": {
@@ -136,7 +136,7 @@
             "name": "Nome Record",
             "posButton": "Salva & Chiudi",
             "renamemsg": "Sei sicuro di voler rinominare __currentName__ in __newName__?",
-            "unkownerror": "Si è verificato un 'errore sconosciuto durante il salvataggio."
+            "unkownerror": "Si &egrave; verificato un errore sconosciuto durante il salvataggio."
         }
     },
     "contact": {
@@ -149,14 +149,14 @@
     "error": {
         "code": "Errore codice: __code__",
         "econnrefused": "Impossibile connetersi con il server",
-        "encryptionnotsupported": "Questo modulo richiede la crittografia locale dei record . Sfortunatamente non è ancora supportata . Per questo modulo si consiglia di utilizzare ODK Collect per la raccolta dei dati.",
+        "encryptionnotsupported": "Questo modulo richiede la crittografia locale dei record . Sfortunatamente non &egrave; ancora supportata . Per questo modulo si consiglia di utilizzare ODK Collect per la raccolta dei dati.",
         "instancenotfound": "Record non presente. Potrebbe essere scaduto.",
         "invalidediturl": "URL non valido",
-        "notfoundinformlist": "Il Form con ID __formId__ non trovato nella lista form ",
+        "notfoundinformlist": "Il modulo con ID __formId__ non trovato nella lista form ",
         "pagenotfound": "Pagina non trovata",
-        "surveyidnotactive": "Il sondaggio con questo ID non è più attivo.",
+        "surveyidnotactive": "Il sondaggio con questo ID non &egrave; pi&ugrave; attivo.",
         "surveyidnotfound": "Il sondaggio con questo ID non &egrave; stato trovato",
-        "unknown": "Si è verificato un 'errore"
+        "unknown": "Si &egrave; verificato un 'errore"
     },
     "feedback": {
         "header": "Informazioni"
@@ -207,7 +207,7 @@
         "modernbrowsers": {
             "heading": "Browsers moderni",
             "ie": {
-                "heading": "Perchè non ami questo diavolo di Internet Explorer non aggiornato?",
+                "heading": "Perch&egrave; non ami questo diavolo di Internet Explorer non aggiornato?",
                 "msg": "Siamo consapevoli che alcune persone , in particolare quelli che lavorano per le grandi burocrazie , non hanno accesso alle versioni pi&ugrave; recenti dei browser . Poich&egrave; sappiamo quanto possa essere grande il web con gli strumenti giusti , abbiamo grande empatia per gli utenti che si trovano in questa spiacevole situazione . Normalmente , dovremmo cercare di fornire soluzioni per supportare alcuni popolari browser obsoleti . Tuttavia, la ragione di esistenza di Enketo &egrave; di rendere disponibili alcune tecnologie all'avanguardia . Purtroppo , gli utenti con browser pi&ugrave; vecchi sono quindi sfortunati."
             },
             "msg1": "Ops! Siamo spiacenti, probabilmente sei stato indirizzato qui perch&egrave; il tuo browser non &egrave; aggiornato o alcuni componenti sono disattivati utilizzando la modalit&agrave; ' navigazione privata '.",
@@ -240,7 +240,7 @@
     },
     "store": {
         "error": {
-            "notavailable": "E' necessario effettuare il salvataggio del browser ma non &egrave; disponibile, &egrave; corrotto o non &egrave; scrivibile. Se stai utilizzando la modalità 'navigazione privata' si prega di passare alla modalità normale, altrimenti cambiare browser. (error: __error__)"
+            "notavailable": "&Egrave; necessario effettuare il salvataggio del browser ma non &egrave; disponibile, &egrave; corrotto o non &egrave; scrivibile. Se stai utilizzando la modalità 'navigazione privata' si prega di passare alla modalità normale, altrimenti cambiare browser. (error: __error__)"
         }
     },
     "submission": {
@@ -251,7 +251,7 @@
         "http404": "Servizio di invio dati server non trovato.",
         "http413": "Dati troppo grandi",
         "http4xx": "Problema di invio sconosciuto sul data server.",
-        "http500": "Il server per il tuo form o il server Enketo sono offline. Si prega di riprovare più tardi o contattare  __supportEmail__."
+        "http500": "Il server per il tuo modulo o il server Enketo sono offline. Si prega di riprovare pi&ugrave; tardi o contattare  __supportEmail__."
     },
     "version": "Versione:"
 }
