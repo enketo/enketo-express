@@ -139,6 +139,10 @@
       "unkownerror": "An unknown error occurred when trying to save data."
     }
   },
+  "constraint": {
+    "invalid": "Value not allowed",
+    "required": "This field is required"
+  },
   "contact": {
     "admin": "Contact the survey administrator please.",
     "support": "Contact __supportEmail__ please.'"

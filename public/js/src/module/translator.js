@@ -56,3 +56,10 @@ define( [ 'settings', 'i18next', 'jquery' ], function( settings, i18next, $ ) {
 
     return i18next.t;
 } );
+
+/**
+ * add keys from XSL stylesheets manually
+ *
+ * t('constraint.invalid');
+ * t('constraint.required');
+ */
