@@ -2,13 +2,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.8] - 2015-04-23
+##### Changed
+- Branch update performance
+- Calculate update performance 
+- Widget loading performance
+
+##### Fixed
+- Top border missing and margin too small when a visible note is preceded by a hidden note.
+- Any branch containing a geoshape widget caused an exception to occur when it was made irrelevant.
+- Appearance 'horizontal' no longer displays with evenly-spaced columns.
+- Some buttons in Safari have border and background when they shouldn't have.
+- Side bar in Safari is not stretching to bottom.
+
 [1.8.7] - 2015-04-17
 ------------------
-#### Added
+##### Added
 - Italian language
 - Romanian language
 
-#### Fixed
+##### Fixed
 - All forms with logic broken in Internet Explorer.
 - When existing instance with multiple repeats is loaded, only the first repeat is created and populated.
 - XML nodenames ending with hyphen or underscore failed to be found.

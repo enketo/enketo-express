@@ -42,7 +42,7 @@
         "enketo-widget/select-likert/likertitem",
         "enketo-widget/distress/distresspicker",
         "enketo-widget/file/filepicker",
-        "enketo-widget/trigger/triggerwidget"
+        "enketo-widget/horizontal-choices/horizontalchoices"
     ],
     "query parameter to pass to submission": "",
     "redis": {
