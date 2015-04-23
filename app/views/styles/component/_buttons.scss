@@ -156,6 +156,11 @@ $button-disabled-cursor: $cursor-default-value !default;
     }
 }
 
+button {
+    background: none;
+    border: none;
+}
+
 .btn {
     @include button-base;
     @include button-size;
