@@ -3,10 +3,11 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 [1.8.8] - 2015-04-23
+-------------------
 ##### Changed
 - Branch update performance
 - Calculate update performance 
-- Widget loading performance
+- Widget loading performance, **WARNING: remove triggerwidget, add horizontal choices widget, see [default-config](./config/default-config.json)**
 
 ##### Fixed
 - Top border missing and margin too small when a visible note is preceded by a hidden note.
@@ -68,6 +69,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Not showing 'save as draft' in pages mode.
 
 [1.8.2] - 2015-03-23
+---------------
 ##### Added
 - Show supported languages on front page.
 
