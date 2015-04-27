@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased] - 2015-04-27
+##### Fixed
+- Click lag (especially on mobile) due to slow progress bar update.
+
 [1.8.8] - 2015-04-23
 -------------------
 ##### Changed
