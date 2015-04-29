@@ -1,6 +1,6 @@
 .form-footer {
     @include flex(1);
-    min-height: 210px;
+    min-height: 230px;
     position: relative;
     // the form footer flexes to stretch down on small forms or form pages
     // the content should be positioned at bottom of stretched element
