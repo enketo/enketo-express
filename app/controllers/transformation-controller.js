@@ -113,7 +113,7 @@ function _getFormFromCache( survey ) {
 }
 
 /**
- * Update the Cache if neccesary. This function never returns anything.
+ * Update the Cache if necessary.
  * @param  {[type]} survey [description]
  */
 function _updateCache( survey ) {

@@ -2,14 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.8.9] - 2015-05-08
 ------------------
-##### Changed
+##### Added 
 - Default repeat creation performance for large amount of repeats (with repeat-count).
+- Enable print script for themes based on Grid Theme that include "grid" in the theme name.
+
+##### Changed
+- Do not attempt to load table/radio/likert/media grid widgets when they are not required.
+- Even faster validation for some forms.
 
 ##### Fixed
+- Screen view remaining at full screen width after printing form with Grid Theme.
+- Print dialog buttons not visible with Grid Theme (Enketo Express).
+- Sequential notes overlapping each other with Grid Theme.
+- Exception occuring in some specific cases when loading an existing record.
 - Click lag (especially on mobile) due to slow progress bar update.
-
 
 [1.8.8] - 2015-04-23
 -------------------

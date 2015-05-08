@@ -293,30 +293,29 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'utils', 'jquery
         var maxSubmissionSize,
             deferred = Q.defer();
 
-        $.ajax( MAX_SIZE_URL, {
-                type: 'GET',
-                timeout: 5 * 1000,
-                dataType: 'json'
-            } )
-            .done( function( response ) {
-                if ( response && response.maxSize && !isNaN( response.maxSize ) ) {
-                    maxSubmissionSize = ( Number( response.maxSize ) > ABSOLUTE_MAX_SIZE ) ? ABSOLUTE_MAX_SIZE : Number( response.maxSize );
-                    //DEBUG
-                    maxSubmissionSize = 3 * 1024 * 1024;
-
-                    deferred.resolve( maxSubmissionSize );
-                } else {
-                    console.error( MAX_SIZE_URL + ' returned a response that is not a number', response );
+        if ( MAX_SIZE_URL ) {
+            $.ajax( MAX_SIZE_URL, {
+                    type: 'GET',
+                    timeout: 5 * 1000,
+                    dataType: 'json'
+                } )
+                .done( function( response ) {
+                    if ( response && response.maxSize && !isNaN( response.maxSize ) ) {
+                        maxSubmissionSize = ( Number( response.maxSize ) > ABSOLUTE_MAX_SIZE ) ? ABSOLUTE_MAX_SIZE : Number( response.maxSize );
+                        deferred.resolve( maxSubmissionSize );
+                    } else {
+                        // Note that in /previews the MAX_SIZE_URL is null, which will immediately call this handler
+                        deferred.resolve( DEFAULT_MAX_SIZE );
+                    }
+                } )
+                .fail( function( jqXHR ) {
                     deferred.resolve( DEFAULT_MAX_SIZE );
-                }
-            } )
-            .fail( function( jqXHR ) {
-                deferred.resolve( DEFAULT_MAX_SIZE );
-            } );
-
+                } );
+        } else {
+            deferred.resolve( DEFAULT_MAX_SIZE );
+        }
         return deferred.promise;
     }
-
 
     /**
      * Obtains HTML Form, XML Model and External Instances
