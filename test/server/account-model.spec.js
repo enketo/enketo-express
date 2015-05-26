@@ -4,8 +4,7 @@
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var model,
-    Q = require( "q" ),
+var Q = require( "q" ),
     chai = require( "chai" ),
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" ),

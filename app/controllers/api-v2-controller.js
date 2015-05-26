@@ -1,7 +1,6 @@
 "use strict";
 
-var communicator = require( '../lib/communicator' ),
-    surveyModel = require( '../models/survey-model' ),
+var surveyModel = require( '../models/survey-model' ),
     instanceModel = require( '../models/instance-model' ),
     account = require( '../models/account-model' ),
     auth = require( 'basic-auth' ),

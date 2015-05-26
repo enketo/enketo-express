@@ -1,6 +1,5 @@
 require( [ 'require-config' ], function( rc ) {
     "use strict";
-    if ( console.time ) console.time( 'client loading time' );
 
     require( [ 'gui', 'controller-webform', 'settings', 'connection', 'enketo-js/FormModel', 'translator', 'store', 'utils', 'form-cache', 'application-cache', 'q', 'jquery' ],
         function( gui, controller, settings, connection, FormModel, t, store, utils, formCache, applicationCache, Q, $ ) {
@@ -152,7 +151,6 @@ require( [ 'require-config' ], function( rc ) {
                         } );
                         $form.add( $buttons ).removeClass( 'hide' );
                         $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
-                        if ( console.timeEnd ) console.timeEnd( 'client loading time' );
 
                         formParts.$form = $form;
                         deferred.resolve( formParts );

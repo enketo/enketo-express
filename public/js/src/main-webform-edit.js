@@ -1,6 +1,5 @@
 require( [ 'require-config' ], function( rc ) {
     "use strict";
-    if ( console.time ) console.time( 'client loading time' );
     require( [ 'gui', 'controller-webform', 'settings', 'connection', 'q', 'translator', 'utils', 'jquery' ],
         function( gui, controller, settings, connection, Q, t, utils, $ ) {
             var $loader = $( '.form__loader' ),
@@ -50,7 +49,6 @@ require( [ 'require-config' ], function( rc ) {
                     } );
                     $form.add( $buttons ).removeClass( 'hide' );
                     $( 'head>title' ).text( utils.getTitleFromFormStr( formStr ) );
-                    if ( console.timeEnd ) console.timeEnd( 'client loading time' );
                 } );
             }
         } );

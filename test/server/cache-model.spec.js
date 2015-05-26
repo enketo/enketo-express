@@ -4,7 +4,7 @@
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var model, survey,
+var survey,
     Q = require( "q" ),
     chai = require( "chai" ),
     expect = chai.expect,
@@ -87,7 +87,9 @@ describe( 'Cache Model', function() {
             getTtl = function( key ) {
                 var deferred = Q.defer();
                 client.pttl( key, function( error, ttl ) {
-                    if ( error ) deferred.reject( error );
+                    if ( error ) {
+                        deferred.reject( error );
+                    }
                     deferred.resolve( ttl );
                 } );
                 return deferred.promise;
@@ -224,7 +226,9 @@ describe( 'Cache Model', function() {
         var getCacheCount = function() {
             var deferred = Q.defer();
             client.keys( 'ca:*', function( error, keys ) {
-                if ( error ) deferred.reject( error );
+                if ( error ) {
+                    deferred.reject( error );
+                }
                 deferred.resolve( keys.length );
             } );
             return deferred.promise;

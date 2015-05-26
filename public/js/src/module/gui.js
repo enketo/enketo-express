@@ -32,12 +32,12 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'translator', 'vex.dialog.custo
         //$( 'footer' ).detach().appendTo( '#container' ); //WTF?
 
         // avoid windows console errors
-        if ( typeof console == "undefined" ) {
-            console = {
+        if ( typeof window.console === "undefined" ) {
+            window.console = {
                 log: function() {}
             };
         }
-        if ( typeof window.console.debug == "undefined" ) {
+        if ( typeof window.console.debug === "undefined" ) {
             console.debug = console.log;
         }
 

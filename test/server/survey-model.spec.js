@@ -4,8 +4,7 @@
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var model,
-    Q = require( "q" ),
+var Q = require( "q" ),
     chai = require( "chai" ),
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" ),
@@ -23,9 +22,13 @@ describe( 'Survey Model', function() {
     afterEach( function( done ) {
         // select test database and flush it
         client.select( 15, function( err ) {
-            if ( err ) return done( err );
+            if ( err ) {
+                return done( err );
+            }
             client.flushdb( function( err ) {
-                if ( err ) return done( err );
+                if ( err ) {
+                    return done( err );
+                }
                 done();
             } );
         } );

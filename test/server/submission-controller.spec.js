@@ -45,9 +45,13 @@ describe( 'Submissions', function() {
     afterEach( function( done ) {
         // select test database and flush it
         client.select( 15, function( err ) {
-            if ( err ) return done( err );
+            if ( err ) {
+                return done( err );
+            }
             client.flushdb( function( err ) {
-                if ( err ) return done( err );
+                if ( err ) {
+                    return done( err );
+                }
                 done();
             } );
         } );
