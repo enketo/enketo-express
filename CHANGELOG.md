@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Index-repeat() support
 
+##### Fixed
+- Calculations on select_one inside a repeat clone throws an exception.
+
 [1.8.9] - 2015-05-08
 ------------------
 ##### Added 
