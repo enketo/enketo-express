@@ -2,15 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+------------------
+##### Added
+- Index-repeat() support
+
 [1.8.9] - 2015-05-08
 ------------------
 ##### Added 
-- Default repeat creation performance for large amount of repeats (with repeat-count).
 - Enable print script for themes based on Grid Theme that include "grid" in the theme name.
 
 ##### Changed
 - Do not attempt to load table/radio/likert/media grid widgets when they are not required.
 - Even faster validation for some forms.
+- Better performance of large default repeat creation with jr:repeat-count.
 
 ##### Fixed
 - Screen view remaining at full screen width after printing form with Grid Theme.
