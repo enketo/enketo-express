@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Calculations on select_one inside a repeat clone throws an exception.
 - Irrelevant questions inside a repeat clone are shown but should be hidden.
+- Calculations inside repeat clones are not evaluated upon form load.
 
 [1.8.9] - 2015-05-08
 ------------------
