@@ -2,13 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.9.0] - 2015-05-28
 ------------------
 ##### Added
 - Index-repeat() support
 
+##### Changed
+- Faster loading
+
 ##### Fixed
-- Calculations on select_one inside a repeat clone throws an exception.
+- Calculations on select_one inside a repeat clone throw an exception.
 - Irrelevant questions inside a repeat clone are shown but should be hidden.
 - Calculations inside repeat clones are not evaluated upon form load.
 

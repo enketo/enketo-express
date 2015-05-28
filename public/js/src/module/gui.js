@@ -18,7 +18,7 @@
  * Deals with the main GUI elements (but not the survey form)
  */
 
-define( [ 'Modernizr', 'q', 'settings', 'print', 'translator', 'vex.dialog.custom', 'jquery', 'plugin', ], function( Modernizr, Q, settings, printForm, t, dialog, $ ) {
+define( [ 'support', 'q', 'settings', 'print', 'translator', 'vex.dialog.custom', 'jquery', 'plugin', ], function( support, Q, settings, printForm, t, dialog, $ ) {
     "use strict";
 
     var nav, pages, updateStatus, feedbackBar,
@@ -29,7 +29,6 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'translator', 'vex.dialog.custo
      */
     function init() {
         setEventHandlers();
-        //$( 'footer' ).detach().appendTo( '#container' ); //WTF?
 
         // avoid windows console errors
         if ( typeof window.console === "undefined" ) {
@@ -40,17 +39,16 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'translator', 'vex.dialog.custo
         if ( typeof window.console.debug === "undefined" ) {
             console.debug = console.log;
         }
-
         if ( !settings.debug ) {
             window.console.log = function() {};
             window.console.debug = function() {};
         }
-        //override Modernizr's detection (for development purposes)
+        // override feature detection (for development purposes)
         if ( settings.touch ) {
-            Modernizr.touch = true;
+            support.touch = true;
             $( 'html' ).addClass( 'touch' );
         } else if ( settings.touch === false ) {
-            Modernizr.touch = false;
+            support.touch = false;
             $( 'html' ).removeClass( 'touch' );
         }
 
@@ -174,7 +172,7 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'translator', 'vex.dialog.custo
      * @param {number=} duration duration in seconds for the message to show
      */
     function feedback( message, duration ) {
-        if ( !Modernizr.touch ) {
+        if ( !support.touch ) {
             feedbackBar.show( message, duration );
         } else {
             alert( message, t( 'feedback.header' ), 'info', duration );

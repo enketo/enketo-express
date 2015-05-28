@@ -42,9 +42,6 @@ module.exports = function( config ) {
                 pattern: 'public/js/src/**/*.js',
                 included: false
             }, {
-                pattern: 'public/lib/enketo-core/lib/Modernizr.js',
-                included: false
-            }, {
                 pattern: 'public/lib/enketo-core/lib/text/text.js',
                 included: false
             }, {

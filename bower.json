@@ -1,6 +1,6 @@
 {
     "name": "enketo-express",
-    "version": "1.8.9",
+    "version": "1.9.0",
     "homepage": "https://github.com/kobotoolbox/enketo-express",
     "authors": [
         "Martijn van de Rijdt <martijn@enketo.org>"
@@ -21,5 +21,6 @@
         "i18next": "~1.7.7",
         "vex": "~2.3.2",
         "papaparse": "4.0.7"
+        "leaflet": "~0.7.3"
     }
 }

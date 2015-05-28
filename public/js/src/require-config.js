@@ -13,11 +13,11 @@ require.config( {
         "text": "../../../lib/enketo-core/lib/text/text",
         "xpath": "../../../lib/enketo-core/lib/xpath/build/enketo-xpathjs",
         "jquery.xpath": "../../../lib/enketo-core/lib/jquery-xpath/jquery.xpath",
-        "Modernizr": "../../../lib/enketo-core/lib/Modernizr",
+        "support": "../../../lib/enketo-core/src/js/support",
         "bootstrap-slider": "../../../lib/enketo-core/lib/bootstrap-slider/js/bootstrap-slider",
         "jquery": "../../../lib/bower-components/jquery/dist/jquery",
         "jquery.touchswipe": "../../../lib/enketo-core/lib/jquery-touchswipe/jquery.touchSwipe",
-        "leaflet": "../../../lib/enketo-core/lib/leaflet/leaflet",
+        "leaflet": "../../../lib/bower-components/leaflet/dist/leaflet",
         "q": "../../../lib/bower-components/q/q",
         "i18next": "../../../lib/bower-components/i18next/i18next.amd",
         "print": "../../../lib/enketo-core/src/js/print",
@@ -37,9 +37,6 @@ require.config( {
             deps: [ "jquery" ],
             exports: "jQuery.fn.timepicker"
         },
-        "Modernizr": {
-            exports: "Modernizr"
-        },
         "leaflet": {
             exports: "L"
         },
@@ -47,6 +44,5 @@ require.config( {
             exports: "Papa"
         },
         "db": [ 'promise-by-Q' ],
-
     }
 } );

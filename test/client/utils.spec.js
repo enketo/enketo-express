@@ -1,4 +1,4 @@
-/* global define, describe, require, it, before, after, beforeEach, afterEach, expect */
+/* global define, describe, it, before, after, beforeEach, afterEach, expect */
 "use strict";
 
 define( [ 'utils' ], function( utils ) {
