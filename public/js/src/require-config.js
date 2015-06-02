@@ -39,9 +39,6 @@ require.config( {
         "leaflet": {
             exports: "L"
         },
-        "papaparse": {
-            exports: "Papa"
-        },
         "db": [ 'promise-by-Q' ],
     }
 } );

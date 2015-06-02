@@ -20,7 +20,7 @@
         "requirejs": "~2.1.15",
         "i18next": "~1.7.7",
         "vex": "~2.3.2",
-        "papaparse": "4.0.7",
-        "leaflet": "~0.7.3"
+        "leaflet": "~0.7.3",
+        "papaparse": "https://github.com/MartijnR/PapaParse.git#~4.1.2"
     }
 }
