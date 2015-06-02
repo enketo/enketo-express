@@ -1,33 +1,43 @@
 extends layout
 
+block style
+  link(rel='stylesheet', href='/css/index.css') 
+
 block content
   p= t("home.msg", {appTitle: title, serverName: openrosa})
 
   p= t("langs.supported")
-    each val in languages
-      if val === "en"
-        span= t("langs.en") + ', '
-      else if val === "ar"
-        span= t("langs.ar") + ', '
-      else if val === "es" 
-        span= t("langs.es") + ', '
-      else if val === "sw"
-        span= t("langs.sw") + ', '
-      else if val === "he" 
-        span= t("langs.he") + ', '
-      else if val === "de"
-        span= t("langs.de") + ', '
-      else if val === "hi"
-        span= t("langs.hi") + ', '
-      else if val === "ro"
-        span= t("langs.ro") + ', '
-      else if val === "el"
-        span= t("langs.el") + ', '
-      else if val === "km"
-        span= t("langs.km") + ', '
-      else if val === "th"
-        span= t("langs.th") + ', '
-      else if val === "vi"
-        span= t("langs.vi") + ', '
-      else if val === "nl"
-        span= t("langs.nl") + ', '
+    each lang in languages
+      case lang
+        when "en"
+          span= t("langs.en")
+        when "ar"
+          span= t("langs.ar")
+        when "es" 
+          span= t("langs.es")
+        when "sw"
+          span= t("langs.sw")
+        when "he" 
+          span= t("langs.he")
+        when "de"
+          span= t("langs.de")
+        when "hi"
+          span= t("langs.hi")
+        when "ro"
+          span= t("langs.ro")
+        when "el"
+          span= t("langs.el")
+        when "km"
+          span= t("langs.km")
+        when "th"
+          span= t("langs.th")
+        when "vi"
+          span= t("langs.vi")
+        when "nl"
+          span= t("langs.nl")
+        default
+          span.lang-placeholder
+      if languages[languages.length - 1] !== lang
+        span= ', '
+      else 
+        span= '.'
