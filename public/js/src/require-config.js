@@ -13,7 +13,6 @@ require.config( {
         "text": "../../../lib/enketo-core/lib/text/text",
         "xpath": "../../../lib/enketo-core/lib/xpath/build/enketo-xpathjs",
         "jquery.xpath": "../../../lib/enketo-core/lib/jquery-xpath/jquery.xpath",
-        "support": "../../../lib/enketo-core/src/js/support",
         "bootstrap-slider": "../../../lib/enketo-core/lib/bootstrap-slider/js/bootstrap-slider",
         "jquery": "../../../lib/bower-components/jquery/dist/jquery",
         "jquery.touchswipe": "../../../lib/enketo-core/lib/jquery-touchswipe/jquery.touchSwipe",

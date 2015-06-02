@@ -18,7 +18,7 @@
  * Deals with the main GUI elements (but not the survey form)
  */
 
-define( [ 'support', 'q', 'settings', 'print', 'translator', 'vex.dialog.custom', 'jquery', 'plugin', ], function( support, Q, settings, printForm, t, dialog, $ ) {
+define( [ 'enketo-js/support', 'q', 'settings', 'print', 'translator', 'vex.dialog.custom', 'jquery', 'plugin', ], function( support, Q, settings, printForm, t, dialog, $ ) {
     "use strict";
 
     var nav, pages, updateStatus, feedbackBar,
