@@ -7,6 +7,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Swahili language
 
+##### Changed
+- Improved performance in logic evaluation.
+
+##### Fixed
+- Firefox only prints first page.
+
 
 [1.9.0] - 2015-05-28
 ------------------
