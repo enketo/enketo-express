@@ -82,8 +82,8 @@ function getManifest( survey ) {
                     return _simplifyFormObj( file );
                 } ) : [];
                 deferred.resolve( survey );
-            } );
-
+            } )
+            .catch( deferred.reject );
     }
     return deferred.promise;
 }
@@ -214,7 +214,7 @@ function _request( options ) {
     var method = options.method || 'get';
     delete options.method;
 
-    debug( 'sending request to url: ' + options.url );
+    debug( 'sending ' + method + ' request to url: ' + options.url );
 
     r = request[ method ]( options, function( error, response, body ) {
         if ( error ) {
