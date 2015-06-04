@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Firefox only prints first page.
+- Failing to load record.
 
 
 [1.9.0] - 2015-05-28
