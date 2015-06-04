@@ -117,7 +117,8 @@ function getMaxSize( survey ) {
 function authenticate( survey ) {
     var options = {
         url: getFormListUrl( survey.openRosaServer ),
-        auth: survey.credentials
+        auth: survey.credentials,
+        method: 'head'
     };
 
     return _request( options )
