@@ -65,8 +65,20 @@ describe( 'Survey Model', function() {
         } );
 
         it( 'returns an enketo id if succesful', function() {
-            // the algorithm for the very first survey to be created return YYYp for number 1
+            // the algorithm for the very first survey to be created returns YYYp
             return expect( model.set( survey ) ).to.eventually.equal( 'YYYp' );
+        } );
+
+        it( 'returns a different enketo id if the capitalization of the OpenRosa Form ID changes', function() {
+            var surveyDifferent = {
+                openRosaId: 'Survey',
+                openRosaServer: survey.openRosaServer
+            };
+            // the algorithm for the second survey to be created returns YYY8
+            return Q.all( [
+                expect( model.set( survey ) ).to.eventually.equal( 'YYYp' ),
+                expect( model.set( surveyDifferent ) ).to.eventually.equal( 'YYY8' ),
+            ] );
         } );
 
         it( 'returns an enketo id when the survey includes a theme property', function() {
@@ -246,6 +258,18 @@ describe( 'Survey Model', function() {
             return Q.all( [
                 expect( promise1 ).to.eventually.equal( 'YYYp' ),
                 expect( promise2 ).to.eventually.equal( 'YYYp' )
+            ] );
+        } );
+
+        it( 'of an existing survey, it returns null if the id does not have a case-sensitive match', function() {
+            var promise1 = model.set( survey ),
+                promise2 = promise1.then( function() {
+                    survey.openRosaId = 'Existing';
+                    return model.getId( survey );
+                } );
+            return Q.all( [
+                expect( promise1 ).to.eventually.equal( 'YYYp' ),
+                expect( promise2 ).to.eventually.be.fulfilled.and.deep.equal( null )
             ] );
         } );
 

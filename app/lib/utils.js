@@ -13,7 +13,8 @@ function getOpenRosaKey( survey, prefix ) {
         return null;
     }
     prefix = prefix || 'or:';
-    return prefix + cleanUrl( survey.openRosaServer ) + ',' + survey.openRosaId.trim().toLowerCase();
+    // Server URL is not case sensitive, form ID is case-sensitive
+    return prefix + cleanUrl( survey.openRosaServer ) + ',' + survey.openRosaId.trim();
 }
 
 /**

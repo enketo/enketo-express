@@ -7,7 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Groups and repeats missing from print view in pages mode.
 - Sidebar handle is shown up in print view.
-- Back button in pages shows merged pages after form reset. 
+- Back button in pages shows merged pages after form reset.
+- OpenRosa Form ID is now case sensitive. **WARNING: any existing forms that have a form ID that included a capitalized letter, will get a new Enketo ID. Existing Enketo IDs will keep working though.**
 
 [1.9.1] - 2015-06-16
 ------------------
