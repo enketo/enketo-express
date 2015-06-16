@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ------------------------
 ##### Fixed
 - Groups and repeats missing from print view in pages mode.
+- Sidebar handle is shown up in print view.
 
 [1.9.1] - 2015-06-16
 ------------------
