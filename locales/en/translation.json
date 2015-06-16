@@ -219,7 +219,7 @@
     },
     "offline": {
       "heading": "Cannot access requested page",
-      "msg1": "This page is only accessible when the browser has an Internet connection and the server is accessible (unless the page does not exist of course)."
+      "msg1": "This page is only accessible when the browser has an Internet connection and the server is accessible (unless the page does not exist)."
     }
   },
   "prompt": {
