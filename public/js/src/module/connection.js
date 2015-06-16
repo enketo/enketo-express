@@ -18,7 +18,7 @@
  * Deals with communication to the server (in process of being transformed to using Promises)
  */
 
-define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'utils', 'jquery' ], function( settings, Q, t, FormModel, utils, $ ) {
+define( [ 'settings', 'q', 'translator', 'utils', 'jquery' ], function( settings, Q, t, utils, $ ) {
     "use strict";
     var that = this,
         currentOnlineStatus = null,
@@ -162,17 +162,16 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'utils', 'jquery
      * @param { { name: string, data: string } } record[ description ]
      */
     function _prepareFormDataArray( record ) {
-        var model = new FormModel( record.xml ),
-            ///instanceID = model.getInstanceID(),
-            $fileNodes = model.$.find( '[type="file"]' ).removeAttr( 'type' ),
-            xmlData = model.getStr( false, true ),
+        var recordDoc = $.parseXML( record.xml ),
+            $fileNodes = $( recordDoc ).find( '[type="file"]' ).removeAttr( 'type' ),
+            xmlData = new XMLSerializer().serializeToString( recordDoc.documentElement, 'text/xml' ),
             xmlSubmissionBlob = new Blob( [ xmlData ], {
                 type: 'text/xml'
             } ),
             availableFiles = record.files || [],
             sizes = [],
             failedFiles = [],
-            files = [],
+            submissionFiles = [],
             batches = [
                 []
             ],
@@ -196,7 +195,7 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'utils', 'jquery
 
             // add the file if it is available
             if ( file ) {
-                files.push( {
+                submissionFiles.push( {
                     nodeName: nodeName,
                     file: file
                 } );
@@ -207,7 +206,7 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'utils', 'jquery
             }
         } );
 
-        if ( files.length > 0 ) {
+        if ( submissionFiles.length > 0 ) {
             batches = _divideIntoBatches( sizes, maxSize );
         }
 
@@ -221,16 +220,13 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'utils', 'jquery
 
             // batch with XML data
             batchPrepped = {
-                //instanceID: instanceID,
                 formData: fd,
                 failedFiles: failedFiles
-                    //batches: batches.length,
-                    //batchIndex: index
             };
 
             // add any media files to the batch
             batch.forEach( function( fileIndex ) {
-                batchPrepped.formData.append( files[ fileIndex ].nodeName, files[ fileIndex ].file );
+                batchPrepped.formData.append( submissionFiles[ fileIndex ].nodeName, submissionFiles[ fileIndex ].file );
             } );
 
             // push the batch to the array
@@ -338,7 +334,6 @@ define( [ 'settings', 'q', 'translator', 'enketo-js/FormModel', 'utils', 'jquery
             } )
             .done( function( data ) {
                 data.enketoId = props.enketoId;
-                //deferred.resolve( data );
                 _getExternalData( data )
                     .then( deferred.resolve )
                     .catch( deferred.reject );

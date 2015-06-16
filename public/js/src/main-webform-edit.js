@@ -17,10 +17,14 @@ require( [ 'require-config' ], function( rc ) {
                 connection.getFormParts( survey ),
                 connection.getExistingInstance( survey )
             ] ).then( function( responses ) {
-                if ( responses[ 0 ].form && responses[ 0 ].model && responses[ 1 ].instance ) {
+                var formParts = responses[ 0 ];
+                formParts.instance = responses[ 1 ].instance;
+
+                if ( formParts.form && formParts.model && formParts.instance ) {
                     gui.swapTheme( responses[ 0 ].theme || utils.getThemeFromFormStr( responses[ 0 ].form ) )
                         .then( function() {
-                            _init( responses[ 0 ].form, responses[ 0 ].model, responses[ 1 ].instance );
+
+                            _init( formParts );
                         } )
                         .then( connection.getMaximumSubmissionSize )
                         .then( function( maxSize ) {
@@ -40,12 +44,13 @@ require( [ 'require-config' ], function( rc ) {
                 }
             }
 
-            function _init( formStr, modelStr, instanceStr ) {
-                $loader[ 0 ].outerHTML = formStr;
+            function _init( formParts ) {
+                $loader[ 0 ].outerHTML = formParts.form;
                 $( document ).ready( function() {
                     controller.init( 'form.or:eq(0)', {
-                        modelStr: modelStr,
-                        instanceStr: instanceStr
+                        modelStr: formParts.model,
+                        instanceStr: formParts.instance,
+                        external: formParts.externalData
                     } );
                     $form.add( $buttons ).removeClass( 'hide' );
                     $( 'head>title' ).text( utils.getTitleFromFormStr( formStr ) );

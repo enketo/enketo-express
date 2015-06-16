@@ -18,8 +18,8 @@
  * Deals with the main high level survey controls: saving, submitting etc.
  */
 
-define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormModel', 'file-manager', 'q', 'translator', 'records-queue', 'jquery' ],
-    function( gui, connection, settings, Form, FormModel, fileManager, Q, t, records, $ ) {
+define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'file-manager', 'q', 'translator', 'records-queue', 'jquery' ],
+    function( gui, connection, settings, Form, fileManager, Q, t, records, $ ) {
         "use strict";
         var form, formSelector, formData, $formprogress;
 
@@ -31,11 +31,6 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
             formSelector = selector;
             formData = data;
             form = new Form( formSelector, formData );
-
-            // DEBUG
-            // window.form = form;
-            // window.gui = gui;
-            // window.store = store;
 
             //initialize form and check for load errors
             loadErrors = form.init();
@@ -117,12 +112,13 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                         if ( !record || !record.xml ) {
                             return gui.alert( t( 'alert.recordnotfound.msg' ) );
                         }
+
                         form.resetView();
                         form = new Form( formSelector, {
                             modelStr: formData.modelStr,
                             instanceStr: record.xml,
                             external: formData.external,
-                            unsubmitted: true
+                            submitted: false
                         } );
                         loadErrors = form.init();
                         // formreset event will update the form media:
@@ -132,14 +128,20 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                         records.setActive( record.instanceId );
 
                         if ( loadErrors.length > 0 ) {
-                            console.error( 'load errors:', loadErrors );
-                            gui.showLoadErrors( loadErrors, t( 'alert.loaderror.editadvice' ) );
+                            throw loadErrors;
                         } else {
                             gui.feedback( t( 'alert.recordloadsuccess.msg', {
                                 recordName: record.name
                             } ), 2 );
                         }
                         $( '.side-slider__toggle.close' ).click();
+                    } )
+                    .catch( function( errors ) {
+                        console.error( 'load errors: ', errors );
+                        if ( !Array.isArray( errors ) ) {
+                            errors = [ errors.message ];
+                        }
+                        gui.alertLoadErrors( errors, t( 'alert.loaderror.editadvice' ) );
                     } );
             }
         }
@@ -166,7 +168,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 '<div class="loader-animation-small" style="margin: 10px auto 0 auto;"/>', t( 'alert.submission.msg' ), 'bare' );
 
             record = {
-                'xml': form.getDataStr( false, true ),
+                'xml': form.getDataStr(),
                 'files': fileManager.getCurrentFiles()
             };
 
@@ -262,8 +264,6 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
             var record, saveMethod,
                 draft = _getDraftStatus();
 
-            console.log( 'saveRecord called with recordname:', recordName, 'confirmed:', confirmed, "error:", errorMsg, 'draft:', draft );
-
             // triggering "beforesave" event to update possible "timeEnd" meta data in form
             form.getView().$.trigger( 'beforesave' );
 
@@ -292,7 +292,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
             // build the record object
             record = {
                 'draft': draft,
-                'xml': form.getDataStr( false, true ),
+                'xml': form.getDataStr(),
                 'name': recordName,
                 'instanceId': form.getInstanceID(),
                 'enketoId': settings.enketoId,
@@ -440,8 +440,6 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'enketo-js/FormMode
                 }
             }
         }
-
-
 
         return {
             init: init

@@ -17,6 +17,7 @@ require.config( {
         "jquery": "../../../lib/bower-components/jquery/dist/jquery",
         "jquery.touchswipe": "../../../lib/enketo-core/lib/jquery-touchswipe/jquery.touchSwipe",
         "leaflet": "../../../lib/bower-components/leaflet/dist/leaflet",
+        "merge-xml": "../../../lib/bower-components/mergexml/mergexml",
         "q": "../../../lib/bower-components/q/q",
         "i18next": "../../../lib/bower-components/i18next/i18next.amd",
         "print": "../../../lib/enketo-core/src/js/print",

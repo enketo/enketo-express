@@ -2,8 +2,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
---------------
+[1.9.1] - 2015-06-16
+------------------
 ##### Added
 - Swahili language
 
@@ -13,7 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Firefox only prints first page.
 - Failing to load record.
-
+- Records with nested repeats loaded incorrectly and completely corrupting model.
 
 [1.9.0] - 2015-05-28
 ------------------
