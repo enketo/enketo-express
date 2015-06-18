@@ -2,13 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased] 
+[1.10.0] - 2015-06-18 
 ------------------------
+##### Changed
+- OpenRosa Form ID is now case-sensitive. **WARNING: any existing forms that have a form ID that included a capitalized letter, will get a new Enketo ID. Existing Enketo IDs will keep working though.**
+
 ##### Fixed
 - Groups and repeats missing from print view in pages mode.
 - Sidebar handle is shown up in print view.
 - Back button in pages shows merged pages after form reset.
-- OpenRosa Form ID is now case sensitive. **WARNING: any existing forms that have a form ID that included a capitalized letter, will get a new Enketo ID. Existing Enketo IDs will keep working though.**
+- Incorrectly capitalized form IDs result in unlaunchable forms. 
+- First page in pages mode is shown if it is disabled.
+- Existing trigger value not populated in form.
 
 [1.9.1] - 2015-06-16
 ------------------
