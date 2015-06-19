@@ -222,6 +222,7 @@ define( [ 'enketo-js/support', 'q', 'settings', 'print', 'translator', 'vex.dial
         }
 
         choices = choices || {};
+        choices.allowAlternativeClose = ( typeof choices.allowAlternativeClose !== 'undefined' ) ? choices.allowAlternativeClose : true;
 
         dialog.confirm( {
             message: errorMsg + ( message || t( 'confirm.default.msg' ) ),
@@ -243,7 +244,9 @@ define( [ 'enketo-js/support', 'q', 'settings', 'print', 'translator', 'vex.dial
                     choices.negAction.call( value );
                 }
             },
-            showCloseButton: true
+            showCloseButton: choices.allowAlternativeClose,
+            escapeButtonCloses: choices.allowAlternativeClose,
+            overlayClosesOnClick: choices.allowAlternativeClose
         } );
     }
 

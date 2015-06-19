@@ -1,7 +1,7 @@
 require( [ 'require-config' ], function( rc ) {
     "use strict";
-    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'q', 'translator', 'utils', 'jquery' ],
-        function( gui, controller, settings, connection, Q, t, utils, $ ) {
+    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'translator', 'utils', 'jquery', 'promise-by-Q' ],
+        function( gui, controller, settings, connection, t, utils, $ ) {
             var $loader = $( '.form__loader' ),
                 $form = $( 'form.or' ),
                 $buttons = $( '.form-header__button--print, button#submit-form' ),
@@ -13,7 +13,7 @@ require( [ 'require-config' ], function( rc ) {
                     instanceId: settings.instanceId
                 };
 
-            Q.all( [
+            Promise.all( [
                 connection.getFormParts( survey ),
                 connection.getExistingInstance( survey )
             ] ).then( function( responses ) {
@@ -51,9 +51,10 @@ require( [ 'require-config' ], function( rc ) {
                         modelStr: formParts.model,
                         instanceStr: formParts.instance,
                         external: formParts.externalData
+                    } ).then( function() {
+                        $form.add( $buttons ).removeClass( 'hide' );
+                        $( 'head>title' ).text( utils.getTitleFromFormStr( formStr ) );
                     } );
-                    $form.add( $buttons ).removeClass( 'hide' );
-                    $( 'head>title' ).text( utils.getTitleFromFormStr( formStr ) );
                 } );
             }
         } );

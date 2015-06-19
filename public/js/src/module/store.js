@@ -499,7 +499,7 @@ define( [ 'db', 'q', 'utils', 'translator' ], function( db, Q, utils, t ) {
             return server.records.get( record.instanceId )
                 .then( function( result ) {
                     // determine obsolete files to be removed
-                    if ( result.files ) {
+                    if ( result && result.files ) {
                         obsoleteFiles = result.files.filter( function( existing ) {
                             return fileKeys.indexOf( existing ) < 0;
                         } );

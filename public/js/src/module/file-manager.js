@@ -125,9 +125,13 @@ define( [ "q", "store", "settings", "jquery" ], function( Q, store, settings, $ 
         return files;
     }
 
+    /**
+     * Obtains the instanceId of the current record.
+     * 
+     * @return {?string} [description]
+     */
     function _getInstanceId() {
-        // this isn't right
-        return $( '.record-list__records__record.active' ).eq( 0 ).attr( 'data-id' );
+        return settings.recordId;
     }
 
     /**

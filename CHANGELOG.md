@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ------------------------
+##### Added
+- Autosave unsaved data in offline-capable webform views
+
 ##### Fixed
 - A note preceding a traditional table is formatted as a group label.
 - Incorrect error message shown when loading a record with a file in the edit view.

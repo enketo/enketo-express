@@ -22,6 +22,7 @@ define( [ 'store', 'connection', 'gui', 'q', 'settings', 'translator' ], functio
     "use strict";
 
     var $exportButton, $uploadButton, $recordList, $queueNumber, uploadProgress,
+        autoSaveKey = '__autoSave_' + settings.enketoId,
         uploadOngoing = false;
 
     function init() {
@@ -33,7 +34,7 @@ define( [ 'store', 'connection', 'gui', 'q', 'settings', 'translator' ], functio
         $uploadButton = $( '.record-list__button-bar__button.upload' );
         $queueNumber = $( '.offline-enabled__queue-length' );
 
-        store.init()
+        return store.init()
             .then( _updateRecordList );
     }
 
@@ -61,7 +62,7 @@ define( [ 'store', 'connection', 'gui', 'q', 'settings', 'translator' ], functio
     /**
      * Updates an existing record
      *
-     * @param  {record} record [description]
+     * @param  {*} record [description]
      * @return {Promise}        [description]
      */
     function update( record ) {
@@ -75,8 +76,34 @@ define( [ 'store', 'connection', 'gui', 'q', 'settings', 'translator' ], functio
      * @return {Promise}        [description]
      */
     function remove( instanceId ) {
-        return store.record.remove( record )
+        return store.record.remove( instanceId )
             .then( _updateRecordList );
+    }
+
+    function getAutoSavedKey() {
+        return autoSaveKey;
+    }
+
+
+    function getAutoSavedRecord() {
+        return get( autoSaveKey );
+    }
+
+    function updateAutoSavedRecord( record ) {
+        // prevent this record from accidentally being submitted
+        record.draft = true;
+        // give an internal name
+        record.name = '__autoSave_' + Date.now();
+        // use the pre-defined key
+        record.instanceId = autoSaveKey;
+        // make the record valid
+        record.enketoId = settings.enketoId;
+
+        return update( record );
+    }
+
+    function removeAutoSavedRecord() {
+        return remove( autoSaveKey );
     }
 
     /**
@@ -98,6 +125,7 @@ define( [ 'store', 'connection', 'gui', 'q', 'settings', 'translator' ], functio
      * @param {string} instanceId [description]
      */
     function setActive( instanceId ) {
+        settings.recordId = instanceId;
         $( '.record-list__records' )
             .find( '.active' ).removeClass( 'active' )
             .addBack().find( '[data-id="' + instanceId + '"]' ).addClass( 'active' );
@@ -271,14 +299,17 @@ define( [ 'store', 'connection', 'gui', 'q', 'settings', 'translator' ], functio
             .then( function( records ) {
                 records = records || [];
 
+                // remove autoSaved record
+                records = records.filter( function( record ) {
+                    return record.instanceId !== autoSaveKey;
+                } );
+
                 // update queue number
                 $queueNumber.text( records.length );
 
                 // add 'no records' message
                 if ( records.length === 0 ) {
                     $recordList.empty().append( '<li class="record-list__records--none">' + t( 'record-list.norecords' ) + '</li>' );
-                    // deferred.resolve();
-                    // return deferred.promise;
                 } else {
                     $recordList.find( '.record-list__records--none' ).remove();
                 }
@@ -340,6 +371,10 @@ define( [ 'store', 'connection', 'gui', 'q', 'settings', 'translator' ], functio
         set: set,
         update: update,
         remove: remove,
+        getAutoSavedKey: getAutoSavedKey,
+        getAutoSavedRecord: getAutoSavedRecord,
+        updateAutoSavedRecord: updateAutoSavedRecord,
+        removeAutoSavedRecord: removeAutoSavedRecord,
         flush: flush,
         getCounterValue: getCounterValue,
         setActive: setActive,

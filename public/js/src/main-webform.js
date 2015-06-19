@@ -1,8 +1,7 @@
 require( [ 'require-config' ], function( rc ) {
     "use strict";
-
-    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'enketo-js/FormModel', 'translator', 'store', 'utils', 'form-cache', 'application-cache', 'q', 'jquery' ],
-        function( gui, controller, settings, connection, FormModel, t, store, utils, formCache, applicationCache, Q, $ ) {
+    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'enketo-js/FormModel', 'translator', 'store', 'utils', 'form-cache', 'application-cache', 'jquery', 'promise-by-Q' ],
+        function( gui, controller, settings, connection, FormModel, t, store, utils, formCache, applicationCache, $ ) {
             var $loader = $( '.form__loader' ),
                 $buttons = $( '.form-header__button--print, button#validate-form, button#submit-form' ),
                 survey = {
@@ -98,19 +97,19 @@ require( [ 'require-config' ], function( rc ) {
             }
 
             function _swapTheme( survey ) {
-                var deferred = Q.defer();
 
                 console.debug( 'swapping theme', survey );
 
-                if ( survey.form && survey.model ) {
-                    gui.swapTheme( survey.theme || utils.getThemeFromFormStr( survey.form ) )
-                        .then( function() {
-                            deferred.resolve( survey );
-                        } );
-                } else {
-                    deferred.reject( new Error( 'Received form incomplete' ) );
-                }
-                return deferred.promise;
+                return new Promise( function( resolve, reject ) {
+                    if ( survey.form && survey.model ) {
+                        gui.swapTheme( survey.theme || utils.getThemeFromFormStr( survey.form ) )
+                            .then( function() {
+                                resolve( survey );
+                            } );
+                    } else {
+                        reject( new Error( 'Received form incomplete' ) );
+                    }
+                } );
             }
 
             function _prepareInstance( modelStr, defaults ) {
@@ -135,36 +134,38 @@ require( [ 'require-config' ], function( rc ) {
             }
 
             function _init( formParts ) {
-                var error, $form,
-                    deferred = Q.defer();
+                var error, $form;
 
-                if ( formParts && formParts.form && formParts.model ) {
-                    $loader[ 0 ].outerHTML = formParts.form;
-                    $form = $( 'form.or:eq(0)' );
+                return new Promise( function( resolve, reject ) {
+                    if ( formParts && formParts.form && formParts.model ) {
+                        $loader[ 0 ].outerHTML = formParts.form;
+                        $form = $( 'form.or:eq(0)' );
 
-                    $( document ).ready( function() {
-                        // TODO pass $form as first parameter?
-                        controller.init( 'form.or:eq(0)', {
-                            modelStr: formParts.model,
-                            instanceStr: _prepareInstance( formParts.model, settings.defaults ),
-                            external: formParts.externalData
+                        $( document ).ready( function() {
+                            // TODO pass $form as first parameter?
+                            // controller.init is asynchronous
+                            controller.init( 'form.or:eq(0)', {
+                                modelStr: formParts.model,
+                                instanceStr: _prepareInstance( formParts.model, settings.defaults ),
+                                external: formParts.externalData
+                            } ).then( function() {
+                                $form.add( $buttons ).removeClass( 'hide' );
+                                $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
+
+                                formParts.$form = $form;
+                                resolve( formParts );
+                            } );
                         } );
-                        $form.add( $buttons ).removeClass( 'hide' );
-                        $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
-
-                        formParts.$form = $form;
-                        deferred.resolve( formParts );
-                    } );
-                } else if ( formParts ) {
-                    error = new Error( 'Form not complete.' );
-                    errors.status = 400;
-                    deferred.reject( error );
-                } else {
-                    error = new Error( 'Form not found' );
-                    error.status = 404;
-                    deferred.reject( error );
-                }
-                return deferred.promise;
+                    } else if ( formParts ) {
+                        error = new Error( 'Form not complete.' );
+                        errors.status = 400;
+                        reject( error );
+                    } else {
+                        error = new Error( 'Form not found' );
+                        error.status = 404;
+                        reject( error );
+                    }
+                } );
             }
         } );
 } );

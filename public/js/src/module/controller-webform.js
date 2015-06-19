@@ -18,40 +18,91 @@
  * Deals with the main high level survey controls: saving, submitting etc.
  */
 
-define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'file-manager', 'q', 'translator', 'records-queue', 'jquery' ],
-    function( gui, connection, settings, Form, fileManager, Q, t, records, $ ) {
+define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'file-manager', 'translator', 'records-queue', 'jquery' ],
+    function( gui, connection, settings, Form, fileManager, t, records, $ ) {
         "use strict";
         var form, formSelector, formData, $formprogress;
 
         function init( selector, data ) {
-            var loadErrors, advice;
-
-            connection.init();
+            var advice,
+                loadErrors = [];
 
             formSelector = selector;
             formData = data;
-            form = new Form( formSelector, formData );
 
-            //initialize form and check for load errors
-            loadErrors = form.init();
+            connection.init();
 
-            if ( settings.offline ) {
-                records.init();
+            return _initializeRecords()
+                .then( _checkAutoSavedRecord )
+                .then( function( record ) {
+                    if ( !data.instanceStr && record && record.xml ) {
+                        records.setActive( records.getAutoSavedKey() );
+                        data.instanceStr = record.xml;
+                    }
+
+                    form = new Form( formSelector, data );
+                    loadErrors = form.init();
+
+                    if ( form.getEncryptionKey() ) {
+                        loadErrors.unshift( '<strong>' + t( 'error.encryptionnotsupported' ) + '</strong>' );
+                    }
+
+                    $formprogress = $( '.form-progress' );
+
+                    _setEventHandlers();
+
+                    if ( loadErrors.length > 0 ) {
+                        throw loadErrors;
+                    }
+                } )
+                .catch( function( error ) {
+                    if ( Array.isArray( error ) ) {
+                        loadErrors = error;
+                    } else {
+                        loadErrors.unshift( error.message || t( 'error.unknown' ) );
+                    }
+
+                    advice = ( data.instanceStr ) ? t( 'alert.loaderror.editadvice' ) : t( 'alert.loaderror.entryadvice' );
+                    gui.alertLoadErrors( loadErrors, advice );
+                } );
+        }
+
+        function _initializeRecords() {
+            if ( !settings.offline ) {
+                return Promise.resolve();
             }
+            return records.init();
+        }
 
-            if ( form.getEncryptionKey() ) {
-                loadErrors.unshift( '<strong>' + t( 'error.encryptionnotsupported' ) + '</strong>' );
+        function _checkAutoSavedRecord() {
+            if ( !settings.offline ) {
+                return Promise.resolve();
             }
+            return records.getAutoSavedRecord()
+                .then( function( record ) {
+                    return new Promise( function( resolve, reject ) {
+                        if ( record ) {
+                            gui.confirm( {
+                                heading: t( 'confirm.autosaveload.heading' ),
+                                msg: t( 'confirm.autosaveload.msg' ),
 
-            if ( loadErrors.length > 0 ) {
-                console.error( 'load errors:', loadErrors );
-                advice = ( formData.instanceStr ) ? t( 'alert.loaderror.editadvice' ) : t( 'alert.loaderror.entryadvice' );
-                gui.alertLoadErrors( loadErrors, advice );
-            }
-
-            $formprogress = $( '.form-progress' );
-
-            _setEventHandlers();
+                            }, {
+                                posButton: t( 'confirm.autosaveload.posButton' ),
+                                negButton: t( 'confirm.autosaveload.negButton' ),
+                                posAction: function() {
+                                    resolve( record );
+                                },
+                                negAction: function() {
+                                    records.removeAutoSavedRecord();
+                                    resolve();
+                                },
+                                allowAlternativeClose: false
+                            } );
+                        } else {
+                            resolve();
+                        }
+                    } );
+                } );
         }
 
         /**
@@ -221,43 +272,41 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'file-manager', 'q'
         }
 
         function _confirmRecordName( recordName, errorMsg ) {
-            var deferred = Q.defer(),
-                texts = {
-                    msg: '',
-                    heading: t( 'formfooter.savedraft.label' ),
-                    errorMsg: errorMsg
-                },
-                choices = {
-                    posButton: t( 'confirm.save.posButton' ),
-                    negButton: t( 'confirm.default.negButton' ),
-                    posAction: function( values ) {
-                        deferred.resolve( values[ 'record-name' ] );
+            return new Promise( function( resolve, reject ) {
+                var texts = {
+                        msg: '',
+                        heading: t( 'formfooter.savedraft.label' ),
+                        errorMsg: errorMsg
                     },
-                    negAction: deferred.reject
-                },
-                inputs = '<label><span>' + t( 'confirm.save.name' ) + '</span>' +
-                '<span class="or-hint active">' + t( 'confirm.save.hint' ) + '</span>' +
-                '<input name="record-name" type="text" value="' + recordName + '"required />' + '</label>';
+                    choices = {
+                        posButton: t( 'confirm.save.posButton' ),
+                        negButton: t( 'confirm.default.negButton' ),
+                        posAction: function( values ) {
+                            resolve( values[ 'record-name' ] );
+                        },
+                        negAction: reject
+                    },
+                    inputs = '<label><span>' + t( 'confirm.save.name' ) + '</span>' +
+                    '<span class="or-hint active">' + t( 'confirm.save.hint' ) + '</span>' +
+                    '<input name="record-name" type="text" value="' + recordName + '"required />' + '</label>';
 
-            gui.prompt( texts, choices, inputs );
-
-            return deferred.promise;
+                gui.prompt( texts, choices, inputs );
+            } );
         }
 
         function _confirmRecordRename( oldName, newName, errMsg ) {
-            var deferred = Q.defer();
-
-            gui.prompt( {
-                    msg: t( 'confirm.save.renamemsg', {
-                        currentName: '"' + oldName + '"',
-                        newName: '"' + newName + '"'
-                    } )
-                }, {
-                    posAction: deferred.resolve,
-                    negAction: deferred.reject
-                }, '<label><span>' + t( 'confirm.save.name' ) + '</span><span>' + t( 'confirm.save.hint' ) + '</span>' +
-                '<input name="record-name" type="text" required /></label>' );
-            return deferred.promise;
+            return new Promise( function( resolve, reject ) {
+                gui.prompt( {
+                        msg: t( 'confirm.save.renamemsg', {
+                            currentName: '"' + oldName + '"',
+                            newName: '"' + newName + '"'
+                        } )
+                    }, {
+                        posAction: resolve,
+                        negAction: reject
+                    }, '<label><span>' + t( 'confirm.save.name' ) + '</span><span>' + t( 'confirm.save.hint' ) + '</span>' +
+                    '<input name="record-name" type="text" required /></label>' );
+            } );
         }
 
         function _saveRecord( recordName, confirmed, errorMsg ) {
@@ -312,8 +361,8 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'file-manager', 'q'
             // save the record
             records[ saveMethod ]( record )
                 .then( function() {
-                    console.log( 'XML save successful!' );
 
+                    records.removeAutoSavedRecord();
                     _resetForm( true );
 
                     if ( draft ) {
@@ -334,7 +383,34 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'file-manager', 'q'
                 } );
         }
 
+        function _autoSaveRecord() {
+            var record;
+
+            // build the variable portions of the record object
+            record = {
+                'xml': form.getDataStr(),
+                'files': fileManager.getCurrentFiles().map( function( file ) {
+                    return ( typeof file === 'string' ) ? {
+                        name: file
+                    } : {
+                        name: file.name,
+                        item: file
+                    };
+                } )
+            };
+
+            // save the record
+            records.updateAutoSavedRecord( record )
+                .then( function() {
+                    console.log( 'autosave successful' );
+                } )
+                .catch( function( error ) {
+                    console.error( 'autosave error', error );
+                } );
+        }
+
         function _setEventHandlers() {
+            var $doc = $( document );
 
             $( 'button#submit-form' ).click( function() {
                 var $button = $( this );
@@ -372,25 +448,25 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'file-manager', 'q'
                 records.uploadQueue();
             } );
 
-            $( document ).on( 'click', '.record-list__records__record[data-draft="true"]', function() {
+            $doc.on( 'click', '.record-list__records__record[data-draft="true"]', function() {
                 _loadRecord( $( this ).attr( 'data-id' ), false );
             } );
 
-            $( document ).on( 'click', '.record-list__records__record', function() {
+            $doc.on( 'click', '.record-list__records__record', function() {
                 $( this ).next( '.record-list__records__msg' ).toggle( 100 );
             } );
 
-            $( document ).on( 'progressupdate', 'form.or', function( event, status ) {
+            $doc.on( 'progressupdate.enketo', 'form.or', function( event, status ) {
                 if ( $formprogress.length > 0 ) {
                     $formprogress.css( 'width', status + '%' );
                 }
             } );
 
             if ( _inIframe() && settings.parentWindowOrigin ) {
-                $( document ).on( 'submissionsuccess edited', _postEventAsMessageToParentWindow );
+                $doc.on( 'submissionsuccess edited.enketo', _postEventAsMessageToParentWindow );
             }
 
-            $( document ).on( 'queuesubmissionsuccess', function() {
+            $doc.on( 'queuesubmissionsuccess', function() {
                 var successes = Array.prototype.slice.call( arguments ).slice( 1 );
                 gui.feedback( t( 'alert.queuesubmissionsuccess.msg', {
                     count: successes.length,
@@ -402,6 +478,10 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'file-manager', 'q'
                 var text = ( $( this ).prop( 'checked' ) ) ? t( "formfooter.savedraft.btn" ) : t( "formfooter.submit.btn" );
                 $( '#submit-form i' ).text( ' ' + text );
             } ).closest( '.draft' ).toggleClass( 'hide', !settings.offline );
+
+            if ( settings.offline ) {
+                $doc.on( 'valuechange.enketo', _autoSaveRecord );
+            }
         }
 
         function _setDraftStatus( status ) {
