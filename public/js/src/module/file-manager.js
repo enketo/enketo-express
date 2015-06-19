@@ -67,19 +67,26 @@ define( [ "q", "store", "settings", "jquery" ], function( Q, store, settings, $ 
         if ( !subject ) {
             deferred.resolve( null );
         } else if ( typeof subject === 'string' ) {
-            // obtain file from storage
-            store.record.file.get( _getInstanceId(), subject )
-                .then( function( file ) {
-                    if ( file.item ) {
-                        if ( _isTooLarge( file.item ) ) {
-                            deferred.reject( _getMaxSizeError() );
+            if ( !store.isAvailable() ) {
+                // e.g. in an online-only edit view
+                deferred.reject( new Error( 'store not available' ) );
+            } else {
+                // obtain file from storage
+                store.record.file.get( _getInstanceId(), subject )
+                    .then( function( file ) {
+                        console.debug( 'file', file );
+                        if ( file.item ) {
+                            if ( _isTooLarge( file.item ) ) {
+                                deferred.reject( _getMaxSizeError() );
+                            } else {
+                                reader.readAsDataURL( file.item );
+                            }
                         } else {
-                            reader.readAsDataURL( file.item );
+                            deferred.reject( new Error( 'File Retrieval Error' ) );
                         }
-                    } else {
-                        deferred.reject( new Error( 'File Retrieval Error' ) );
-                    }
-                } );
+                    } )
+                    .catch( deferred.reject );
+            }
         } else if ( typeof subject === 'object' ) {
             if ( _isTooLarge( subject ) ) {
                 deferred.reject( _getMaxSizeError() );

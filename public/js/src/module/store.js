@@ -21,6 +21,7 @@
 define( [ 'db', 'q', 'utils', 'translator' ], function( db, Q, utils, t ) {
     "use strict";
     var server, blobEncoding, propertyStore, recordStore, surveyStore, dump,
+        available = false,
         databaseName = 'enketo';
 
     function init() {
@@ -106,6 +107,9 @@ define( [ 'db', 'q', 'utils', 'translator' ], function( db, Q, utils, t ) {
             } )
             .then( _isWriteable )
             .then( _setBlobStorageEncoding )
+            .then( function() {
+                available = true;
+            } )
             .catch( function( e ) {
                 // make error more useful and throw it further down the line
                 var error = new Error( t( 'store.error.notavailable', {
@@ -114,6 +118,10 @@ define( [ 'db', 'q', 'utils', 'translator' ], function( db, Q, utils, t ) {
                 error.status = 500;
                 throw error;
             } );
+    }
+
+    function isAvailable() {
+        return available;
     }
 
     function _isWriteable( dbName ) {
@@ -816,6 +824,7 @@ define( [ 'db', 'q', 'utils', 'translator' ], function( db, Q, utils, t ) {
 
     return {
         init: init,
+        isAvailable: isAvailable,
         property: propertyStore,
         survey: surveyStore,
         record: recordStore,
