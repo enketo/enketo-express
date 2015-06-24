@@ -79,7 +79,7 @@ The easiest way to start the app in development and debugging mode with liverelo
 * :white_check_mark: this one will use the `instanceName` value defined in the XForm as the default local record name
 * :white_check_mark: this one will automatically save any unsaved record in the offline-capable views to avoid loosing data
 * :large_orange_diamond: offline forms are still experimental - **enable offline functionality only for testing and [report bugs](https://github.com/kobotoolbox/enketo-express/issues) please**
-* :x: missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views), and "/surveys/list" 
+* :x: missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views)
 * :x: no export of queued records (yet)
 * :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
 * :x: no [Forms](https://enketo.org/forms) app (you do not need this)

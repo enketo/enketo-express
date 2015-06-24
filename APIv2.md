@@ -18,6 +18,11 @@ curl --user APIKEY: -d "server_url=https://ona.io/enketo&form_id=widgets&default
 ```
 The returned URL contains the 'feature' (and not the Database), so a single survey can be served with different default to different users.
 
+# /survey/all endpoint
+Returns both url (online-only) and offline_url (offline-capable) url properties for each survey. Does not return 'subdomain' property any more. Returns new enketo_id property to replace this.
+
+# /surveys/list endpoint
+Returns list of surveys with **all urls** (like survey/all).
 
 # postMessage
 All */iframe endpoints now accept a `parent_window_origin` parameter to enable an iframed webform to post messages to its parent window.

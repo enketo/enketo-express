@@ -9,7 +9,7 @@ process.env.NODE_ENV = 'test';
  * at http://apidocs.enketo.org.
  */
 
-var v1Survey, v1Instance,
+var v1Survey, v1Instance, v1Surveys,
     Q = require( "q" ),
     chai = require( "chai" ),
     expect = chai.expect,
@@ -54,18 +54,22 @@ describe( 'api', function() {
         } );
     } );
 
-    // return string or error if it fails
+    // return error if it fails
     function responseCheck( value, expected ) {
-        if ( typeof expected === 'string' ) {
+        if ( typeof expected === 'string' || typeof expected === 'number' ) {
             if ( value !== expected ) {
-                return 'Response ' + value + ' not equal to ' + expected;
+                return new Error( 'Response ' + value + ' not equal to ' + expected );
+            }
+        } else if ( expected instanceof RegExp && typeof value === 'object' ) {
+            if ( !expected.test( JSON.stringify( value ) ) ) {
+                return new Error( 'Response ' + JSON.stringify( value ) + ' not matching ' + expected );
             }
         } else if ( expected instanceof RegExp ) {
             if ( !expected.test( value ) ) {
-                return 'Response ' + value + ' not matching ' + expected;
+                return new Error( 'Response ' + value + ' not matching ' + expected );
             }
         } else {
-            return 'This is not a valid expected value';
+            return new Error( 'This is not a valid expected value' );
         }
     }
 
@@ -262,7 +266,67 @@ describe( 'api', function() {
             } );
         } );
 
-        // TODO: add some tests for other /survey/* and /surveys/number endpoints
+        // TODO: add some tests for other /survey/* endpoints
+
+        // /surveys/* endpoints
+        describe( '', function() {
+            v1Surveys = [
+                // GET /surveys/number
+                {
+                    version: version,
+                    endpoint: '/surveys/number',
+                    method: 'get',
+                    auth: true,
+                    server: validServer,
+                    status: 200,
+                    res: {
+                        property: 'number',
+                        expected: 1
+                    }
+                },
+                // POST /surveys/number (same)
+                {
+                    version: version,
+                    endpoint: '/surveys/number',
+                    method: 'post',
+                    auth: true,
+                    server: validServer,
+                    status: 200,
+                    res: {
+                        property: 'number',
+                        expected: 1
+                    }
+                },
+                // GET /surveys/list
+                {
+                    version: version,
+                    endpoint: '/surveys/list',
+                    method: 'get',
+                    auth: true,
+                    server: validServer,
+                    status: 200,
+                    res: {
+                        property: 'forms',
+                        expected: /"url":"http:\/\/.*\/::YYYp".*"form_id":"something"/
+                    }
+                },
+                // POST /surveys/list (same)
+                {
+                    version: version,
+                    endpoint: '/surveys/list',
+                    method: 'post',
+                    auth: true,
+                    server: validServer,
+                    status: 200,
+                    res: {
+                        property: 'forms',
+                        expected: /"url":"http:\/\/.*\/::YYYp".*"form_id":"something"/
+                    }
+                },
+            ];
+
+            v1Surveys.forEach( testResponse );
+        } );
 
         describe( '', function() {
             v1Instance = [
@@ -370,6 +434,14 @@ describe( 'api', function() {
                 if ( obj.instanceId === 'AAA' ) {
                     obj.instanceId = 'BBB';
                 }
+                return obj;
+            } ).forEach( testResponse );
+        } );
+
+        describe( 'v1-compatible ', function() {
+            // make sure v2 is backwards-compatible with v1
+            v1Surveys.map( function( obj ) {
+                obj.version = version;
                 return obj;
             } ).forEach( testResponse );
         } );
@@ -632,6 +704,33 @@ describe( 'api', function() {
                 theme: 'gorgeous',
                 method: 'post',
                 status: 200
+            },
+            // TESTING /SURVEYS/LIST RESPONSES THAT DEVIATE FROM V1
+            // GET /surveys/list
+            {
+                version: version,
+                endpoint: '/surveys/list',
+                method: 'get',
+                auth: true,
+                server: validServer,
+                status: 200,
+                res: {
+                    property: 'forms',
+                    expected: /"offline_url":"http:\/\/.*\/::YYYp".*"form_id":"something"/
+                }
+            },
+            // POST /surveys/list (same)
+            {
+                version: version,
+                endpoint: '/surveys/list',
+                method: 'post',
+                auth: true,
+                server: validServer,
+                status: 200,
+                res: {
+                    property: 'forms',
+                    expected: /"offline_url":"http:\/\/.*\/::YYYp".*"form_id":"something"/
+                }
             },
 
         ].map( function( obj ) {

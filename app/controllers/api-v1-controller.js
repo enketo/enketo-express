@@ -166,7 +166,22 @@ function getNumber( req, res, next ) {
 }
 
 function getList( req, res, next ) {
-    _render( 500, 'This API point is not implemented yet', res );
+    var obj;
+
+    return surveyModel
+        .getList( req.body.server_url || req.query.server_url )
+        .then( function( list ) {
+            list = list.map( function( survey ) {
+                obj = _generateWebformUrls( survey.enketo_id, req );
+                obj.form_id = survey.form_id;
+                return obj;
+            } );
+            _render( 200, {
+                code: 200,
+                forms: list
+            }, res );
+        } )
+        .catch( next );
 }
 
 function cacheInstance( req, res, next ) {

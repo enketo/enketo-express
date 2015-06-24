@@ -5,7 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [Unreleased]
 ------------------------
 ##### Added
-- Autosave unsaved data in offline-capable webform views
+- Auto-save unsaved data in offline-capable webform views
+- API endpoint /surveys/list
 
 ##### Fixed
 - A note preceding a traditional table is formatted as a group label.

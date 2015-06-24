@@ -24,11 +24,16 @@ router
     .all( '*', _setDefaultsQueryParam )
     .all( '/*/iframe', _setIframeQueryParams )
     .all( '/survey/all', _setIframeQueryParams )
+    .all( '/surveys/list', _setIframeQueryParams )
     .all( '/survey/preview*', function( req, res, next ) {
         req.webformType = 'preview';
         next();
     } )
     .all( '/survey/all', function( req, res, next ) {
+        req.webformType = 'all';
+        next();
+    } )
+    .all( '/surveys/list', function( req, res, next ) {
         req.webformType = 'all';
         next();
     } )
@@ -184,7 +189,22 @@ function getNumber( req, res, next ) {
 }
 
 function getList( req, res, next ) {
-    _render( 500, 'This API point is not implemented yet', res );
+    var obj;
+
+    return surveyModel
+        .getList( req.body.server_url || req.query.server_url )
+        .then( function( list ) {
+            list = list.map( function( survey ) {
+                obj = _generateWebformUrls( survey.enketo_id, req );
+                obj.form_id = survey.form_id;
+                return obj;
+            } );
+            _render( 200, {
+                code: 200,
+                forms: list
+            }, res );
+        } )
+        .catch( next );
 }
 
 function cacheInstance( req, res, next ) {
@@ -303,8 +323,8 @@ function _generateWebformUrls( id, req ) {
             queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
             obj.iframe_url = baseUrl + idPartOnline + queryString;
             obj.preview_iframe_url = baseUrl + 'preview/' + idPartOnline + queryString;
-            // enketo-legacy
-            obj.subdomain = '';
+            // rest
+            obj.enketo_id = id;
             break;
         case 'offline':
             obj.offline_url = baseUrl + '_/' + idPartOffline;
