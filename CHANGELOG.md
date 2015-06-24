@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - A note preceding a traditional table is formatted as a group label.
+- A note following a traditional table is formatted as a group label.
 - Incorrect error message shown when loading a record with a file in the edit view.
 
 [1.10.0] - 2015-06-18 
