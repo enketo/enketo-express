@@ -2,7 +2,8 @@
 	"strict" : true,
 	"globals": {
 		"module": false,
-		"require": false
+		"require": false, 
+		"Promise": true
 	},
 	"node": true,
 	"browser": false,

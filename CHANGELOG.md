@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.11.0] - 2015-06-25
 ------------------------
 ##### Added
 - Auto-save unsaved data in offline-capable webform views
