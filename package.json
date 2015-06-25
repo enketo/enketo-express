@@ -41,7 +41,7 @@
         "chai": "2.3.x",
         "chai-as-promised": "*",
         "grunt": "0.4.x",
-        "grunt-concurrent": "1.0.x",
+        "grunt-concurrent": "2.x.x",
         "grunt-contrib-jshint": "0.11.x",
         "grunt-contrib-requirejs": "0.4.x",
         "grunt-contrib-symlink": "0.3.x",
