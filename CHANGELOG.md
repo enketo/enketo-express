@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+------------------------
+##### Fixed
+- API endpoint /surveys/list does not include server_url property in each survey item.
+
 [1.11.0] - 2015-06-25
 ------------------------
 ##### Added

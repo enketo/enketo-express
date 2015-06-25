@@ -238,8 +238,9 @@ function getListOfSurveys( server ) {
                             surveys.sort( _ascendingLaunchDate );
                             list = surveys.map( function( survey ) {
                                 return {
-                                    form_id: survey.openRosaId,
-                                    enketo_id: survey.enketoId
+                                    openRosaServer: survey.openRosaServer,
+                                    openRosaId: survey.openRosaId,
+                                    enketoId: survey.enketoId
                                 };
                             } );
 

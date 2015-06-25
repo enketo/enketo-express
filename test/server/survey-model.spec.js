@@ -361,11 +361,13 @@ describe( 'Survey Model', function() {
                     return model.getList( server );
                 } );
             return expect( getList ).to.eventually.deep.equal( [ {
-                enketo_id: 'YYYp',
-                form_id: 'a'
+                openRosaServer: server,
+                enketoId: 'YYYp',
+                openRosaId: 'a'
             }, {
-                enketo_id: 'YYY8',
-                form_id: 'b'
+                openRosaServer: server,
+                enketoId: 'YYY8',
+                openRosaId: 'b'
             } ] );
         } );
 
@@ -386,8 +388,9 @@ describe( 'Survey Model', function() {
                     return model.getList( server );
                 } );
             return expect( getList ).to.eventually.deep.equal( [ {
-                enketo_id: 'YYY8',
-                form_id: 'b'
+                openRosaServer: server,
+                enketoId: 'YYY8',
+                openRosaId: 'b'
             } ] );
         } );
     } );

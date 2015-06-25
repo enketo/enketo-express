@@ -172,8 +172,9 @@ function getList( req, res, next ) {
         .getList( req.body.server_url || req.query.server_url )
         .then( function( list ) {
             list = list.map( function( survey ) {
-                obj = _generateWebformUrls( survey.enketo_id, req );
-                obj.form_id = survey.form_id;
+                obj = _generateWebformUrls( survey.enketoId, req );
+                obj.form_id = survey.openRosaId;
+                obj.server_url = survey.openRosaServer;
                 return obj;
             } );
             _render( 200, {

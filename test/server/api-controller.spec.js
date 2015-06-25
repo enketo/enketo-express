@@ -323,6 +323,19 @@ describe( 'api', function() {
                         expected: /"url":"http:\/\/.*\/::YYYp".*"form_id":"something"/
                     }
                 },
+                // POST /surveys/list - check for server_url property
+                {
+                    version: version,
+                    endpoint: '/surveys/list',
+                    method: 'post',
+                    auth: true,
+                    server: validServer,
+                    status: 200,
+                    res: {
+                        property: 'forms',
+                        expected: /"server_url":"https:\/\/testserver\.com\/bob"/
+                    }
+                },
             ];
 
             v1Surveys.forEach( testResponse );
