@@ -5,6 +5,7 @@ var request = require( 'request' ),
     //wwwAuth = require( 'www-authenticate' ),
     TError = require( '../custom-error' ).TranslatedError,
     Q = require( 'q' ),
+    config = require( '../../models/config-model' ).server,
     debug = require( 'debug' )( 'openrosa-communicator' ),
     parser = new require( 'xml2js' ).Parser();
 
@@ -105,10 +106,11 @@ function getMaxSize( survey ) {
         auth: survey.credentials,
         headers: {
             cookie: survey.cookie
-        }
+        },
+        method: 'head'
     };
 
-    return _headRequest( options )
+    return _request( options )
         .then( function( response ) {
             return response.headers[ 'x-openrosa-accept-content-length' ] || 5 * 1024 * 1024;
         } );
@@ -118,7 +120,8 @@ function authenticate( survey ) {
     var options = {
         url: getFormListUrl( survey.openRosaServer ),
         auth: survey.credentials,
-        method: 'head'
+        // Formhub has a bug and cannot use the correct HEAD method.
+        method: config[ 'linked form and data server' ][ 'legacy formhub' ] ? 'get' : 'head'
     };
 
     return _request( options )
@@ -172,11 +175,6 @@ function getFormListUrl( server ) {
 
 function getSubmissionUrl( server ) {
     return ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'submission' : server + '/submission';
-}
-
-function _headRequest( options ) {
-    options.method = 'head';
-    return _request( options );
 }
 
 /**

@@ -6,6 +6,7 @@
         "name": "KoBoCAT",
         "server url": "kf.kobotoolbox.org",
         "api key": "enketorules",
+        "legacy formhub": false,
         "authentication": {
             "managed by enketo": true,
             "allow insecure transport": false,

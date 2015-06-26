@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ------------------------
 ##### Fixed
 - API endpoint /surveys/list does not include server_url property in each survey item.
+- Formhub authentication regression. **WARNING: Formhub users, see additional config.json setting to work around formhub bug.**
 
 [1.11.0] - 2015-06-25
 ------------------------
