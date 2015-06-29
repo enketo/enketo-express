@@ -1,6 +1,7 @@
 "use strict";
 
 var user = require( '../models/user-model' ),
+    communicator = require( '../lib/communicator' ),
     request = require( 'request' ),
     express = require( 'express' ),
     router = express.Router(),
@@ -21,15 +22,13 @@ function _extractMediaUrl( path ) {
 }
 
 function getMedia( req, res, next ) {
-    var options = {
-            url: _extractMediaUrl( req.url.substring( '/get/'.length ) )
-        },
-        auth = user.getCredentials( req );
+    var options = communicator.getUpdatedRequestOptions( {
+        url: _extractMediaUrl( req.url.substring( '/get/'.length ) ),
+        auth: user.getCredentials( req )
+    } );
 
-    if ( auth ) {
-        options.auth = auth;
-        options.auth.sendImmediately = false;
-    }
+    // due to a bug in request/request using options.method with Digest Auth we won't pass method as an option
+    delete options.method;
 
     request.get( options ).pipe( res ).on( 'error', function( error ) {
         debug( 'error retrieving media from OpenRosa server: ' + JSON.stringify( error ) );
@@ -39,5 +38,5 @@ function getMedia( req, res, next ) {
         next( error );
     } );
 
-    // this simpler alternative does not work properly: request( mediaUrl, next ).pipe( res );
+    // this simpler alternative does not work properly: req.get( options, next ).pipe( res );
 }

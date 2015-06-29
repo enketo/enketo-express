@@ -2,11 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.11.1] - 2015-06-29
 ------------------------
 ##### Fixed
 - API endpoint /surveys/list does not include server_url property in each survey item.
 - Formhub authentication regression. **WARNING: Formhub users, see additional config.json setting to work around formhub bug.**
+- Media for protected forms cannot be retrieved (on strict compliant OpenRosa servers).
 
 [1.11.0] - 2015-06-25
 ------------------------

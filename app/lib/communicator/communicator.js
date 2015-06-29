@@ -2,7 +2,6 @@
 
 var request = require( 'request' ),
     Auth = require( 'request/lib/auth' ).Auth,
-    //wwwAuth = require( 'www-authenticate' ),
     TError = require( '../custom-error' ).TranslatedError,
     Q = require( 'q' ),
     config = require( '../../models/config-model' ).server,
@@ -89,7 +88,6 @@ function getManifest( survey ) {
     return deferred.promise;
 }
 
-
 /**
  * Checks the maximum acceptable submission size the server accepts
  * @param  {[type]} survey survey object
@@ -131,6 +129,13 @@ function authenticate( survey ) {
         } );
 }
 
+/**
+ * Generates an Auhorization header that can be used to inject into piped requests (e.g. submissions).
+ * 
+ * @param  {string} url         [description]
+ * @param  {{user: string, pass: string}} credentials [description]
+ * @return {string}             [description]
+ */
 function getAuthHeader( url, credentials ) {
     var auth, authHeader,
         deferred = Q.defer(),
@@ -144,22 +149,14 @@ function getAuthHeader( url, credentials ) {
 
     var req = request( options, function( error, response ) {
         if ( response.statusCode === 401 ) {
+            // Using request's internal library we create an appropiate authorization header.
+            // This is a bit dangerous because internal changes in request/request, could break this code.
+            req.method = 'POST';
             auth = new Auth( req );
             auth.hasAuth = true;
             auth.user = credentials.user;
             auth.pass = credentials.pass;
-            auth.method = 'POST';
-            // TODO: THIS WILL BREAK IN FUTURE request/request module UPDATE
-            // to be changed to auth.onResponse(response) and some variable changes above
-            authHeader = auth.response( auth.method, url, response.headers );
-
-            // alternatively with www-authenticate
-            //var onWwwAuthenticate = wwwAuth( credentials.user, credentials.pass );
-            //var authenticator = onWwwAuthenticate( response.headers[ 'www-authenticate' ] );
-            //if ( authenticator.err ) deferred.reject( authenticator.err );
-            //var authHeader2 = authenticator.authorize( 'POST', url );
-            //debug( 'authHeader created by www-authenticate module', authHeader2 );
-
+            authHeader = auth.onResponse( response );
             deferred.resolve( authHeader );
         } else {
             deferred.resolve( null );
@@ -177,6 +174,29 @@ function getSubmissionUrl( server ) {
     return ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'submission' : server + '/submission';
 }
 
+function getUpdatedRequestOptions( options ) {
+    options.method = options.method || 'get';
+
+    // set headers
+    options.headers = options.headers || {};
+    options.headers[ 'X-OpenRosa-Version' ] = '1.0';
+
+    if ( !options.headers.cookie ) {
+        // remove undefined cookie
+        delete options.headers.cookie;
+    }
+
+    // set Authorization header
+    if ( !options.auth ) {
+        delete options.auth;
+    } else {
+        // check first is DIGEST or BASIC is required
+        options.auth.sendImmediately = false;
+    }
+
+    return options;
+}
+
 /**
  * Sends a request to an OpenRosa server
  *
@@ -184,7 +204,7 @@ function getSubmissionUrl( server ) {
  * @return {?string=}    promise
  */
 function _request( options ) {
-    var error, r,
+    var error, r, method,
         deferred = Q.defer();
 
     if ( typeof options !== 'object' && !options.url ) {
@@ -193,24 +213,10 @@ function _request( options ) {
         deferred.reject( error );
     }
 
-    // set headers
-    options.headers = options.headers || {};
-    options.headers[ 'X-OpenRosa-Version' ] = '1.0';
-    if ( !options.headers.cookie ) {
-        // remove undefined cookie
-        delete options.headers.cookie;
-    }
-    // set Authorization header
-    if ( !options.auth ) {
-        delete options.auth;
-    } else {
-        // check first is DIGEST or BASIC is required
-        options.auth.sendImmediately = false;
-        //debug( 'authenticating with', options.auth );
-    }
+    options = getUpdatedRequestOptions( options );
 
-    // due to bug https://github.com/request/request/issues/1412, we won't pass method as an option (temporarily)
-    var method = options.method || 'get';
+    // due to a bug in request/request using options.method with Digest Auth we won't pass method as an option
+    method = options.method;
     delete options.method;
 
     debug( 'sending ' + method + ' request to url: ' + options.url );
@@ -324,5 +330,6 @@ module.exports = {
     authenticate: authenticate,
     getAuthHeader: getAuthHeader,
     getFormListUrl: getFormListUrl,
-    getSubmissionUrl: getSubmissionUrl
+    getSubmissionUrl: getSubmissionUrl,
+    getUpdatedRequestOptions: getUpdatedRequestOptions
 };

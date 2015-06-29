@@ -17,8 +17,8 @@ describe( 'Communicator Library', function() {
     describe( 'getAuthHeader function', function() {
         it( 'has not broken due to a request library update', function() {
             var auth = new Auth();
-            expect( auth ).to.have.property( 'response' );
-            expect( auth.response ).to.be.a( 'function' );
+            expect( auth ).to.have.property( 'onResponse' );
+            expect( auth.onResponse ).to.be.a( 'function' );
         } );
     } );
 
