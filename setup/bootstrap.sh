@@ -24,7 +24,6 @@ cd $ENKETO_EXPRESS_REPO_DIR
 git submodule update --init --recursive
 
 # further redis setup with persistence, security, logging, multiple instances, priming 
-#stop redis-server
 echo 'copying enketo redis conf...'
 if [ -f "/etc/redis/redis.conf" ]; then
     mv /etc/redis/redis.conf /etc/redis/redis-origin.conf
@@ -61,11 +60,10 @@ if [ $ENKETO_EXPRESS_USE_NODE_ENV = "true" ]; then
     nodeenv env
     . env/bin/activate
 else
-    add-apt-repository ppa:chris-lea/node.js
-    apt-get update
+    curl -sL https://deb.nodesource.com/setup_0.10 | sudo bash -
     apt-get install -y nodejs
 fi
-npm -g install grunt-cli nodemon mocha bower
+npm -g install grunt-cli bower node-gyp gulp nodemon mocha
 npm -g install npm@next
 # remove node_modules if exists because npm builds can be system-specific
 if [ -d "$ENKETO_EXPRESS_REPO_DIR/node_modules" ]; then
@@ -81,20 +79,19 @@ if [ ! -f "$ENKETO_EXPRESS_REPO_DIR/config/config.json" ]; then
 fi
 
 # build js and css
-grunt symlink
-grunt compile
+grunt
 
-# start in background and keep restarting if it fails until `pm2 stop enketo` is called
-# developers may want to comment this out
+# still installing pm2 but not using in script any more. Because it runs invisibly when started as root.
 if [ $(whoami) = "root" ]; then
     npm install pm2@latest -g --unsafe-perm
 else
     npm install pm2@latest -g
 fi
-pm2 start app.js -n enketo
-echo "*************************************************************************************"
-echo "***                    Enketo Express should now have started!                   ****"
-echo "***                                                                              ****"
-echo "***   You can terminate it by ssh-ing into the VM and running: pm2 stop enketo   ****"
-echo "*************************************************************************************"
+
+echo "**************************************************************************************"
+echo "***                        Enketo Express is installed!                           ****"
+echo "***                                                                               ****"
+echo "*** You can start it by ssh-ing into the VM and running: cd /vagrant && npm start ****"
+echo "***                 ( or with: pm2 start /vagrant/app.js -n enketo )              ****"
+echo "**************************************************************************************"
 

@@ -3,9 +3,11 @@ Enketo Express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express
 
 [![Enketo Logo](https://enketo.org/private_media/images/logo-black.png "Enketo Logo")](https://enketo.org)
 
-A super light-weight node.js version of Enketo Smart Paper. Chock-full of [badass rockstar tech](https://www.youtube.com/watch?v=bzkRVzciAZg).
+A light-weight node.js version of Enketo Smart Paper. Chock-full of [badass rockstar tech](https://www.youtube.com/watch?v=bzkRVzciAZg).
 
-### How to install (anywhere)
+### How to install to test/develop
+
+#### Manually:
 
 1. Install JS prerequisites: [Node.js 0.10.x](http://nodejs.org/) (newer version [not supported yet](https://github.com/bsuh/node_xslt/issues/24)), [Grunt Client](http://gruntjs.com), [Bower](http://bower.io/), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
 2. Install [Redis](http://redis.io/topics/quickstart)
@@ -16,15 +18,24 @@ A super light-weight node.js version of Enketo Smart Paper. Chock-full of [badas
 7. Create config/config.json to override values in the [default config](./config/default-config.json). Start with `cp config/default-config.json config/config.json`
 8. Build with `grunt` from the project root
 
-### How to install as a local VirtualBox VM - the easy way
+#### Using vagrant:
+
+This takes several shortcuts. Do not use for production!
 
 1. Install [Vagrant](http://docs.vagrantup.com/v2/installation/index.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Clone this repository 
 3. Run `vagrant up` from the enketo-express folder and wait until it completes \* 
-4. The app should now be running on [localhost:8006](http://localhost:8006). You can test the API with:
+4. Log in to the VM with `vagrant ssh` and run `cd /vagrant && npm start`
+5. The app should now be running on [localhost:8006](http://localhost:8006). You can test the API in a different console window with:
 ```curl --user enketorules: -d "server_url=https://ona.io/enketo&form_id=widgets" http://localhost:8006/api/v2/survey```.
 
 _\* sometimes `vagrant up` fails for reasons beyond our control - e.g. if external resources are temporarily unavailable. Try running `vagrant reload --provision` to resolve this._
+
+
+### How to install a production server
+
+See [this tutorial](http://blog.enketo.org/install-enketo-production-ubuntu/) for detailed instructions.
+
 
 ### How to configure
 
@@ -41,6 +52,7 @@ To configure your own custom external authentication also see [this section](#au
 
 The API is accessible on **/api/v2** and **/api/v1**. Only API v1 is [properly documented](http://apidocs.enketo.org) at the moment. This [temporary note](APIv2.md) describes the changes introduced by API v2.
 
+
 ### How to run
 Run with `npm start` from project root.
 
@@ -55,11 +67,12 @@ For a production server, we recommend using [pm2](https://github.com/unitech/pm2
 * re-build with `grunt`
 * restart app
 
+
 ### Developer tools
 Install [nodemon](https://github.com/remy/nodemon) to automatically restart the server when a file changes.
 Install [gulp](http://gulpjs.com/) to automatically update the translation keys.
 
-The easiest way to start the app in development and debugging mode with livereload is with `grunt develop`. If you are developing using the vagrant VM, make sure to `pm2 kill` first or comment out the pm2 block at the end in the [bootstrap](/setup/bootstrap.sh) script before creating the VM.
+The easiest way to start the app in development and debugging mode with livereload is with `grunt develop`.
 
 
 ### Differences with [enketo/enketo-legacy](https://github.com/enketo/enketo-legacy) (and [enketo.org](https://enketo.org))
