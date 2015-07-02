@@ -80,6 +80,7 @@ function maxSize( req, res, next ) {
     surveyModel.get( req.enketoId )
         .then( function( survey ) {
             survey.credentials = userModel.getCredentials( req );
+            survey.cookie = ( req.headers.cookie !== null && req.headers.cookie !== undefined ) ? req.headers.cookie : null;
             return survey;
         } )
         .then( communicator.getMaxSize )
