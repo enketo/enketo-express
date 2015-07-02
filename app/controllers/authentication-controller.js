@@ -33,7 +33,7 @@ function login( req, res, next ) {
             // - set a session cookie (cross-domain if necessary), 
             // - and return the user back to Enketo
             // - enketo will then pass this cookie along when requesting resources, submitting data
-            res.redirect( externalLoginUrl.replace( '{RETURNURL}', returnUrl ) );
+            res.redirect( externalLoginUrl.replace( '{RETURNURL}', encodeURIComponent( returnUrl ) ) );
         } else {
             error = new Error( 'Enketo-express was not configured correctly. Enketo should either manage authentication itself (configuration set to true), or an external login url that sets a cookie should be provided.)' );
             error.status = 500;
