@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Vagrant setup script
 
+##### Fixed
+- Geo Widget map tiles only partially loaded if widget not visible upon initial form load.
+
 [1.11.1] - 2015-06-29
 ------------------------
 ##### Fixed

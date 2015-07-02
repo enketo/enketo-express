@@ -5,7 +5,7 @@ Enketo Express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express
 
 A light-weight node.js version of Enketo Smart Paper. Chock-full of [badass rockstar tech](https://www.youtube.com/watch?v=bzkRVzciAZg).
 
-### How to install to test/develop
+### How to install a test/development server
 
 #### Manually:
 
