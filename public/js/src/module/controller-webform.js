@@ -318,7 +318,7 @@ define( [ 'gui', 'connection', 'settings', 'enketo-js/Form', 'file-manager', 'tr
 
             // check validity of record if necessary
             if ( !draft && !form.validate() ) {
-                gui.alert( 'Form contains errors <br/>(please see fields marked in red)' );
+                gui.alert( t( 'alert.validationerror.msg' ) );
                 return;
             }
 
