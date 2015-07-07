@@ -200,9 +200,9 @@ define( [ 'store', 'connection', 'gui', 'q', 'settings', 'translator' ], functio
                                         if ( successes.length > 0 ) {
                                             // let gui send a feedback message
                                             $( document ).trigger( 'queuesubmissionsuccess', successes );
-                                            // update the list by properly removing obsolete records
-                                            _updateRecordList();
                                         }
+                                        // update the list by properly removing obsolete records, reactivating button(s)
+                                        _updateRecordList();
                                     }
                                 } );
                         } );
