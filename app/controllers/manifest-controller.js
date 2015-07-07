@@ -1,7 +1,7 @@
 "use strict";
 
 var manifest = require( '../models/manifest-model' ),
-    Q = require( 'q' ),
+    Promise = require( 'q' ).Promise,
     express = require( 'express' ),
     router = express.Router(),
     debug = require( 'debug' )( 'manifest-controller' );
@@ -9,7 +9,6 @@ var manifest = require( '../models/manifest-model' ),
 module.exports = function( app ) {
     app.use( '/_/manifest.appcache*', router );
 };
-
 router
     .get( '*', function( req, res, next ) {
         getManifest( req, res )
@@ -22,19 +21,17 @@ router
     } );
 
 function getManifest( req, res ) {
-    var deferred = Q.defer();
-
-    res.render( 'surveys/webform', {
-        manifest: '/_/manifest.appcache'
-    }, function( err, html ) {
-        if ( err ) {
-            deferred.reject( err );
-        } else {
-            manifest.get( html, req.i18n.lng() )
-                .then( deferred.resolve )
-                .catch( deferred.reject );
-        }
+    return new Promise( function( resolve, reject ) {
+        res.render( 'surveys/webform', {
+            manifest: '/_/manifest.appcache'
+        }, function( err, html ) {
+            if ( err ) {
+                reject( err );
+            } else {
+                manifest.get( html, req.i18n.lng() )
+                    .then( resolve )
+                    .catch( reject );
+            }
+        } );
     } );
-
-    return deferred.promise;
 }

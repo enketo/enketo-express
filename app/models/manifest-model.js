@@ -1,16 +1,16 @@
 "use strict";
 
-var libxml = require( "libxmljs" ),
-    url = require( 'url' ),
-    path = require( 'path' ),
-    fs = require( 'fs' ),
-    Q = require( 'q' ),
-    config = require( './config-model' ).server,
-    client = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
-        auth_pass: config.redis.cache.password
-    } ),
-    utils = require( '../lib/utils' ),
-    debug = require( 'debug' )( 'manifest-model' );
+var libxml = require( "libxmljs" );
+var url = require( 'url' );
+var path = require( 'path' );
+var fs = require( 'fs' );
+var Promise = require( 'q' ).Promise;
+var config = require( './config-model' ).server;
+var client = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
+    auth_pass: config.redis.cache.password
+} );
+var utils = require( '../lib/utils' );
+var debug = require( 'debug' )( 'manifest-model' );
 
 // in test environment, switch to different db
 if ( process.env.NODE_ENV === 'test' ) {
@@ -18,69 +18,69 @@ if ( process.env.NODE_ENV === 'test' ) {
 }
 
 function getManifest( html, lang ) {
-    var hash, version, doc, resources, themesSupported, date,
-        manifestKey = 'ma:' + lang + '_manifest',
-        versionKey = 'ma:' + lang + '_version',
-        deferred = Q.defer();
+    var hash, version, doc, resources, themesSupported, date;
+    var manifestKey = 'ma:' + lang + '_manifest';
+    var versionKey = 'ma:' + lang + '_version';
 
-    // each language gets its own manifest
-    client.get( manifestKey, function( error, manifest ) {
-        if ( error ) {
-            deferred.reject( error );
-        } else if ( manifest && manifest !== 'null' ) {
-            debug( 'getting manifest from cache' );
-            deferred.resolve( manifest );
-        } else {
-            debug( 'building manifest from scratch' );
-            doc = libxml.parseHtml( html );
-            resources = [];
-            themesSupported = config[ 'themes supported' ] || [];
+    return new Promise( function( resolve, reject ) {
+        // each language gets its own manifest
+        client.get( manifestKey, function( error, manifest ) {
+            if ( error ) {
+                reject( error );
+            } else if ( manifest && manifest !== 'null' ) {
+                debug( 'getting manifest from cache' );
+                resolve( manifest );
+            } else {
+                debug( 'building manifest from scratch' );
+                doc = libxml.parseHtml( html );
+                resources = [];
+                themesSupported = config[ 'themes supported' ] || [];
 
-            // href attributes of link elements
-            resources = resources.concat( _getLinkHrefs( doc ) );
+                // href attributes of link elements
+                resources = resources.concat( _getLinkHrefs( doc ) );
 
-            // additional themes
-            resources = resources.concat( _getAdditionalThemes( resources, themesSupported ) );
+                // additional themes
+                resources = resources.concat( _getAdditionalThemes( resources, themesSupported ) );
 
-            // translations
-            resources = resources.concat( _getTranslations( lang ) );
+                // translations
+                resources = resources.concat( _getTranslations( lang ) );
 
-            // any resources inside css files
-            resources = resources.concat( _getResourcesFromCss( resources ) );
+                // any resources inside css files
+                resources = resources.concat( _getResourcesFromCss( resources ) );
 
-            // src attributes
-            resources = resources.concat( _getSrcAttributes( doc ) );
+                // src attributes
+                resources = resources.concat( _getSrcAttributes( doc ) );
 
-            // remove non-existing files, empties, duplicates and non-http urls
-            resources = resources
-                .filter( _removeEmpties )
-                .filter( _removeDuplicates )
-                .filter( _removeNonHttpResources )
-                .filter( _removeNonExisting );
+                // remove non-existing files, empties, duplicates and non-http urls
+                resources = resources
+                    .filter( _removeEmpties )
+                    .filter( _removeDuplicates )
+                    .filter( _removeNonHttpResources )
+                    .filter( _removeNonExisting );
 
-            // calculate the hash to serve as the manifest version number
-            hash = _calculateHash( html, resources );
+                // calculate the hash to serve as the manifest version number
+                hash = _calculateHash( html, resources );
 
-            // determine version
-            _getVersionObj( versionKey )
-                .then( function( obj ) {
-                    version = obj.version;
-                    if ( obj.hash !== hash ) {
-                        // create a new version
-                        date = new Date().toISOString().replace( 'T', '|' );
-                        version = date.substring( 0, date.length - 8 ) + '|' + lang;
-                        // update stored version, don't wait for result
-                        _updateVersionObj( versionKey, hash, version );
-                    }
-                    manifest = _getManifestString( version, resources );
-                    // cache manifest for an hour, don't wait for result
-                    client.set( manifestKey, manifest, 'EX', 1 * 60 * 60, function() {} );
-                    deferred.resolve( manifest );
-                } );
-        }
+                // determine version
+                _getVersionObj( versionKey )
+                    .then( function( obj ) {
+                        version = obj.version;
+                        if ( obj.hash !== hash ) {
+                            // create a new version
+                            date = new Date().toISOString().replace( 'T', '|' );
+                            version = date.substring( 0, date.length - 8 ) + '|' + lang;
+                            // update stored version, don't wait for result
+                            _updateVersionObj( versionKey, hash, version );
+                        }
+                        manifest = _getManifestString( version, resources );
+                        // cache manifest for an hour, don't wait for result
+                        client.set( manifestKey, manifest, 'EX', 1 * 60 * 60, function() {} );
+                        resolve( manifest );
+                    } );
+            }
+        } );
     } );
 
-    return deferred.promise;
 }
 
 function _getManifestString( version, resources ) {
@@ -98,20 +98,18 @@ function _getManifestString( version, resources ) {
 }
 
 function _getVersionObj( versionKey ) {
-    var deferred = Q.defer();
-
-    client.hgetall( versionKey, function( error, obj ) {
-        debug( 'result', obj );
-        if ( error ) {
-            deferred.reject( error );
-        } else if ( obj && obj.hash && obj.version ) {
-            deferred.resolve( obj );
-        } else {
-            deferred.resolve( {} );
-        }
+    return new Promise( function( resolve, reject ) {
+        client.hgetall( versionKey, function( error, obj ) {
+            debug( 'result', obj );
+            if ( error ) {
+                reject( error );
+            } else if ( obj && obj.hash && obj.version ) {
+                resolve( obj );
+            } else {
+                resolve( {} );
+            }
+        } );
     } );
-
-    return deferred.promise;
 }
 
 function _updateVersionObj( versionKey, hash, version ) {
@@ -151,7 +149,16 @@ function _getAdditionalThemes( resources, themes ) {
 }
 
 function _getTranslations( lang ) {
-    return ( lang ) ? '/locales/' + lang + '/translation.json' : null;
+    var langs = [];
+
+    // fallback language
+    langs.push( '/locales/en/translation.json' );
+
+    if ( lang && lang !== 'en' ) {
+        langs.push( '/locales/' + lang + '/translation.json' );
+    }
+
+    return langs;
 }
 
 function _getResourcesFromCss( resources ) {
