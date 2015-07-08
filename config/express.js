@@ -70,8 +70,8 @@ app.use( function( req, res, next ) {
     res.locals.defaultTheme = req.app.get( 'default theme' ).replace( 'theme-', '' ) || 'kobo';
     res.locals.title = req.app.get( 'app name' );
     res.locals.offline = req.app.get( 'offline enabled' ); // temporary to show 'Experimental' warning
-    res.locals.directionality = function(){ 
-        return /^(ar|he)/.test(i18n.lng()) ? 'rtl' : 'ltr';
+    res.locals.directionality = function() {
+        return /^(ar|he)/.test( i18n.lng() ) ? 'rtl' : 'ltr';
     };
     next();
 } );
