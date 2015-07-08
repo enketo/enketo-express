@@ -107,13 +107,14 @@ $slider-width: 240px;
         margin-top: 30px;
     }
     &__button-bar__button{
-        width: 45%;
+        // width: 45%;
+        width: 100%;
         padding:10px;
         // setting a fixed height to cut off long translations, not a great thing to do
-        height: 40px;
+        //height: 40px;
     }
     &__button-bar__button.upload{ 
-        margin-left: 10%;
+        // margin-left: 10%;
     }
     &__upload-progress {
         visibility: hidden;
@@ -186,6 +187,20 @@ $slider-width: 240px;
             text-align: center;
             margin-bottom: 35px;
             font-style: italic;
+        }
+    }
+}
+
+[dir="rtl"] {
+    .record-list {
+        &__records {
+            &__record{
+                &[data-draft=true] {
+                    &::before{
+                        float:left;
+                    }
+                }
+            }
         }
     }
 }

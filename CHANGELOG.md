@@ -4,11 +4,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased] 
 ------------------------
+##### Added
+- Right-to-left UI language directionality support.
+
 ##### Changed
-- Vagrant setup script
+- Vagrant setup script updated.
 
 ##### Fixed
+- Validation error dialog message not translated.
+- Fallback (english) language not cached in offline views.
 - Geo Widget map tiles only partially loaded if widget not visible upon initial form load.
+
+##### Removed
+- Non-functional export button removed until the functionality can be added.
 
 [1.11.1] - 2015-06-29
 ------------------------
