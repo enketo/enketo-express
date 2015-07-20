@@ -2,7 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased] 
+[1.12.1] - 2015-07-20 
+------------------------
+##### Fixed
+- Nested branches do not get evaluated when the parent is enabled.
+
+[1.12.0] - 2015-07-08
 ------------------------
 ##### Added
 - Right-to-left UI language directionality support.
