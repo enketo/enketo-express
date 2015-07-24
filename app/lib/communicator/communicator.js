@@ -281,11 +281,14 @@ function _findFormAddInfo( formListXml, survey ) {
     // first convert to JSON to make it easier to work with
     _xmlToJson( formListXml )
         .then( function( formListObj ) {
-            // find the form and stop looking when found
-            found = formListObj.xforms.xform.some( function( xform, i ) {
-                index = i;
-                return xform.formID.toString() === survey.openRosaId;
-            } );
+            if ( formListObj.xforms && formListObj.xforms.xform ) {
+                // find the form and stop looking when found
+                found = formListObj.xforms.xform.some( function( xform, i ) {
+                    index = i;
+                    return xform.formID.toString() === survey.openRosaId;
+                } );
+            }
+
             if ( !found ) {
                 error = new TError( 'error.notfoundinformlist', {
                     formId: "'" + survey.openRosaId + "'"

@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+
+##### Fixed
+- Error message is not useful when formList is found to be empty.
+
 [1.12.1] - 2015-07-20 
 ------------------------
 ##### Fixed
