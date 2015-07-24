@@ -138,7 +138,7 @@ require( [ 'require-config' ], function( rc ) {
 
                 return new Promise( function( resolve, reject ) {
                     if ( formParts && formParts.form && formParts.model ) {
-                        $loader[ 0 ].outerHTML = formParts.form;
+                        $loader.replaceWith( formParts.form );
                         $form = $( 'form.or:eq(0)' );
 
                         $( document ).ready( function() {
