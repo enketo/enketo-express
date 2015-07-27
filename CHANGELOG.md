@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Right-to-left form language directionality support.
 
+##### Changed
+- Made page-swipe less sensitive on touchscreens in pages-mode.
+
 [1.12.2] - 2015-07-24
 -----------------------
 ##### Fixed
