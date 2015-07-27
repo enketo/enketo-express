@@ -62,7 +62,7 @@
         "karma-phantomjs-launcher": "0.2.x",
         "karma-requirejs": "0.2.x",
         "karma-safari-launcher": "0.1.x",
-        "karma-sinon-chai": "1.0.x",
+        "karma-sinon-chai": "0.2.x",
         "load-grunt-tasks": "3.x.x",
         "mocha": "2.2.x",
         "requirejs": "2.1.x",
