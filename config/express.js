@@ -71,7 +71,22 @@ app.use( function( req, res, next ) {
     res.locals.title = req.app.get( 'app name' );
     res.locals.offline = req.app.get( 'offline enabled' ); // temporary to show 'Experimental' warning
     res.locals.directionality = function() {
-        return /^(ar|he)/.test( i18n.lng() ) ? 'rtl' : 'ltr';
+        // TODO: remove this when https://github.com/i18next/i18next/pull/413 is merged, copied to node-i18next, and published.
+        // After that we can just access i18n.dir(), in the jade template
+        var currentLng = i18n.lng();
+        var rtlLangs = [ "ar", "shu", "sqr", "ssh", "xaa", "yhd", "yud", "aao", "abh", "abv", "acm",
+            "acq", "acw", "acx", "acy", "adf", "ads", "aeb", "aec", "afb", "ajp", "apc", "apd", "arb",
+            "arq", "ars", "ary", "arz", "auz", "avl", "ayh", "ayl", "ayn", "ayp", "bbz", "pga", "he",
+            "iw", "ps", "pbt", "pbu", "pst", "prp", "prd", "ur", "ydd", "yds", "yih", "ji", "yi", "hbo",
+            "men", "xmn", "fa", "jpr", "peo", "pes", "prs", "dv", "sam"
+        ];
+
+        if ( rtlLangs.some( function( lang ) {
+                return new RegExp( '^' + lang ).test( currentLng );
+            } ) ) {
+            return 'rtl';
+        }
+        return 'ltr';
     };
     next();
 } );

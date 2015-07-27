@@ -11,10 +11,8 @@ $offline-color: #d15200;
 }
 
 .form-header {
-    //height: 60px;
-    //min-height: 68px;
+    text-align: left; // even for rtl UI
     .branding {
-        //display: inline-block;
         margin: 0;
         height: 34px;
         display: inline-table;
@@ -59,6 +57,16 @@ $offline-color: #d15200;
     background-color: $offline-color;
     z-index: 1000;
     @include transition-slow;
+}
+
+[dir="rtl"] {
+    .offline-enabled{
+        top: 0px;
+    }
+    .form-progress {
+        right: 0;
+        left: auto;
+    }
 }
 
 .offline-enabled {

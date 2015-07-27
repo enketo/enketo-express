@@ -8,6 +8,8 @@ html {
     // of the form. Setting height to auto fixes this.
     // Both enketo-core and foundation set this to 100%, which is the common approach.
     height: auto;
+    // to avoid revealing the side-slider in direction rtl when scrolling horizontally
+    overflow-x: hidden;
 }
 
 body {

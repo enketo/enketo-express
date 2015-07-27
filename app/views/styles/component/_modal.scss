@@ -34,7 +34,7 @@
     }
 }
 
-.vex-dialog-form {
+.vex.vex-theme-plain .vex-dialog-input {
     input {
         @extend .form-control;
     }
@@ -49,11 +49,11 @@
             display: inline-block;
             width: auto;
             font-weight: normal;
-            input {
+            input[type=radio] {
                 width: auto;
                 display: inline-block;
                 height: auto;
-                margin-right: 7px;
+                margin-left: 10px;
             }
             &:hover {
                 background: none;

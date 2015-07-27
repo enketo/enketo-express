@@ -77,14 +77,13 @@ The easiest way to start the app in development and debugging mode with liverelo
 
 ### Differences with [enketo/enketo-legacy](https://github.com/enketo/enketo-legacy) (and [enketo.org](https://enketo.org))
 
-* :white_check_mark: this one is 100% JavaScript
 * :white_check_mark: this one is much easier to install
-* :white_check_mark: this one can be hosted on a local webserver
-* :white_check_mark: this one has a [multi-language](#translation) user interface
 * :white_check_mark: this one has cross-browser (media) file inputs
+* :white_check_mark: this one has a [multi-language](#translation) user interface
+* :white_check_mark: this one displays right-to-left scripts from right-to-left
 * :white_check_mark: this one has better security of user credentials
-* :white_check_mark: this one has an improved API (v2)
 * :white_check_mark: this one has support for multiple themes in *all* form views including previews 
+* :white_check_mark: this one has an improved API (v2)
 * :white_check_mark: this one allows overriding a form-defined theme via the API (v2) 
 * :white_check_mark: this one has the ability to override default form values on launch through the API (v2)
 * :white_check_mark: this one has a more advanced iframeable webform view that can communicate back to the parent window, enabled through the API (v2)
@@ -96,6 +95,8 @@ The easiest way to start the app in development and debugging mode with liverelo
 * :x: no export of queued records (yet)
 * :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
 * :x: no [Forms](https://enketo.org/forms) app (you do not need this)
+* :white_check_mark: this one is 100% JavaScript
+* :white_check_mark: this one can be hosted on a local webserver
 
 
 ### Themes
