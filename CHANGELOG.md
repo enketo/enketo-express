@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Appearance "compact-n" support for media grid pickers.
 
+##### Fixed
+- Indexed-repeat() expressions not working if the position is dynamic.
+
 [1.13.0] - 2015-07-27
 -----------------------
 ##### Added
