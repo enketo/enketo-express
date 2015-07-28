@@ -39,10 +39,6 @@ service redis-server-enketo-main restart
 echo 'starting second enketo redis instance...'
 service redis-server-enketo-cache restart
 
-# install XML prerequisites for node_xslt
-echo 'installing libxml2 and libxslt'
-apt-get install -y libxml2-dev libxslt1-dev
-
 # install dependencies, development tools, node, grunt
 apt-get install -y python-software-properties python g++ make git
 cd $ENKETO_EXPRESS_REPO_DIR
