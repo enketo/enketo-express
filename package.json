@@ -65,6 +65,7 @@
         "karma-sinon-chai": "0.2.x",
         "load-grunt-tasks": "3.x.x",
         "mocha": "2.2.x",
+        "phantomjs": "1.9.x",
         "requirejs": "2.1.x",
         "rjs-build-analysis": "0.0.x",
         "supertest": "1.0.x",
