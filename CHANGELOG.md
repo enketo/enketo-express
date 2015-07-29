@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Indexed-repeat() expressions not working if the position is dynamic.
+- Page navigation buttons messed up on small screen in pages-mode.
 
 [1.13.0] - 2015-07-27
 -----------------------
