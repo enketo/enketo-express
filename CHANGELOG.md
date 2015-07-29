@@ -11,13 +11,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Indexed-repeat() expressions not working if the position is dynamic.
 - Page navigation buttons messed up on small screen in pages-mode.
 - Top-level (non-grouped) questions on first row do not have a top border.
+- Language options in form language selector oddly aligned when mix of rtl and ltr languages is used (FF).
 
 [1.13.0] - 2015-07-27
 -----------------------
 ##### Added
 - Right-to-left form language directionality support.
 
-##### Changed
+##### Changed 
 - Made page-swipe less sensitive on touchscreens in pages-mode.
 
 [1.12.2] - 2015-07-24
