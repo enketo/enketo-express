@@ -21,7 +21,7 @@ require.config( {
         "q": "../../../lib/bower-components/q/q",
         "i18next": "../../../lib/bower-components/i18next/i18next.amd",
         "print": "../../../lib/enketo-core/src/js/print",
-        "db": "../../../lib/martijnr-db.js/src/db",
+        "db": "../../../lib/bower-components/db.js/src/db",
         "vex": "../../../lib/bower-components/vex/js/vex",
         "papaparse": "../../../lib/bower-components/papaparse/papaparse",
     },

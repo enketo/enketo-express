@@ -33,10 +33,10 @@ module.exports = function( config ) {
                 pattern: 'public/lib/bower-components/papaparse/papaparse.js',
                 included: false
             }, {
-                pattern: 'public/lib/bower-components/jquery/dist/jquery.js',
+                pattern: 'public/lib/bower-components/db.js/src/db.js',
                 included: false
             }, {
-                pattern: 'public/lib/martijnr-db.js/src/db.js',
+                pattern: 'public/lib/bower-components/jquery/dist/jquery.js',
                 included: false
             }, {
                 pattern: 'public/js/src/**/*.js',
