@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.14.0] - 2015-07-29
 ------------------------
 ##### Added
 - Appearance "compact-n" support for media grid pickers.
@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Page navigation buttons messed up on small screen in pages-mode.
 - Top-level (non-grouped) questions on first row do not have a top border.
 - Language options in form language selector oddly aligned when mix of rtl and ltr languages is used (FF).
+- Title directionality is not displayed according to script used in Grid theme.
 
 [1.13.0] - 2015-07-27
 -----------------------
