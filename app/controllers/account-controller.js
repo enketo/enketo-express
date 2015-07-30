@@ -1,7 +1,7 @@
 "use strict";
 
 var account = require( '../models/account-model' ),
-    auth = require( '../lib/basic-auth' ),
+    auth = require( 'basic-auth' ),
     express = require( 'express' ),
     router = express.Router(),
     debug = require( 'debug' )( 'account-controller' );

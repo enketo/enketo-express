@@ -9,9 +9,9 @@ var Q = require( "q" ),
     expect = chai.expect,
     chaiAsPromised = require( "chai-as-promised" ),
     request = require( 'supertest' ),
-    app = require( '../config/express' ),
-    config = require( '../config/config' ),
-    accountModel = require( '../app/models/account-model' );
+    app = require( '../../config/express' ),
+    config = require( "../../app/models/config-model" ).server,
+    accountModel = require( '../../app/models/account-model' );
 
 chai.use( chaiAsPromised );
 
@@ -244,7 +244,8 @@ describe( 'Account manager API', function() {
                 account_key = ( typeof test.key !== 'undefined' ) ? test.key : validApiKey1;
 
             it( test.method.toUpperCase() + ' /accounts/api/v1/account with ' + authDesc + ' authentication and ' + account_server +
-                ', ' + account_key + ' responds with ' + test.status, function( done ) {
+                ', ' + account_key + ' responds with ' + test.status,
+                function( done ) {
                     request( app )[ test.method ]( '/accounts/api/v1/account' )
                         .set( auth )
                         .send( {

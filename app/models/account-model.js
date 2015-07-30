@@ -2,7 +2,7 @@
 
 var hardcodedAccount,
     Q = require( "q" ),
-    config = require( '../../config/config' ),
+    config = require( './config-model' ).server,
     utils = require( '../lib/utils' ),
     pending = {},
     client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
