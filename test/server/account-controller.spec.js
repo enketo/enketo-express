@@ -240,17 +240,17 @@ describe( 'Account manager API', function() {
         ].forEach( function( test ) {
             var authDesc = test.auth === true ? 'valid' : ( test.auth === false ? 'invalid' : 'empty' ),
                 auth = test.auth === true ? validAuth : ( test.auth === false ? invalidAuth : {} ),
-                account_server = ( typeof test.server !== 'undefined' ) ? test.server : validServer1,
-                account_key = ( typeof test.key !== 'undefined' ) ? test.key : validApiKey1;
+                accountServer = ( typeof test.server !== 'undefined' ) ? test.server : validServer1,
+                accountKey = ( typeof test.key !== 'undefined' ) ? test.key : validApiKey1,
+                dataSendMethod = ( test.method === 'get' ) ? 'query' : 'send';
 
-            it( test.method.toUpperCase() + ' /accounts/api/v1/account with ' + authDesc + ' authentication and ' + account_server +
-                ', ' + account_key + ' responds with ' + test.status,
+            it( test.method.toUpperCase() + ' /accounts/api/v1/account with ' + authDesc + ' authentication and ' + accountServer +
+                ', ' + accountKey + ' responds with ' + test.status,
                 function( done ) {
                     request( app )[ test.method ]( '/accounts/api/v1/account' )
-                        .set( auth )
-                        .send( {
-                            server_url: account_server,
-                            api_key: account_key
+                        .set( auth )[ dataSendMethod ]( {
+                            server_url: accountServer,
+                            api_key: accountKey
                         } )
                         .expect( test.status, done );
                 } );
