@@ -9,11 +9,11 @@ A light-weight node.js version of Enketo Smart Paper. Chock-full of [badass rock
 
 #### Manually:
 
-1. Install JS prerequisites: [Node.js 0.10.x](http://nodejs.org/) (newer version [not supported yet](https://github.com/bsuh/node_xslt/issues/24)), [Grunt Client](http://gruntjs.com), [Bower](http://bower.io/), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
+1. Install JS prerequisites: [Node.js 0.10.x](http://nodejs.org/) (newer version [not supported yet](https://github.com/albanm/node-libxslt/issues/18)), [Grunt Client](http://gruntjs.com), [Bower](http://bower.io/), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
 2. Install [Redis](http://redis.io/topics/quickstart)
-3. Install libxslt, libxml2, (build-essentials)  with `(sudo) apt-get install libxml2-dev libxslt1-dev build-essentials`
+3. Install build-essential with `(sudo) apt-get install build-essential`
 4. Clone this repository
-5. Clone git submodules with `git submodule update --init --recursive`
+5. Clone git submodules with `git submodule update --init --recursive` from project folder
 6. Install dependencies with `npm install` and `bower install` from the project root
 7. Create config/config.json to override values in the [default config](./config/default-config.json). Start with `cp config/default-config.json config/config.json`
 8. Build with `grunt` from the project root
@@ -24,8 +24,9 @@ This takes several shortcuts. Do not use for production!
 
 1. Install [Vagrant](http://docs.vagrantup.com/v2/installation/index.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Clone this repository 
-3. Run `vagrant up` from the enketo-express folder and wait until it completes \* 
-4. Log in to the VM with `vagrant ssh` and run `cd /vagrant && npm start`
+3. Clone git submodules with `git submodule update --init --recursive` from  project folder
+4. Run `vagrant up` and wait until it completes \* 
+5. Log in to the VM with `vagrant ssh` and run `cd /vagrant && npm start`
 5. The app should now be running on [localhost:8006](http://localhost:8006). You can test the API in a different console window with:
 ```curl --user enketorules: -d "server_url=https://ona.io/enketo&form_id=widgets" http://localhost:8006/api/v2/survey```.
 
@@ -71,6 +72,8 @@ For a production server, we recommend using [pm2](https://github.com/unitech/pm2
 ### Developer tools
 Install [nodemon](https://github.com/remy/nodemon) to automatically restart the server when a file changes.
 Install [gulp](http://gulpjs.com/) to automatically update the translation keys.
+Install [mocha](https://github.com/mochajs/mocha) to run tests.
+Install [nodemon](https://github.com/remy/nodemon) to run app in development mode with autoreload.
 
 The easiest way to start the app in development and debugging mode with livereload is with `grunt develop`.
 
