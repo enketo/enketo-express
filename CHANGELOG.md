@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.14.1] - 2015-07-30
+------------------------
+##### Fixed
+- In pages mode, an exception occurs after submission showing empty page.
+- In pulldown select radiobuttons/checkboxes not aligned properly.
+
 [1.14.0] - 2015-07-29
 ------------------------
 ##### Added
