@@ -49,8 +49,8 @@ function authCheck( req, res, next ) {
 
 function getExistingAccount( req, res, next ) {
     return account.get( {
-            openRosaServer: req.param( 'server_url' ),
-            key: req.param( 'api_key' )
+            openRosaServer: req.query.server_url,
+            key: req.query.api_key
         } )
         .then( function( account ) {
             _render( 200, account, res );
@@ -60,8 +60,8 @@ function getExistingAccount( req, res, next ) {
 
 function getNewOrExistingAccount( req, res, next ) {
     return account.set( {
-            openRosaServer: req.param( 'server_url' ),
-            key: req.param( 'api_key' )
+            openRosaServer: req.body.server_url || req.query.server_url,
+            key: req.body.api_key || req.query.api_key
         } )
         .then( function( account ) {
             _render( account.status || 201, account, res );
@@ -71,8 +71,8 @@ function getNewOrExistingAccount( req, res, next ) {
 
 function updateExistingAccount( req, res, next ) {
     return account.update( {
-            openRosaServer: req.param( 'server_url' ),
-            key: req.param( 'api_key' )
+            openRosaServer: req.body.server_url || req.query.server_url,
+            key: req.body.api_key || req.query.api_key
         } )
         .then( function( account ) {
             _render( account.status || 201, account, res );
@@ -82,8 +82,8 @@ function updateExistingAccount( req, res, next ) {
 
 function removeAccount( req, res, next ) {
     return account.remove( {
-            openRosaServer: req.param( 'server_url' ),
-            key: req.param( 'api_key' )
+            openRosaServer: req.body.server_url || req.query.server_url,
+            key: req.body.api_key || req.query.api_key
         } ).then( function( account ) {
             _render( 204, null, res );
         } )
@@ -101,7 +101,7 @@ function getList( req, res, next ) {
 function _render( status, body, res ) {
     if ( status === 204 ) {
         // send 204 response without a body
-        res.send( status );
+        res.status( status ).end();
     } else {
         body = body || {};
         if ( typeof body === 'string' ) {
@@ -116,7 +116,7 @@ function _render( status, body, res ) {
             body = _renameProps( body );
         }
         body.code = status;
-        res.json( status, body );
+        res.status( status ).json( body );
     }
 }
 
