@@ -18,7 +18,7 @@
  * Deals with the main GUI elements (but not the survey form)
  */
 
-define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation.reveal' ], function( Modernizr, Q, settings, printForm, $ ) {
+define( [ 'enketo-js/support', 'q', 'settings', 'print', 'translator', 'vex.dialog.custom', 'jquery', 'plugin', ], function( support, Q, settings, printForm, t, dialog, $ ) {
     "use strict";
 
     var nav, pages, updateStatus, feedbackBar,
@@ -28,33 +28,32 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
      * Initializes a GUI object.
      */
     function init() {
-        nav.setup();
-        pages.init();
         setEventHandlers();
-        $( 'footer' ).detach().appendTo( '#container' ); //WTF?
-        positionPageAndBar();
+
         // avoid windows console errors
-        if ( typeof console == "undefined" ) {
-            console = {
+        if ( typeof window.console === "undefined" ) {
+            window.console = {
                 log: function() {}
             };
         }
-        if ( typeof window.console.debug == "undefined" ) {
+        if ( typeof window.console.debug === "undefined" ) {
             console.debug = console.log;
         }
-
         if ( !settings.debug ) {
             window.console.log = function() {};
             window.console.debug = function() {};
         }
-        //override Modernizr's detection (for development purposes)
+        // override feature detection (for development purposes)
         if ( settings.touch ) {
-            Modernizr.touch = true;
+            support.touch = true;
             $( 'html' ).addClass( 'touch' );
         } else if ( settings.touch === false ) {
-            Modernizr.touch = false;
+            support.touch = false;
             $( 'html' ).removeClass( 'touch' );
         }
+
+        //customize vex.dialog.custom.js options
+        dialog.defaultOptions.className = 'vex-theme-plain';
     }
 
     /**
@@ -62,92 +61,42 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
      */
     function setEventHandlers() {
 
-        $( document ).on( 'click', '#feedback-bar .close', function( event ) {
+        $( document ).on( 'click', '#feedback-bar .close, .touch #feedback-bar', function( event ) {
             feedbackBar.hide();
             return false;
         } );
 
-        $( document ).on( 'click', '.touch #feedback-bar', function( event ) {
-            feedbackBar.hide();
-        } );
-
-        $( document ).on( 'click', '#page .close', function( event ) {
-            pages.close();
-            return false;
-        } );
-
-        $( document ).on( 'click', '.side-slider .close', function( event ) {
+        $( document ).on( 'click', '.side-slider .close, .slider-overlay', function( event ) {
             $( 'body' ).removeClass( 'show-side-slider' );
         } );
 
         $( '.form-header__button--print' ).on( 'click', function() {
-            printForm();
+            printForm( promptPrintSettings );
         } );
 
-        $( '.side-slider-toggle' ).on( 'click', function() {
+        $( '.side-slider__toggle, .offline-enabled__queue-length' ).on( 'click', function() {
             var $body = $( 'body' );
             window.scrollTo( 0, 0 );
             $body.toggleClass( 'show-side-slider' );
         } );
 
-        $( '.offline-enabled-icon' ).on( 'click', function() {
-            var msg = "<p>This form can now be loaded and used without an Internet connection on this device. " +
-                "Bookmark it for easy offline access." +
-                "<p>Records are automatically stored and queued on your computer until an Internet connection is available. " +
-                "When the app is online, records will be automatically submitted - one by one.</p>" +
-                "<p>Only after a record has been succesfully submitted, it will be removed from the queue. " +
-                "You can safely close down your browser and computer with items in the queue. " +
-                "They will still be there next time you load the form.</p>";
-            alert( msg, 'Form works offline!', 'normal' );
-        } );
-
-        // capture all internal links to navigation menu items (except the links in the navigation menu itself)
-        $( document ).on( 'click', 'a[href^="#"]:not([href="#"]):not(nav ul li a)', function( event ) {
-            var href = $( this ).attr( 'href' );
-            console.log( 'captured click to nav page, href=' + href );
-            //if href is not just an empty anchor it is an internal link and will trigger a navigation menu click
-            if ( href !== '#' ) {
-                event.preventDefault();
-                $( 'nav li a[href="' + href + '"]' ).click();
-            }
-        } );
-
-        // event handlers for navigation menu
-        $( 'nav ul li a[href^="#"]' )
-            .click( function( event ) {
-                event.preventDefault();
-                var targetPage = $( this ).attr( 'href' ).substr( 1 );
-                pages.open( targetPage );
-                $( this ).closest( 'li' ).addClass( 'active' ).siblings().removeClass( 'active' );
-            } );
-
-        // handlers for status icons in header
-        $( window ).on( 'onlinestatuschange', function( e, online ) {
-            updateStatus.connection( online );
-        } );
-
-        $( document ).on( 'edit', 'form.jr', function( event, status ) {
-            //console.log('gui updating edit status icon');
-            updateStatus.edit( status );
-        } );
-
-        $( document ).on( 'browsersupport', function( e, supported ) {
-            updateStatus.support( supported );
-        } );
-
-        $( '#page, #feedback-bar' ).on( 'changepagebar', function() {
-            positionPageAndBar();
+        $( '.offline-enabled__icon' ).on( 'click', function() {
+            var msg = t( 'alert.offlinesupported.msg' );
+            alert( msg, t( 'alert.offlinesupported.heading' ), 'normal' );
         } );
 
         $( document ).on( 'xpatherror', function( ev, error ) {
-            var email = settings[ 'supportEmail' ];
-            alert( 'A formula evaluation error occurred. Please contact ' +
-                '<a href="mailto:' + email + '?subject=xpath errors for: ' + location.href + '&body=' + error + '" target="_blank" >' + email + '</a>' +
-                ' with this error:<ul class="error-list"><li>' + error + '</li></ul>', 'Formula Error' );
+            var email = settings[ 'supportEmail' ],
+                link = '<a href="mailto:' + email + '?subject=xpath errors for: ' + location.href + '&body=' + error + '" target="_blank" >' + email + '</a>';
+
+            alert( t( 'alert.xpatherror.msg', {
+                emailLink: link
+            } ) + '<ul class="error-list"><li>' + error + '</li></ul>', t( 'alert.xpatherror.heading' ) );
         } );
 
-        $( '.ad .close' ).on( 'click', function() {
-            $( this ).closest( '.ad' ).remove();
+        $( '.side-slider__app-version' ).on( 'click', function() {
+            console.debug( 'toggling' );
+            $( '.side-slider__advanced' ).toggleClass( 'hide' );
         } );
     }
 
@@ -176,125 +125,6 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
         return deferred.promise;
     }
 
-    nav = {
-        setup: function() {
-            $( 'article.page' ).each( function() {
-                var display, title = '',
-                    id, link;
-                id = $( this ).attr( 'id' );
-                if ( $( this ).attr( 'data-display-icon' ) ) {
-                    display = '<span class="glyphicon glyphicon-' + $( this ).attr( 'data-display-icon' ) + '" > </span>';
-                } else if ( $( this ).attr( 'data-display' ) ) {
-                    display = $( this ).attr( 'data-display' );
-                } else display = id;
-                if ( $( this ).attr( 'data-title' ) ) {
-                    title = $( this ).attr( 'data-title' );
-                } else title = id;
-                if ( $( this ).attr( 'data-ext-link' ) ) {
-                    link = $( this ).attr( 'data-ext-link' );
-                } else link = '#' + id;
-
-                $( '<li class=""><a href="' + link + '" title="' + title + '" >' + display + '</a></li>' )
-                    .appendTo( $( '.navbar-right' ) );
-
-            } );
-        },
-        reset: function() {
-
-            $( 'nav ul li' ).removeClass( 'active' );
-        }
-    };
-
-    pages = {
-        /**
-         * initializes the pages
-         */
-        init: function() {
-            // placeholder 'parent' element for the articles (pages)
-            this.$pages = $( '<pages></pages>' );
-            // detaching pages from DOM and storing them in the pages variable
-            $( 'article.page' ).detach().appendTo( this.$pages );
-        },
-
-        /**
-         * Obtains a particular pages from the pages variable
-         * @param  {string} name id of page
-         * @return {jQuery}
-         */
-        get: function( name ) {
-            var $page = this.$pages.find( 'article[id="' + name + '"]' );
-            $page = ( $page.length > 0 ) ? $page : $( 'article[id="' + name + '"]' );
-            return $page;
-        },
-
-        /**
-         * Confirms whether a page with a particular id or any page is currently showing
-         * @param  {string=}  name id of page
-         * @return {boolean}       returns true or false
-         */
-        isShowing: function( name ) {
-            var idSelector = ( typeof name !== 'undefined' ) ? '[id="' + name + '"]' : '';
-            return ( $( '#page article.page' + idSelector ).length > 0 );
-        },
-
-        /**
-         * Opens a page with a particular id
-         * @param  {string} pg id of page
-         */
-        open: function( pg ) {
-            var $page,
-                $header = $( 'header' ),
-                that = this;
-            if ( this.isShowing( pg ) ) {
-                return;
-            }
-
-            $page = this.get( pg );
-
-            if ( $page.length !== 1 ) {
-                console.error( 'page not found' );
-                return;
-            }
-
-            if ( this.isShowing() ) {
-                this.close();
-            }
-
-            $( '#page .content' ).prepend( $page.show() ).trigger( 'changepagebar' );
-            $( '#page' ).show();
-            //$('.overlay').show();
-            $( '.main' ).css( 'opacity', '0.3' );
-
-            $( window ).on( 'resize.pageEvents', function() {
-                $( '#page' ).trigger( 'changepagebar' );
-            } );
-            setTimeout( function() {
-                $( window ).on( 'click.pageEvents', function( event ) {
-                    if ( $( event.target ).parents( '#page' ).length === 0 ) {
-                        that.close();
-                    }
-                    return true;
-                } );
-            }, 1000 );
-        },
-
-        /**
-         * Closes the currently shown page
-         */
-        close: function() {
-            var $page = $( '#page .page' );
-            if ( $page.length > 0 ) {
-                this.$pages.append( $page.detach() );
-                $( '#page' ).trigger( 'changepagebar' );
-                $( '.navbar-right li' ).removeClass( 'active' );
-                //$('#overlay').hide();
-                $( window ).off( '.pageEvents' );
-            }
-            //$('.overlay').hide();
-            $( '.main' ).css( 'opacity', '1' );
-        }
-    };
-
     feedbackBar = {
         /**
          * Shows an unobtrusive feedback bar to the user.
@@ -303,34 +133,35 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
          * @param {number=} duration duration in seconds for the message to show
          */
         show: function( message, duration ) {
-
-            var $msg,
-                that = this;
+            var $msg;
 
             duration = ( duration ) ? duration * 1000 : 10 * 1000;
 
             // max 2 messages displayed
-            $( '#feedback-bar p' ).eq( 1 ).remove();
+            $( '#feedback-bar' ).addClass( 'feedback-bar--show' )
+                .find( 'p' ).eq( 1 ).remove();
 
             // if an already shown message isn't exactly the same
             if ( $( '#feedback-bar p' ).html() !== message ) {
-                $msg = $( '<p></p>' );
-                $msg.append( message );
+                $msg = $( '<p></p>' ).append( message );
                 $( '#feedback-bar' ).prepend( $msg );
             }
-            $( '#feedback-bar' ).show().trigger( 'changepagebar' );
 
             // automatically remove feedback after a period
             setTimeout( function() {
+                var siblings;
                 if ( typeof $msg !== 'undefined' ) {
+                    siblings = $msg.siblings( 'p' ).length;
                     $msg.remove();
+                    if ( siblings === 0 ) {
+                        feedbackBar.hide();
+                    }
                 }
-                $( '#feedback-bar' ).trigger( 'changepagebar' );
             }, duration );
         },
         hide: function() {
-            $( '#feedback-bar p' ).remove();
-            $( '#feedback-bar' ).trigger( 'changepagebar' );
+            $( '#feedback-bar' ).removeClass( 'feedback-bar--show' )
+                .find( 'p' ).remove();
         }
     };
 
@@ -339,28 +170,17 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
      *
      * @param {string}  message
      * @param {number=} duration duration in seconds for the message to show
-     * @param {string=} heading  heading to show - defaults to information, ignored in feedback bar
-     * @param {Object=} choices  choices to show - defaults to simple Close button, ignored in feedback bar for now
      */
-    function feedback( message, duration, heading, choices ) {
-        heading = heading || 'Information';
-        //if ($('header').css('position') === 'fixed'){
-        if ( !Modernizr.touch ) {
+    function feedback( message, duration ) {
+        if ( !support.touch ) {
             feedbackBar.show( message, duration );
-        }
-        //a more obtrusive message is shown
-        else if ( choices ) {
-            confirm( {
-                msg: message,
-                heading: heading
-            }, choices, null, duration );
         } else {
-            alert( message, heading, 'info', duration );
+            alert( message, t( 'feedback.header' ), 'info', duration );
         }
     }
 
     /**
-     * Shows a modal alert box with a message.
+     * Shows a modal alert dialog.
      *
      * @param {string} message
      * @param {string=} heading
@@ -368,181 +188,104 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
      * @param {number=} duration duration in secondsafter which dialog should self-destruct
      */
     function alert( message, heading, level, duration ) {
-        var cls, timer, timeout, open,
-            $alert = $( '#dialog-alert' );
-
-        heading = heading || 'Alert';
         level = level || 'error';
-        cls = ( level === 'normal' ) ? '' : 'alert-box ' + level;
-        open = $alert.hasClass( 'open' );
 
-        // write content into alert dialog
-        $alert.find( '.modal__header h3' ).text( heading );
-        $alert.find( '.modal__body p' ).removeClass().addClass( cls ).html( message ).capitalizeStart();
-        $alert.find( '.self-destruct-timer' ).text( '' );
-
-        // close handler for close button
-        $alert.find( '.close' ).one( 'click', function() {
-            $alert.foundation( 'reveal', 'close' );
+        dialog.alert( {
+            message: message,
+            title: heading || t( 'alert.default.heading' ),
+            messageClassName: ( level === 'normal' ) ? '' : 'alert-box ' + level,
+            buttons: {
+                YES: {
+                    text: t( 'alert.default.button' ),
+                    type: 'submit',
+                    className: 'btn btn-primary small'
+                }
+            },
+            autoClose: duration,
+            showCloseButton: true
         } );
-
-        // cleanup after close
-        $alert.one( 'close', function() {
-            $alert.find( '.modal__header h3, .modal__body p' ).html( '' );
-            clearInterval( timer );
-            clearTimeout( timeout );
-        } );
-
-        // add countdown timer
-        if ( typeof duration === 'number' ) {
-            var left = duration;
-            $alert.find( '.self-destruct-timer' ).text( left );
-            timer = setInterval( function() {
-                left--;
-                $alert.find( '.self-destruct-timer' ).text( left );
-            }, 1000 );
-            timeout = setTimeout( function() {
-                clearInterval( timer );
-                $alert.foundation( 'reveal', 'close' );
-            }, duration * 1000 );
-        }
-
-        // instantiate modal
-        $alert.foundation( 'reveal', 'open' );
-
-        // the .css('top', '') is a hack to fix an issue that occurs sometimes when gui.alert is called when it is already open
-        if ( open ) {
-            $alert.css( 'top', '' );
-        }
-
-        /* sample test code (for console):
-
-        gui.alert('What did you just do???', 'Obtrusive alert dialog');
-
-         */
     }
 
     /**
-     * Function: confirm
+     * Shows a confirmation dialog
      *
-     * description
-     *
-     *   @param {?(Object.<string, (string|boolean)>|string)=} texts - In its simplest form this is just a string but it can
+     * @param {?(Object.<string, (string|boolean)>|string)=} content - In its simplest form this is just a string but it can
      *                                                         also an object with parameters msg, heading and errorMsg.
-     *   @param {Object=} choices - [type/description]
-     *   @param {number=} duration duration in seconds after which dialog should self-destruct
+     * @param {Object=} choices - [type/description]
      */
-    function confirm( texts, choices, values, duration ) {
-        var msg, heading, errorMsg, closeFn, dialogName, $dialog, timer, timeout;
+    function confirm( content, choices ) {
+        var errorMsg = '',
+            message = ( typeof content === 'string' ) ? content : content.msg;
 
-        if ( typeof texts === 'string' ) {
-            msg = texts;
-        } else if ( typeof texts.msg === 'string' ) {
-            msg = texts.msg;
+        if ( content.errorMsg ) {
+            errorMsg = '<p class="alert-box error">' + content.errorMsg + '</p>';
         }
 
-        msg = msg || 'Please confirm action';
-        heading = texts.heading || 'Are you sure?';
-        errorMsg = texts.errorMsg || '';
-        dialogName = texts.dialog || 'confirm';
-        values = values || {};
         choices = choices || {};
-        choices.posButton = choices.posButton || 'Confirm';
-        choices.negButton = choices.negButton || 'Cancel';
-        choices.posAction = choices.posAction || function() {};
-        choices.negAction = choices.negAction || function() {};
-        choices.beforeAction = choices.beforeAction || function() {};
+        choices.allowAlternativeClose = ( typeof choices.allowAlternativeClose !== 'undefined' ) ? choices.allowAlternativeClose : true;
 
-        $dialog = $( '#dialog-' + dialogName );
-
-        //write content into confirmation dialog
-        $dialog.find( '.modal__header h3' ).text( heading );
-        $dialog.find( '.modal__body .msg' ).html( msg ).capitalizeStart();
-        $dialog.find( '.modal__body .error' ).html( errorMsg ).show();
-        if ( !errorMsg ) {
-            $dialog.find( '.modal__body .error' ).hide();
-        }
-        $dialog.find( 'input, select, textarea' ).each( function() {
-            var name = $( this ).attr( 'name' );
-            $( this ).val( values[ name ] || '' );
-        } );
-
-        // before handler
-        $dialog.one( 'open', function() {
-            choices.beforeAction.call();
-        } );
-
-        // close handler for close button
-        $dialog.find( '.close' ).one( 'click', function() {
-            $dialog.foundation( 'reveal', 'close' );
-        } );
-
-        // cleanup after close
-        $dialog.one( 'close', function() {
-            $dialog.find( '.modal__header h3, .modal__body .msg, .modal__body .error, .modal__footer .btn' ).text( '' );
-            clearInterval( timer );
-            clearTimeout( timeout );
-        } );
-
-        $dialog.find( 'button.positive' ).one( 'click', function() {
-            var values = {};
-            $( this ).closest( '.modal' ).find( 'input, select, textarea' ).each( function() {
-                if ( $( this ).attr( 'name' ) ) {
-                    values[ $( this ).attr( 'name' ) ] = $( this ).val().trim();
+        dialog.confirm( {
+            message: errorMsg + ( message || t( 'confirm.default.msg' ) ),
+            title: content.heading || t( 'confirm.default.heading' ),
+            buttons: [ {
+                text: choices.posButton || t( 'confirm.default.posButton' ),
+                type: 'submit',
+                className: 'btn btn-primary small'
+            }, {
+                text: choices.negButton || t( 'confirm.default.negButton' ),
+                type: 'button',
+                className: 'btn btn-default small'
+            } ],
+            callback: function( value ) {
+                console.log( 'closing dialog with value:', value );
+                if ( value && typeof choices.posAction !== 'undefined' ) {
+                    choices.posAction.call( value );
+                } else if ( typeof choices.negAction !== 'undefined' ) {
+                    choices.negAction.call( value );
                 }
-            } );
-            $dialog.foundation( 'reveal', 'close' );
-            choices.posAction.call( undefined, values );
-        } ).text( choices.posButton );
-
-        $dialog.find( 'button.negative' ).one( 'click', function() {
-            $dialog.foundation( 'reveal', 'close' );
-            choices.negAction.call();
-        } ).text( choices.negButton );
-
-        // add countdown timer
-        if ( typeof duration === 'number' ) {
-            var left = duration;
-            $dialog.find( '.self-destruct-timer' ).text( left );
-            timer = setInterval( function() {
-                left--;
-                $dialog.find( '.self-destruct-timer' ).text( left );
-            }, 1000 );
-            timeout = setTimeout( function() {
-                clearInterval( timer );
-                $dialog.foundation( 'reveal', 'close' );
-            }, duration * 1000 );
-        }
-
-        // instantiate dialog
-        $dialog.foundation( 'reveal', 'open' );
-
-        /* sample test code (for console):
-
-        gui.confirm( {
-            msg: 'This is an obtrusive confirmation dialog asking you to make a decision',
-            heading: 'Please confirm this action',
-            errorMsg: 'Oh man, you messed up big time!'
-        }, {
-            posButton: 'Confirmeer',
-            negButton: 'Annuleer',
-            posAction: function() {
-                console.log( 'you just did something positive!' )
             },
-            negAction: function() {
-                console.log( 'you did something negative' )
-            },
-            beforeAction: function() {
-                console.log( 'doing some preparatory work' )
-            }
-        }, null, 100 );
-
-		gui.confirm('confirm this please');
-
-	   */
+            showCloseButton: choices.allowAlternativeClose,
+            escapeButtonCloses: choices.allowAlternativeClose,
+            overlayClosesOnClick: choices.allowAlternativeClose
+        } );
     }
 
+    function prompt( content, choices, inputs ) {
+        var errorMsg = '',
+            message = ( typeof content === 'string' ) ? content : content.msg;
 
+        if ( content.errorMsg ) {
+            errorMsg = '<p class="alert-box error">' + content.errorMsg + '</p>';
+        }
+
+        choices = choices || {};
+        dialog.prompt( {
+            message: errorMsg + ( message || '' ),
+            title: content.heading || t( 'prompt.default.heading' ),
+            buttons: [ {
+                text: choices.posButton || t( 'confirm.default.posButton' ),
+                type: 'submit',
+                className: 'btn btn-primary small'
+            }, {
+                text: choices.negButton || t( 'confirm.default.negButton' ),
+                type: 'button',
+                className: 'btn btn-default small'
+            } ],
+            input: inputs,
+            callback: function( value ) {
+                console.log( 'closing dialog with value:', value );
+                if ( value && typeof choices.posAction !== 'undefined' ) {
+                    choices.posAction.call( null, value );
+                } else if ( typeof choices.negAction !== 'undefined' ) {
+                    choices.negAction.call( null, value );
+                }
+                if ( typeof choices.afterAction !== 'undefined' ) {
+                    choices.afterAction.call( null, value );
+                }
+            },
+            showCloseButton: true
+        } );
+    }
 
     /**
      * Shows modal asking for confirmation to redirect to login screen
@@ -550,27 +293,21 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
      * @param  {string=} serverURL serverURL for which authentication is required
      */
     function confirmLogin( msg, serverURL ) {
-        msg = msg || '<p>In order to submit your queued data, you need to login. If you want to do this now, you will be redirected,' +
-            ' and loose unsaved information.</p><p>Would you like to login now or later?</p>';
+        msg = msg || t( 'confirm.login.msg' );
         serverURL = serverURL || settings.serverURL;
 
         confirm( {
             msg: msg,
-            heading: 'Login Required'
+            heading: t( 'confirm.login.heading' )
         }, {
-            posButton: 'Log in now',
-            negButton: 'Later',
+            posButton: t( 'confirm.login.posButton' ),
+            negButton: t( 'confirm.login.negButton' ),
             posAction: function() {
-                var search = '?server=' + encodeURIComponent( serverURL ) + '&return=' + encodeURIComponent( location.href );
-                search += ( settings.formId ) ? '&id=' + settings.formId : '';
+                var search = '?return_url=' + encodeURIComponent( location.href );
                 search += ( settings.touch ) ? '&touch=' + settings.touch : '';
                 search += ( settings.debug ) ? '&debug=' + settings.debug : '';
-                location.href = location.protocol + '//' + location.host + '/authenticate' + search;
-            },
-            negAction: function() {
-                console.log( 'login cancelled' );
-            },
-            beforeAction: function() {}
+                location.href = location.protocol + '//' + location.host + '/login' + search;
+            }
         } );
     }
 
@@ -579,31 +316,69 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
      * @param  {Array.<string>} loadErrors  load error messagesg
      * @param  {string=}        advice  a string with advice
      */
-    function showLoadErrors( loadErrors, advice ) {
-        var errorStringHTML = '<ul class="error-list"><li>' + loadErrors.join( '</li><li>' ) + '</li></ul',
+    function alertLoadErrors( loadErrors, advice ) {
+        var errorStringHTML = '<ul class="error-list"><li>' + loadErrors.join( '</li><li>' ) + '</li></ul>',
             errorStringEmail = '* ' + loadErrors.join( '* ' ),
-            s = ( loadErrors.length > 1 ) ? 's' : '',
-            email = settings[ 'supportEmail' ];
+            email = settings[ 'supportEmail' ],
+            link = '<a href="mailto:' + email + '?subject=loading errors for: ' + location.href + '&body=' + errorStringEmail + '" target="_blank" >' + email + '</a>',
+            params = {
+                emailLink: link,
+                count: loadErrors.length
+            };
+
         advice = advice || '';
-        alert( '<p>Error' + s + ' occured during the loading of this form. ' + advice + '</p><br/><p>' +
-            'Please contact <a href="mailto:' + email +
-            '?subject=loading errors for: ' + location.href + '&body=' + errorStringEmail + '" target="_blank" >' + email + '</a>' +
-            ' with the link to this page and the error message' + s + ' below:</p>' + errorStringHTML, 'Loading Error' + s );
+
+        alert(
+            '<p>' +
+            t( 'alert.loaderror.msg1', params ) + ' ' + advice + '</p><p>' +
+            t( 'alert.loaderror.msg2', params ) +
+            '</p>' + errorStringHTML, t( 'alert.loaderror.heading', params )
+        );
     }
 
-    function showCacheUnsupported() {
-        var message = 'Offline application launch is not supported by your browser. ' +
-            'You can use the form without this feature or see options for resolving this',
+    /**
+     * Prompts for print settings
+     *
+     * @param  {*} ignore This is here for historic reasons but is ignored
+     * @param  {{posAction: Function, negAction: Function, afterAction: Function}} actions Object with actions
+     */
+    function promptPrintSettings( ignore, actions ) {
+        var texts = {
+                heading: t( 'confirm.print.heading' ),
+                msg: t( 'confirm.print.msg' )
+            },
+            options = {
+                posButton: t( 'confirm.print.posButton' ), //Prepare',
+                posAction: actions.posAction,
+                negButton: t( 'alert.default.button' ),
+                negAction: actions.negAction,
+                afterAction: actions.afterAction
+            },
+            inputs = '<fieldset><legend>' + t( 'confirm.print.psize' ) + '</legend>' +
+            '<label><input name="format" type="radio" value="A4" required checked/><span>' + t( 'confirm.print.a4' ) + '</span></label>' +
+            '<label><input name="format" type="radio" value="letter" required/><span>' + t( 'confirm.print.letter' ) + '</span></label>' +
+            '</fieldset>' +
+            '<fieldset><legend>' + t( 'confirm.print.orientation' ) + '</legend>' +
+            '<label><input name="orientation" type="radio" value="portrait" required checked/><span>' + t( 'confirm.print.portrait' ) + '</span></label>' +
+            '<label><input name="orientation" type="radio" value="landscape" required/><span>' + t( 'confirm.print.landscape' ) + '</span></label>' +
+            '</fieldset>' +
+            '<p class="alert-box info" >' + t( 'confirm.print.reminder' ) + '</p>';
+
+        prompt( texts, options, inputs );
+    }
+
+    function alertCacheUnsupported() {
+        var message = t( 'alert.offlineunsupported.msg' ),
             choices = {
-                posButton: 'Show options',
-                negButton: 'Use it',
+                posButton: t( 'alert.offlineunsupported.posButton' ),
+                negButton: t( 'alert.offlineunsupported.negButton' ),
                 posAction: function() {
                     window.location = settings[ 'modernBrowsersURL' ];
                 }
             };
         confirm( {
             msg: message,
-            heading: 'Application cannot launch offline'
+            heading: t( 'alert.offlineunsupported.heading' )
         }, choices );
     }
 
@@ -613,135 +388,69 @@ define( [ 'Modernizr', 'q', 'settings', 'print', 'jquery', 'plugin', 'foundation
      * @type {Object}
      */
     updateStatus = {
-        connection: function( online ) {
-
-            /*console.log('updating online status in menu bar to:', online);
-		if (online === true) {
-			$('header #status-connection').removeClass().addClass('ui-icon ui-icon-signal-diag')
-				.attr('title', 'It appears there is currently an Internet connection available.');
-			$('.drawer #status').removeClass('offline waiting').text('');
-		}
-		else if (online === false) {
-			$('header #status-connection').removeClass().addClass('ui-icon ui-icon-cancel')
-				.attr('title', 'It appears there is currently no Internet connection');
-			$('.drawer #status').removeClass('waiting').addClass('offline').text('Offline. ');
-		}
-		else{
-			$('.drawer #status').removeClass('offline').addClass('waiting').text('Waiting. ');
-		}*/
-        },
-        edit: function( editing ) {
-
-            if ( editing ) {
-                $( 'header #status-editing' ).removeClass().addClass( 'ui-icon ui-icon-pencil' )
-                    .attr( 'title', 'Form is being edited.' );
-            } else {
-                $( 'header #status-editing' ).removeClass().attr( 'title', '' );
-            }
-        },
-        support: function( supported ) {},
-        offlineLaunch: function( offlineCapable ) {
+        offlineCapable: function( offlineCapable ) {
             if ( offlineCapable ) {
-                $( '.offline-enabled-icon.not-enabled' ).removeClass( 'not-enabled' );
+                $( '.offline-enabled__icon.not-enabled' ).removeClass( 'not-enabled' );
             } else {
-                $( '.offline-enabled-icon' ).addClass( 'not-enabled' );
+                $( '.offline-enabled__icon' ).addClass( 'not-enabled' );
             }
-            //$( '.drawer #status-offline-launch' ).text( status );
+        },
+        applicationVersion: function( version ) {
+            $( '.side-slider__app-version__value' ).text( version );
         }
     };
 
-    /**
-     * Returns the height in pixels that it would take for this element to stretch down to the bottom of the window
-     * For now it's a dumb function that only takes into consideration a header above the element.
-     * @param  {jQuery} $elem [description]
-     * @return {number}       [description]
-     */
-    function fillHeight( $elem ) {
-        var bottom = $( window ).height(),
-            above = $( 'header' ).outerHeight( true ),
-            fluff = $elem.outerHeight() - $elem.height();
-        return bottom - above - fluff;
-    }
+    function getErrorResponseMsg( statusCode ) {
+        var msg,
+            supportEmailObj = {
+                supportEmail: settings.supportEmail
+            },
+            contactSupport = t( 'contact.support', supportEmailObj ),
+            contactAdmin = t( 'contact.admin' ),
+            statusMap = {
+                '0': t( 'submission.http0' ),
+                '200': t( 'submission.http2xx' ) + '<br/>' + contactSupport,
+                '2xx': t( 'submission.http2xx' ) + '<br/>' + contactSupport,
+                '400': t( 'submission.http400' ) + '<br/>' + contactAdmin,
+                '403': t( 'submission.http403' ) + '<br/>' + contactAdmin,
+                '404': t( 'submission.http404' ),
+                '4xx': t( 'submission.http4xx' ),
+                '413': t( 'submission.http413' ) + '<br/>' + contactSupport,
+                '500': t( 'submission.http500', supportEmailObj ),
+                '503': t( 'submission.http500', supportEmailObj ),
+                '5xx': t( 'submission.http500', supportEmailObj )
+            };
 
-    /**
-     * Makes sure sliders that reveal the feedback bar and page have the correct css 'top' property when the header is fixed
-     */
-    function positionPageAndBar() {
-        var fTop, pTop,
-            $header = $( 'header.navbar' ),
-            hHeight = $header.outerHeight() || 0,
-            $feedback = $( '#feedback-bar' ),
-            fShowing = ( $feedback.find( 'p' ).length > 0 ) ? true : false,
-            fHeight = $feedback.outerHeight(),
-            $page = $( '#page' ),
-            pShowing = pages.isShowing(),
-            pHeight = $page.outerHeight() || 0;
+        console.debug( 'getting msg belonging to ', statusCode );
 
-        //to go with the responsive flow, copy the css position type of the header
-        $page.css( {
-            'position': $header.css( 'position' )
-        } );
+        statusCode = ( typeof statusCode !== 'undefined' ) ? statusCode.toString() : 'undefined';
 
-        if ( $header.length > 0 && $header.css( 'position' ) !== 'fixed' ) {
-            if ( !fShowing ) {
-                $feedback.hide();
-            }
-            if ( !pShowing ) {
-                $page.hide();
-            }
-            return false;
-        }
-
-        fTop = ( !fShowing ) ? 0 - fHeight : hHeight;
-        pTop = ( !pShowing ) ? 0 - pHeight : ( ( fShowing ) ? fTop + fHeight : hHeight );
-
-        // the timeout works around an issue in Chrome where setting the css top property has no impact. 
-        // https://github.com/MartijnR/enketo/issues/245
-        // It is nice from a UX perspective as well to have a slight delay
-        setTimeout( function() {
-            $feedback.css( 'top', fTop + 'px' );
-            $page.css( 'top', pTop + 'px' );
-        }, 100 );
-    }
-
-    /**
-     * Parses a list of forms
-     * @param  {?Array.<{title: string, url: string, server: string, name: string}>} list array of object with form information
-     * @param { jQuery } $target jQuery-wrapped target node with a <ul> element as child to append formlist to
-     * @param { boolean=} reset if list provided is empty and reset is true, no error message is shown
-     */
-    function parseFormlist( list, $target, reset ) {
-        var i,
-            listHTML = '';
-        console.log( 'list: ', list );
-        if ( !$.isEmptyObject( list ) ) {
-            for ( i = 0; i < list.length; i++ ) {
-                listHTML += '<li><a class="btn btn-block btn-info" id="' + list[ i ].form_id + '" title="' + list[ i ].title + '" ' +
-                    'href="' + list[ i ].url + '" data-server="' + list[ i ].server_url + '" >' + list[ i ].name + '</a></li>';
-            }
-            $target.removeClass( 'empty' );
+        if ( statusMap[ statusCode ] ) {
+            msg = statusMap[ statusCode ];
+        } else if ( statusMap[ statusCode.replace( statusCode.substring( 1 ), 'xx' ) ] ) {
+            msg = statusMap[ statusCode.replace( statusCode.substring( 1 ), 'xx' ) ];
         } else {
-            $target.addClass( 'empty' );
-            if ( !reset ) {
-                listHTML = '<p class="alert alert-danger">Error occurred during creation of form list or no forms found</p>';
-            }
+            msg = t( 'error.unknown' );
         }
-        $target.find( 'ul' ).empty().append( listHTML );
+
+        return msg;
     }
 
-    init();
+    $( document ).ready( function() {
+        init();
+    } );
 
     return {
         alert: alert,
         confirm: confirm,
+        prompt: prompt,
         feedback: feedback,
         updateStatus: updateStatus,
         pages: pages,
         swapTheme: swapTheme,
-        fillHeight: fillHeight,
         confirmLogin: confirmLogin,
-        showLoadErrors: showLoadErrors,
-        showCacheUnsupported: showCacheUnsupported,
-        parseFormlist: parseFormlist
+        alertLoadErrors: alertLoadErrors,
+        alertCacheUnsupported: alertCacheUnsupported,
+        getErrorResponseMsg: getErrorResponseMsg
     };
 } );

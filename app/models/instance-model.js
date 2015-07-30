@@ -1,7 +1,8 @@
 "use strict";
 
 var Q = require( 'q' ),
-    config = require( '../../config/config' ),
+    config = require( './config-model' ).server,
+    TError = require( '../lib/custom-error' ).TranslatedError,
     utils = require( '../lib/utils' ),
     client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
         auth_pass: config.redis.main.password
@@ -65,7 +66,7 @@ function _getInstance( survey ) {
             if ( err ) {
                 deferred.reject( err );
             } else if ( !obj ) {
-                error = new Error( 'Record not present. It may have expired.' );
+                error = new TError( 'error.instancenotfound' );
                 error.status = 404;
                 deferred.reject( error );
             } else {

@@ -1,10 +1,9 @@
 "use strict";
 
-var communicator = require( '../lib/communicator' ),
-    surveyModel = require( '../models/survey-model' ),
+var surveyModel = require( '../models/survey-model' ),
     instanceModel = require( '../models/instance-model' ),
     account = require( '../models/account-model' ),
-    auth = require( '../lib/basic-auth' ),
+    auth = require( 'basic-auth' ),
     express = require( 'express' ),
     router = express.Router(),
     debug = require( 'debug' )( 'api-controller' );
@@ -63,7 +62,7 @@ function authCheck( req, res, next ) {
     var error,
         creds = auth( req ),
         key = ( creds ) ? creds.name : undefined,
-        server = req.param( 'server_url' );
+        server = req.body.server_url || req.query.server_url;
 
     // set content-type to json to provide appropriate json Error responses
     res.set( 'Content-Type', 'application/json' );
@@ -90,8 +89,8 @@ function getExistingSurvey( req, res, next ) {
 
     return surveyModel
         .getId( {
-            openRosaServer: req.param( 'server_url' ),
-            openRosaId: req.param( 'form_id' )
+            openRosaServer: req.query.server_url,
+            openRosaId: req.query.form_id
         } )
         .then( function( id ) {
             if ( id ) {
@@ -106,8 +105,8 @@ function getExistingSurvey( req, res, next ) {
 function getNewOrExistingSurvey( req, res, next ) {
     var error, body, status,
         survey = {
-            openRosaServer: req.param( 'server_url' ),
-            openRosaId: req.param( 'form_id' )
+            openRosaServer: req.body.server_url || req.query.server_url,
+            openRosaId: req.body.form_id || req.query.form_id
         };
 
     return surveyModel
@@ -133,8 +132,8 @@ function deactivateSurvey( req, res, next ) {
 
     return surveyModel
         .update( {
-            openRosaServer: req.param( 'server_url' ),
-            openRosaId: req.param( 'form_id' ),
+            openRosaServer: req.body.server_url,
+            openRosaId: req.body.form_id,
             active: false
         } )
         .then( function( id ) {
@@ -151,7 +150,7 @@ function getNumber( req, res, next ) {
     var error, body;
 
     return surveyModel
-        .getNumber( req.param( 'server_url' ) )
+        .getNumber( req.body.server_url || req.query.server_url )
         .then( function( number ) {
             if ( number ) {
                 _render( 200, {
@@ -167,18 +166,34 @@ function getNumber( req, res, next ) {
 }
 
 function getList( req, res, next ) {
-    _render( 500, 'This API point is not implemented yet', res );
+    var obj;
+
+    return surveyModel
+        .getList( req.body.server_url || req.query.server_url )
+        .then( function( list ) {
+            list = list.map( function( survey ) {
+                obj = _generateWebformUrls( survey.enketoId, req );
+                obj.form_id = survey.openRosaId;
+                obj.server_url = survey.openRosaServer;
+                return obj;
+            } );
+            _render( 200, {
+                code: 200,
+                forms: list
+            }, res );
+        } )
+        .catch( next );
 }
 
 function cacheInstance( req, res, next ) {
     var error, body, survey;
 
     survey = {
-        openRosaServer: req.param( 'server_url' ),
-        openRosaId: req.param( 'form_id' ),
-        instance: req.param( 'instance' ),
-        instanceId: req.param( 'instance_id' ),
-        returnUrl: req.param( 'return_url' )
+        openRosaServer: req.body.server_url,
+        openRosaId: req.body.form_id,
+        instance: req.body.instance,
+        instanceId: req.body.instance_id,
+        returnUrl: req.body.return_url
     };
     instanceModel
         .set( survey )
@@ -195,9 +210,9 @@ function removeInstance( req, res, next ) {
 
     return instanceModel
         .remove( {
-            openRosaServer: req.param( 'server_url' ),
-            openRosaId: req.param( 'form_id' ),
-            instanceId: req.param( 'instance_id' )
+            openRosaServer: req.body.server_url,
+            openRosaId: req.body.form_id,
+            instanceId: req.body.instance_id
         } )
         .then( function( instanceId ) {
             if ( instanceId ) {
@@ -215,8 +230,9 @@ function _setIframeQueryParam( req, res, next ) {
 }
 
 function _setReturnQueryParam( req, res, next ) {
-    if ( req.param( 'return_url' ) && ( req.webformType === 'edit' || req.webformType === 'single' ) ) {
-        req.returnQueryParam = 'returnUrl=' + encodeURIComponent( decodeURIComponent( req.param( 'return_url' ) ) );
+    var returnUrl = req.body.return_url || req.query.return_url;
+    if ( returnUrl && ( req.webformType === 'edit' || req.webformType === 'single' ) ) {
+        req.returnQueryParam = 'returnUrl=' + encodeURIComponent( decodeURIComponent( returnUrl ) );
     }
     next();
 }
@@ -236,35 +252,38 @@ function _generateQueryString( params ) {
 function _generateWebformUrls( id, req ) {
     var queryString,
         obj = {},
-        baseUrl = req.protocol + '://' + req.headers.host + '/',
-        idPart = '::' + id;
+        protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol,
+        baseUrl = protocol + '://' + req.headers.host + '/',
+        idPartOnline = '::' + id,
+        idPartOffline = '#' + id,
+        offline = req.app.get( 'offline enabled' ) && !req.iframeQueryParam;
 
     req.webformType = req.webformType || 'default';
 
     switch ( req.webformType ) {
         case 'preview':
             queryString = _generateQueryString( [ req.iframeQueryParam ] );
-            obj.preview_url = baseUrl + 'preview/' + idPart + queryString;
+            obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             break;
         case 'edit':
-            queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.param( 'instance_id' ), req.returnQueryParam ] );
-            obj.edit_url = baseUrl + 'edit/' + idPart + queryString;
+            queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.body.instance_id, req.returnQueryParam ] );
+            obj.edit_url = baseUrl + 'edit/' + idPartOnline + queryString;
             break;
         case 'all':
             // non-iframe views
             queryString = _generateQueryString( [] );
-            obj.url = baseUrl + idPart + queryString;
-            obj.preview_url = baseUrl + 'preview/' + idPart + queryString;
+            obj.url = ( offline ) ? baseUrl + '_/' + idPartOffline : baseUrl + idPartOnline + queryString;
+            obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // iframe views
             queryString = _generateQueryString( [ 'iframe=true' ] );
-            obj.iframe_url = baseUrl + idPart + queryString;
-            obj.preview_iframe_url = baseUrl + 'preview/' + idPart + queryString;
+            obj.iframe_url = baseUrl + idPartOnline + queryString;
+            obj.preview_iframe_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // enketo-legacy
             obj.subdomain = '';
             break;
         default:
             queryString = _generateQueryString( [ req.iframeQueryParam ] );
-            obj.url = baseUrl + idPart + queryString;
+            obj.url = ( offline ) ? baseUrl + '_/' + idPartOffline : baseUrl + idPartOnline + queryString;
             break;
     }
 

@@ -1,0 +1,257 @@
+{
+    "advanced": {
+        "flushdb": "Verwijder Opslag"
+    },
+    "alert": {
+        "appupdated": {
+            "heading": "App Bijgewerkt!",
+            "msg": "Een nieuwe versie van deze applicatie is gedownload. Vernieuw deze pagina om de bijgewerkte versie te laden."
+        },
+        "default": {
+            "button": "Sluit",
+            "heading": "Let op"
+        },
+        "formupdated": {
+            "heading": "Enquete Bijgewerkt!",
+            "msg": "Een nieuwe versie van deze enquete is gedownload. Vernieuw deze pagina om de bijgewerkte versie te laden."
+        },
+        "loaderror": {
+            "editadvice": "Het is aanbevolen dit record niet te verander totdat dit opgelost it.",
+            "entryadvice": "Het is aanbevolen deze enquete niet te gebruiken voor het invoeren van informatie totdat dit opgelost is.",
+            "heading": "Laad Fout",
+            "msg1": "Er is een fout opgetreden tijdens het laden van deze enquete.",
+            "msg2": "Contacteer __emailLink__ met de link naar dit form en de fout beschrijving hieronder:",
+            "heading_plural": "Laad fouten",
+            "msg1_plural": "Er zijn fouten opgetreden tijdens het laden van dit form.",
+            "msg2_plural": "Contacteer __emailLink__ met de link naar deze enquete met de fout beschrijvingen hieronder:"
+        },
+        "logout": {
+            "heading": "Uitgelogd",
+            "msg": "Je bent uitgelogd."
+        },
+        "offlinesupported": {
+            "heading": "Enquete werkt offline!",
+            "msg": [
+                "Deze enquete kan nu geladen en gebruikt worden zonder een Internet verbinding op dit apparaat. Bookmark het om het makkelijk te kunnen vinden offline.",
+                "Records worden automatisch opgeslagen in de browser en toegevoegd aan de wachtlijst. Als de app online is worden de records automatisch verzonden - één voor één.",
+                "Alleen nadat een record succesvol verzonden is, wordt het verwijderd van de wachtlijst. Je kunt je browser en apparaat veilig afsluiten met records in de wachtlijst. Deze zullen er nog steeds zijn, de volgend keer deze enquete geladen wordt."
+            ]
+        },
+        "offlineunsupported": {
+            "heading": "App kan niet offline opstarten",
+            "msg": "Het opstarten van deze app offline is niet ondersteund in deze browser. Je kunt de enquete gebruiken zonder deze functie of opties bekijken om dit op te lossen.",
+            "negButton": "Gebruik het",
+            "posButton": "Laat opties zien"
+        },
+        "queuesubmissionsuccess": {
+            "msg": "__recordNames__ was succesvol verzonden",
+            "msg_plural": "__recordNames__ zijn succesvol verzonden"
+        },
+        "recordloadsuccess": {
+            "msg": "__recordName__ is geladen"
+        },
+        "recordnotfound": {
+            "msg": "Record kon niet geladen worden of was leeg."
+        },
+        "recordsavesuccess": {
+            "draftmsg": "Record opgeslagen als draft.",
+            "finalmsg": "Record aan lijst toegevoegd."
+        },
+        "submission": {
+            "msg": "Verzending gaande...",
+            "redirectmsg": "Je wordt automatisch doorverzonden als de verzending compleet is."
+        },
+        "submissionerror": {
+            "authrequiredmsg": "Identificiéring noodzakelijk. Aub identificeer __here__ in een nieuwe browser tab en probeer opnieuw.",
+            "fnfmsg": [
+                "De volgende media bestanden konden niet gevonden worden: __failedFiles__. De verzending is doorgegaan en gelukt zonder deze bestanden.",
+                "Contacteer __supportEmail__ aub om een 'bug' te rapporteren en indien mogelijk beschrijf hoe het probleem kan worden gereproduceerd. "
+            ],
+            "heading": "Verzenden Niet Succesvol"
+        },
+        "submissionsuccess": {
+            "heading": "Verzending Succesvol!",
+            "msg": "De records zijn verzonden!",
+            "redirectmsg": "Je wordt nu doorgestuurd."
+        },
+        "validationerror": {
+            "msg": "De enquete bevat fouten. Zie de vragen die rood gekleurd zijn."
+        },
+        "validationsuccess": {
+            "heading": "OK",
+            "msg": "The enquete is geldig!"
+        },
+        "xpatherror": {
+            "heading": "Formula fout",
+            "msg": "Er is een formule evaluatie fout opgetreden. Contacteer __emailLink__ met deze fout beschrijving:"
+        }
+    },
+    "confirm": {
+        "default": {
+            "heading": "Weet je het zeker?",
+            "msg": "Confirmeer deze aktie",
+            "negButton": "Annuleer",
+            "posButton": "Confirmeer"
+        },
+        "deleteall": {
+            "heading": "PANIEK!",
+            "msg": [
+                "Dit verwijderd all de opgeslagen records en alle enquetes uit de browser. De records zullen voor altijd verloren gaan. Gebruik dit alleen als noodoplossing als de browser opslag corrupt lijkt te zijn.",
+                "Sluit eerst alle andere Enketo browser tabs.",
+                "De pagine zal zich herladen. Als er een fout opduikt kan het zijn dat je deze aktie moet herhalen.",
+                "Weet je zeker dat je dit wilt doen?"
+            ],
+            "posButton": "Verwijder Alles"
+        },
+        "discardcurrent": {
+            "heading": "Niet opgeslagen edits",
+            "msg": "Er zijn niet-opgeslagen veranderingen gemaakt. Wil je een nieuw record laden zonder deze verandering te bewaren?",
+            "posButton": "Ga verder zonder op te slaan"
+        },
+        "login": {
+            "heading": "Login Noodzakelijk",
+            "msg": [
+                "Om de records te kunnen verzenden dient ingelogd te worden. Als je dit nu wilt doen wordt je doorgestuurd en gaat de on-opgeslagen information verloren.",
+                "Wil je nu inloggen of later?"
+            ],
+            "negButton": "Later",
+            "posButton": "Log nu in"
+        },
+        "print": {
+            "a4": "A4",
+            "heading": "Selecteer Print Instellingen",
+            "landscape": "Landscape",
+            "letter": "Letter (US)",
+            "msg": "Vul the informatie hieronder in om een geoptimaliseerde print versie voor te bereiden.",
+            "orientation": "Papier Orientatie",
+            "portrait": "Portrait",
+            "posButton": "Bereid Voor",
+            "psize": "Papier Formaat",
+            "reminder": "Denk er aan om dezelfde settings te gebruiken in het print menu hierna!"
+        },
+        "save": {
+            "existingerror": "Deze record naam of ID bestaat al.",
+            "hint": "Deze naam dient om makkelijk het opgeslagen bestand te kunnen vinden om het later compleet te maken.",
+            "msg": "Er zijn niet-opgeslagen veranderingen gemaakt. Wil je doorgaan zonder deze te bewaren?",
+            "name": "Record Naam",
+            "posButton": "Sla Op & Sluit",
+            "renamemsg": "Weet je zeker dat je __currentName__ naar __newName__ wilt veranderen?",
+            "unkownerror": "Een onbekende fout trad op tijdens het opslaan."
+        }
+    },
+    "contact": {
+        "admin": "Contacteer de enquete administrateur aub.",
+        "support": "Contacteer __supportEmail__ aub."
+    },
+    "enketo": {
+        "power": "Powered by"
+    },
+    "error": {
+        "code": "Fout Code: __code__",
+        "econnrefused": "Kon niet verbinden met de Server",
+        "encryptionnotsupported": "De informatie verzameld met deze enquete dient versleuteld te worden. Helaas is dit nog niet ondersteund. We bevelen aan om ODK Collect te gebruiken voor deze enquete.",
+        "instancenotfound": "Record niet gevonden. Het kan verlopen zijn.",
+        "invalidediturl": "Niet een geldig edit URL",
+        "notfoundinformlist": "Enquete met ID __formId__ niet gevonden in /formList",
+        "pagenotfound": "Pagina niet gevonden",
+        "surveyidnotactive": "Enquete met dit ID is niet langer aktief",
+        "surveyidnotfound": "Enquete met dit ID niet gevonden",
+        "unknown": "Een onbekende fout is opgetreden"
+    },
+    "feedback": {
+        "header": "Informatie"
+    },
+    "form": {
+        "chooseLanguage": "Kies een Taal",
+        "logout": "log uit",
+        "pages": {
+            "back": "Terug",
+            "end": "Ga naar het Einde",
+            "next": "Volgende",
+            "return": "Terug naar het Begin"
+        }
+    },
+    "formfooter": {
+        "savedraft": {
+            "btn": "Sla Op als Draft",
+            "label": "Sla Op als Draft"
+        },
+        "submit": {
+            "btn": "Verzend"
+        },
+        "validate": {
+            "btn": "Valideer"
+        }
+    },
+    "here": "hier",
+    "home": {
+        "msg": "__appTitle__ werkt! De Enketo enquetes zijn vanaf de __serverName__ installatie toegankelijk."
+    },
+    "langs": {
+        "ar": "Arabisch",
+        "de": "Duits",
+        "el": "Grieks",
+        "en": "Engels",
+        "es": "Spaans",
+        "he": "Hebreeuws",
+        "hi": "Hindi",
+        "km": "Khmer",
+        "nl": "Nederlands",
+        "ro": "Roemeens",
+        "supported": "Talen ondersteund:",
+        "sw": "Swahili",
+        "th": "Thai",
+        "vi": "Vietnamees"
+    },
+    "page": {
+        "modernbrowsers": {
+            "heading": "Moderne Browsers",
+            "ie": {
+                "heading": "Waarom geen liefde voor die nare ouderwetse versies van Internet Explorer?",
+                "msg": "We begrijpen dat sommige mensen, vooral degenen die werken voor een grote bureaucratie, geen toegang hebben tot the laatste en best browsers. Aangezien we weten hoe fantastisch het Web kan zijn, zijn we empatisch met de gebruikers in zo'n situatie. Normaal, zouden we proberen om hier een oplossing voor te vinden voor de populairste ouderwetse browsers. Alleen in dit geval niet omdat Enketo gebouwd is naar aanleiding van een aantal hele nieuwe technologien. Helaas hebben gebruikers met oudere browsers hierdoor pech."
+            },
+            "msg1": "Au! Sorry, je bent hier waarschijnlijk heen gestuurd omdat je browser te ouderwets is of misschien belangrijke functies heeft uitgeschakeld in 'prive mode'.",
+            "msg2": "Als je een ouderwetse browser gebruikt, raden wij aan om deze te vervangen of up-te-daten met een van de volgende prima moderne browsers:"
+        },
+        "offline": {
+            "heading": "Kan de verzochte pagina niet laden.",
+            "msg1": "Deze pagine is alleen bereikbaar als de browser een Internet verbinding heeft en de server beschikbaar is (tenzij de pagina niet bestaat)."
+        }
+    },
+    "prompt": {
+        "default": {
+            "heading": "Vul waardes in"
+        },
+        "login": {
+            "heading": "Vul je __server__ gegevens in.",
+            "password": "Wachtwoord",
+            "remember": "Onthoud op deze computer",
+            "submit": "Verzend",
+            "username": "Gebruikersnaam"
+        }
+    },
+    "record-list": {
+        "export": "Exporteer",
+        "msg1": "Records worden in je browser opgeslagen totdat ze verzonden zijn (zelfs als je het apparaat uitzet of geen Internet verbinding hebt).",
+        "msg2": "Opgeslagen records, behalve degene die als draft __icon__ gemarkeerd, worden automatisch verzonden in de achtergrond, elke 5 minuten als deze pagina open is en een Internet verbinding aanwezig is. Om een verzending te forceren tussen automatische pogingen in, klik op Verzend. ",
+        "norecords": "geen records aanwezig",
+        "title": "Records",
+        "upload": "Verzend"
+    },
+    "store": {
+        "error": {
+            "notavailable": "Browser opslag is benodigd maar niet beschikbaar, kapot, of niet beschrijfbaar. Als je in 'prive´ browsing' mode zit, schakel over naar de normale mode. Of probeer een ander browser. (fout: __error__)"
+        }
+    },
+    "submission": {
+        "http0": "Gefaald (Offline?)",
+        "http2xx": "Onverwacht antwoord tijdens record verzending.",
+        "http400": "Data server wilde het record niet accepteren.",
+        "http403": "Niet toegestaan om records te verzenden naar deze server.",
+        "http404": "Ontvangst service niet gevonden op data server.",
+        "http413": "Record is te groot.",
+        "http4xx": "Onbekend ontvangst probleem op de data server.",
+        "http500": "De data server voor deze enquete is niet bereikbaar. Probeer het later nog een keer of contacteer __supportEmail__."
+    },
+    "version": "versie:"
+}

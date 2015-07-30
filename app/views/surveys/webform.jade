@@ -1,5 +1,8 @@
 extends ../layout
 
+block redirect
+  <!--[if lt IE 10 ]><script>window.location = '/modern-browsers';</script><![endif]-->
+
 block style
   link(rel='stylesheet', media='all', type='text/css' href='/css/theme-#{defaultTheme}.css') 
   link(rel='stylesheet', media='print', type='text/css' href='/css/theme-#{defaultTheme}.print.css') 
@@ -12,6 +15,10 @@ block script
     script(data-main="/js/src/main-webform#{suffix}.js", src="/lib/bower-components/requirejs/require.js")
  
 block content
+  if manifest
+    .alert-box.info(style="text-align: center;") Offline-enabled forms are experimental. Use only for testing. 
+      a(href="https://github.com/kobotoolbox/enketo-express/issues" target="_top") Report new bugs
+      | .
   .main
     article.paper
       include component/_form-header
@@ -19,5 +26,6 @@ block content
       unless form
         div.form__loader
       include component/_form-footer
-    
-  include component/_dialogs
+  if manifest
+    include component/_side-slider
+  include component/_feedback-bar

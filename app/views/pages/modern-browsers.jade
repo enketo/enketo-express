@@ -2,23 +2,12 @@ extends ../layout
 
 block content
 
-  h1 Modern Browsers
-  p Ouch! Sorry, you were probably sent here because your browser is outdated or 
-    | perhaps it has its key features disabled by using 'private browsing' mode.
-  p If you are using an outdated browser, we 
-    strong recommend 
-    | upgrading 
-    | to a recent version of one of the following excellent modern browsers:        
+  h1= t("page.modernbrowsers.heading")
+  p= t("page.modernbrowsers.msg1") 
+  p= t("page.modernbrowsers.msg2")         
     ul
       li: a(href="http://www.google.com/chrome/",title="Chrome download page") Chrome
-      li: a(href="http://www.apple.com/safari/",title="Safari download page") Safari
       li: a(href="http://www.mozilla.com/",title="Firefox download page") Firefox
       li: a(href="http://www.opera.com/", title="Opera download page") Opera
-  h2 Why no love for those evil outdated versions of Internet Explorer?
-  p We understand that some people, especially those working for large bureaucracies, do 
-    | not have access to the latest and greatest browsers. Since we know how great the web 
-    | could be with the right tools, we have great empathy for users in that unfortunate 
-    | situation. Normally, we would provide workarounds to support some populair outdated 
-    | browsers. However, the reason Enketo exists is the availability of some very fancy  
-    | cutting-edge technologies. Unfortunately, users of older browsers are therefore out 
-    | of luck.
+  h2= t("page.modernbrowsers.ie.heading")
+  p= t("page.modernbrowsers.ie.msg")

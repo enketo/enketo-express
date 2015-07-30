@@ -2,6 +2,7 @@
 
 var communicator = require( '../lib/communicator' ),
     surveyModel = require( '../models/survey-model' ),
+    userModel = require( '../models/user-model' ),
     instanceModel = require( '../models/instance-model' ),
     utils = require( '../lib/utils' ),
     request = require( 'request' ),
@@ -47,35 +48,29 @@ router
  * @return {[type]}        [description]
  */
 function submit( req, res, next ) {
-    var paramName = req.app.get( "query parameter to pass to submission" ),
+    var server, submissionUrl, credentials, options,
+        paramName = req.app.get( "query parameter to pass to submission" ),
         paramValue = req.query[ paramName ],
         query = ( paramValue ) ? '?' + paramName + '=' + paramValue : '';
 
     surveyModel.get( req.enketoId )
         .then( function( survey ) {
-            var submissionUrl = survey.openRosaServer + '/submission' + query,
-                submissionRequest = request( submissionUrl );
+            submissionUrl = communicator.getSubmissionUrl( survey.openRosaServer ) + query;
+            credentials = userModel.getCredentials( req );
 
-            // pipe the request
-            req.pipe( submissionRequest ).pipe( res );
-
-            // The hack below is to workaround an issue in the (KoBo) VM where the response never closes (until it times out). 
-            // For some reason the response body is never piped under certain (fast | race) conditions. 
-            var raceConditionHack = function() {
-                setTimeout( function() {
-                    // if the headers have been sent (not an exact check)
-                    if ( res.headersSent ) {
-                        // the check below seems to always be true
-                        if ( req.socket && !req.socket.destroyed ) {
-                            debug( 'manually closing socket in case it is still open' );
-                            req.socket.destroy();
-                        }
-                    } else {
-                        raceConditionHack();
-                    }
-                }, 1000 );
+            // first check if authentication is required and if so get the Basic or Digest Authorization header
+            return communicator.getAuthHeader( submissionUrl, credentials );
+        } )
+        .then( function( authHeader ) {
+            options = {
+                url: submissionUrl,
+                headers: authHeader ? {
+                    'Authorization': authHeader
+                } : {}
             };
-            raceConditionHack();
+
+            // pipe the request 
+            req.pipe( request( options ) ).pipe( res );
 
         } )
         .catch( next );
@@ -83,6 +78,10 @@ function submit( req, res, next ) {
 
 function maxSize( req, res, next ) {
     surveyModel.get( req.enketoId )
+        .then( function( survey ) {
+            survey.credentials = userModel.getCredentials( req );
+            return survey;
+        } )
         .then( communicator.getMaxSize )
         .then( function( maxSize ) {
             res.json( {

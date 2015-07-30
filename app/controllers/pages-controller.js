@@ -11,10 +11,17 @@ module.exports = function( app ) {
 router
     .get( '/', function( req, res ) {
         res.render( 'index', {
-            title: req.app.get( 'app name' ) || 'Enketo Smart Paper',
-            openrosa: req.app.get( 'linked form and data server' ).name || '?'
+            openrosa: req.app.get( 'linked form and data server' ).name || '?',
+            languages: req.app.get( 'languages supported' )
         } );
     } )
     .get( '/modern-browsers', function( req, res ) {
-        res.render( 'pages/modern-browsers', {} );
+        res.render( 'pages/modern-browsers', {
+            title: "Modern Browsers"
+        } );
+    } )
+    .get( '/offline', function( req, res ) {
+        res.render( 'pages/offline', {
+            title: "Offline"
+        } );
     } );

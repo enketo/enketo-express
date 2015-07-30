@@ -1,10 +1,9 @@
 "use strict";
 
-var communicator = require( '../lib/communicator' ),
-    surveyModel = require( '../models/survey-model' ),
+var surveyModel = require( '../models/survey-model' ),
     instanceModel = require( '../models/instance-model' ),
     account = require( '../models/account-model' ),
-    auth = require( '../lib/basic-auth' ),
+    auth = require( 'basic-auth' ),
     express = require( 'express' ),
     router = express.Router(),
     debug = require( 'debug' )( 'api-controller' );
@@ -25,6 +24,7 @@ router
     .all( '*', _setDefaultsQueryParam )
     .all( '/*/iframe', _setIframeQueryParams )
     .all( '/survey/all', _setIframeQueryParams )
+    .all( '/surveys/list', _setIframeQueryParams )
     .all( '/survey/preview*', function( req, res, next ) {
         req.webformType = 'preview';
         next();
@@ -33,14 +33,31 @@ router
         req.webformType = 'all';
         next();
     } )
+    .all( '/surveys/list', function( req, res, next ) {
+        req.webformType = 'all';
+        next();
+    } )
     .all( '/instance*', function( req, res, next ) {
         req.webformType = 'edit';
         next();
     } )
+    .all( '/survey/offline', function( req, res, next ) {
+        var error;
+        if ( req.app.get( 'offline enabled' ) ) {
+            req.webformType = 'offline';
+            next();
+        } else {
+            error = new Error( 'Not Allowed.' );
+            error.status = 405;
+            next( error );
+        }
+    } )
     .all( '*', _setReturnQueryParam )
     .get( '/survey', getExistingSurvey )
+    .get( '/survey/offline', getExistingSurvey )
     .get( '/survey/iframe', getExistingSurvey )
     .post( '/survey', getNewOrExistingSurvey )
+    .post( '/survey/offline', getNewOrExistingSurvey )
     .post( '/survey/iframe', getNewOrExistingSurvey )
     .delete( '/survey', deactivateSurvey )
     .get( '/survey/preview', getExistingSurvey )
@@ -57,7 +74,7 @@ router
     .post( '/instance/iframe', cacheInstance )
     .delete( '/instance', removeInstance )
     .all( '*', function( req, res, next ) {
-        var error = new Error( 'Not allowed' );
+        var error = new Error( 'Not allowed.' );
         error.status = 405;
         next( error );
     } );
@@ -67,7 +84,7 @@ function authCheck( req, res, next ) {
     var error,
         creds = auth( req ),
         key = ( creds ) ? creds.name : undefined,
-        server = req.param( 'server_url' );
+        server = req.body.server_url || req.query.server_url;
 
     // set content-type to json to provide appropriate json Error responses
     res.set( 'Content-Type', 'application/json' );
@@ -94,14 +111,14 @@ function getExistingSurvey( req, res, next ) {
 
     return surveyModel
         .getId( {
-            openRosaServer: req.param( 'server_url' ),
-            openRosaId: req.param( 'form_id' )
+            openRosaServer: req.query.server_url,
+            openRosaId: req.query.form_id
         } )
         .then( function( id ) {
             if ( id ) {
                 _render( 200, _generateWebformUrls( id, req ), res );
             } else {
-                _render( 404, 'Survey not found', res );
+                _render( 404, 'Survey not found.', res );
             }
         } )
         .catch( next );
@@ -110,9 +127,9 @@ function getExistingSurvey( req, res, next ) {
 function getNewOrExistingSurvey( req, res, next ) {
     var error, body, status,
         survey = {
-            openRosaServer: req.param( 'server_url' ),
-            openRosaId: req.param( 'form_id' ),
-            theme: req.param( 'theme' )
+            openRosaServer: req.body.server_url || req.query.server_url,
+            openRosaId: req.body.form_id || req.query.form_id,
+            theme: req.body.theme || req.query.theme
         };
 
     return surveyModel
@@ -126,7 +143,7 @@ function getNewOrExistingSurvey( req, res, next ) {
                     if ( id ) {
                         _render( status, _generateWebformUrls( id, req ), res );
                     } else {
-                        _render( 404, 'Survey not found', res );
+                        _render( 404, 'Survey not found.', res );
                     }
                 } );
         } )
@@ -138,15 +155,15 @@ function deactivateSurvey( req, res, next ) {
 
     return surveyModel
         .update( {
-            openRosaServer: req.param( 'server_url' ),
-            openRosaId: req.param( 'form_id' ),
+            openRosaServer: req.body.server_url,
+            openRosaId: req.body.form_id,
             active: false
         } )
         .then( function( id ) {
             if ( id ) {
                 _render( 204, null, res );
             } else {
-                _render( 404, 'Survey not found', res );
+                _render( 404, 'Survey not found.', res );
             }
         } )
         .catch( next );
@@ -156,7 +173,7 @@ function getNumber( req, res, next ) {
     var error, body;
 
     return surveyModel
-        .getNumber( req.param( 'server_url' ) )
+        .getNumber( req.body.server_url || req.query.server_url )
         .then( function( number ) {
             if ( number ) {
                 _render( 200, {
@@ -165,25 +182,41 @@ function getNumber( req, res, next ) {
                 }, res );
             } else {
                 // this cannot be reached I think
-                _render( 404, 'No surveys found', res );
+                _render( 404, 'No surveys found.', res );
             }
         } )
         .catch( next );
 }
 
 function getList( req, res, next ) {
-    _render( 500, 'This API point is not implemented yet', res );
+    var obj;
+
+    return surveyModel
+        .getList( req.body.server_url || req.query.server_url )
+        .then( function( list ) {
+            list = list.map( function( survey ) {
+                obj = _generateWebformUrls( survey.enketoId, req );
+                obj.form_id = survey.openRosaId;
+                obj.server_url = survey.openRosaServer;
+                return obj;
+            } );
+            _render( 200, {
+                code: 200,
+                forms: list
+            }, res );
+        } )
+        .catch( next );
 }
 
 function cacheInstance( req, res, next ) {
     var error, body, survey;
 
     survey = {
-        openRosaServer: req.param( 'server_url' ),
-        openRosaId: req.param( 'form_id' ),
-        instance: req.param( 'instance' ),
-        instanceId: req.param( 'instance_id' ),
-        returnUrl: req.param( 'return_url' )
+        openRosaServer: req.body.server_url,
+        openRosaId: req.body.form_id,
+        instance: req.body.instance,
+        instanceId: req.body.instance_id,
+        returnUrl: req.body.return_url
     };
     instanceModel
         .set( survey )
@@ -199,26 +232,25 @@ function removeInstance( req, res, next ) {
 
     return instanceModel
         .remove( {
-            openRosaServer: req.param( 'server_url' ),
-            openRosaId: req.param( 'form_id' ),
-            instanceId: req.param( 'instance_id' )
+            openRosaServer: req.body.server_url,
+            openRosaId: req.body.form_id,
+            instanceId: req.body.instance_id
         } )
         .then( function( instanceId ) {
             if ( instanceId ) {
                 _render( 204, null, res );
             } else {
-                _render( 404, 'Record not found', res );
+                _render( 404, 'Record not found.', res );
             }
         } )
         .catch( next );
 }
 
 function _setDefaultsQueryParam( req, res, next ) {
-    var map,
-        queryParam = '';
+    var queryParam = '',
+        map = req.body.defaults || req.query.defaults;
 
-    if ( req.param( 'defaults' ) ) {
-        map = req.param( 'defaults' );
+    if ( map ) {
         for ( var prop in map ) {
             if ( map.hasOwnProperty( prop ) ) {
                 queryParam += 'd[' + encodeURIComponent( decodeURIComponent( prop ) ) + ']' + '=' +
@@ -232,16 +264,20 @@ function _setDefaultsQueryParam( req, res, next ) {
 }
 
 function _setIframeQueryParams( req, res, next ) {
+    var parentWindowOrigin = req.body.parent_window_origin || req.query.parent_window_origin;
+
     req.iframeQueryParam = 'iframe=true';
-    if ( req.param( 'parent_window_origin' ) ) {
-        req.parentWindowOriginParam = 'parentWindowOrigin=' + encodeURIComponent( decodeURIComponent( req.param( 'parent_window_origin' ) ) );
+    if ( parentWindowOrigin ) {
+        req.parentWindowOriginParam = 'parentWindowOrigin=' + encodeURIComponent( decodeURIComponent( parentWindowOrigin ) );
     }
     next();
 }
 
 function _setReturnQueryParam( req, res, next ) {
-    if ( req.param( 'return_url' ) && ( req.webformType === 'edit' || req.webformType === 'single' ) ) {
-        req.returnQueryParam = 'returnUrl=' + encodeURIComponent( decodeURIComponent( req.param( 'return_url' ) ) );
+    var returnUrl = req.body.return_url || req.query.return_url;
+
+    if ( returnUrl && ( req.webformType === 'edit' || req.webformType === 'single' ) ) {
+        req.returnQueryParam = 'returnUrl=' + encodeURIComponent( decodeURIComponent( returnUrl ) );
     }
     next();
 }
@@ -261,36 +297,42 @@ function _generateQueryString( params ) {
 function _generateWebformUrls( id, req ) {
     var queryString,
         obj = {},
-        baseUrl = req.protocol + '://' + req.headers.host + '/',
-        idPart = '::' + id;
+        protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol,
+        baseUrl = protocol + '://' + req.headers.host + '/',
+        idPartOnline = '::' + id,
+        idPartOffline = '#' + id;
 
     req.webformType = req.webformType || 'default';
 
     switch ( req.webformType ) {
         case 'preview':
             queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
-            obj.preview_url = baseUrl + 'preview/' + idPart + queryString;
+            obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             break;
         case 'edit':
             // no defaults query parameter in edit view
-            queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.param( 'instance_id' ), req.parentWindowOriginParam, req.returnQueryParam ] );
-            obj.edit_url = baseUrl + 'edit/' + idPart + queryString;
+            queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.body.instance_id, req.parentWindowOriginParam, req.returnQueryParam ] );
+            obj.edit_url = baseUrl + 'edit/' + idPartOnline + queryString;
             break;
         case 'all':
             // non-iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam ] );
-            obj.url = baseUrl + idPart + queryString;
-            obj.preview_url = baseUrl + 'preview/' + idPart + queryString;
+            obj.url = baseUrl + idPartOnline + queryString;
+            obj.offline_url = baseUrl + '_/' + idPartOffline;
+            obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // iframe views
             queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
-            obj.iframe_url = baseUrl + idPart + queryString;
-            obj.preview_iframe_url = baseUrl + 'preview/' + idPart + queryString;
-            // enketo-legacy
-            obj.subdomain = '';
+            obj.iframe_url = baseUrl + idPartOnline + queryString;
+            obj.preview_iframe_url = baseUrl + 'preview/' + idPartOnline + queryString;
+            // rest
+            obj.enketo_id = id;
+            break;
+        case 'offline':
+            obj.offline_url = baseUrl + '_/' + idPartOffline;
             break;
         default:
             queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
-            obj.url = baseUrl + idPart + queryString;
+            obj.url = baseUrl + idPartOnline + queryString;
             break;
     }
 

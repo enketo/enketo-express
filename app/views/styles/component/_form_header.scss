@@ -11,10 +11,8 @@ $offline-color: #d15200;
 }
 
 .form-header {
-    //height: 60px;
-    //min-height: 68px;
+    text-align: left; // even for rtl UI
     .branding {
-        //display: inline-block;
         margin: 0;
         height: 34px;
         display: inline-table;
@@ -61,17 +59,27 @@ $offline-color: #d15200;
     @include transition-slow;
 }
 
+[dir="rtl"] {
+    .offline-enabled{
+        top: 0px;
+    }
+    .form-progress {
+        right: 0;
+        left: auto;
+    }
+}
+
 .offline-enabled {
     @include transition-fast;
     display: block;
     position: fixed;
     top: 3px;
     left: 0;
-    .offline-enabled-icon {
+    .offline-enabled__icon {
         width: 34px;
         height: 34px;
         background-color: $offline-color;
-        //background-image: url($images-path + "offline-enabled.png");
+        background-image: url("/images/offline-enabled.png");
         background-repeat: no-repeat;
         opacity: 1;
         @include transition-slow(opacity, 3s);
@@ -79,12 +87,13 @@ $offline-color: #d15200;
             height: 0;
             opacity: 0;
             width: 0;
+            background: none;
         }
         &:hover {
             opacity: 0.8;
         }
     }
-    .queue-length {
+    .offline-enabled__queue-length {
         cursor: pointer;
         margin-top: 1px;
         width: 34px;
@@ -163,7 +172,7 @@ $offline-color: #d15200;
         position: static;
         display: inline-block;
         float: left;
-        .offline-enabled-icon {
+        &__icon {
             float: left;
             margin-right: 10px;
             display: block;
@@ -171,7 +180,7 @@ $offline-color: #d15200;
                 margin-left: 0;
             }
         }
-        .queue-length {
+        &__queue-length {
             margin-top: 0;
             margin-left: -10px;
             margin-right: 10px;

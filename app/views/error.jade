@@ -6,6 +6,6 @@ block style
 block content
   h1.error= message
     if code
-      span.status-code Error Code: #{code}
+      span.status-code= t('error.code', {code: code})
   if stack
     pre #{stack}

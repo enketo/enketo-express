@@ -11,5 +11,5 @@ module.exports = function( app ) {
 
 router
     .get( '/', function( req, res, next ) {
-        res.json( config.client() );
+        res.json( config.client );
     } );

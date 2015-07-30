@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function( grunt ) {
-    var JS_INCLUDE = [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/*.spec.js", "!**/*.min.js", "!public/lib/bower-components/**/*.js", "!app/lib/martijnr-foundation/**/*.js", "!public/lib/martijnr-foundation/**/*.js" ];
+    var JS_INCLUDE = [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/**/*.spec.js", "!**/*.min.js", "!public/lib/**/*.js", "!app/lib/martijnr-foundation/**/*.js" ];
     // show elapsed time at the end
     require( 'time-grunt' )( grunt );
     // load all grunt tasks
@@ -31,7 +31,7 @@ module.exports = function( grunt ) {
                     },
                     env: {
                         NODE_ENV: 'development',
-                        DEBUG: '*, -express:*, -send, -compression'
+                        DEBUG: '*, -express:*, -send, -compression, -body-parser:*'
                     }
                 }
             }
@@ -50,12 +50,25 @@ module.exports = function( grunt ) {
         },
         watch: {
             sass: {
-                files: [ '.rebooted', 'config.json', 'app/views/styles/**/*.scss', 'app/lib/enketo-core/src/**/*.scss', 'app/views/**/*.jade' ],
+                files: [ '.rebooted', 'config/config.json', 'app/views/styles/**/*.scss', 'app/lib/enketo-core/src/**/*.scss', 'app/views/**/*.jade' ],
                 tasks: [ 'sass' ],
                 options: {
                     spawn: true,
                     livereload: true
                 }
+            },
+            language: {
+                files: [ 'app/views/**/*.jade', 'app/controllers/**/*.js', 'app/models/**/*.js', 'public/js/src/**/*.js' ],
+                tasks: [ 'shell:translation' ]
+            }
+        },
+        shell: {
+            translation: {
+                command: [
+                    'cd locales',
+                    'gulp',
+                    'cd ..'
+                ].join( '&&' )
             }
         },
         jsbeautifier: {
@@ -79,15 +92,31 @@ module.exports = function( grunt ) {
             },
             all: JS_INCLUDE
         },
+        // test server JS
         mochaTest: {
             all: {
                 options: {
-                    reporter: 'spec'
+                    reporter: 'dot'
                 },
-                src: [ 'test/**/*.spec.js' ]
+                src: [ 'test/server/**/*.spec.js' ]
             },
             account: {
-                src: [ 'test/account-*.spec.js' ]
+                src: [ 'test/server/account-*.spec.js' ]
+            }
+        },
+        // test client JS
+        karma: {
+            options: {
+                singleRun: true,
+                reporters: [ 'dots' ]
+            },
+            headless: {
+                configFile: 'test/client/config/headless-karma.conf.js',
+                browsers: [ 'PhantomJS' ]
+            },
+            browsers: {
+                configFile: 'test/client/config/browser-karma.conf.js',
+                browsers: [ 'Chrome', 'ChromeCanary', 'Firefox', 'Opera', /*'Safari'*/ ]
             }
         },
         requirejs: {
@@ -119,18 +148,9 @@ module.exports = function( grunt ) {
                 files: [ {
                     overwrite: false,
                     expand: true,
-                    cwd: 'app/lib/enketo-core',
-                    src: [ '*' ],
-                    dest: 'public/lib/enketo-core'
-                } ]
-            },
-            foundation: {
-                files: [ {
-                    overwrite: false,
-                    expand: true,
-                    cwd: 'app/lib/martijnr-foundation',
-                    src: [ '*' ],
-                    dest: 'public/lib/martijnr-foundation'
+                    cwd: 'app/lib/',
+                    src: [ 'enketo-core' ],
+                    dest: 'public/lib/'
                 } ]
             }
         },
@@ -142,9 +162,9 @@ module.exports = function( grunt ) {
     } );
 
     function getWebformCompileOptions( type ) {
-        //add widgets js and widget config.json files
-        var widgets = grunt.file.readJSON( './config/config.json' ).widgets;
-        widgets.forEach( function( widget, index, arr ) {
+        // determine all widget js resources
+        var widgetResources = [].concat( require( './app/models/config-model' ).server.widgets );
+        widgetResources.forEach( function( widget, index, arr ) {
             arr.push( 'text!' + widget.substr( 0, widget.lastIndexOf( '/' ) + 1 ) + 'config.json' );
         } );
         type = ( type ) ? '-' + type : '';
@@ -152,7 +172,7 @@ module.exports = function( grunt ) {
             options: {
                 name: "../main-webform" + type,
                 out: "public/js/webform" + type + "-combined.min.js",
-                include: [ /*'core-lib/require'*/ '../../../../public/lib/bower-components/requirejs/require' ].concat( widgets )
+                include: [ '../../../../public/lib/bower-components/requirejs/require' ].concat( widgetResources )
             }
         };
     }
@@ -161,7 +181,7 @@ module.exports = function( grunt ) {
         var clientConfigPath = "public/temp-client-config.json";
         if ( task === 'create' ) {
             var config = require( './app/models/config-model' );
-            grunt.file.write( clientConfigPath, JSON.stringify( config.client() ) );
+            grunt.file.write( clientConfigPath, JSON.stringify( config.client ) );
             grunt.log.writeln( 'File ' + clientConfigPath + ' created' );
         } else if ( task === 'remove' ) {
             grunt.file.delete( clientConfigPath );
@@ -171,6 +191,6 @@ module.exports = function( grunt ) {
 
     grunt.registerTask( 'default', [ 'symlink', 'compile' ] );
     grunt.registerTask( 'compile', [ 'sass', 'client-config-file:create', 'requirejs', 'client-config-file:remove' ] );
-    grunt.registerTask( 'test', [ 'env:test', 'symlink', 'mochaTest', 'jsbeautifier:test', 'jshint', 'compile' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'symlink', 'compile', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
     grunt.registerTask( 'develop', [ 'concurrent:develop' ] );
 };

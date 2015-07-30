@@ -1,0 +1,257 @@
+{
+    "advanced": {
+        "flushdb": "Speicher löschen"
+    },
+    "alert": {
+        "appupdated": {
+            "heading": "App aktualisiert!",
+            "msg": "Eine neue Version dieser Anwendung wurde heruntergeladen. Aktualisieren Sie diese Seite, um die aktualisierte Version zu laden."
+        },
+        "default": {
+            "button": "Schließen",
+            "heading": "Benachrichtigung"
+        },
+        "formupdated": {
+            "heading": "Formular aktualisiert!",
+            "msg": "Eine neue Version dieser Anwendung wurde heruntergeladen. Aktualisieren Sie diese Seite, um die aktualisierte Version zu laden."
+        },
+        "loaderror": {
+            "editadvice": "Es wird empfohlen, diesen Eintrag nicht zu bearbeiten bis dieser Fehler behoben wurde.",
+            "entryadvice": "Es wird empfohlen, dieses Formular für die Dateneingabe verwenden, bis das Problem behoben wurde.",
+            "heading": "Ladefehler",
+            "msg1": "Fehler beim Laden des Formulars aufgetreten.",
+            "msg2": "Bitte senden Sie eine E-Mail mit der Adresse dieser Seite und die untenstehende Fehlermeldung an __emailLink__.",
+            "heading_plural": "Ladefehler",
+            "msg1_plural": "Fehler beim Laden des Formulars aufgetreten.",
+            "msg2_plural": "Bitte senden Sie eine E-Mail mit der Adresse dieser Seite und die untenstehende Fehlermeldungen an __emailLink__."
+        },
+        "logout": {
+            "heading": "Abmelden",
+            "msg": "Sie wurden abgemeldet."
+        },
+        "offlinesupported": {
+            "heading": "Formular funktioniert offline!",
+            "msg": [
+                "Dieses Formular kann jetzt geladen und ohne Internetverbindung auf diesem Gerät verwendet werden. Speichern Sie es als Lesezeichen um es später einfach offline zu öffnen.",
+                "Datensätze werden automatisch gespeichert und in die Warteschlange gestellt bis in Ihrem Browser eine Internetverbindung verfügbar ist. Wenn Sie wieder online sind werden die Datensätze automatisch versandt - einer nach dem anderen.",
+                "Erst nachdem der Datensatz erfolgreich versandt wurde wird er aus der Warteschlange entfernt. Sie können Ihren Browser in der Zwischenzeit problemlos schließen oder Ihr Gerät ausschalten. Die Datensätze werden noch immer da sein wenn Sie das nächste Mal dieses Formular laden."
+            ]
+        },
+        "offlineunsupported": {
+            "heading": "Anwendung kann nicht offline gestartet werden",
+            "msg": "Ihr Browser unterstützt keine Offline-Anwendungen. Sie können dieses Formular auch ohne diese Funktion verwenden oder eine der folgenden Optionen als Lösung auswählen.",
+            "negButton": "Benutzen",
+            "posButton": "Optionen anzeigen"
+        },
+        "queuesubmissionsuccess": {
+            "msg": "__recordNames__ wurde erfolgreich verschickt",
+            "msg_plural": "__recordNames__ wurden erfolgreich übermittelt"
+        },
+        "recordloadsuccess": {
+            "msg": "__recordName__ wurde geladen"
+        },
+        "recordnotfound": {
+            "msg": "Datensatz konnte nicht abgerufen werden oder enthielt keine Daten. "
+        },
+        "recordsavesuccess": {
+            "draftmsg": "Datensatz als Entwurf gespeichert.",
+            "finalmsg": "Datensatz wurde für den Versand in die Warteschlange gestellt."
+        },
+        "submission": {
+            "msg": "Sendet...",
+            "redirectmsg": "Sie werden automatisch nach dem Versand umgeleitet."
+        },
+        "submissionerror": {
+            "authrequiredmsg": "Authentifizierung erforderlich. Bitte melden Sie sich __here__ in einem anderen Browser-Tab an, und versuchen Sie es erneut.",
+            "fnfmsg": [
+                "Die folgenden Mediendateien konnte nicht abgerufen werden: __failedFiles__. Die Speicherung wurde ohne diese Dateien durchgeführt.",
+                "Bitte kontaktieren Sie den Support per E-Mail, um einen Fehler zu melden und wenn möglich zu erklären, wie das Problem reproduziert werden kann."
+            ],
+            "heading": "Versand fehlgeschlagen"
+        },
+        "submissionsuccess": {
+            "heading": "Versand erfolgreich",
+            "msg": "Ihre Daten wurden gesendet!",
+            "redirectmsg": "Sie werden jetzt weitergeleitet."
+        },
+        "validationerror": {
+            "msg": "Das formular enthält Fehler. Bitte beachten Sie die rot markierten Felder."
+        },
+        "validationsuccess": {
+            "heading": "OK",
+            "msg": "Formular ist gültig!"
+        },
+        "xpatherror": {
+            "heading": "Formel-Fehler",
+            "msg": "Ein Formelauswertungsfehler ist aufgetreten. Bitte kontaktieren Sie __emailLink__ mit diesem Fehler:"
+        }
+    },
+    "confirm": {
+        "default": {
+            "heading": "Sind Sie sicher?",
+            "msg": "Bitte bestätigen Sie diese Aktion",
+            "negButton": "Abbrechen",
+            "posButton": "Bestätigen"
+        },
+        "deleteall": {
+            "heading": "PANIK!",
+            "msg": [
+                "Hierdurch werden alle Ihre Daten in der Warteschlange und alle Ihre Formulare aus dem Browserspeicher entfernt. Die Daten sind dann für immer verloren. Verwenden Sie diese Funktion nur als letzte Option wenn der Browserspeicher beschädigt wurde.",
+                "Schließen Sie zuerst alle anderen Enketo Tabs.",
+                "Die Seite wird neu geladen. Wenn Sie einen Fehler sehen, müssen Sie diese Aktion wiederholen.",
+                "Sind Sie sicher, dass Sie dies tun wollen?"
+            ],
+            "posButton": "Alles löschen"
+        },
+        "discardcurrent": {
+            "heading": "Nicht gespeicherte Änderungen",
+            "msg": "Das aktuelle Formular enthält nicht gespeicherte Änderungen.  Möchten Sie einen anderen Eintrag öffnen ohne Ihre Änderungen im aktuellen Formular zu speichern?",
+            "posButton": "Weiter ohne Speichern"
+        },
+        "login": {
+            "heading": "Anmeldung erforderlich",
+            "msg": [
+                "Um Ihre Daten in der Warteschlange einzureichen, müssen Sie sich anmelden. Wenn Sie dies jetzt tun wollen, werden Sie weitergeleitet und verlieren nicht gespeicherte Informationen.",
+                "Möchten Sie sich jetzt oder später anmelden?"
+            ],
+            "negButton": "später",
+            "posButton": "Jetzt anmelden"
+        },
+        "print": {
+            "a4": "A4",
+            "heading": "Druckeinstellungen auswählen",
+            "landscape": "Querformat",
+            "letter": "Letter",
+            "msg": "Um einen optimierten Druck vorzubereiten, wählen Sie bitte die Druckeinstellungen nachfolgend",
+            "orientation": "Papierausrichtung",
+            "portrait": "Hochformat",
+            "posButton": "Vorbereitung",
+            "psize": "Papierformat",
+            "reminder": "Denken Sie daran danach die gleichen Druckeinstellungen im Druckmenü des Browsers zu setzen!"
+        },
+        "save": {
+            "existingerror": "Dieser Datensatz oder die ID sind bereits vorhanden.",
+            "hint": "Dieser Name hilft Ihnen um später Ihren Entwurf dieses Datensatzes zu finden und fertigzustellen.",
+            "msg": "Es gibt ungesicherte Änderungen. Möchten Sie ohne zu speichern fortfahren?",
+            "name": "Datensatzname",
+            "posButton": "Speichern & Schließen",
+            "renamemsg": "Sind Sie sicher, dass Sie __currentName__ in __newName__ umbenennen wollen?",
+            "unkownerror": "Beim Speichern is ein unbekannter Fehler aufgetreten."
+        }
+    },
+    "contact": {
+        "admin": "Kontaktieren Sie den Ersteller der Umfrage bitte.",
+        "support": "Bitte kontaktieren Sie __supportEmail__'"
+    },
+    "enketo": {
+        "power": "Bereitgestellt von"
+    },
+    "error": {
+        "code": "Fehlercode: __code__",
+        "econnrefused": "Konnte nicht mit Server verbinden",
+        "encryptionnotsupported": "Dieses Formular erfordert lokale Verschlüsselung von Datensätzen. Leider wird dies noch nicht unterstützt. Wir empfehlen die Verwendung von ODK Collect für die Datensammlung mit diesem Formular.",
+        "instancenotfound": "Datensatz nicht vorhanden. Er ist wahrscheinlich abgelaufen.",
+        "invalidediturl": "Keine gültige Bearbeitungs-URL",
+        "notfoundinformlist": "Formular mit ID __formId__ wurde nicht in /formList gefunden",
+        "pagenotfound": "Seite nicht gefunden",
+        "surveyidnotactive": "Umfrage mit dieser ID ist nicht mehr aktiv",
+        "surveyidnotfound": "Umfrage mit dieser ID nicht gefunden",
+        "unknown": "Ein unbekannter Fehler ist aufgetreten"
+    },
+    "feedback": {
+        "header": "Information"
+    },
+    "form": {
+        "chooseLanguage": "Sprache auswählen",
+        "logout": "Abmelden",
+        "pages": {
+            "back": "Zurück",
+            "end": "Ans Ende gehen",
+            "next": "Weiter",
+            "return": "Zurück zum Anfang"
+        }
+    },
+    "formfooter": {
+        "savedraft": {
+            "btn": "Entwurf speichern",
+            "label": "Als Entwurf speichern"
+        },
+        "submit": {
+            "btn": "Senden"
+        },
+        "validate": {
+            "btn": "Prüfen"
+        }
+    },
+    "here": "hier",
+    "home": {
+        "msg": "__appTitle__ läuft! Bitte besuchen Sie Enketo Formulare von Ihrer __serverName__ Installation."
+    },
+    "langs": {
+        "ar": "Arabisch",
+        "de": "Deutsch",
+        "el": "Griechisch",
+        "en": "Englisch",
+        "es": "Spanisch",
+        "he": "Hebräisch",
+        "hi": "Indisch",
+        "km": "Khmer",
+        "nl": "Niederländisch",
+        "ro": "Rumänisch",
+        "supported": "Unterstützte Sprachen:",
+        "sw": "Suaheli",
+        "th": "Thailändisch",
+        "vi": "Vietnamesisch"
+    },
+    "page": {
+        "modernbrowsers": {
+            "heading": "Moderne Browser",
+            "ie": {
+                "heading": "Warum wir die bösen veralteten Versionen von Internet Explorer nicht lieben?",
+                "msg": "Wir verstehen, dass einige Leute, vor allem diejenigen, die für große Institutionen arbeiten, keinen Zugang zu den neuesten und besten Browsern haben. Da wir wissen, wie großartig das Web mit den richtigen Programmen sein könnte, haben wir großes Mitgefühl für Benutzer in dieser traurigen Lage. Normalerweise würden wir versuchen, provisorische Lösungen bereitzustellen um einige beliebte veralteten Browser zu unterstützen. Allerdings existiert Enketo um mehrere nagelneue Technologien zu verwenden. Leider haben die Benutzer dieser ältereren Browser daher kein Glück."
+            },
+            "msg1": "Autsch! Leider wurden Sie wahrscheinlich hierher geschickt, weil Ihr Browser veraltet ist. Oder vielleicht haben Sie einige Browserfunktionen mit Hilfe des \"Privates Surfen\" deaktiviert.",
+            "msg2": "Wenn Sie einen veralteten Browser verwenden, empfehlen wir Ihnen ein Upgrade auf eine neuere Version eines der folgenden ausgezeichneten modernen Browser:"
+        },
+        "offline": {
+            "heading": "Kein Zugriff auf die angeforderte Seite",
+            "msg1": "Diese Seite ist nur zugänglich, wenn der Browser über eine Internetverbindung vefügt und der Server zugänglich ist (es sei denn, die Seite existiert nicht)."
+        }
+    },
+    "prompt": {
+        "default": {
+            "heading": "Werte eingeben"
+        },
+        "login": {
+            "heading": "Geben Sie Ihre Anmeldeinformationen für __server__ ein ",
+            "password": "Passwort",
+            "remember": "Diesen Computer merken",
+            "submit": "Senden",
+            "username": "Benutzername"
+        }
+    },
+    "record-list": {
+        "export": "Exportieren",
+        "msg1": "Die Datensätze werden in Ihrem Browser gespeichert, bis sie hochgeladen wurden (auch wenn Sie den Computer ausschalten oder offline gehen).",
+        "msg2": "Aufzeichnungen in der Warteschlange, mit Ausnahme der als Entwurf __icon__ markiert, werden automatisch hochgeladen, in den Hintergrund, alle 5 Minuten, wenn die Webseite geöffnet ist und eine Internet-Verbindung verfügbar ist. Um einen Upload zwischen automatischen Versuchen zu erzwingen, klicken Sie auf Hochladen.",
+        "norecords": "keine Datensätze in der Warteschlange",
+        "title": "Warteschlange",
+        "upload": "Hochladen"
+    },
+    "store": {
+        "error": {
+            "notavailable": "Browser Speicher erforderlich ist, aber nicht verfügbar ist, ist beschädigt oder nicht beschreibbar. Wenn Sie im Modus \"Private-Browsing\" sind Sie in regelmäßigen Modus zu wechseln, ansonsten auf einen anderen Browser umzuschalten. (Fehler: __error__)"
+        }
+    },
+    "submission": {
+        "http0": "Fehlgeschlagen (offline?).",
+        "http2xx": "Unerwartete Antwort beim Datenversand.",
+        "http400": "Der Datenserver hat keine Daten akzeptiert.",
+        "http403": "Nicht erlaubt Daten zu diesem Datenserver zu übermitteln.",
+        "http404": "Sende-Service wurde auf dem Datenserver nicht gefunden.",
+        "http413": "Datenmenge ist zu groß.",
+        "http4xx": "Unbekanntes Sendeproblem auf Datenserver.",
+        "http500": "Der Datenserver für das Formular oder der Enketo Server sind ausgefallen. Bitte versuchen Sie es später noch einmal oder kontaktieren __supportEmail__"
+    },
+    "version": "Version:"
+}

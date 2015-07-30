@@ -1,22 +1,23 @@
 section.form-footer
   .form-footer__content
-    fieldset.draft.question
+    fieldset.draft.question.simple-select.hide
+      .option-wrapper: label.select 
+        input.ignore(type="checkbox", name="draft")
+        span.option-label= t('formfooter.savedraft.label')
     .main-controls
-      a.previous-page.disabled(href="#") Back
+      a.previous-page.disabled(href="#")= t('form.pages.back')
       if type === 'preview'
         button#validate-form.btn.btn-primary.hide
-          i.icon.icon-check
-          |  Validate
+          i.icon.icon-check= ' '+ t('formfooter.validate.btn')
       else
         button#submit-form.btn.btn-primary.hide
-          i.icon.icon-check
-          |  Submit
-      a.btn.btn-primary.next-page Next
+          i.icon.icon-check= ' '+ t('formfooter.submit.btn')
+      a.btn.btn-primary.next-page(href="#")= t('form.pages.next')
 
     if logout
       include _logout
     include _enketo-power
 
-    a.btn.btn-default.disabled.first-page(href="#") Return to Beginning
-    a.btn.btn-default.disabled.last-page(href="#") Go to End
+    a.btn.btn-default.disabled.first-page(href="#")= t('form.pages.return')
+    a.btn.btn-default.disabled.last-page(href="#")= t('form.pages.end')
 

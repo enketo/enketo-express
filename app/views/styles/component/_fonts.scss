@@ -2,7 +2,7 @@
 
 @font-face {
     font-family: 'OpenSansRegular';
-    src: url("../fonts/OpenSans-Regular-webfont.woff") format("woff"), url("../fonts/OpenSans-Regular-webfont.ttf") format("truetype"), url("../fonts/OpenSans-Regular-webfont.svg#OpenSansRegular") format("svg");
+    src: url("/fonts/OpenSans-Regular-webfont.woff") format("woff"), url("/fonts/OpenSans-Regular-webfont.ttf") format("truetype"), url("/fonts/OpenSans-Regular-webfont.svg#OpenSansRegular") format("svg");
     font-weight: normal;
     font-style: normal;
 }
@@ -10,7 +10,7 @@
 
 @font-face {
     font-family: 'OpenSansBold';
-    src: url("../fonts/OpenSans-Bold-webfont.woff") format("woff"), url("../fonts/OpenSans-Bold-webfont.ttf") format("truetype"), url("../fonts/OpenSans-Bold-webfont.svg#OpenSansBold") format("svg");
+    src: url("/fonts/OpenSans-Bold-webfont.woff") format("woff"), url("/fonts/OpenSans-Bold-webfont.ttf") format("truetype"), url("/fonts/OpenSans-Bold-webfont.svg#OpenSansBold") format("svg");
     font-weight: normal;
     font-style: normal;
 }
@@ -18,7 +18,7 @@
 
 @font-face {
     font-family: 'enketo-icons';
-    src: url("../lib/enketo-core/build/fonts/enketo-icons-v2.woff") format("woff"), url("../lib/enketo-core/build/fonts/enketo-icons-v2.ttf") format("truetype"), url("../lib/enketo-core/build/fonts/enketo-icons-v2.svg#enketo-icons") format("svg");
+    src: url("/lib/enketo-core/build/fonts/enketo-icons-v2.woff") format("woff"), url("/lib/enketo-core/build/fonts/enketo-icons-v2.ttf") format("truetype"), url("/lib/enketo-core/build/fonts/enketo-icons-v2.svg#enketo-icons") format("svg");
     font-weight: normal;
     font-style: normal;
 }

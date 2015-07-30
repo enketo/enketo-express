@@ -1,8 +1,7 @@
 require( [ 'require-config' ], function( rc ) {
     "use strict";
-    if ( console.time ) console.time( 'client loading time' );
-    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'q', 'jquery' ],
-        function( gui, controller, settings, connection, Q, $ ) {
+    require( [ 'gui', 'controller-webform', 'settings', 'connection', 'translator', 'utils', 'jquery', 'promise-by-Q' ],
+        function( gui, controller, settings, connection, t, utils, $ ) {
             var $loader = $( '.form__loader' ),
                 $form = $( 'form.or' ),
                 $buttons = $( '.form-header__button--print, button#submit-form' ),
@@ -14,17 +13,25 @@ require( [ 'require-config' ], function( rc ) {
                     instanceId: settings.instanceId
                 };
 
-            Q.all( [
+            Promise.all( [
                 connection.getFormParts( survey ),
                 connection.getExistingInstance( survey )
             ] ).then( function( responses ) {
-                if ( responses[ 0 ].form && responses[ 0 ].model && responses[ 1 ].instance ) {
-                    gui.swapTheme( responses[ 0 ].theme || _getThemeFromFormStr( responses[ 0 ].form ) )
+                var formParts = responses[ 0 ];
+                formParts.instance = responses[ 1 ].instance;
+
+                if ( formParts.form && formParts.model && formParts.instance ) {
+                    gui.swapTheme( responses[ 0 ].theme || utils.getThemeFromFormStr( responses[ 0 ].form ) )
                         .then( function() {
-                            _init( responses[ 0 ].form, responses[ 0 ].model, responses[ 1 ].instance );
+
+                            _init( formParts );
+                        } )
+                        .then( connection.getMaximumSubmissionSize )
+                        .then( function( maxSize ) {
+                            settings.maxSize = maxSize;
                         } );
                 } else {
-                    throw new Error( 'An unknown error occured.' );
+                    throw new Error( t( 'error.unknown' ) );
                 }
             } ).catch( _showErrorOrAuthenticate );
 
@@ -33,22 +40,21 @@ require( [ 'require-config' ], function( rc ) {
                 if ( error.status === 401 ) {
                     window.location.href = '/login?return_url=' + encodeURIComponent( window.location.href );
                 } else {
-                    gui.alert( error.message, 'Something went wrong' );
+                    gui.alert( error.message, t( 'alert.loaderror.heading' ) );
                 }
             }
 
-            // TODO: move to utils.js after merging offline features
-            function _getThemeFromFormStr( formStr ) {
-                var matches = formStr.match( /<\s?form .*theme-([A-z]+)/ );
-                return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
-            }
-
-            function _init( formStr, modelStr, instanceStr ) {
-                $loader[ 0 ].outerHTML = formStr;
+            function _init( formParts ) {
+                $loader[ 0 ].outerHTML = formParts.form;
                 $( document ).ready( function() {
-                    controller.init( 'form.or:eq(0)', modelStr, instanceStr );
-                    $form.add( $buttons ).removeClass( 'hide' );
-                    if ( console.timeEnd ) console.timeEnd( 'client loading time' );
+                    controller.init( 'form.or:eq(0)', {
+                        modelStr: formParts.model,
+                        instanceStr: formParts.instance,
+                        external: formParts.externalData
+                    } ).then( function() {
+                        $form.add( $buttons ).removeClass( 'hide' );
+                        $( 'head>title' ).text( utils.getTitleFromFormStr( formStr ) );
+                    } );
                 } );
             }
         } );
