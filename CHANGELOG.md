@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+------------------------
+##### Changed
+- Repeat background color in Grid theme
+
+##### Fixed
+- Repeat button location in Grid theme
+
 [1.14.1] - 2015-07-30
 ------------------------
 ##### Fixed
