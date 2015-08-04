@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Repeat button location in Grid theme.
 - Radio buttons inside cloned repeat, require 2 clicks if the master was selected.
+- Radio button and checkbox default values not populated correctly in cloned repeat. Overriding values in first repeat. 
 
 [1.14.1] - 2015-07-30
 ------------------------
