@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ------------------------
 ##### Changed
 - Repeat background color in Grid theme.
+- Background color of selected radiobutton/checkbox on touchscreen in non-Grid themes.
 
 ##### Fixed
 - Repeat button location in Grid theme.
