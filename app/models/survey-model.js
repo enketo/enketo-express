@@ -58,7 +58,7 @@ function getSurvey( id ) {
 }
 
 function setSurvey( survey ) {
-    // set in db:
+    // Set in db:
     // a) a record with key "id:"+ _createEnketoId(client.incr('surveys:counter')) and all survey info
     // b) a record with key "or:"+ _createOpenRosaKey(survey.openRosaUrl, survey.openRosaId) and the enketo_id
     var error,
@@ -166,6 +166,7 @@ function _addSurvey( openRosaKey, survey ) {
                     theme: survey.theme || ''
                 } )
                 .set( openRosaKey, id )
+                .bgsave()
                 .exec( function( error, replies ) {
                     delete pending[ openRosaKey ];
                     if ( error ) {
