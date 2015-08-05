@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+------------------------
+##### Changed
+- Reduce space between border and form on small screens.
+
 [1.14.2] - 2015-08-05
 ------------------------
 ##### Changed
