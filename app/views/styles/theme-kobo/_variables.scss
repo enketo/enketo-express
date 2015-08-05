@@ -1,3 +1,4 @@
 $body-bg: #f0f0f0;
-$brand-primary-color: #3e75a6; /* KoBo blue */
+$brand-primary-color: #3e75a6;
+$brand-secondary-color: lighten($brand-primary-color, 45%);
 $repeat-bg: lighten($brand-primary-color, 50%);

@@ -158,7 +158,7 @@ $offline-color: #d15200;
 @media screen and (max-width: $main-breakpoint + 100px) {
     body {
         .main {
-            article {
+            .paper {
                 padding-top: 70px;
             }
         }
@@ -222,7 +222,7 @@ $offline-color: #d15200;
 @media screen and (max-width: 430px) {
     body {
         .main {
-            article {
+            .paper {
                 padding-top: 90px;
             }
         }
