@@ -2,13 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.14.3] - 2015-08-13
 ------------------------
 ##### Changed
 - Reduce space between border and form on small screens.
 
 ##### Fixed
 - Loading a record with multiple repeats with missing nodes fails with error message.
+- Select minimal widgets in Grid theme overlap other text in print view.
 
 [1.14.2] - 2015-08-05
 ------------------------
