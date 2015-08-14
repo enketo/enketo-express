@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased] 
+------------------------
+##### Fixed
+- Repeat buttons missing in Grid theme.
+- Pulldowns get cut off when the extend beyond form border.
+
+
 [1.14.3] - 2015-08-13
 ------------------------
 ##### Changed
