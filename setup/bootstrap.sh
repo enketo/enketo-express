@@ -31,7 +31,7 @@ if [ -f "/etc/redis/redis.conf" ]; then
     fi
     echo 'copying enketo default redis db...'
     cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/enketo-main.rdb /var/lib/redis/
-    chown redis:redis /var/lib/redis/enketo-main.rdb
+    chown redis:enketo /var/lib/redis/enketo-main.rdb
     chmod 660 /var/lib/redis/enketo-main.rdb
 fi
 echo 'starting first enketo redis instance...'
