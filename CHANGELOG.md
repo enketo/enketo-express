@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Repeat buttons missing in Grid theme.
 - Pulldowns get cut off when the extend beyond form border.
-
+- Formfooter buttons in pages mode overlap form border.
 
 [1.14.3] - 2015-08-13
 ------------------------
