@@ -24,18 +24,18 @@ if [ -f "/etc/redis/redis.conf" ]; then
     chown redis:redis /var/lib/redis/
     echo 'copying enketo redis-server configs...'
     mv /etc/init/redis-server.conf /etc/init/redis-server.conf.disabled
-    cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/init/redis-server-enketo-main.conf /etc/init/
+    cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/init/redis-server-enketo-main-vagrant.conf /etc/init/
     cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/init/redis-server-enketo-cache.conf /etc/init/
     if [ -f "/var/lib/redis/redis.rdb" ]; then
 	   rm /var/lib/redis/redis.rdb
     fi
     echo 'copying enketo default redis db...'
     cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/enketo-main.rdb /var/lib/redis/
-    chown redis:enketo /var/lib/redis/enketo-main.rdb
+    chown redis:redis /var/lib/redis/enketo-main.rdb
     chmod 660 /var/lib/redis/enketo-main.rdb
 fi
 echo 'starting first enketo redis instance...'
-service redis-server-enketo-main restart
+service redis-server-enketo-main-vagrant restart
 echo 'starting second enketo redis instance...'
 service redis-server-enketo-cache restart
 
