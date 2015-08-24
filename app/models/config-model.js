@@ -12,16 +12,34 @@ var config = require( '../../config/default-config' ),
 // merge default and local config
 merge( config, localConfig );
 
-// detect supported themes
-config[ 'themes supported' ] = [];
-if ( fs.existsSync( themePath ) ) {
-    fs.readdirSync( themePath ).forEach( function( file ) {
-        var matches = file.match( /^theme-([A-z]+)\.css$/ );
-        if ( matches && matches.length > 1 ) {
-            config[ 'themes supported' ].push( matches[ 1 ] );
-        }
-    } );
+/**
+ * Returns a list of supported themes,
+ * in case a list is provided only the ones that exists are returned.
+ * @param {Array} themeList - a list of themes e.g ['formhub', 'grid']
+ * @return {Array}
+ */
+function getThemesSupported( themeList ) {
+    var themes = [];
+    if ( fs.existsSync( themePath ) ) {
+        fs.readdirSync( themePath ).forEach( function( file ) {
+            var matches = file.match( /^theme-([A-z]+)\.css$/ );
+            if ( matches && matches.length > 1 ) {
+                if ( themeList !== undefined && themeList.length ) {
+                    if ( themeList.indexOf( matches[ 1 ] ) !== -1 ) {
+                        themes.push( matches[ 1 ] );
+                    }
+                } else {
+                    themes.push( matches[ 1 ] );
+                }
+            }
+        } );
+    }
+
+    return themes;
 }
+
+// detect supported themes
+config[ 'themes supported' ] = getThemesSupported( config[ 'themes supported' ] );
 
 // detect supported languages
 config[ 'languages supported' ] = fs.readdirSync( languagePath ).filter( function( file ) {
@@ -38,5 +56,6 @@ module.exports = {
         supportEmail: config.support.email,
         themesSupported: config[ 'themes supported' ],
         languagesSupported: config[ 'languages supported' ]
-    }
+    },
+    getThemesSupported: getThemesSupported
 };
