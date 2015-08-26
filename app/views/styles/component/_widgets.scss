@@ -1,17 +1,2 @@
-// Dynamically created list of widget stylesheets to import based on the content
-// based on the content of config.json
-
-@import "../../../lib/enketo-core/src/widget/note/note.scss";
-@import "../../../lib/enketo-core/src/widget/select-desktop/selectpicker.scss";
-@import "../../../lib/enketo-core/src/widget/select-mobile/selectpicker.scss";
-@import "../../../lib/enketo-core/src/widget/geo/geopicker.scss";
-@import "../../../lib/enketo-core/src/widget/table/tablewidget.scss";
-@import "../../../lib/enketo-core/src/widget/radio/radiopicker.scss";
-@import "../../../lib/enketo-core/src/widget/time/timepicker-extended.scss";
-@import "../../../lib/enketo-core/src/widget/date/datepicker-extended.scss";
-@import "../../../lib/enketo-core/src/widget/datetime/datetimepicker-extended.scss";
-@import "../../../lib/enketo-core/src/widget/mediagrid/mediagridpicker.scss";
-@import "../../../lib/enketo-core/src/widget/file/filepicker.scss";
-@import "../../../lib/enketo-core/src/widget/select-likert/likertitem.scss";
-@import "../../../lib/enketo-core/src/widget/distress/distresspicker.scss";
-@import "../../../lib/enketo-core/src/widget/horizontal-choices/horizontalchoices.scss";
+// no customizations, just the default enketo-core
+@import "../../../../node_modules/enketo-core/src/sass/core/_widgets.scss";

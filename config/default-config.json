@@ -29,22 +29,6 @@
         "tiles": [ "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" ],
         "attribution": "Map data © <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors"
     } ],
-    "widgets": [
-        "enketo-widget/note/notewidget",
-        "enketo-widget/select-desktop/selectpicker",
-        "enketo-widget/select-mobile/selectpicker",
-        "enketo-widget/geo/geopicker",
-        "enketo-widget/table/tablewidget",
-        "enketo-widget/radio/radiopicker",
-        "enketo-widget/time/timepicker-extended",
-        "enketo-widget/date/datepicker-extended",
-        "enketo-widget/datetime/datetimepicker-extended",
-        "enketo-widget/mediagrid/mediagridpicker",
-        "enketo-widget/select-likert/likertitem",
-        "enketo-widget/distress/distresspicker",
-        "enketo-widget/file/filepicker",
-        "enketo-widget/horizontal-choices/horizontalchoices"
-    ],
     "query parameter to pass to submission": "",
     "redis": {
         "main": {

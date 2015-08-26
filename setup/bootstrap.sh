@@ -40,7 +40,7 @@ echo 'starting second enketo redis instance...'
 service redis-server-enketo-cache restart
 
 # install dependencies, development tools, node, grunt
-apt-get install -y python-software-properties python g++ make git
+apt-get install -y build-essential git libfontconfig
 cd $ENKETO_EXPRESS_REPO_DIR
 if [ $ENKETO_EXPRESS_USE_NODE_ENV = "true" ]; then
     apt-get install python-pip
@@ -51,14 +51,13 @@ else
     curl -sL https://deb.nodesource.com/setup_0.10 | sudo bash -
     apt-get install -y nodejs
 fi
-npm -g install grunt-cli bower node-gyp gulp nodemon mocha
+npm -g install grunt-cli node-gyp gulp nodemon mocha
 npm -g install npm@next
 # remove node_modules if exists because npm builds can be system-specific
 if [ -d "$ENKETO_EXPRESS_REPO_DIR/node_modules" ]; then
 	rm -R $ENKETO_EXPRESS_REPO_DIR/node_modules
 fi
 npm install
-bower install --allow-root
 
 # create a local configuration file unless it already exists
 echo 'copying custom configuration unless config.json already exists'

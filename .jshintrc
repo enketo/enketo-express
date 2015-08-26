@@ -3,10 +3,12 @@
     "globals": {
         "module": false,
         "require": false, 
-        "Promise": true
+        "Promise": true,
+        "indexedDB": true,
+        "define": true
     },
     "node": true,
-    "browser": false,
+    "browser": true,
     "jquery": false,
     "sub": true,
     "esnext": true

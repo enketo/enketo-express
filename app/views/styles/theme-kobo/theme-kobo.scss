@@ -3,22 +3,22 @@
 
 // variables, in the right order
 @import "variables";
-@import "../../../lib/enketo-core/src/sass/formhub/variables";
-@import "../../../lib/enketo-core/src/sass/core/variables";
+@import "../../../../node_modules/enketo-core/src/sass/formhub/variables";
+@import "../../../../node_modules/enketo-core/src/sass/core/variables";
 
 // mixins, in the right order
-@import "../../../lib/enketo-core/src/sass/core/mixins";
-@import "../../../lib/enketo-core/src/sass/formhub/mixins";
+@import "../../../../node_modules/enketo-core/src/sass/core/mixins";
+@import "../../../../node_modules/enketo-core/src/sass/formhub/mixins";
 @import "../component/mixins";
 
 // reset
-@import "../../../lib/enketo-core/src/sass/core/reset";
+@import "../../../../node_modules/enketo-core/src/sass/core/reset";
 
 // common styles
 @import "../component/common";
 
 // utilities
-@import "../../../lib/enketo-core/src/sass/core/utilities";
+@import "../../../../node_modules/enketo-core/src/sass/core/utilities";
 
 // icons
 @import "../component/icons";
@@ -27,8 +27,8 @@
 @import "../component/buttons";
 
 // layout
-@import "../../../lib/enketo-core/src/sass/core/layout";
-@import "../../../lib/enketo-core/src/sass/core/pages";
+@import "../../../../node_modules/enketo-core/src/sass/core/layout";
+@import "../../../../node_modules/enketo-core/src/sass/core/pages";
 
 // components
 @import "../component/side-slider";

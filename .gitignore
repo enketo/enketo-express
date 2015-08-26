@@ -2,6 +2,7 @@
 *.sublime-workspace
 node_modules
 public/js/*.min.js
+public/js/*-bundle.js
 public/css/*.css
 public/lib/enketo-core
 public/lib/bower-components
@@ -10,4 +11,4 @@ config/config.json
 .rebooted
 .vagrant
 .scratchpad
-
+.nodemon-*

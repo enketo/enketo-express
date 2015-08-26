@@ -1,3 +1,0 @@
-[submodule "app/lib/enketo-core"]
-	path = app/lib/enketo-core
-	url = https://github.com/enketo/enketo-core.git

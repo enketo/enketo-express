@@ -47,9 +47,9 @@ describe( 'Manifest Model', function() {
             expect( result ).to.contain( '/fonts/OpenSans-Regular-webfont.svg' );
             expect( result ).to.contain( '/fonts/OpenSans-Bold-webfont.woff' );
             expect( result ).to.contain( '/fonts/OpenSans-Bold-webfont.svg' );
-            expect( result ).to.contain( '/lib/enketo-core/build/fonts/enketo-icons-v2.woff' );
-            expect( result ).to.contain( '/lib/enketo-core/build/fonts/enketo-icons-v2.ttf' );
-            expect( result ).to.contain( 'lib/enketo-core/build/fonts/enketo-icons-v2.svg' );
+            expect( result ).to.contain( '/fonts/enketo-icons-v2.woff' );
+            expect( result ).to.contain( '/fonts/enketo-icons-v2.ttf' );
+            expect( result ).to.contain( '/fonts/enketo-icons-v2.svg' );
             expect( result ).to.contain( '/js/src/module/gui.js' );
         } );
 
