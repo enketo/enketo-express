@@ -1,13 +1,13 @@
 {
-	"strict" : true,
-	"globals": {
-		"module": false,
-		"require": false, 
-		"Promise": true
-	},
-	"node": true,
-	"browser": false,
-	"jquery": false,
-	"sub": true,
+    "strict" : true,
+    "globals": {
+        "module": false,
+        "require": false, 
+        "Promise": true
+    },
+    "node": true,
+    "browser": false,
+    "jquery": false,
+    "sub": true,
     "esnext": true
 }
