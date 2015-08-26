@@ -1,17 +1,17 @@
-@import '../../lib/enketo-core/src/sass/core/fonts';
-@import 'component/fonts';
-@import '../../lib/enketo-core/src/sass/core/variables';
-@import '../../lib/enketo-core/src/sass/core/mixins';
-@import '../../lib/enketo-core/src/sass/formhub/mixins';
+@import "../../../node_modules/enketo-core/src/sass/core/fonts";
+@import "component/fonts";
+@import "../../../node_modules/enketo-core/src/sass/core/variables";
+@import "../../../node_modules/enketo-core/src/sass/core/mixins";
+@import "../../../node_modules/enketo-core/src/sass/formhub/mixins";
 
 body {
-	@include font-normal;
+    @include font-normal;
 }
 
 .error {
-	margin: 40px 20px 20px 20px;
-	padding: 20px;
-	border: 1px solid #F2616D;
+    margin: 40px 20px 20px 20px;
+    padding: 20px;
+    border: 1px solid #F2616D;
     position: relative;
     font-weight: normal;
     min-height: 100px;

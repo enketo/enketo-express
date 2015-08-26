@@ -1,14 +1,13 @@
 "use strict";
 
 module.exports = function( grunt ) {
-    var JS_INCLUDE = [ "**/*.js", "!**/enketo-core/**", "!node_modules/**", "!test/**/*.spec.js", "!**/*.min.js", "!public/lib/**/*.js", "!app/lib/martijnr-foundation/**/*.js" ];
-    // show elapsed time at the end
+    var JS_INCLUDE = [ "**/*.js", "!node_modules/**", "!test/**/*.spec.js", "!public/lib/**/*.js", '!public/js/*-bundle.js', '!public/js/*-bundle.min.js' ];
+    var pkg = grunt.file.readJSON( 'package.json' );
+
     require( 'time-grunt' )( grunt );
-    // load all grunt tasks
     require( 'load-grunt-tasks' )( grunt );
 
-    grunt.initConfig( {
-        pkg: grunt.file.readJSON( 'package.json' ),
+    grunt.config.init( {
         concurrent: {
             develop: {
                 tasks: [ 'nodemon', 'watch' ],
@@ -50,7 +49,7 @@ module.exports = function( grunt ) {
         },
         watch: {
             sass: {
-                files: [ '.rebooted', 'config/config.json', 'app/views/styles/**/*.scss', 'app/lib/enketo-core/src/**/*.scss', 'app/views/**/*.jade' ],
+                files: [ '.rebooted', 'config/config.json', 'app/views/styles/**/*.scss', 'app/views/**/*.jade' ],
                 tasks: [ 'sass' ],
                 options: {
                     spawn: true,
@@ -60,6 +59,14 @@ module.exports = function( grunt ) {
             language: {
                 files: [ 'app/views/**/*.jade', 'app/controllers/**/*.js', 'app/models/**/*.js', 'public/js/src/**/*.js' ],
                 tasks: [ 'shell:translation' ]
+            },
+            js: {
+                files: JS_INCLUDE,
+                tasks: [ 'compile-dev' ],
+                options: {
+                    spawn: true,
+                    livereload: true
+                }
             }
         },
         shell: {
@@ -90,7 +97,7 @@ module.exports = function( grunt ) {
             options: {
                 jshintrc: ".jshintrc"
             },
-            all: JS_INCLUDE
+            all: JS_INCLUDE,
         },
         // test server JS
         mochaTest: {
@@ -116,43 +123,44 @@ module.exports = function( grunt ) {
             },
             browsers: {
                 configFile: 'test/client/config/browser-karma.conf.js',
-                browsers: [ 'Chrome', 'ChromeCanary', 'Firefox', 'Opera', /*'Safari'*/ ]
+                browsers: [ 'Chrome', 'ChromeCanary', 'Firefox', 'Opera' /*,'Safari'*/ ],
             }
         },
-        requirejs: {
-            options: {
-                //generateSourceMaps: true,
-                preserveLicenseComments: false,
-                baseUrl: "public/js/src/module",
-                mainConfigFile: [ "./public/js/src/require-config.js", "./public/js/src/require-build-config.js" ],
-                findNestedDependencies: true,
-                optimize: "uglify2",
-                done: function( done, output ) {
-                    var duplicates = require( 'rjs-build-analysis' ).duplicates( output );
-
-                    if ( duplicates.length > 0 ) {
-                        grunt.log.subhead( 'Duplicates found in requirejs build:' );
-                        grunt.log.warn( duplicates );
-                        done( new Error( 'r.js built duplicate modules, please check the excludes option.' ) );
-                    } else {
-                        grunt.log.writeln( 'Checked for duplicates. All seems OK!' );
+        browserify: {
+            development: {
+                files: {
+                    'public/js/enketo-webform-dev-bundle.js': [ 'public/js/src/main-webform.js' ],
+                    'public/js/enketo-webform-edit-dev-bundle.js': [ 'public/js/src/main-webform-edit.js' ],
+                },
+                options: {
+                    browserifyOptions: {
+                        debug: true
                     }
-                    done();
-                }
+                },
             },
-            "webform": getWebformCompileOptions(),
-            "webform-edit": getWebformCompileOptions( 'edit' )
+            production: {
+                files: {
+                    'public/js/enketo-webform-bundle.js': [ 'public/js/src/main-webform.js' ],
+                    'public/js/enketo-webform-edit-bundle.js': [ 'public/js/src/main-webform-edit.js' ],
+                },
+            },
+            options: {
+                // ensure that enketo-config and widgets are overridden in **enketo-core**
+                transform: [
+                    [ 'aliasify', {
+                        aliases: pkg.aliasify.aliases,
+                        global: true
+                    } ]
+                ]
+            },
         },
-        symlink: {
-            core: {
-                files: [ {
-                    overwrite: false,
-                    expand: true,
-                    cwd: 'app/lib/',
-                    src: [ 'enketo-core' ],
-                    dest: 'public/lib/'
-                } ]
-            }
+        uglify: {
+            all: {
+                files: {
+                    'public/js/enketo-webform-bundle.min.js': [ 'public/js/enketo-webform-bundle.js' ],
+                    'public/js/enketo-webform-edit-bundle.min.js': [ 'public/js/enketo-webform-edit-bundle.js' ],
+                },
+            },
         },
         env: {
             test: {
@@ -160,22 +168,6 @@ module.exports = function( grunt ) {
             }
         }
     } );
-
-    function getWebformCompileOptions( type ) {
-        // determine all widget js resources
-        var widgetResources = [].concat( require( './app/models/config-model' ).server.widgets );
-        widgetResources.forEach( function( widget, index, arr ) {
-            arr.push( 'text!' + widget.substr( 0, widget.lastIndexOf( '/' ) + 1 ) + 'config.json' );
-        } );
-        type = ( type ) ? '-' + type : '';
-        return {
-            options: {
-                name: "../main-webform" + type,
-                out: "public/js/webform" + type + "-combined.min.js",
-                include: [ '../../../../public/lib/bower-components/requirejs/require' ].concat( widgetResources )
-            }
-        };
-    }
 
     grunt.registerTask( 'client-config-file', 'Temporary client-config file', function( task ) {
         var clientConfigPath = "public/temp-client-config.json";
@@ -189,8 +181,10 @@ module.exports = function( grunt ) {
         }
     } );
 
-    grunt.registerTask( 'default', [ 'symlink', 'compile' ] );
-    grunt.registerTask( 'compile', [ 'sass', 'client-config-file:create', 'requirejs', 'client-config-file:remove' ] );
-    grunt.registerTask( 'test', [ 'env:test', 'symlink', 'compile', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
-    grunt.registerTask( 'develop', [ 'concurrent:develop' ] );
+    grunt.registerTask( 'default', [ 'sass', 'compile', 'uglify' ] );
+    grunt.registerTask( 'compile', [ 'client-config-file:create', 'browserify:production', 'client-config-file:remove' ] );
+    grunt.registerTask( 'compile-dev', [ 'client-config-file:create', 'browserify:development', 'client-config-file:remove' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'compile', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
+    grunt.registerTask( 'test-browser', [ 'env:test', 'client-config-file:create', 'karma:browsers', 'client-config-file:remove' ] );
+    grunt.registerTask( 'develop', [ 'compile-dev', 'concurrent:develop' ] );
 };

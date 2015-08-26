@@ -10,9 +10,9 @@ block style
 block script
   - var suffix = (type && type == "edit") ? "-edit" : ""
   if environment == "production"
-    script(src="/js/webform#{suffix}-combined.min.js")
+    script(src="/js/enketo-webform#{suffix}-bundle.min.js")
   else
-    script(data-main="/js/src/main-webform#{suffix}.js", src="/lib/bower-components/requirejs/require.js")
+    script(src="/js/enketo-webform#{suffix}-dev-bundle.js")
  
 block content
   if manifest

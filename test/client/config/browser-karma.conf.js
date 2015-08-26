@@ -11,43 +11,15 @@ module.exports = function( config ) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: [ 'mocha', 'requirejs', 'sinon-chai' ],
+        frameworks: [ 'browserify', 'mocha', 'sinon-chai' ],
 
 
         // list of files / patterns to load in the browser
         files: [
-            'public/js/src/require-config.js',
-            'test/client/test-main.js', {
-                pattern: 'test/client/**/*.spec.js',
-                included: false
-            }, {
-                pattern: 'config/config.json',
-                included: false
-            }, {
-                pattern: 'test/client/**/*.browser-spec.js',
-                included: false
-            }, {
-                pattern: 'public/lib/bower-components/q/q.js',
-                included: false
-            }, {
-                pattern: 'public/lib/bower-components/papaparse/papaparse.js',
-                included: false
-            }, {
-                pattern: 'public/lib/bower-components/db.js/src/db.js',
-                included: false
-            }, {
-                pattern: 'public/lib/bower-components/jquery/dist/jquery.js',
-                included: false
-            }, {
+            'test/client/**/*spec.js', {
                 pattern: 'public/js/src/**/*.js',
                 included: false
-            }, {
-                pattern: 'public/lib/enketo-core/lib/text/text.js',
-                included: false
-            }, {
-                pattern: 'public/lib/bower-components/i18next/i18next.amd.js',
-                included: false
-            }
+            },
         ],
 
 
@@ -57,7 +29,9 @@ module.exports = function( config ) {
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-        preprocessors: {},
+        preprocessors: {
+            'test/client/**/*spec.js': [ 'browserify' ],
+        },
 
 
         // test results reporter to use
