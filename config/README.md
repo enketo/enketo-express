@@ -30,6 +30,9 @@ Enketo will use this to encrypt sensitive information whenever necessary (e.g. f
 #### default theme 
 The theme to use if the survey has no user-or-api-defined theme. Values could be `"kobo"`, `"formhub"`, `"grid"`, or `"[yourowncustomtheme]"`.
 
+#### themes supported
+An array of theme names to enable. This can be used to disable certain themes. If this configuration item is absent or an empty array, all installed themes will be enabled.
+
 #### support
 * **email: The email address your users can contact when they experience problems with the service.**
 

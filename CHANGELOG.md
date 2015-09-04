@@ -2,10 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+------------------------
+##### Added
+- Ability to disable themes in config.json.
+
 [1.15.0] - 2015-08-28
 ------------------------
 ##### Changed
-- switched to CommonJS modules (**WARNING: forks with custom client scripts, tests need to be updated)
+- Switched to CommonJS modules (**WARNING: forks with custom client scripts, tests need to be updated).
 
 ##### Fixed
 - HTML titles not populated
