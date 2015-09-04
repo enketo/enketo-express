@@ -40,7 +40,7 @@ echo 'starting second enketo redis instance...'
 service redis-server-enketo-cache restart
 
 # install dependencies, development tools, node, grunt
-apt-get install -y build-essential git libfontconfig
+apt-get install -y build-essential git libfontconfig curl
 cd $ENKETO_EXPRESS_REPO_DIR
 if [ $ENKETO_EXPRESS_USE_NODE_ENV = "true" ]; then
     apt-get install python-pip
