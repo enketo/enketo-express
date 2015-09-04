@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Ability to disable themes in config.json.
 
+##### Fixed
+- Form initialization issue in Android (enketo-core 4.0.2)
+
 [1.15.0] - 2015-08-28
 ------------------------
 ##### Changed

@@ -107,9 +107,6 @@ function _setEmergencyHandlers() {
 }
 
 function _swapTheme( survey ) {
-
-    console.debug( 'swapping theme', survey );
-
     return new Promise( function( resolve, reject ) {
         if ( survey.form && survey.model ) {
             gui.swapTheme( survey.theme || utils.getThemeFromFormStr( survey.form ) )
