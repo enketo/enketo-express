@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ------------------------
 ##### Added
 - Ability to disable themes in config.json.
+- Support for pulldata function in XForms that contain a reference to the external data in the model.
 
 ##### Fixed
 - Form initialization issue in Android (enketo-core 4.0.2)

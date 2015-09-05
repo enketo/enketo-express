@@ -24,7 +24,7 @@
         "csurf": "1.6.x",
         "db.js": "0.10.x",
         "debug": "2.x.x",
-        "enketo-core": "4.0.2",
+        "enketo-core": "4.1.0",
         "enketo-transformer": "1.4.x",
         "express": "4.x.x",
         "i18next": "1.10.x",
