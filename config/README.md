@@ -57,10 +57,6 @@ The `maps` configuration can include an array of Mapbox TileJSON objects (or a s
 
 For GMaps layers you have the four options as tiles values: `"GOOGLE_SATELLITE"`, `"GOOGLE_ROADMAP"`, `"GOOGLE_HYBRID"`, `"GOOGLE_TERRAIN"`. You can also add other TileJSON properties, such as minZoom, maxZoom, id to all layers. 
 
-
-#### widgets
-Generally leave this unchanged. Remove any widgets you'd like to disable, or add custom widgets you'd like to add.
-
 #### query parameter to pass to submission
 For most form servers this item does nothing. If you would like to pass a particular ID to any online-only webform url as a query parameter and track submissions with this ID, you can provide the parameter name here. The parameter and its value will be copied to the submission URL.
 
