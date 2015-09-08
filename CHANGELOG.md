@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+-----------------------
+##### Added
+- More comprehensive markdown support in all labels and hints.
+
 [1.16.0] - 2015-09-05
 ------------------------
 ##### Added
