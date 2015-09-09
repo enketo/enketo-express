@@ -12,3 +12,4 @@ config/config.json
 .vagrant
 .scratchpad
 .nodemon-*
+enketo-main.rdb
