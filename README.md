@@ -11,10 +11,11 @@ A light-weight node.js version of Enketo Smart Paper. Chock-full of [badass rock
 
 1. Install JS prerequisites: [Node.js 0.10.x](http://nodejs.org/) (newer version [not supported yet](https://github.com/albanm/node-libxslt/issues/18)), [Grunt Client](http://gruntjs.com), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
 2. Install [Redis](http://redis.io/topics/quickstart)
-3. Install build-essential (and libfontconfig to run tests) with `(sudo) apt-get install build-essential libfontconfig`
-4. Install dependencies with `npm install` from the project root
-5. Create config/config.json to override values in the [default config](./config/default-config.json). Start with `cp config/default-config.json config/config.json`
-8. Build with `grunt` from the project root
+3. Install build-essential and git (and libfontconfig to run tests) with `(sudo) apt-get install build-essential git libfontconfig`
+4. Clone this repository
+5. Install dependencies with `npm install` from the project root
+6. Create config/config.json to override values in the [default config](./config/default-config.json). Start with `cp config/default-config.json config/config.json`
+7. Build with `grunt` from the project root
 
 #### Using vagrant:
 
