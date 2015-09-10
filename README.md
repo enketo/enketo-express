@@ -82,6 +82,7 @@ The easiest way to start the app in development and debugging mode with liverelo
 * :white_check_mark: this one has cross-browser (media) file inputs
 * :white_check_mark: this one has a [multi-language](#translation) user interface
 * :white_check_mark: this one displays right-to-left scripts from right-to-left
+* :white_check_mark: this one has more text formatting (markdown syntax) support and across **all** labels **and hints**
 * :white_check_mark: this one has better security of user credentials
 * :white_check_mark: this one has support for multiple themes in *all* form views including previews 
 * :white_check_mark: this one has an improved API (v2)

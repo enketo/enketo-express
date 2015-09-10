@@ -2,10 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.17.0] - 2015-09-10
 -----------------------
 ##### Added
-- More comprehensive markdown support in all labels and hints.
+- More comprehensive markdown support and now activated in all labels and hints.
 
 ##### Fixed
 - If theme changed via API, offline view does not update.
