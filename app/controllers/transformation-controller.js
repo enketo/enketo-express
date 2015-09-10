@@ -151,7 +151,7 @@ function _respond( res, survey ) {
         // If a form contains no media this hash is null, which would be an empty string upon first load.
         // Subsequent cache checks will however get the value 'null' causing the form cache to be unnecessarily refreshed
         // on the client.
-        hash: [ String( survey.formHash ), String( survey.mediaHash ), String( survey.xslHash ) ].join( '-' )
+        hash: [ String( survey.formHash ), String( survey.mediaHash ), String( survey.xslHash ), String( survey.theme ) ].join( '-' )
     } );
 }
 
