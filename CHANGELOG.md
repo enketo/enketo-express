@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - More comprehensive markdown support in all labels and hints.
 
+##### Fixed
+- If theme changed via API, offline view does not update.
+- Edit view form injection fails with certain characters.
+
 [1.16.0] - 2015-09-05
 ------------------------
 ##### Added

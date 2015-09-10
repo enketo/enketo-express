@@ -12,4 +12,5 @@ config/config.json
 .vagrant
 .scratchpad
 .nodemon-*
+.DS_Store
 enketo-main.rdb
