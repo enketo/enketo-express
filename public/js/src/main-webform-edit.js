@@ -54,7 +54,7 @@ function _showErrorOrAuthenticate( error ) {
 }
 
 function _init( formParts ) {
-    $loader[ 0 ].outerHTML = formParts.form;
+    $loader.replaceWith( formParts.form );
     $( document ).ready( function() {
         controller.init( 'form.or:eq(0)', {
             modelStr: formParts.model,
