@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.18.0] - 2015-10-06
+-----------------------
+##### Added
+- Analog Scale picker
+
+##### Changed
+- Form footer styling.
+- Location of required * now on left of question (in LTR language).
+
 [1.17.0] - 2015-09-10
 -----------------------
 ##### Added
