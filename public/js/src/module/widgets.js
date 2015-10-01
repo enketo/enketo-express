@@ -18,6 +18,7 @@ var widgets = [
     require( '../../../../node_modules/enketo-core/src/widget/select-likert/likertitem' ),
     require( '../../../../node_modules/enketo-core/src/widget/distress/distresspicker' ),
     require( '../../../../node_modules/enketo-core/src/widget/horizontal-choices/horizontalchoices' ),
+    require( '../../../../node_modules/enketo-core/src/widget/analog-scale/analog-scalepicker' ),
 ];
 
 module.exports = widgets;

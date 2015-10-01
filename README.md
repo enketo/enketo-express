@@ -99,10 +99,11 @@ The easiest way to start the app in development and debugging mode with liverelo
 * :x: no [Forms](https://enketo.org/forms) app (you do not need this)
 * :white_check_mark: this one is 100% JavaScript
 * :white_check_mark: this one can be hosted on a local webserver
+* :white_check_mark: this one includes an analog scale widget
 
 
 ### Themes
-
+ 
 The default theme can be set in config/config.json. The default theme can be overridden in [the form definition](http://xlsform.org/#grid). 
 
 The recommended way to customize themes is to either:
