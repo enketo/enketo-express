@@ -1,92 +1,100 @@
 .form-footer {
-    @include flex(1);
-    min-height: 230px;
     position: relative;
-    // the form footer flexes to stretch down on small forms or form pages
-    // the content should be positioned at bottom of stretched element
     &__content {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-    }
-    .draft {
-        width: 100%;
-        @include font-normal;
-        font-style: italic;
-        text-align: center;
-        display: block;
-        border: none;
-        flex: none;
-        padding: 0;
-        margin: 0 auto;
-        max-width: 150px;
-        label {
+        @include display-flex;
+        @include flex-direction(column);
+        @include flex-wrap(nowrap);
+        &__main-controls {
+            flex: 1;
+            margin: 30px auto;
             width: 100%;
-        }
-    }
-    .main-controls {
-        margin: 30px auto 60px auto;
-        width: 100%;
-        text-align: center;
-        .btn {
-            display: inline-block;
-            min-width: 180px;
-            position: static;
-            min-height: 32px;
-            progress {
-                margin: 0;
-                padding: 0;
+            text-align: center;
+            position: relative;
+            .btn {
+                display: inline-block;
+                min-width: 180px;
+                position: static;
+                min-height: 32px;
+                margin-bottom: 30px;
+                progress {
+                    margin: 0;
+                    padding: 0;
+                    width: 100%;
+                }
+            }
+            .draft {
                 width: 100%;
+                @include font-normal;
+                font-style: italic;
+                text-align: center;
+                display: block;
+                border: none;
+                flex: none;
+                padding: 0;
+                margin: 0 auto 20px auto;
+                max-width: 250px;
+                label {
+                    margin-left: 0;
+                    width: 100%;
+                }
+            }
+            .previous-page, .next-page {
+                display: none;
+            }
+            .previous-page {
+                // This button is absolutely positioned to avoid
+                // it pushing up other form footer content when it becomes
+                // visible on page 2 and higher.
+                position: absolute;
+                left: 5px;
+                bottom: 5px;
             }
         }
-        .previous-page, .next-page {
-            display: none;
-        }
-        .previous-page {
-            position: absolute;
-            left: 20px;
-            bottom: 45px;
-        }
-    }
-    .first-page, .last-page {
-        width: 50%;
-        opacity: 0.7;
-        border-radius: 0 !important;
-        display: none;
-        padding: 9px;
-        margin-bottom: 0;
-        float: left;
-    }
-    .first-page {
-        &:not(:hover) {
-            border-right: none;
-        }
-        &::before {
-            @include enketo-icon;
-            content: '\e611' !important;
-            float: left;
-            color: #757474;
-        }
-    }
-    .last-page {
-        &::before {
-            @include enketo-icon;
-            content: '\e610' !important;
-            float: right;
-            color: #757474;
+        &__jump-nav {
+            @include display-flex;
+            @include flex-direction(row);
+            @include flex-wrap(nowrap);
+            .first-page, .last-page {
+                //width: 50%;
+                flex: 1;
+                opacity: 0.7;
+                border-radius: 0 !important;
+                display: none;
+                padding: 9px;
+                margin-bottom: 0;
+                float: left;
+            }
+            .first-page {
+                &:not(:hover) {
+                    border-right: none;
+                }
+                &::before {
+                    @include enketo-icon;
+                    content: '\e611' !important;
+                    float: left;
+                    color: #757474;
+                }
+            }
+            .last-page {
+                &::before {
+                    @include enketo-icon;
+                    content: '\e610' !important;
+                    float: right;
+                    color: #757474;
+                }
+            }
         }
     }
     .logout {
         width: 100%;
         display: block;
-        margin-top: -40px;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
         text-align: center;
     }
     .enketo-power {
+        position: static;
+        margin: 0 auto 30px auto;
         left: auto;
-        margin: -20px 0 40px 0;
         width: 100%;
         line-height: 25px;
         img {
@@ -96,48 +104,27 @@
 }
 
 .pages ~ .form-footer {
+    .form-footer__content {
+        &__main-controls {
+            margin-bottom: 0;
+        }
+    }
     &.end {
-        .main-controls {
-            .btn {
-                display: inline-block;
-            }
-            .previous-page {}
-            .next-page {
-                display: none;
-            }
-        }
-        .logout, .draft {
-            display: block;
-        }
         .logout {
             margin-bottom: 50px;
         }
-    }
-    .main-controls {
-        .btn {
-            display: none;
-        }
-        .previous-page, .next-page {
-            display: inline-block;
-            &.disabled {
-                display: none;
-            }
-        }
-    }
-    .first-page, .last-page {
-        display: inline-block;
-    }
-    .logout, .draft {
-        display: none;
     }
 }
 
 @media screen and (min-width: $main-breakpoint) {
     .form-footer .enketo-power {
         position: absolute;
-        bottom: -90px;
+        bottom: -100px;
         right: 5px;
         width: auto;
+    }
+    .pages ~ .form-footer .enketo-power{
+        bottom: -105px;
     }
 }
 
