@@ -1,11 +1,10 @@
 section.form-footer
   .form-footer__content
-    fieldset.draft.question.simple-select.hide
-      .option-wrapper: label.select 
-        input.ignore(type="checkbox", name="draft")
-        span.option-label= t('formfooter.savedraft.label')
-    .main-controls
-      a.previous-page.disabled(href="#")= t('form.pages.back')
+    .form-footer__content__main-controls
+      fieldset.draft.question.simple-select.hide
+        .option-wrapper: label.select 
+          input.ignore(type="checkbox", name="draft")
+          span.option-label= t('formfooter.savedraft.label')
       if type === 'preview'
         button#validate-form.btn.btn-primary.hide
           i.icon.icon-check= ' '+ t('formfooter.validate.btn')
@@ -13,11 +12,12 @@ section.form-footer
         button#submit-form.btn.btn-primary.hide
           i.icon.icon-check= ' '+ t('formfooter.submit.btn')
       a.btn.btn-primary.next-page(href="#")= t('form.pages.next')
+      if logout
+        include _logout
+      include _enketo-power
+      a.previous-page.disabled(href="#")= t('form.pages.back')
 
-    if logout
-      include _logout
-    include _enketo-power
-
-    a.btn.btn-default.disabled.first-page(href="#")= t('form.pages.return')
-    a.btn.btn-default.disabled.last-page(href="#")= t('form.pages.end')
+    .form-footer__content__jump-nav
+      a.btn.btn-default.disabled.first-page(href="#")= t('form.pages.return')
+      a.btn.btn-default.disabled.last-page(href="#")= t('form.pages.end')
 
