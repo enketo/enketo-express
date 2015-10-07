@@ -51,8 +51,8 @@ else
     curl -sL https://deb.nodesource.com/setup_0.10 | sudo bash -
     apt-get install -y nodejs
 fi
+npm -g install npm@2.14.3
 npm -g install grunt-cli node-gyp gulp nodemon mocha
-npm -g install npm@next
 # remove node_modules if exists because npm builds can be system-specific
 if [ -d "$ENKETO_EXPRESS_REPO_DIR/node_modules" ]; then
 	rm -R $ENKETO_EXPRESS_REPO_DIR/node_modules
