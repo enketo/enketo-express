@@ -10,14 +10,14 @@ var survey,
     config = require( "../../app/models/config-model" );
 
 describe( 'Config Model', function() {
-    var themes = [ 'formhub', 'grid', 'kobo', 'plain' ];
+    var themes = [ 'formhub', 'grid', 'kobo', 'oc', 'plain' ];
 
     it( 'should return default list of themes', function() {
         expect( config.getThemesSupported() ).to.deep.equal( themes );
     } );
 
     it( 'should return only specified themes if given a list of themes', function() {
-        var themeList = [ 'formhub' , 'grid' ];
+        var themeList = [ 'formhub', 'grid' ];
         expect( config.getThemesSupported( themeList ) ).to.deep.equal( themeList );
     } );
 
