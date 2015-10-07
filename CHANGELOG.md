@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.18.1] - 2015-10-07
+-----------------------
+##### Fixed
+- Vagrant build failing due to npm version.
+- Markdown lists generated if first item was not preceded by newline character.
+
 [1.18.0] - 2015-10-06
 -----------------------
 ##### Added
