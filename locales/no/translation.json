@@ -1,0 +1,267 @@
+{
+    "advanced": {
+        "flushdb": "Slett Lagring"
+    },
+    "alert": {
+        "appupdated": {
+            "heading": "App oppdatert!",
+            "msg": "En ny versjon av denne applikasjonen har blitt lastet ned. Oppdater denne siden for å hente inn den nye versjonen."
+        },
+        "default": {
+            "button": "Lukk",
+            "heading": "Advarsel"
+        },
+        "formupdated": {
+            "heading": "Skjema oppdatert!",
+            "msg": "En ny versjon av dette skjemaet har blitt lastet ned. Oppdater denne siden for å hente inn nyeste versjon."
+        },
+        "loaderror": {
+            "editadvice": "Det anbefales å ikke endre denne oppføringen før dette er løst.",
+            "entryadvice": "Det anbefales å ikke bruke dette skjemaet for legge inn data før dette er løst.",
+            "heading": "Innlastningsfeil",
+            "msg1": "En feil oppstod under innhentingen av skjemaet.",
+            "msg2": "Vennligst kontakt __emailLink__ med en kobling til denne siden og feilmeldingen under:",
+            "heading_plural": "Innlastingsfeil",
+            "msg1_plural": "En feil oppstod under innhentingen av skjemaet.",
+            "msg2_plural": "Vennligst kontakt __emailLink__ med en kobling til denne siden og feilmeldingene under:"
+        },
+        "logout": {
+            "heading": "Logget Ut",
+            "msg": "Du har blitt logget ut."
+        },
+        "offlinesupported": {
+            "heading": "Skjemaet fungerer frakoblet!",
+            "msg": [
+                "Dette skjemaet kan nå bli lastet inn uten en internett-tilkobling på denne enheten. Lagre det som bokmerke for rask tilgang.",
+                "Innføringer er automatisk lagret og lagt i kø i nettleseren din frem til en internett-tilkobling er tilgjengelig. ",
+                "Oppføringer blir kun fjernet fra køen etter at det har blitt sendt inn. Du kan trygt lukke ned nettleseren og enheten med oppføringer i køen. De er der fortsatt neste gang du laster inn skjemaet. "
+            ]
+        },
+        "offlineunsupported": {
+            "heading": "Applikasjonen kan ikke kjøres frakoblet",
+            "msg": "Frakoblet start av applikasjonen er ikke støttet i din nettleser. Du kan bruke skjemaet uten denne funksjonen og se på muligheter for å løse dette.",
+            "negButton": "Bruk",
+            "posButton": "Vis instillinger"
+        },
+        "queuesubmissionsuccess": {
+            "msg": "__recordNames__ har blitt sendt",
+            "msg_plural": "__recordNames__ har blitt sendt"
+        },
+        "recordloadsuccess": {
+            "msg": "__recordName__ har blitt lastet inn"
+        },
+        "recordnotfound": {
+            "msg": "Oppføringen kunne ikke hentes eller inneholder ikke noe data."
+        },
+        "recordsavesuccess": {
+            "draftmsg": "Oppføring lagret som utkast.",
+            "finalmsg": "Oppføring lagt i kø for sending."
+        },
+        "submission": {
+            "msg": "Sender...",
+            "redirectmsg": "Du blir automatisk videresendt etter fullført sending."
+        },
+        "submissionerror": {
+            "authrequiredmsg": "Pålogging kreves. Vennligst logg på __here__ i en annen nettleserfane og prøv på nytt.",
+            "fnfmsg": [
+                "Følgende mediafiler kunne ikke hentes inn: __failedFiles__. Sending fortsatte og var vellykket uten disse filene. ",
+                "Vennligst kontakt __supportEmail__ for å rapportere en feil og, hvis mulig, forklar hvordan feilen kan bli reprodusert."
+            ],
+            "heading": "Sending Mislykket"
+        },
+        "submissionsuccess": {
+            "heading": "Sending Vellykket ",
+            "msg": "Dataen har blitt sendt!",
+            "redirectmsg": "Du blir nå videresendt"
+        },
+        "validationerror": {
+            "msg": "Skjemaet inneholder feil. Vennligst se skjemaet markert i rødt."
+        },
+        "validationsuccess": {
+            "heading": "OK",
+            "msg": "Skjemaet er ikke gyldig!"
+        },
+        "xpatherror": {
+            "heading": "Feil i Formel",
+            "msg": "En feil ved formel-evaluering oppstod. Vennligst kontakt __emailLink__ med denne feilmeldingen:"
+        }
+    },
+    "confirm": {
+        "autosaveload": {
+            "heading": "Ulagrede Oppføringer Funnet",
+            "msg": "Enketo har funnet en ulagret oppføring. Vil du laste inn eller forkaste den?",
+            "negButton": "Forkast",
+            "posButton": "Last inn Oppføring"
+        },
+        "default": {
+            "heading": "Er du sikker?",
+            "msg": "Vennligst bekreft denne handlingen",
+            "negButton": "Avbryt",
+            "posButton": "Bekreft"
+        },
+        "deleteall": {
+            "heading": "PANIKK!",
+            "msg": [
+                "Dette vil fjerne all data i køen og alle skjemaene som er lagret i nettleseren din. Data blir slettet for alltid. Bruk dette bare som en siste utvei hvis lagringen til nettleseren virker ødelagt. ",
+                "Steng alle andre nettleserfaner med Enketo først.",
+                "Denne siden vil bli lastet inn på nytt. Hvis du ser en feilmelding kan det hende du må gjenta dette.",
+                "Er du sikker på at du vil gjøre dette?'"
+            ],
+            "posButton": "Slett Alle"
+        },
+        "discardcurrent": {
+            "heading": "Ulagrede endringer",
+            "msg": "Dette skjemaet har ulagrede endringer. Vil du hente en oppføring uten å lagre endringene i det skjemaet du jobber med?",
+            "posButton": "Gå videre uten å lagre"
+        },
+        "login": {
+            "heading": "Innlogging Påkrevet",
+            "msg": [
+                "For å kunne sende data før køen må du logge inn. Hvis du vil gjøre det nå vil du bli videresendt til en ny side og miste informasjon som ikke er lagret.",
+                "Vil du logge inn nå eller senere?"
+            ],
+            "negButton": "Senere",
+            "posButton": "Logge inn"
+        },
+        "print": {
+            "a4": "A4",
+            "heading": "Velg Utskriftsinnstillinger",
+            "landscape": "Landskap",
+            "letter": "Brev",
+            "msg": "For å lage en optimalisert utskrift, vennligst velg utskriftsinnstillinger under",
+            "orientation": "Papirorientering",
+            "portrait": "Portrett",
+            "posButton": "Forbered",
+            "psize": "Papirstørrelse",
+            "reminder": "Husk å velge de samme utskriftsinnstillingene i nettleserens utskriftsmeny etterpå!"
+        },
+        "save": {
+            "existingerror": "Dette oppføringsnavnet eller ID eksistere allerede.",
+            "hint": "Dette navner gjør det enklere for deg å finne dine utkast for å fullføre senere.",
+            "msg": "Det er ulagrede endringer. Vil du fortsette uten å lagre disse?",
+            "name": "Oppføringsnavn",
+            "posButton": "Lagre og Lukk",
+            "renamemsg": "Er du sikker på at du vil endre navn fra __currentName__ til __newName__?",
+            "unkownerror": "En ukjent feil oppstod ved lagring av data."
+        }
+    },
+    "constraint": {
+        "invalid": "Verdien er ikke tillatt",
+        "required": "Dette feltet er påkrevet"
+    },
+    "contact": {
+        "admin": "Vennligst kontakt administratoren for skjemaet",
+        "support": "Vennligst kontakt __supportEmail__.'"
+    },
+    "enketo": {
+        "power": "Drevet av"
+    },
+    "error": {
+        "code": "Feilmeldingskode: __code__",
+        "econnrefused": "Kunne ikke koble til Server",
+        "encryptionnotsupported": "Dette skjemaet krever lokal kryptering av oppføringer. Uheldigvis er dette ikke støttet enda, men vi anbefaler at du bruker ODK Collect for datainnsamling med dette skjemaet.",
+        "instancenotfound": "Oppføringen er ikke tilgjengelig. Den kan ha utløpt.",
+        "invalidediturl": "Ikke en gyldig redigerings-adresse",
+        "notfoundinformlist": "Skjemaet med ID __formId__ ble ikke funnet i /formList",
+        "pagenotfound": "Side ikke Funnet",
+        "surveyidnotactive": "Skjemaet med denne IDen er ikke lengre aktivt",
+        "surveyidnotfound": "Skjema med denne IDen ble ikke funnet",
+        "unknown": "En ukjent feil har oppstått"
+    },
+    "feedback": {
+        "header": "Informasjon"
+    },
+    "form": {
+        "chooseLanguage": "Velg språk",
+        "logout": "logg ut",
+        "pages": {
+            "back": "Tilbake",
+            "end": "Gå til Slutt",
+            "next": "Neste",
+            "return": "Tilbake til Begynnelsen"
+        }
+    },
+    "formfooter": {
+        "savedraft": {
+            "btn": "Lagre Utkast",
+            "label": "Lagre som Utkast"
+        },
+        "submit": {
+            "btn": "Send"
+        },
+        "validate": {
+            "btn": "Valider"
+        }
+    },
+    "here": "her",
+    "home": {
+        "msg": "__appTitle__ kjører! Vennligst åpne Enketo-skjemaer fra din __serverName__-installasjon."
+    },
+    "langs": {
+        "ar": "Arabisk",
+        "de": "Tysk",
+        "el": "Gresk",
+        "en": "Engelsk",
+        "es": "Spansk",
+        "he": "Hebraisk",
+        "hi": "Hindi",
+        "km": "Khmer",
+        "nl": "Nederlansk",
+        "ro": "Rumensk",
+        "supported": "Støttede språk:",
+        "sw": "Swahili",
+        "th": "Thai",
+        "vi": "Vietnamesisk"
+    },
+    "page": {
+        "modernbrowsers": {
+            "heading": "Moderne Nettlesere",
+            "ie": {
+                "heading": "Hvorfor viser vi ingen kjærlighet for de slemme, udaterte versjonene av Internet Explorer?",
+                "msg": "Vi forstår at noen mennesker, spesielt de som jobber for større byråkratier, ikke har tilgang til den beste og nyeste nettleserene. Fordi vi vet hvor fantastisk internet kan være med de riktige verktøyene føler vi med alle brukere i slike uheldige situasjoner. Normalt hadde vi forsøkt å tilby midlertidige løsninger for å støtte noen populære, utdaterte nettlesere, men Enketo eksisterer på grunn av tilgjengeligheten til noen veldig flotte, moderne teknologier. Dessverre er dette derfor ikke noe man kan bruke med eldre nettlesere."
+            },
+            "msg1": "Au! Unnskyld, du ble mest sannsynlig sendt hit fordi nettleseren din er utdatert eller kanskje fordi noen viktige funksjoner har blitt skrudd av i \"privat surfing\" modus.",
+            "msg2": "Hvis du bruker en utdatert nettleser anbefaler vi at du oppgraderer til en nyere versjon av en av disse følgende utmerkede moderne nettleserne:"
+        },
+        "offline": {
+            "heading": "Ingen tilgang til forespurte side",
+            "msg1": "Denne siden er bare tilgjengelig når nettleseren har en internett-tilkobling og serveren er tilgjengelig (med mindre siden ikke eksisterer). "
+        }
+    },
+    "prompt": {
+        "default": {
+            "heading": "Skriv inn verdier"
+        },
+        "login": {
+            "heading": "Skriv inn din __server__ legitimasjon",
+            "password": "Passord",
+            "remember": "Husk på denne datamaskinen",
+            "submit": "Send",
+            "username": "Brukernavn"
+        }
+    },
+    "record-list": {
+        "export": "Eksporter",
+        "msg1": "Oppføringer er lagret i nettleseren din frem til de er lastet opp (selv om du skrur av datamaskinen eller kobler fra internett).",
+        "msg2": "Oppføringer i køen, bortsett fra de markert som utkast __icon__, blir lastet opp automatisk i bakgrunnen. Dette skjer hvert 5. minutt når websiden er åpen og en internett-tilkobling er tilgjengelig. For å tvinge en opplastning i perioden mellom automatiske forsøk, trykk på Last Opp",
+        "norecords": "ingen oppføringer i køen",
+        "title": "Kø",
+        "upload": "Last Opp"
+    },
+    "store": {
+        "error": {
+            "notavailable": "Nettleserlagring er behøves men er ikke tilgjengelig, er ødelagt eller ikke skrivbar. Hvis du er i modus for \"privat surfing,\" vennligst bytt til vanlig modus eller en annen nettleser. (error: __error__)"
+        }
+    },
+    "submission": {
+        "http0": "Mislykket (Frakoblet?)",
+        "http2xx": "Uforventet svar ved sending av data.",
+        "http400": "Dataserveren tok ikke imot dataen.",
+        "http403": "Ikke tillatt å sende data til denne dataserveren.",
+        "http404": "Innsendingsservice på dataserveren ble ikke funnet.",
+        "http413": "Dataen er for stor.",
+        "http4xx": "Ukjent problem ved sending til dataserver.",
+        "http500": "Dataserveren for ditt skjema eller Enketo-serveren er nede. Vennligst prøv igjen senere eller kontakt __supportEmail__."
+    },
+    "version": "Versjon:"
+}
