@@ -122,6 +122,12 @@ function authenticate( survey ) {
         method: config[ 'linked form and data server' ][ 'legacy formhub' ] ? 'get' : 'head'
     };
 
+    if ( survey.cookie !== null ) {
+        options[ 'headers' ] = {
+            'cookie': survey.cookie
+        };
+    }
+
     return _request( options )
         .then( function() {
             debug( 'successful (authenticated if it was necessary)' );
@@ -154,8 +160,10 @@ function getAuthHeader( url, credentials ) {
             req.method = 'POST';
             auth = new Auth( req );
             auth.hasAuth = true;
-            auth.user = credentials.user;
-            auth.pass = credentials.pass;
+            if ( credentials !== null ) {
+                auth.user = credentials.user;
+                auth.pass = credentials.pass;
+            }
             authHeader = auth.onResponse( response );
             deferred.resolve( authHeader );
         } else {
