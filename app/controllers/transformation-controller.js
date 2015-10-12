@@ -1,15 +1,15 @@
-"use strict";
+'use strict';
 
-var Q = require( 'q' ),
-    transformer = require( 'enketo-transformer' ),
-    communicator = require( '../lib/communicator' ),
-    surveyModel = require( '../models/survey-model' ),
-    cacheModel = require( '../models/cache-model' ),
-    account = require( '../models/account-model' ),
-    user = require( '../models/user-model' ),
-    express = require( 'express' ),
-    router = express.Router(),
-    debug = require( 'debug' )( 'transformation-controller' );
+var Promise = require( 'q' ).Promise;
+var transformer = require( 'enketo-transformer' );
+var communicator = require( '../lib/communicator' );
+var surveyModel = require( '../models/survey-model' );
+var cacheModel = require( '../models/cache-model' );
+var account = require( '../models/account-model' );
+var user = require( '../models/user-model' );
+var express = require( 'express' );
+var router = express.Router();
+var debug = require( 'debug' )( 'transformation-controller' );
 
 module.exports = function( app ) {
     app.use( '/transform', router );
@@ -23,7 +23,6 @@ router
     } )
     .post( '/xform', getSurveyParts )
     .post( '/xform/hash', getCachedSurveyHash );
-
 
 /**
  * Obtains HTML Form, XML model, and existing XML instance
@@ -101,6 +100,7 @@ function getCachedSurveyHash( req, res, next ) {
 
 function _getFormDirectly( survey ) {
     return communicator.getXForm( survey )
+        .then( _addMediaMap )
         .then( transformer.transform );
 }
 
@@ -137,6 +137,38 @@ function _updateCache( survey ) {
         } );
 }
 
+/**
+ * Adds a media map, see enketo/enketo-transformer
+ * 
+ * @param {[type]} survey [description]
+ */
+function _addMediaMap( survey ) {
+    var mediaMap = null;
+
+    return new Promise( function( resolve, reject ) {
+        survey.manifest.forEach( function( file ) {
+            mediaMap = mediaMap ? mediaMap : {};
+            if ( file.downloadUrl ) {
+                mediaMap[ file.filename ] = _toLocalMediaUrl( file.downloadUrl );
+            }
+        } );
+
+        survey.media = mediaMap;
+        resolve( survey );
+    } );
+}
+
+/**
+ * Converts a url to a local (proxied) url.
+ *
+ * @param  {string} url The url to convert.
+ * @return {string}     The converted url.
+ */
+function _toLocalMediaUrl( url ) {
+    var localUrl = '/media/get/' + url.replace( /(https?):\/\//, '$1/' );
+    return localUrl;
+}
+
 function _respond( res, survey ) {
 
     delete survey.credentials;
@@ -156,8 +188,8 @@ function _respond( res, survey ) {
 }
 
 function _getSurveyParams( params ) {
-    var error, cleanId,
-        deferred = Q.defer();
+    var error;
+    var cleanId;
 
     if ( params.enketoId ) {
         return surveyModel.get( params.enketoId )
@@ -167,18 +199,20 @@ function _getSurveyParams( params ) {
             openRosaServer: params.serverUrl,
             openRosaId: params.xformId
         } );
-    } else if ( params.xformUrl ) {
-        // do not check account
-        deferred.resolve( {
-            info: {
-                downloadUrl: params.xformUrl
+    } else {
+        return new Promise( function( resolve, reject ) {
+            if ( params.xformUrl ) {
+                // do not check account
+                resolve( {
+                    info: {
+                        downloadUrl: params.xformUrl
+                    }
+                } );
+            } else {
+                error = new Error( 'Bad Request. Survey information not complete.' );
+                error.status = 400;
+                reject( error );
             }
         } );
-    } else {
-        error = new Error( 'Bad Request. Survey information not complete.' );
-        error.status = 400;
-        deferred.reject( error );
     }
-
-    return deferred.promise;
 }
