@@ -1,21 +1,21 @@
-"use strict";
+'use strict';
 
-var themesSupported = [],
-    languagesSupported = [],
-    express = require( 'express' ),
-    path = require( 'path' ),
-    bodyParser = require( 'body-parser' ),
-    cookieParser = require( 'cookie-parser' ),
-    fs = require( 'fs' ),
-    favicon = require( 'serve-favicon' ),
-    config = require( '../app/models/config-model' ).server,
-    logger = require( 'morgan' ),
-    i18n = require( 'i18next' ),
-    compression = require( 'compression' ),
-    errorHandler = require( '../app/controllers/error-handler' ),
-    controllersPath = path.join( __dirname, '../app/controllers' ),
-    app = express(),
-    debug = require( 'debug' )( 'express' );
+var themesSupported = [];
+var languagesSupported = [];
+var express = require( 'express' );
+var path = require( 'path' );
+var bodyParser = require( 'body-parser' );
+var cookieParser = require( 'cookie-parser' );
+var fs = require( 'fs' );
+var favicon = require( 'serve-favicon' );
+var config = require( '../app/models/config-model' ).server;
+var logger = require( 'morgan' );
+var i18n = require( 'i18next' );
+var compression = require( 'compression' );
+var errorHandler = require( '../app/controllers/error-handler' );
+var controllersPath = path.join( __dirname, '../app/controllers' );
+var app = express();
+var debug = require( 'debug' )( 'express' );
 
 // general 
 for ( var item in config ) {

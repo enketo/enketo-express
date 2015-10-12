@@ -1,15 +1,15 @@
-"use strict";
+'use strict';
 
-var Q = require( 'q' ),
-    utils = require( '../lib/utils' ),
-    transformer = require( 'enketo-transformer' ),
-    prefix = 'ca:',
-    expiry = 30 * 24 * 60 * 60,
-    config = require( './config-model' ).server,
-    client = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
-        auth_pass: config.redis.cache.password
-    } ),
-    debug = require( 'debug' )( 'cache-model' );
+var Q = require( 'q' );
+var utils = require( '../lib/utils' );
+var transformer = require( 'enketo-transformer' );
+var prefix = 'ca:';
+var expiry = 30 * 24 * 60 * 60;
+var config = require( './config-model' ).server;
+var client = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
+    auth_pass: config.redis.cache.password
+} );
+var debug = require( 'debug' )( 'cache-model' );
 
 // in test environment, switch to different db
 if ( process.env.NODE_ENV === 'test' ) {

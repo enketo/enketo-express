@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // Error to be translated
 function TranslatedError( translationKey, translationObject ) {

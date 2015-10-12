@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
-var user = require( '../models/user-model' ),
-    communicator = require( '../lib/communicator' ),
-    request = require( 'request' ),
-    express = require( 'express' ),
-    router = express.Router(),
-    debug = require( 'debug' )( 'media-controller' );
+var user = require( '../models/user-model' );
+var communicator = require( '../lib/communicator' );
+var request = require( 'request' );
+var express = require( 'express' );
+var router = express.Router();
+var debug = require( 'debug' )( 'media-controller' );
 
 module.exports = function( app ) {
     app.use( '/media', router );

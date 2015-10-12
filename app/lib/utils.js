@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-var crypto = require( 'crypto' ),
-    debug = require( 'debug' )( 'utils' );
+var crypto = require( 'crypto' );
+var debug = require( 'debug' )( 'utils' );
 
 /** 
  * Returns a unique, predictable openRosaKey from a survey oject

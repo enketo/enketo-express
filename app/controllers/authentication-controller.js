@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
-var url = require( 'url' ),
-    csrfProtection = require( 'csurf' )( {
-        cookie: true
-    } ),
-    jwt = require( 'jwt-simple' ),
-    express = require( 'express' ),
-    router = express.Router(),
-    debug = require( 'debug' )( 'authentication-controller' );
+var url = require( 'url' );
+var csrfProtection = require( 'csurf' )( {
+    cookie: true
+} );
+var jwt = require( 'jwt-simple' );
+var express = require( 'express' );
+var router = express.Router();
+var debug = require( 'debug' )( 'authentication-controller' );
 
 
 module.exports = function( app ) {

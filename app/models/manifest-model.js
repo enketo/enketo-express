@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var libxml = require( "libxmljs" );
 var url = require( 'url' );

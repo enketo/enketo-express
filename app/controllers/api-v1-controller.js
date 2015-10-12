@@ -1,12 +1,12 @@
-"use strict";
+'use strict';
 
-var surveyModel = require( '../models/survey-model' ),
-    instanceModel = require( '../models/instance-model' ),
-    account = require( '../models/account-model' ),
-    auth = require( 'basic-auth' ),
-    express = require( 'express' ),
-    router = express.Router(),
-    debug = require( 'debug' )( 'api-controller' );
+var surveyModel = require( '../models/survey-model' );
+var instanceModel = require( '../models/instance-model' );
+var account = require( '../models/account-model' );
+var auth = require( 'basic-auth' );
+var express = require( 'express' );
+var router = express.Router();
+var debug = require( 'debug' )( 'api-controller' );
 
 module.exports = function( app ) {
     app.use( '/api/v1', router );

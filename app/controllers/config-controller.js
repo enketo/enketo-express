@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-var config = require( '../models/config-model' ),
-    express = require( 'express' ),
-    router = express.Router(),
-    debug = require( 'debug' )( 'config-controller' );
+var config = require( '../models/config-model' );
+var express = require( 'express' );
+var router = express.Router();
+var debug = require( 'debug' )( 'config-controller' );
 
 module.exports = function( app ) {
     app.use( '/client-config.json', router );

@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-var hardcodedAccount,
-    Q = require( "q" ),
-    utils = require( '../lib/utils' ),
-    debug = require( 'debug' )( "account-model" );
+var hardcodedAccount;
+var Q = require( 'q' );
+var utils = require( '../lib/utils' );
+var debug = require( 'debug' )( "account-model" );
 
 /**
  * Obtain account
