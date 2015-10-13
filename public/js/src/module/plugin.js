@@ -21,7 +21,9 @@ $.fn.capitalizeStart = function( numWords ) {
 };
 
 $.fn.btnBusyState = function( busy ) {
-    var $button, btnContent;
+    var $button;
+    var btnContent;
+
     return this.each( function() {
         $button = $( this );
         btnContent = $button.data( 'btnContent' );

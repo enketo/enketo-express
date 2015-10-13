@@ -35,8 +35,8 @@ var formData;
 var $formprogress;
 
 function init( selector, data ) {
-    var advice,
-        loadErrors = [];
+    var advice;
+    var loadErrors = [];
 
     formSelector = selector;
     formData = data;
@@ -121,7 +121,8 @@ function _checkAutoSavedRecord() {
  * @param  {boolean=} confirmed Whether unsaved changes can be discarded and lost forever
  */
 function _resetForm( confirmed ) {
-    var message, choices;
+    var message;
+    var choices;
 
     if ( !confirmed && form.getEditStatus() ) {
         message = t( 'confirm.save.msg' );
@@ -154,7 +155,9 @@ function _resetForm( confirmed ) {
  * @param  {=boolean?} confirmed  [description]
  */
 function _loadRecord( instanceId, confirmed ) {
-    var texts, choices, loadErrors;
+    var texts;
+    var choices;
+    var loadErrors;
 
     if ( !confirmed && form.getEditStatus() ) {
         texts = {
@@ -214,15 +217,15 @@ function _loadRecord( instanceId, confirmed ) {
  * and is not used in offline-capable views.
  */
 function _submitRecord() {
-    var record, redirect, beforeMsg, authLink, level,
-        msg = [];
+    var record;
+    var redirect;
+    var beforeMsg;
+    var authLink;
+    var level;
+    var msg = [];
 
     form.getView().$.trigger( 'beforesave' );
 
-    if ( !form.isValid() ) {
-        gui.alert( t( 'alert.validationerror.msg' ) );
-        return;
-    }
     beforeMsg = ( redirect ) ? t( 'alert.submission.redirectmsg' ) : '';
     authLink = '<a href="/login" target="_blank">' + t( 'here' ) + '</a>';
 
@@ -234,7 +237,7 @@ function _submitRecord() {
         'files': fileManager.getCurrentFiles()
     };
 
-    connection.uploadRecord( record )
+    return connection.uploadRecord( record )
         .then( function( result ) {
             result = result || {};
             level = 'success';
@@ -321,23 +324,18 @@ function _confirmRecordRename( oldName, newName, errMsg ) {
 }
 
 function _saveRecord( recordName, confirmed, errorMsg ) {
-    var record, saveMethod,
-        draft = _getDraftStatus();
+    var record;
+    var saveMethod;
+    var draft = _getDraftStatus();
 
     // triggering "beforesave" event to update possible "timeEnd" meta data in form
     form.getView().$.trigger( 'beforesave' );
-
-    // check validity of record if necessary
-    if ( !draft && !form.validate() ) {
-        gui.alert( t( 'alert.validationerror.msg' ) );
-        return;
-    }
 
     // check recordName
     if ( !recordName ) {
         return _getRecordName()
             .then( function( name ) {
-                _saveRecord( name, false, errorMsg );
+                return _saveRecord( name, false, errorMsg );
             } );
     }
 
@@ -345,7 +343,7 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
     if ( draft && !confirmed ) {
         return _confirmRecordName( recordName, errorMsg )
             .then( function( name ) {
-                _saveRecord( name, true );
+                return _saveRecord( name, true );
             } );
     }
 
@@ -370,7 +368,7 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
     saveMethod = form.getRecordName() ? 'update' : 'set';
 
     // save the record
-    records[ saveMethod ]( record )
+    return records[ saveMethod ]( record )
         .then( function() {
 
             records.removeAutoSavedRecord();
@@ -425,17 +423,32 @@ function _setEventHandlers() {
 
     $( 'button#submit-form' ).click( function() {
         var $button = $( this );
+        var draft = _getDraftStatus();
         $button.btnBusyState( true );
         setTimeout( function() {
-            if ( settings.offline ) {
+            if ( settings.offline && draft ) {
+                $button.btnBusyState( false );
                 _saveRecord();
             } else {
-                form.validate();
-                _submitRecord();
+                form.validate()
+                    .then( function( valid ) {
+                        $button.btnBusyState( false );
+                        if ( valid ) {
+                            if ( settings.offline ) {
+                                return _saveRecord();
+                            } else {
+                                return _submitRecord();
+                            }
+                        } else {
+                            gui.alert( t( 'alert.validationerror.msg' ) );
+                        }
+                    } )
+                    .catch( function( e ) {
+                        gui.alert( e.message );
+                    } );
             }
-            $button.btnBusyState( false );
-            return false;
         }, 100 );
+        return false;
     } );
 
     $( 'button#validate-form:not(.disabled)' ).click( function() {
@@ -443,16 +456,24 @@ function _setEventHandlers() {
             var $button = $( this );
             $button.btnBusyState( true );
             setTimeout( function() {
-                form.validate();
-                $button.btnBusyState( false );
-                if ( !form.isValid() ) {
-                    gui.alert( t( 'alert.validationerror.msg' ) );
-                    return;
-                } else {
-                    gui.alert( t( 'alert.validationsuccess.msg' ), t( 'alert.validationsuccess.heading' ), 'success' );
-                }
+                form.validate()
+                    .then( function( valid ) {
+                        $button.btnBusyState( false );
+                        if ( !valid ) {
+                            gui.alert( t( 'alert.validationerror.msg' ) );
+                        } else {
+                            gui.alert( t( 'alert.validationsuccess.msg' ), t( 'alert.validationsuccess.heading' ), 'success' );
+                        }
+                    } )
+                    .catch( function( e ) {
+                        gui.alert( e.message );
+                    } )
+                    .then( function() {
+                        $button.btnBusyState( false );
+                    } );
             }, 100 );
         }
+        return false;
     } );
 
     $( '.record-list__button-bar__button.upload' ).on( 'click', function() {
