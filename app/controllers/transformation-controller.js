@@ -7,6 +7,7 @@ var surveyModel = require( '../models/survey-model' );
 var cacheModel = require( '../models/cache-model' );
 var account = require( '../models/account-model' );
 var user = require( '../models/user-model' );
+var isArray = require( 'lodash/lang/isArray' );
 var express = require( 'express' );
 var router = express.Router();
 var debug = require( 'debug' )( 'transformation-controller' );
@@ -146,13 +147,14 @@ function _addMediaMap( survey ) {
     var mediaMap = null;
 
     return new Promise( function( resolve, reject ) {
-        survey.manifest.forEach( function( file ) {
-            mediaMap = mediaMap ? mediaMap : {};
-            if ( file.downloadUrl ) {
-                mediaMap[ file.filename ] = _toLocalMediaUrl( file.downloadUrl );
-            }
-        } );
-
+        if ( isArray( survey.manifest ) ) {
+            survey.manifest.forEach( function( file ) {
+                mediaMap = mediaMap ? mediaMap : {};
+                if ( file.downloadUrl ) {
+                    mediaMap[ file.filename ] = _toLocalMediaUrl( file.downloadUrl );
+                }
+            } );
+        }
         survey.media = mediaMap;
         resolve( survey );
     } );
