@@ -211,7 +211,7 @@ $offline-color: #d15200;
     .form-language-selector {
         padding-right: 0;
     }
-    .print {
+    .form-header__button--print {
         display: none;
         ~ .form-language-selector {
             border-right: none;

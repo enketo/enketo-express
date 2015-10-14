@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+-----------------------
+##### Fixed
+- Language selector on small screens has right border.
+
 [1.19.0] - 2015-10-14
 -----------------------
 ##### Added
