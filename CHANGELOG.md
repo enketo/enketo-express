@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.19.0] - 2015-10-14
+-----------------------
+##### Added
+- Next-page validation in pages mode.
+
+##### Changed
+- Analog scale picker behaviour when value is empty.
+
+##### Fixed
+- Question focus issues in pages mode.
+
 [1.18.1] - 2015-10-07
 -----------------------
 ##### Fixed
