@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
-var Q = require( 'q' ),
-    config = require( './config-model' ).server,
-    TError = require( '../lib/custom-error' ).TranslatedError,
-    utils = require( '../lib/utils' ),
-    client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
-        auth_pass: config.redis.main.password
-    } ),
-    debug = require( 'debug' )( 'instance-model' );
+var Q = require( 'q' );
+var config = require( './config-model' ).server;
+var TError = require( '../lib/custom-error' ).TranslatedError;
+var utils = require( '../lib/utils' );
+var client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
+    auth_pass: config.redis.main.password
+} );
+var debug = require( 'debug' )( 'instance-model' );
 
 // in test environment, switch to different db
 if ( process.env.NODE_ENV === 'test' ) {

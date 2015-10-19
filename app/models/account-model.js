@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 
-var hardcodedAccount,
-    Q = require( "q" ),
-    config = require( './config-model' ).server,
-    utils = require( '../lib/utils' ),
-    pending = {},
-    client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
-        auth_pass: config.redis.main.password
-    } ),
-    debug = require( 'debug' )( "account-model" );
+var hardcodedAccount;
+var Q = require( "q" );
+var config = require( './config-model' ).server;
+var utils = require( '../lib/utils' );
+var pending = {};
+var client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
+    auth_pass: config.redis.main.password
+} );
+var debug = require( 'debug' )( "account-model" );
 
 // in test environment, switch to different db
 if ( process.env.NODE_ENV === 'test' ) {

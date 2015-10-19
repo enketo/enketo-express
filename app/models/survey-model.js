@@ -1,16 +1,16 @@
-"use strict";
+'use strict';
 
-var Promise = require( 'q' ).Promise,
-    utils = require( '../lib/utils' ),
-    TError = require( '../lib/custom-error' ).TranslatedError,
-    config = require( './config-model' ).server,
-    client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
-        auth_pass: config.redis.main.password
-    } ),
-    pending = {},
-    //randomized 'abcdefghijklmnopqrstuvwxyzABCDEFGHUJKLMNOPQRSTUVWXYZ0123456789';
-    CHARS = "Yp8oyU0HhFQiPz9KZ1SBGvdTqCM6XDnUmkbxNOVLAsEcf5uRe347Wrtlj2awgJ",
-    debug = require( 'debug' )( 'survey-model' );
+var Promise = require( 'q' ).Promise;
+var utils = require( '../lib/utils' );
+var TError = require( '../lib/custom-error' ).TranslatedError;
+var config = require( './config-model' ).server;
+var client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
+    auth_pass: config.redis.main.password
+} );
+var pending = {};
+//randomized 'abcdefghijklmnopqrstuvwxyzABCDEFGHUJKLMNOPQRSTUVWXYZ0123456789';
+var CHARS = 'Yp8oyU0HhFQiPz9KZ1SBGvdTqCM6XDnUmkbxNOVLAsEcf5uRe347Wrtlj2awgJ';
+var debug = require( 'debug' )( 'survey-model' );
 
 // in test environment, switch to different db
 if ( process.env.NODE_ENV === 'test' ) {

@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-var express = require( 'express' ),
-    router = express.Router(),
-    debug = require( 'debug' )( 'pages-controller' );
+var express = require( 'express' );
+var router = express.Router();
+var debug = require( 'debug' )( 'pages-controller' );
 
 module.exports = function( app ) {
     app.use( '/', router );

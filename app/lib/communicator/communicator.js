@@ -1,12 +1,12 @@
-"use strict";
+'use strict';
 
-var request = require( 'request' ),
-    Auth = require( 'request/lib/auth' ).Auth,
-    TError = require( '../custom-error' ).TranslatedError,
-    Q = require( 'q' ),
-    config = require( '../../models/config-model' ).server,
-    debug = require( 'debug' )( 'openrosa-communicator' ),
-    parser = new require( 'xml2js' ).Parser();
+var request = require( 'request' );
+var Auth = require( 'request/lib/auth' ).Auth;
+var TError = require( '../custom-error' ).TranslatedError;
+var Q = require( 'q' );
+var config = require( '../../models/config-model' ).server;
+var debug = require( 'debug' )( 'openrosa-communicator' );
+var parser = new require( 'xml2js' ).Parser();
 
 /**
  * Gets form info

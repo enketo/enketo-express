@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
-var manifest = require( '../models/manifest-model' ),
-    Promise = require( 'q' ).Promise,
-    express = require( 'express' ),
-    router = express.Router(),
-    debug = require( 'debug' )( 'manifest-controller' );
+var manifest = require( '../models/manifest-model' );
+var Promise = require( 'q' ).Promise;
+var express = require( 'express' );
+var router = express.Router();
+var debug = require( 'debug' )( 'manifest-controller' );
 
 module.exports = function( app ) {
     app.use( '/_/manifest.appcache*', router );

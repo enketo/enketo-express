@@ -35,7 +35,8 @@ progress {
 
 .form__loader {
     @include loader-image(250px);
-    margin: 170px auto 0 auto;
+    @include flex(1);
+    margin: 70px auto 10px auto;
     &.fail {
         background: none;
     }

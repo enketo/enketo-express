@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
-var config = require( '../../config/default-config' ),
-    localConfig = require( '../../config/config' ),
-    merge = require( 'lodash/object/merge' ),
-    path = require( 'path' ),
-    fs = require( 'fs' ),
-    themePath = path.join( __dirname, '../../public/css' ),
-    languagePath = path.join( __dirname, '../../locales' ),
-    debug = require( 'debug' )( 'config-model' );
+var config = require( '../../config/default-config' );
+var localConfig = require( '../../config/config' );
+var merge = require( 'lodash/object/merge' );
+var path = require( 'path' );
+var fs = require( 'fs' );
+var themePath = path.join( __dirname, '../../public/css' );
+var languagePath = path.join( __dirname, '../../locales' );
+var debug = require( 'debug' )( 'config-model' );
 
 // merge default and local config
 merge( config, localConfig );

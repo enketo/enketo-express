@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 
-var communicator = require( '../lib/communicator' ),
-    surveyModel = require( '../models/survey-model' ),
-    userModel = require( '../models/user-model' ),
-    instanceModel = require( '../models/instance-model' ),
-    utils = require( '../lib/utils' ),
-    request = require( 'request' ),
-    express = require( 'express' ),
-    router = express.Router(),
-    debug = require( 'debug' )( 'submission-controller' );
+var communicator = require( '../lib/communicator' );
+var surveyModel = require( '../models/survey-model' );
+var userModel = require( '../models/user-model' );
+var instanceModel = require( '../models/instance-model' );
+var utils = require( '../lib/utils' );
+var request = require( 'request' );
+var express = require( 'express' );
+var router = express.Router();
+var debug = require( 'debug' )( 'submission-controller' );
 
 module.exports = function( app ) {
     app.use( '/submission', router );
