@@ -195,15 +195,16 @@ function addSubmission( id ) {
 }
 
 function getNumberOfSurveys( server ) {
-    var error, tasks, number;
+    var error, tasks, number, cleanServerUrl;
 
     return new Promise( function( resolve, reject ) {
-        if ( !server ) {
+        cleanServerUrl = ( server === '' ) ? '' : utils.cleanurl( server );
+        if ( !cleanServerUrl && cleanServerUrl !== '' ) {
             error = new Error( 'Survey information not complete or invalid' );
             error.status = 400;
             reject( error );
         } else {
-            client.keys( "or:" + utils.cleanUrl( server ) + "*", function( err, keys ) {
+            client.keys( "or:" + cleanServerUrl + "*", function( err, keys ) {
                 if ( error ) {
                     reject( error );
                 } else if ( keys ) {
@@ -222,15 +223,16 @@ function getNumberOfSurveys( server ) {
 }
 
 function getListOfSurveys( server ) {
-    var error, tasks, list;
+    var error, tasks, list, cleanServerUrl;
 
     return new Promise( function( resolve, reject ) {
-        if ( !server ) {
+        cleanServerUrl = ( server === '' ) ? '' : utils.cleanurl( server );
+        if ( !cleanServerUrl && cleanServerUrl !== '' ) {
             error = new Error( 'Survey information not complete or invalid' );
             error.status = 400;
             reject( error );
         } else {
-            client.keys( "or:" + utils.cleanUrl( server ) + "*", function( err, keys ) {
+            client.keys( "or:" + cleanServerUrl + "*", function( err, keys ) {
                 if ( error ) {
                     reject( error );
                 } else if ( keys ) {
