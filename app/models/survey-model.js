@@ -198,7 +198,7 @@ function getNumberOfSurveys( server ) {
     var error, tasks, number, cleanServerUrl;
 
     return new Promise( function( resolve, reject ) {
-        cleanServerUrl = ( server === '' ) ? '' : utils.cleanurl( server );
+        cleanServerUrl = ( server === '' ) ? '' : utils.cleanUrl( server );
         if ( !cleanServerUrl && cleanServerUrl !== '' ) {
             error = new Error( 'Survey information not complete or invalid' );
             error.status = 400;
@@ -226,7 +226,7 @@ function getListOfSurveys( server ) {
     var error, tasks, list, cleanServerUrl;
 
     return new Promise( function( resolve, reject ) {
-        cleanServerUrl = ( server === '' ) ? '' : utils.cleanurl( server );
+        cleanServerUrl = ( server === '' ) ? '' : utils.cleanUrl( server );
         if ( !cleanServerUrl && cleanServerUrl !== '' ) {
             error = new Error( 'Survey information not complete or invalid' );
             error.status = 400;

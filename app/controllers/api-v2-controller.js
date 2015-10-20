@@ -6,6 +6,7 @@ var account = require( '../models/account-model' );
 var auth = require( 'basic-auth' );
 var express = require( 'express' );
 var router = express.Router();
+var quotaErrorMessage = 'Forbidden. No quota left';
 var debug = require( 'debug' )( 'api-controller' );
 
 module.exports = function( app ) {
@@ -21,6 +22,7 @@ router
         next( error );
     } )
     .all( '*', authCheck )
+    .all( '*', _setQuotaUsed )
     .all( '*', _setDefaultsQueryParam )
     .all( '/*/iframe', _setIframeQueryParams )
     .all( '/survey/all', _setIframeQueryParams )
@@ -91,7 +93,6 @@ function authCheck( req, res, next ) {
 
     account.get( server )
         .then( function( account ) {
-            debug( 'account', account );
             if ( !key || ( key !== account.key ) ) {
                 error = new Error( 'Not Allowed. Invalid API key.' );
                 error.status = 401;
@@ -100,6 +101,7 @@ function authCheck( req, res, next ) {
                     .set( 'WWW-Authenticate', 'Basic realm="Enter valid API key as user name"' );
                 next( error );
             } else {
+                req.account = account;
                 next();
             }
         } )
@@ -108,6 +110,10 @@ function authCheck( req, res, next ) {
 
 function getExistingSurvey( req, res, next ) {
     var error, body;
+
+    if ( req.account.quota < req.account.quotaUsed ) {
+        return _render( 403, quotaErrorMessage, res );
+    }
 
     return surveyModel
         .getId( {
@@ -132,10 +138,16 @@ function getNewOrExistingSurvey( req, res, next ) {
             theme: req.body.theme || req.query.theme
         };
 
+    if ( req.account.quota < req.account.quotaUsed ) {
+        return _render( 403, quotaErrorMessage, res );
+    }
+
     return surveyModel
         .getId( survey ) // will return id only for existing && active surveys
         .then( function( id ) {
-            debug( 'id: ' + id );
+            if ( !id && req.account.quota <= req.account.quotaUsed ) {
+                return _render( 403, quotaErrorMessage, res );
+            }
             status = ( id ) ? 200 : 201;
             // even if id was found still call .set() method to update any properties
             return surveyModel.set( survey )
@@ -211,6 +223,10 @@ function getList( req, res, next ) {
 function cacheInstance( req, res, next ) {
     var error, body, survey;
 
+    if ( req.account.quota < req.account.quotaUsed ) {
+        return _render( 403, quotaErrorMessage, res );
+    }
+
     survey = {
         openRosaServer: req.body.server_url,
         openRosaId: req.body.form_id,
@@ -242,6 +258,16 @@ function removeInstance( req, res, next ) {
             } else {
                 _render( 404, 'Record not found.', res );
             }
+        } )
+        .catch( next );
+}
+
+function _setQuotaUsed( req, res, next ) {
+    surveyModel
+        .getNumber( req.account.openRosaServer )
+        .then( function( number ) {
+            req.account.quotaUsed = number;
+            next();
         } )
         .catch( next );
 }

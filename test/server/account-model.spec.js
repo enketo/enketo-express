@@ -1,16 +1,16 @@
 /* global describe, require, it, before, after, beforeEach, afterEach */
-"use strict";
+'use strict';
 
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var Q = require( "q" ),
-    chai = require( "chai" ),
-    expect = chai.expect,
-    chaiAsPromised = require( "chai-as-promised" ),
-    app = require( '../../config/express' ),
-    model = require( '../../app/models/account-model' ),
-    config = require( "../../app/models/config-model" ).server;
+var Promise = require( 'q' ).Promise;
+var chai = require( 'chai' );
+var expect = chai.expect;
+var chaiAsPromised = require( 'chai-as-promised' );
+var app = require( '../../config/express' );
+var model = require( '../../app/models/account-model' );
+var config = require( '../../app/models/config-model' ).server;
 
 chai.use( chaiAsPromised );
 
@@ -22,23 +22,63 @@ describe( 'Account Model', function() {
             return expect( model.get( 'nonexisting' ) ).to.eventually.be.rejected;
         } );
 
-        // the test below assumes the config.json server url does not have the http:// prefix
-        it( 'returns the hardcoded account object', function() {
-            var account, getAccountPromise;
+        [
+            // config               // request serverUrl
+            [ 'http://example.com', 'http://example.com' ],
+            [ 'http://example.com', 'https://example.com' ],
+            [ 'http://example.com', 'http://example.com/johndoe' ],
+            [ 'http://example.com', 'https://example.com/johndoe' ],
+            [ 'https://example.com', 'http://example.com' ],
+            [ 'https://example.com', 'http://example.com/johndoe' ],
+            [ 'https://example.com', 'https://example.com/johndoe' ],
+            [ 'example.com', 'http://example.com' ],
+            [ 'example.com', 'https://example.com' ],
+            [ 'example.com', 'http://example.com/johndoe' ],
+        ].forEach( function( test ) {
+            var accountServerUrl = test[ 0 ];
+            var requestServerUrl = test[ 1 ];
+            it( 'returns the hardcoded account object with linked server ' + accountServerUrl + ' and request server ' + requestServerUrl, function() {
+                var getAccountPromise;
+                var accountKey = '123abc';
+                var survey = {
+                    openRosaServer: requestServerUrl
+                };
 
-            config[ 'linked form and data server' ][ 'server url' ] = 'example.com';
+                config[ 'linked form and data server' ][ 'server url' ] = accountServerUrl;
+                config[ 'linked form and data server' ][ 'api key' ] = accountKey;
 
-            account = {
-                key: config[ 'linked form and data server' ][ 'api key' ],
-                openRosaServer: 'http://' + config[ 'linked form and data server' ][ 'server url' ]
-            };
-            getAccountPromise = model.get( account );
+                getAccountPromise = model.get( survey );
 
-            return Q.all( [
-                expect( getAccountPromise ).to.eventually.have.property( 'key' ).and.to.equal( account.key ),
-                expect( getAccountPromise ).to.eventually.have.property( 'openRosaServer' ).and.to.equal( account.openRosaServer )
-            ] );
+                return Promise.all( [
+                    expect( getAccountPromise ).to.eventually.have.property( 'key' ).and.to.equal( accountKey ),
+                    expect( getAccountPromise ).to.eventually.have.property( 'openRosaServer' ).and.to.equal( accountServerUrl )
+                ] );
+            } );
         } );
+
+        [
+            [ 'http://example.com', 'http://example.org', 403 ],
+            [ 'http://examplecom', 'http://example.org', 403 ],
+            [ 'http://example.com/johndoe', 'http://example.com', 403 ],
+
+        ].forEach( function( test ) {
+            var accountServerUrl = test[ 0 ];
+            var requestServerUrl = test[ 1 ];
+            var errorCode = test[ 2 ];
+            it( 'returns ' + errorCode + ' for ' + accountServerUrl + ' and request server ' + requestServerUrl, function() {
+                var getAccountPromise;
+                var survey = {
+                    openRosaServer: requestServerUrl
+                };
+
+                config[ 'linked form and data server' ][ 'server url' ] = accountServerUrl;
+
+                getAccountPromise = model.get( survey );
+
+                return expect( getAccountPromise ).to.eventually.be.rejected;
+            } );
+        } );
+
     } );
 
 } );

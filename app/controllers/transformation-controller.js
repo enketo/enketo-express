@@ -171,6 +171,23 @@ function _toLocalMediaUrl( url ) {
     return localUrl;
 }
 
+function _checkQuota( survey ) {
+    var error;
+
+    return surveyModel
+        .getNumber( survey.account.openRosaServer )
+        .then( function( quotaUsed ) {
+            debug( 'quota available', survey.account.quota );
+            debug( 'quota used', quotaUsed );
+            if ( quotaUsed <= survey.account.quota ) {
+                return Promise.resolve( survey );
+            }
+            error = new Error( 'Forbidden. Quota exceeded.' );
+            error.status = 403;
+            throw error;
+        } );
+}
+
 function _respond( res, survey ) {
 
     delete survey.credentials;
@@ -195,12 +212,14 @@ function _getSurveyParams( params ) {
 
     if ( params.enketoId ) {
         return surveyModel.get( params.enketoId )
-            .then( account.check );
+            .then( account.check )
+            .then( _checkQuota );
     } else if ( params.serverUrl && params.xformId ) {
         return account.check( {
-            openRosaServer: params.serverUrl,
-            openRosaId: params.xformId
-        } );
+                openRosaServer: params.serverUrl,
+                openRosaId: params.xformId
+            } )
+            .then( _checkQuota );
     } else {
         return new Promise( function( resolve, reject ) {
             if ( params.xformUrl ) {

@@ -1,96 +1,69 @@
 'use strict';
 
-var hardcodedAccount;
-var Q = require( 'q' );
+var Promise = require( 'q' ).Promise;
 var utils = require( '../lib/utils' );
-var debug = require( 'debug' )( "account-model" );
+var surveyModel = require( './survey-model' );
+var config = require( './config-model' ).server;
+var customGetAccount = config[ 'account lib' ] ? require( config[ 'account lib' ] ).getAccount : undefined;
+var debug = require( 'debug' )( 'account-model' );
 
 /**
  * Obtain account
  * @param  {[type]} survey [description]
  * @return {[type]}        [description]
  */
-function _get( survey ) {
-    var error,
-        hardcodedAccount = _getHardcodedAccount(),
-        server = _getServer( survey ),
-        app = app || require( '../../config/express' ),
-        deferred = Q.defer();
+function get( survey ) {
+    var error;
+    var server = _getServer( survey );
 
     if ( !server ) {
-        error = new Error( 'Bad Request. Server URL missing' );
+        error = new Error( 'Bad Request. Server URL missing.' );
         error.status = 400;
-        deferred.reject( error );
+        return Promise.reject( error );
     } else if ( !utils.isValidUrl( server ) ) {
         error = new Error( 'Bad Request. Server URL is not a valid URL.' );
         error.status = 400;
-        deferred.reject( error );
-    } else {
-        if ( hardcodedAccount && _isAllowed( hardcodedAccount, server ) ) {
-            deferred.resolve( {
-                openRosaServer: server,
-                key: hardcodedAccount.key
-            } );
-        } else if ( /https?:\/\/testserver.com\/bob/.test( server ) ) {
-            deferred.resolve( {
-                openRosaServer: server,
-                key: 'abc'
-            } );
-        } else if ( /https?:\/\/testserver.com\/noquota/.test( server ) ) {
-            error = new Error( 'Forbidden. No quota left' );
-            error.status = 403;
-            deferred.reject( error );
-        } else if ( /https?:\/\/testserver.com\/noapi/.test( server ) ) {
-            error = new Error( 'Forbidden. No API access granted' );
-            error.status = 405;
-            deferred.reject( error );
-        } else if ( /https?:\/\/testserver.com\/noquotanoapi/.test( server ) ) {
-            error = new Error( 'Forbidden. No API access granted' );
-            error.status = 405;
-            deferred.reject( error );
-        } else if ( /https?:\/\/testserver.com\/notpaid/.test( server ) ) {
-            error = new Error( 'Forbidden. The account is not active.' );
-            error.status = 403;
-            deferred.reject( error );
-        } else {
-            error = new Error( 'Forbidden. This server is not linked with Enketo' );
-            error.status = 403;
-            deferred.reject( error );
-        }
+        return Promise.reject( error );
+    } else if ( /https?:\/\/testserver.com\/bob/.test( server ) ) {
+        return Promise.resolve( {
+            openRosaServer: server,
+            key: 'abc',
+            quota: 100
+        } );
+    } else if ( /https?:\/\/testserver.com\/noquota/.test( server ) ) {
+        error = new Error( 'Forbidden. No quota left.' );
+        error.status = 403;
+        return Promise.reject( error );
+    } else if ( /https?:\/\/testserver.com\/noapi/.test( server ) ) {
+        error = new Error( 'Forbidden. No API access granted.' );
+        error.status = 405;
+        return Promise.reject( error );
+    } else if ( /https?:\/\/testserver.com\/noquotanoapi/.test( server ) ) {
+        error = new Error( 'Forbidden. No API access granted.' );
+        error.status = 405;
+        return Promise.reject( error );
+    } else if ( /https?:\/\/testserver.com\/notpaid/.test( server ) ) {
+        error = new Error( 'Forbidden. The account is not active.' );
+        error.status = 403;
+        return Promise.reject( error );
     }
 
-    return deferred.promise;
+    return _getAccount( server );
 }
 
-
-
 /** 
- * Check if account is active and pass parameter if so
- * this passes back the original survey object and therefore differs from _get!
+ * Check if account for passed survey is active, and not exceeding quota.
+ * This passes back the original survey object and therefore differs from the get function!
+ * 
  * @param  {[type]} survey [description]
  * @return {[type]}        [description]
  */
-function _check( survey ) {
-    var error,
-        hardcodedAccount = _getHardcodedAccount(),
-        server = _getServer( survey ),
-        deferred = Q.defer();
-
-    if ( !server ) {
-        error = new Error( 'Bad Request. Server URL missing' );
-        error.status = 400;
-        deferred.reject( error );
-    } else {
-        if ( hardcodedAccount && _isAllowed( hardcodedAccount, server ) ) {
-            deferred.resolve( survey );
-        } else {
-            error = new Error( 'Forbidden. This server is not linked with Enketo' );
-            error.status = 403;
-            deferred.reject( error );
-        }
-    }
-
-    return deferred.promise;
+function check( survey ) {
+    return get( survey )
+        .then( function( account ) {
+            survey.account = account;
+            return survey;
+        } );
 }
 
 /**
@@ -120,15 +93,34 @@ function _stripProtocol( url ) {
 }
 
 /**
+ * Obtains account from either configuration (hardcoded) or via custom function
+ * 
+ * @param  {string} serverUrl the serverUrl to be used to look up the account
+ * @return {{openRosaServer: string, key: string, quota: number}} account object
+ */
+function _getAccount( serverUrl ) {
+    var error;
+    var hardcodedAccount = _getHardcodedAccount();
+
+    if ( _isAllowed( hardcodedAccount, serverUrl ) ) {
+        return Promise.resolve( hardcodedAccount );
+    }
+
+    if ( customGetAccount ) {
+        return customGetAccount( serverUrl );
+    }
+
+    error = new Error( 'Forbidden. This server is not linked with Enketo.' );
+    error.status = 403;
+    return Promise.reject( error );
+}
+
+/**
  * Obtains the hardcoded account from the config
  * @return {[type]} [description]
  */
 function _getHardcodedAccount() {
     var app, linkedServer;
-
-    if ( hardcodedAccount ) {
-        return hardcodedAccount;
-    }
 
     app = require( '../../config/express' );
     linkedServer = app.get( 'linked form and data server' );
@@ -140,7 +132,8 @@ function _getHardcodedAccount() {
 
     return {
         openRosaServer: linkedServer[ 'server url' ],
-        key: linkedServer[ 'api key' ]
+        key: linkedServer[ 'api key' ],
+        quota: linkedServer[ 'quota' ] || Infinity
     };
 }
 
@@ -157,6 +150,6 @@ function _getServer( survey ) {
 }
 
 module.exports = {
-    get: _get,
-    check: _check
+    get: get,
+    check: check
 };

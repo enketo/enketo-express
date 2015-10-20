@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Added
+- Ability to link to custom library to obtain account info.
+
 ##### Fixed
 - API /surveys/list and /surveys/number return error when linked server is "".
 
