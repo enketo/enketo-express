@@ -81,7 +81,8 @@
         "aliases": {
             "text!enketo-config": "./public/temp-client-config.json",
             "enketo-config": "./public/temp-client-config.json",
-            "widgets": "./public/js/src/module/widgets"
+            "widgets": "./public/js/src/module/widgets",
+            "../../js/file-manager": "./public/js/src/module/file-manager"
         }
     }
 }
