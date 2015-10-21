@@ -30,10 +30,10 @@ function cleanUrl( url ) {
         url = url.substring( 0, url.length - 1 );
     }
     matches = url.match( /https?\:\/\/(www\.)?(.+)/ );
-    if ( matches.length > 2 ) {
+    if ( matches && matches.length > 2 ) {
         return matches[ 2 ].toLowerCase();
     }
-    return null;
+    return cleanUrl;
 }
 
 function isValidUrl( url ) {

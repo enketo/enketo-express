@@ -9,6 +9,7 @@ var account = require( '../models/account-model' );
 var user = require( '../models/user-model' );
 var isArray = require( 'lodash/lang/isArray' );
 var express = require( 'express' );
+var url = require( 'url' );
 var router = express.Router();
 var debug = require( 'debug' )( 'transformation-controller' );
 
@@ -200,7 +201,7 @@ function _respond( res, survey ) {
         theme: survey.theme,
         // The hash components are converted to deal with a node_redis limitation with storing and retrieving null.
         // If a form contains no media this hash is null, which would be an empty string upon first load.
-        // Subsequent cache checks will however get the value 'null' causing the form cache to be unnecessarily refreshed
+        // Subsequent cache checks will however get the string value 'null' causing the form cache to be unnecessarily refreshed
         // on the client.
         hash: [ String( survey.formHash ), String( survey.mediaHash ), String( survey.xslHash ), String( survey.theme ) ].join( '-' )
     } );
@@ -208,7 +209,8 @@ function _respond( res, survey ) {
 
 function _getSurveyParams( params ) {
     var error;
-    var cleanId;
+    var urlObj;
+    var domain;
 
     if ( params.enketoId ) {
         return surveyModel.get( params.enketoId )
@@ -220,20 +222,30 @@ function _getSurveyParams( params ) {
                 openRosaId: params.xformId
             } )
             .then( _checkQuota );
-    } else {
-        return new Promise( function( resolve, reject ) {
-            if ( params.xformUrl ) {
-                // do not check account
-                resolve( {
+    } else if ( params.xformUrl ) {
+        urlObj = url.parse( params.xformUrl );
+        if ( !urlObj || !urlObj.protocol || !urlObj.host ) {
+            error = new Error( 'Bad Request. Form URL is invalid.' );
+            error.status = 400;
+            throw error;
+        }
+        // The previews using the xform parameter are less strictly checked.
+        // If an account with the domain is active, the check will pass.
+        domain = urlObj.protocol + '//' + urlObj.host;
+        return account.check( {
+                openRosaServer: domain
+            } )
+            .then( function( account ) {
+                // no need to check quota
+                return Promise.resolve( {
                     info: {
                         downloadUrl: params.xformUrl
                     }
                 } );
-            } else {
-                error = new Error( 'Bad Request. Survey information not complete.' );
-                error.status = 400;
-                reject( error );
-            }
-        } );
+            } );
+    } else {
+        error = new Error( 'Bad Request. Survey information not complete.' );
+        error.status = 400;
+        throw error;
     }
 }

@@ -2,10 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.20.0] - 2015-10-22
 ---------------------
 ##### Added
 - Ability to link to custom library to obtain account info.
+
+##### Changed
+- Previews now only allowed for forms hosted on linked server.
 
 ##### Fixed
 - API /surveys/list and /surveys/number return error when linked server is "".
