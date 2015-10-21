@@ -35,13 +35,16 @@ var updateStatus;
 var feedbackBar;
 var supportLink = '<a href="mailto:' + settings[ 'supportEmail' ] + '">' + settings[ 'supportEmail' ] + '</a>';
 
+// Customize vex.dialog.custom.js options
+dialog.defaultOptions.className = 'vex-theme-plain';
+
 /**
- * Initializes a GUI object.
+ * Initializes the GUI module
  */
 function init() {
     setEventHandlers();
 
-    // avoid windows console errors
+    // avoid Windows console errors
     if ( typeof window.console === "undefined" ) {
         window.console = {
             log: function() {}
@@ -62,9 +65,6 @@ function init() {
         support.touch = false;
         $( 'html' ).removeClass( 'touch' );
     }
-
-    //customize vex.dialog.custom.js options
-    dialog.defaultOptions.className = 'vex-theme-plain';
 }
 
 /**

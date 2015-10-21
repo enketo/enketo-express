@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - API /surveys/list and /surveys/number return error when linked server is "".
+- Styling of load error dialog sometimes messed up.
 
 [1.19.3] - 2015-10-21
 ----------------------
