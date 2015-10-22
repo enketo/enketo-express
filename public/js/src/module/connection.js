@@ -1,27 +1,10 @@
 /**
- * @preserve Copyright 2014 Martijn van de Rijdt
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
  * Deals with communication to the server (in process of being transformed to using Promises)
  */
 
 'use strict';
 
 var settings = require( './settings' );
-var Q = require( 'q' );
 var t = require( './translator' );
 var utils = require( './utils' );
 var $ = require( 'jquery' );
@@ -91,15 +74,13 @@ function _setOnlineStatus( newStatus ) {
  * @return {Promise}
  */
 function uploadRecord( record ) {
-    var batches,
-        tasks = [],
-        deferred = Q.defer();
+    var batches;
+    var tasks = [];
 
     try {
         batches = _prepareFormDataArray( record );
     } catch ( e ) {
-        deferred.reject( e );
-        return deferred.promise;
+        return Promise.reject( e );
     }
 
     batches.forEach( function( batch ) {
@@ -107,7 +88,7 @@ function uploadRecord( record ) {
         tasks.push( _uploadBatch( batch ) );
     } );
 
-    return Q.all( tasks )
+    return Promise.all( tasks )
         .then( function( results ) {
             console.debug( 'results of all batches submitted', results );
             return results[ 0 ];
@@ -121,44 +102,43 @@ function uploadRecord( record ) {
  * @return {Promise}      [description]
  */
 function _uploadBatch( recordBatch ) {
-    var deferred = Q.defer();
 
     console.log( 'uploading batch with failed Files', recordBatch.failedFiles );
 
-    $.ajax( SUBMISSION_URL, {
-            type: 'POST',
-            data: recordBatch.formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            headers: {
-                'X-OpenRosa-Version': '1.0'
-            },
-            timeout: 300 * 1000
-        } )
-        .done( function( data, textStatus, jqXHR ) {
-            var result = {
-                status: jqXHR.status,
-                failedFiles: ( recordBatch.failedFiles ) ? recordBatch.failedFiles : undefined
-            };
-            if ( result.status === 201 || result.status === 202 ) {
-                deferred.resolve( result );
-            } else {
-                deferred.reject( result );
-            }
-        } )
-        .fail( function( jqXHR, textStatus, errorThrown ) {
-            // TODO: extract message from XML response?
-            deferred.reject( {
-                status: jqXHR.status
-                    // message: textStatus
+    return new Promise( function( resolve, reject ) {
+        $.ajax( SUBMISSION_URL, {
+                type: 'POST',
+                data: recordBatch.formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'X-OpenRosa-Version': '1.0'
+                },
+                timeout: 300 * 1000
+            } )
+            .done( function( data, textStatus, jqXHR ) {
+                var result = {
+                    status: jqXHR.status,
+                    failedFiles: ( recordBatch.failedFiles ) ? recordBatch.failedFiles : undefined
+                };
+                if ( result.status === 201 || result.status === 202 ) {
+                    resolve( result );
+                } else {
+                    reject( result );
+                }
+            } )
+            .fail( function( jqXHR, textStatus ) {
+                // TODO: extract message from XML response?
+                reject( {
+                    status: jqXHR.status
+                        // message: textStatus
+                } );
+                if ( jqXHR.status === 0 ) {
+                    _setOnlineStatus( false );
+                }
             } );
-            if ( jqXHR.status === 0 ) {
-                _setOnlineStatus( false );
-            }
-        } );
-
-    return deferred.promise;
+    } );
 }
 
 /**
@@ -167,21 +147,21 @@ function _uploadBatch( recordBatch ) {
  * @param { { name: string, data: string } } record[ description ]
  */
 function _prepareFormDataArray( record ) {
-    var recordDoc = $.parseXML( record.xml ),
-        $fileNodes = $( recordDoc ).find( '[type="file"]' ).removeAttr( 'type' ),
-        xmlData = new XMLSerializer().serializeToString( recordDoc.documentElement, 'text/xml' ),
-        xmlSubmissionBlob = new Blob( [ xmlData ], {
-            type: 'text/xml'
-        } ),
-        availableFiles = record.files || [],
-        sizes = [],
-        failedFiles = [],
-        submissionFiles = [],
-        batches = [
-            []
-        ],
-        batchesPrepped = [],
-        maxSize = settings.maxSize;
+    var recordDoc = $.parseXML( record.xml );
+    var $fileNodes = $( recordDoc ).find( '[type="file"]' ).removeAttr( 'type' );
+    var xmlData = new XMLSerializer().serializeToString( recordDoc.documentElement, 'text/xml' );
+    var xmlSubmissionBlob = new Blob( [ xmlData ], {
+        type: 'text/xml'
+    } );
+    var availableFiles = record.files || [];
+    var sizes = [];
+    var failedFiles = [];
+    var submissionFiles = [];
+    var batches = [
+        []
+    ];
+    var batchesPrepped = [];
+    var maxSize = settings.maxSize;
 
     $fileNodes.each( function() {
         var file,
@@ -217,7 +197,7 @@ function _prepareFormDataArray( record ) {
 
     console.debug( 'splitting record into ' + batches.length + ' batches to reduce submission size ', batches );
 
-    batches.forEach( function( batch, index ) {
+    batches.forEach( function( batch ) {
         var batchPrepped,
             fd = new FormData();
 
@@ -251,9 +231,13 @@ function _prepareFormDataArray( record ) {
  */
 
 function _divideIntoBatches( fileSizes, limit ) {
-    var i, j, batch, batchSize,
-        sizes = [],
-        batches = [];
+    var i;
+    var j;
+    var batch;
+    var batchSize;
+    var sizes = [];
+    var batches = [];
+
     //limit = limit || 5 * 1024 * 1024;
     for ( i = 0; i < fileSizes.length; i++ ) {
         sizes.push( {
@@ -261,6 +245,7 @@ function _divideIntoBatches( fileSizes, limit ) {
             'size': fileSizes[ i ]
         } );
     }
+
     while ( sizes.length > 0 ) {
         batch = [ sizes[ 0 ].index ];
         batchSize = sizes[ 0 ].size;
@@ -281,6 +266,7 @@ function _divideIntoBatches( fileSizes, limit ) {
             }
         }
     }
+
     return batches;
 }
 
@@ -288,34 +274,34 @@ function _divideIntoBatches( fileSizes, limit ) {
 /**
  * Returns the value of the X-OpenRosa-Content-Length header returned by the OpenRosa server for this form.
  *
- * @return {number} [description]
+ * @return {Promise} [description]
  */
 function getMaximumSubmissionSize() {
-    var maxSubmissionSize,
-        deferred = Q.defer();
+    var maxSubmissionSize;
 
-    if ( MAX_SIZE_URL ) {
-        $.ajax( MAX_SIZE_URL, {
-                type: 'GET',
-                timeout: 5 * 1000,
-                dataType: 'json'
-            } )
-            .done( function( response ) {
-                if ( response && response.maxSize && !isNaN( response.maxSize ) ) {
-                    maxSubmissionSize = ( Number( response.maxSize ) > ABSOLUTE_MAX_SIZE ) ? ABSOLUTE_MAX_SIZE : Number( response.maxSize );
-                    deferred.resolve( maxSubmissionSize );
-                } else {
-                    // Note that in /previews the MAX_SIZE_URL is null, which will immediately call this handler
-                    deferred.resolve( DEFAULT_MAX_SIZE );
-                }
-            } )
-            .fail( function( jqXHR ) {
-                deferred.resolve( DEFAULT_MAX_SIZE );
-            } );
-    } else {
-        deferred.resolve( DEFAULT_MAX_SIZE );
-    }
-    return deferred.promise;
+    return new Promise( function( resolve ) {
+        if ( MAX_SIZE_URL ) {
+            $.ajax( MAX_SIZE_URL, {
+                    type: 'GET',
+                    timeout: 5 * 1000,
+                    dataType: 'json'
+                } )
+                .done( function( response ) {
+                    if ( response && response.maxSize && !isNaN( response.maxSize ) ) {
+                        maxSubmissionSize = ( Number( response.maxSize ) > ABSOLUTE_MAX_SIZE ) ? ABSOLUTE_MAX_SIZE : Number( response.maxSize );
+                        resolve( maxSubmissionSize );
+                    } else {
+                        // Note that in /previews the MAX_SIZE_URL is null, which will immediately call this handler
+                        resolve( DEFAULT_MAX_SIZE );
+                    }
+                } )
+                .fail( function() {
+                    resolve( DEFAULT_MAX_SIZE );
+                } );
+        } else {
+            resolve( DEFAULT_MAX_SIZE );
+        }
+    } );
 }
 
 /**
@@ -325,39 +311,38 @@ function getMaximumSubmissionSize() {
  * @return { Promise }
  */
 function getFormParts( props ) {
-    var error,
-        deferred = Q.defer();
+    var error;
 
-    $.ajax( TRANSFORM_URL, {
-            type: 'POST',
-            data: {
-                enketoId: props.enketoId,
-                serverUrl: props.serverUrl,
-                xformId: props.xformId,
-                xformUrl: props.xformUrl
-            }
-        } )
-        .done( function( data ) {
-            data.enketoId = props.enketoId;
-            _getExternalData( data )
-                .then( deferred.resolve )
-                .catch( deferred.reject );
-        } )
-        .fail( function( jqXHR, textStatus, errorMsg ) {
-            if ( jqXHR.responseJSON && jqXHR.responseJSON.message && /ENOTFOUND/.test( jqXHR.responseJSON.message ) ) {
-                jqXHR.responseJSON.message = 'Form could not be retrieved from server.';
-            }
-            error = jqXHR.responseJSON || new Error( errorMsg );
-            error.status = jqXHR.status;
-            deferred.reject( error );
-        } );
-
-    return deferred.promise;
+    return new Promise( function( resolve, reject ) {
+        $.ajax( TRANSFORM_URL, {
+                type: 'POST',
+                data: {
+                    enketoId: props.enketoId,
+                    serverUrl: props.serverUrl,
+                    xformId: props.xformId,
+                    xformUrl: props.xformUrl
+                }
+            } )
+            .done( function( data ) {
+                data.enketoId = props.enketoId;
+                _getExternalData( data )
+                    .then( resolve )
+                    .catch( reject );
+            } )
+            .fail( function( jqXHR, textStatus, errorMsg ) {
+                if ( jqXHR.responseJSON && jqXHR.responseJSON.message && /ENOTFOUND/.test( jqXHR.responseJSON.message ) ) {
+                    jqXHR.responseJSON.message = 'Form could not be retrieved from server.';
+                }
+                error = jqXHR.responseJSON || new Error( errorMsg );
+                error.status = jqXHR.status;
+                reject( error );
+            } );
+    } );
 }
 
 function _getExternalData( survey ) {
-    var doc, deferred,
-        tasks = [];
+    var doc;
+    var tasks = [];
 
     try {
         doc = $.parseXML( survey.model );
@@ -377,12 +362,10 @@ function _getExternalData( survey ) {
             } ) );
         } );
     } catch ( e ) {
-        deferred = Q.defer();
-        deferred.reject( e );
-        return deferred.promise;
+        return Promise.reject( e );
     }
 
-    return Q.all( tasks )
+    return Promise.all( tasks )
         .then( function() {
             return survey;
         } );
@@ -396,24 +379,23 @@ function _getExternalData( survey ) {
  * @return {Promise} [description]
  */
 function getMediaFile( url ) {
-    var deferred = Q.defer(),
-        xhr = new XMLHttpRequest();
+    var xhr = new XMLHttpRequest();
 
-    xhr.onreadystatechange = function() {
-        if ( this.readyState == 4 && this.status == 200 ) {
-            deferred.resolve( {
-                url: url,
-                item: this.response
-            } );
-        }
-        // TODO: add fail handler
-    };
+    return new Promise( function( resolve, reject ) {
+        xhr.onreadystatechange = function() {
+            if ( this.readyState === 4 && this.status === 200 ) {
+                resolve( {
+                    url: url,
+                    item: this.response
+                } );
+            }
+            // TODO: add fail handler
+        };
 
-    xhr.open( 'GET', url );
-    xhr.responseType = 'blob';
-    xhr.send();
-
-    return deferred.promise;
+        xhr.open( 'GET', url );
+        xhr.responseType = 'blob';
+        xhr.send();
+    } );
 }
 
 /**
@@ -422,21 +404,21 @@ function getMediaFile( url ) {
  * @return {Promise} [description]
  */
 function _getDataFile( url ) {
-    var deferred = Q.defer();
+    var error;
 
-    $.get( url )
-        .done( function( data ) {
-            deferred.resolve( data );
-        } )
-        .fail( function( jqXHR, textStatus, errorMsg ) {
-            errorMsg = errorMsg || t( 'error.dataloadfailed', {
-                url: url
+    return new Promise( function( resolve, reject ) {
+        $.get( url )
+            .done( function( data ) {
+                resolve( data );
+            } )
+            .fail( function( jqXHR, textStatus, errorMsg ) {
+                errorMsg = errorMsg || t( 'error.dataloadfailed', {
+                    url: url
+                } );
+                error = jqXHR.responseJSON || new Error( errorMsg );
+                reject( error );
             } );
-            var error = jqXHR.responseJSON || new Error( errorMsg );
-            deferred.reject( error );
-        } );
-
-    return deferred.promise;
+    } );
 }
 
 /**
@@ -446,48 +428,46 @@ function _getDataFile( url ) {
  * @return {Promise} [description]
  */
 function getManifestVersion( manifestUrl ) {
-    var matches,
-        deferred = Q.defer(),
-        xhr = new XMLHttpRequest();
+    var matches;
+    var xhr = new XMLHttpRequest();
 
-    xhr.onreadystatechange = function() {
-        if ( this.readyState == 4 && this.status == 200 ) {
-            if ( ( matches = this.response.match( /version:\s?([^\n]+)\n/ ) ) ) {
-                deferred.resolve( matches[ 1 ] );
-            } else {
-                deferred.reject( new Error( 'No version found in manifest' ) );
+    return new Promise( function( resolve, reject ) {
+        xhr.onreadystatechange = function() {
+            if ( this.readyState === 4 && this.status === 200 ) {
+                if ( ( matches = this.response.match( /version:\s?([^\n]+)\n/ ) ) ) {
+                    resolve( matches[ 1 ] );
+                } else {
+                    reject( new Error( 'No version found in manifest' ) );
+                }
             }
-        }
-        // TODO: add fail handler
-    };
+            // TODO: add fail handler
+        };
 
-    xhr.open( 'GET', manifestUrl );
-    xhr.responseType = 'text';
-    xhr.send();
-
-    return deferred.promise;
+        xhr.open( 'GET', manifestUrl );
+        xhr.responseType = 'text';
+        xhr.send();
+    } );
 }
 
 function getFormPartsHash( props ) {
-    var error,
-        deferred = Q.defer();
+    var error;
 
-    $.ajax( TRANSFORM_HASH_URL, {
-            type: 'POST',
-            data: {
-                enketoId: props.enketoId
-            }
-        } )
-        .done( function( data ) {
-            deferred.resolve( data.hash );
-        } )
-        .fail( function( jqXHR, textStatus, errorMsg ) {
-            error = new Error( errorMsg );
-            error.status = jqXHR.status;
-            deferred.reject( error );
-        } );
-
-    return deferred.promise;
+    return new Promise( function( resolve, reject ) {
+        $.ajax( TRANSFORM_HASH_URL, {
+                type: 'POST',
+                data: {
+                    enketoId: props.enketoId
+                }
+            } )
+            .done( function( data ) {
+                resolve( data.hash );
+            } )
+            .fail( function( jqXHR, textStatus, errorMsg ) {
+                error = new Error( errorMsg );
+                error.status = jqXHR.status;
+                reject( error );
+            } );
+    } );
 }
 
 /**
@@ -497,21 +477,21 @@ function getFormPartsHash( props ) {
  * @return { Promise }
  */
 function getExistingInstance( props ) {
-    var deferred = Q.defer();
+    var error;
 
-    $.ajax( INSTANCE_URL, {
-            type: 'GET',
-            data: props
-        } )
-        .done( function( data ) {
-            deferred.resolve( data );
-        } )
-        .fail( function( jqXHR, textStatus, errorMsg ) {
-            var error = jqXHR.responseJSON || new Error( errorMsg );
-            deferred.reject( error );
-        } );
-
-    return deferred.promise;
+    return new Promise( function( resolve, reject ) {
+        $.ajax( INSTANCE_URL, {
+                type: 'GET',
+                data: props
+            } )
+            .done( function( data ) {
+                resolve( data );
+            } )
+            .fail( function( jqXHR, textStatus, errorMsg ) {
+                error = jqXHR.responseJSON || new Error( errorMsg );
+                reject( error );
+            } );
+    } );
 }
 
 module.exports = {

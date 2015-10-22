@@ -1,18 +1,11 @@
-/* global describe, require, it, beforeEach, afterEach */
-"use strict";
+/* global describe, require, it */
+'use strict';
 
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var
-    Q = require( "q" ),
-    chai = require( "chai" ),
-    expect = chai.expect,
-    chaiAsPromised = require( "chai-as-promised" ),
-    request = require( 'supertest' ),
-    app = require( '../../config/express' );
-
-chai.use( chaiAsPromised );
+var request = require( 'supertest' );
+var app = require( '../../config/express' );
 
 describe( 'Survey Controller', function() {
 

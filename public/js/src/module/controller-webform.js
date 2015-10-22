@@ -1,20 +1,4 @@
 /**
- * @preserve Copyright 2014 Martijn van de Rijdt & Harvard Humanitarian Initiative
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
  * Deals with the main high level survey controls: saving, submitting etc.
  */
 
@@ -91,7 +75,7 @@ function _checkAutoSavedRecord() {
     }
     return records.getAutoSavedRecord()
         .then( function( record ) {
-            return new Promise( function( resolve, reject ) {
+            return new Promise( function( resolve ) {
                 if ( record ) {
                     gui.confirm( {
                         heading: t( 'confirm.autosaveload.heading' ),
@@ -507,7 +491,7 @@ function _setEventHandlers() {
     } );
 
     $( '.form-footer [name="draft"]' ).on( 'change', function() {
-        var text = ( $( this ).prop( 'checked' ) ) ? t( "formfooter.savedraft.btn" ) : t( "formfooter.submit.btn" );
+        var text = ( $( this ).prop( 'checked' ) ) ? t( 'formfooter.savedraft.btn' ) : t( 'formfooter.submit.btn' );
         $( '#submit-form i' ).text( ' ' + text );
     } ).closest( '.draft' ).toggleClass( 'hide', !settings.offline );
 

@@ -7,7 +7,7 @@ var auth = require( 'basic-auth' );
 var express = require( 'express' );
 var router = express.Router();
 var quotaErrorMessage = 'Forbidden. No quota left';
-var debug = require( 'debug' )( 'api-controller' );
+// var debug = require( 'debug' )( 'api-controller' );
 
 module.exports = function( app ) {
     app.use( '/api/v2', router );
@@ -83,10 +83,10 @@ router
 
 function authCheck( req, res, next ) {
     // check authentication and account
-    var error,
-        creds = auth( req ),
-        key = ( creds ) ? creds.name : undefined,
-        server = req.body.server_url || req.query.server_url;
+    var error;
+    var creds = auth( req );
+    var key = ( creds ) ? creds.name : undefined;
+    var server = req.body.server_url || req.query.server_url;
 
     // set content-type to json to provide appropriate json Error responses
     res.set( 'Content-Type', 'application/json' );
@@ -109,7 +109,6 @@ function authCheck( req, res, next ) {
 }
 
 function getExistingSurvey( req, res, next ) {
-    var error, body;
 
     if ( req.account.quota < req.account.quotaUsed ) {
         return _render( 403, quotaErrorMessage, res );
@@ -131,12 +130,12 @@ function getExistingSurvey( req, res, next ) {
 }
 
 function getNewOrExistingSurvey( req, res, next ) {
-    var error, body, status,
-        survey = {
-            openRosaServer: req.body.server_url || req.query.server_url,
-            openRosaId: req.body.form_id || req.query.form_id,
-            theme: req.body.theme || req.query.theme
-        };
+    var status;
+    var survey = {
+        openRosaServer: req.body.server_url || req.query.server_url,
+        openRosaId: req.body.form_id || req.query.form_id,
+        theme: req.body.theme || req.query.theme
+    };
 
     if ( req.account.quota < req.account.quotaUsed ) {
         return _render( 403, quotaErrorMessage, res );
@@ -163,7 +162,6 @@ function getNewOrExistingSurvey( req, res, next ) {
 }
 
 function deactivateSurvey( req, res, next ) {
-    var error;
 
     return surveyModel
         .update( {
@@ -182,7 +180,6 @@ function deactivateSurvey( req, res, next ) {
 }
 
 function getNumber( req, res, next ) {
-    var error, body;
 
     return surveyModel
         .getNumber( req.body.server_url || req.query.server_url )
@@ -221,7 +218,7 @@ function getList( req, res, next ) {
 }
 
 function cacheInstance( req, res, next ) {
-    var error, body, survey;
+    var survey;
 
     if ( req.account.quota < req.account.quotaUsed ) {
         return _render( 403, quotaErrorMessage, res );
@@ -244,7 +241,6 @@ function cacheInstance( req, res, next ) {
 }
 
 function removeInstance( req, res, next ) {
-    var error;
 
     return instanceModel
         .remove( {
@@ -273,8 +269,8 @@ function _setQuotaUsed( req, res, next ) {
 }
 
 function _setDefaultsQueryParam( req, res, next ) {
-    var queryParam = '',
-        map = req.body.defaults || req.query.defaults;
+    var queryParam = '';
+    var map = req.body.defaults || req.query.defaults;
 
     if ( map ) {
         for ( var prop in map ) {
@@ -321,12 +317,12 @@ function _generateQueryString( params ) {
 }
 
 function _generateWebformUrls( id, req ) {
-    var queryString,
-        obj = {},
-        protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol,
-        baseUrl = protocol + '://' + req.headers.host + '/',
-        idPartOnline = '::' + id,
-        idPartOffline = '#' + id;
+    var queryString;
+    var obj = {};
+    var protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol;
+    var baseUrl = protocol + '://' + req.headers.host + '/';
+    var idPartOnline = '::' + id;
+    var idPartOffline = '#' + id;
 
     req.webformType = req.webformType || 'default';
 

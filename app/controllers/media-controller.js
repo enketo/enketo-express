@@ -33,10 +33,8 @@ function getMedia( req, res, next ) {
     request.get( options ).pipe( res ).on( 'error', function( error ) {
         debug( 'error retrieving media from OpenRosa server: ' + JSON.stringify( error ) );
         if ( !error.status ) {
-            error.status = ( error.code && error.code == 'ENOTFOUND' ) ? 404 : 500;
+            error.status = ( error.code && error.code === 'ENOTFOUND' ) ? 404 : 500;
         }
         next( error );
     } );
-
-    // this simpler alternative does not work properly: req.get( options, next ).pipe( res );
 }

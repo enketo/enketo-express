@@ -1,6 +1,5 @@
 'use strict';
 
-var Q = require( 'q' );
 var utils = require( '../lib/utils' );
 var TError = require( '../lib/custom-error' ).TranslatedError;
 var communicator = require( '../lib/communicator' );
@@ -8,7 +7,7 @@ var surveyModel = require( '../models/survey-model' );
 var userModel = require( '../models/user-model' );
 var express = require( 'express' );
 var router = express.Router();
-var debug = require( 'debug' )( 'survey-controller' );
+// var debug = require( 'debug' )( 'survey-controller' );
 
 module.exports = function( app ) {
     app.use( '/', router );
@@ -32,7 +31,7 @@ router
     .get( '/preview', preview )
     .get( '/edit/:enketo_id', edit )
     .get( '/xform/:enketo_id', xform )
-    .get( '/connection', function( req, res, next ) {
+    .get( '/connection', function( req, res ) {
         res.status = 200;
         res.send( 'connected ' + Math.random() );
     } );

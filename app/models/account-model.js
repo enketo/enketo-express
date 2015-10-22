@@ -1,11 +1,10 @@
 'use strict';
 
-var Promise = require( 'q' ).Promise;
+var Promise = require( 'lie' );
 var utils = require( '../lib/utils' );
-var surveyModel = require( './survey-model' );
 var config = require( './config-model' ).server;
 var customGetAccount = config[ 'account lib' ] ? require( config[ 'account lib' ] ).getAccount : undefined;
-var debug = require( 'debug' )( 'account-model' );
+// var debug = require( 'debug' )( 'account-model' );
 
 /**
  * Obtain account

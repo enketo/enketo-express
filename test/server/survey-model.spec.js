@@ -1,20 +1,20 @@
-/* global describe, require, it, before, after, beforeEach, afterEach */
-"use strict";
+/* global describe, require, it, beforeEach, afterEach */
+'use strict';
 
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var _wait1ms,
-    Promise = require( "q" ).Promise,
-    chai = require( "chai" ),
-    expect = chai.expect,
-    chaiAsPromised = require( "chai-as-promised" ),
-    redis = require( "redis" ),
-    config = require( "../../app/models/config-model" ).server,
-    model = require( '../../app/models/survey-model' ),
-    client = redis.createClient( config.redis.main.port, config.redis.main.host, {
-        auth_pass: config.redis.main.password
-    } );
+var _wait1ms;
+var Promise = require( 'lie' );
+var chai = require( 'chai' );
+var expect = chai.expect;
+var chaiAsPromised = require( 'chai-as-promised' );
+var redis = require( 'redis' );
+var config = require( '../../app/models/config-model' ).server;
+var model = require( '../../app/models/survey-model' );
+var client = redis.createClient( config.redis.main.port, config.redis.main.host, {
+    auth_pass: config.redis.main.password
+} );
 
 chai.use( chaiAsPromised );
 
@@ -113,10 +113,10 @@ describe( 'Survey Model', function() {
 
         it( 'returns the survey object when survey exists', function() {
             var survey = {
-                    openRosaId: 'test',
-                    openRosaServer: 'https://ona.io/enketo'
-                },
-                getSurveyPromise = model.set( survey ).then( model.get );
+                openRosaId: 'test',
+                openRosaServer: 'https://ona.io/enketo'
+            };
+            var getSurveyPromise = model.set( survey ).then( model.get );
             return Promise.all( [
                 expect( getSurveyPromise ).to.eventually.have.property( 'openRosaId' ).and.to.equal( survey.openRosaId ),
                 expect( getSurveyPromise ).to.eventually.have.property( 'openRosaServer' ).and.to.equal( survey.openRosaServer )
@@ -125,20 +125,20 @@ describe( 'Survey Model', function() {
 
         it( 'returns the survey object with a theme parameter when this exists', function() {
             var survey = {
-                    openRosaId: 'test',
-                    openRosaServer: 'https://ona.io/enketo',
-                    theme: 'gorgeous'
-                },
-                getSurveyPromise = model.set( survey ).then( model.get );
+                openRosaId: 'test',
+                openRosaServer: 'https://ona.io/enketo',
+                theme: 'gorgeous'
+            };
+            var getSurveyPromise = model.set( survey ).then( model.get );
             return expect( getSurveyPromise ).to.eventually.have.property( 'theme' ).and.to.equal( survey.theme );
         } );
 
         it( 'returns the survey object with an empty string as theme property if the theme is undefined', function() {
             var survey = {
-                    openRosaId: 'test',
-                    openRosaServer: 'https://ona.io/enketo'
-                },
-                getSurveyPromise = model.set( survey ).then( model.get );
+                openRosaId: 'test',
+                openRosaServer: 'https://ona.io/enketo'
+            };
+            var getSurveyPromise = model.set( survey ).then( model.get );
             return expect( getSurveyPromise ).to.eventually.have.property( 'theme' ).and.to.equal( '' );
         } );
     } );
@@ -154,13 +154,13 @@ describe( 'Survey Model', function() {
         } );
 
         it( 'it returns an error when the parameters are incorrect', function() {
-            var promise1 = model.set( survey ),
-                promise2 = promise1.then( function() {
-                    survey.openRosaId = '';
-                    //change to http
-                    survey.openRosaServer = 'http://ona.io/enketo';
-                    return model.update( survey );
-                } ).then( model.get );
+            var promise1 = model.set( survey );
+            var promise2 = promise1.then( function() {
+                survey.openRosaId = '';
+                //change to http
+                survey.openRosaServer = 'http://ona.io/enketo';
+                return model.update( survey );
+            } ).then( model.get );
             return Promise.all( [
                 expect( promise1 ).to.eventually.have.length( 4 ),
                 expect( promise2 ).to.eventually.be.rejected
@@ -273,11 +273,11 @@ describe( 'Survey Model', function() {
         } );
 
         it( 'of an existing survey, it returns null if the id does not have a case-sensitive match', function() {
-            var promise1 = model.set( survey ),
-                promise2 = promise1.then( function() {
-                    survey.openRosaId = 'Existing';
-                    return model.getId( survey );
-                } );
+            var promise1 = model.set( survey );
+            var promise2 = promise1.then( function() {
+                survey.openRosaId = 'Existing';
+                return model.getId( survey );
+            } );
             return Promise.all( [
                 expect( promise1 ).to.eventually.equal( 'YYYp' ),
                 expect( promise2 ).to.eventually.be.fulfilled.and.deep.equal( null )
@@ -300,15 +300,15 @@ describe( 'Survey Model', function() {
 
 
     describe( 'getNumber', function() {
-        var server = 'https://kobotoolbox.org/enketo',
-            survey1 = {
-                openRosaId: 'a',
-                openRosaServer: server
-            },
-            survey2 = {
-                openRosaId: 'b',
-                openRosaServer: server
-            };
+        var server = 'https://kobotoolbox.org/enketo';
+        var survey1 = {
+            openRosaId: 'a',
+            openRosaServer: server
+        };
+        var survey2 = {
+            openRosaId: 'b',
+            openRosaServer: server
+        };
 
         it( 'obtains the number of surveys if all are active', function() {
             var getNumber = model.set( survey1 )
@@ -341,15 +341,15 @@ describe( 'Survey Model', function() {
     } );
 
     describe( 'getList', function() {
-        var server = 'https://kobotoolbox.org/enketo',
-            survey1 = {
-                openRosaId: 'a',
-                openRosaServer: server
-            },
-            survey2 = {
-                openRosaId: 'b',
-                openRosaServer: server
-            };
+        var server = 'https://kobotoolbox.org/enketo';
+        var survey1 = {
+            openRosaId: 'a',
+            openRosaServer: server
+        };
+        var survey2 = {
+            openRosaId: 'b',
+            openRosaServer: server
+        };
 
         it( 'obtains the list surveys if all are active in ascending launch date order', function() {
             var getList = model.set( survey1 )

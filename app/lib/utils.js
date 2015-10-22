@@ -1,7 +1,7 @@
 'use strict';
 
 var crypto = require( 'crypto' );
-var debug = require( 'debug' )( 'utils' );
+// var debug = require( 'debug' )( 'utils' );
 
 /** 
  * Returns a unique, predictable openRosaKey from a survey oject
@@ -48,7 +48,7 @@ function md5( message ) {
 }
 
 function randomString( howMany, chars ) {
-    chars = chars || "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+    chars = chars || 'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
     var rnd = crypto.randomBytes( howMany ),
         value = new Array( howMany ),
         len = chars.length;

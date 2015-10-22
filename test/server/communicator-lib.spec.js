@@ -1,16 +1,12 @@
-/* global describe, require, it, before, after, beforeEach, afterEach */
-"use strict";
+/* global describe, require, it */
+'use strict';
 
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var Q = require( "q" ),
-    chai = require( "chai" ),
-    expect = chai.expect,
-    Auth = require( 'request/lib/auth' ).Auth,
-    chaiAsPromised = require( "chai-as-promised" );
-
-chai.use( chaiAsPromised );
+var chai = require( 'chai' );
+var expect = chai.expect;
+var Auth = require( 'request/lib/auth' ).Auth;
 
 describe( 'Communicator Library', function() {
 

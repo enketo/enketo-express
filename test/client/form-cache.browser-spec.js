@@ -1,16 +1,15 @@
-/* global define, describe, xdescribe, require, it, xit, before, after, beforeEach, afterEach, expect, Blob, sinon */
+/* global describe, require, it, beforeEach, afterEach, expect, Blob, sinon */
 'use strict';
 
 var formCache = require( '../../public/js/src/module/form-cache' );
 var connection = require( '../../public/js/src/module/connection' );
-var Q = require( 'q' );
+var Promise = require( 'lie' );
 var $ = require( 'jquery' );
 
 var url1 = '/path/to/source.png';
 var form1 = '<form class="or"><img src="' + url1 + '"/></form>';
 var model1 = '<model></model>';
 var hash1 = '12345';
-var enketoId1 = 'TESt';
 
 describe( 'Client Form Cache', function() {
     var survey, sandbox, getFormPartsSpy, getFileSpy;
@@ -19,24 +18,20 @@ describe( 'Client Form Cache', function() {
         survey = {};
         sandbox = sinon.sandbox.create();
         getFormPartsSpy = sandbox.stub( connection, 'getFormParts', function( survey ) {
-            var deferred = Q.defer();
-            deferred.resolve( {
+            return Promise.resolve( {
                 enketoId: survey.enketoId,
                 form: form1,
                 model: model1,
                 hash: hash1
             } );
-            return deferred.promise;
         } );
         getFileSpy = sandbox.stub( connection, 'getMediaFile', function( url ) {
-            var deferred = Q.defer();
-            deferred.resolve( {
+            return Promise.resolve( {
                 url: url,
                 item: new Blob( [ 'babdf' ], {
                     type: 'image/png'
                 } )
             } );
-            return deferred.promise;
         } );
     } );
 
@@ -53,7 +48,7 @@ describe( 'Client Form Cache', function() {
         it( 'will call connection.getFormParts to obtain the form parts', function( done ) {
             survey.enketoId = '10';
             formCache.init( survey )
-                .then( function( result ) {
+                .then( function() {
                     expect( getFormPartsSpy ).to.have.been.calledWith( survey );
                 } )
                 .then( done, done );

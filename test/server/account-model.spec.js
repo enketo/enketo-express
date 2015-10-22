@@ -1,14 +1,13 @@
-/* global describe, require, it, before, after, beforeEach, afterEach */
+/* global describe, require, it */
 'use strict';
 
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var Promise = require( 'q' ).Promise;
+var Promise = require( 'lie' );
 var chai = require( 'chai' );
 var expect = chai.expect;
 var chaiAsPromised = require( 'chai-as-promised' );
-var app = require( '../../config/express' );
 var model = require( '../../app/models/account-model' );
 var config = require( '../../app/models/config-model' ).server;
 

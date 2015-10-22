@@ -1,13 +1,11 @@
 /* global describe, require, it, beforeEach, afterEach */
-"use strict";
+'use strict';
 
-var model,
-    Q = require( "q" ),
-    chai = require( "chai" ),
-    expect = chai.expect,
-    chaiAsPromised = require( "chai-as-promised" ),
-    model = require( '../../app/models/instance-model' ),
-    config = require( "../../app/models/config-model" ).server;
+var Promise = require( 'lie' );
+var chai = require( 'chai' );
+var expect = chai.expect;
+var chaiAsPromised = require( 'chai-as-promised' );
+var model = require( '../../app/models/instance-model' );
 
 chai.use( chaiAsPromised );
 
@@ -69,7 +67,8 @@ describe( 'Instance Model', function() {
     } );
 
     describe( 'get: when attempting to obtain a cached instance', function() {
-        var survey, promise;
+        var survey;
+        var promise;
 
         beforeEach( function() {
             survey = {
@@ -93,7 +92,7 @@ describe( 'Instance Model', function() {
         } );
         it( 'returns the survey object with the instance property when successful', function() {
             promise = model.set( survey ).then( model.get );
-            return Q.all( [
+            return Promise.all( [
                 expect( promise ).to.eventually
                 .have.property( 'instance' ).that.equals( survey.instance ),
                 expect( promise ).to.eventually.
@@ -103,7 +102,10 @@ describe( 'Instance Model', function() {
     } );
 
     describe( 'remove: when attempting to remove a cached instance', function() {
-        var survey, setPromise, remPromise, getPromise;
+        var survey;
+        var setPromise;
+        var remPromise;
+        var getPromise;
 
         beforeEach( function() {
             survey = {
@@ -126,14 +128,14 @@ describe( 'Instance Model', function() {
 
         it( 'returns the removed instanceId when successful', function() {
             setPromise = model.set( survey ).then( model.get );
-            remPromise = setPromise.then( model.remove ),
-                getPromise = remPromise.then( function() {
-                    return model.get( {
-                        instanceId: survey.instanceId
-                    } );
+            remPromise = setPromise.then( model.remove );
+            getPromise = remPromise.then( function() {
+                return model.get( {
+                    instanceId: survey.instanceId
                 } );
+            } );
 
-            return Q.all( [
+            return Promise.all( [
                 expect( setPromise ).to.eventually.have.property( 'instance' ).that.equals( survey.instance ),
                 expect( remPromise ).to.eventually.equal( survey.instanceId ),
                 expect( getPromise ).to.eventually.be.rejected.and.to.have.property( 'status' ).that.equals( 404 )

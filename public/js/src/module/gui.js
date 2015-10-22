@@ -1,27 +1,10 @@
 /**
- * @preserve Copyright 2014 Martijn van de Rijdt
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
  * Deals with the main GUI elements (but not the survey form)
  */
 
 'use strict';
 
 var support = require( 'enketo-core/src/js/support' );
-var Q = require( 'q' );
 var settings = require( './settings' );
 var printForm = require( 'enketo-core/src/js/print' );
 var t = require( './translator' );
@@ -29,11 +12,9 @@ var dialog = require( './vex.dialog.custom' );
 var $ = require( 'jquery' );
 require( './plugin' );
 
-var nav;
 var pages;
 var updateStatus;
 var feedbackBar;
-var supportLink = '<a href="mailto:' + settings[ 'supportEmail' ] + '">' + settings[ 'supportEmail' ] + '</a>';
 
 // Customize vex.dialog.custom.js options
 dialog.defaultOptions.className = 'vex-theme-plain';
@@ -45,12 +26,12 @@ function init() {
     setEventHandlers();
 
     // avoid Windows console errors
-    if ( typeof window.console === "undefined" ) {
+    if ( typeof window.console === 'undefined' ) {
         window.console = {
             log: function() {}
         };
     }
-    if ( typeof window.console.debug === "undefined" ) {
+    if ( typeof window.console.debug === 'undefined' ) {
         console.debug = console.log;
     }
     if ( !settings.debug ) {
@@ -71,13 +52,14 @@ function init() {
  * Sets the default (common) UI eventhandlers (extended in each class for custom handlers)
  */
 function setEventHandlers() {
+    var $doc = $( document );
 
-    $( document ).on( 'click', '#feedback-bar .close, .touch #feedback-bar', function( event ) {
+    $doc.on( 'click', '#feedback-bar .close, .touch #feedback-bar', function() {
         feedbackBar.hide();
         return false;
     } );
 
-    $( document ).on( 'click', '.side-slider .close, .slider-overlay', function( event ) {
+    $doc.on( 'click', '.side-slider .close, .slider-overlay', function() {
         $( 'body' ).removeClass( 'show-side-slider' );
     } );
 
@@ -96,7 +78,7 @@ function setEventHandlers() {
         alert( msg, t( 'alert.offlinesupported.heading' ), 'normal' );
     } );
 
-    $( document ).on( 'xpatherror', function( ev, error ) {
+    $doc.on( 'xpatherror', function( ev, error ) {
         var email = settings[ 'supportEmail' ],
             link = '<a href="mailto:' + email + '?subject=xpath errors for: ' + location.href + '&body=' + error + '" target="_blank" >' + email + '</a>';
 
@@ -112,28 +94,29 @@ function setEventHandlers() {
 }
 
 function swapTheme( theme ) {
-    var deferred = Q.defer();
-    if ( !theme ) {
-        console.log( 'No theme defined in form or database. Keeping default theme.' );
-        deferred.resolve();
-    } else if ( settings.themesSupported.some( function( supportedTheme ) {
-            return theme === supportedTheme;
-        } ) ) {
-        var $currentStyleSheet = $( 'link[rel=stylesheet][media=all][href*=theme-]' ),
-            $currentPrintStyleSheet = $( 'link[rel=stylesheet][media=print][href*=theme-]' ),
-            $newStyleSheet = $( '<link rel="stylesheet" media="all" href="/css/theme-' + theme + '.css"/>' ),
-            $newPrintStyleSheet = '<link rel="stylesheet" media="print" href="/css/theme-' + theme + '.print.css"/>';
 
-        $newStyleSheet.on( 'load', function() {
-            deferred.resolve();
-        } );
-        $currentStyleSheet.replaceWith( $newStyleSheet );
-        $currentPrintStyleSheet.replaceWith( $newPrintStyleSheet );
-    } else {
-        console.log( 'Theme "' + theme + '" is not supported. Keeping default theme.' );
-        deferred.resolve();
-    }
-    return deferred.promise;
+    return new Promise( function( resolve ) {
+        if ( !theme ) {
+            console.log( 'No theme defined in form or database. Keeping default theme.' );
+            resolve();
+        } else if ( settings.themesSupported.some( function( supportedTheme ) {
+                return theme === supportedTheme;
+            } ) ) {
+            var $currentStyleSheet = $( 'link[rel=stylesheet][media=all][href*=theme-]' ),
+                $currentPrintStyleSheet = $( 'link[rel=stylesheet][media=print][href*=theme-]' ),
+                $newStyleSheet = $( '<link rel="stylesheet" media="all" href="/css/theme-' + theme + '.css"/>' ),
+                $newPrintStyleSheet = '<link rel="stylesheet" media="print" href="/css/theme-' + theme + '.print.css"/>';
+
+            $newStyleSheet.on( 'load', function() {
+                resolve();
+            } );
+            $currentStyleSheet.replaceWith( $newStyleSheet );
+            $currentPrintStyleSheet.replaceWith( $newPrintStyleSheet );
+        } else {
+            console.log( 'Theme "' + theme + '" is not supported. Keeping default theme.' );
+            resolve();
+        }
+    } );
 }
 
 feedbackBar = {
@@ -145,17 +128,18 @@ feedbackBar = {
      */
     show: function( message, duration ) {
         var $msg;
+        var $fbBar = $( '#feedback-bar' );
 
         duration = ( duration ) ? duration * 1000 : 10 * 1000;
 
         // max 2 messages displayed
-        $( '#feedback-bar' ).addClass( 'feedback-bar--show' )
+        $fbBar.addClass( 'feedback-bar--show' )
             .find( 'p' ).eq( 1 ).remove();
 
         // if an already shown message isn't exactly the same
-        if ( $( '#feedback-bar p' ).html() !== message ) {
+        if ( $fbBar.find( 'p' ).html() !== message ) {
             $msg = $( '<p></p>' ).append( message );
-            $( '#feedback-bar' ).prepend( $msg );
+            $fbBar.prepend( $msg );
         }
 
         // automatically remove feedback after a period
@@ -225,8 +209,8 @@ function alert( message, heading, level, duration ) {
  * @param {Object=} choices - [type/description]
  */
 function confirm( content, choices ) {
-    var errorMsg = '',
-        message = ( typeof content === 'string' ) ? content : content.msg;
+    var errorMsg = '';
+    var message = ( typeof content === 'string' ) ? content : content.msg;
 
     if ( content.errorMsg ) {
         errorMsg = '<p class="alert-box error">' + content.errorMsg + '</p>';
@@ -262,8 +246,8 @@ function confirm( content, choices ) {
 }
 
 function prompt( content, choices, inputs ) {
-    var errorMsg = '',
-        message = ( typeof content === 'string' ) ? content : content.msg;
+    var errorMsg = '';
+    var message = ( typeof content === 'string' ) ? content : content.msg;
 
     if ( content.errorMsg ) {
         errorMsg = '<p class="alert-box error">' + content.errorMsg + '</p>';
@@ -328,14 +312,14 @@ function confirmLogin( msg, serverURL ) {
  * @param  {string=}        advice  a string with advice
  */
 function alertLoadErrors( loadErrors, advice ) {
-    var errorStringHTML = '<ul class="error-list"><li>' + loadErrors.join( '</li><li>' ) + '</li></ul>',
-        errorStringEmail = '* ' + loadErrors.join( '* ' ),
-        email = settings[ 'supportEmail' ],
-        link = '<a href="mailto:' + email + '?subject=loading errors for: ' + location.href + '&body=' + errorStringEmail + '" target="_blank" >' + email + '</a>',
-        params = {
-            emailLink: link,
-            count: loadErrors.length
-        };
+    var errorStringHTML = '<ul class="error-list"><li>' + loadErrors.join( '</li><li>' ) + '</li></ul>';
+    var errorStringEmail = '* ' + loadErrors.join( '* ' );
+    var email = settings[ 'supportEmail' ];
+    var link = '<a href="mailto:' + email + '?subject=loading errors for: ' + location.href + '&body=' + errorStringEmail + '" target="_blank" >' + email + '</a>';
+    var params = {
+        emailLink: link,
+        count: loadErrors.length
+    };
 
     advice = advice || '';
 
@@ -355,17 +339,17 @@ function alertLoadErrors( loadErrors, advice ) {
  */
 function promptPrintSettings( ignore, actions ) {
     var texts = {
-            heading: t( 'confirm.print.heading' ),
-            msg: t( 'confirm.print.msg' )
-        },
-        options = {
-            posButton: t( 'confirm.print.posButton' ), //Prepare',
-            posAction: actions.posAction,
-            negButton: t( 'alert.default.button' ),
-            negAction: actions.negAction,
-            afterAction: actions.afterAction
-        },
-        inputs = '<fieldset><legend>' + t( 'confirm.print.psize' ) + '</legend>' +
+        heading: t( 'confirm.print.heading' ),
+        msg: t( 'confirm.print.msg' )
+    };
+    var options = {
+        posButton: t( 'confirm.print.posButton' ), //Prepare',
+        posAction: actions.posAction,
+        negButton: t( 'alert.default.button' ),
+        negAction: actions.negAction,
+        afterAction: actions.afterAction
+    };
+    var inputs = '<fieldset><legend>' + t( 'confirm.print.psize' ) + '</legend>' +
         '<label><input name="format" type="radio" value="A4" required checked/><span>' + t( 'confirm.print.a4' ) + '</span></label>' +
         '<label><input name="format" type="radio" value="letter" required/><span>' + t( 'confirm.print.letter' ) + '</span></label>' +
         '</fieldset>' +
@@ -379,14 +363,14 @@ function promptPrintSettings( ignore, actions ) {
 }
 
 function alertCacheUnsupported() {
-    var message = t( 'alert.offlineunsupported.msg' ),
-        choices = {
-            posButton: t( 'alert.offlineunsupported.posButton' ),
-            negButton: t( 'alert.offlineunsupported.negButton' ),
-            posAction: function() {
-                window.location = settings[ 'modernBrowsersURL' ];
-            }
-        };
+    var message = t( 'alert.offlineunsupported.msg' );
+    var choices = {
+        posButton: t( 'alert.offlineunsupported.posButton' ),
+        negButton: t( 'alert.offlineunsupported.negButton' ),
+        posAction: function() {
+            window.location = settings[ 'modernBrowsersURL' ];
+        }
+    };
     confirm( {
         msg: message,
         heading: t( 'alert.offlineunsupported.heading' )
@@ -412,25 +396,25 @@ updateStatus = {
 };
 
 function getErrorResponseMsg( statusCode ) {
-    var msg,
-        supportEmailObj = {
-            supportEmail: settings.supportEmail
-        },
-        contactSupport = t( 'contact.support', supportEmailObj ),
-        contactAdmin = t( 'contact.admin' ),
-        statusMap = {
-            '0': t( 'submission.http0' ),
-            '200': t( 'submission.http2xx' ) + '<br/>' + contactSupport,
-            '2xx': t( 'submission.http2xx' ) + '<br/>' + contactSupport,
-            '400': t( 'submission.http400' ) + '<br/>' + contactAdmin,
-            '403': t( 'submission.http403' ) + '<br/>' + contactAdmin,
-            '404': t( 'submission.http404' ),
-            '4xx': t( 'submission.http4xx' ),
-            '413': t( 'submission.http413' ) + '<br/>' + contactSupport,
-            '500': t( 'submission.http500', supportEmailObj ),
-            '503': t( 'submission.http500', supportEmailObj ),
-            '5xx': t( 'submission.http500', supportEmailObj )
-        };
+    var msg;
+    var supportEmailObj = {
+        supportEmail: settings.supportEmail
+    };
+    var contactSupport = t( 'contact.support', supportEmailObj );
+    var contactAdmin = t( 'contact.admin' );
+    var statusMap = {
+        '0': t( 'submission.http0' ),
+        '200': t( 'submission.http2xx' ) + '<br/>' + contactSupport,
+        '2xx': t( 'submission.http2xx' ) + '<br/>' + contactSupport,
+        '400': t( 'submission.http400' ) + '<br/>' + contactAdmin,
+        '403': t( 'submission.http403' ) + '<br/>' + contactAdmin,
+        '404': t( 'submission.http404' ),
+        '4xx': t( 'submission.http4xx' ),
+        '413': t( 'submission.http413' ) + '<br/>' + contactSupport,
+        '500': t( 'submission.http500', supportEmailObj ),
+        '503': t( 'submission.http500', supportEmailObj ),
+        '5xx': t( 'submission.http500', supportEmailObj )
+    };
 
     console.debug( 'getting msg belonging to ', statusCode );
 

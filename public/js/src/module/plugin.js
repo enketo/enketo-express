@@ -8,13 +8,14 @@ $.fn.capitalizeStart = function( numWords ) {
         numWords = 1;
     }
     var node = this.contents().filter( function() {
-            return this.nodeType == 3;
+            return this.nodeType === 3;
         } ).first(),
         text = node.text(),
-        first = text.split( " ", numWords ).join( " " );
+        first = text.split( ' ', numWords ).join( ' ' );
 
-    if ( !node.length )
+    if ( !node.length ) {
         return;
+    }
 
     node[ 0 ].nodeValue = text.slice( first.length );
     node.before( '<span class="capitalize">' + first + '</span>' );

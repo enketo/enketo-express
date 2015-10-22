@@ -2,7 +2,7 @@
 
 var express = require( 'express' );
 var router = express.Router();
-var debug = require( 'debug' )( 'pages-controller' );
+// var debug = require( 'debug' )( 'pages-controller' );
 
 module.exports = function( app ) {
     app.use( '/', router );
@@ -17,11 +17,11 @@ router
     } )
     .get( '/modern-browsers', function( req, res ) {
         res.render( 'pages/modern-browsers', {
-            title: "Modern Browsers"
+            title: 'Modern Browsers'
         } );
     } )
     .get( '/offline', function( req, res ) {
         res.render( 'pages/offline', {
-            title: "Offline"
+            title: 'Offline'
         } );
     } );

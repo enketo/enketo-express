@@ -1,29 +1,12 @@
 /**
- * @preserve Copyright 2014 Martijn van de Rijdt & Harvard Humanitarian Initiative
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
  * Deals with browser storage
  */
 
 'use strict';
 
 var db = require( 'db.js' );
-var Q = require( 'q' );
 var utils = require( './utils' );
-var t = require( './utils' );
+var t = require( './translator' );
 
 var server;
 var blobEncoding;
@@ -134,7 +117,7 @@ function isAvailable() {
     return available;
 }
 
-function _isWriteable( dbName ) {
+function _isWriteable() {
     return propertyStore.update( {
         name: 'testWrite',
         value: new Date().getTime()
@@ -153,22 +136,16 @@ function _canStoreBlobs() {
 }
 
 function _setBlobStorageEncoding() {
-    var deferred = Q.defer();
 
-    _canStoreBlobs()
-        .then( function( blobsSupported ) {
+    return _canStoreBlobs()
+        .then( function() {
             console.debug( 'This browser is able to store blobs directly' );
             blobEncoding = false;
         } )
         .catch( function() {
             console.debug( 'This browser is not able to store blobs directly, so blobs will be Base64 encoded' );
             blobEncoding = true;
-        } )
-        .then( function() {
-            deferred.resolve();
         } );
-
-    return deferred.promise;
 }
 
 propertyStore = {
@@ -254,9 +231,9 @@ surveyStore = {
      * @return {Promise}        [description]
      */
     update: function( survey ) {
-        var resourceKeys,
-            tasks = [],
-            obsoleteResources = [];
+        var resourceKeys;
+        var tasks = [];
+        var obsoleteResources = [];
 
         console.debug( 'attempting to update a stored survey' );
 
@@ -301,12 +278,10 @@ surveyStore = {
                     tasks.push( surveyStore.resource.remove( survey.enketoId, key ) );
                 } );
                 // execution
-                return Q.all( tasks )
+                return Promise.all( tasks )
                     .then( function() {
-                        var deferred = Q.defer();
                         // resolving with original survey (not the array returned by server.surveys.update)
-                        deferred.resolve( survey );
-                        return deferred.promise;
+                        return survey;
                     } );
             } );
     },
@@ -317,8 +292,8 @@ surveyStore = {
      * @return {Promise}    [description]
      */
     remove: function( id ) {
-        var resources,
-            tasks = [];
+        var resources;
+        var tasks = [];
 
         return surveyStore.get( id )
             .then( function( survey ) {
@@ -328,7 +303,7 @@ surveyStore = {
                     tasks.push( surveyStore.resource.remove( id, resource ) );
                 } );
                 tasks.push( server.surveys.remove( id ) );
-                return Q.all( tasks );
+                return Promise.all( tasks );
             } );
     },
     /**
@@ -394,7 +369,7 @@ recordStore = {
                     tasks.push( recordStore.file.get( record.instanceId, fileKey ) );
                 } );
 
-                return Q.all( tasks )
+                return Promise.all( tasks )
                     .then( function( files ) {
                         record.files = files;
                         return record;
@@ -409,12 +384,11 @@ recordStore = {
      * @return {Promise}
      */
     getAll: function( enketoId, finalOnly ) {
-        var deferred = Q.defer();
 
         if ( !enketoId ) {
-            deferred.reject( new Error( 'No Enketo ID provided' ) );
-            return deferred.promise;
+            return Promise.reject( new Error( 'No Enketo ID provided' ) );
         }
+
         return server.records.query( 'enketoId' )
             .only( enketoId )
             .execute()
@@ -438,14 +412,12 @@ recordStore = {
      * @return {Promise}        [description]
      */
     set: function( record ) {
-        var fileKeys,
-            deferred = Q.defer();
+        var fileKeys;
 
         console.debug( 'attempting to store new record', record );
 
         if ( !record.instanceId || !record.enketoId || !record.name || !record.xml ) {
-            deferred.reject( new Error( 'Record not complete' ) );
-            return deferred.promise;
+            return Promise.reject( new Error( 'Record not complete' ) );
         }
 
         record.files = record.files || [];
@@ -475,7 +447,7 @@ recordStore = {
                         tasks.push( recordStore.file.update( record.instanceId, file ) );
                     }
                 } );
-                return Q.all( tasks );
+                return Promise.all( tasks );
             } )
             .then( function() {
                 console.debug( 'all save tasks completed!' );
@@ -489,9 +461,9 @@ recordStore = {
      * @return {Promise}        [description]
      */
     update: function( record ) {
-        var fileKeys,
-            tasks = [],
-            obsoleteFiles = [];
+        var fileKeys;
+        var tasks = [];
+        var obsoleteFiles = [];
 
         console.debug( 'attempting to update a stored record' );
 
@@ -538,12 +510,10 @@ recordStore = {
                     tasks.push( recordStore.file.remove( record.instanceId, key ) );
                 } );
                 // execution
-                return Q.all( tasks )
+                return Promise.all( tasks )
                     .then( function() {
-                        var deferred = Q.defer();
                         // resolving with original record (not the array returned by server.records.update)
-                        deferred.resolve( record );
-                        return deferred.promise;
+                        return record;
                     } );
             } );
     },
@@ -554,8 +524,8 @@ recordStore = {
      * @return {Promise}        [description]
      */
     remove: function( instanceId ) {
-        var files,
-            tasks = [];
+        var files;
+        var tasks = [];
 
         return recordStore.get( instanceId )
             .then( function( record ) {
@@ -565,7 +535,7 @@ recordStore = {
                     tasks.push( recordStore.file.remove( instanceId, fileKey ) );
                 } );
                 tasks.push( server.records.remove( instanceId ) );
-                return Q.all( tasks );
+                return Promise.all( tasks );
             } );
     },
     /**
@@ -622,17 +592,14 @@ recordStore = {
  * @return {Promise}       [description]
  */
 function _firstItemOnly( results ) {
-    var deferred = Q.defer();
 
     if ( Object.prototype.toString.call( results ) === '[object Array]' ) {
         // if an array
-        deferred.resolve( results[ 0 ] );
+        return Promise.resolve( results[ 0 ] );
     } else {
         // if not an array
-        deferred.resolve( results );
+        return Promise.resolve( results );
     }
-
-    return deferred.promise;
 }
 
 /**
@@ -644,35 +611,34 @@ function _firstItemOnly( results ) {
  * @return {Promise}
  */
 function _getFile( table, id, key ) {
-    var prop,
-        file = {},
-        deferred = Q.defer();
+    var prop;
+    var file = {};
 
-    if ( table === 'resources' || table === 'files' ) {
-        prop = ( table === 'resources' ) ? 'url' : 'name';
-        server[ table ].get( id + ':' + key )
-            .then( function( item ) {
-                file[ prop ] = key;
-                if ( item instanceof Blob ) {
-                    file.item = item;
-                    deferred.resolve( file );
-                } else if ( typeof item === 'string' ) {
-                    utils.dataUriToBlob( item )
-                        .then( function( item ) {
-                            file.item = item;
-                            deferred.resolve( file );
-                        } );
-                } else {
-                    // if item is falsy or unexpected
-                    deferred.resolve( undefined );
-                }
-            } )
-            .catch( deferred.reject );
-    } else {
-        deferred.reject( new Error( 'Unknown table or issing id or key.' ) );
-    }
-
-    return deferred.promise;
+    return new Promise( function( resolve, reject ) {
+        if ( table === 'resources' || table === 'files' ) {
+            prop = ( table === 'resources' ) ? 'url' : 'name';
+            server[ table ].get( id + ':' + key )
+                .then( function( item ) {
+                    file[ prop ] = key;
+                    if ( item instanceof Blob ) {
+                        file.item = item;
+                        resolve( file );
+                    } else if ( typeof item === 'string' ) {
+                        utils.dataUriToBlob( item )
+                            .then( function( item ) {
+                                file.item = item;
+                                resolve( file );
+                            } );
+                    } else {
+                        // if item is falsy or unexpected
+                        resolve( undefined );
+                    }
+                } )
+                .catch( reject );
+        } else {
+            reject( new Error( 'Unknown table or issing id or key.' ) );
+        }
+    } );
 }
 
 /**
@@ -684,8 +650,9 @@ function _getFile( table, id, key ) {
  * @return {Promise]}       [description]
  */
 function _updateFile( table, id, file ) {
-    var error, prop, propValue,
-        deferred = Q.defer();
+    var error;
+    var prop;
+    var propValue;
 
     if ( table === 'resources' || table === 'files' ) {
         prop = ( table === 'resources' ) ? 'url' : 'name';
@@ -722,12 +689,11 @@ function _updateFile( table, id, file ) {
         } else {
             error = new Error( 'DataError. File not complete or id not provided.' );
             error.name = 'DataError';
-            deferred.reject( error );
+            return Promise.reject( error );
         }
     } else {
-        deferred.reject( new Error( 'Unknown table or issing id or key.' ) );
+        return Promise.reject( new Error( 'Unknown table or issing id or key.' ) );
     }
-    return deferred.promise;
 }
 
 /**
@@ -735,31 +701,29 @@ function _updateFile( table, id, file ) {
  * @return {[type]} [description]
  */
 function flush() {
-    var request,
-        deferred = Q.defer();
+    var request;
 
-    try {
-        server.close( databaseName );
-    } catch ( e ) {
-        console.log( 'Database has probably been removed already. Doing nothing.', e );
-        deferred.resolve();
-        return deferred.promise;
-    }
+    return new Promise( function( resolve, reject ) {
+        try {
+            server.close( databaseName );
+        } catch ( e ) {
+            console.log( 'Database has probably been removed already. Doing nothing.', e );
+            resolve();
+        }
 
-    request = indexedDB.deleteDatabase( databaseName );
+        request = indexedDB.deleteDatabase( databaseName );
 
-    request.onsuccess = function() {
-        console.log( "Deleted database successfully" );
-        deferred.resolve();
-    };
-    request.onerror = function( error ) {
-        deferred.reject( error );
-    };
-    request.onblocked = function( error ) {
-        deferred.reject( error );
-    };
-
-    return deferred.promise;
+        request.onsuccess = function() {
+            console.log( 'Deleted database successfully' );
+            resolve();
+        };
+        request.onerror = function( error ) {
+            reject( error );
+        };
+        request.onblocked = function( error ) {
+            reject( error );
+        };
+    } );
 }
 
 /**

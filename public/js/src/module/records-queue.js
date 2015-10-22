@@ -1,28 +1,12 @@
 /**
- * @preserve Copyright 2014 Martijn van de Rijdt & Harvard Humanitarian Initiative
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
  * Deals with browser storage
  */
+
 'use strict';
 
 var store = require( './store' );
 var connection = require( './connection' );
 var gui = require( './gui' );
-var Q = require( 'q' );
 var settings = require( './settings' );
 var t = require( './translator' );
 var $ = require( 'jquery' );
@@ -161,9 +145,9 @@ function _setUploadIntervals() {
  * @return {Promise} [description]
  */
 function uploadQueue() {
-    var errorMsg,
-        successes = [],
-        fails = [];
+    var errorMsg;
+    var successes = [];
+    var fails = [];
 
     if ( !uploadOngoing && connection.getOnlineStatus ) {
 
@@ -190,7 +174,7 @@ function uploadQueue() {
                                 uploadProgress.update( record.instanceId, 'ongoing', '', successes.length + fails.length, records.length );
                                 return connection.uploadRecord( record );
                             } )
-                            .then( function( result ) {
+                            .then( function() {
                                 successes.push( record.name );
                                 uploadProgress.update( record.instanceId, 'success', '', successes.length + fails.length, records.length );
                                 return store.record.remove( record.instanceId )
@@ -216,7 +200,7 @@ function uploadQueue() {
                                 }
                             } );
                     } );
-                }, new Q( null ) );
+                }, Promise.resolve() );
             } );
     }
 }
@@ -297,7 +281,6 @@ uploadProgress = {
  */
 function _updateRecordList() {
     var $li;
-    // deferred = Q.defer();
 
     // reset the list
     $exportButton.prop( 'disabled', true );
@@ -365,13 +348,11 @@ function _updateRecordList() {
 function flush() {
     return store.flushTable( 'records' )
         .then( function() {
-            store.flushTable( 'files' );
+            return store.flushTable( 'files' );
         } )
         .then( function() {
-            var deferred = Q.defer();
-            deferred.resolve();
             console.log( 'Done! The record store is empty now.' );
-            return deferred.promise;
+            return;
         } );
 }
 

@@ -1,7 +1,6 @@
 'use strict';
 
 var Papa = require( 'papaparse' );
-var Q = require( 'q' );
 
 //var hasArrayBufferView = new Blob( [ new Uint8Array( 100 ) ] ).size == 100;
 
@@ -12,26 +11,25 @@ var Q = require( 'q' );
  * @return {Promise}
  */
 function blobToDataUri( blob ) {
-    var deferred = Q.defer(),
-        reader = new window.FileReader();
+    var reader = new window.FileReader();
 
-    reader.onloadend = function() {
-        var base64data = reader.result;
-        deferred.resolve( base64data );
-    };
-    reader.onerror = function( e ) {
-        deferred.reject( e );
-    };
+    return new Promise( function( resolve, reject ) {
+        reader.onloadend = function() {
+            var base64data = reader.result;
+            resolve( base64data );
+        };
+        reader.onerror = function( e ) {
+            reject( e );
+        };
 
-    // There is some quirky Chrome and Safari behaviour if blob is undefined or a string
-    // so we peform an additional check
-    if ( !( blob instanceof Blob ) ) {
-        deferred.reject( new Error( 'TypeError: Require Blob' ) );
-    } else {
-        reader.readAsDataURL( blob );
-    }
-
-    return deferred.promise;
+        // There is some quirky Chrome and Safari behaviour if blob is undefined or a string
+        // so we peform an additional check
+        if ( !( blob instanceof Blob ) ) {
+            reject( new Error( 'TypeError: Require Blob' ) );
+        } else {
+            reader.readAsDataURL( blob );
+        }
+    } );
 }
 
 /**
@@ -41,39 +39,42 @@ function blobToDataUri( blob ) {
  * @return {Promise}
  */
 function dataUriToBlob( dataURI ) {
-    var byteString, mimeString, buffer, array, blob,
-        deferred = Q.defer();
+    var byteString;
+    var mimeString;
+    var buffer;
+    var array;
+    var blob;
 
-    try {
-        // convert base64 to raw binary data held in a string
-        // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-        byteString = atob( dataURI.split( ',' )[ 1 ] );
-        // separate out the mime component
-        mimeString = dataURI.split( ',' )[ 0 ].split( ':' )[ 1 ].split( ';' )[ 0 ];
+    return new Promise( function( resolve, reject ) {
+        try {
+            // convert base64 to raw binary data held in a string
+            // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+            byteString = atob( dataURI.split( ',' )[ 1 ] );
+            // separate out the mime component
+            mimeString = dataURI.split( ',' )[ 0 ].split( ':' )[ 1 ].split( ';' )[ 0 ];
 
-        // write the bytes of the string to an ArrayBuffer
-        buffer = new ArrayBuffer( byteString.length );
-        array = new Uint8Array( buffer );
+            // write the bytes of the string to an ArrayBuffer
+            buffer = new ArrayBuffer( byteString.length );
+            array = new Uint8Array( buffer );
 
-        for ( var i = 0; i < byteString.length; i++ ) {
-            array[ i ] = byteString.charCodeAt( i );
+            for ( var i = 0; i < byteString.length; i++ ) {
+                array[ i ] = byteString.charCodeAt( i );
+            }
+
+            /*if ( !hasArrayBufferView ) {
+                array = buffer;
+            }*/
+
+            // write the ArrayBuffer to a blob
+            blob = new Blob( [ array ], {
+                type: mimeString
+            } );
+
+            resolve( blob );
+        } catch ( e ) {
+            reject( e );
         }
-
-        /*if ( !hasArrayBufferView ) {
-            array = buffer;
-        }*/
-
-        // write the ArrayBuffer to a blob
-        blob = new Blob( [ array ], {
-            type: mimeString
-        } );
-
-        deferred.resolve( blob );
-    } catch ( e ) {
-        deferred.reject( e );
-    }
-
-    return deferred.promise;
+    } );
 }
 
 function getThemeFromFormStr( formStr ) {
@@ -88,10 +89,10 @@ function getTitleFromFormStr( formStr ) {
 }
 
 function csvToXml( csv ) {
-    var xmlStr,
-        result = Papa.parse( csv ),
-        rows = result.data,
-        headers = rows.shift();
+    var xmlStr;
+    var result = Papa.parse( csv );
+    var rows = result.data;
+    var headers = rows.shift();
 
     if ( result.errors.length ) {
         throw result.errors[ 0 ];

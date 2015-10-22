@@ -1,14 +1,12 @@
 'use strict';
 
-var url = require( 'url' );
 var csrfProtection = require( 'csurf' )( {
     cookie: true
 } );
 var jwt = require( 'jwt-simple' );
 var express = require( 'express' );
 var router = express.Router();
-var debug = require( 'debug' )( 'authentication-controller' );
-
+// var debug = require( 'debug' )( 'authentication-controller' );
 
 module.exports = function( app ) {
     app.use( '/', router );
@@ -20,11 +18,11 @@ router
     .post( '/login', csrfProtection, setToken );
 
 function login( req, res, next ) {
-    var error,
-        authSettings = req.app.get( 'linked form and data server' ).authentication,
-        externalLoginUrl = authSettings[ 'external login url that sets cookie' ],
-        authenticationManagedByEnketo = authSettings[ 'managed by enketo' ],
-        returnUrl = req.query.return_url || '';
+    var error;
+    var authSettings = req.app.get( 'linked form and data server' ).authentication;
+    var externalLoginUrl = authSettings[ 'external login url that sets cookie' ];
+    var authenticationManagedByEnketo = authSettings[ 'managed by enketo' ];
+    var returnUrl = req.query.return_url || '';
 
     if ( !authenticationManagedByEnketo ) {
         if ( externalLoginUrl ) {
@@ -51,18 +49,21 @@ function login( req, res, next ) {
     }
 }
 
-function logout( req, res, next ) {
+function logout( req, res ) {
     res
         .clearCookie( req.app.get( 'authentication cookie name' ) )
         .clearCookie( '__enketo_meta_uid' )
         .render( 'surveys/logout' );
 }
 
-function setToken( req, res, next ) {
-    var token, authOptions, uidOptions, secure,
-        username = req.body.username.trim(),
-        maxAge = 30 * 24 * 60 * 60 * 1000,
-        returnUrl = req.query.return_url || '';
+function setToken( req, res ) {
+    var token;
+    var authOptions;
+    var uidOptions;
+    var secure;
+    var username = req.body.username.trim();
+    var maxAge = 30 * 24 * 60 * 60 * 1000;
+    var returnUrl = req.query.return_url || '';
 
     token = jwt.encode( {
         user: username,

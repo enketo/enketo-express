@@ -8,7 +8,7 @@ var utils = require( '../lib/utils' );
 var request = require( 'request' );
 var express = require( 'express' );
 var router = express.Router();
-var debug = require( 'debug' )( 'submission-controller' );
+// var debug = require( 'debug' )( 'submission-controller' );
 
 module.exports = function( app ) {
     app.use( '/submission', router );
@@ -48,10 +48,12 @@ router
  * @return {[type]}        [description]
  */
 function submit( req, res, next ) {
-    var server, submissionUrl, credentials, options,
-        paramName = req.app.get( "query parameter to pass to submission" ),
-        paramValue = req.query[ paramName ],
-        query = ( paramValue ) ? '?' + paramName + '=' + paramValue : '';
+    var submissionUrl;
+    var credentials;
+    var options;
+    var paramName = req.app.get( 'query parameter to pass to submission' );
+    var paramValue = req.query[ paramName ];
+    var query = ( paramValue ) ? '?' + paramName + '=' + paramValue : '';
 
     surveyModel.get( req.enketoId )
         .then( function( survey ) {
@@ -107,8 +109,6 @@ function getInstance( req, res, next ) {
             survey.instanceId = req.query.instanceId;
             instanceModel.get( survey )
                 .then( function( survey ) {
-                    debug( 'survey', survey );
-                    debug( 'calc key', utils.getOpenRosaKey( survey ) );
                     // check if found instance actually belongs to the form
                     if ( utils.getOpenRosaKey( survey ) === survey.openRosaKey ) {
                         res.json( {

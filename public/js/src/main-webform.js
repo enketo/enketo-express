@@ -120,28 +120,32 @@ function _swapTheme( survey ) {
 }
 
 function _prepareInstance( modelStr, defaults ) {
-    var model, init,
-        existingInstance = null;
+    var model;
+    var init;
+    var existingInstance = null;
 
     for ( var path in defaults ) {
-        // TODO full:false support still needs to be added to FormModel.js
-        model = model || new FormModel( modelStr, {
-            full: false
-        } );
-        init = init || model.init();
         if ( defaults.hasOwnProperty( path ) ) {
-            // if this fails, the FormModel will output a console error and ignore the instruction
-            model.node( path ).setVal( defaults[ path ] );
+            // TODO full:false support still needs to be added to FormModel.js
+            model = model || new FormModel( modelStr, {
+                full: false
+            } );
+            init = init || model.init();
+            if ( defaults.hasOwnProperty( path ) ) {
+                // if this fails, the FormModel will output a console error and ignore the instruction
+                model.node( path ).setVal( defaults[ path ] );
+            }
+            // TODO would be good to not include nodes that weren't in the defaults parameter
+            // TODO would be good to just pass model along instead of converting to string first
+            existingInstance = model.getStr();
         }
-        // TODO would be good to not include nodes that weren't in the defaults parameter
-        // TODO would be good to just pass model along instead of converting to string first
-        existingInstance = model.getStr();
     }
     return existingInstance;
 }
 
 function _init( formParts ) {
-    var error, $form;
+    var error;
+    var $form;
 
     return new Promise( function( resolve, reject ) {
         if ( formParts && formParts.form && formParts.model ) {

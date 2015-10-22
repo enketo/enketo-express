@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-"use strict";
+'use strict';
 
 var cluster = require( 'cluster' ),
     numCPUs = require( 'os' ).cpus().length;
@@ -12,7 +12,7 @@ if ( cluster.isMaster ) {
         cluster.fork();
     }
 
-    cluster.on( 'exit', function( worker, code, signal ) {
+    cluster.on( 'exit', function( worker ) {
         console.log( 'Worker ' + worker.process.pid + ' sadly passed away. It will be reincarnated.' );
         cluster.fork();
     } );

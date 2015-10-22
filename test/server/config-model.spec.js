@@ -1,13 +1,12 @@
-/* global describe, require, it, before, after, beforeEach, afterEach */
-"use strict";
+/* global describe, require, it */
+'use strict';
 
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var survey,
-    chai = require( "chai" ),
-    expect = chai.expect,
-    config = require( "../../app/models/config-model" );
+var chai = require( 'chai' );
+var expect = chai.expect;
+var config = require( '../../app/models/config-model' );
 
 describe( 'Config Model', function() {
     var themes = [ 'formhub', 'grid', 'kobo', 'plain' ];
@@ -17,7 +16,7 @@ describe( 'Config Model', function() {
     } );
 
     it( 'should return only specified themes if given a list of themes', function() {
-        var themeList = [ 'formhub' , 'grid' ];
+        var themeList = [ 'formhub', 'grid' ];
         expect( config.getThemesSupported( themeList ) ).to.deep.equal( themeList );
     } );
 

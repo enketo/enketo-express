@@ -1,4 +1,4 @@
-/* global define, describe, xdescribe, require, it, xit, before, after, beforeEach, afterEach, expect, Blob */
+/* global describe, require, it, beforeEach, expect, Blob */
 'use strict';
 
 /**
@@ -22,25 +22,25 @@ describe( 'Client Storage', function() {
         resourceA = {
             url: '/path/to/resource1',
             item: new Blob( [ '<html>something1</html' ], {
-                type: "text/xml"
+                type: 'text/xml'
             } )
         };
         resourceB = {
             url: '/path/to/resource2',
             item: new Blob( [ '<html>something2</html' ], {
-                type: "text/xml"
+                type: 'text/xml'
             } )
         };
         fileA = {
             name: 'something1.xml',
             item: new Blob( [ '<html>something1</html' ], {
-                type: "text/xml"
+                type: 'text/xml'
             } )
         };
         fileB = {
             name: 'something2.xml',
             item: new Blob( [ '<html>something2å</html' ], {
-                type: "text/xml"
+                type: 'text/xml'
             } )
         };
         recordA = {
@@ -199,7 +199,7 @@ describe( 'Client Storage', function() {
                 url = resourceA.url;
 
             store.survey.resource.update( id, resourceA )
-                .then( function( stored ) {
+                .then( function() {
                     return store.survey.resource.get( id, url );
                 } )
                 .then( function( result ) {
@@ -351,7 +351,7 @@ describe( 'Client Storage', function() {
                     surveyA.resources = [ resourceA, resourceB ];
                     return store.survey.update( surveyA );
                 } )
-                .then( function( result ) {
+                .then( function() {
                     // update survey to contain only 1 resource
                     surveyA.resources = [ {
                         url: urlA,
@@ -558,12 +558,12 @@ describe( 'Client Storage', function() {
         } );
 
         it( 'fails if a record with that instanceId already exists in the db', function( done ) {
-            recordA.name = "another name";
+            recordA.name = 'another name';
             store.record.set( recordA )
                 .then( function() {
                     return store.record.set( recordA );
                 } )
-                .catch( function( e ) {
+                .catch( function() {
                     // Firefox failure? => https://github.com/aaronpowell/db.js/issues/98
                     expect( true ).to.equal( true );
                 } )
@@ -571,7 +571,7 @@ describe( 'Client Storage', function() {
         } );
 
         it( 'fails if a record with that instanceName already exists in the db', function( done ) {
-            recordA.instanceId = "anotherid";
+            recordA.instanceId = 'anotherid';
             store.record.set( recordA )
                 .then( function() {
                     return store.record.set( recordA );

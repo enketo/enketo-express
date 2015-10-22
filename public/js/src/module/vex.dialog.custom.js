@@ -37,17 +37,17 @@ vexDialogFactory = function( $, vex ) {
             text: 'Cancel',
             type: 'button',
             className: 'vex-dialog-button-secondary',
-            click: function( $vexContent, event ) {
+            click: function( $vexContent ) {
                 $vexContent.data().vex.value = false;
                 return vex.close( $vexContent.data().vex.id );
             }
         }
     };
     dialog.defaultOptions = {
-        callback: function( value ) {},
+        callback: function() {},
         afterOpen: function() {},
         message: 'Message',
-        input: "<input name=\"vex\" type=\"hidden\" value=\"_vex-empty-value\" />",
+        input: '<input name="vex" type="hidden" value="_vex-empty-value" />',
         value: false,
         buttons: [ dialog.buttons.YES, dialog.buttons.NO ],
         showCloseButton: false,
@@ -109,8 +109,8 @@ vexDialogFactory = function( $, vex ) {
             return $.error( 'dialog.prompt(options) requires options.callback.' );
         }
         defaultPromptOptions = {
-            message: "<label for=\"vex\">" + ( options.label || 'Prompt:' ) + "</label>",
-            input: "<input name=\"vex\" type=\"text\" class=\"vex-dialog-prompt-input\" placeholder=\"" + ( options.placeholder || '' ) + "\"  value=\"" + ( options.value || '' ) + "\" />"
+            message: '<label for="vex">' + ( options.label || 'Prompt:' ) + '</label>',
+            input: '<input name="vex" type="text" class="vex-dialog-prompt-input" placeholder="' + ( options.placeholder || '' ) + '"  value="' + ( options.value || '' ) + '" />'
         };
         options = $.extend( {}, defaultPromptOptions, options );
         return dialog.open( options );
@@ -140,7 +140,7 @@ vexDialogFactory = function( $, vex ) {
         $buttons = $( '<div class="vex-dialog-buttons" />' );
         $.each( buttons, function( index, button ) {
             var $button;
-            $button = $( "<button type=\"" + button.type + "\"></button>" ).text( button.text ).addClass( button.className + ' vex-dialog-button ' + ( index === 0 ? 'vex-first ' : '' ) + ( index === buttons.length - 1 ? 'vex-last ' : '' ) ).bind( 'click.vex', function( e ) {
+            $button = $( '<button type="' + button.type + '"></button>' ).text( button.text ).addClass( button.className + ' vex-dialog-button ' + ( index === 0 ? 'vex-first ' : '' ) + ( index === buttons.length - 1 ? 'vex-last ' : '' ) ).bind( 'click.vex', function( e ) {
                 if ( button.click ) {
                     return button.click( $( this ).parents( vex.getSelectorFromBaseClass( vex.baseClassNames.content ) ), e );
                 }

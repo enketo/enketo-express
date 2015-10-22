@@ -1,20 +1,4 @@
 /**
- * @preserve Copyright 2014 Martijn van de Rijdt & Harvard Humanitarian Initiative
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
  * Deals with browser storage
  */
 
@@ -22,7 +6,6 @@
 
 var store = require( './store' );
 var connection = require( './connection' );
-var Q = require( 'q' );
 var $ = require( 'jquery' );
 
 var hash;
@@ -33,10 +16,9 @@ function init( survey ) {
             return get( survey );
         } )
         .then( function( result ) {
-            var deferred = Q.defer();
+
             if ( result ) {
-                deferred.resolve( result );
-                return deferred.promise;
+                return result;
             } else {
                 return set( survey );
             }
@@ -59,13 +41,8 @@ function remove( survey ) {
     return store.survey.remove( survey.enketoId );
 }
 
-function update( survey ) {
-    return store.survey.update( survey );
-}
 
 function _setUpdateIntervals( survey ) {
-    var deferred = Q.defer();
-
     hash = survey.hash;
 
     // when it's pretty certain that the form has been rendered, check for form update
@@ -76,8 +53,8 @@ function _setUpdateIntervals( survey ) {
     setInterval( function() {
         _updateCache( survey );
     }, 20 * 60 * 1000 );
-    deferred.resolve( survey );
-    return deferred.promise;
+
+    return Promise.resolve( survey );
 }
 
 /**
@@ -87,7 +64,6 @@ function _setUpdateIntervals( survey ) {
  * @param {[type]} survey [description]
  */
 function _setResetListener( survey ) {
-    var deferred = Q.defer();
 
     $( document ).on( 'formreset', function( event ) {
         if ( event.target.nodeName.toLowerCase() === 'form' ) {
@@ -96,17 +72,13 @@ function _setResetListener( survey ) {
         }
     } );
 
-    deferred.resolve( survey );
-    return deferred.promise;
+    return Promise.resolve( survey );
 }
 
 function _swapMediaSrc( survey ) {
-    var deferred = Q.defer();
+    survey.form = survey.form.replace( /(src=\"[^"]*\")/g, 'data-offline-$1 src=""' );
 
-    survey.form = survey.form.replace( /(src=\"[^"]*\")/g, "data-offline-$1 src=\"\"" );
-    deferred.resolve( survey );
-
-    return deferred.promise;
+    return Promise.resolve( survey );
 }
 
 /**
@@ -119,18 +91,16 @@ function _swapMediaSrc( survey ) {
  * @return {[type]}        [description]
  */
 function updateMaxSubmissionSize( survey ) {
-    var deferred = Q.defer();
 
     if ( !survey.maxSize ) {
-        connection.getMaximumSubmissionSize()
+        return connection.getMaximumSubmissionSize()
             .then( function( maxSize ) {
                 survey.maxSize = maxSize;
-                deferred.resolve( survey );
+                return survey;
             } );
     } else {
-        deferred.resolve( survey );
+        return Promise.resolve( survey );
     }
-    return deferred.promise;
 }
 
 /**
@@ -154,21 +124,18 @@ function updateMedia( survey ) {
         requests.push( connection.getMediaFile( src ) );
     } );
 
-    return Q.all( requests )
+    return Promise.all( requests )
         .then( function( resources ) {
-            var deferred = Q.defer();
             survey.resources = resources;
-            deferred.resolve( survey );
-            return deferred.promise;
+            return survey;
         } )
         .then( store.survey.update )
         .then( _loadMedia );
 }
 
 function _loadMedia( survey ) {
-    var resourceUrl,
-        deferred = Q.defer(),
-        URL = window.URL || window.webkitURL;
+    var resourceUrl;
+    var URL = window.URL || window.webkitURL;
 
     _getElementsGroupedBySrc( survey.$form ).forEach( function( elements ) {
         var src = elements[ 0 ].dataset.offlineSrc;
@@ -193,14 +160,13 @@ function _loadMedia( survey ) {
     //    URL.revokeObjectURL( resourceUrl );
     // } );
 
-    deferred.resolve( survey );
-    return deferred.promise;
+    return Promise.resolve( survey );
 }
 
 function _getElementsGroupedBySrc( $form ) {
-    var groupedElements = [],
-        urls = {},
-        $els = $form.find( '[data-offline-src]' );
+    var groupedElements = [];
+    var urls = {};
+    var $els = $form.find( '[data-offline-src]' );
 
     $els.each( function() {
         if ( !urls[ this.dataset.offlineSrc ] ) {
@@ -233,11 +199,9 @@ function _updateCache( survey ) {
                 console.debug( 'Cached survey is outdated! old:', hash, 'new:', version );
                 return connection.getFormParts( survey )
                     .then( function( formParts ) {
-                        var deferred = Q.defer();
                         // media will be updated next time the form is loaded if resources is undefined
                         formParts.resources = undefined;
-                        deferred.resolve( formParts );
-                        return deferred.promise;
+                        return formParts;
                     } )
                     .then( _swapMediaSrc )
                     .then( store.survey.update )

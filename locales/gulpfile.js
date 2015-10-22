@@ -5,7 +5,7 @@
  * If not working on updating translations, this can be ignored.
  */
 
-"use strict";
+'use strict';
 
 var gulp = require( 'gulp' );
 var i18next = require( 'i18next-parser' );
