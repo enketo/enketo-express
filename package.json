@@ -25,7 +25,7 @@
         "db.js": "0.10.x",
         "debug": "2.x.x",
         "enketo-core": "4.4.0",
-        "enketo-transformer": "1.6.2",
+        "enketo-transformer": "1.6.3",
         "express": "4.x.x",
         "i18next": "1.10.x",
         "i18next-client": "1.10.x",

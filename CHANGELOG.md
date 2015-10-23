@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Themes with hyphen in name do not register.
+- A label or hint that contains a \<span\> element without other markdown is not rendered as HTML.
+
 [1.20.1] - 2015-10-23
 ---------------------
 ##### Fixed
