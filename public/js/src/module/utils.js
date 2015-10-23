@@ -78,7 +78,7 @@ function dataUriToBlob( dataURI ) {
 }
 
 function getThemeFromFormStr( formStr ) {
-    var matches = formStr.match( /<\s?form .*theme-([A-z]+)/ );
+    var matches = formStr.match( /<\s?form .*theme-([A-z\-]+)/ );
     return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
 }
 
