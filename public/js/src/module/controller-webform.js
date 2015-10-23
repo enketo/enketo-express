@@ -257,7 +257,7 @@ function _submitRecord() {
                 msg += '<br/>' + t( 'alert.submissionsuccess.redirectmsg' );
                 gui.alert( msg, t( 'alert.submissionsuccess.heading' ), level );
                 setTimeout( function() {
-                    location.href = settings.returnUrl;
+                    location.href = decodeURIComponent( settings.returnUrl );
                 }, 1500 );
             } else {
                 msg = ( msg.length > 0 ) ? msg : t( 'alert.submissionsuccess.msg' );
