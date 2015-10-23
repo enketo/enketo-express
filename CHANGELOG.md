@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+Unreleased
+---------------------
+##### Fixed
+- External data loading failing.
+
 [1.20.0] - 2015-10-22
 ---------------------
 ##### Added

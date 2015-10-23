@@ -158,6 +158,7 @@
   },
   "error": {
     "code": "Error Code: __code__",
+    "dataloadfailed": "Failed to load data from __url__",
     "econnrefused": "Could not connect with Server",
     "encryptionnotsupported": "This form requires local encryption of records. Unfortunately this not yet supported. We recommend using ODK Collect for data collection with this form.",
     "instancenotfound": "Record not present. It may have expired.",

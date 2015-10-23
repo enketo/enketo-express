@@ -429,6 +429,9 @@ function _getDataFile( url ) {
             deferred.resolve( data );
         } )
         .fail( function( jqXHR, textStatus, errorMsg ) {
+            errorMsg = errorMsg || t( 'error.dataloadfailed', {
+                url: url
+            } );
             var error = jqXHR.responseJSON || new Error( errorMsg );
             deferred.reject( error );
         } );
