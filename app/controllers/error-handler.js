@@ -1,6 +1,6 @@
 'use strict';
 
-var debug = require( 'debug' )( 'error-handler' );
+// var debug = require( 'debug' )( 'error-handler' );
 
 function getErrorMessage( req, error ) {
     if ( error.message ) {
@@ -21,7 +21,7 @@ function getErrorMessage( req, error ) {
 }
 
 module.exports = {
-    production: function( err, req, res ) {
+    production: function( err, req, res, next ) {
         var body = {
             code: err.status || 500,
             message: getErrorMessage( req, err )
@@ -33,7 +33,7 @@ module.exports = {
             res.render( 'error', body );
         }
     },
-    development: function( err, req, res ) {
+    development: function( err, req, res, next ) {
         var body = {
             code: err.status || 500,
             message: getErrorMessage( req, err ),
@@ -49,7 +49,6 @@ module.exports = {
     '404': function( req, res, next ) {
         var err = new Error( req.i18n.t( 'error.pagenotfound' ) );
         err.status = 404;
-        debug( '404 handler' );
         next( err );
     }
 };
