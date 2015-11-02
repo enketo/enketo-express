@@ -106,7 +106,7 @@ function _getAccount( serverUrl ) {
     }
 
     if ( customGetAccount ) {
-        return customGetAccount( serverUrl );
+        return customGetAccount( serverUrl, config[ 'account api url' ] );
     }
 
     error = new Error( 'Forbidden. This server is not linked with Enketo.' );
