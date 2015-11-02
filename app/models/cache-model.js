@@ -58,7 +58,7 @@ function getSurvey( survey ) {
 /** 
  * Gets the hashes of an item from the cache.
  *
- * @param  {{openRosaServer: string, openRosaId: string }} survey [description]
+ * @param  {{openRosaServer: string, openRosaId: string, theme: string}} survey [description]
  * @return {[type]}        [description]
  */
 function getSurveyHashes( survey ) {
@@ -82,7 +82,8 @@ function getSurveyHashes( survey ) {
                     resolve( {
                         formHash: hashArr[ 0 ],
                         mediaHash: hashArr[ 1 ],
-                        xslHash: hashArr[ 2 ]
+                        xslHash: hashArr[ 2 ],
+                        theme: survey.theme
                     } );
                 }
             } );

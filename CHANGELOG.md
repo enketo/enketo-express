@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Themes with hyphen in name do not register.
 - A label or hint that contains a \<span\> element without other markdown is not rendered as HTML.
+- False 'Form has updated' messages appear continously every 20 minutes.
 
 [1.20.1] - 2015-10-23
 ---------------------
