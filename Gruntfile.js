@@ -163,6 +163,9 @@ module.exports = function( grunt ) {
             },
         },
         env: {
+            develop: {
+                NODE_ENV: 'develop'
+            },
             test: {
                 NODE_ENV: 'test'
             }
@@ -186,5 +189,5 @@ module.exports = function( grunt ) {
     grunt.registerTask( 'compile-dev', [ 'client-config-file:create', 'browserify:development', 'client-config-file:remove' ] );
     grunt.registerTask( 'test', [ 'env:test', 'compile', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'client-config-file:create', 'karma:browsers', 'client-config-file:remove' ] );
-    grunt.registerTask( 'develop', [ 'compile-dev', 'concurrent:develop' ] );
+    grunt.registerTask( 'develop', [ 'env:develop', 'compile-dev', 'concurrent:develop' ] );
 };
