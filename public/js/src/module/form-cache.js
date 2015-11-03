@@ -16,7 +16,6 @@ function init( survey ) {
             return get( survey );
         } )
         .then( function( result ) {
-
             if ( result ) {
                 return result;
             } else {
@@ -45,10 +44,13 @@ function remove( survey ) {
 function _setUpdateIntervals( survey ) {
     hash = survey.hash;
 
-    // when it's pretty certain that the form has been rendered, check for form update
+    // Check for form update upon loading.
+    // Note that for large Xforms where the XSL transformation takes more than 30 seconds, 
+    // the first update make take 20 minutes to propagate to the browser of the very first user(s) 
+    // that open the form right after the XForm update.
     setTimeout( function() {
         _updateCache( survey );
-    }, 3 * 60 * 1000 );
+    }, 30 * 1000 );
     // check for form update every 20 minutes
     setInterval( function() {
         _updateCache( survey );
@@ -194,7 +196,7 @@ function _updateCache( survey ) {
     connection.getFormPartsHash( survey )
         .then( function( version ) {
             if ( hash === version ) {
-                console.debug( 'Cached survey is up to date!' );
+                console.debug( 'Cached survey is up to date!', hash );
             } else {
                 console.debug( 'Cached survey is outdated! old:', hash, 'new:', version );
                 return connection.getFormParts( survey )

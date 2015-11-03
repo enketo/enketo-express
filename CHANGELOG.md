@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.20.2] - 2015-11-02
 ---------------------
+##### Changed
+- Make form updates propagate quicker in offline webform views.
+
 ##### Fixed
 - Themes with hyphen in name do not register.
 - A label or hint that contains a \<span\> element without other markdown is not rendered as HTML.
