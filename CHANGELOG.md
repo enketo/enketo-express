@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Chevron icons in timepicker not shown.
+
 [1.20.2] - 2015-11-02
 ---------------------
 ##### Changed
