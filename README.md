@@ -76,7 +76,7 @@ Install [nodemon](https://github.com/remy/nodemon) to run app in development mod
 The easiest way to start the app in development and debugging mode with livereload is with `grunt develop`.
 
 
-### Differences with [enketo/enketo-legacy](https://github.com/enketo/enketo-legacy) (and [enketo.org](https://enketo.org))
+### Differences with [enketo/enketo-legacy](https://github.com/enketo/enketo-legacy)
 
 * :white_check_mark: this one is much easier to install
 * :white_check_mark: this one has cross-browser (media) file inputs
@@ -97,6 +97,8 @@ The easiest way to start the app in development and debugging mode with liverelo
 * :x: no export of queued records (yet)
 * :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
 * :x: no [Forms](https://enketo.org/forms) app (you do not need this)
+* :white_check_mark: this one supports external CSV and XML data (handcoded XForms or Pyxform after [this issue](https://github.com/XLSForm/pyxform/issues/30) is completed)
+* :white_check_mark: this one supports the pulldata() function (if Pyxform version after Sept 7th was used)
 * :white_check_mark: this one is 100% JavaScript
 * :white_check_mark: this one can be hosted on a local webserver
 * :white_check_mark: this one includes an analog scale widget
