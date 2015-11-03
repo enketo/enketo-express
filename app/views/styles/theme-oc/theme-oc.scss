@@ -22,6 +22,8 @@
 
 // icons
 @import "../component/icons";
+.icon-plus:before { content: "Add Another"; font-family: 'OpenSansRegular', Arial, sans-serif; font-size: 15px; }
+.icon-minus:before { content: "Remove"; font-family: 'OpenSansRegular', Arial, sans-serif; font-size: 15px; }
 
 // buttons
 @import "../component/buttons";
