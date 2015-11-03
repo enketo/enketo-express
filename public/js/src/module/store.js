@@ -104,6 +104,7 @@ function init() {
             available = true;
         } )
         .catch( function( e ) {
+            console.error( 'store initialization error', error );
             // make error more useful and throw it further down the line
             var error = new Error( t( 'store.error.notavailable', {
                 error: e.message
