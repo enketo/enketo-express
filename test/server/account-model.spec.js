@@ -8,8 +8,9 @@ var Promise = require( 'lie' );
 var chai = require( 'chai' );
 var expect = chai.expect;
 var chaiAsPromised = require( 'chai-as-promised' );
-var model = require( '../../app/models/account-model' );
 var config = require( '../../app/models/config-model' ).server;
+config[ 'account lib' ] = undefined;
+var model = require( '../../app/models/account-model' );
 
 chai.use( chaiAsPromised );
 
@@ -50,7 +51,7 @@ describe( 'Account Model', function() {
 
                 return Promise.all( [
                     expect( getAccountPromise ).to.eventually.have.property( 'key' ).and.to.equal( accountKey ),
-                    expect( getAccountPromise ).to.eventually.have.property( 'openRosaServer' ).and.to.equal( accountServerUrl )
+                    expect( getAccountPromise ).to.eventually.have.property( 'linkedServer' ).and.to.equal( accountServerUrl )
                 ] );
             } );
         } );
