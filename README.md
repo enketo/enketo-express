@@ -30,6 +30,12 @@ The app should now be running on [localhost:8006](http://localhost:8006). You ca
 
 _\* sometimes `vagrant up` fails for reasons beyond our control - e.g. if external resources are temporarily unavailable. Try running `vagrant reload --provision` to resolve this._
 
+#### Using Docker:
+1. Install [Docker Compose](http://docs.docker.com/compose/install/).
+2. Set Enketo Express's API key, the linked form and data server, and any additional desired configurations in the file `setup/docker/envfile.txt`.
+3. Run `docker-compose up` from project folder and wait until it completes.
+
+The app should now be running on [localhost:8005](http://localhost:8005).
 
 ### How to install a production server
 
