@@ -79,12 +79,10 @@ function getSurveyHashes( survey ) {
                 } else if ( !hashArr ) {
                     resolve( null );
                 } else {
-                    resolve( {
-                        formHash: hashArr[ 0 ],
-                        mediaHash: hashArr[ 1 ],
-                        xslHash: hashArr[ 2 ],
-                        theme: survey.theme
-                    } );
+                    survey.formHash = hashArr[ 0 ];
+                    survey.mediaHash = hashArr[ 1 ];
+                    survey.xslHash = hashArr[ 2 ];
+                    resolve( survey );
                 }
             } );
         }

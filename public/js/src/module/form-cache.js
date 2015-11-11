@@ -40,7 +40,6 @@ function remove( survey ) {
     return store.survey.remove( survey.enketoId );
 }
 
-
 function _setUpdateIntervals( survey ) {
     hash = survey.hash;
 
@@ -121,7 +120,7 @@ function updateMedia( survey ) {
 
     survey.resources = [];
 
-    _getElementsGroupedBySrc( survey.$form ).forEach( function( elements ) {
+    _getElementsGroupedBySrc( survey.$form.add( $( '.form-header' ) ) ).forEach( function( elements ) {
         var src = elements[ 0 ].dataset.offlineSrc;
         requests.push( connection.getMediaFile( src ) );
     } );
@@ -139,9 +138,10 @@ function _loadMedia( survey ) {
     var resourceUrl;
     var URL = window.URL || window.webkitURL;
 
-    _getElementsGroupedBySrc( survey.$form ).forEach( function( elements ) {
+    _getElementsGroupedBySrc( survey.$form.add( $( '.form-header' ) ) ).forEach( function( elements ) {
         var src = elements[ 0 ].dataset.offlineSrc;
-
+        // TODO: For nicer loading and hiding ugly alt attribute text, 
+        // maybe add style: visibility: hidden until the src is populated?
         store.survey.resource.get( survey.enketoId, src )
             .then( function( resource ) {
                 // var srcUsedInsideRepeat;
@@ -172,14 +172,14 @@ function _getElementsGroupedBySrc( $form ) {
 
     $els.each( function() {
         if ( !urls[ this.dataset.offlineSrc ] ) {
-            var src = this.dataset.offlineSrc,
-                $group = $els.filter( function() {
-                    if ( this.dataset.offlineSrc === src ) {
-                        // remove from $els to improve performance
-                        $els = $els.not( '[data-offline-src="' + src + '"]' );
-                        return true;
-                    }
-                } );
+            var src = this.dataset.offlineSrc;
+            var $group = $els.filter( function() {
+                if ( this.dataset.offlineSrc === src ) {
+                    // remove from $els to improve performance
+                    $els = $els.not( '[data-offline-src="' + src + '"]' );
+                    return true;
+                }
+            } );
 
             urls[ src ] = true;
             groupedElements.push( $.makeArray( $group ) );

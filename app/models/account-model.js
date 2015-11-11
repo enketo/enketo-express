@@ -72,7 +72,7 @@ function check( survey ) {
  * @return { boolean } [description]
  */
 function _isAllowed( account, serverUrl ) {
-    return account.openRosaServer === '' || new RegExp( 'https?:\/\/' + _stripProtocol( account.openRosaServer ) ).test( serverUrl );
+    return account.linkedServer === '' || new RegExp( 'https?:\/\/' + _stripProtocol( account.linkedServer ) ).test( serverUrl );
 }
 
 /**
@@ -119,18 +119,17 @@ function _getAccount( serverUrl ) {
  * @return {[type]} [description]
  */
 function _getHardcodedAccount() {
-    var app, linkedServer;
-
-    app = require( '../../config/express' );
-    linkedServer = app.get( 'linked form and data server' );
+    var app = require( '../../config/express' );
+    var linkedServer = app.get( 'linked form and data server' );
 
     // check if configuration is acceptable
     if ( !linkedServer || typeof linkedServer[ 'server url' ] === 'undefined' || typeof linkedServer[ 'api key' ] === 'undefined' ) {
         return null;
     }
 
+    // do not add default branding
     return {
-        openRosaServer: linkedServer[ 'server url' ],
+        linkedServer: linkedServer[ 'server url' ],
         key: linkedServer[ 'api key' ],
         quota: linkedServer[ 'quota' ] || Infinity
     };

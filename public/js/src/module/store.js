@@ -268,7 +268,8 @@ surveyStore = {
                     theme: survey.theme,
                     resources: resourceKeys,
                     maxSize: survey.maxSize,
-                    externalData: survey.externalData
+                    externalData: survey.externalData,
+                    branding: survey.branding
                 } );
             } )
             .then( function() {
