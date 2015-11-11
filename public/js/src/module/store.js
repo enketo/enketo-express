@@ -242,19 +242,21 @@ surveyStore = {
             throw new Error( 'Survey not complete' );
         }
 
-        survey.resources = survey.resources || [];
-
-        // build array of resource keys
-        resourceKeys = survey.resources.map( function( resource ) {
-            return resource.url;
-        } );
+        // note: if survey.resources = undefined/null, do not store empty array
+        // as it means there are no resources to store (and load)
+        if ( survey.resources ) {
+            // build array of resource keys
+            resourceKeys = survey.resources.map( function( resource ) {
+                return resource.url;
+            } );
+        }
 
         return server.surveys.get( survey.enketoId )
             .then( function( result ) {
                 // determine obsolete resources to be removed
                 if ( result.resources ) {
                     obsoleteResources = result.resources.filter( function( existing ) {
-                        return resourceKeys.indexOf( existing ) < 0;
+                        return !resourceKeys || resourceKeys.indexOf( existing ) < 0;
                     } );
                 }
                 // update the existing survey
@@ -270,10 +272,12 @@ surveyStore = {
                 } );
             } )
             .then( function() {
-                // add new or update existing resources
-                survey.resources.forEach( function( file ) {
-                    tasks.push( surveyStore.resource.update( survey.enketoId, file ) );
-                } );
+                if ( survey.resources ) {
+                    // add new or update existing resources
+                    survey.resources.forEach( function( file ) {
+                        tasks.push( surveyStore.resource.update( survey.enketoId, file ) );
+                    } );
+                }
                 // remove obsolete resources
                 obsoleteResources.forEach( function( key ) {
                     tasks.push( surveyStore.resource.remove( survey.enketoId, key ) );
