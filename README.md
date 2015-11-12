@@ -49,7 +49,7 @@ To configure your own custom external authentication also see [this section](#au
 
 ### API
 
-The API is accessible on **/api/v2** and **/api/v1**. Only API v1 is [properly documented](http://apidocs.enketo.org) at the moment. This [temporary note](APIv2.md) describes the changes introduced by API v2.
+The API is accessible on **/api/v2** and **/api/v1**. Only API v1 is [properly documented](http://apidocs.enketo.org) at the moment. This [temporary note](./doc/APIv2.md) describes the changes introduced by API v2.
 
 
 ### How to run
@@ -75,33 +75,9 @@ Install [nodemon](https://github.com/remy/nodemon) to run app in development mod
 
 The easiest way to start the app in development and debugging mode with livereload is with `grunt develop`.
 
-
 ### Differences with [enketo/enketo-legacy](https://github.com/enketo/enketo-legacy)
 
-* :white_check_mark: this one is much easier to install
-* :white_check_mark: this one has cross-browser (media) file inputs
-* :white_check_mark: this one has a [multi-language](#translation) user interface
-* :white_check_mark: this one displays right-to-left scripts from right-to-left
-* :white_check_mark: this one has more text formatting (markdown syntax) support and across **all** labels **and hints**
-* :white_check_mark: this one has better security of user credentials
-* :white_check_mark: this one has support for multiple themes in *all* form views including previews 
-* :white_check_mark: this one has an improved API (v2)
-* :white_check_mark: this one allows overriding a form-defined theme via the API (v2) 
-* :white_check_mark: this one has the ability to override default form values on launch through the API (v2)
-* :white_check_mark: this one has a more advanced iframeable webform view that can communicate back to the parent window, enabled through the API (v2)
-* :white_check_mark: this one has [external authentication](#authentication) support 
-* :white_check_mark: this one will use the `instanceName` value defined in the XForm as the default local record name
-* :white_check_mark: this one will automatically save any unsaved record in the offline-capable views to avoid loosing data
-* :large_orange_diamond: offline forms are still experimental - **enable offline functionality only for testing and [report bugs](https://github.com/kobotoolbox/enketo-express/issues) please**
-* :x: missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views)
-* :x: no export of queued records (yet)
-* :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
-* :x: no [Forms](https://enketo.org/forms) app (you do not need this)
-* :white_check_mark: this one supports external CSV and XML data (handcoded XForms or Pyxform after [this issue](https://github.com/XLSForm/pyxform/issues/30) is completed)
-* :white_check_mark: this one supports the pulldata() function (if Pyxform version after Sept 7th was used)
-* :white_check_mark: this one is 100% JavaScript
-* :white_check_mark: this one can be hosted on a local webserver
-* :white_check_mark: this one includes an analog scale widget
+See [this doc](./doc/differences.md)
 
 
 ### Themes
