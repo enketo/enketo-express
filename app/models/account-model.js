@@ -25,7 +25,7 @@ function get( survey ) {
         return Promise.reject( error );
     } else if ( /https?:\/\/testserver.com\/bob/.test( server ) ) {
         return Promise.resolve( {
-            openRosaServer: server,
+            linkedServer: server,
             key: 'abc',
             quota: 100
         } );
