@@ -238,7 +238,7 @@ function removeInstance( req, res, next ) {
 
 function _setQuotaUsed( req, res, next ) {
     surveyModel
-        .getNumber( req.account.openRosaServer )
+        .getNumber( req.account.linkedServer )
         .then( function( number ) {
             req.account.quotaUsed = number;
             next();
