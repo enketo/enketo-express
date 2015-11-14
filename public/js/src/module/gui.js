@@ -78,6 +78,11 @@ function setEventHandlers() {
         alert( msg, t( 'alert.offlinesupported.heading' ), 'normal' );
     } );
 
+    $( 'a.branding' ).on( 'click', function() {
+        var href = this.getAttribute( 'href' );
+        return ( !href || href === '#' ) ? false : true
+    } );
+
     $doc.on( 'xpatherror', function( ev, error ) {
         var email = settings[ 'supportEmail' ],
             link = '<a href="mailto:' + email + '?subject=xpath errors for: ' + location.href + '&body=' + error + '" target="_blank" >' + email + '</a>';
