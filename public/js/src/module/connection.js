@@ -379,17 +379,25 @@ function _getExternalData( survey ) {
  * @return {Promise} [description]
  */
 function getMediaFile( url ) {
+    var error;
     var xhr = new XMLHttpRequest();
 
     return new Promise( function( resolve, reject ) {
         xhr.onreadystatechange = function() {
-            if ( this.readyState === 4 && this.status === 200 ) {
-                resolve( {
-                    url: url,
-                    item: this.response
-                } );
+            if ( this.readyState === 4 ) {
+                if ( this.status >= 200 && this.status < 300 ) {
+                    resolve( {
+                        url: url,
+                        item: this.response
+                    } );
+                } else {
+                    error = new Error( this.statusText || t( 'error.loadfailed', {
+                        resource: url
+                    } ) );
+                    error.status = this.status;
+                    reject( error );
+                }
             }
-            // TODO: add fail handler
         };
 
         xhr.open( 'GET', url );

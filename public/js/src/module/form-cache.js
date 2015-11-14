@@ -125,13 +125,41 @@ function updateMedia( survey ) {
         requests.push( connection.getMediaFile( src ) );
     } );
 
-    return Promise.all( requests )
+    return Promise.all( requests.map( _reflect ) )
         .then( function( resources ) {
+            // filter out the failed requests (undefined)
+            resources = resources.filter( function( resource ) {
+                return !!resource;
+            } );
             survey.resources = resources;
             return survey;
         } )
+        // store any resources that were succesfull
         .then( store.survey.update )
-        .then( _loadMedia );
+        .then( _loadMedia )
+        .catch( function( error ) {
+            console.error( 'loadMedia failed', error );
+            // Let the flow continue. 
+            return survey;
+        } );
+}
+
+/**
+ * To be used with Promise.all if you want the results to be returned even if some 
+ * have failed. Failed tasks will return undefined.
+ *
+ * @param  {Promise} task [description]
+ * @return {*}         [description]
+ */
+function _reflect( task ) {
+    return task
+        .then( function( response ) {
+                return response;
+            },
+            function( error ) {
+                console.error( error );
+                return;
+            } );
 }
 
 function _loadMedia( survey ) {

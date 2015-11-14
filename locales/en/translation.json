@@ -163,6 +163,7 @@
     "encryptionnotsupported": "This form requires local encryption of records. Unfortunately this not yet supported. We recommend using ODK Collect for data collection with this form.",
     "instancenotfound": "Record not present. It may have expired.",
     "invalidediturl": "Not a valid edit URL",
+    "loadfailed": "Failed to load __resource__",
     "notfoundinformlist": "Form with ID __formId__ not found in /formList",
     "pagenotfound": "Page not Found",
     "surveyidnotactive": "Survey with this ID no longer active",
