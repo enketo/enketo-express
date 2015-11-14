@@ -17,9 +17,10 @@
 * :large_orange_diamond: Enketo Express' offline-capable forms are still experimental - **enable offline functionality only for testing and [report bugs](https://github.com/kobotoolbox/enketo-express/issues) please**
 * :x: Enketo Express has missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views)
 * :x: Enketo Express has no export of queued records (yet)
-* :x: Enketo Express has no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
+* :x: Enketo Express has no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews - it helps to let us know if this is important to you)
 * :x: Enketo Express has no [Forms](https://enketo.org/forms) app (you do not need this)
 * :white_check_mark: Enketo Express supports external CSV and XML data (for handcoded XForms or XLSForms after [this issue](https://github.com/XLSForm/pyxform/issues/30) is completed)
+* :white_check_mark: Enketo Express has many bug fixes in the form engine that Enketo Legacy doesn't have.
 * :white_check_mark: Enketo Express supports the pulldata() function (if Pyxform version after Sept 7th was used)
 * :white_check_mark: Enketo Express is 100% JavaScript
 * :white_check_mark: Enketo Express can be hosted on a local webserver

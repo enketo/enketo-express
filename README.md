@@ -40,7 +40,7 @@ See [this tutorial](http://blog.enketo.org/install-enketo-production-ubuntu/) fo
 
 All configuration is done in config/config.json. Strictly speaking, this file only has to contain the [default properties](./config/default-config.json) that you'd like to override, but it might be safer to include all properties. The configuration items have self-explanatory names and helpful sample values. After editing the configuration, the app will need to be restarted.
 
-The default production configuration includes 2 redis instances for the cache. You can **greatly simplify installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you'll find the vagrant setup steps in [bootstrap.sh](./setup/bootstrap.sh) useful.
+The default production configuration includes 2 redis instances. You can **greatly simplify installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you might find the vagrant setup steps in [bootstrap.sh](./setup/bootstrap.sh) useful.
 
 For detailed guidance on each configuration item, see [this document](./config/README.md).
 
@@ -69,10 +69,9 @@ For a production server, we recommend using [pm2](https://github.com/unitech/pm2
 
 
 ### Developer tools
-Install [nodemon](https://github.com/remy/nodemon) to automatically restart the server when a file changes.
-Install [gulp](http://gulpjs.com/) to automatically update the translation keys.
-Install [mocha](https://github.com/mochajs/mocha) to run tests.
-Install [nodemon](https://github.com/remy/nodemon) to run app in development mode with autoreload.
+* Install [nodemon](https://github.com/remy/nodemon) to automatically restart the server when a file changes.
+* Install [gulp](http://gulpjs.com/) to automatically update the translation keys.
+* Install [mocha](https://github.com/mochajs/mocha) to run tests.
 
 The easiest way to start the app in development and debugging mode with livereload is with `grunt develop`.
 
@@ -88,7 +87,7 @@ The default theme can be set in config/config.json. The default theme can be ove
 The recommended way to customize themes is to either:
 
  * Create an issue (and fund or send a pull request) for changes to the existing themes, or
- * Create your own theme in your own enketo-express port and add your custom theme in its own folder [here](app/views/styles). No other changes are required. A succesful rebuild with `grunt`, and your theme will become active when the app starts. The advantage of using this method instead of editing the existing themes, is that you will not have any merge conflicts when you update your port! Add a print-specific version of your theme and use the same filenaming convention as the built-in themes.
+ * Create your own theme in your own enketo-express port and add your custom theme in its own folder [here](app/views/styles). No other changes are required. A succesful rebuild with `grunt`, and your theme will become active when the app starts. The advantage of using this method instead of editing the existing themes, is that you will not have merge conflicts when you update your port! Add a print-specific version of your theme and use the same filenaming convention as the built-in themes.
 
  See also [this further guidance](https://github.com/enketo/enketo-core#notes-for-css-developers)
 
@@ -127,8 +126,7 @@ _Send a message if you'd like to contribute! We use an easy web interface provid
 
 ### Funding
 
-The development of this application was funded by [KoBo Toolbox (Harvard Humanitarian Initiative)](http://www.kobotoolbox.org), [iMMAP](http://immap.org), [OpenClinica](https://openclinica.com), and [Enketo LLC](https://enketo.org). The [Enketo-core](https://github.com/enketo/enketo-core) library (the form engine + themes) used in this application obtained significant funding from [SEL (Columbia University)](http://modi.mech.columbia.edu/), the [Santa Fe Institute](http://www.santafe.edu/), and the [HRP project](http://www.who.int/reproductivehealth/topics/mhealth/en/). 
-
+The development of this application was funded by [KoBo Toolbox (Harvard Humanitarian Initiative)](http://www.kobotoolbox.org), [iMMAP](http://immap.org), [OpenClinica](https://openclinica.com), and [Enketo LLC](https://enketo.org). The [Enketo-core](https://github.com/enketo/enketo-core) library (the form engine + themes) used in this application obtained significant funding from [SEL (Columbia University)](http://modi.mech.columbia.edu/), the [Santa Fe Institute](http://www.santafe.edu/), [Ona](https://ona.io) and the [HRP project](http://www.who.int/reproductivehealth/topics/mhealth/en/). 
 
 ### License
 
