@@ -85,10 +85,8 @@ function getSurveyParts( req, res, next ) {
  * @return {[type]}        [description]
  */
 function getCachedSurveyHash( req, res, next ) {
-    var s;
     _getSurveyParams( req.body )
         .then( function( survey ) {
-            s = survey;
             return cacheModel.getHashes( survey );
         } )
         .then( function( survey ) {
@@ -100,7 +98,7 @@ function getCachedSurveyHash( req, res, next ) {
             // update cache if necessary, asynchronously AFTER responding
             // this is the ONLY mechanism by which a locally browser-stored form
             // will be updated
-            _updateCache( s );
+            _updateCache( survey );
         } )
         .catch( next );
 }
@@ -129,6 +127,9 @@ function _updateCache( survey ) {
         .then( cacheModel.check )
         .then( function( upToDate ) {
             if ( !upToDate ) {
+                delete survey.formHash;
+                delete survey.mediaHash;
+                delete survey.xslHash;
                 return _getFormDirectly( survey )
                     .then( cacheModel.set );
             }
