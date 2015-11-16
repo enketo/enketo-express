@@ -172,13 +172,15 @@ function _loadMedia( survey ) {
         // maybe add style: visibility: hidden until the src is populated?
         store.survey.resource.get( survey.enketoId, src )
             .then( function( resource ) {
-                // var srcUsedInsideRepeat;
+                if ( !resource || !resource.item ) {
+                    console.error( 'resource not found or not complete', resource );
+                    return;
+                }
                 // create a resourceURL
                 resourceUrl = URL.createObjectURL( resource.item );
                 // add this resourceURL as the src for all elements in the group
                 elements.forEach( function( element ) {
                     element.src = resourceUrl;
-                    // srcUsedInsideRepeat = srcUsedInsideRepeat || $(element).closest('.or-repeat').length > 0;
                 } );
             } );
     } );

@@ -412,6 +412,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Repeat groups not working when they have no \<group\> wrapper.
 - Multipe markdown links in a note are merged into one.
+- File uploads in Chrome in offline-capable view fail to load after an hour (workaround for browser bug).
 
 [1.5.0] - 2014-12-30
 -----------
