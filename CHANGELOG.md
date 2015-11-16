@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Changed
+- Updated Italian translation
+
 ##### Fixed
 - Clicking brand logo link with '#' value messes up offline views.
 - Several issues where updating form media files did not properly update the form caches on server and client.
