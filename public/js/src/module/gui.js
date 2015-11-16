@@ -80,7 +80,7 @@ function setEventHandlers() {
 
     $( 'a.branding' ).on( 'click', function() {
         var href = this.getAttribute( 'href' );
-        return ( !href || href === '#' ) ? false : true
+        return ( !href || href === '#' ) ? false : true;
     } );
 
     $doc.on( 'xpatherror', function( ev, error ) {
