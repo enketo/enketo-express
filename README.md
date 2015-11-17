@@ -9,7 +9,7 @@ A light-weight node.js version of Enketo Smart Paper. Chock-full of [badass rock
 
 #### Manually:
 
-1. Install JS prerequisites: [Node.js 0.10.x](http://nodejs.org/) (newer version [not supported yet](https://github.com/albanm/node-libxslt/issues/18)), [Grunt Client](http://gruntjs.com), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
+1. Install JS prerequisites: [Node.js 0.12.x](http://nodejs.org/) (newer versions not supported yet), [Grunt Client](http://gruntjs.com), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
 2. Install [Redis](http://redis.io/topics/quickstart)
 3. Install build-essential and git (and libfontconfig to run tests) with `(sudo) apt-get install build-essential git libfontconfig`
 4. Clone this repository

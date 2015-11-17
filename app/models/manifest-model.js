@@ -1,6 +1,6 @@
 'use strict';
 
-var libxml = require( 'libxmljs' );
+var libxml = require( 'libxslt' ).libxmljs;
 var url = require( 'url' );
 var path = require( 'path' );
 var fs = require( 'fs' );
