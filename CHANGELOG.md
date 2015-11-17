@@ -10,6 +10,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Clicking brand logo link with '#' value messes up offline views.
 - Several issues where updating form media files did not properly update the form caches on server and client.
+- File uploads in Chrome in offline-capable view fail to load after an hour (workaround for browser bug).
+- If accompanying file for record cannot be retrieved, upload is blocked forever.
 
 [1.20.3] - 2015-11-13
 ---------------------
@@ -411,9 +413,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 -----------
 ##### Fixed
 - Repeat groups not working when they have no \<group\> wrapper.
-- Multipe markdown links in a note are merged into one.
-- File uploads in Chrome in offline-capable view fail to load after an hour (workaround for browser bug).
-- If accompanying file for record cannot be retrieved, upload is blocked forever.
+- Multiple markdown links in a note are merged into one.
 
 [1.5.0] - 2014-12-30
 -----------
