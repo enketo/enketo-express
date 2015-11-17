@@ -397,10 +397,13 @@ recordStore = {
                 record.files.forEach( function( fileKey ) {
                     tasks.push( recordStore.file.get( record.instanceId, fileKey ) );
                 } );
-
                 return Promise.all( tasks )
                     .then( function( files ) {
-                        record.files = files;
+                        // filter out the failed files (= undefined)
+                        files = files.filter( function( file ) {
+                            return file;
+                        } );
+                        record.files = files || [];
                         return record;
                     } );
             } );

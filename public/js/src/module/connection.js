@@ -186,8 +186,8 @@ function _prepareFormDataArray( record ) {
             } );
             sizes.push( file.size );
         } else {
-            failedFiles.push( file.name );
-            console.error( 'Error occured when trying to retrieve ' + file.name );
+            failedFiles.push( fileName );
+            console.error( 'Error occured when trying to retrieve ' + fileName );
         }
     } );
 
