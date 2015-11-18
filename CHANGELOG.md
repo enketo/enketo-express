@@ -5,7 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [Unreleased]
 ---------------------
 ##### Changed
-- Updated Italian translation
+- Updated Italian translation.
+- Redirect all IE users to /modern-browsers page.
 
 ##### Fixed
 - Clicking brand logo link with '#' value messes up offline views.
