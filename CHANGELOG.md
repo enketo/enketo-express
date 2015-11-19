@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Submission counters not updated upon successful submission.
+
 [1.20.4] - 2015-11-25
 ---------------------
 ##### Added

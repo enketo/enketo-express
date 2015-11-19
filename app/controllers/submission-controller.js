@@ -54,8 +54,9 @@ function submit( req, res, next ) {
     var paramName = req.app.get( 'query parameter to pass to submission' );
     var paramValue = req.query[ paramName ];
     var query = ( paramValue ) ? '?' + paramName + '=' + paramValue : '';
+    var id = req.enketoId;
 
-    surveyModel.get( req.enketoId )
+    surveyModel.get( id )
         .then( function( survey ) {
             submissionUrl = communicator.getSubmissionUrl( survey.openRosaServer ) + query;
             credentials = userModel.getCredentials( req );
@@ -72,7 +73,12 @@ function submit( req, res, next ) {
             };
 
             // pipe the request 
-            req.pipe( request( options ) ).pipe( res );
+            req.pipe( request( options ) ).on( 'response', function( orResponse ) {
+                if ( orResponse.statusCode === 201 ) {
+                    // do not wait for database update confirmation
+                    surveyModel.addSubmission( id );
+                }
+            } ).pipe( res );
 
         } )
         .catch( next );
