@@ -15,6 +15,9 @@
     },
     "encryption key": "s0m3v3rys3cr3tk3y",
     "default theme": "kobo",
+    "log": {
+        "submissions": false
+    },
     "support": {
         "email": "info@kobotoolbox.org"
     },

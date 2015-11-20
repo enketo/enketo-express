@@ -218,7 +218,9 @@ function _submitRecord() {
 
     record = {
         'xml': form.getDataStr(),
-        'files': fileManager.getCurrentFiles()
+        'files': fileManager.getCurrentFiles(),
+        'instanceId': form.getInstanceID(),
+        'deprecatedId': form.getDeprecatedID()
     };
 
     return connection.uploadRecord( record )
@@ -337,6 +339,7 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
         'xml': form.getDataStr(),
         'name': recordName,
         'instanceId': form.getInstanceID(),
+        'deprecateId': form.getDeprecatedID(),
         'enketoId': settings.enketoId,
         'files': fileManager.getCurrentFiles().map( function( file ) {
             return ( typeof file === 'string' ) ? {

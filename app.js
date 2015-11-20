@@ -2,8 +2,8 @@
 
 'use strict';
 
-var cluster = require( 'cluster' ),
-    numCPUs = require( 'os' ).cpus().length;
+var cluster = require( 'cluster' );
+var numCPUs = require( 'os' ).cpus().length;
 
 if ( cluster.isMaster ) {
 

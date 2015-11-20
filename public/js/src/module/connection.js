@@ -85,6 +85,8 @@ function uploadRecord( record ) {
 
     batches.forEach( function( batch ) {
         batch.formData.append( 'Date', new Date().toUTCString() );
+        batch.instanceId = record.instanceId;
+        batch.deprecatedId = record.deprecatedId;
         tasks.push( _uploadBatch( batch ) );
     } );
 
@@ -102,9 +104,6 @@ function uploadRecord( record ) {
  * @return {Promise}      [description]
  */
 function _uploadBatch( recordBatch ) {
-
-    console.log( 'uploading batch with failed Files', recordBatch.failedFiles );
-
     return new Promise( function( resolve, reject ) {
         $.ajax( SUBMISSION_URL, {
                 type: 'POST',
@@ -113,7 +112,9 @@ function _uploadBatch( recordBatch ) {
                 contentType: false,
                 processData: false,
                 headers: {
-                    'X-OpenRosa-Version': '1.0'
+                    'X-OpenRosa-Version': '1.0',
+                    'X-OpenRosa-Deprecated-Id': recordBatch.deprecatedId,
+                    'X-OpenRosa-Instance-Id': recordBatch.instanceId
                 },
                 timeout: 300 * 1000
             } )

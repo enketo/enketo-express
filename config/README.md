@@ -30,6 +30,9 @@ Enketo will use this to encrypt sensitive information whenever necessary (e.g. f
 #### default theme 
 The theme to use if the survey has no user-or-api-defined theme. Values could be `"kobo"`, `"formhub"`, `"grid"`, or `"[yourowncustomtheme]"`.
 
+#### log
+* submissions: Whether successfully submitted _record instanceIDs_ should be logged into log files. This could help troubleshoot any issues with the Form/Data Server or with Enketo. Only 201 responses to /submission on the Form/Data server will be logged. If a record is divided into multiple batches, it should only be recorded once. Logging instancedIDs could be considered a privacy issue, as together with web server logs it will potentially allow one to determine which IP address a specific record (instanceID) was submitted from and when. 
+
 #### themes supported
 An array of theme names to enable. This can be used to disable certain themes. If this configuration item is absent or an empty array, all installed themes will be enabled.
 

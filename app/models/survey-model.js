@@ -179,7 +179,7 @@ function _addSurvey( openRosaKey, survey ) {
     } );
 }
 
-function addSubmission( id ) {
+function incrSubmissions( id ) {
     return new Promise( function( resolve, reject ) {
         client.multi()
             .incr( 'submission:counter' )
@@ -355,5 +355,5 @@ module.exports = {
     getId: getEnketoIdFromSurveyObject,
     getNumber: getNumberOfSurveys,
     getList: getListOfSurveys,
-    addSubmission: addSubmission
+    incrementSubmissions: incrSubmissions
 };

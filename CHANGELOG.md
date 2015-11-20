@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Added
+- InstanceID logging of successful submissions (optional feature, off by default).
+
 ##### Fixed
 - Submission counters not updated upon successful submission.
 
