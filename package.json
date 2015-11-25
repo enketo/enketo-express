@@ -2,7 +2,7 @@
     "name": "enketo-express",
     "description": "A simplified version of Enketo Smart Paper that requires a constant connection to the server.",
     "homepage": "",
-    "version": "1.20.3",
+    "version": "1.20.4",
     "main": "./app.js",
     "repository": {
         "type": "git",
@@ -37,8 +37,8 @@
         "lodash": "3.10.x",
         "morgan": "1.x.x",
         "papaparse": "4.1.x",
-        "redis": "2.3.x",
-        "request": "2.65.x",
+        "redis": "2.4.x",
+        "request": "2.67.x",
         "serve-favicon": "2.x.x",
         "vex-js": "2.3.x",
         "xml2js": "0.4.x"
@@ -51,7 +51,7 @@
         "grunt-browserify": "4.0.x",
         "grunt-concurrent": "2.x.x",
         "grunt-contrib-jshint": "0.11.x",
-        "grunt-contrib-uglify": "0.10.x",
+        "grunt-contrib-uglify": "0.11.x",
         "grunt-contrib-watch": "0.6.x",
         "grunt-env": "0.4.x",
         "grunt-jsbeautifier": "0.2.x",
