@@ -87,6 +87,12 @@
         }
     },
     "confirm": {
+        "autosaveload": {
+            "heading": "Niet Opgeslagen Record Gevonden",
+            "msg": "Enketo heeft een niet opgeslagen record gevonden. Wil je dit record laden of verwijderen?",
+            "negButton": "Verwijder",
+            "posButton": "Laad Record"
+        },
         "default": {
             "heading": "Weet je het zeker?",
             "msg": "Confirmeer deze aktie",
@@ -139,6 +145,10 @@
             "unkownerror": "Een onbekende fout trad op tijdens het opslaan."
         }
     },
+    "constraint": {
+        "invalid": "Waarde niet toegestaan",
+        "required": "Dit veld is verplicht"
+    },
     "contact": {
         "admin": "Contacteer de enquete administrateur aub.",
         "support": "Contacteer __supportEmail__ aub."
@@ -148,10 +158,12 @@
     },
     "error": {
         "code": "Fout Code: __code__",
+        "dataloadfailed": "Kon data niet laden van __url__",
         "econnrefused": "Kon niet verbinden met de Server",
         "encryptionnotsupported": "De informatie verzameld met deze enquete dient versleuteld te worden. Helaas is dit nog niet ondersteund. We bevelen aan om ODK Collect te gebruiken voor deze enquete.",
         "instancenotfound": "Record niet gevonden. Het kan verlopen zijn.",
         "invalidediturl": "Niet een geldig edit URL",
+        "loadfailed": "Kon __resource__ niet laden",
         "notfoundinformlist": "Enquete met ID __formId__ niet gevonden in /formList",
         "pagenotfound": "Pagina niet gevonden",
         "surveyidnotactive": "Enquete met dit ID is niet langer aktief",
@@ -197,6 +209,7 @@
         "hi": "Hindi",
         "km": "Khmer",
         "nl": "Nederlands",
+        "no": "Noorweegs",
         "ro": "Roemeens",
         "supported": "Talen ondersteund:",
         "sw": "Swahili",
@@ -215,7 +228,7 @@
         },
         "offline": {
             "heading": "Kan de verzochte pagina niet laden.",
-            "msg1": "Deze pagine is alleen bereikbaar als de browser een Internet verbinding heeft en de server beschikbaar is (tenzij de pagina niet bestaat)."
+            "msg1": "Deze pagina is alleen toegankelijk als de browser een Internet verbinding heeft en de server bereikbaar is (tenzij de pagina niet bestaat)."
         }
     },
     "prompt": {
