@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Submission counters not updated upon successful submission.
+- Node 4 incompatibility.
 
 [1.20.4] - 2015-11-25
 ---------------------

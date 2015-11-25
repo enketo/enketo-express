@@ -41,7 +41,9 @@ echo 'starting second enketo redis instance...'
 service redis-server-enketo-cache restart
 
 # install dependencies, development tools, node, grunt
+echo 'installing some apt-get packages...'
 apt-get install -y build-essential git libfontconfig curl
+echo 'installing nodejs...'
 cd $ENKETO_EXPRESS_REPO_DIR
 if [ $ENKETO_EXPRESS_USE_NODE_ENV = "true" ]; then
     apt-get install python-pip
@@ -49,7 +51,7 @@ if [ $ENKETO_EXPRESS_USE_NODE_ENV = "true" ]; then
     nodeenv env
     . env/bin/activate
 else
-    curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
+    curl -sL https://deb.nodesource.com/setup_4.x | sudo bash -
     apt-get install -y nodejs
 fi
 
