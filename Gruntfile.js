@@ -19,6 +19,7 @@ module.exports = function( grunt ) {
         nodemon: {
             dev: {
                 script: 'app.js',
+                watch: JS_INCLUDE,
                 options: {
                     //nodeArgs: [ '--debug' ],
                     callback: function( nodemon ) {
