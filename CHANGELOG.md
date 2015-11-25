@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Added
+- Slovak translation.
+
 ##### Changed
 - Updated Italian, Dutch and German translations.
 - Redirect all IE users to /modern-browsers page.
