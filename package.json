@@ -42,24 +42,26 @@
         "request": "2.67.x",
         "serve-favicon": "2.x.x",
         "vex-js": "2.3.x",
-        "xml2js": "0.4.x"
-    },
-    "devDependencies": {
-        "aliasify": "1.8.x",
-        "chai": "3.4.x",
-        "chai-as-promised": "*",
+        "xml2js": "0.4.x",
         "grunt": "0.4.x",
         "grunt-browserify": "4.0.x",
+        "aliasify": "1.8.x",
+        "grunt-contrib-uglify": "0.11.x",
+        "grunt-sass": "1.1.x",
+        "grunt-env": "0.4.x",
+        "load-grunt-tasks": "3.x.x",
+        "time-grunt": "1.x.x"
+    },
+    "devDependencies": {
+        "chai": "3.4.x",
+        "chai-as-promised": "*",
         "grunt-concurrent": "2.x.x",
         "grunt-contrib-jshint": "0.11.x",
-        "grunt-contrib-uglify": "0.11.x",
         "grunt-contrib-watch": "0.6.x",
-        "grunt-env": "0.4.x",
         "grunt-jsbeautifier": "0.2.x",
         "grunt-karma": "0.12.x",
         "grunt-mocha-test": "0.12.x",
         "grunt-nodemon": "0.4.x",
-        "grunt-sass": "1.1.x",
         "grunt-shell": "1.1.x",
         "gulp": "3.9.x",
         "i18next-parser": "0.3.x",
@@ -72,11 +74,9 @@
         "karma-phantomjs-launcher": "0.2.x",
         "karma-safari-launcher": "0.1.x",
         "karma-sinon-chai": "1.1.x",
-        "load-grunt-tasks": "3.x.x",
         "mocha": "2.3.x",
         "phantomjs": "1.9.x",
-        "supertest": "1.1.x",
-        "time-grunt": "1.x.x"
+        "supertest": "1.1.x"
     },
     "aliasify": {
         "aliases": {
