@@ -121,8 +121,8 @@ function _formatter( options, severity, date, elems ) {
     if ( Array.isArray( elems ) ) {
         instanceId = elems[ 0 ];
         if ( elems[ 1 ] && typeof elems[ 1 ] === 'object' ) {
-            enketoId = elems[ 1 ].enketoId || '-';
-            deprecatedId = elems[ 1 ].deprecatedId || '_';
+            enketoId = elems[ 1 ].enketoId || enketoId;
+            deprecatedId = elems[ 1 ].deprecatedId || deprecatedId;
         }
     }
 

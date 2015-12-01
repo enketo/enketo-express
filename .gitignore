@@ -16,4 +16,5 @@ config/config.json
 enketo-main.rdb
 setup/docker/envfile.txt
 setup/docker/secrets
-logs
+logs/submissions*
+logs/logrotate
