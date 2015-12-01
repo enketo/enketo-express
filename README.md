@@ -69,7 +69,7 @@ For a production server, we recommend using [pm2](https://github.com/unitech/pm2
 ### How to update
 
 * update git repository with `git pull` (check out a specific release (git tag) for a production server)
-* update dependencies with `npm update`
+* update dependencies with `npm update --production`
 * re-build with `grunt`
 * restart app
 
