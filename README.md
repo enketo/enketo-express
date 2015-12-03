@@ -81,6 +81,14 @@ For a production server, we recommend using [pm2](https://github.com/unitech/pm2
 
 The easiest way to start the app in development and debugging mode with livereload is with `grunt develop`.
 
+
+### Browser support
+
+Only the latest modern browser versions are officially supported. The exception is with iOS browsers. Largely, due to Apple's restrictions on third-party browsers, Chrome does not work properly with _offline-capable_ forms. We expect the iOS situation to improve somewhat in the future and are patiently waiting for this.
+
+**Enketo endeavors to show a helpful (multi-lingual) error message on unsupported browsers when the form is loaded to avoid serious issues. E.g. Chrome users on iOS will be recommended to switch to Safari when necessary.**
+
+
 ### Differences with [enketo/enketo-legacy](https://github.com/enketo/enketo-legacy)
 
 See [this doc](./doc/differences.md)

@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Changed
+- Show helpful "Use Safari on iOS" message when unsupported iOS browser is used.
+
 ##### Fixed
 - Empty error dialog when form fails to load.
 
