@@ -11,6 +11,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Empty error dialog when form fails to load.
 - Form footer margins incorrect.
 
+##### Removed
+- "Experimental" warning message
+
 [1.21.0] - 2015-12-01
 ---------------------
 ##### Added
