@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Empty error dialog when form fails to load.
+
 [1.21.0] - 2015-12-01
 ---------------------
 ##### Added

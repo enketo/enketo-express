@@ -30,7 +30,10 @@ options = {
     // use custom loader to avoid query string timestamp (messes up applicationCache)
     customLoad: function( lng, ns, options, loadComplete ) {
         // load the file for given language and namespace
-        $.get( '/locales/__lng__/translation.json'.replace( '__lng__', lng ) )
+        $.ajax( {
+                url: '/locales/__lng__/translation.json'.replace( '__lng__', lng ),
+                async: false
+            } )
             .done( function( data ) {
                 loadComplete( null, data );
             } )

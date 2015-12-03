@@ -58,7 +58,7 @@ if ( settings.offline ) {
 
 function _showErrorOrAuthenticate( error ) {
     error = ( typeof error === 'string' ) ? new Error( error ) : error;
-    console.log( 'error', error, error.stack );
+    console.error( error, error.stack );
     $loader.addClass( 'fail' );
     if ( error.status === 401 ) {
         window.location.href = '/login?return_url=' + encodeURIComponent( window.location.href );
