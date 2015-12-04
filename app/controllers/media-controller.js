@@ -24,7 +24,10 @@ function _extractMediaUrl( path ) {
 function getMedia( req, res, next ) {
     var options = communicator.getUpdatedRequestOptions( {
         url: _extractMediaUrl( req.url.substring( '/get/'.length ) ),
-        auth: user.getCredentials( req )
+        auth: user.getCredentials( req ),
+        headers: {
+            'cookie': req.headers.cookie
+        }
     } );
 
     // due to a bug in request/request using options.method with Digest Auth we won't pass method as an option

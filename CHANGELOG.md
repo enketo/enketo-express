@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Empty error dialog when form fails to load.
 - Form footer margins incorrect.
+- Media & data form resource retrieval does not work with "external authentication".
 
 ##### Removed
 - "Experimental" warning message
