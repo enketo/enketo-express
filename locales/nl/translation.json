@@ -201,16 +201,20 @@
     },
     "langs": {
         "ar": "Arabisch",
+        "cs": "Tsjechisch",
         "de": "Duits",
         "el": "Grieks",
         "en": "Engels",
         "es": "Spaans",
+        "fr": "Frans",
         "he": "Hebreeuws",
         "hi": "Hindi",
+        "it": "Italiaans",
         "km": "Khmer",
         "nl": "Nederlands",
         "no": "Noorweegs",
         "ro": "Roemeens",
+        "sk": "Slowaaks",
         "supported": "Talen ondersteund:",
         "sw": "Swahili",
         "th": "Thai",
@@ -253,7 +257,9 @@
     },
     "store": {
         "error": {
-            "notavailable": "Browser opslag is benodigd maar niet beschikbaar, kapot, of niet beschrijfbaar. Als je in 'prive´ browsing' mode zit, schakel over naar de normale mode. Of probeer een ander browser. (fout: __error__)"
+            "iosusesafari": "Uw iOS browser kan deze survey niet laden. Op iOS raden wij aan Safari te gebruiken.",
+            "notavailable": "Browser opslag is benodigd maar niet beschikbaar, kapot, of niet beschrijfbaar. Als je in 'prive´ browsing' mode zit, schakel over naar de normale mode. Of probeer een ander browser. (fout: __error__)",
+            "notsupported": "Uw browser kan deze survey niet laden. We raden aan een moderne browser te gebruiken."
         }
     },
     "submission": {
