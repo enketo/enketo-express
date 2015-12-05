@@ -289,6 +289,7 @@ function prompt( content, choices, inputs ) {
 
 /**
  * Shows modal asking for confirmation to redirect to login screen
+ * 
  * @param  {string=} msg       message to show
  * @param  {string=} serverURL serverURL for which authentication is required
  */
@@ -412,6 +413,7 @@ function getErrorResponseMsg( statusCode ) {
         '200': t( 'submission.http2xx' ) + '<br/>' + contactSupport,
         '2xx': t( 'submission.http2xx' ) + '<br/>' + contactSupport,
         '400': t( 'submission.http400' ) + '<br/>' + contactAdmin,
+        '401': t( 'submission.http401' ),
         '403': t( 'submission.http403' ) + '<br/>' + contactAdmin,
         '404': t( 'submission.http404' ),
         '4xx': t( 'submission.http4xx' ),

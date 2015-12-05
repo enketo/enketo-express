@@ -127,7 +127,7 @@ function authenticate( survey ) {
  * Generates an Auhorization header that can be used to inject into piped requests (e.g. submissions).
  * 
  * @param  {string} url         [description]
- * @param  {{user: string, pass: string}} credentials [description]
+ * @param  {?{user: string, pass: string}=} credentials [description]
  * @return {string}             [description]
  */
 function getAuthHeader( url, credentials ) {
@@ -143,7 +143,7 @@ function getAuthHeader( url, credentials ) {
 
     return new Promise( function( resolve ) {
         var req = request( options, function( error, response ) {
-            if ( response.statusCode === 401 ) {
+            if ( response.statusCode === 401 && credentials && credentials.user && credentials.pass ) {
                 // Using request's internal library we create an appropiate authorization header.
                 // This is a bit dangerous because internal changes in request/request, could break this code.
                 req.method = 'POST';

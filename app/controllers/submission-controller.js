@@ -79,6 +79,9 @@ function submit( req, res, next ) {
             req.pipe( request( options ) ).on( 'response', function( orResponse ) {
                 if ( orResponse.statusCode === 201 ) {
                     _logSubmission( id, instanceId, deprecatedId );
+                } else if ( orResponse.statusCode === 401 ) {
+                    // replace the www-authenticate header to avoid browser built-in authentication dialog
+                    orResponse.headers[ 'WWW-Authenticate' ] = 'enketo' + orResponse.headers[ 'WWW-Authenticate' ];
                 }
             } ).pipe( res );
 

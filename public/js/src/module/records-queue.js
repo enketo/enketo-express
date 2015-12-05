@@ -148,6 +148,7 @@ function uploadQueue() {
     var errorMsg;
     var successes = [];
     var fails = [];
+    var authRequired;
 
     if ( !uploadOngoing && connection.getOnlineStatus ) {
 
@@ -187,6 +188,10 @@ function uploadQueue() {
                                     } );
                             } )
                             .catch( function( result ) {
+                                // catch 401 responses (1 of them)
+                                if ( result.status === 401 ) {
+                                    authRequired = true;
+                                }
                                 // if any non HTTP error occurs, output the error.message
                                 errorMsg = result.message || gui.getErrorResponseMsg( result.status );
                                 fails.push( record.name );
@@ -195,7 +200,9 @@ function uploadQueue() {
                             .then( function() {
                                 if ( successes.length + fails.length === records.length ) {
                                     uploadOngoing = false;
-                                    if ( successes.length > 0 ) {
+                                    if ( authRequired ) {
+                                        gui.confirmLogin();
+                                    } else if ( successes.length > 0 ) {
                                         // let gui send a feedback message
                                         $( document ).trigger( 'queuesubmissionsuccess', successes );
                                     }
