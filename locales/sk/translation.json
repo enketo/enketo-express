@@ -201,16 +201,20 @@
     },
     "langs": {
         "ar": "Arabčina",
+        "cs": "Čeština",
         "de": "Nemčina",
         "el": "Gréčtina",
         "en": "Angličtina",
         "es": "Španielčina",
+        "fr": "Francúzština",
         "he": "Hebrejčina",
         "hi": "Hindčina",
+        "it": "Taliančina",
         "km": "Khmérčina",
         "nl": "Holandčina ",
         "no": "Nórčina ",
         "ro": "Rumunčina",
+        "sk": "Slovenčina",
         "supported": "Podporované jazyky:",
         "sw": "Swahilčina",
         "th": "Thajčina",
@@ -253,7 +257,9 @@
     },
     "store": {
         "error": {
-            "notavailable": "Je požadovaný prístup k úložisku prehliadača, ale to nie je k dispozícii, je poškodené, alebo do neho nie je možné zapisovať. Ak ste v režime 'súkromného prehliadania', prepnite prosím do normálneho režimu, alebo použite iný prehliadač. (error: __error__)"
+            "iosusesafari": "Váš iOS prehliadač nie je schopný zobraziť tento formulár. Na iOS platforme odporúčame používať Safari.",
+            "notavailable": "Je požadovaný prístup k úložisku prehliadača, ale to nie je k dispozícii, je poškodené, alebo do neho nie je možné zapisovať. Ak ste v režime 'súkromného prehliadania', prepnite prosím do normálneho režimu, alebo použite iný prehliadač. (error: __error__)",
+            "notsupported": "Váš prehliadač nie je schopný zobraziť tento formulár. Odporúčame používať moderný prehliadač."
         }
     },
     "submission": {
