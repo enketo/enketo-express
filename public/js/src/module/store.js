@@ -666,7 +666,7 @@ function _getFile( table, id, key ) {
     return new Promise( function( resolve, reject ) {
         if ( table === 'resources' || table === 'files' ) {
             prop = ( table === 'resources' ) ? 'url' : 'name';
-            server[ table ].get( id + ':' + key )
+            return server[ table ].get( id + ':' + key )
                 .then( function( item ) {
                     file[ prop ] = key;
                     if ( item instanceof Blob ) {

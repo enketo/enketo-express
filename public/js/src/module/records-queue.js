@@ -169,6 +169,10 @@ function uploadQueue() {
                             .then( function( record ) {
                                 // convert record.files to a simple <File> array
                                 record.files = record.files.map( function( object ) {
+                                    // do not add name property if already has one (a File will throw exception)
+                                    if ( typeof object.item.name === 'undefined' ) {
+                                        object.item.name = object.name;
+                                    }
                                     return object.item;
                                 } );
                                 uploadProgress.update( record.instanceId, 'ongoing', '', successes.length + fails.length, records.length );

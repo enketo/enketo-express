@@ -199,8 +199,8 @@ function _prepareFormDataArray( record ) {
     console.debug( 'splitting record into ' + batches.length + ' batches to reduce submission size ', batches );
 
     batches.forEach( function( batch ) {
-        var batchPrepped,
-            fd = new FormData();
+        var batchPrepped;
+        var fd = new FormData();
 
         fd.append( 'xml_submission_file', xmlSubmissionBlob );
 
@@ -212,7 +212,7 @@ function _prepareFormDataArray( record ) {
 
         // add any media files to the batch
         batch.forEach( function( fileIndex ) {
-            batchPrepped.formData.append( submissionFiles[ fileIndex ].nodeName, submissionFiles[ fileIndex ].file );
+            batchPrepped.formData.append( submissionFiles[ fileIndex ].nodeName, submissionFiles[ fileIndex ].file, submissionFiles[ fileIndex ].file.name );
         } );
 
         // push the batch to the array
