@@ -32,7 +32,7 @@
         "i18next-client": "1.11.x",
         "jade": "1.x.x",
         "jquery": "2.1.x",
-        "jwt-simple": "0.3.x",
+        "jwt-simple": "0.4.x",
         "libxslt": "0.6.0",
         "lie": "3.0.x",
         "lodash": "3.10.x",
