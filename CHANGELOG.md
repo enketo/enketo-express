@@ -2,16 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.21.1] - 2015-12-07
 ---------------------
 ##### Changed
 - Show helpful "Use Safari on iOS" message when unsupported iOS browser is used.
-- Updated Dutch and Norwegian translations.
+- Updated Slovak, Dutch and Norwegian translations.
 
 ##### Fixed
 - Empty error dialog when form fails to load.
 - Form footer margins incorrect.
 - Media & data form resource retrieval does not work with "external authentication".
+- Media missing from submission in offline-capable views.
 
 ##### Removed
 - "Experimental" warning message
