@@ -53,6 +53,7 @@ function logout( req, res ) {
     res
         .clearCookie( req.app.get( 'authentication cookie name' ) )
         .clearCookie( '__enketo_meta_uid' )
+        .clearCookie( '__enketo_logout' )
         .render( 'surveys/logout' );
 }
 
@@ -95,6 +96,7 @@ function setToken( req, res ) {
     // store the token in a cookie on the client
     res
         .cookie( req.app.get( 'authentication cookie name' ), token, authOptions )
+        .cookie( '__enketo_logout', true )
         .cookie( '__enketo_meta_uid', username, uidOptions );
 
     if ( returnUrl ) {

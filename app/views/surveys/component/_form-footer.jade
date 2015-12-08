@@ -12,8 +12,7 @@ section.form-footer
         button#submit-form.btn.btn-primary.hide
           i.icon.icon-check= ' '+ t('formfooter.submit.btn')
       a.btn.btn-primary.next-page(href="#")= t('form.pages.next')
-      if logout
-        include _logout
+      include _logout
       include _enketo-power
       a.previous-page.disabled(href="#")= t('form.pages.back')
 

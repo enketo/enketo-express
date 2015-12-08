@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Fixed
 - If users logs out, queue cannot be submitted, no login UI shown.
+- OpenRosa authentication: a change in auth status for one user causes global appCache refresh.
 
 [1.21.1] - 2015-12-07
 ---------------------

@@ -101,7 +101,7 @@ function init() {
         } )
         .then( function( s ) {
             server = s;
-            console.debug( 'WHoohoeeee, we\'ve got ourselves a da tabase! Now let\'s check if it works properly.' );
+            console.debug( 'WHoohoeeee, we\'ve got ourselves a database! Now let\'s check if it works properly.' );
         } )
         .then( _isWriteable )
         .then( _setBlobStorageEncoding )

@@ -45,6 +45,7 @@ function init( selector, data ) {
             $formprogress = $( '.form-progress' );
 
             _setEventHandlers();
+            _setLogoutLinkVisibility();
 
             if ( loadErrors.length > 0 ) {
                 throw loadErrors;
@@ -501,6 +502,13 @@ function _setEventHandlers() {
     if ( settings.offline ) {
         $doc.on( 'valuechange.enketo', _autoSaveRecord );
     }
+}
+
+function _setLogoutLinkVisibility() {
+    var visible = document.cookie.split( '; ' ).some( function( rawCookie ) {
+        return rawCookie.indexOf( '__enketo_logout=' ) !== -1;
+    } );
+    $( '.form-footer .logout' ).toggleClass( 'hide', !visible );
 }
 
 function _setDraftStatus( status ) {
