@@ -275,19 +275,19 @@ function _getRecordName() {
 function _confirmRecordName( recordName, errorMsg ) {
     return new Promise( function( resolve, reject ) {
         var texts = {
-                msg: '',
-                heading: t( 'formfooter.savedraft.label' ),
-                errorMsg: errorMsg
+            msg: '',
+            heading: t( 'formfooter.savedraft.label' ),
+            errorMsg: errorMsg
+        };
+        var choices = {
+            posButton: t( 'confirm.save.posButton' ),
+            negButton: t( 'confirm.default.negButton' ),
+            posAction: function( values ) {
+                resolve( values[ 'record-name' ] );
             },
-            choices = {
-                posButton: t( 'confirm.save.posButton' ),
-                negButton: t( 'confirm.default.negButton' ),
-                posAction: function( values ) {
-                    resolve( values[ 'record-name' ] );
-                },
-                negAction: reject
-            },
-            inputs = '<label><span>' + t( 'confirm.save.name' ) + '</span>' +
+            negAction: reject
+        };
+        var inputs = '<label><span>' + t( 'confirm.save.name' ) + '</span>' +
             '<span class="or-hint active">' + t( 'confirm.save.hint' ) + '</span>' +
             '<input name="record-name" type="text" value="' + recordName + '"required />' + '</label>';
 
@@ -295,20 +295,8 @@ function _confirmRecordName( recordName, errorMsg ) {
     } );
 }
 
-function _confirmRecordRename( oldName, newName, errMsg ) {
-    return new Promise( function( resolve, reject ) {
-        gui.prompt( {
-                msg: t( 'confirm.save.renamemsg', {
-                    currentName: '"' + oldName + '"',
-                    newName: '"' + newName + '"'
-                } )
-            }, {
-                posAction: resolve,
-                negAction: reject
-            }, '<label><span>' + t( 'confirm.save.name' ) + '</span><span>' + t( 'confirm.save.hint' ) + '</span>' +
-            '<input name="record-name" type="text" required /></label>' );
-    } );
-}
+// save the translation in case ever required in the future
+// t( 'confirm.save.renamemsg', {} )
 
 function _saveRecord( recordName, confirmed, errorMsg ) {
     var record;

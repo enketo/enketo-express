@@ -497,12 +497,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [1.2.0] - 2014-11-11
 -----------
-Added
+##### Added
 - External authentication support.
 
 [1.1.1] - 2014-11-08
 -----------
-Fixed
+##### Fixed
 - Instance API endpoint does not add return URL to response.
 
 [1.1.0] - 2014-11-08
