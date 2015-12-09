@@ -19,7 +19,7 @@ function getOpenRosaKey( survey, prefix ) {
 
 /**
  * cleans a Server URL so it becomes useful as a db key
- * It strips the protocol, removes a trailing slash, and converts to lowercase
+ * It strips the protocol, removes a trailing slash, removes www, and converts to lowercase
  * @param  {string} url [description]
  * @return {string=}     [description]
  */

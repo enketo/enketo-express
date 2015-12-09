@@ -107,14 +107,13 @@ $slider-width: 240px;
         margin-top: 30px;
     }
     &__button-bar__button{
-        // width: 45%;
-        width: 100%;
+        width: 46%;
         padding:10px;
         // setting a fixed height to cut off long translations, not a great thing to do
         //height: 40px;
     }
     &__button-bar__button.upload{ 
-        // margin-left: 10%;
+        margin-left: 8%;
     }
     &__upload-progress {
         visibility: hidden;

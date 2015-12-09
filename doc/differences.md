@@ -14,11 +14,12 @@
 * :white_check_mark: Enketo Express supports the pulldata() function (if Pyxform version after Sept 7th was used)
 * :white_check_mark: Enketo Express validates each page in pages mode before a user can go to the next page
 * :white_check_mark: Enketo Express includes an analog scale widget
-* :x: Enketo Express does not work in Internet Explorer (it does work in Microsoft Edge of course)
-* :x: Enketo Express has no export of queued records (yet, but very soon)
+* :x: Enketo Express no longer works in Internet Explorer (it does work in Microsoft Edge of course)
+* :white_check_mark: Enketo Express more useful cross-browser exports including media files, in the ODK format
 * :x: Enketo Express has no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews - it helps to let us know if this is important to you)
 * :x: Enketo Express has no [Forms](https://enketo.org/forms) app (you do not need this)
 * :white_check_mark: Enketo Express supports external CSV and XML data (for handcoded XForms or XLSForms after [this issue](https://github.com/XLSForm/pyxform/issues/30) is completed)
+* :white_check_mark: Enketo Express has far more helpful error messages
 
 #### Developer Features
 * :white_check_mark: Enketo Express has an improved API (v2)
@@ -27,10 +28,10 @@
 * :white_check_mark: Enketo Express has a more advanced iframeable webform view that can communicate back to the parent window, enabled through the API (v2)
 * :white_check_mark: Enketo Express has [external authentication](../README.md#authentication) support 
 * :x: Enketo Express has missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views)
-* :white_check_mark: Enketo Express has far more helpful error messages
+* :white_check_mark: Enketo Express is 100% JavaScript
+* :white_check_mark: Enketo Express can be hosted on a local webserver
 
 #### Other
 * :white_check_mark: Enketo Express is much easier to install
 * :white_check_mark: Enketo Express has many bug fixes in the form engine that Enketo Legacy doesn't have
-* :white_check_mark: Enketo Express is 100% JavaScript
-* :white_check_mark: Enketo Express can be hosted on a local webserver
+

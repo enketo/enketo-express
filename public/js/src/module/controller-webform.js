@@ -460,6 +460,34 @@ function _setEventHandlers() {
         records.uploadQueue();
     } );
 
+    $( '.record-list__button-bar__button.export' ).on( 'click', function() {
+        var createDownloadLink = '<a class="vex-dialog-link" id="download-export-create" href="#">' +
+            t( 'alert.export.alternativequestion' ) + '</a>';
+
+        records.exportToZip( form.getSurveyName() )
+            .then( function( zipFile ) {
+                // Hack for stupid Safari and iOS browsers
+                $( document ).off( 'click.export' ).one( 'click.export', '#download-export-create', function( event ) {
+                    _handleAlternativeDownloadRequest.call( this, event, zipFile );
+                } );
+
+                gui.alert( t( 'alert.export.success.msg' ) + createDownloadLink, t( 'alert.export.success.heading' ), 'info' );
+            } )
+            .catch( function( error ) {
+                var message = t( 'alert.export.error.msg', {
+                    errors: error.message
+                } );
+                if ( error.exportFile ) {
+                    // Hack for stupid Safari and iOS browsers
+                    $( document ).off( 'click.export' ).one( 'click.export', '#download-export-create', function( event ) {
+                        _handleAlternativeDownloadRequest.call( this, event, error.exportFile );
+                    } );
+                    message += '<p>' + t( 'alert.export.error.filecreatedmsg' ) + '</p>' + createDownloadLink;
+                }
+                gui.alert( message, t( 'alert.export.error.heading' ) );
+            } );
+    } );
+
     $doc.on( 'click', '.record-list__records__record[data-draft="true"]', function() {
         _loadRecord( $( this ).attr( 'data-id' ), false );
     } );
@@ -494,6 +522,32 @@ function _setEventHandlers() {
     if ( settings.offline ) {
         $doc.on( 'valuechange.enketo', _autoSaveRecord );
     }
+}
+
+function _handleAlternativeDownloadRequest( event, zipFile ) {
+    var $loader;
+    var $link;
+
+    event.preventDefault();
+
+    $loader = $( '<div class="loader-animation-small" style="margin: 10px auto 0 auto;"/>' );
+    $( event.target ).replaceWith( $loader );
+
+    connection.getDownloadUrl( zipFile )
+        .then( function( downloadUrl ) {
+            $link = $( '<a class="vex-dialog-link" href="' + downloadUrl +
+                '" download target="_blank">' + zipFile.name + '</a>' );
+            $loader.replaceWith( $link );
+            $link.one( 'click', function() {
+                this.remove();
+                return true;
+            } );
+        } )
+        .catch( function( error ) {
+            gui.alert( t( 'alert.export.error.linknotcreated' ) );
+        } );
+
+    return false;
 }
 
 function _setLogoutLinkVisibility() {

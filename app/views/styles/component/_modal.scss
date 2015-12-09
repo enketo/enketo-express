@@ -32,6 +32,13 @@
     .or-hint.active {
         margin-bottom: 10px;
     }
+    .vex-dialog-link {
+        margin-top: 20px;
+        font-size: 0.8em;
+        font-color: $gray;
+        text-align: center;
+        display: block;
+    }
 }
 
 .vex.vex-theme-plain .vex-dialog-input {

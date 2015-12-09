@@ -528,6 +528,7 @@ describe( 'Client Storage', function() {
                 .then( function( result ) {
                     expect( result.instanceId ).to.equal( recordA.instanceId );
                     expect( result.xml ).to.equal( recordA.xml );
+                    expect( result.created ).to.be.at.least( new Date().getTime() - 100 );
                     expect( result.updated ).to.be.at.least( new Date().getTime() - 100 );
                     done();
                 } )

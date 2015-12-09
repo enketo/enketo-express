@@ -11,6 +11,19 @@
       "button": "Close",
       "heading": "Alert"
     },
+    "export": {
+      "alternativequestion": "alternative download - online",
+      "error": {
+        "filecreatedmsg": "Nevertheless, an incomplete export file was still created.",
+        "heading": "Export Error",
+        "linknotcreated": "Failed to create an export link. Are you online?",
+        "msg": "Errors occurred during creating of the record export file. Errors: __errors__"
+      },
+      "success": {
+        "heading": "",
+        "msg": "Export file created for all records belonging to this form."
+      }
+    },
     "formupdated": {
       "heading": "Form Updated!",
       "msg": "A new version of this form has been downloaded. Refresh this page to load the updated version."
