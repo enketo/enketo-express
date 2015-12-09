@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Changed
+- Attempt to upload queue immediately after saving a final record.
+
 ##### Fixed
 - If users logs out, queue cannot be submitted, no login UI shown.
 - OpenRosa authentication: a change in auth status for one user causes global appCache refresh.

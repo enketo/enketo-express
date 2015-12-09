@@ -354,6 +354,10 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
                 gui.feedback( t( 'alert.recordsavesuccess.draftmsg' ), 3 );
             } else {
                 gui.feedback( t( 'alert.recordsavesuccess.finalmsg' ), 3 );
+                // The timeout simply avoids showing two messages at the same time:
+                // 1. "added to queue"
+                // 2. "successfully submitted"
+                setTimeout( records.uploadQueue, 5 * 1000 );
             }
         } )
         .catch( function( error ) {
