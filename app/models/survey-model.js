@@ -205,7 +205,7 @@ function getNumberOfSurveys( server ) {
             error.status = 400;
             reject( error );
         } else {
-            client.keys( 'or:' + cleanServerUrl + '*', function( err, keys ) {
+            client.keys( 'or:' + cleanServerUrl + '[/,]*', function( err, keys ) {
                 if ( error ) {
                     reject( error );
                 } else if ( keys ) {
@@ -235,7 +235,7 @@ function getListOfSurveys( server ) {
             error.status = 400;
             reject( error );
         } else {
-            client.keys( 'or:' + cleanServerUrl + '*', function( err, keys ) {
+            client.keys( 'or:' + cleanServerUrl + '[/,]*', function( err, keys ) {
                 if ( error ) {
                     reject( error );
                 } else if ( keys ) {

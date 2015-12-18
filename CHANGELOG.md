@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Export functionality.
 
+##### Fixed
+- Under some conditions surveys/list and surveys/number return too many results.
+
 [1.21.2] - 2015-12-18
 ---------------------
 ##### Changed

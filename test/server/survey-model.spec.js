@@ -309,22 +309,48 @@ describe( 'Survey Model', function() {
             openRosaId: 'b',
             openRosaServer: server
         };
+        // Include:
+        var survey3 = {
+            openRosaId: 'c',
+            openRosaServer: server + '/deep'
+        };
+        // Do not include:
+        var survey4 = {
+            openRosaId: 'd',
+            openRosaServer: server + 'deep'
+        };
 
         it( 'obtains the number of surveys if all are active', function() {
             var getNumber = model.set( survey1 )
                 .then( function() {
                     return model.set( survey2 );
                 } )
+                .then( _wait1ms )
+                .then( function() {
+                    return model.set( survey3 );
+                } )
+                .then( _wait1ms )
+                .then( function() {
+                    return model.set( survey4 );
+                } )
                 .then( function() {
                     return model.getNumber( server );
                 } );
-            return expect( getNumber ).to.eventually.equal( 2 );
+            return expect( getNumber ).to.eventually.equal( 3 );
         } );
 
         it( 'obtains the number of active surveys only', function() {
             var getNumber = model.set( survey1 )
                 .then( function() {
                     return model.set( survey2 );
+                } )
+                .then( _wait1ms )
+                .then( function() {
+                    return model.set( survey3 );
+                } )
+                .then( _wait1ms )
+                .then( function() {
+                    return model.set( survey4 );
                 } )
                 .then( function() {
                     return model.update( {
@@ -336,7 +362,7 @@ describe( 'Survey Model', function() {
                 .then( function() {
                     return model.getNumber( server );
                 } );
-            return expect( getNumber ).to.eventually.equal( 1 );
+            return expect( getNumber ).to.eventually.equal( 2 );
         } );
     } );
 
@@ -350,12 +376,30 @@ describe( 'Survey Model', function() {
             openRosaId: 'b',
             openRosaServer: server
         };
+        // Include:
+        var survey3 = {
+            openRosaId: 'c',
+            openRosaServer: server + '/deep'
+        };
+        // Do not include:
+        var survey4 = {
+            openRosaId: 'd',
+            openRosaServer: server + 'deep'
+        };
 
         it( 'obtains the list surveys if all are active in ascending launch date order', function() {
             var getList = model.set( survey1 )
                 .then( _wait1ms )
                 .then( function() {
                     return model.set( survey2 );
+                } )
+                .then( _wait1ms )
+                .then( function() {
+                    return model.set( survey3 );
+                } )
+                .then( _wait1ms )
+                .then( function() {
+                    return model.set( survey4 );
                 } )
                 .then( function() {
                     return model.getList( server );
@@ -368,14 +412,27 @@ describe( 'Survey Model', function() {
                 openRosaServer: server,
                 enketoId: 'YYY8',
                 openRosaId: 'b'
+            }, {
+                openRosaServer: server + '/deep',
+                enketoId: 'YYYo',
+                openRosaId: 'c'
             } ] );
         } );
+
 
         it( 'obtains the list of active surveys only', function() {
             var getList = model.set( survey1 )
                 .then( _wait1ms )
                 .then( function() {
                     return model.set( survey2 );
+                } )
+                .then( _wait1ms )
+                .then( function() {
+                    return model.set( survey3 );
+                } )
+                .then( _wait1ms )
+                .then( function() {
+                    return model.set( survey4 );
                 } )
                 .then( function() {
                     return model.update( {
@@ -391,6 +448,10 @@ describe( 'Survey Model', function() {
                 openRosaServer: server,
                 enketoId: 'YYY8',
                 openRosaId: 'b'
+            }, {
+                openRosaServer: server + '/deep',
+                enketoId: 'YYYo',
+                openRosaId: 'c'
             } ] );
         } );
     } );
