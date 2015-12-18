@@ -202,7 +202,7 @@ function _prepareFormDataArray( record ) {
         var batchPrepped;
         var fd = new FormData();
 
-        fd.append( 'xml_submission_file', xmlSubmissionBlob );
+        fd.append( 'xml_submission_file', xmlSubmissionBlob, 'xml_submission_file' );
 
         // batch with XML data
         batchPrepped = {

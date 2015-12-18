@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.21.2] - 2015-12-18
 ---------------------
 ##### Changed
 - Attempt to upload queue immediately after saving a final record.
