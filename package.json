@@ -28,7 +28,7 @@
         "db.js": "0.10.x",
         "debug": "2.x.x",
         "enketo-core": "4.4.4",
-        "enketo-transformer": "1.6.5",
+        "enketo-transformer": "1.6.6",
         "express": "4.x.x",
         "grunt": "0.4.x",
         "grunt-browserify": "4.0.x",

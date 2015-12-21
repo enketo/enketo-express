@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Under some conditions surveys/list and surveys/number return too many results.
+- Multiple span elements on same line get rendered as one span.
 
 [1.21.2] - 2015-12-18
 ---------------------
