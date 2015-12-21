@@ -15,7 +15,7 @@
 * :white_check_mark: Enketo Express validates each page in pages mode before a user can go to the next page
 * :white_check_mark: Enketo Express includes an analog scale widget
 * :x: Enketo Express no longer works in Internet Explorer (it does work in Microsoft Edge of course)
-* :white_check_mark: Enketo Express more useful cross-browser exports including media files, in the ODK format
+* :white_check_mark: Enketo Express has more useful cross-browser exports including media files, in the ODK format
 * :x: Enketo Express has no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews - it helps to let us know if this is important to you)
 * :x: Enketo Express has no [Forms](https://enketo.org/forms) app (you do not need this)
 * :white_check_mark: Enketo Express supports external CSV and XML data (for handcoded XForms or XLSForms after [this issue](https://github.com/XLSForm/pyxform/issues/30) is completed)

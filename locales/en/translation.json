@@ -21,7 +21,7 @@
       },
       "success": {
         "heading": "",
-        "msg": "Export file created for all records belonging to this form."
+        "msg": "Export file created for all unsubmitted records belonging to this form."
       }
     },
     "formupdated": {
