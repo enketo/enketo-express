@@ -155,6 +155,15 @@ $offline-color: #d15200;
     }
 }
 
+.form-header__button--homescreen {
+    position: fixed;
+    top: 1px;
+    right: 6px;
+    .icon {
+        font-size: 25px;
+    }
+}
+
 @media screen and (max-width: $main-breakpoint + 100px) {
     body {
         .main {
@@ -191,6 +200,10 @@ $offline-color: #d15200;
     .or .form-logo {
         margin-top: 45px;
     }
+     .form-header__button--homescreen {
+        position: absolute;
+        top: 73px;
+    }
 }
 
 @media screen and (max-width: $main-breakpoint) {
@@ -198,6 +211,15 @@ $offline-color: #d15200;
         .queue-length {
             background-color: rgb(245, 245, 245);
         }
+    }
+    .form-header__button--print {
+        display: none;
+        ~ .form-language-selector {
+            border-right: none;
+        }
+    }
+    .form-header__button--homescreen {
+        top: -2px;
     }
 }
 
@@ -210,12 +232,6 @@ $offline-color: #d15200;
 @media screen and (max-width: 490px) {
     .form-language-selector {
         padding-right: 0;
-    }
-    .form-header__button--print {
-        display: none;
-        ~ .form-language-selector {
-            border-right: none;
-        }
     }
 }
 

@@ -3,8 +3,12 @@
         border-radius: 0;
         border: none;
     }
+    .form-header__button--homescreen {
+        display: none;
+    }
 }
 
+// TODO: remove?
 .edit .paper .branding {
     display: none;
 }

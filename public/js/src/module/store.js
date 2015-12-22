@@ -128,7 +128,7 @@ function _checkSupport() {
         if ( typeof indexedDB === "object" ) {
             resolve();
         } else {
-            if ( sniffer.browser.isOnIos() ) {
+            if ( sniffer.os.isIos() ) {
                 error = new Error( t( 'store.error.iosusesafari' ) );
             } else {
                 error = new Error( t( 'store.error.notsupported' ) );
