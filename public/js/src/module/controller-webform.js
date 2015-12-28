@@ -471,7 +471,7 @@ function _setEventHandlers() {
                     _handleAlternativeDownloadRequest.call( this, event, zipFile );
                 } );
 
-                gui.alert( t( 'alert.export.success.msg' ) + createDownloadLink, t( 'alert.export.success.heading' ), 'info' );
+                gui.alert( t( 'alert.export.success.msg' ) + createDownloadLink, t( 'alert.export.success.heading' ), 'normal' );
             } )
             .catch( function( error ) {
                 var message = t( 'alert.export.error.msg', {
