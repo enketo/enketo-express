@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Under some conditions surveys/list and surveys/number return too many results.
 - Multiple span elements on same line get rendered as one span.
+- Media iles not removed from browser storage after submission.
 
 [1.21.2] - 2015-12-18
 ---------------------

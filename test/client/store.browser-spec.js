@@ -809,10 +809,17 @@ describe( 'Client Storage', function() {
                     return store.record.update( recordA );
                 } )
                 .then( function( result ) {
+                    return store.record.file.get( recordA.instanceId, name );
+                } )
+                .then( function( result ) {
+                    expect( result ).to.have.property( 'item' );
+                    expect( result.item ).to.be.an.instanceof( Blob );
+                } )
+                .then( function( result ) {
                     return store.record.remove( recordA.instanceId );
                 } )
                 .then( function( result ) {
-                    return store.record.file.get( recordA.instanceId, url );
+                    return store.record.file.get( recordA.instanceId, name );
                 } )
                 .then( function( result ) {
                     expect( result ).to.equal( undefined );

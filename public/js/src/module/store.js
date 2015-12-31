@@ -578,7 +578,8 @@ recordStore = {
         var files;
         var tasks = [];
 
-        return recordStore.get( instanceId )
+        return server.records.get( instanceId )
+            .then( _firstItemOnly )
             .then( function( record ) {
                 files = record.files || [];
                 files.forEach( function( fileKey ) {
