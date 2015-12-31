@@ -12,6 +12,7 @@
 var store = require( './store' );
 var settings = require( './settings' );
 var $ = require( 'jquery' );
+var coreUtils = require( 'enketo-core/src/js/utils' );
 
 var supported = typeof FileReader !== 'undefined';
 var notSupportedAdvisoryMsg = '';
@@ -107,6 +108,7 @@ function getFileUrl( subject ) {
  */
 function getCurrentFiles() {
     var file;
+    var newFilename;
     var files = [];
     var $fileInputs = $( 'form.or input[type="file"]' );
 
@@ -114,6 +116,15 @@ function getCurrentFiles() {
     $fileInputs.each( function() {
         file = this.files[ 0 ];
         if ( file ) {
+            // Correct file names by adding a unique-ish postfix
+            // First create a clone, because the name property is immutable
+            // TODO: in the future, when browser support increase we can invoke
+            // the File constructor to do this.
+            newFilename = coreUtils.getFilename( file, this.dataset.filenamePostfix );
+            file = new Blob( [ file ], {
+                type: file.type
+            } );
+            file.name = newFilename;
             files.push( file );
         }
     } );

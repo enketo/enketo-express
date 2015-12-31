@@ -13,7 +13,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Under some conditions surveys/list and surveys/number return too many results.
 - Multiple span elements on same line get rendered as one span.
-- Media iles not removed from browser storage after submission.
+- Media files not removed from browser storage after submission.
+- Media files from camera app in iOS get overwritten because the same filename is provided by the iOS camera pp.
 
 [1.21.2] - 2015-12-18
 ---------------------
