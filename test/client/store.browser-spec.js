@@ -196,6 +196,8 @@ describe( 'Client Storage', function() {
 
         it( 'succeeds if key and item are present and item is a Blob', function( done ) {
             var id = 'TESt',
+                type = resourceA.item.type,
+                size = resourceA.item.size,
                 url = resourceA.url;
 
             store.survey.resource.update( id, resourceA )
@@ -203,8 +205,8 @@ describe( 'Client Storage', function() {
                     return store.survey.resource.get( id, url );
                 } )
                 .then( function( result ) {
-                    expect( result.item.type ).to.equal( resourceA.item.type );
-                    expect( result.item.size ).to.equal( resourceA.item.size );
+                    expect( result.item.type ).to.equal( type );
+                    expect( result.item.size ).to.equal( size );
                     expect( result.item ).to.be.an.instanceof( Blob );
                     expect( result.url ).to.equal( url );
                 } )
@@ -321,6 +323,8 @@ describe( 'Client Storage', function() {
 
         it( 'succeeds if the survey has the required properties and contains file resources', function( done ) {
             var urlA = resourceA.url;
+            var type = resourceA.item.type;
+            var size = resourceA.item.size;
 
             store.survey.set( surveyA )
                 .then( function() {
@@ -334,8 +338,8 @@ describe( 'Client Storage', function() {
                 } )
                 .then( function( result ) {
                     // check response of getResource
-                    expect( result.item.type ).to.equal( surveyA.resources[ 0 ].item.type );
-                    expect( result.item.size ).to.equal( surveyA.resources[ 0 ].item.size );
+                    expect( result.item.type ).to.equal( type );
+                    expect( result.item.size ).to.equal( size );
                     expect( result.item ).to.be.an.instanceof( Blob );
                 } )
                 .then( done, done );
@@ -343,7 +347,10 @@ describe( 'Client Storage', function() {
 
         it( 'removes any form resources that have become obsolete', function( done ) {
             var urlA = resourceA.url,
-                urlB = resourceB.url;
+                urlB = resourceB.url,
+                itemA = new Blob( [ resourceA.item ], {
+                    type: resourceA.type
+                } );
 
             store.survey.set( surveyA )
                 .then( function() {
@@ -355,7 +362,7 @@ describe( 'Client Storage', function() {
                     // update survey to contain only 1 resource
                     surveyA.resources = [ {
                         url: urlA,
-                        item: resourceA.item
+                        item: itemA
                     } ];
                     return store.survey.update( surveyA );
                 } )
@@ -457,16 +464,18 @@ describe( 'Client Storage', function() {
         } );
 
         it( 'succeeds if key and item are present and item is a Blob', function( done ) {
-            var id = 'TESt',
-                name = fileA.name;
+            var id = 'TESt';
+            var type = fileA.item.type;
+            var size = fileA.item.size;
+            var name = fileA.name;
 
             store.record.file.update( id, fileA )
                 .then( function( stored ) {
                     return store.record.file.get( id, name );
                 } )
                 .then( function( result ) {
-                    expect( result.item.type ).to.equal( fileA.item.type );
-                    expect( result.item.size ).to.equal( fileA.item.size );
+                    expect( result.item.type ).to.equal( type );
+                    expect( result.item.size ).to.equal( size );
                     expect( result.item ).to.be.an.instanceof( Blob );
                     expect( result.name ).to.equal( name );
                     done();
@@ -740,7 +749,8 @@ describe( 'Client Storage', function() {
 
         it( 'does not remove record files that were loaded into a draft record and were left unchanged', function( done ) {
             var name1 = fileA.name,
-                name2 = fileB.name;
+                name2 = fileB.name,
+                size1 = fileA.item.size;
 
             recordA.files = [ fileA ];
             store.record.set( recordA )
@@ -768,7 +778,8 @@ describe( 'Client Storage', function() {
                 } )
                 .then( function( result ) {
                     // check whether obsolete file has been removed
-                    expect( result ).to.deep.equal( fileA );
+                    expect( result.item.size ).to.equal( size1 );
+                    expect( result.name ).to.equal( name1 );
                 } )
                 .then( done, done );
         } );
@@ -799,7 +810,7 @@ describe( 'Client Storage', function() {
         } );
 
         it( 'succeeds if the record contains files', function( done ) {
-            var url = fileA.url;
+            var name = fileA.name;
 
             recordA.instanceId = recordA.instanceId + Math.random();
 
