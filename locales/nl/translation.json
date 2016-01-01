@@ -266,6 +266,7 @@
         "http0": "Gefaald (Offline?)",
         "http2xx": "Onverwacht antwoord tijdens record verzending.",
         "http400": "Data server wilde het record niet accepteren.",
+        "http401": "Autorisatie probleem met de data server.",
         "http403": "Niet toegestaan om records te verzenden naar deze server.",
         "http404": "Ontvangst service niet gevonden op data server.",
         "http413": "Record is te groot.",

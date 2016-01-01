@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Changed
 - Links are underlined.
+- Updated German, Dutch and Slovak translations.
 
 ##### Fixed
 - Under some conditions surveys/list and surveys/number return too many results.

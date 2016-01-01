@@ -201,16 +201,20 @@
     },
     "langs": {
         "ar": "Arabisch",
+        "cs": "Tschechisch",
         "de": "Deutsch",
         "el": "Griechisch",
         "en": "Englisch",
         "es": "Spanisch",
+        "fr": "Französisch",
         "he": "Hebräisch",
         "hi": "Indisch",
+        "it": "Italienisch",
         "km": "Khmer",
         "nl": "Niederländisch",
         "no": "Norwegisch",
         "ro": "Rumänisch",
+        "sk": "Slowakisch",
         "supported": "Unterstützte Sprachen:",
         "sw": "Suaheli",
         "th": "Thailändisch",
@@ -253,13 +257,16 @@
     },
     "store": {
         "error": {
-            "notavailable": "Browser Speicher erforderlich ist, aber nicht verfügbar ist, ist beschädigt oder nicht beschreibbar. Wenn Sie im Modus \"Private-Browsing\" sind Sie in regelmäßigen Modus zu wechseln, ansonsten auf einen anderen Browser umzuschalten. (Fehler: __error__)"
+            "iosusesafari": "Ihr iOS-Browser ist nicht in der Lage, diese Form laufen. Auf iOS, empfehlen wir die Safari verwenden.",
+            "notavailable": "Browser Speicher erforderlich ist, aber nicht verfügbar ist, ist beschädigt oder nicht beschreibbar. Wenn Sie im Modus \"Private-Browsing\" sind Sie in regelmäßigen Modus zu wechseln, ansonsten auf einen anderen Browser umzuschalten. (Fehler: __error__)",
+            "notsupported": "Ihr Browser ist nicht in der Lage, dieses Formular ausführen. Wir empfehlen, einen modernen Browser zu verwenden."
         }
     },
     "submission": {
         "http0": "Fehlgeschlagen (offline?).",
         "http2xx": "Unerwartete Antwort beim Datenversand.",
         "http400": "Der Datenserver hat keine Daten akzeptiert.",
+        "http401": "Authentifizierung Problem mit Datenserver.",
         "http403": "Nicht erlaubt Daten zu diesem Datenserver zu übermitteln.",
         "http404": "Sende-Service wurde auf dem Datenserver nicht gefunden.",
         "http413": "Datenmenge ist zu groß.",
