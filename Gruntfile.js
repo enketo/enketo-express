@@ -188,7 +188,7 @@ module.exports = function( grunt ) {
     grunt.registerTask( 'default', [ 'sass', 'compile', 'uglify' ] );
     grunt.registerTask( 'compile', [ 'client-config-file:create', 'browserify:production', 'client-config-file:remove' ] );
     grunt.registerTask( 'compile-dev', [ 'client-config-file:create', 'browserify:development', 'client-config-file:remove' ] );
-    grunt.registerTask( 'test', [ 'env:test', 'compile', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
-    grunt.registerTask( 'test-browser', [ 'env:test', 'client-config-file:create', 'karma:browsers', 'client-config-file:remove' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'compile', 'sass', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
+    grunt.registerTask( 'test-browser', [ 'env:test', 'sass', 'client-config-file:create', 'karma:browsers', 'client-config-file:remove' ] );
     grunt.registerTask( 'develop', [ 'env:develop', 'compile-dev', 'concurrent:develop' ] );
 };

@@ -117,7 +117,10 @@ function getTitleFromFormStr( formStr ) {
 
 function csvToXml( csv ) {
     var xmlStr;
-    var result = Papa.parse( csv );
+    var options = {
+        skipEmptyLines: true
+    };
+    var result = Papa.parse( csv, options );
     var rows = result.data;
     var headers = rows.shift();
 
