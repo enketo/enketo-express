@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Persian translation.
 
+##### Changed
+- Updated Dutch translation.
+
 ##### Fixed
 - Empty lines in external CSV data result in empty items.
 
