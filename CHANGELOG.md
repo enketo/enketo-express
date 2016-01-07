@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Added
+- Persian translation.
+
 ##### Fixed
 - Empty lines in external CSV data result in empty items.
 
