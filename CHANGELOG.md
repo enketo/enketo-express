@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Empty lines in external CSV data result in empty items.
+- Media files in recovered auto-saved record get lost during saving as a regular record.
 
 [1.22.0] - 2016-01-01 
 ---------------------

@@ -44,13 +44,18 @@ function get( instanceId ) {
 }
 
 /**
- * Stores a new record
+ * Stores a new record. Overwrites (media) files from auto-saved record.
  *
  * @param {*} record [description]
  * @return {Promise}
  */
 function set( record ) {
-    return store.record.set( record )
+    return getAutoSavedRecord()
+        .then( function( autoSavedRecord ) {
+            // add files from autoSavedRecord
+            record.files = autoSavedRecord.files;
+            return store.record.set( record );
+        } )
         .then( _updateRecordList );
 }
 
