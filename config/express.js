@@ -69,7 +69,6 @@ app.use( function( req, res, next ) {
     res.locals.logo = req.app.get( 'logo' );
     res.locals.defaultTheme = req.app.get( 'default theme' ).replace( 'theme-', '' ) || 'kobo';
     res.locals.title = req.app.get( 'app name' );
-    res.locals.offline = req.app.get( 'offline enabled' ); // temporary to show 'Experimental' warning
     res.locals.directionality = function() {
         // TODO: remove this when https://github.com/i18next/i18next/pull/413 is merged, copied to node-i18next, and published.
         // After that we can just access i18n.dir(), in the jade template
