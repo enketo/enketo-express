@@ -375,6 +375,11 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
 function _autoSaveRecord() {
     var record;
 
+    // do not auto-save a record if the record was loaded from storage
+    if ( form.getRecordName() ) {
+        return Promise.resolve();
+    }
+
     // build the variable portions of the record object
     record = {
         'xml': form.getDataStr(),
@@ -389,7 +394,7 @@ function _autoSaveRecord() {
     };
 
     // save the record
-    records.updateAutoSavedRecord( record )
+    return records.updateAutoSavedRecord( record )
         .then( function() {
             console.log( 'autosave successful' );
         } )
