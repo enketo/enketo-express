@@ -11,7 +11,7 @@ WORKDIR /srv
 RUN apt-get update && \
     apt-get upgrade -y
 RUN apt-get install -y curl && \
-    curl -sL https://deb.nodesource.com/setup_0.10 | bash -
+    curl -sL https://deb.nodesource.com/setup_4.x | bash -
 COPY ./setup/docker/apt_packages.txt /srv/
 RUN apt-get install -y $(cat apt_packages.txt)
 # Non-interactive equivalent of `dpkg-reconfigure -plow unattended-upgrades` (see https://blog.sleeplessbeastie.eu/2015/01/02/how-to-perform-unattended-upgrades/).
