@@ -20,6 +20,9 @@
 * :x: Enketo Express has no [Forms](https://enketo.org/forms) app (you do not need this)
 * :white_check_mark: Enketo Express supports external CSV and XML data (for handcoded XForms or XLSForms after [this issue](https://github.com/XLSForm/pyxform/issues/30) is completed)
 * :white_check_mark: Enketo Express has far more helpful error messages
+* :white_check_mark: Enketo Express has support for dynamic required expressions
+* :white_check_mark: Enketo Express has support for jr:requiredMsg
+* :white_check_mark: Enketo Express has support for the "big-image" XForm feature
 
 #### Developer Features
 * :white_check_mark: Enketo Express has an improved API (v2)
