@@ -250,7 +250,8 @@
     "supported": "Languages supported: ",
     "sw": "Swahili",
     "th": "Thai",
-    "vi": "Vietnamese"
+    "vi": "Vietnamese",
+    "zh": "Chinese"
   },
   "page": {
     "modernbrowsers": {
