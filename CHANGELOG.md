@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Media files in recovered auto-saved record get lost during saving as a regular record.
 - Auto-saving did not work with records loaded from storage. Only enabled for new records now.
 - Existing XForm content of secondary external instances not properly cleared if nodename is not 'root' or if multiple root-level nodes are present.
+- Rogue XML namespace added in ODK Collect submission causes namespace incompatibility error when loaded for editing.
 
 [1.22.0] - 2016-01-01 
 ---------------------
