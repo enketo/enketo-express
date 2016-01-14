@@ -60,6 +60,18 @@ function randomString( howMany, chars ) {
     return value.join( '' );
 }
 
+function pickRandomFromArray( array ) {
+    var random;
+    if ( !Array.isArray( array ) || array.length === 0 ) {
+        return null;
+    }
+    random = Math.floor( Math.random() * array.length );
+    if ( !array[ random ] ) {
+        return null;
+    }
+    return array[ random ];
+}
+
 // not recursive, only goes one property level deep
 function areOwnPropertiesEqual( a, b ) {
     var prop,
@@ -93,5 +105,6 @@ module.exports = {
     isValidUrl: isValidUrl,
     md5: md5,
     randomString: randomString,
+    pickRandomFromArray: pickRandomFromArray,
     areOwnPropertiesEqual: areOwnPropertiesEqual
 };

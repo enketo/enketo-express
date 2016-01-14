@@ -5,13 +5,14 @@ block style
   link(rel='stylesheet', media='print', type='text/css' href='/css/theme-#{defaultTheme}.print.css') 
 
 block script
-  - var suffix = (type && type == "edit") ? "-edit" : ""
-  if environment == "production"
-    script(src="/js/enketo-webform#{suffix}-bundle.min.js")
+  - var suffix = (type && type == 'edit') ? '-edit' : ''
+  if environment == 'production'
+    script(src='/js/enketo-webform#{suffix}-bundle.min.js')
   else
-    script(src="/js/enketo-webform#{suffix}-dev-bundle.js")
+    script(src='/js/enketo-webform#{suffix}-dev-bundle.js')
  
 block content
+  include component/_ad
   .main
     article.paper
       include component/_form-header

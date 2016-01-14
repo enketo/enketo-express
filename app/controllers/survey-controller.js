@@ -5,6 +5,7 @@ var TError = require( '../lib/custom-error' ).TranslatedError;
 var communicator = require( '../lib/communicator' );
 var surveyModel = require( '../models/survey-model' );
 var userModel = require( '../models/user-model' );
+var config = require( '../models/config-model' ).server;
 var express = require( 'express' );
 var router = express.Router();
 // var debug = require( 'debug' )( 'survey-controller' );
@@ -68,7 +69,8 @@ function preview( req, res, next ) {
     var options = {
         type: 'preview',
         iframe: !!req.query.iframe,
-        logout: req.logout
+        logout: req.logout,
+        ad: utils.pickRandomFromArray( config.ads )
     };
 
     _renderWebform( req, res, next, options );
