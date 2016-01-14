@@ -70,7 +70,7 @@ function preview( req, res, next ) {
         type: 'preview',
         iframe: !!req.query.iframe,
         logout: req.logout,
-        ad: utils.pickRandomFromArray( config.ads )
+        notification: utils.pickRandomItemFromArray( config.notifications )
     };
 
     _renderWebform( req, res, next, options );

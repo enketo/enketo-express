@@ -60,7 +60,7 @@ function randomString( howMany, chars ) {
     return value.join( '' );
 }
 
-function pickRandomFromArray( array ) {
+function pickRandomItemFromArray( array ) {
     var random;
     if ( !Array.isArray( array ) || array.length === 0 ) {
         return null;
@@ -105,6 +105,6 @@ module.exports = {
     isValidUrl: isValidUrl,
     md5: md5,
     randomString: randomString,
-    pickRandomFromArray: pickRandomFromArray,
+    pickRandomItemFromArray: pickRandomItemFromArray,
     areOwnPropertiesEqual: areOwnPropertiesEqual
 };
