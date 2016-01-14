@@ -25,7 +25,7 @@ router
         next();
     } )
     .post( '/xform', getSurveyParts )
-    .post( '/xform/hash', getCachedSurveyHash );
+    .post( '/xform/hash', getSurveyHash );
 
 /**
  * Obtains HTML Form, XML model, and existing XML instance
@@ -84,21 +84,22 @@ function getSurveyParts( req, res, next ) {
  * @param  {Function} next [description]
  * @return {[type]}        [description]
  */
-function getCachedSurveyHash( req, res, next ) {
+function getSurveyHash( req, res, next ) {
     _getSurveyParams( req.body )
         .then( function( survey ) {
             return cacheModel.getHashes( survey );
         } )
         .then( function( survey ) {
-            delete survey.credentials;
+            return _updateCache( survey );
+        } )
+        .then( function( survey ) {
+            if ( survey.hasOwnProperty( 'credentials' ) ) {
+                delete survey.credentials;
+            }
             res.status( 200 );
             res.send( {
                 hash: _getCombinedHash( survey )
             } );
-            // update cache if necessary, asynchronously AFTER responding
-            // this is the ONLY mechanism by which a locally browser-stored form
-            // will be updated
-            _updateCache( survey );
         } )
         .catch( next );
 }
@@ -133,6 +134,7 @@ function _updateCache( survey ) {
                 return _getFormDirectly( survey )
                     .then( cacheModel.set );
             }
+            return survey;
         } )
         .catch( function( error ) {
             if ( error.status === 401 || error.status === 404 ) {

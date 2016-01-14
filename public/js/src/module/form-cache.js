@@ -49,7 +49,7 @@ function _setUpdateIntervals( survey ) {
     // that open the form right after the XForm update.
     setTimeout( function() {
         _updateCache( survey );
-    }, 30 * 1000 );
+    }, 3 * 1000 );
     // check for form update every 20 minutes
     setInterval( function() {
         _updateCache( survey );

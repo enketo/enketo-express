@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.23.1] - 2016-02-09
 ----------------------
+##### Changed
+- Make form updates propagate much faster in offline-capable views.
+
 ##### Fixed
 - Min() and max() return undefined for empty values.
 - Parallel batch uploads may cause lost data in ODK Aggregate.
