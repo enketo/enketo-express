@@ -2,23 +2,33 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[1.22.1] - 2016-01-08
----------------------
+[1.23.0] - 2016-02-01
+----------------------
 ##### Added
 - Support for dynamic required expressions.
 - Support for jr:requiredMsg.
-- Persian translation.
 - Basic support for big-image form attributes on itext values.
+- Vietnamese translation.
 
 ##### Changed
-- Updated Farzi, Spanish, Slovak and Dutch translations.
+- Updated Spanish, Slovak and Dutch translations.
+
+##### Fixed
+- Existing XForm content of secondary external instances not properly cleared if nodename is not 'root' or if multiple root-level nodes are present.
+- Rogue XML namespace added in ODK Collect submission causes namespace incompatibility error when loaded for editing.
+
+[1.22.1] - 2016-01-08
+---------------------
+##### Added
+- Persian translation.
+
+##### Changed
+- Updated Dutch translation.
 
 ##### Fixed
 - Empty lines in external CSV data result in empty items.
 - Media files in recovered auto-saved record get lost during saving as a regular record.
 - Auto-saving did not work with records loaded from storage. Only enabled for new records now.
-- Existing XForm content of secondary external instances not properly cleared if nodename is not 'root' or if multiple root-level nodes are present.
-- Rogue XML namespace added in ODK Collect submission causes namespace incompatibility error when loaded for editing.
 
 [1.22.0] - 2016-01-01 
 ---------------------

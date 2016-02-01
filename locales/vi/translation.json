@@ -1,0 +1,310 @@
+{
+    "advanced": {
+        "flushdb": "Xóa bỏ lưu trữ"
+    },
+    "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "Để thêm form này vào màn hình bắt đầu-Homescreen-của bạn, hãy kích vào trình duyệt biểu tượng thiết lập _image1_ và chọn: 'Thêm vào màn hình bắt đầu'."
+            },
+            "androidfirefox": {
+                "msg": [
+                    "Thêm form này vào màn hình bắt đầu-Homescreen-của bạn",
+                    "1. Thêm trang này vào bảng đánh dấu bookmark trong Firefox bằng cách bấm chuột vào biểu tượng thiết lập  __image1__  và vào biểu tượng ngôi sao  __image2__",
+                    "2. Mở bảng đánh dấu bookmark của bạn bằng cách mở một trang mới và kích vào tab Bookmarks",
+                    "3. Hãy kích và giữ nguyên trên form cho đến khi cửa sổ menu xuất hiện.",
+                    "4. Hãy chọn \"Màn hình bắt đầu\" Home screen."
+                ]
+            },
+            "heading": "Thêm vào màn hình bắt đầu- Home Screen",
+            "iossafari": {
+                "msg": "Để thêm form này vào màn hình bắt đầu-Homescreen của bạn, hãy kích vào biểu tượng chia sẻ __image1__ ở góc trên, phải của trình duyệt và chọn:'Thêm vào màn hình bắt đầu'"
+            }
+        },
+        "appupdated": {
+            "heading": "Ứng dụng đã được cập nhật!",
+            "msg": "Một phiên bản mới đã được tải xuống. Làm tươi trang này để có được phiên bản cập nhật"
+        },
+        "default": {
+            "button": "Đóng",
+            "heading": "Khẩn"
+        },
+        "export": {
+            "alternativequestion": "tùy chọn tải xuống khác- trực tuyến",
+            "error": {
+                "filecreatedmsg": "Thay vào đó, một tệp tin không đầy đủ đã được tạo.",
+                "heading": "Lỗi xuất dữ liệu",
+                "linknotcreated": "Lỗi khi tạo một liên kết xuất dữ liệu đối với các bản ghi chưa được gởi lên máy chủ. Bạn đang online?",
+                "msg": "Có lỗi khi tạo file dữ liệu xuất bản ghi. Các lỗi là __errors__"
+            },
+            "success": {
+                "heading": "Dữ liệu xuất đã được tạo",
+                "msg": "File xuất dữ liệu đã được tạo đối với các bản ghi chưa được gởi thuộc về form này."
+            }
+        },
+        "formupdated": {
+            "heading": "Form đã được cập nhật",
+            "msg": "Một phiên bản mới của form này đã được tải xuống. Làm tươi lại trang này để tải phiên bản đã được thay đổi."
+        },
+        "loaderror": {
+            "editadvice": "Không nên sửa bản ghi này cho đến khi vấn đề được giải quyết",
+            "entryadvice": "Không nên dùng form này để nhập liệu cho đến khi vấn đề được giải quyết.",
+            "heading": "Lỗi tải",
+            "msg1": "Có lỗi trong khi tải form này.",
+            "msg2": "Xin liên hệ với __emailLink__ với liên kết đến trang này và thông báo lỗi như sau:",
+            "heading_plural": "Các lỗi tải",
+            "msg1_plural": "Có lỗi xảy ra khi tải form này.",
+            "msg2_plural": "Xin liên hệ với __emailLink__ với liên kết và đến trang này và các thông báo lỗi sau đây:"
+        },
+        "logout": {
+            "heading": "Đã đăng xuất",
+            "msg": "Bạn đã đăng xuất rồi."
+        },
+        "offlinesupported": {
+            "heading": "Form được sử dụng offline!",
+            "msg": [
+                "Form này bây giờ có thể tải lên và sử dụng mà không cần kết nối Internet. Đánh dấu nó để có thể dễ dàng dùng offline.",
+                "Các bản ghi được tự động lưu lại và chờ trong trình duyệt của bạn cho đến khi có kết nối Internet. Lúc đó, các bản ghi sẽ được tự động gởi lên máy chủ, từng cái một.",
+                "Chỉ sau khi một bản ghi được gởi đi thành công, nó mới bị loại khỏi hàng đợi. Bạn có thể tắt trình duyệt và thiết bị của bạn một cách an toàn mà không ảnh hưởng gì đến các mục chưa được gởi đi. Chúng vẫn còn đó khi bạn tải lại form lần sau."
+            ]
+        },
+        "offlineunsupported": {
+            "heading": "Ứng dụng không thể chạy offline.",
+            "msg": "Việc sử dụng offline không được trình duyệt của bạn hỗ trợ. Bạn có thể thu thập dữ liệu mà không dùng tính năng này hoặc xem xét các tùy chọn để giải quyết vấn đề này.",
+            "negButton": "Hãy dùng nó",
+            "posButton": "Hiển thị các tùy chọn"
+        },
+        "queuesubmissionsuccess": {
+            "msg": "_recordNames_ đã được gửi thành công",
+            "msg_plural": "__recordNames__ đã được gởi đi thành công."
+        },
+        "recordloadsuccess": {
+            "msg": "__recordName__ đã được tải"
+        },
+        "recordnotfound": {
+            "msg": "Bản ghi không thể truy xuất hoặc không có dữ liệu."
+        },
+        "recordsavesuccess": {
+            "draftmsg": "Bản ghi được lưu lại như là bản nháp",
+            "finalmsg": "Bản ghi được đưa vào hàng đợi để gởi đi"
+        },
+        "submission": {
+            "msg": "Đang gởi đi...",
+            "redirectmsg": "Bạn sẽ được đăng nhập lại tự động sau khi hoàn tất việc gởi đi."
+        },
+        "submissionerror": {
+            "authrequiredmsg": "Yêu cầu xác thực. Xin xác nhận _here_ trong một cửa sổ trình duyệt khác và thử lại lần nữa.",
+            "fnfmsg": [
+                "Các tệp tin sau đây không thể lấy lại được:_failedFile_. Việc gởi thông tin đi trước đó đã thành công mà không có những tệp tin này.",
+                "Xin liên hệ _supportEmail_ để báo cáo lỗi và nếu có thể hãy giải thích làm thế nào vấn đề có thể cải thiện được. "
+            ],
+            "heading": "Việc gửi đi bị lỗi"
+        },
+        "submissionsuccess": {
+            "heading": "Việc gửi đi thành công",
+            "msg": "Dữ liệu của bạn đã được gửi đi!",
+            "redirectmsg": "Bây giờ bạn sẽ đăng nhập lại."
+        },
+        "validationerror": {
+            "msg": "Form có chứa lỗi. Xin xem lại các trường có đánh dấu đỏ."
+        },
+        "validationsuccess": {
+            "heading": "OK",
+            "msg": "Form hợp lệ!"
+        },
+        "xpatherror": {
+            "heading": "Lỗi công thức",
+            "msg": "Một lỗi mô phỏng công thức đã xảy ra. Xin liên hệ _emailLink_ về lỗi này:"
+        }
+    },
+    "confirm": {
+        "autosaveload": {
+            "heading": "Bảng ghi chưa lưu được tìm thấy",
+            "msg": "Enketo đã tìm thấy một bảng ghi chưa được lưu. Bạn muốn tải bảng ghi này hay là hủy bỏ nó?",
+            "negButton": "Hủy bỏ",
+            "posButton": "Tải bản ghi"
+        },
+        "default": {
+            "heading": "Bạn chắc chứ?",
+            "msg": "Xin xác nhận động tác này",
+            "negButton": "Hủy",
+            "posButton": "Xác nhận"
+        },
+        "deleteall": {
+            "heading": "Panic",
+            "msg": [
+                "Thao tác này sẽ loại bỏ tất cả dữ liệu đang được chờ lưu trữ và tất cả form được lưu trong trình duyệt. Dữ liệu sẽ mất vĩnh viễn. Chỉ nên thực hiện điều này như là giải pháp cuối cùng nếu bộ lưu trữ của trình duyệt bị hỏng.",
+                "Hãy đóng các cửa sổ trình duyệt hiển thị Enketo trước.",
+                "Trang được tải lại. Bạn sẽ thấy thông báo lỗi nếu bạn thực hiện lại thông báo này.",
+                "Bạn có chắc chắn muốn thực hiện điều này?"
+            ],
+            "posButton": "Xóa tất cả"
+        },
+        "discardcurrent": {
+            "heading": "Các sửa đổi chưa được lưu",
+            "msg": "Form hiện tại  có các thay đổi chưa được lưu. Bạn có muốn tải bản ghi mà không lưu thay đổi này?",
+            "posButton": "Tiến hành mà không lưu."
+        },
+        "login": {
+            "heading": "Cần phải đăng nhập",
+            "msg": [
+                "Để đưa dữ liệu đang chờ lên máy chủ bạn cần phải đăng nhập. Nếu bạn chấp nhận bạn sẽ được dẫn đến trang đăng nhập và sẽ bị mất thông tin chưa được lưu",
+                "Bạn muốn đăng nhập bây giờ hoặc để sau?"
+            ],
+            "negButton": "Sau này",
+            "posButton": "Hãy đăng nhập bây giờ"
+        },
+        "print": {
+            "a4": "A4",
+            "heading": "Hãy chọn thiết lập cho máy in",
+            "landscape": "Chiều ngang",
+            "letter": "Thư",
+            "msg": "Để có thể in một cách tối ưu xin chọn các thiết lập dưới đây",
+            "orientation": "Chiều giấy in",
+            "portrait": "Dọc",
+            "posButton": "Chuẩn bị",
+            "psize": "Khổ giấy",
+            "reminder": "Hãy nhớ thiết lập việc in ấn như nhau trong trình đơn in của trình duyệt sau này!"
+        },
+        "save": {
+            "existingerror": "Tên hoặc ID của bản ghi này đã có.",
+            "hint": "Tên này cho phép bạn tìm kiếm dễ dàng hơn về sau để hoàn thành.",
+            "msg": "Có vài thay đổi chưa được lưu, bạn có muốn tiếp tục mà không lưu chúng?",
+            "name": "Tên bản ghi.",
+            "posButton": "Lưu và Đóng",
+            "renamemsg": "Bạn thực sự muốn đổi tên __currentName__ to __newName__?",
+            "unkownerror": "Một lỗi không xác định đã xảy ra khi lưu dữ liệu."
+        }
+    },
+    "constraint": {
+        "invalid": "Giá trị không được chấp nhận.",
+        "required": "Trường này bắt buộc phải nhập"
+    },
+    "contact": {
+        "admin": "Xin liên hệ với người quản lý cuộc khảo sát",
+        "support": "Xin liên hệ với __supportEmail__"
+    },
+    "enketo": {
+        "power": "Được phát triển bởi"
+    },
+    "error": {
+        "code": "Mã lỗi: __code__",
+        "dataloadfailed": "Lỗi tải dữ liệu từ địa chỉ __url__",
+        "econnrefused": "Không thể kết nối với máy chủ",
+        "encryptionnotsupported": "Form này cần được mã hóa trên máy của bạn. Rất tiếc nó không được hỗ trợ. Chúng tôi khuyên bạn nên dùng ODK Collect để thu thập dữ liệu đối với form này.",
+        "instancenotfound": "Bản ghi không tồn tại. Có thể đã quá hạn.",
+        "invalidediturl": "URL không hợp lệ",
+        "loadfailed": "Lỗi tải __resource__",
+        "notfoundinformlist": "Form với ID __formid__ không có trong /formList",
+        "pagenotfound": "Trang không tìm thấy",
+        "surveyidnotactive": "Khảo sát với ID vừa được kích hoạt",
+        "surveyidnotfound": "Khảo sát với ID không được tìm thấy",
+        "unknown": "Một lỗi không xác định đã xảy ra"
+    },
+    "feedback": {
+        "header": "Thông tin"
+    },
+    "form": {
+        "chooseLanguage": "Hãy chọn ngôn ngữ",
+        "logout": "đăng xuất",
+        "pages": {
+            "back": "Trở lui",
+            "end": "Về cuối",
+            "next": "Tiếp theo",
+            "return": "Trở lại từ đầu"
+        }
+    },
+    "formfooter": {
+        "savedraft": {
+            "btn": "Lưu nháp",
+            "label": "Lưu như là bản nháp"
+        },
+        "submit": {
+            "btn": "Gởi lên"
+        },
+        "validate": {
+            "btn": "Kiểm tra tính hợp lệ"
+        }
+    },
+    "here": "tại đây",
+    "home": {
+        "msg": "__appTitle__ đang chạy! Hãy truy xuất từ form Enketo máy chủ __serverName__"
+    },
+    "langs": {
+        "ar": "Ả rập",
+        "cs": "Séc",
+        "de": "Đức",
+        "el": "Hy Lạp",
+        "en": "Anh",
+        "es": "Tây Ban Nha",
+        "fa": "Ba Tư",
+        "fr": "Pháp",
+        "he": "Do Thái",
+        "hi": "Hindi -Ấn Độ",
+        "it": "Ý",
+        "km": "Khơ-me",
+        "nl": "Hà Lan",
+        "no": "Na Uy",
+        "ro": "Rumani",
+        "sk": "Slovak",
+        "supported": "Ngôn ngữ được hỗ trợ:",
+        "sw": "Tiếng Bantu ở Đông Phi",
+        "th": "Thái",
+        "vi": "Việt Nam",
+        "zh": "Trung Quốc"
+    },
+    "page": {
+        "modernbrowsers": {
+            "heading": "Các trình duyệt mới",
+            "ie": {
+                "heading": "Vì sao không thương xót gì đến những phiên bản lạc hậu IE?",
+                "msg": "Chúng tôi hiểu rằng một số người, đặc biệt là những người làm trong các môi trường văn phòng lớn, không có cơ hội sử dụng các trình duyệt tốt nhất và mới nhất. Vì chúng tôi biết web rất tuyệt vời với các công cụ phù hợp, chúng tôi rất thông cảm những người sử dụng  trong tình huống kém may mắn đó. Thông thường, chúng tôi cố gắng cung cấp sự hỗ trợ cho cả những trình duyệt lỗi thời. Nhưtng, lý do mà Enketo tồn tại là nó có những đặc tính công nghệ tiên tiến nhất. Rất tiếc, những người sử dụng các trình duyệt cũ, do đó, không có sự may mắn đó."
+            },
+            "msg1": "Ồ! Xin lỗi, bạn nên gửi tại đây bởi vì trình duyệt của bạn đã lỗi thời hoặc có lẽ đã bị khóa một số thuộc tính do sử dụng chế độ 'trình duyệt cá nhân' ",
+            "msg2": "Nếu bạn đang dùng một trình duyệt đã lỗi thời, chúng tôi khuyên bạn nâng cấp lên một phiên bản mới  hơn, là một trong số các trình duyệt hiện đại nhiều tính năng vượt trội như sau:"
+        },
+        "offline": {
+            "heading": "Không thể truy xuất trang được yêu cầu",
+            "msg1": "Trang này chỉ có thể truy cập khi trình duyệt đã kết nối Internet và máy chủ truy cập được (trừ khi trang không tồn tại)"
+        }
+    },
+    "prompt": {
+        "default": {
+            "heading": "Hãy nhập các giá trị"
+        },
+        "login": {
+            "heading": "Nhập thông tin giới thiệu _server_ của bạn",
+            "password": "Mật khẩu",
+            "remember": "Hãy nhớ trên máy tính này",
+            "submit": "Gởi lên",
+            "username": "Tên đăng nhập"
+        }
+    },
+    "record-list": {
+        "export": "Xuất ra",
+        "msg1": "Các bản ghi được lưu trữ bên trong trình duyệt của bạn cho đến khi chúng được tải lên (ngay cả khi bạn tắt máy hoặc offline).",
+        "msg2": "Ngoại trừ các bản ghi được đánh dấu như bản nháp _icon_, các bản ghi trong hàng đợi được tải lên một cách tự động, cứ mỗi 5 phút một lần khi trang web được mở và kết nối Internet sẵn sàng. Để thúc đẩy nhanh hơn việc tải lên, hãy kích Upload.",
+        "norecords": "Không có bản ghi nào vào hàng đợi",
+        "title": "Hàng đợi",
+        "upload": "Tải lên"
+    },
+    "store": {
+        "error": {
+            "iosusesafari": "Trình duyệt iOS không thể chạy trong form này, Trên iOS, chúng tôi khuyến cáo sử dụng trình duyệt Safari.",
+            "notavailable": "Lưu trữ trình duyệt là cần thiết nhưng không có sẵn, có thể bị hỏng hoặc không cho phép ghi. Nếu bạn đang trong chế độ 'trình duyệt cá nhân' hãy chuyển đổi sang chế độ thông dụng, còn không thì chuyển sang trình duyệt khác. (lỗi: _error_)",
+            "notsupported": "Trình duyệt của bạn không thể chạy form này. Chúng tôi khuyên bạn sử dụng một trình duyệt mới hơn."
+        }
+    },
+    "submission": {
+        "http0": "Lỗi (offline?)",
+        "http2xx": "Một phản hồi không mong đợi khi đang gửi dữ liệu.",
+        "http400": "Máy chủ không chấp nhận dữ liệu này.",
+        "http401": "Vấn đề về xác thực dữ liệu với máy chủ.",
+        "http403": "Không được phép gửi dữ liệu đến máy chủ dữ liệu này.",
+        "http404": "Dịch vụ gửi dữ liệu lên máy chủ không được tìm thấy.",
+        "http413": "Dữ liệu quá lớn.",
+        "http4xx": "Không xác định được dữ liệu gửi lên máy chủ.",
+        "http500": "Dữ liệu gửi lên máy chủ trong form của bạn hoặc hiển thị Enketo đã bị ngừng. Hãy thử lại sau hoặc liên hệ _supportEmail_."
+    },
+    "version": "Phiên bản:"
+}
