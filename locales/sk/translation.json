@@ -3,6 +3,24 @@
         "flushdb": "Vymazať Úložisko"
     },
     "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "Pre pridanie tohto formulára na Vašu Domovskú Obrazovku, kliknite na ikonu možnosti prehliadača __image1__ a zvolte: 'Pridať na Domovskú Obrazovku'."
+            },
+            "androidfirefox": {
+                "msg": [
+                    "Pre pridanie tohto formulára na Vašu Domovskú Obrazovku:",
+                    "1. Add this page to your Firefox bookmarks by clicking the settings icon __image1__ and then the star icon __image2__.",
+                    "2. Open your bookmarks by opening a new page and clicking the Bookmarks tab.",
+                    "3. Click-and-hold your form until a pop-up menu appears.",
+                    "4. Vyberte 'Pridať na Domovskú Obrazovku'."
+                ]
+            },
+            "heading": "Pridať na Domovskú Obrazovku",
+            "iossafari": {
+                "msg": "To add this form to your Home screen, click the share icon __image1__ in the top right of your browser, and select: '+ Add to Home Screen'."
+            }
+        },
         "appupdated": {
             "heading": "Aplikácia Aktualizovaná!",
             "msg": "Nová verzia tejto aplikácie bola stiahnutá. Obnovte túto stránku pre načítanie aktualizovanej verzie."
@@ -10,6 +28,19 @@
         "default": {
             "button": "Zatvoriť",
             "heading": "Výstraha"
+        },
+        "export": {
+            "alternativequestion": "k dispozícii na stiahnutie - online",
+            "error": {
+                "filecreatedmsg": "Avšak, neúplný export bol aj napriek tomu vytvorený.",
+                "heading": "Chyba pri Exporte",
+                "linknotcreated": "Nepodarilo sa vytvoriť odkaz na export pre neodoslané záznamy. Ste stále online?",
+                "msg": "Nastali chyby pri tvorbe exportu pre neodoslané záznamy. Chyby: __error__"
+            },
+            "success": {
+                "heading": "Export Vytvorený",
+                "msg": "Export bol vytvorený pre všetky neodoslané záznamy patriace tomuto formuláru."
+            }
         },
         "formupdated": {
             "heading": "Formulár Aktualizovaný!",
@@ -206,6 +237,7 @@
         "el": "Gréčtina",
         "en": "Angličtina",
         "es": "Španielčina",
+        "fa": "Perzština",
         "fr": "Francúzština",
         "he": "Hebrejčina",
         "hi": "Hindčina",
@@ -218,7 +250,8 @@
         "supported": "Podporované jazyky:",
         "sw": "Swahilčina",
         "th": "Thajčina",
-        "vi": "Vietnamčina"
+        "vi": "Vietnamčina",
+        "zh": "Čínština"
     },
     "page": {
         "modernbrowsers": {

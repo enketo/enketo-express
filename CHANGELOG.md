@@ -11,7 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Basic support for big-image form attributes on itext values.
 
 ##### Changed
-- Updated Dutch translation.
+- Updated Farzi, Spanish, Slovak and Dutch translations.
 
 ##### Fixed
 - Empty lines in external CSV data result in empty items.
