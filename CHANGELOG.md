@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Fixed
+- Min() and max() return undefined for empty values.
+
 [1.23.0] - 2016-02-01
 ----------------------
 ##### Added
