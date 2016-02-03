@@ -76,7 +76,6 @@ function _setOnlineStatus( newStatus ) {
  */
 function uploadRecord( record ) {
     var batches;
-    var tasks = [];
 
     try {
         batches = _prepareFormDataArray( record );
@@ -88,10 +87,15 @@ function uploadRecord( record ) {
         batch.formData.append( 'Date', new Date().toUTCString() );
         batch.instanceId = record.instanceId;
         batch.deprecatedId = record.deprecatedId;
-        tasks.push( _uploadBatch( batch ) );
     } );
 
-    return Promise.all( tasks )
+    // Perform batch uploads sequentially for to avoid issues when connections are very poor and 
+    // a serious issue with ODK Aggregate (https://github.com/kobotoolbox/enketo-express/issues/400)
+    return batches.reduce( function( prevPromise, batch ) {
+            return prevPromise.then( function() {
+                return _uploadBatch( batch );
+            } );
+        }, Promise.resolve() )
         .then( function( results ) {
             console.debug( 'results of all batches submitted', results );
             return results[ 0 ];

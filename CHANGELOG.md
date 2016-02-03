@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Fixed
 - Min() and max() return undefined for empty values.
+- Parallel batch uploads may cause lost data in ODK Aggregate.
 
 [1.23.0] - 2016-02-01
 ----------------------
