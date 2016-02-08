@@ -148,7 +148,7 @@ Note that some of the libraries used in this app have different license. In part
 
 The Enketo logo and Icons are trademarked by [Enketo LLC](https://www.linkedin.com/company/enketo-llc). They can be used in the KoBoCAT VM only. Replace the logo images in [/public/images](/public/images) with your own or contact [Enketo LLC](mailto:info@enketo.org) to discuss the use inside your app.
 
-One exception is the 'Powered by Enketo' footer requirement as explained in [enketo-core](https://github.com/enketo/enketo-core#license), which is applicable to all Enketo apps, including this one.
+However, note the logo-use exception as part of the 'Powered by Enketo' footer requirement as explained in [enketo-core](https://github.com/enketo/enketo-core#license), which is applicable to all Enketo apps, including this one.
 
 ### Change log
 

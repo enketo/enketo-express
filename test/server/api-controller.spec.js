@@ -9,9 +9,10 @@ process.env.NODE_ENV = 'test';
  * at http://apidocs.enketo.org.
  */
 var request = require( 'supertest' );
+var config = require( '../../app/models/config-model' ).server;
+config[ 'base path' ] = '';
 var app = require( '../../config/express' );
 var surveyModel = require( '../../app/models/survey-model' );
-
 var v1Survey;
 var v1Instance;
 var v1Surveys;

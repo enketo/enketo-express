@@ -9,7 +9,7 @@ var router = express.Router();
 // var debug = require( 'debug' )( 'authentication-controller' );
 
 module.exports = function( app ) {
-    app.use( '/', router );
+    app.use( app.get( 'base path' ) + '/', router );
 };
 
 router

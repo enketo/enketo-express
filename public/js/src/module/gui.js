@@ -111,10 +111,10 @@ function swapTheme( theme ) {
         } else if ( settings.themesSupported.some( function( supportedTheme ) {
                 return theme === supportedTheme;
             } ) ) {
-            var $currentStyleSheet = $( 'link[rel=stylesheet][media=all][href*=theme-]' ),
-                $currentPrintStyleSheet = $( 'link[rel=stylesheet][media=print][href*=theme-]' ),
-                $newStyleSheet = $( '<link rel="stylesheet" media="all" href="/css/theme-' + theme + '.css"/>' ),
-                $newPrintStyleSheet = '<link rel="stylesheet" media="print" href="/css/theme-' + theme + '.print.css"/>';
+            var $currentStyleSheet = $( 'link[rel=stylesheet][media=all][href*=theme-]' );
+            var $currentPrintStyleSheet = $( 'link[rel=stylesheet][media=print][href*=theme-]' );
+            var $newStyleSheet = $( '<link rel="stylesheet" media="all" href="' + settings.basePath + '/css/theme-' + theme + '.css"/>' );
+            var $newPrintStyleSheet = '<link rel="stylesheet" media="print" href="' + settings.basePath + '/css/theme-' + theme + '.print.css"/>';
 
             $newStyleSheet.on( 'load', function() {
                 resolve();

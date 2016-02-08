@@ -48,6 +48,14 @@ config[ 'languages supported' ] = fs.readdirSync( languagePath ).filter( functio
     return fs.statSync( path.join( languagePath, file ) ).isDirectory();
 } );
 
+// if necessary, correct the base path to use for all routing
+if ( config[ 'base path' ] && config[ 'base path' ].indexOf( '/' ) !== 0 ) {
+    config[ 'base path' ] = '/' + config[ 'base path' ];
+}
+if ( config[ 'base path' ] && config[ 'base path' ].lastIndexOf( '/' ) === config[ 'base path' ].length - 1 ) {
+    config[ 'base path' ] = config[ 'base path' ].substring( 0, config[ 'base path' ].length - 1 );
+}
+
 module.exports = {
     server: config,
     client: {
@@ -60,7 +68,8 @@ module.exports = {
         languagesSupported: config[ 'languages supported' ],
         submissionParameter: {
             name: config[ 'query parameter to pass to submission' ]
-        }
+        },
+        basePath: config[ 'base path' ]
     },
     getThemesSupported: getThemesSupported
 };

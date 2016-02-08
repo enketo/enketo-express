@@ -30,6 +30,9 @@ Enketo will use this to encrypt sensitive information whenever necessary (e.g. f
 #### default theme 
 The theme to use if the survey has no user-or-api-defined theme. Values could be `"kobo"`, `"formhub"`, `"grid"`, or `"[yourowncustomtheme]"`.
 
+#### base path
+The basepath Enketo should use for everything. The default is `""`, which gives a baseUrl like https://yourdomain.com. If you set the value to e.g. `"enketo"`, the baseUrl for the app becomes https://yourdomain.com/enketo. Warning: If the base path is changed, you need to discard your redis **cache** database to ensure form media URLs are re-generated.
+
 #### log
 * submissions: Whether successfully submitted _record instanceIDs_ should be logged into log files. This could help troubleshoot any issues with the Form/Data Server or with Enketo. Only 201 responses to /submission on the Form/Data server will be logged. If a record is divided into multiple batches, it should only be recorded once. Logging instancedIDs could be considered a privacy issue, as together with web server logs it will potentially allow one to determine which IP address a specific record (instanceID) was submitted from and when. 
 

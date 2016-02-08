@@ -12,7 +12,7 @@ var PREFIX = '__export-';
 var DESTROY = 30 * 60 * 1000;
 
 module.exports = function( app ) {
-    app.use( '/export', router );
+    app.use( app.get( 'base path' ) + '/export', router );
 };
 
 router

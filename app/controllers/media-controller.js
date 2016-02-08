@@ -8,7 +8,7 @@ var router = express.Router();
 var debug = require( 'debug' )( 'media-controller' );
 
 module.exports = function( app ) {
-    app.use( '/media', router );
+    app.use( app.get( 'base path' ) + '/media', router );
 };
 
 router

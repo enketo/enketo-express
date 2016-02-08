@@ -12,10 +12,12 @@ var isArray = require( 'lodash/isArray' );
 var express = require( 'express' );
 var url = require( 'url' );
 var router = express.Router();
+var config = require( '../models/config-model' ).server;
+
 // var debug = require( 'debug' )( 'transformation-controller' );
 
 module.exports = function( app ) {
-    app.use( '/transform', router );
+    app.use( app.get( 'base path' ) + '/transform', router );
 };
 
 router
@@ -176,7 +178,7 @@ function _addMediaMap( survey ) {
  * @return {string}     The converted url.
  */
 function _toLocalMediaUrl( url ) {
-    var localUrl = '/media/get/' + url.replace( /(https?):\/\//, '$1/' );
+    var localUrl = config[ 'base path' ] + '/media/get/' + url.replace( /(https?):\/\//, '$1/' );
     return localUrl;
 }
 

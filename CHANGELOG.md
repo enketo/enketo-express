@@ -4,9 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ----------------------
+##### Added
+- Enketo can now be configured with a base path, allowing Enketo to run with other servers on the same (sub)domain.
+
 ##### Removed
 - Offline-capable iframe-friendly webform views and API endpoints.
-
 
 [1.24.1] - 2016-03-04 
 ----------------------

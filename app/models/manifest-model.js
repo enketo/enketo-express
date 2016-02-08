@@ -69,7 +69,7 @@ function getManifest( html, lang ) {
                 // add explicit entries in case user never lands on URL without querystring
                 // otherwise they may never get added as a Master entry
                 resources = resources.concat( [
-                    '/_/'
+                    config[ 'base path' ] + '/_/'
                 ] );
 
                 // determine version
@@ -102,7 +102,7 @@ function _getManifestString( version, resources ) {
         resources.join( '\n' ) + '\n' +
         '\n' +
         'FALLBACK:\n' +
-        '/_ /offline\n' +
+        '/_ ' + config[ 'base path' ] + '/offline\n' +
         '\n' +
         'NETWORK:\n' +
         '*\n';
@@ -163,10 +163,10 @@ function _getTranslations( lang ) {
     var langs = [];
 
     // fallback language
-    langs.push( '/locales/en/translation.json' );
+    langs.push( config[ 'base path' ] + '/locales/en/translation.json' );
 
     if ( lang && lang !== 'en' ) {
-        langs.push( '/locales/' + lang + '/translation.json' );
+        langs.push( config[ 'base path' ] + '/locales/' + lang + '/translation.json' );
     }
 
     return langs;
@@ -192,26 +192,32 @@ function _getResourcesFromCss( resources ) {
 }
 
 function _getResourceContent( resource ) {
-    var rel;
+    var localResourcePath;
     // in try catch in case css file is missing
     try {
-        rel = ( resource.indexOf( '/locales/' ) === 0 ) ? '../../' : '../../public';
-        return fs.readFileSync( path.join( __dirname, rel, url.parse( resource ).pathname ), 'utf8' );
+        localResourcePath = _getLocalPath( resource );
+        return fs.readFileSync( localResourcePath, 'utf8' );
     } catch ( e ) {
         return '';
     }
 }
 
 function _removeNonExisting( resource ) {
-    var rel = ( resource.indexOf( '/locales/' ) === 0 ) ? '../../' : '../../public';
-    var resourcePath = path.join( __dirname, rel, url.parse( resource ).pathname );
+    var localResourcePath = _getLocalPath( resource );
     // TODO: in later versions of node.js, this should be replaced by: fs.accessSync(resourcePath, fs.R_OK)
-    var exists = fs.existsSync( resourcePath );
+    var exists = fs.existsSync( localResourcePath );
 
     if ( !exists ) {
-        debug( 'cannot find', resourcePath );
+        debug( 'cannot find', localResourcePath );
     }
     return exists;
+}
+
+function _getLocalPath( resource ) {
+    var rel = ( resource.indexOf( config[ 'base path' ] + '/locales/' ) === 0 ) ? '../../' : '../../public';
+    var resourceWithoutBase = resource.substring( config[ 'base path' ].length );
+    var localResourcePath = path.join( __dirname, rel, url.parse( resourceWithoutBase ).pathname );
+    return localResourcePath;
 }
 
 function _removeEmpties( resource ) {

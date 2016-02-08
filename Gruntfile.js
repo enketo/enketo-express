@@ -192,10 +192,18 @@ module.exports = function( grunt ) {
         }
     } );
 
-    grunt.registerTask( 'default', [ 'sass', 'compile', 'uglify' ] );
-    grunt.registerTask( 'compile', [ 'client-config-file:create', 'browserify:production' ] );
-    grunt.registerTask( 'compile-dev', [ 'client-config-file:create', 'browserify:development' ] );
-    grunt.registerTask( 'test', [ 'env:test', 'compile', 'sass', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
-    grunt.registerTask( 'test-browser', [ 'env:test', 'sass', 'client-config-file:create', 'karma:browsers' ] );
-    grunt.registerTask( 'develop', [ 'env:develop', 'compile-dev', 'concurrent:develop' ] );
+    grunt.registerTask( 'system-sass-variables', 'Creating _system_variables.scss', function( task ) {
+        var systemSassVariablesPath = 'app/views/styles/component/_system_variables.scss';
+        var config = require( './app/models/config-model' );
+        grunt.file.write( systemSassVariablesPath, '$base-path: "' + config.server[ 'base path' ] + '";' );
+        grunt.log.writeln( 'File ' + systemSassVariablesPath + ' created' );
+    } );
+
+    grunt.registerTask( 'default', [ 'css', 'js', 'uglify' ] );
+    grunt.registerTask( 'js', [ 'client-config-file:create', 'browserify:production' ] );
+    grunt.registerTask( 'js-dev', [ 'client-config-file:create', 'browserify:development' ] );
+    grunt.registerTask( 'css', [ 'system-sass-variables:create', 'sass' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
+    grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
+    grunt.registerTask( 'develop', [ 'env:develop', 'js-dev', 'concurrent:develop' ] );
 };

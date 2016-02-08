@@ -68,8 +68,8 @@ app.use( i18nextMiddleware.handle( i18next, {
     /*ignoreRoutes: [ '/css', '/fonts', '/images', '/js' ]*/
 } ) );
 app.use( favicon( path.resolve( __dirname, '../public/images/favicon.ico' ) ) );
-app.use( express.static( path.resolve( __dirname, '../public' ) ) );
-app.use( '/locales', express.static( path.resolve( __dirname, '../locales' ) ) );
+app.use( app.get( 'base path' ), express.static( path.resolve( __dirname, '../public' ) ) );
+app.use( app.get( 'base path' ) + '/locales', express.static( path.resolve( __dirname, '../locales' ) ) );
 
 // set variables that should be accessible in all view templates
 app.use( function( req, res, next ) {
@@ -83,11 +83,12 @@ app.use( function( req, res, next ) {
     res.locals.dir = function( lng ) {
         return i18next.dir( lng );
     };
+    res.locals.basePath = req.app.get( 'base path' );
     res.locals.draftEnabled = !req.app.get( 'disable save as draft' );
     next();
 } );
 
-// load controllers (including routers)
+// load controllers (including their routers)
 fs.readdirSync( controllersPath ).forEach( function( file ) {
     if ( file.indexOf( '-controller.js' ) >= 0 ) {
         debug( 'loading', file );

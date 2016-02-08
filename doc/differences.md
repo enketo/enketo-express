@@ -33,6 +33,7 @@
 * :x: Enketo Express has missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views)
 * :white_check_mark: Enketo Express is 100% JavaScript
 * :white_check_mark: Enketo Express can be hosted on a local webserver
+* :white_check_mark: Enketo Express can be configured with a basepath, allowing it to run on the same domain as a form/data server
 
 #### Other
 * :white_check_mark: Enketo Express is much easier to install

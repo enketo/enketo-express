@@ -10,9 +10,9 @@ var quotaErrorMessage = 'Forbidden. No quota left';
 // var debug = require( 'debug' )( 'api-controller' );
 
 module.exports = function( app ) {
-    app.use( '/api/v2', router );
+    app.use( app.get( 'base path' ) + '/api/v2', router );
     // old enketo-legacy URL structure for migration-friendliness
-    app.use( '/api_v2', router );
+    app.use( app.get( 'base path' ) + '/api_v2', router );
 };
 
 router
@@ -323,7 +323,7 @@ function _generateWebformUrls( id, req ) {
     var OFFLINEPATH = '_/';
     var iframePart = ( req.iframe ) ? IFRAMEPATH : '';
     var protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol;
-    var baseUrl = protocol + '://' + req.headers.host + '/';
+    var baseUrl = protocol + '://' + req.headers.host + req.app.get( 'base path' ) + '/';
     var idPartOnline = '::' + id;
     var idPartOffline = '#' + id;
 

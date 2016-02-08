@@ -9,6 +9,7 @@ var expect = chai.expect;
 var chaiAsPromised = require( 'chai-as-promised' );
 var redis = require( 'redis' );
 var config = require( '../../app/models/config-model' ).server;
+config[ 'base path' ] = '';
 var submission = require( '../../app/models/submission-model' );
 var client = redis.createClient( config.redis.main.port, config.redis.main.host, {
     auth_pass: config.redis.main.password

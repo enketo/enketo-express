@@ -5,6 +5,8 @@
 process.env.NODE_ENV = 'test';
 
 var request = require( 'supertest' );
+var config = require( '../../app/models/config-model' ).server;
+config[ 'base path' ] = '';
 var app = require( '../../config/express' );
 
 describe( 'Survey Controller', function() {

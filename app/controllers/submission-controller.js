@@ -12,7 +12,7 @@ var router = express.Router();
 // var debug = require( 'debug' )( 'submission-controller' );
 
 module.exports = function( app ) {
-    app.use( '/submission', router );
+    app.use( app.get( 'base path' ) + '/submission', router );
 };
 
 // duplicate in survey-controller

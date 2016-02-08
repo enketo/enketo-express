@@ -1,10 +1,11 @@
-// fonts
-@import "../component/fonts";
-
 // variables, in the right order
 @import "variables";
+@import "../component/variables";
 @import "../../../../node_modules/enketo-core/src/sass/formhub/variables";
 @import "../../../../node_modules/enketo-core/src/sass/core/variables";
+
+// fonts
+@import "../component/fonts";
 
 // mixins, in the right order
 @import "../../../../node_modules/enketo-core/src/sass/core/mixins";
