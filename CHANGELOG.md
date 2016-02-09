@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Changed
+- Form section headers are now left-aligned again.
+
+##### Fixed
+- In pages mode, adding a repeat to the current page scrolls to top of page.
+- Constraint is evaluated twice when form value is changed (performance).
+
 [1.23.1] - 2016-02-09
 ----------------------
 ##### Changed
