@@ -10,6 +10,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - In pages mode, adding a repeat to the current page scrolls to top of page.
 - Constraint is evaluated twice when form value is changed (performance).
+- Deleted default values re-appear when a record is loaded.
+- Form scrolls to first question upon load.
 
 [1.23.1] - 2016-02-09
 ----------------------
