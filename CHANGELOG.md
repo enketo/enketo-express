@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.23.2] - 2016-02-10
 ----------------------
 ##### Changed
 - Form section headers are now left-aligned again.
