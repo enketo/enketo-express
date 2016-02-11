@@ -7,7 +7,7 @@ var path = require( 'path' );
 var fs = require( 'fs' );
 var themePath = path.join( __dirname, '../../public/css' );
 var languagePath = path.join( __dirname, '../../locales' );
-var debug = require( 'debug' )( 'config-model' );
+// var debug = require( 'debug' )( 'config-model' );
 
 // merge default and local config
 merge( config, localConfig );
@@ -15,14 +15,16 @@ merge( config, localConfig );
 /**
  * Returns a list of supported themes,
  * in case a list is provided only the ones that exists are returned.
+ * 
  * @param {Array} themeList - a list of themes e.g ['formhub', 'grid']
  * @return {Array}
  */
 function getThemesSupported( themeList ) {
     var themes = [];
+
     if ( fs.existsSync( themePath ) ) {
         fs.readdirSync( themePath ).forEach( function( file ) {
-            var matches = file.match( /^theme-([A-z]+)\.css$/ );
+            var matches = file.match( /^theme-([A-z\-]+)\.css$/ );
             if ( matches && matches.length > 1 ) {
                 if ( themeList !== undefined && themeList.length ) {
                     if ( themeList.indexOf( matches[ 1 ] ) !== -1 ) {

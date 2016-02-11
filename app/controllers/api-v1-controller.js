@@ -6,6 +6,7 @@ var account = require( '../models/account-model' );
 var auth = require( 'basic-auth' );
 var express = require( 'express' );
 var router = express.Router();
+var quotaErrorMessage = 'Forbidden. No quota left';
 var debug = require( 'debug' )( 'api-controller' );
 
 module.exports = function( app ) {
@@ -19,6 +20,7 @@ router
         res.redirect( 'http://apidocs.enketo.org' );
     } )
     .all( '*', authCheck )
+    .all( '*', _setQuotaUsed )
     .all( '/*/iframe', _setIframeQueryParam )
     .all( '/survey/preview*', function( req, res, next ) {
         req.webformType = 'preview';
@@ -59,17 +61,16 @@ router
 
 function authCheck( req, res, next ) {
     // check authentication and account
-    var error,
-        creds = auth( req ),
-        key = ( creds ) ? creds.name : undefined,
-        server = req.body.server_url || req.query.server_url;
+    var error;
+    var creds = auth( req );
+    var key = ( creds ) ? creds.name : undefined;
+    var server = req.body.server_url || req.query.server_url;
 
     // set content-type to json to provide appropriate json Error responses
     res.set( 'Content-Type', 'application/json' );
 
     account.get( server )
         .then( function( account ) {
-            debug( 'account', account );
             if ( !key || ( key !== account.key ) ) {
                 error = new Error( 'Not Allowed. Invalid API key.' );
                 error.status = 401;
@@ -78,6 +79,7 @@ function authCheck( req, res, next ) {
                     .set( 'WWW-Authenticate', 'Basic realm="Enter valid API key as user name"' );
                 next( error );
             } else {
+                req.account = account;
                 next();
             }
         } )
@@ -85,7 +87,10 @@ function authCheck( req, res, next ) {
 }
 
 function getExistingSurvey( req, res, next ) {
-    var error, body;
+
+    if ( req.account.quota < req.account.quotaUsed ) {
+        return _render( 403, quotaErrorMessage, res );
+    }
 
     return surveyModel
         .getId( {
@@ -103,16 +108,22 @@ function getExistingSurvey( req, res, next ) {
 }
 
 function getNewOrExistingSurvey( req, res, next ) {
-    var error, body, status,
-        survey = {
-            openRosaServer: req.body.server_url || req.query.server_url,
-            openRosaId: req.body.form_id || req.query.form_id
-        };
+    var status;
+    var survey = {
+        openRosaServer: req.body.server_url || req.query.server_url,
+        openRosaId: req.body.form_id || req.query.form_id
+    };
+
+    if ( req.account.quota < req.account.quotaUsed ) {
+        return _render( 403, quotaErrorMessage, res );
+    }
 
     return surveyModel
         .getId( survey ) // will return id only for existing && active surveys
         .then( function( id ) {
-            debug( 'id: ' + id );
+            if ( !id && req.account.quota <= req.account.quotaUsed ) {
+                return _render( 403, quotaErrorMessage, res );
+            }
             status = ( id ) ? 200 : 201;
             // even if id was found still call .set() method to update any properties
             return surveyModel.set( survey )
@@ -128,7 +139,6 @@ function getNewOrExistingSurvey( req, res, next ) {
 }
 
 function deactivateSurvey( req, res, next ) {
-    var error;
 
     return surveyModel
         .update( {
@@ -147,7 +157,6 @@ function deactivateSurvey( req, res, next ) {
 }
 
 function getNumber( req, res, next ) {
-    var error, body;
 
     return surveyModel
         .getNumber( req.body.server_url || req.query.server_url )
@@ -186,7 +195,11 @@ function getList( req, res, next ) {
 }
 
 function cacheInstance( req, res, next ) {
-    var error, body, survey;
+    var survey;
+
+    if ( req.account.quota < req.account.quotaUsed ) {
+        return _render( 403, quotaErrorMessage, res );
+    }
 
     survey = {
         openRosaServer: req.body.server_url,
@@ -206,7 +219,6 @@ function cacheInstance( req, res, next ) {
 }
 
 function removeInstance( req, res, next ) {
-    var error;
 
     return instanceModel
         .remove( {
@@ -222,6 +234,15 @@ function removeInstance( req, res, next ) {
             }
         } )
         .catch( next );
+}
+
+function _setQuotaUsed( req, res, next ) {
+    surveyModel
+        .getNumber( req.account.linkedServer )
+        .then( function( number ) {
+            req.account.quotaUsed = number;
+            next();
+        } );
 }
 
 function _setIframeQueryParam( req, res, next ) {
@@ -250,13 +271,13 @@ function _generateQueryString( params ) {
 }
 
 function _generateWebformUrls( id, req ) {
-    var queryString,
-        obj = {},
-        protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol,
-        baseUrl = protocol + '://' + req.headers.host + '/',
-        idPartOnline = '::' + id,
-        idPartOffline = '#' + id,
-        offline = req.app.get( 'offline enabled' ) && !req.iframeQueryParam;
+    var queryString;
+    var obj = {};
+    var protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol;
+    var baseUrl = protocol + '://' + req.headers.host + '/';
+    var idPartOnline = '::' + id;
+    var idPartOffline = '#' + id;
+    var offline = req.app.get( 'offline enabled' ) && !req.iframeQueryParam;
 
     req.webformType = req.webformType || 'default';
 

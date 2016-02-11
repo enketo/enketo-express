@@ -19,6 +19,7 @@ var widgets = [
     require( '../../../../node_modules/enketo-core/src/widget/distress/distresspicker' ),
     require( '../../../../node_modules/enketo-core/src/widget/horizontal-choices/horizontalchoices' ),
     require( '../../../../node_modules/enketo-core/src/widget/analog-scale/analog-scalepicker' ),
+    require( '../../../../node_modules/enketo-core/src/widget/big-image/image-viewer' ),
 ];
 
 module.exports = widgets;

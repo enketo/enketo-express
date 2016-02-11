@@ -1,29 +1,13 @@
 /**
- * @preserve Copyright 2014 Martijn van de Rijdt & Harvard Humanitarian Initiative
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
  * Deals with browser storage
  */
 
 'use strict';
 
 var db = require( 'db.js' );
-var Q = require( 'q' );
 var utils = require( './utils' );
-var t = require( './utils' );
+var sniffer = require( './sniffer' );
+var t = require( './translator' );
 
 var server;
 var blobEncoding;
@@ -35,81 +19,85 @@ var available = false;
 var databaseName = 'enketo';
 
 function init() {
-    return db.open( {
-            server: databaseName,
-            version: 1,
-            schema: {
-                // the surveys
-                surveys: {
-                    key: {
-                        keyPath: 'enketoId',
-                        autoIncrement: false
-                    },
-                    indexes: {
-                        enketoId: {
-                            unique: true
-                        }
-                    }
-                },
-                // the resources that belong to a survey
-                resources: {
-                    key: {
-                        autoIncrement: false
-                    },
-                    indexes: {
+
+    return _checkSupport()
+        .then( function() {
+            return db.open( {
+                server: databaseName,
+                version: 1,
+                schema: {
+                    // the surveys
+                    surveys: {
                         key: {
-                            unique: true
-                        }
-                    }
-                },
-                // Records in separate table because it makes more sense for getting, updating and removing records
-                // if they are not stored in one (giant) array or object value.
-                // Need to watch out for bad iOS bug: http://www.raymondcamden.com/2014/9/25/IndexedDB-on-iOS-8--Broken-Bad
-                // but with the current keys there is no risk of using the same key in multiple tables.
-                // InstanceId is the key because instanceName may change when editing a draft.
-                records: {
-                    key: {
-                        keyPath: 'instanceId',
-                    },
-                    indexes: {
-                        // useful to check if name exists
-                        name: {
-                            unique: true
+                            keyPath: 'enketoId',
+                            autoIncrement: false
                         },
-                        // the actual key
-                        instanceId: {
-                            unique: true
+                        indexes: {
+                            enketoId: {
+                                unique: true
+                            }
+                        }
+                    },
+                    // the resources that belong to a survey
+                    resources: {
+                        key: {
+                            autoIncrement: false
                         },
-                        // to get all records belonging to a form
-                        enketoId: {
-                            unique: false
+                        indexes: {
+                            key: {
+                                unique: true
+                            }
                         }
-                    }
-                },
-                // the files that belong to a record
-                files: {
-                    key: {
-                        autoIncrement: false
                     },
-                    indexes: {
+                    // Records in separate table because it makes more sense for getting, updating and removing records
+                    // if they are not stored in one (giant) array or object value.
+                    // Need to watch out for bad iOS bug: http://www.raymondcamden.com/2014/9/25/IndexedDB-on-iOS-8--Broken-Bad
+                    // but with the current keys there is no risk of using the same key in multiple tables.
+                    // InstanceId is the key because instanceName may change when editing a draft.
+                    records: {
                         key: {
-                            unique: true
+                            keyPath: 'instanceId',
+                        },
+                        indexes: {
+                            // useful to check if name exists
+                            name: {
+                                unique: true
+                            },
+                            // the actual key
+                            instanceId: {
+                                unique: true
+                            },
+                            // to get all records belonging to a form
+                            enketoId: {
+                                unique: false
+                            }
                         }
-                    }
-                },
-                // settings or other global app properties
-                properties: {
-                    key: {
-                        keyPath: 'name',
-                        autoIncrement: false
                     },
-                    indexes: {
+                    // the files that belong to a record
+                    files: {
                         key: {
-                            unique: true
+                            autoIncrement: false
+                        },
+                        indexes: {
+                            key: {
+                                unique: true
+                            }
+                        }
+                    },
+                    // settings or other global app properties
+                    properties: {
+                        key: {
+                            keyPath: 'name',
+                            autoIncrement: false
+                        },
+                        indexes: {
+                            key: {
+                                unique: true
+                            }
                         }
                     }
                 }
-            }
+            } );
         } )
         .then( function( s ) {
             server = s;
@@ -120,21 +108,42 @@ function init() {
         .then( function() {
             available = true;
         } )
-        .catch( function( e ) {
+        .catch( function( error ) {
+            console.error( 'store initialization error', error.message );
             // make error more useful and throw it further down the line
-            var error = new Error( t( 'store.error.notavailable', {
-                error: e.message
+            error = ( typeof error === 'string' ) ? new Error( error ) : error;
+            error = error ? error : new Error( t( 'store.error.notavailable', {
+                error: error.message
             } ) );
             error.status = 500;
             throw error;
         } );
 }
 
+
+function _checkSupport() {
+    var error;
+    // best to perform this specific check ourselves and not rely on specific error message in db.js.
+    return new Promise( function( resolve, reject ) {
+        if ( typeof indexedDB === "object" ) {
+            resolve();
+        } else {
+            if ( sniffer.os.isIos() ) {
+                error = new Error( t( 'store.error.iosusesafari' ) );
+            } else {
+                error = new Error( t( 'store.error.notsupported' ) );
+            }
+            error.status = 500;
+            reject( error );
+        }
+    } );
+}
+
 function isAvailable() {
     return available;
 }
 
-function _isWriteable( dbName ) {
+function _isWriteable() {
     return propertyStore.update( {
         name: 'testWrite',
         value: new Date().getTime()
@@ -146,6 +155,21 @@ function _canStoreBlobs() {
     var aBlob = new Blob( [ '<a id="a"><b id="b">hey!</b></a>' ], {
         type: 'text/xml'
     } );
+
+    /*
+     * Chrome appears to store blobs fine, but after a few hours, when retreiving a blob,
+     * and creating an ObjectURL from it, the object URL returns a 404. 
+     * Similarly, trying to use FileReader to readAsDataURL, results in a null result.
+     *
+     * Last checked in Chrome 46
+     *
+     * https://github.com/kobotoolbox/enketo-express/issues/155
+     */
+    if ( sniffer.browser.isChrome() ) {
+        console.debug( 'This is Chrome which has a blob/file storage problem.' );
+        return Promise.reject();
+    }
+
     return propertyStore.update( {
         name: 'testBlobWrite',
         value: aBlob
@@ -153,22 +177,16 @@ function _canStoreBlobs() {
 }
 
 function _setBlobStorageEncoding() {
-    var deferred = Q.defer();
 
-    _canStoreBlobs()
-        .then( function( blobsSupported ) {
+    return _canStoreBlobs()
+        .then( function() {
             console.debug( 'This browser is able to store blobs directly' );
             blobEncoding = false;
         } )
         .catch( function() {
             console.debug( 'This browser is not able to store blobs directly, so blobs will be Base64 encoded' );
             blobEncoding = true;
-        } )
-        .then( function() {
-            deferred.resolve();
         } );
-
-    return deferred.promise;
 }
 
 propertyStore = {
@@ -254,9 +272,9 @@ surveyStore = {
      * @return {Promise}        [description]
      */
     update: function( survey ) {
-        var resourceKeys,
-            tasks = [],
-            obsoleteResources = [];
+        var resourceKeys;
+        var tasks = [];
+        var obsoleteResources = [];
 
         console.debug( 'attempting to update a stored survey' );
 
@@ -264,19 +282,21 @@ surveyStore = {
             throw new Error( 'Survey not complete' );
         }
 
-        survey.resources = survey.resources || [];
-
-        // build array of resource keys
-        resourceKeys = survey.resources.map( function( resource ) {
-            return resource.url;
-        } );
+        // note: if survey.resources = undefined/null, do not store empty array
+        // as it means there are no resources to store (and load)
+        if ( survey.resources ) {
+            // build array of resource keys
+            resourceKeys = survey.resources.map( function( resource ) {
+                return resource.url;
+            } );
+        }
 
         return server.surveys.get( survey.enketoId )
             .then( function( result ) {
                 // determine obsolete resources to be removed
                 if ( result.resources ) {
                     obsoleteResources = result.resources.filter( function( existing ) {
-                        return resourceKeys.indexOf( existing ) < 0;
+                        return !resourceKeys || resourceKeys.indexOf( existing ) < 0;
                     } );
                 }
                 // update the existing survey
@@ -288,25 +308,26 @@ surveyStore = {
                     theme: survey.theme,
                     resources: resourceKeys,
                     maxSize: survey.maxSize,
-                    externalData: survey.externalData
+                    externalData: survey.externalData,
+                    branding: survey.branding
                 } );
             } )
             .then( function() {
-                // add new or update existing resources
-                survey.resources.forEach( function( file ) {
-                    tasks.push( surveyStore.resource.update( survey.enketoId, file ) );
-                } );
+                if ( survey.resources ) {
+                    // add new or update existing resources
+                    survey.resources.forEach( function( file ) {
+                        tasks.push( surveyStore.resource.update( survey.enketoId, file ) );
+                    } );
+                }
                 // remove obsolete resources
                 obsoleteResources.forEach( function( key ) {
                     tasks.push( surveyStore.resource.remove( survey.enketoId, key ) );
                 } );
                 // execution
-                return Q.all( tasks )
+                return Promise.all( tasks )
                     .then( function() {
-                        var deferred = Q.defer();
                         // resolving with original survey (not the array returned by server.surveys.update)
-                        deferred.resolve( survey );
-                        return deferred.promise;
+                        return survey;
                     } );
             } );
     },
@@ -317,8 +338,8 @@ surveyStore = {
      * @return {Promise}    [description]
      */
     remove: function( id ) {
-        var resources,
-            tasks = [];
+        var resources;
+        var tasks = [];
 
         return surveyStore.get( id )
             .then( function( survey ) {
@@ -328,7 +349,7 @@ surveyStore = {
                     tasks.push( surveyStore.resource.remove( id, resource ) );
                 } );
                 tasks.push( server.surveys.remove( id ) );
-                return Q.all( tasks );
+                return Promise.all( tasks );
             } );
     },
     /**
@@ -393,10 +414,13 @@ recordStore = {
                 record.files.forEach( function( fileKey ) {
                     tasks.push( recordStore.file.get( record.instanceId, fileKey ) );
                 } );
-
-                return Q.all( tasks )
+                return Promise.all( tasks )
                     .then( function( files ) {
-                        record.files = files;
+                        // filter out the failed files (= undefined)
+                        files = files.filter( function( file ) {
+                            return file;
+                        } );
+                        record.files = files || [];
                         return record;
                     } );
             } );
@@ -409,12 +433,11 @@ recordStore = {
      * @return {Promise}
      */
     getAll: function( enketoId, finalOnly ) {
-        var deferred = Q.defer();
 
         if ( !enketoId ) {
-            deferred.reject( new Error( 'No Enketo ID provided' ) );
-            return deferred.promise;
+            return Promise.reject( new Error( 'No Enketo ID provided' ) );
         }
+
         return server.records.query( 'enketoId' )
             .only( enketoId )
             .execute()
@@ -438,14 +461,12 @@ recordStore = {
      * @return {Promise}        [description]
      */
     set: function( record ) {
-        var fileKeys,
-            deferred = Q.defer();
+        var fileKeys;
 
         console.debug( 'attempting to store new record', record );
 
         if ( !record.instanceId || !record.enketoId || !record.name || !record.xml ) {
-            deferred.reject( new Error( 'Record not complete' ) );
-            return deferred.promise;
+            return Promise.reject( new Error( 'Record not complete' ) );
         }
 
         record.files = record.files || [];
@@ -461,6 +482,7 @@ recordStore = {
                 name: record.name,
                 xml: record.xml,
                 files: fileKeys,
+                created: new Date().getTime(),
                 updated: new Date().getTime(),
                 draft: record.draft
             } )
@@ -475,7 +497,7 @@ recordStore = {
                         tasks.push( recordStore.file.update( record.instanceId, file ) );
                     }
                 } );
-                return Q.all( tasks );
+                return Promise.all( tasks );
             } )
             .then( function() {
                 console.debug( 'all save tasks completed!' );
@@ -489,9 +511,9 @@ recordStore = {
      * @return {Promise}        [description]
      */
     update: function( record ) {
-        var fileKeys,
-            tasks = [],
-            obsoleteFiles = [];
+        var fileKeys;
+        var tasks = [];
+        var obsoleteFiles = [];
 
         console.debug( 'attempting to update a stored record' );
 
@@ -521,6 +543,7 @@ recordStore = {
                     name: record.name,
                     xml: record.xml,
                     files: fileKeys,
+                    created: ( result && result.created ? result.created : new Date().getTime() ),
                     updated: new Date().getTime(),
                     draft: record.draft
                 } );
@@ -538,12 +561,10 @@ recordStore = {
                     tasks.push( recordStore.file.remove( record.instanceId, key ) );
                 } );
                 // execution
-                return Q.all( tasks )
+                return Promise.all( tasks )
                     .then( function() {
-                        var deferred = Q.defer();
                         // resolving with original record (not the array returned by server.records.update)
-                        deferred.resolve( record );
-                        return deferred.promise;
+                        return record;
                     } );
             } );
     },
@@ -554,10 +575,11 @@ recordStore = {
      * @return {Promise}        [description]
      */
     remove: function( instanceId ) {
-        var files,
-            tasks = [];
+        var files;
+        var tasks = [];
 
-        return recordStore.get( instanceId )
+        return server.records.get( instanceId )
+            .then( _firstItemOnly )
             .then( function( record ) {
                 files = record.files || [];
                 files.forEach( function( fileKey ) {
@@ -565,7 +587,7 @@ recordStore = {
                     tasks.push( recordStore.file.remove( instanceId, fileKey ) );
                 } );
                 tasks.push( server.records.remove( instanceId ) );
-                return Q.all( tasks );
+                return Promise.all( tasks );
             } );
     },
     /**
@@ -622,17 +644,14 @@ recordStore = {
  * @return {Promise}       [description]
  */
 function _firstItemOnly( results ) {
-    var deferred = Q.defer();
 
     if ( Object.prototype.toString.call( results ) === '[object Array]' ) {
         // if an array
-        deferred.resolve( results[ 0 ] );
+        return Promise.resolve( results[ 0 ] );
     } else {
         // if not an array
-        deferred.resolve( results );
+        return Promise.resolve( results );
     }
-
-    return deferred.promise;
 }
 
 /**
@@ -644,35 +663,34 @@ function _firstItemOnly( results ) {
  * @return {Promise}
  */
 function _getFile( table, id, key ) {
-    var prop,
-        file = {},
-        deferred = Q.defer();
+    var prop;
+    var file = {};
 
-    if ( table === 'resources' || table === 'files' ) {
-        prop = ( table === 'resources' ) ? 'url' : 'name';
-        server[ table ].get( id + ':' + key )
-            .then( function( item ) {
-                file[ prop ] = key;
-                if ( item instanceof Blob ) {
-                    file.item = item;
-                    deferred.resolve( file );
-                } else if ( typeof item === 'string' ) {
-                    utils.dataUriToBlob( item )
-                        .then( function( item ) {
-                            file.item = item;
-                            deferred.resolve( file );
-                        } );
-                } else {
-                    // if item is falsy or unexpected
-                    deferred.resolve( undefined );
-                }
-            } )
-            .catch( deferred.reject );
-    } else {
-        deferred.reject( new Error( 'Unknown table or issing id or key.' ) );
-    }
-
-    return deferred.promise;
+    return new Promise( function( resolve, reject ) {
+        if ( table === 'resources' || table === 'files' ) {
+            prop = ( table === 'resources' ) ? 'url' : 'name';
+            return server[ table ].get( id + ':' + key )
+                .then( function( item ) {
+                    file[ prop ] = key;
+                    if ( item instanceof Blob ) {
+                        file.item = item;
+                        resolve( file );
+                    } else if ( typeof item === 'string' ) {
+                        utils.dataUriToBlob( item )
+                            .then( function( item ) {
+                                file.item = item;
+                                resolve( file );
+                            } );
+                    } else {
+                        // if item is falsy or unexpected
+                        resolve( undefined );
+                    }
+                } )
+                .catch( reject );
+        } else {
+            reject( new Error( 'Unknown table or issing id or key.' ) );
+        }
+    } );
 }
 
 /**
@@ -684,8 +702,9 @@ function _getFile( table, id, key ) {
  * @return {Promise]}       [description]
  */
 function _updateFile( table, id, file ) {
-    var error, prop, propValue,
-        deferred = Q.defer();
+    var error;
+    var prop;
+    var propValue;
 
     if ( table === 'resources' || table === 'files' ) {
         prop = ( table === 'resources' ) ? 'url' : 'name';
@@ -722,12 +741,11 @@ function _updateFile( table, id, file ) {
         } else {
             error = new Error( 'DataError. File not complete or id not provided.' );
             error.name = 'DataError';
-            deferred.reject( error );
+            return Promise.reject( error );
         }
     } else {
-        deferred.reject( new Error( 'Unknown table or issing id or key.' ) );
+        return Promise.reject( new Error( 'Unknown table or issing id or key.' ) );
     }
-    return deferred.promise;
 }
 
 /**
@@ -735,31 +753,29 @@ function _updateFile( table, id, file ) {
  * @return {[type]} [description]
  */
 function flush() {
-    var request,
-        deferred = Q.defer();
+    var request;
 
-    try {
-        server.close( databaseName );
-    } catch ( e ) {
-        console.log( 'Database has probably been removed already. Doing nothing.', e );
-        deferred.resolve();
-        return deferred.promise;
-    }
+    return new Promise( function( resolve, reject ) {
+        try {
+            server.close( databaseName );
+        } catch ( e ) {
+            console.log( 'Database has probably been removed already. Doing nothing.', e );
+            resolve();
+        }
 
-    request = indexedDB.deleteDatabase( databaseName );
+        request = indexedDB.deleteDatabase( databaseName );
 
-    request.onsuccess = function() {
-        console.log( "Deleted database successfully" );
-        deferred.resolve();
-    };
-    request.onerror = function( error ) {
-        deferred.reject( error );
-    };
-    request.onblocked = function( error ) {
-        deferred.reject( error );
-    };
-
-    return deferred.promise;
+        request.onsuccess = function() {
+            console.log( 'Deleted database successfully' );
+            resolve();
+        };
+        request.onerror = function( error ) {
+            reject( error );
+        };
+        request.onblocked = function( error ) {
+            reject( error );
+        };
+    } );
 }
 
 /**

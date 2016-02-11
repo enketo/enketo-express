@@ -9,7 +9,7 @@ A light-weight node.js version of Enketo Smart Paper port for OpenClinica. Chock
 
 #### Manually:
 
-1. Install JS prerequisites: [Node.js 0.10.x](http://nodejs.org/) (newer version [not supported yet](https://github.com/albanm/node-libxslt/issues/18)), [Grunt Client](http://gruntjs.com), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
+1. Install JS prerequisites: [Node.js](https://github.com/nodesource/distributions) (4.x LTS recommended), [Grunt Client](http://gruntjs.com), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
 2. Install [Redis](http://redis.io/topics/quickstart)
 3. Install build-essential and git (and libfontconfig to run tests) with `(sudo) apt-get install build-essential git libfontconfig`
 4. Clone this repository
@@ -30,6 +30,12 @@ The app should now be running on [localhost:8006](http://localhost:8006). You ca
 
 _\* sometimes `vagrant up` fails for reasons beyond our control - e.g. if external resources are temporarily unavailable. Try running `vagrant reload --provision` to resolve this._
 
+#### Using Docker:
+1. Install [Docker Compose](http://docs.docker.com/compose/install/).
+2. Set Enketo Express's API key, the linked form and data server, and any additional desired configurations in the file `setup/docker/envfile.txt`.
+3. Run `docker-compose up` from project folder and wait until it completes.
+
+The app should now be running on [localhost:8005](http://localhost:8005).
 
 ### How to install a production server
 
@@ -40,7 +46,7 @@ See [this tutorial](http://blog.enketo.org/install-enketo-production-ubuntu/) fo
 
 All configuration is done in config/config.json. Strictly speaking, this file only has to contain the [default properties](./config/default-config.json) that you'd like to override, but it might be safer to include all properties. The configuration items have self-explanatory names and helpful sample values. After editing the configuration, the app will need to be restarted.
 
-The default production configuration includes 2 redis instances for the cache. You can **greatly simplify installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you'll find the vagrant setup steps in [bootstrap.sh](./setup/bootstrap.sh) useful.
+The default production configuration includes 2 redis instances. You can **greatly simplify installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you might find the vagrant setup steps in [bootstrap.sh](./setup/bootstrap.sh) useful.
 
 For detailed guidance on each configuration item, see [this document](./config/README.md).
 
@@ -49,7 +55,7 @@ To configure your own custom external authentication also see [this section](#au
 
 ### API
 
-The API is accessible on **/api/v2** and **/api/v1**. Only API v1 is [properly documented](http://apidocs.enketo.org) at the moment. This [temporary note](APIv2.md) describes the changes introduced by API v2.
+The API is accessible on **/api/v2** and **/api/v1**. Only API v1 is [properly documented](http://apidocs.enketo.org) at the moment. This [temporary note](./doc/APIv2.md) describes the changes introduced by API v2.
 
 
 ### How to run
@@ -61,45 +67,31 @@ For a production server, we recommend using [pm2](https://github.com/unitech/pm2
 
 
 ### How to update
-* update git repository with `git pull`
-* update dependencies with `npm update`
+
+* update git repository with `git pull` (check out a specific release (git tag) for a production server)
+* update dependencies with `npm update --production`
 * re-build with `grunt`
 * restart app
 
 
 ### Developer tools
-Install [nodemon](https://github.com/remy/nodemon) to automatically restart the server when a file changes.
-Install [gulp](http://gulpjs.com/) to automatically update the translation keys.
-Install [mocha](https://github.com/mochajs/mocha) to run tests.
-Install [nodemon](https://github.com/remy/nodemon) to run app in development mode with autoreload.
+* Install [nodemon](https://github.com/remy/nodemon) to automatically restart the server when a file changes.
+* Install [gulp](http://gulpjs.com/) to automatically update the translation keys.
+* Install [mocha](https://github.com/mochajs/mocha) to run tests.
 
 The easiest way to start the app in development and debugging mode with livereload is with `grunt develop`.
 
 
-### Differences with [enketo/enketo-legacy](https://github.com/enketo/enketo-legacy) (and [enketo.org](https://enketo.org))
+### Browser support
 
-* :white_check_mark: this one is much easier to install
-* :white_check_mark: this one has cross-browser (media) file inputs
-* :white_check_mark: this one has a [multi-language](#translation) user interface
-* :white_check_mark: this one displays right-to-left scripts from right-to-left
-* :white_check_mark: this one has more text formatting (markdown syntax) support and across **all** labels **and hints**
-* :white_check_mark: this one has better security of user credentials
-* :white_check_mark: this one has support for multiple themes in *all* form views including previews 
-* :white_check_mark: this one has an improved API (v2)
-* :white_check_mark: this one allows overriding a form-defined theme via the API (v2) 
-* :white_check_mark: this one has the ability to override default form values on launch through the API (v2)
-* :white_check_mark: this one has a more advanced iframeable webform view that can communicate back to the parent window, enabled through the API (v2)
-* :white_check_mark: this one has [external authentication](#authentication) support 
-* :white_check_mark: this one will use the `instanceName` value defined in the XForm as the default local record name
-* :white_check_mark: this one will automatically save any unsaved record in the offline-capable views to avoid loosing data
-* :large_orange_diamond: offline forms are still experimental - **enable offline functionality only for testing and [report bugs](https://github.com/kobotoolbox/enketo-express/issues) please**
-* :x: missing API endpoints and corresponding views: all endpoints containing "/single" (single submission views)
-* :x: no export of queued records (yet)
-* :x: no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews)
-* :x: no [Forms](https://enketo.org/forms) app (you do not need this)
-* :white_check_mark: this one is 100% JavaScript
-* :white_check_mark: this one can be hosted on a local webserver
-* :white_check_mark: this one includes an analog scale widget
+Only the latest modern browser versions on Windows, OS X, Linux, Android and iOS are officially supported. Chrome or Firefox are the best browsers on all platforms except on iOS. On iOS there are no modern browsers due to Apple's restrictions on third party browsers, but Safari is the least bad option.
+
+**Enketo endeavors to show a helpful (multi-lingual) error message on unsupported browsers when the form is loaded to avoid serious issues.**
+
+
+### Differences with [enketo/enketo-legacy](https://github.com/enketo/enketo-legacy)
+
+See [this doc](./doc/differences.md)
 
 
 ### Themes
@@ -109,7 +101,7 @@ The default theme can be set in config/config.json. The default theme can be ove
 The recommended way to customize themes is to either:
 
  * Create an issue (and fund or send a pull request) for changes to the existing themes, or
- * Create your own theme in your own enketo-express port and add your custom theme in its own folder [here](app/views/styles). No other changes are required. A succesful rebuild with `grunt`, and your theme will become active when the app starts. The advantage of using this method instead of editing the existing themes, is that you will not have any merge conflicts when you update your port! Add a print-specific version of your theme and use the same filenaming convention as the built-in themes.
+ * Create your own theme in your own enketo-express port and add your custom theme in its own folder [here](app/views/styles). No other changes are required. A succesful rebuild with `grunt`, and your theme will become active when the app starts. The advantage of using this method instead of editing the existing themes, is that you will not have merge conflicts when you update your port! Add a print-specific version of your theme and use the same filenaming convention as the built-in themes.
 
  See also [this further guidance](https://github.com/enketo/enketo-core#notes-for-css-developers)
 
@@ -141,15 +133,14 @@ _Form authentication_ is only secure when Enketo is running on **https**. To avo
 
 ### Translation
 
-The user interface was translated by: Robert Michael Lundin (Norwegian), Margaret Ndisha, Charles Mutisya (Swahili), Panzero Mauro (Italian), Gabriel Kreindler (Romanian), Jason Reeder, Omar Nazar, Sara Sameer, David Gessel (Arabic), Tino Kreutzer (German), Wasilis Mandratzis-Walz (German, Greek), Luis Molina (Spanish), Martijn van de Rijdt (Dutch).
+The user interface was translated by: Trần Quý Phi (Vietnamese), Reza Doosti, Hossein Azad, Davood Mottalee (Persian), Tomas Skripcak (Slovak, German), Robert Michael Lundin (Norwegian), Margaret Ndisha, Charles Mutisya (Swahili), Panzero Mauro (Italian), Gabriel Kreindler (Romanian), Jason Reeder, Omar Nazar, Sara Sameer, David Gessel (Arabic), Tino Kreutzer (German), Wasilis Mandratzis-Walz (German, Greek), Luis Molina (Spanish), Martijn van de Rijdt (Dutch).
 
 _Send a message if you'd like to contribute! We use an easy web interface provided by [Transifex](https://www.transifex.com/projects/p/enketo-express/)._
 
 
 ### Funding
 
-The development of this application was funded by [KoBo Toolbox (Harvard Humanitarian Initiative)](http://www.kobotoolbox.org), [iMMAP](http://immap.org), [OpenClinica](https://openclinica.com), and [Enketo LLC](https://enketo.org). The [Enketo-core](https://github.com/enketo/enketo-core) library (the form engine + themes) used in this application obtained significant funding from [SEL (Columbia University)](http://modi.mech.columbia.edu/), the [Santa Fe Institute](http://www.santafe.edu/), and the [HRP project](http://www.who.int/reproductivehealth/topics/mhealth/en/). 
-
+The development of this application was funded by [KoBo Toolbox (Harvard Humanitarian Initiative)](http://www.kobotoolbox.org), [iMMAP](http://immap.org), [OpenClinica](https://openclinica.com), and [Enketo LLC](https://enketo.org). The [Enketo-core](https://github.com/enketo/enketo-core) library (the form engine + themes) used in this application obtained significant funding from [SEL (Columbia University)](http://modi.mech.columbia.edu/), the [Santa Fe Institute](http://www.santafe.edu/), [Ona](https://ona.io) and the [HRP project](http://www.who.int/reproductivehealth/topics/mhealth/en/). 
 
 ### License
 

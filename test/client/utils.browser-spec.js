@@ -1,4 +1,4 @@
-/* global define, describe, require, it, before, after, beforeEach, afterEach, expect, Blob */
+/* global describe, require, it, expect, Blob */
 'use strict';
 
 var utils = require( '../../public/js/src/module/utils' );

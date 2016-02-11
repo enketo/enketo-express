@@ -31,18 +31,18 @@ $slider-width: 240px;
         margin: 20px 0 33px 0;
     }
     &__toggle {
-    font-family: arial, sans-serif;
-    position: fixed;
-    top: 50%;
-    margin: 0;
-    padding: 0;
-    height: 50px;
-    width: 6px;
-    background: none;
-    border-top: 2px solid;
-    border-bottom: 2px solid;
-    font-size: 20px;
-    line-height: 30px;
+        font-family: arial, sans-serif;
+        position: fixed;
+        top: 50%;
+        margin: 0;
+        padding: 0;
+        height: 50px;
+        width: 6px;
+        background: none;
+        border-top: 2px solid;
+        border-bottom: 2px solid;
+        font-size: 20px;
+        line-height: 30px;
         &.open {
             border-left: none;
             border-right: 3px solid;
@@ -107,14 +107,21 @@ $slider-width: 240px;
         margin-top: 30px;
     }
     &__button-bar__button{
-        // width: 45%;
         width: 100%;
         padding:10px;
         // setting a fixed height to cut off long translations, not a great thing to do
         //height: 40px;
     }
-    &__button-bar__button.upload{ 
-        // margin-left: 10%;
+    &__button-bar__button.export{ 
+        display: block;
+        padding: 2px;
+        font-size: 13px;
+        background: none;
+        color: white;
+        &:hover {
+            background: #626262;
+            color: white;
+        }
     }
     &__upload-progress {
         visibility: hidden;

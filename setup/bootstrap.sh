@@ -13,6 +13,7 @@ ENKETO_EXPRESS_USE_NODE_ENV=${ENKETO_EXPRESS_USE_NODE_ENV:-"false"}
 echo 'installing redis...'
 add-apt-repository -y ppa:rwky/redis
 apt-get update
+apt-get upgrade -y
 apt-get install -y redis-server
 
 # further redis setup with persistence, security, logging, multiple instances, priming 
@@ -40,7 +41,9 @@ echo 'starting second enketo redis instance...'
 service redis-server-enketo-cache restart
 
 # install dependencies, development tools, node, grunt
+echo 'installing some apt-get packages...'
 apt-get install -y build-essential git libfontconfig curl
+echo 'installing nodejs...'
 cd $ENKETO_EXPRESS_REPO_DIR
 if [ $ENKETO_EXPRESS_USE_NODE_ENV = "true" ]; then
     apt-get install python-pip
@@ -48,22 +51,23 @@ if [ $ENKETO_EXPRESS_USE_NODE_ENV = "true" ]; then
     nodeenv env
     . env/bin/activate
 else
-    curl -sL https://deb.nodesource.com/setup_0.10 | sudo bash -
+    curl -sL https://deb.nodesource.com/setup_4.x | sudo bash -
     apt-get install -y nodejs
 fi
-npm -g install npm@2.14.3
-npm -g install grunt-cli node-gyp gulp nodemon mocha
-# remove node_modules if exists because npm builds can be system-specific
-if [ -d "$ENKETO_EXPRESS_REPO_DIR/node_modules" ]; then
-	rm -R $ENKETO_EXPRESS_REPO_DIR/node_modules
-fi
-npm install
 
 # create a local configuration file unless it already exists
 echo 'copying custom configuration unless config.json already exists'
 if [ ! -f "$ENKETO_EXPRESS_REPO_DIR/config/config.json" ]; then
     cp setup/config/config.json config/config.json
 fi
+
+# remove node_modules if exists because npm builds can be system-specific
+if [ -d "$ENKETO_EXPRESS_REPO_DIR/node_modules" ]; then
+	rm -R $ENKETO_EXPRESS_REPO_DIR/node_modules
+fi
+#npm -g install npm@2.14.3
+npm install -g grunt-cli gulp nodemon mocha
+npm install
 
 # build js and css
 grunt

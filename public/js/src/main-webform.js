@@ -1,5 +1,6 @@
 'use strict';
 
+require( './module/redirect-IE' );
 require( './module/jquery-global' );
 require( './module/promise-by-Q' );
 
@@ -30,6 +31,7 @@ _setEmergencyHandlers();
 if ( settings.offline ) {
     console.debug( 'in offline mode' );
     formCache.init( survey )
+        .then( _addBranding )
         .then( _swapTheme )
         .then( _init )
         .then( formCache.updateMaxSubmissionSize )
@@ -44,6 +46,7 @@ if ( settings.offline ) {
 } else {
     console.debug( 'in online mode' );
     connection.getFormParts( survey )
+        .then( _addBranding )
         .then( _swapTheme )
         .then( _init )
         .then( connection.getMaximumSubmissionSize )
@@ -55,7 +58,7 @@ if ( settings.offline ) {
 
 function _showErrorOrAuthenticate( error ) {
     error = ( typeof error === 'string' ) ? new Error( error ) : error;
-    console.log( 'error', error, error.stack );
+    console.error( error, error.stack );
     $loader.addClass( 'fail' );
     if ( error.status === 401 ) {
         window.location.href = '/login?return_url=' + encodeURIComponent( window.location.href );
@@ -106,6 +109,30 @@ function _setEmergencyHandlers() {
     } );
 }
 
+/**
+ * Adds/replaces branding if necessary, and unhides branding.
+ * 
+ * @param {[type]} survey [description]
+ */
+function _addBranding( survey ) {
+    var $brandImg = $( '.form-header .branding img' );
+    var attribute = ( settings.offline ) ? 'data-offline-src' : 'src';
+
+    if ( survey.branding && survey.branding.source && $brandImg.attr( 'src' ) !== survey.branding.source ) {
+        $brandImg.attr( 'src', '' );
+        $brandImg.attr( attribute, survey.branding.source );
+    }
+    $brandImg.removeClass( 'hide' );
+
+    return survey;
+}
+
+/**
+ * Swaps the theme if necessary.
+ * 
+ * @param  {[type]} survey [description]
+ * @return {[type]}        [description]
+ */
 function _swapTheme( survey ) {
     return new Promise( function( resolve, reject ) {
         if ( survey.form && survey.model ) {
@@ -120,28 +147,32 @@ function _swapTheme( survey ) {
 }
 
 function _prepareInstance( modelStr, defaults ) {
-    var model, init,
-        existingInstance = null;
+    var model;
+    var init;
+    var existingInstance = null;
 
     for ( var path in defaults ) {
-        // TODO full:false support still needs to be added to FormModel.js
-        model = model || new FormModel( modelStr, {
-            full: false
-        } );
-        init = init || model.init();
         if ( defaults.hasOwnProperty( path ) ) {
-            // if this fails, the FormModel will output a console error and ignore the instruction
-            model.node( path ).setVal( defaults[ path ] );
+            // TODO full:false support still needs to be added to FormModel.js
+            model = model || new FormModel( modelStr, {
+                full: false
+            } );
+            init = init || model.init();
+            if ( defaults.hasOwnProperty( path ) ) {
+                // if this fails, the FormModel will output a console error and ignore the instruction
+                model.node( path ).setVal( defaults[ path ] );
+            }
+            // TODO would be good to not include nodes that weren't in the defaults parameter
+            // TODO would be good to just pass model along instead of converting to string first
+            existingInstance = model.getStr();
         }
-        // TODO would be good to not include nodes that weren't in the defaults parameter
-        // TODO would be good to just pass model along instead of converting to string first
-        existingInstance = model.getStr();
     }
     return existingInstance;
 }
 
 function _init( formParts ) {
-    var error, $form;
+    var error;
+    var $form;
 
     return new Promise( function( resolve, reject ) {
         if ( formParts && formParts.form && formParts.model ) {

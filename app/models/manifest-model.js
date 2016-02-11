@@ -1,10 +1,10 @@
 'use strict';
 
-var libxml = require( "libxmljs" );
+var libxml = require( 'libxslt' ).libxmljs;
 var url = require( 'url' );
 var path = require( 'path' );
 var fs = require( 'fs' );
-var Promise = require( 'q' ).Promise;
+var Promise = require( 'lie' );
 var config = require( './config-model' ).server;
 var client = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
     auth_pass: config.redis.cache.password
@@ -18,7 +18,12 @@ if ( process.env.NODE_ENV === 'test' ) {
 }
 
 function getManifest( html, lang ) {
-    var hash, version, doc, resources, themesSupported, date;
+    var hash;
+    var version;
+    var doc;
+    var resources;
+    var themesSupported;
+    var date;
     var manifestKey = 'ma:' + lang + '_manifest';
     var versionKey = 'ma:' + lang + '_version';
 
@@ -116,7 +121,7 @@ function _updateVersionObj( versionKey, hash, version ) {
     client.hmset( versionKey, {
         hash: hash,
         version: version
-    }, function( error ) {} );
+    } );
 }
 
 function _getLinkHrefs( doc ) {
@@ -162,10 +167,11 @@ function _getTranslations( lang ) {
 }
 
 function _getResourcesFromCss( resources ) {
-    var content, matches,
-        urlReg = /url\(['|"]?([^\)'"]+)['|"]?\)/g,
-        cssReg = /^.+\.css$/,
-        urls = [];
+    var content;
+    var matches;
+    var urlReg = /url\(['|"]?([^\)'"]+)['|"]?\)/g;
+    var cssReg = /^.+\.css$/;
+    var urls = [];
 
     resources.forEach( function( resource ) {
         if ( cssReg.test( resource ) ) {
@@ -191,10 +197,10 @@ function _getResourceContent( resource ) {
 }
 
 function _removeNonExisting( resource ) {
-    var rel = ( resource.indexOf( '/locales/' ) === 0 ) ? '../../' : '../../public',
-        resourcePath = path.join( __dirname, rel, url.parse( resource ).pathname ),
-        // TODO: in later versions of node.js, this should be replaced by: fs.accessSync(resourcePath, fs.R_OK)
-        exists = fs.existsSync( resourcePath );
+    var rel = ( resource.indexOf( '/locales/' ) === 0 ) ? '../../' : '../../public';
+    var resourcePath = path.join( __dirname, rel, url.parse( resource ).pathname );
+    // TODO: in later versions of node.js, this should be replaced by: fs.accessSync(resourcePath, fs.R_OK)
+    var exists = fs.existsSync( resourcePath );
 
     if ( !exists ) {
         debug( 'cannot find', resourcePath );
@@ -207,7 +213,7 @@ function _removeEmpties( resource ) {
 }
 
 function _removeDuplicates( resource, position, array ) {
-    return array.indexOf( resource ) == position;
+    return array.indexOf( resource ) === position;
 }
 
 function _removeNonHttpResources( resourceUrl ) {
@@ -216,8 +222,8 @@ function _removeNonHttpResources( resourceUrl ) {
 }
 
 function _calculateHash( html, resources ) {
-    var content,
-        hash = utils.md5( html );
+    var content;
+    var hash = utils.md5( html );
 
     resources.forEach( function( resource ) {
         try {

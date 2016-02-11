@@ -1,0 +1,7 @@
+git
+htop
+build-essential
+curl
+unattended-upgrades
+python
+nodejs

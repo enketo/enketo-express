@@ -1,29 +1,14 @@
 /**
- * @preserve Copyright 2014 Martijn van de Rijdt & Harvard Humanitarian Initiative
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
  * Deals with browser storage
  */
+
 'use strict';
 
 var store = require( './store' );
 var connection = require( './connection' );
 var gui = require( './gui' );
-var Q = require( 'q' );
 var settings = require( './settings' );
+var exporter = require( './exporter' );
 var t = require( './translator' );
 var $ = require( 'jquery' );
 
@@ -59,13 +44,18 @@ function get( instanceId ) {
 }
 
 /**
- * Stores a new record
+ * Stores a new record. Overwrites (media) files from auto-saved record.
  *
  * @param {*} record [description]
  * @return {Promise}
  */
 function set( record ) {
-    return store.record.set( record )
+    return getAutoSavedRecord()
+        .then( function( autoSavedRecord ) {
+            // add files from autoSavedRecord
+            record.files = autoSavedRecord.files;
+            return store.record.set( record );
+        } )
         .then( _updateRecordList );
 }
 
@@ -161,9 +151,10 @@ function _setUploadIntervals() {
  * @return {Promise} [description]
  */
 function uploadQueue() {
-    var errorMsg,
-        successes = [],
-        fails = [];
+    var errorMsg;
+    var successes = [];
+    var fails = [];
+    var authRequired;
 
     if ( !uploadOngoing && connection.getOnlineStatus ) {
 
@@ -185,12 +176,16 @@ function uploadQueue() {
                             .then( function( record ) {
                                 // convert record.files to a simple <File> array
                                 record.files = record.files.map( function( object ) {
+                                    // do not add name property if already has one (a File will throw exception)
+                                    if ( typeof object.item.name === 'undefined' ) {
+                                        object.item.name = object.name;
+                                    }
                                     return object.item;
                                 } );
                                 uploadProgress.update( record.instanceId, 'ongoing', '', successes.length + fails.length, records.length );
                                 return connection.uploadRecord( record );
                             } )
-                            .then( function( result ) {
+                            .then( function() {
                                 successes.push( record.name );
                                 uploadProgress.update( record.instanceId, 'success', '', successes.length + fails.length, records.length );
                                 return store.record.remove( record.instanceId )
@@ -199,6 +194,10 @@ function uploadQueue() {
                                     } );
                             } )
                             .catch( function( result ) {
+                                // catch 401 responses (1 of them)
+                                if ( result.status === 401 ) {
+                                    authRequired = true;
+                                }
                                 // if any non HTTP error occurs, output the error.message
                                 errorMsg = result.message || gui.getErrorResponseMsg( result.status );
                                 fails.push( record.name );
@@ -207,7 +206,9 @@ function uploadQueue() {
                             .then( function() {
                                 if ( successes.length + fails.length === records.length ) {
                                     uploadOngoing = false;
-                                    if ( successes.length > 0 ) {
+                                    if ( authRequired ) {
+                                        gui.confirmLogin();
+                                    } else if ( successes.length > 0 ) {
                                         // let gui send a feedback message
                                         $( document ).trigger( 'queuesubmissionsuccess', successes );
                                     }
@@ -216,9 +217,24 @@ function uploadQueue() {
                                 }
                             } );
                     } );
-                }, new Q( null ) );
+                }, Promise.resolve() );
             } );
     }
+}
+
+function exportToZip( formTitle ) {
+
+    $exportButton.prop( 'disabled', true );
+
+    return exporter.recordsToZip( settings.enketoId, formTitle )
+        .then( function( blob ) {
+            $exportButton.prop( 'disabled', false );
+            return blob;
+        } )
+        .catch( function( error ) {
+            $exportButton.prop( 'disabled', false );
+            throw error;
+        } );
 }
 
 /**
@@ -297,7 +313,6 @@ uploadProgress = {
  */
 function _updateRecordList() {
     var $li;
-    // deferred = Q.defer();
 
     // reset the list
     $exportButton.prop( 'disabled', true );
@@ -322,6 +337,7 @@ function _updateRecordList() {
                 $recordList.empty().append( '<li class="record-list__records--none">' + t( 'record-list.norecords' ) + '</li>' );
             } else {
                 $recordList.find( '.record-list__records--none' ).remove();
+                $exportButton.prop( 'disabled', false );
             }
 
             // remove records that no longer exist
@@ -333,9 +349,6 @@ function _updateRecordList() {
                     $rec.next( '.msg' ).addBack().remove();
                 }
             } );
-
-            // TODO enable export button
-            // $exportButton.prop( 'disabled', false );
 
             records.forEach( function( record ) {
                 // if there is at least one record not marked as draft
@@ -365,13 +378,11 @@ function _updateRecordList() {
 function flush() {
     return store.flushTable( 'records' )
         .then( function() {
-            store.flushTable( 'files' );
+            return store.flushTable( 'files' );
         } )
         .then( function() {
-            var deferred = Q.defer();
-            deferred.resolve();
             console.log( 'Done! The record store is empty now.' );
-            return deferred.promise;
+            return;
         } );
 }
 
@@ -388,5 +399,6 @@ module.exports = {
     flush: flush,
     getCounterValue: getCounterValue,
     setActive: setActive,
-    uploadQueue: uploadQueue
+    uploadQueue: uploadQueue,
+    exportToZip: exportToZip
 };

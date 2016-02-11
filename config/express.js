@@ -1,7 +1,5 @@
 'use strict';
 
-var themesSupported = [];
-var languagesSupported = [];
 var express = require( 'express' );
 var path = require( 'path' );
 var bodyParser = require( 'body-parser' );
@@ -19,9 +17,11 @@ var debug = require( 'debug' )( 'express' );
 
 // general 
 for ( var item in config ) {
-    app.set( item, app.get( item ) || config[ item ] );
+    if ( config.hasOwnProperty( item ) ) {
+        app.set( item, app.get( item ) || config[ item ] );
+    }
 }
-app.set( 'port', process.env.PORT || app.get( "port" ) || 3000 );
+app.set( 'port', process.env.PORT || app.get( 'port' ) || 3000 );
 app.set( 'env', process.env.NODE_ENV || 'production' );
 app.set( 'authentication cookie name', '__enketo' );
 
@@ -69,16 +69,15 @@ app.use( function( req, res, next ) {
     res.locals.logo = req.app.get( 'logo' );
     res.locals.defaultTheme = req.app.get( 'default theme' ).replace( 'theme-', '' ) || 'kobo';
     res.locals.title = req.app.get( 'app name' );
-    res.locals.offline = req.app.get( 'offline enabled' ); // temporary to show 'Experimental' warning
     res.locals.directionality = function() {
         // TODO: remove this when https://github.com/i18next/i18next/pull/413 is merged, copied to node-i18next, and published.
         // After that we can just access i18n.dir(), in the jade template
         var currentLng = i18n.lng();
-        var rtlLangs = [ "ar", "shu", "sqr", "ssh", "xaa", "yhd", "yud", "aao", "abh", "abv", "acm",
-            "acq", "acw", "acx", "acy", "adf", "ads", "aeb", "aec", "afb", "ajp", "apc", "apd", "arb",
-            "arq", "ars", "ary", "arz", "auz", "avl", "ayh", "ayl", "ayn", "ayp", "bbz", "pga", "he",
-            "iw", "ps", "pbt", "pbu", "pst", "prp", "prd", "ur", "ydd", "yds", "yih", "ji", "yi", "hbo",
-            "men", "xmn", "fa", "jpr", "peo", "pes", "prs", "dv", "sam"
+        var rtlLangs = [ 'ar', 'shu', 'sqr', 'ssh', 'xaa', 'yhd', 'yud', 'aao', 'abh', 'abv', 'acm',
+            'acq', 'acw', 'acx', 'acy', 'adf', 'ads', 'aeb', 'aec', 'afb', 'ajp', 'apc', 'apd', 'arb',
+            'arq', 'ars', 'ary', 'arz', 'auz', 'avl', 'ayh', 'ayl', 'ayn', 'ayp', 'bbz', 'pga', 'he',
+            'iw', 'ps', 'pbt', 'pbu', 'pst', 'prp', 'prd', 'ur', 'ydd', 'yds', 'yih', 'ji', 'yi', 'hbo',
+            'men', 'xmn', 'fa', 'jpr', 'peo', 'pes', 'prs', 'dv', 'sam'
         ];
 
         if ( rtlLangs.some( function( lang ) {
@@ -103,7 +102,7 @@ fs.readdirSync( controllersPath ).forEach( function( file ) {
 app.use( logger( ( app.get( 'env' ) === 'development' ? 'dev' : 'tiny' ) ) );
 
 // error handlers
-app.use( errorHandler[ "404" ] );
+app.use( errorHandler[ '404' ] );
 if ( app.get( 'env' ) === 'development' ) {
     app.use( errorHandler.development );
 }

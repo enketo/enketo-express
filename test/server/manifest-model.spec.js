@@ -1,21 +1,20 @@
-/* global describe, require, it, before, after, beforeEach, afterEach */
-"use strict";
+/* global describe, require, it, beforeEach */
+'use strict';
 
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var model = require( '../../app/models/manifest-model' ),
-    Q = require( "q" ),
-    chai = require( "chai" ),
-    expect = chai.expect;
+var model = require( '../../app/models/manifest-model' );
+var chai = require( 'chai' );
+var expect = chai.expect;
 
 describe( 'Manifest Model', function() {
 
     describe( 'creating a manifest', function() {
-        var result,
-            dataUri = 'data:image/svg+xml;base64,PD94bW==',
-            localLink = '#LOCAL',
-            html = '<html>' +
+        var result;
+        var dataUri = 'data:image/svg+xml;base64,PD94bW==';
+        var localLink = '#LOCAL';
+        var html = '<html>' +
             '<head><link href="/css/theme-kobo.css"/></head>' +
             '<body><script src="/js/src/module/gui.js"></script><img src="' + dataUri + '" /><img src="' + localLink + '" /></body>' +
             '</html>';

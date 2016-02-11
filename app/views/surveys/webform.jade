@@ -1,24 +1,18 @@
 extends ../layout
 
-block redirect
-  <!--[if lt IE 10 ]><script>window.location = '/modern-browsers';</script><![endif]-->
-
 block style
   link(rel='stylesheet', media='all', type='text/css' href='/css/theme-#{defaultTheme}.css') 
   link(rel='stylesheet', media='print', type='text/css' href='/css/theme-#{defaultTheme}.print.css') 
 
 block script
-  - var suffix = (type && type == "edit") ? "-edit" : ""
-  if environment == "production"
-    script(src="/js/enketo-webform#{suffix}-bundle.min.js")
+  - var suffix = (type && type == 'edit') ? '-edit' : ''
+  if environment == 'production'
+    script(src='/js/enketo-webform#{suffix}-bundle.min.js')
   else
-    script(src="/js/enketo-webform#{suffix}-dev-bundle.js")
+    script(src='/js/enketo-webform#{suffix}-dev-bundle.js')
  
 block content
-  if manifest
-    .alert-box.info(style="text-align: center;") Offline-enabled forms are experimental. Use only for testing. 
-      a(href="https://github.com/kobotoolbox/enketo-express/issues" target="_top") Report new bugs
-      | .
+  include component/_notification
   .main
     article.paper
       include component/_form-header

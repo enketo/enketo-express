@@ -158,10 +158,12 @@
     },
     "error": {
         "code": "Feilmeldingskode: __code__",
+        "dataloadfailed": "Klarte ikke å laste inn data fra __url__",
         "econnrefused": "Kunne ikke koble til Server",
         "encryptionnotsupported": "Dette skjemaet krever lokal kryptering av oppføringer. Uheldigvis er dette ikke støttet enda, men vi anbefaler at du bruker ODK Collect for datainnsamling med dette skjemaet.",
         "instancenotfound": "Oppføringen er ikke tilgjengelig. Den kan ha utløpt.",
         "invalidediturl": "Ikke en gyldig redigerings-adresse",
+        "loadfailed": "Klarte ikke å laste inn __resource__",
         "notfoundinformlist": "Skjemaet med ID __formId__ ble ikke funnet i /formList",
         "pagenotfound": "Side ikke Funnet",
         "surveyidnotactive": "Skjemaet med denne IDen er ikke lengre aktivt",
@@ -199,15 +201,20 @@
     },
     "langs": {
         "ar": "Arabisk",
+        "cs": "Czech",
         "de": "Tysk",
         "el": "Gresk",
         "en": "Engelsk",
         "es": "Spansk",
+        "fr": "French",
         "he": "Hebraisk",
         "hi": "Hindi",
+        "it": "Italian",
         "km": "Khmer",
         "nl": "Nederlansk",
+        "no": "Norsk",
         "ro": "Rumensk",
+        "sk": "Slovak",
         "supported": "Støttede språk:",
         "sw": "Swahili",
         "th": "Thai",
@@ -250,7 +257,9 @@
     },
     "store": {
         "error": {
-            "notavailable": "Nettleserlagring er behøves men er ikke tilgjengelig, er ødelagt eller ikke skrivbar. Hvis du er i modus for \"privat surfing,\" vennligst bytt til vanlig modus eller en annen nettleser. (error: __error__)"
+            "iosusesafari": "Your iOS browser is not able to run this form. On iOS, we recommend using Safari.",
+            "notavailable": "Nettleserlagring er behøves men er ikke tilgjengelig, er ødelagt eller ikke skrivbar. Hvis du er i modus for \"privat surfing,\" vennligst bytt til vanlig modus eller en annen nettleser. (error: __error__)",
+            "notsupported": "Your browser is not able to run this form. We recommend using a modern browser."
         }
     },
     "submission": {

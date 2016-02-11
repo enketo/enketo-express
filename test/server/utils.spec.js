@@ -1,10 +1,10 @@
-/* global describe, require, it, beforeEach, afterEach */
-"use strict";
+/* global describe, require, it */
+'use strict';
 
-var utils = require( '../../app/lib/utils' ),
-    chai = require( "chai" ),
-    expect = chai.expect,
-    chaiAsPromised = require( "chai-as-promised" );
+var utils = require( '../../app/lib/utils' );
+var chai = require( 'chai' );
+var expect = chai.expect;
+var chaiAsPromised = require( 'chai-as-promised' );
 
 chai.use( chaiAsPromised );
 
@@ -12,22 +12,22 @@ describe( 'Utilities', function() {
 
     describe( 'helper to clean openRosaServer URLs', function() {
         [
-            "https://ona.io/enketo",
-            " https://ona.io/enketo",
-            "https://ona.io/enketo/",
-            "http://ona.io/enketo",
-            "https://www.ona.io/enketo",
-            " https://www.ona.io/enketo",
-            "https://www.ona.io/enketo/",
-            "http://www.ona.io/enketo",
-            "https://ona.io/enketo ",
-            " https://ona.io/enketo ",
-            "https://ona.io/enketo/ ",
-            "http://ona.io/enketo ",
-            "https://www.ona.io/enketo ",
-            " https://www.ona.io/enketo ",
-            "https://www.ona.io/enketo/ ",
-            "http://www.ona.io/enketo "
+            'https://ona.io/enketo',
+            ' https://ona.io/enketo',
+            'https://ona.io/enketo/',
+            'http://ona.io/enketo',
+            'https://www.ona.io/enketo',
+            ' https://www.ona.io/enketo',
+            'https://www.ona.io/enketo/',
+            'http://www.ona.io/enketo',
+            'https://ona.io/enketo ',
+            ' https://ona.io/enketo ',
+            'https://ona.io/enketo/ ',
+            'http://ona.io/enketo ',
+            'https://www.ona.io/enketo ',
+            ' https://www.ona.io/enketo ',
+            'https://www.ona.io/enketo/ ',
+            'http://www.ona.io/enketo '
         ].forEach( function( url ) {
             it( 'returns clean url for ' + url, function() {
                 expect( utils.cleanUrl( url ) ).to.equal( 'ona.io/enketo' );
@@ -35,22 +35,22 @@ describe( 'Utilities', function() {
         } );
 
         [
-            "https://enketo.surveycto.com",
-            " https://enketo.surveycto.com",
-            "https://enketo.surveycto.com/",
-            "http://enketo.surveycto.com",
-            "https://www.enketo.surveycto.com",
-            " https://www.enketo.surveycto.com",
-            "https://www.enketo.surveycto.com/",
-            "http://www.enketo.surveycto.com",
-            "https://enketo.surveycto.com ",
-            " https://enketo.surveycto.com ",
-            "https://enketo.surveycto.com/ ",
-            "http://enketo.surveycto.com ",
-            "https://www.enketo.surveycto.com ",
-            " https://www.enketo.surveycto.com ",
-            "https://www.enketo.surveycto.com ",
-            "http://www.enketo.surveycto.com "
+            'https://enketo.surveycto.com',
+            ' https://enketo.surveycto.com',
+            'https://enketo.surveycto.com/',
+            'http://enketo.surveycto.com',
+            'https://www.enketo.surveycto.com',
+            ' https://www.enketo.surveycto.com',
+            'https://www.enketo.surveycto.com/',
+            'http://www.enketo.surveycto.com',
+            'https://enketo.surveycto.com ',
+            ' https://enketo.surveycto.com ',
+            'https://enketo.surveycto.com/ ',
+            'http://enketo.surveycto.com ',
+            'https://www.enketo.surveycto.com ',
+            ' https://www.enketo.surveycto.com ',
+            'https://www.enketo.surveycto.com ',
+            'http://www.enketo.surveycto.com '
         ].forEach( function( url ) {
             it( 'returns clean url for ' + url, function() {
                 expect( utils.cleanUrl( url ) ).to.equal( 'enketo.surveycto.com' );
@@ -58,22 +58,22 @@ describe( 'Utilities', function() {
         } );
 
         [
-            "https://ENKETO.surveycto.com/PaTH",
-            " https://ENKETO.surveycto.com/PaTH",
-            "https://ENKETO.surveycto.com/PaTH",
-            "http://ENKETO.surveycto.com/PaTH/",
-            "https://www.ENKETO.surveycto.com/PaTH",
-            " https://www.ENKETO.surveycto.com/PaTH",
-            "https://www.ENKETO.surveycto.com/PaTH/",
-            "http://www.ENKETO.surveycto.com/PaTH",
-            "https://ENKETO.surveycto.com/PaTH ",
-            " https://ENKETO.surveycto.com/PaTH ",
-            "https://ENKETO.surveycto.com/PaTH/ ",
-            "http://ENKETO.surveycto.com/PaTH ",
-            "https://www.ENKETO.surveycto.com/PaTH ",
-            " https://www.ENKETO.surveycto.com/PaTH ",
-            "https://www.ENKETO.surveycto.com/PaTH/ ",
-            "http://www.ENKETO.surveycto.com/PaTH "
+            'https://ENKETO.surveycto.com/PaTH',
+            ' https://ENKETO.surveycto.com/PaTH',
+            'https://ENKETO.surveycto.com/PaTH',
+            'http://ENKETO.surveycto.com/PaTH/',
+            'https://www.ENKETO.surveycto.com/PaTH',
+            ' https://www.ENKETO.surveycto.com/PaTH',
+            'https://www.ENKETO.surveycto.com/PaTH/',
+            'http://www.ENKETO.surveycto.com/PaTH',
+            'https://ENKETO.surveycto.com/PaTH ',
+            ' https://ENKETO.surveycto.com/PaTH ',
+            'https://ENKETO.surveycto.com/PaTH/ ',
+            'http://ENKETO.surveycto.com/PaTH ',
+            'https://www.ENKETO.surveycto.com/PaTH ',
+            ' https://www.ENKETO.surveycto.com/PaTH ',
+            'https://www.ENKETO.surveycto.com/PaTH/ ',
+            'http://www.ENKETO.surveycto.com/PaTH '
         ].forEach( function( url ) {
             it( 'returns clean url with lowercased domain and path for ' + url, function() {
                 expect( utils.cleanUrl( url ) ).to.equal( 'enketo.surveycto.com/path' );
@@ -81,14 +81,14 @@ describe( 'Utilities', function() {
         } );
 
         [
-            "https://255.255.255.255/AGGREGATE",
-            " https://255.255.255.255/AGGREGATE",
-            "https://255.255.255.255/AGGREGATE/",
-            "http://255.255.255.255/AGGREGATE",
-            "https://255.255.255.255/AGGREGATE ",
-            " https://255.255.255.255/AGGREGATE ",
-            "https://255.255.255.255/AGGREGATE/ ",
-            "http://255.255.255.255/AGGREGATE "
+            'https://255.255.255.255/AGGREGATE',
+            ' https://255.255.255.255/AGGREGATE',
+            'https://255.255.255.255/AGGREGATE/',
+            'http://255.255.255.255/AGGREGATE',
+            'https://255.255.255.255/AGGREGATE ',
+            ' https://255.255.255.255/AGGREGATE ',
+            'https://255.255.255.255/AGGREGATE/ ',
+            'http://255.255.255.255/AGGREGATE '
         ].forEach( function( url ) {
             it( 'returns clean IP url with lowercased path for ' + url, function() {
                 expect( utils.cleanUrl( url ) ).to.equal( '255.255.255.255/aggregate' );
@@ -101,8 +101,8 @@ describe( 'Utilities', function() {
         [
             [ null, undefined, null ],
             [ null, null, true ],
-            [ "", "a", null ],
-            [ "", "", null ],
+            [ '', 'a', null ],
+            [ '', '', null ],
             [ {
                     a: 2,
                     b: 3
@@ -118,7 +118,7 @@ describe( 'Utilities', function() {
                 }, {
                     b: 3,
                     a: 2,
-                    c: "a"
+                    c: 'a'
                 },
                 false
             ]

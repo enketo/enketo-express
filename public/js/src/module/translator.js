@@ -1,19 +1,3 @@
-/**
- * @preserve Copyright 2014 Martijn van de Rijdt
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 'use strict';
 
 var settings = require( './settings' );
@@ -23,7 +7,7 @@ var $ = require( 'jquery' );
 var options;
 
 // The postProcessor assumes that array values with line breaks should be divided into HTML paragraphs.
-i18next.addPostProcessor( "htmlParagraphs", function( value, key, options ) {
+i18next.addPostProcessor( 'htmlParagraphs', function( value, key ) {
     var paragraphs = value.split( '\n' );
     return ( paragraphs.length > 1 ) ? '<p>' + paragraphs.join( '</p><p>' ) + '</p>' : value;
 } );
@@ -46,7 +30,10 @@ options = {
     // use custom loader to avoid query string timestamp (messes up applicationCache)
     customLoad: function( lng, ns, options, loadComplete ) {
         // load the file for given language and namespace
-        $.get( '/locales/__lng__/translation.json'.replace( '__lng__', lng ) )
+        $.ajax( {
+                url: '/locales/__lng__/translation.json'.replace( '__lng__', lng ),
+                async: false
+            } )
             .done( function( data ) {
                 loadComplete( null, data );
             } )

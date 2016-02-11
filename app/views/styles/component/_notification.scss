@@ -1,0 +1,18 @@
+.notification {
+    border: 2px solid $brand-primary-color;
+    width: calc((100% - #{$max-content-width}) / 2 - 40px);
+    min-height: 140px;
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+    background: white;
+    line-height: 22px;
+    top: 100px;
+    left: 20px;
+}
+
+@media screen and (max-width: 1023px) {
+    .notification {
+        display: none;
+    }
+}

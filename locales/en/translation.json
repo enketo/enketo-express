@@ -3,6 +3,24 @@
     "flushdb": "Clear Storage"
   },
   "alert": {
+    "addtohomescreen": {
+      "androidchrome": {
+        "msg": "To add this form to your Home screen, click the browser settings icon __image1__ and select: 'Add to Home screen'."
+      },
+      "androidfirefox": {
+        "msg": [
+          "To add this form to your Homescreen:",
+          "1. Add this page to your Firefox bookmarks by clicking the settings icon __image1__ and then the star icon __image2__.",
+          "2. Open your bookmarks by opening a new page and clicking the Bookmarks tab.",
+          "3. Click-and-hold your form until a pop-up menu appears.",
+          "4. Select 'Add to Home Screen'."
+        ]
+      },
+      "heading": "Add to Home Screen",
+      "iossafari": {
+        "msg": "To add this form to your Home screen, click the share icon __image1__ in the top right of your browser, and select: '+ Add to Home Screen'."
+      }
+    },
     "appupdated": {
       "heading": "App Updated!",
       "msg": "A new version of this application has been downloaded. Refresh this page to load the updated version."
@@ -10,6 +28,19 @@
     "default": {
       "button": "Close",
       "heading": "Alert"
+    },
+    "export": {
+      "alternativequestion": "alternative download - online",
+      "error": {
+        "filecreatedmsg": "Nevertheless, an incomplete export file was still created.",
+        "heading": "Export Error",
+        "linknotcreated": "Failed to create an export link for unsubmitted records. Are you online?",
+        "msg": "Errors occurred during creating of the record export file for unsubmitted records. Errors: __errors__"
+      },
+      "success": {
+        "heading": "Export Created",
+        "msg": "Export file created for all unsubmitted records belonging to this form."
+      }
     },
     "formupdated": {
       "heading": "Form Updated!",
@@ -158,10 +189,12 @@
   },
   "error": {
     "code": "Error Code: __code__",
+    "dataloadfailed": "Failed to load data from __url__",
     "econnrefused": "Could not connect with Server",
     "encryptionnotsupported": "This form requires local encryption of records. Unfortunately this not yet supported. We recommend using ODK Collect for data collection with this form.",
     "instancenotfound": "Record not present. It may have expired.",
     "invalidediturl": "Not a valid edit URL",
+    "loadfailed": "Failed to load __resource__",
     "notfoundinformlist": "Form with ID __formId__ not found in /formList",
     "pagenotfound": "Page not Found",
     "surveyidnotactive": "Survey with this ID no longer active",
@@ -199,20 +232,26 @@
   },
   "langs": {
     "ar": "Arabic",
+    "cs": "Czech",
     "de": "German",
     "el": "Greek",
     "en": "English",
     "es": "Spanish",
+    "fa": "Persian",
+    "fr": "French",
     "he": "Hebrew",
     "hi": "Hindi",
+    "it": "Italian",
     "km": "Khmer",
     "nl": "Dutch",
     "no": "Norwegian",
     "ro": "Romanian",
+    "sk": "Slovak",
     "supported": "Languages supported: ",
     "sw": "Swahili",
     "th": "Thai",
-    "vi": "Vietnamese"
+    "vi": "Vietnamese",
+    "zh": "Chinese"
   },
   "page": {
     "modernbrowsers": {
@@ -251,13 +290,16 @@
   },
   "store": {
     "error": {
-      "notavailable": "Browser storage is required but is not available, is corrupted, or is not writeable. If you are in 'private browsing' mode please switch to regular mode, otherwise switch to another browser. (error: __error__)"
+      "iosusesafari": "Your iOS browser is not able to run this form. On iOS, we recommend using Safari.",
+      "notavailable": "Browser storage is required but is not available, is corrupted, or is not writeable. If you are in 'private browsing' mode please switch to regular mode, otherwise switch to another browser. (error: __error__)",
+      "notsupported": "Your browser is not able to run this form. We recommend using a modern browser."
     }
   },
   "submission": {
     "http0": "Failed (Offline?).",
     "http2xx": "Unexpected response when submitting data.",
     "http400": "Data server did not accept data.",
+    "http401": "Authentication problem with data server.",
     "http403": "Not allowed to post data to this data server.",
     "http404": "Submission service on data server not found.",
     "http413": "Data is too large.",

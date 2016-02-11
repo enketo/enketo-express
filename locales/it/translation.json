@@ -87,6 +87,12 @@
         }
     },
     "confirm": {
+        "autosaveload": {
+            "heading": "Trovati Record NON Salvati",
+            "msg": "Enketo ha trovato record non salvati.Voui caricarli o eliminarli?",
+            "negButton": "Elimina",
+            "posButton": "Carica Record"
+        },
         "default": {
             "heading": "Sei sicuro?",
             "msg": "Prego confermare quest'operazione",
@@ -139,6 +145,10 @@
             "unkownerror": "Si &egrave; verificato un errore sconosciuto durante il salvataggio."
         }
     },
+    "constraint": {
+        "invalid": "Valore non permesso",
+        "required": "Questo campo è obbligatorio"
+    },
     "contact": {
         "admin": "Prego contattare l'amministratore del sondaggio",
         "support": "Prego contattare __supportEmail__ ."
@@ -148,6 +158,7 @@
     },
     "error": {
         "code": "Errore codice: __code__",
+        "dataloadfailed": "Caricamento dati __url__ fallito",
         "econnrefused": "Impossibile connetersi con il server",
         "encryptionnotsupported": "Questo modulo richiede la crittografia locale dei record . Sfortunatamente non &egrave; ancora supportata . Per questo modulo si consiglia di utilizzare ODK Collect per la raccolta dei dati.",
         "instancenotfound": "Record non presente. Potrebbe essere scaduto.",
@@ -197,6 +208,7 @@
         "hi": "Hindi",
         "km": "Khmer",
         "nl": "Olandese",
+        "no": "Norvegese",
         "ro": "Rumeno",
         "supported": "Lingue supportate:",
         "sw": "Swahili",
@@ -215,7 +227,7 @@
         },
         "offline": {
             "heading": "Impossibile accedere alla pagina richiesta",
-            "msg1": "Questa pagina &egrave; accessibile solo quando &egrave; presente una connessione ad Internet ed il server &egrave; accessibile (tranne se la pagina non esiste)."
+            "msg1": "Questa pagina è raggiungibile solo quando il browser è connesso ad internet e il server è accessibile (altrimenti la pagina non esiste)"
         }
     },
     "prompt": {

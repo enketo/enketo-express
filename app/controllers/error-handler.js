@@ -1,6 +1,6 @@
 'use strict';
 
-var debug = require( 'debug' )( 'error-handler' );
+// var debug = require( 'debug' )( 'error-handler' );
 
 function getErrorMessage( req, error ) {
     if ( error.message ) {
@@ -46,8 +46,8 @@ module.exports = {
             res.render( 'error', body );
         }
     },
-    "404": function( req, res, next ) {
-        var err = new Error( req.i18n.t( 'error.pagenotfound' /* 'Page not Found'*/ ) );
+    '404': function( req, res, next ) {
+        var err = new Error( req.i18n.t( 'error.pagenotfound' ) );
         err.status = 404;
         next( err );
     }

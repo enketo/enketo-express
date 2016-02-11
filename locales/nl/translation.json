@@ -3,6 +3,24 @@
         "flushdb": "Verwijder Opslag"
     },
     "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "Om dit formulier toe te voegen aan uw beginscherm, klikt u op het pictogram browserinstellingen __image1__ en selecteer: 'Zet in beginscherm'."
+            },
+            "androidfirefox": {
+                "msg": [
+                    "Om dit formulier toe te voegen aan uw beginscherm:",
+                    "1. Voeg deze pagina toe aan uw Firefox bookmarks door te klikken op het pictogram voor instellingen __image1__ en vervolgens het ster pictogram __image2__.",
+                    "2. Open uw bookmarks door een nieuwe pagina te openen en te klikken op het tabblad Bladwijzers.",
+                    "3. Klik-en-houd uw survey tot een pop-up menu verschijnt.",
+                    "4. Selecteer 'Zet in beginscherm'."
+                ]
+            },
+            "heading": "Zet in beginscherm",
+            "iossafari": {
+                "msg": "Om dit formulier toe te voegen aan uw beginscherm, klikt u op het pictogram Delen __image1__ in de rechter bovenhoek van uw browser, en selecteer: '+ zet in beginscherm."
+            }
+        },
         "appupdated": {
             "heading": "App Bijgewerkt!",
             "msg": "Een nieuwe versie van deze applicatie is gedownload. Vernieuw deze pagina om de bijgewerkte versie te laden."
@@ -10,6 +28,19 @@
         "default": {
             "button": "Sluit",
             "heading": "Let op"
+        },
+        "export": {
+            "alternativequestion": "alternatief downloaden - online",
+            "error": {
+                "filecreatedmsg": "Toch werd een onvolledig exportbestand gemaakt.",
+                "heading": "Export Fout",
+                "linknotcreated": "Niet gelukt een export link voor niet-verzonden records te creeren. Bent u online?",
+                "msg": "Fouten opgetreden tijdens het maken van het exportbestand voor unsubmitted records. Fouten: __errors__"
+            },
+            "success": {
+                "heading": "Export Gemaakt",
+                "msg": "Exportbestand gemaakt voor alle niet-verzonden records die behoren by deze survey."
+            }
         },
         "formupdated": {
             "heading": "Enquete Bijgewerkt!",
@@ -87,6 +118,12 @@
         }
     },
     "confirm": {
+        "autosaveload": {
+            "heading": "Niet Opgeslagen Record Gevonden",
+            "msg": "Enketo heeft een niet opgeslagen record gevonden. Wil je dit record laden of verwijderen?",
+            "negButton": "Verwijder",
+            "posButton": "Laad Record"
+        },
         "default": {
             "heading": "Weet je het zeker?",
             "msg": "Confirmeer deze aktie",
@@ -139,6 +176,10 @@
             "unkownerror": "Een onbekende fout trad op tijdens het opslaan."
         }
     },
+    "constraint": {
+        "invalid": "Waarde niet toegestaan",
+        "required": "Dit veld is verplicht"
+    },
     "contact": {
         "admin": "Contacteer de enquete administrateur aub.",
         "support": "Contacteer __supportEmail__ aub."
@@ -148,10 +189,12 @@
     },
     "error": {
         "code": "Fout Code: __code__",
+        "dataloadfailed": "Kon data niet laden van __url__",
         "econnrefused": "Kon niet verbinden met de Server",
         "encryptionnotsupported": "De informatie verzameld met deze enquete dient versleuteld te worden. Helaas is dit nog niet ondersteund. We bevelen aan om ODK Collect te gebruiken voor deze enquete.",
         "instancenotfound": "Record niet gevonden. Het kan verlopen zijn.",
         "invalidediturl": "Niet een geldig edit URL",
+        "loadfailed": "Kon __resource__ niet laden",
         "notfoundinformlist": "Enquete met ID __formId__ niet gevonden in /formList",
         "pagenotfound": "Pagina niet gevonden",
         "surveyidnotactive": "Enquete met dit ID is niet langer aktief",
@@ -189,19 +232,26 @@
     },
     "langs": {
         "ar": "Arabisch",
+        "cs": "Tsjechisch",
         "de": "Duits",
         "el": "Grieks",
         "en": "Engels",
         "es": "Spaans",
+        "fa": "Perzisch",
+        "fr": "Frans",
         "he": "Hebreeuws",
         "hi": "Hindi",
+        "it": "Italiaans",
         "km": "Khmer",
         "nl": "Nederlands",
+        "no": "Noorweegs",
         "ro": "Roemeens",
+        "sk": "Slowaaks",
         "supported": "Talen ondersteund:",
         "sw": "Swahili",
         "th": "Thai",
-        "vi": "Vietnamees"
+        "vi": "Vietnamees",
+        "zh": "Chinees"
     },
     "page": {
         "modernbrowsers": {
@@ -215,7 +265,7 @@
         },
         "offline": {
             "heading": "Kan de verzochte pagina niet laden.",
-            "msg1": "Deze pagine is alleen bereikbaar als de browser een Internet verbinding heeft en de server beschikbaar is (tenzij de pagina niet bestaat)."
+            "msg1": "Deze pagina is alleen toegankelijk als de browser een Internet verbinding heeft en de server bereikbaar is (tenzij de pagina niet bestaat)."
         }
     },
     "prompt": {
@@ -240,13 +290,16 @@
     },
     "store": {
         "error": {
-            "notavailable": "Browser opslag is benodigd maar niet beschikbaar, kapot, of niet beschrijfbaar. Als je in 'prive´ browsing' mode zit, schakel over naar de normale mode. Of probeer een ander browser. (fout: __error__)"
+            "iosusesafari": "Uw iOS browser kan deze survey niet laden. Op iOS raden wij aan Safari te gebruiken.",
+            "notavailable": "Browser opslag is benodigd maar niet beschikbaar, kapot, of niet beschrijfbaar. Als je in 'prive´ browsing' mode zit, schakel over naar de normale mode. Of probeer een ander browser. (fout: __error__)",
+            "notsupported": "Uw browser kan deze survey niet laden. We raden aan een moderne browser te gebruiken."
         }
     },
     "submission": {
         "http0": "Gefaald (Offline?)",
         "http2xx": "Onverwacht antwoord tijdens record verzending.",
         "http400": "Data server wilde het record niet accepteren.",
+        "http401": "Autorisatie probleem met de data server.",
         "http403": "Niet toegestaan om records te verzenden naar deze server.",
         "http404": "Ontvangst service niet gevonden op data server.",
         "http413": "Record is te groot.",

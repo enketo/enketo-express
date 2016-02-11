@@ -3,7 +3,7 @@
 var request = require( 'request' );
 var Auth = require( 'request/lib/auth' ).Auth;
 var TError = require( '../custom-error' ).TranslatedError;
-var Q = require( 'q' );
+var Promise = require( 'lie' );
 var config = require( '../../models/config-model' ).server;
 var debug = require( 'debug' )( 'openrosa-communicator' );
 var parser = new require( 'xml2js' ).Parser();
@@ -15,8 +15,6 @@ var parser = new require( 'xml2js' ).Parser();
  * @return {[type]}               promise
  */
 function getXFormInfo( survey ) {
-    var formListUrl;
-
     if ( !survey.openRosaServer ) {
         throw new Error( 'No server provided.' );
     }
@@ -39,7 +37,6 @@ function getXFormInfo( survey ) {
  * @return {[type]}         promise
  */
 function getXForm( survey ) {
-    var deferred = Q.defer();
 
     return _request( {
         url: survey.info.downloadUrl,
@@ -49,8 +46,7 @@ function getXForm( survey ) {
         }
     } ).then( function( xform ) {
         survey.xform = xform;
-        deferred.resolve( survey );
-        return deferred.promise;
+        return Promise.resolve( survey );
     } );
 }
 
@@ -62,14 +58,12 @@ function getXForm( survey ) {
  * @return {[type]}        promise
  */
 function getManifest( survey ) {
-    var error,
-        deferred = Q.defer();
 
     if ( !survey.info.manifestUrl ) {
         // a manifest is optional
-        deferred.resolve( survey );
+        return Promise.resolve( survey );
     } else {
-        _request( {
+        return _request( {
                 url: survey.info.manifestUrl,
                 auth: survey.credentials,
                 headers: {
@@ -81,11 +75,9 @@ function getManifest( survey ) {
                 survey.manifest = ( obj.manifest && obj.manifest.mediaFile ) ? obj.manifest.mediaFile.map( function( file ) {
                     return _simplifyFormObj( file );
                 } ) : [];
-                deferred.resolve( survey );
-            } )
-            .catch( deferred.reject );
+                return survey;
+            } );
     }
-    return deferred.promise;
 }
 
 /**
@@ -94,7 +86,9 @@ function getManifest( survey ) {
  * @return {[type]}        promise
  */
 function getMaxSize( survey ) {
-    var server, submissionUrl, options;
+    var server;
+    var submissionUrl;
+    var options;
 
     server = survey.openRosaServer;
     submissionUrl = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'submission' : server + '/submission';
@@ -133,37 +127,37 @@ function authenticate( survey ) {
  * Generates an Auhorization header that can be used to inject into piped requests (e.g. submissions).
  * 
  * @param  {string} url         [description]
- * @param  {{user: string, pass: string}} credentials [description]
+ * @param  {?{user: string, pass: string}=} credentials [description]
  * @return {string}             [description]
  */
 function getAuthHeader( url, credentials ) {
-    var auth, authHeader,
-        deferred = Q.defer(),
-        options = {
-            url: url,
-            method: 'head',
-            headers: {
-                'X-OpenRosa-Version': '1.0'
-            }
-        };
-
-    var req = request( options, function( error, response ) {
-        if ( response.statusCode === 401 ) {
-            // Using request's internal library we create an appropiate authorization header.
-            // This is a bit dangerous because internal changes in request/request, could break this code.
-            req.method = 'POST';
-            auth = new Auth( req );
-            auth.hasAuth = true;
-            auth.user = credentials.user;
-            auth.pass = credentials.pass;
-            authHeader = auth.onResponse( response );
-            deferred.resolve( authHeader );
-        } else {
-            deferred.resolve( null );
+    var auth;
+    var authHeader;
+    var options = {
+        url: url,
+        method: 'head',
+        headers: {
+            'X-OpenRosa-Version': '1.0'
         }
-    } );
+    };
 
-    return deferred.promise;
+    return new Promise( function( resolve ) {
+        var req = request( options, function( error, response ) {
+            if ( response.statusCode === 401 && credentials && credentials.user && credentials.pass ) {
+                // Using request's internal library we create an appropiate authorization header.
+                // This is a bit dangerous because internal changes in request/request, could break this code.
+                req.method = 'POST';
+                auth = new Auth( req );
+                auth.hasAuth = true;
+                auth.user = credentials.user;
+                auth.pass = credentials.pass;
+                authHeader = auth.onResponse( response );
+                resolve( authHeader );
+            } else {
+                resolve( null );
+            }
+        } );
+    } );
 }
 
 function getFormListUrl( server ) {
@@ -204,44 +198,45 @@ function getUpdatedRequestOptions( options ) {
  * @return {?string=}    promise
  */
 function _request( options ) {
-    var error, r, method,
-        deferred = Q.defer();
+    var error;
+    var r;
+    var method;
 
-    if ( typeof options !== 'object' && !options.url ) {
-        error = new Error( 'Bad request. No options provided.' );
-        error.status = 400;
-        deferred.reject( error );
-    }
-
-    options = getUpdatedRequestOptions( options );
-
-    // due to a bug in request/request using options.method with Digest Auth we won't pass method as an option
-    method = options.method;
-    delete options.method;
-
-    debug( 'sending ' + method + ' request to url: ' + options.url );
-
-    r = request[ method ]( options, function( error, response, body ) {
-        if ( error ) {
-            debug( 'Error occurred when requesting ' + options.url, error );
-            deferred.reject( error );
-        } else if ( response.statusCode === 401 ) {
-            error = new Error( 'Forbidden. Authorization Required.' );
-            error.status = response.statusCode;
-            deferred.reject( error );
-        } else if ( response.statusCode < 200 || response.statusCode >= 300 ) {
-            error = new Error( 'Request to ' + options.url + ' failed.' );
-            error.status = response.statusCode;
-            deferred.reject( error );
-        } else if ( method === 'head' ) {
-            deferred.resolve( response );
-        } else {
-            debug( 'response of request to ' + options.url + ' has status code: ', response.statusCode );
-            deferred.resolve( body );
+    return new Promise( function( resolve, reject ) {
+        if ( typeof options !== 'object' && !options.url ) {
+            error = new Error( 'Bad request. No options provided.' );
+            error.status = 400;
+            reject( error );
         }
-    } );
 
-    return deferred.promise;
+        options = getUpdatedRequestOptions( options );
+
+        // due to a bug in request/request using options.method with Digest Auth we won't pass method as an option
+        method = options.method;
+        delete options.method;
+
+        debug( 'sending ' + method + ' request to url: ' + options.url );
+
+        r = request[ method ]( options, function( error, response, body ) {
+            if ( error ) {
+                debug( 'Error occurred when requesting ' + options.url, error );
+                reject( error );
+            } else if ( response.statusCode === 401 ) {
+                error = new Error( 'Forbidden. Authorization Required.' );
+                error.status = response.statusCode;
+                reject( error );
+            } else if ( response.statusCode < 200 || response.statusCode >= 300 ) {
+                error = new Error( 'Request to ' + options.url + ' failed.' );
+                error.status = response.statusCode;
+                reject( error );
+            } else if ( method === 'head' ) {
+                resolve( response );
+            } else {
+                debug( 'response of request to ' + options.url + ' has status code: ', response.statusCode );
+                resolve( body );
+            }
+        } );
+    } );
 }
 
 /**
@@ -251,19 +246,17 @@ function _request( options ) {
  * @return {[type]}     promise
  */
 function _xmlToJson( xml ) {
-    var deferred = Q.defer();
 
-    parser.parseString( xml, function( error, data ) {
-        if ( error ) {
-            debug( 'error parsing xml and converting to JSON' );
-            deferred.reject( error );
-        } else {
-            debug( 'succesfully converted XML to JSON' );
-            deferred.resolve( data );
-        }
+    return new Promise( function( resolve, reject ) {
+        parser.parseString( xml, function( error, data ) {
+            if ( error ) {
+                debug( 'error parsing xml and converting to JSON' );
+                reject( error );
+            } else {
+                resolve( data );
+            }
+        } );
     } );
-
-    return deferred.promise;
 }
 
 /**
@@ -274,37 +267,39 @@ function _xmlToJson( xml ) {
  * @return {[type]}             promise
  */
 function _findFormAddInfo( formListXml, survey ) {
-    var found, index, error,
-        deferred = Q.defer();
+    var found;
+    var index;
+    var error;
 
     debug( 'looking for form object with id "' + survey.openRosaId + '" in formlist' );
-    // first convert to JSON to make it easier to work with
-    _xmlToJson( formListXml )
-        .then( function( formListObj ) {
-            if ( formListObj.xforms && formListObj.xforms.xform ) {
-                // find the form and stop looking when found
-                found = formListObj.xforms.xform.some( function( xform, i ) {
-                    index = i;
-                    return xform.formID.toString() === survey.openRosaId;
-                } );
-            }
 
-            if ( !found ) {
-                error = new TError( 'error.notfoundinformlist', {
-                    formId: "'" + survey.openRosaId + "'"
-                } );
-                error.status = 404;
-                deferred.reject( error );
-            } else {
-                debug( 'found form' );
-                survey.info = _simplifyFormObj( formListObj.xforms.xform[ index ] );
-                debug( 'survey.info', survey.info );
-                deferred.resolve( survey );
-            }
-        } )
-        .catch( deferred.reject );
+    return new Promise( function( resolve, reject ) {
+        // first convert to JSON to make it easier to work with
+        _xmlToJson( formListXml )
+            .then( function( formListObj ) {
+                if ( formListObj.xforms && formListObj.xforms.xform ) {
+                    // find the form and stop looking when found
+                    found = formListObj.xforms.xform.some( function( xform, i ) {
+                        index = i;
+                        return xform.formID.toString() === survey.openRosaId;
+                    } );
+                }
 
-    return deferred.promise;
+                if ( !found ) {
+                    error = new TError( 'error.notfoundinformlist', {
+                        formId: '"' + survey.openRosaId + '"'
+                    } );
+                    error.status = 404;
+                    reject( error );
+                } else {
+                    debug( 'found form' );
+                    survey.info = _simplifyFormObj( formListObj.xforms.xform[ index ] );
+                    debug( 'survey.info', survey.info );
+                    resolve( survey );
+                }
+            } )
+            .catch( reject );
+    } );
 }
 
 /**
@@ -319,8 +314,8 @@ function _simplifyFormObj( formObj ) {
         if ( formObj.hasOwnProperty( prop ) && Object.prototype.toString.call( formObj[ prop ] ) === '[object Array]' ) {
             formObj[ prop ] = formObj[ prop ][ 0 ].toString();
         }
-        formObj.manifestUrl = formObj.manifestUrl || null;
     }
+    formObj.manifestUrl = formObj.manifestUrl || null;
 
     return formObj;
 }

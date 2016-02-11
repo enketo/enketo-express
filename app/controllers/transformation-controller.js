@@ -1,16 +1,18 @@
 'use strict';
 
-var Promise = require( 'q' ).Promise;
+var Promise = require( 'lie' );
 var transformer = require( 'enketo-transformer' );
 var communicator = require( '../lib/communicator' );
 var surveyModel = require( '../models/survey-model' );
 var cacheModel = require( '../models/cache-model' );
 var account = require( '../models/account-model' );
 var user = require( '../models/user-model' );
+var utils = require( '../lib/utils' );
 var isArray = require( 'lodash/lang/isArray' );
 var express = require( 'express' );
+var url = require( 'url' );
 var router = express.Router();
-var debug = require( 'debug' )( 'transformation-controller' );
+// var debug = require( 'debug' )( 'transformation-controller' );
 
 module.exports = function( app ) {
     app.use( '/transform', router );
@@ -23,7 +25,7 @@ router
         next();
     } )
     .post( '/xform', getSurveyParts )
-    .post( '/xform/hash', getCachedSurveyHash );
+    .post( '/xform/hash', getSurveyHash );
 
 /**
  * Obtains HTML Form, XML model, and existing XML instance
@@ -82,19 +84,22 @@ function getSurveyParts( req, res, next ) {
  * @param  {Function} next [description]
  * @return {[type]}        [description]
  */
-function getCachedSurveyHash( req, res, next ) {
-    var s;
+function getSurveyHash( req, res, next ) {
     _getSurveyParams( req.body )
         .then( function( survey ) {
-            s = survey;
             return cacheModel.getHashes( survey );
         } )
-        .then( function( result ) {
-            _respond( res, result );
-            // update cache if necessary, asynchronously AFTER responding
-            // this is the ONLY mechanism by which a locally browser-stored form
-            // will be updated
-            _updateCache( s );
+        .then( function( survey ) {
+            return _updateCache( survey );
+        } )
+        .then( function( survey ) {
+            if ( survey.hasOwnProperty( 'credentials' ) ) {
+                delete survey.credentials;
+            }
+            res.status( 200 );
+            res.send( {
+                hash: _getCombinedHash( survey )
+            } );
         } )
         .catch( next );
 }
@@ -123,9 +128,13 @@ function _updateCache( survey ) {
         .then( cacheModel.check )
         .then( function( upToDate ) {
             if ( !upToDate ) {
+                delete survey.formHash;
+                delete survey.mediaHash;
+                delete survey.xslHash;
                 return _getFormDirectly( survey )
                     .then( cacheModel.set );
             }
+            return survey;
         } )
         .catch( function( error ) {
             if ( error.status === 401 || error.status === 404 ) {
@@ -146,7 +155,7 @@ function _updateCache( survey ) {
 function _addMediaMap( survey ) {
     var mediaMap = null;
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( function( resolve ) {
         if ( isArray( survey.manifest ) ) {
             survey.manifest.forEach( function( file ) {
                 mediaMap = mediaMap ? mediaMap : {};
@@ -171,8 +180,22 @@ function _toLocalMediaUrl( url ) {
     return localUrl;
 }
 
-function _respond( res, survey ) {
+function _checkQuota( survey ) {
+    var error;
 
+    return surveyModel
+        .getNumber( survey.account.linkedServer )
+        .then( function( quotaUsed ) {
+            if ( quotaUsed <= survey.account.quota ) {
+                return Promise.resolve( survey );
+            }
+            error = new Error( 'Forbidden. Quota exceeded.' );
+            error.status = 403;
+            throw error;
+        } );
+}
+
+function _respond( res, survey ) {
     delete survey.credentials;
 
     res.status( 200 );
@@ -181,40 +204,60 @@ function _respond( res, survey ) {
         // previously this was JSON.stringified, not sure why
         model: survey.model,
         theme: survey.theme,
+        branding: survey.account.branding,
         // The hash components are converted to deal with a node_redis limitation with storing and retrieving null.
         // If a form contains no media this hash is null, which would be an empty string upon first load.
-        // Subsequent cache checks will however get the value 'null' causing the form cache to be unnecessarily refreshed
+        // Subsequent cache checks will however get the string value 'null' causing the form cache to be unnecessarily refreshed
         // on the client.
-        hash: [ String( survey.formHash ), String( survey.mediaHash ), String( survey.xslHash ), String( survey.theme ) ].join( '-' )
+        hash: _getCombinedHash( survey )
     } );
+}
+
+function _getCombinedHash( survey ) {
+    var brandingHash = ( survey.account.branding && survey.account.branding.source ) ? utils.md5( survey.account.branding.source ) : '';
+    return [ String( survey.formHash ), String( survey.mediaHash ), String( survey.xslHash ), String( survey.theme ), String( brandingHash ) ].join( '-' );
 }
 
 function _getSurveyParams( params ) {
     var error;
-    var cleanId;
+    var urlObj;
+    var domain;
 
     if ( params.enketoId ) {
         return surveyModel.get( params.enketoId )
-            .then( account.check );
+            .then( account.check )
+            .then( _checkQuota );
     } else if ( params.serverUrl && params.xformId ) {
         return account.check( {
-            openRosaServer: params.serverUrl,
-            openRosaId: params.xformId
-        } );
-    } else {
-        return new Promise( function( resolve, reject ) {
-            if ( params.xformUrl ) {
-                // do not check account
-                resolve( {
+                openRosaServer: params.serverUrl,
+                openRosaId: params.xformId
+            } )
+            .then( _checkQuota );
+    } else if ( params.xformUrl ) {
+        urlObj = url.parse( params.xformUrl );
+        if ( !urlObj || !urlObj.protocol || !urlObj.host ) {
+            error = new Error( 'Bad Request. Form URL is invalid.' );
+            error.status = 400;
+            throw error;
+        }
+        // The previews using the xform parameter are less strictly checked.
+        // If an account with the domain is active, the check will pass.
+        domain = urlObj.protocol + '//' + urlObj.host;
+        return account.check( {
+                openRosaServer: domain
+            } )
+            .then( function( survey ) {
+                // no need to check quota
+                return Promise.resolve( {
                     info: {
                         downloadUrl: params.xformUrl
-                    }
+                    },
+                    account: survey.account
                 } );
-            } else {
-                error = new Error( 'Bad Request. Survey information not complete.' );
-                error.status = 400;
-                reject( error );
-            }
-        } );
+            } );
+    } else {
+        error = new Error( 'Bad Request. Survey information not complete.' );
+        error.status = 400;
+        throw error;
     }
 }

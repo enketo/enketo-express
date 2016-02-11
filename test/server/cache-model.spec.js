@@ -1,20 +1,21 @@
-/* global describe, require, it, before, after, beforeEach, afterEach */
-"use strict";
+/* global describe, require, it, beforeEach, afterEach */
+'use strict';
 
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var survey,
-    Q = require( "q" ),
-    chai = require( "chai" ),
-    expect = chai.expect,
-    chaiAsPromised = require( "chai-as-promised" ),
-    redis = require( "redis" ),
-    config = require( "../../app/models/config-model" ).server,
-    client = redis.createClient( config.redis.cache.port, config.redis.cache.host, {
-        auth_pass: config.redis.cache.password
-    } ),
-    model = require( '../../app/models/cache-model' );
+var Promise = require( 'lie' );
+var chai = require( 'chai' );
+var expect = chai.expect;
+var chaiAsPromised = require( 'chai-as-promised' );
+var redis = require( 'redis' );
+var config = require( '../../app/models/config-model' ).server;
+var client = redis.createClient( config.redis.cache.port, config.redis.cache.host, {
+    auth_pass: config.redis.cache.password
+} );
+var model = require( '../../app/models/cache-model' );
+
+var survey;
 
 chai.use( chaiAsPromised );
 // select database #15 to use as the test database
@@ -83,17 +84,17 @@ describe( 'Cache Model', function() {
     } );
 
     describe( 'expiration', function() {
-        var expiration = 30 * 24 * 60 * 60 * 1000,
-            getTtl = function( key ) {
-                var deferred = Q.defer();
+        var expiration = 30 * 24 * 60 * 60 * 1000;
+        var getTtl = function( key ) {
+            return new Promise( function( resolve, reject ) {
                 client.pttl( key, function( error, ttl ) {
                     if ( error ) {
-                        deferred.reject( error );
+                        reject( error );
                     }
-                    deferred.resolve( ttl );
+                    resolve( ttl );
                 } );
-                return deferred.promise;
-            };
+            } );
+        };
         it( 'is ' + expiration + ' milliseconds for new cache items', function() {
             var promise = model.set( survey )
                 .then( function() {
@@ -103,15 +104,16 @@ describe( 'Cache Model', function() {
                 .and.to.be.at.least( expiration - 10 );
         } );
         it( 'is reset to the original expiration every time the cache item is accessed ', function() {
-            var promise1, promise2,
-                delayTime = 1 * 1000,
-                delay = function() {
-                    var deferred = Q.defer();
+            var promise1;
+            var promise2;
+            var delayTime = 1 * 1000;
+            var delay = function() {
+                return new Promise( function( resolve ) {
                     setTimeout( function() {
-                        deferred.resolve( true );
+                        resolve( true );
                     }, delayTime );
-                    return deferred.promise;
-                };
+                } );
+            };
 
             promise1 = model.set( survey )
                 .then( delay )
@@ -124,7 +126,7 @@ describe( 'Cache Model', function() {
                 return getTtl( 'ca:testserver.com/bob,widgets' );
             } );
 
-            return Q.all( [
+            return Promise.all( [
                 expect( promise1 ).to.eventually.be.at.most( expiration - delayTime )
                 .and.to.be.at.least( expiration - delayTime - 100 ),
                 expect( promise2 ).to.eventually.be.at.most( expiration )
@@ -153,7 +155,7 @@ describe( 'Cache Model', function() {
 
             delete survey.manifest;
             promise = model.set( survey ).then( model.get );
-            return Q.all( [
+            return Promise.all( [
                 expect( promise ).to.eventually.have.property( 'form' ).that.equals( survey.form ),
                 expect( promise ).to.eventually.have.property( 'model' ).that.equals( survey.model ),
                 expect( promise ).to.eventually.have.property( 'xslHash' ).and.to.have.length.above( 2 ),
@@ -163,7 +165,7 @@ describe( 'Cache Model', function() {
         } );
         it( 'returns the survey object with the form and model properties when successful', function() {
             var promise = model.set( survey ).then( model.get );
-            return Q.all( [
+            return Promise.all( [
                 expect( promise ).to.eventually.have.property( 'form' ).that.equals( survey.form ),
                 expect( promise ).to.eventually.have.property( 'model' ).that.equals( survey.model ),
                 expect( promise ).to.eventually.have.property( 'xslHash' ).and.to.have.length.above( 2 ),
@@ -180,7 +182,9 @@ describe( 'Cache Model', function() {
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
         it( 'returns false when the cache is outdated (formHash changed)', function() {
-            var setPromise, checkPromise, updatedSurvey;
+            var setPromise;
+            var checkPromise;
+            var updatedSurvey;
 
             updatedSurvey = JSON.parse( JSON.stringify( survey ) );
             setPromise = model.set( survey );
@@ -191,14 +195,16 @@ describe( 'Cache Model', function() {
                 return model.check( updatedSurvey );
             } );
 
-            return Q.all( [
+            return Promise.all( [
                 expect( setPromise ).to.eventually.deep.equal( survey ),
                 expect( checkPromise ).to.eventually.to.eventually.deep.equal( false )
             ] );
 
         } );
         it( 'returns false when the cache is outdated (manifest removed)', function() {
-            var setPromise, checkPromise, updatedSurvey;
+            var setPromise;
+            var checkPromise;
+            var updatedSurvey;
 
             updatedSurvey = JSON.parse( JSON.stringify( survey ) );
             setPromise = model.set( survey );
@@ -207,7 +213,7 @@ describe( 'Cache Model', function() {
                 return model.check( updatedSurvey );
             } );
 
-            return Q.all( [
+            return Promise.all( [
                 expect( setPromise ).to.eventually.deep.equal( survey ),
                 expect( checkPromise ).to.eventually.to.eventually.deep.equal( false )
             ] );
@@ -224,25 +230,26 @@ describe( 'Cache Model', function() {
 
     describe( 'flush(ing): when attempting to flush the cache', function() {
         var getCacheCount = function() {
-            var deferred = Q.defer();
-            client.keys( 'ca:*', function( error, keys ) {
-                if ( error ) {
-                    deferred.reject( error );
-                }
-                deferred.resolve( keys.length );
+            return new Promise( function( resolve, reject ) {
+                client.keys( 'ca:*', function( error, keys ) {
+                    if ( error ) {
+                        reject( error );
+                    }
+                    resolve( keys.length );
+                } );
             } );
-            return deferred.promise;
         };
         it( 'with flushAll, the entire cache becomes empty...', function() {
-            var count1, count2, survey2;
-            survey2 = JSON.parse( JSON.stringify( survey ) );
+            var count1;
+            var count2;
+            var survey2 = JSON.parse( JSON.stringify( survey ) );
             survey2.openRosaId = 'something_else';
             count1 = model.set( survey ).then( function() {
                 model.set( survey2 );
             } ).then( getCacheCount );
             count2 = count1.then( model.flushAll ).then( getCacheCount );
 
-            return Q.all( [
+            return Promise.all( [
                 expect( count1 ).to.eventually.equal( 2 ),
                 expect( count2 ).to.eventually.deep.equal( 0 )
             ] );
@@ -252,7 +259,7 @@ describe( 'Cache Model', function() {
                 get2Promise = get1Promise.then( model.flush ).then( function() {
                     return model.get( survey );
                 } );
-            return Q.all( [
+            return Promise.all( [
                 expect( get1Promise ).to.eventually.have.property( 'form' ).that.equals( survey.form ),
                 expect( get2Promise ).to.eventually.deep.equal( null )
             ] );

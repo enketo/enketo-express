@@ -1,5 +1,5 @@
 /* global describe, require, it, beforeEach, afterEach */
-"use strict";
+'use strict';
 
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
@@ -8,30 +8,26 @@ process.env.NODE_ENV = 'test';
  * Some of these tests use the special test Api Token and Server URLs defined in the API spec
  * at http://apidocs.enketo.org.
  */
+var request = require( 'supertest' );
+var app = require( '../../config/express' );
+var surveyModel = require( '../../app/models/survey-model' );
 
-var v1Survey, v1Instance, v1Surveys,
-    Q = require( "q" ),
-    chai = require( "chai" ),
-    expect = chai.expect,
-    chaiAsPromised = require( "chai-as-promised" ),
-    request = require( 'supertest' ),
-    app = require( '../../config/express' ),
-    surveyModel = require( '../../app/models/survey-model' );
-
-chai.use( chaiAsPromised );
+var v1Survey;
+var v1Instance;
+var v1Surveys;
 
 describe( 'api', function() {
-    var validApiKey = 'abc',
-        validAuth = {
-            'Authorization': 'Basic ' + new Buffer( validApiKey + ':' ).toString( 'base64' )
-        },
-        invalidApiKey = 'def',
-        invalidAuth = {
-            'Authorization': 'Basic ' + new Buffer( invalidApiKey + ':' ).toString( 'base64' )
-        },
-        validServer = 'https://testserver.com/bob',
-        validFormId = 'something',
-        invalidServer = 'https://someotherserver.com/john';
+    var validApiKey = 'abc';
+    var validAuth = {
+        'Authorization': 'Basic ' + new Buffer( validApiKey + ':' ).toString( 'base64' )
+    };
+    var invalidApiKey = 'def';
+    var invalidAuth = {
+        'Authorization': 'Basic ' + new Buffer( invalidApiKey + ':' ).toString( 'base64' )
+    };
+    var validServer = 'https://testserver.com/bob';
+    var validFormId = 'something';
+    var invalidServer = 'https://someotherserver.com/john';
 
     beforeEach( function( done ) {
         // add survey if it doesn't exist in the db
@@ -74,18 +70,18 @@ describe( 'api', function() {
     }
 
     function testResponse( test ) {
-        var authDesc = test.auth === true ? 'valid' : ( test.auth === false ? 'invalid' : 'empty' ),
-            auth = test.auth === true ? validAuth : ( test.auth === false ? invalidAuth : {} ),
-            version = test.version,
-            server = ( typeof test.server !== 'undefined' ) ? test.server : validServer,
-            id = typeof test.id !== 'undefined' ? test.id : validFormId,
-            ret = typeof test.ret !== 'undefined' ? test.ret : 'http://example.com',
-            instance = typeof test.instance !== 'undefined' ? test.instance : '<data></data>',
-            instanceId = typeof test.instanceId !== 'undefined' ? test.instanceId : 'someUUID:' + Math.random(),
-            endpoint = test.endpoint,
-            resProp = ( test.res && test.res.property ) ? test.res.property : 'url',
-            offlineEnabled = !!test.offline,
-            dataSendMethod = ( test.method === 'get' ) ? 'query' : 'send';
+        var authDesc = test.auth === true ? 'valid' : ( test.auth === false ? 'invalid' : 'empty' );
+        var auth = test.auth === true ? validAuth : ( test.auth === false ? invalidAuth : {} );
+        var version = test.version;
+        var server = ( typeof test.server !== 'undefined' ) ? test.server : validServer;
+        var id = typeof test.id !== 'undefined' ? test.id : validFormId;
+        var ret = typeof test.ret !== 'undefined' ? test.ret : 'http://example.com';
+        var instance = typeof test.instance !== 'undefined' ? test.instance : '<data></data>';
+        var instanceId = typeof test.instanceId !== 'undefined' ? test.instanceId : 'someUUID:' + Math.random();
+        var endpoint = test.endpoint;
+        var resProp = ( test.res && test.res.property ) ? test.res.property : 'url';
+        var offlineEnabled = !!test.offline;
+        var dataSendMethod = ( test.method === 'get' ) ? 'query' : 'send';
 
         it( test.method.toUpperCase() + ' /api/v' + version + endpoint + ' with ' + authDesc + ' authentication and ' + server + ', ' +
             id + ', ' + ret + ', ' + instance + ', ' + instanceId + ', ' + test.theme +

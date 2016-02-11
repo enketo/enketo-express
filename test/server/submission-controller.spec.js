@@ -1,5 +1,5 @@
 /* global describe, require, it, beforeEach, afterEach */
-"use strict";
+'use strict';
 
 /* 
  * These tests use the special test Api Token and Server URLs defined in the API spec
@@ -9,27 +9,21 @@
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var Q = require( "q" ),
-    chai = require( "chai" ),
-    expect = chai.expect,
-    chaiAsPromised = require( "chai-as-promised" ),
-    request = require( 'supertest' ),
-    app = require( '../../config/express' ),
-    surveyModel = require( '../../app/models/survey-model' ),
-    instanceModel = require( '../../app/models/instance-model' ),
-    redis = require( "redis" ),
-    config = require( "../../app/models/config-model" ).server,
-    client = redis.createClient( config.redis.main.port, config.redis.main.host, {
-        auth_pass: config.redis.main.password
-    } );
-
-chai.use( chaiAsPromised );
+var request = require( 'supertest' );
+var app = require( '../../config/express' );
+var surveyModel = require( '../../app/models/survey-model' );
+var instanceModel = require( '../../app/models/instance-model' );
+var redis = require( 'redis' );
+var config = require( '../../app/models/config-model' ).server;
+var client = redis.createClient( config.redis.main.port, config.redis.main.host, {
+    auth_pass: config.redis.main.password
+} );
 
 describe( 'Submissions', function() {
-    var enketoId,
-        nonExistingEnketoId = 'nope',
-        validServer = 'https://testserver.com/bob',
-        validFormId = 'something';
+    var enketoId;
+    var nonExistingEnketoId = 'nope';
+    var validServer = 'https://testserver.com/bob';
+    var validFormId = 'something';
 
     beforeEach( function( done ) {
         // add survey if it doesn't exist in the db
@@ -142,7 +136,7 @@ describe( 'Submissions', function() {
                     instanceId: 'b',
                     returnUrl: 'example.com',
                     instance: '<data></data>'
-                } ).then( function( s ) {
+                } ).then( function() {
                     done();
                 } );
             } );
@@ -164,7 +158,7 @@ describe( 'Submissions', function() {
                     instanceId: 'c',
                     returnUrl: 'example.com',
                     instance: '<data></data>'
-                } ).then( function( s ) {
+                } ).then( function() {
                     done();
                 } );
             } );

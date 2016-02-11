@@ -1,20 +1,4 @@
 /**
- * @preserve Copyright 2014 Martijn van de Rijdt & Harvard Humanitarian Initiative
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
  * Deals with the main high level survey controls: saving, submitting etc.
  */
 
@@ -61,6 +45,7 @@ function init( selector, data ) {
             $formprogress = $( '.form-progress' );
 
             _setEventHandlers();
+            _setLogoutLinkVisibility();
 
             if ( loadErrors.length > 0 ) {
                 throw loadErrors;
@@ -91,7 +76,7 @@ function _checkAutoSavedRecord() {
     }
     return records.getAutoSavedRecord()
         .then( function( record ) {
-            return new Promise( function( resolve, reject ) {
+            return new Promise( function( resolve ) {
                 if ( record ) {
                     gui.confirm( {
                         heading: t( 'confirm.autosaveload.heading' ),
@@ -234,7 +219,9 @@ function _submitRecord() {
 
     record = {
         'xml': form.getDataStr(),
-        'files': fileManager.getCurrentFiles()
+        'files': fileManager.getCurrentFiles(),
+        'instanceId': form.getInstanceID(),
+        'deprecatedId': form.getDeprecatedID()
     };
 
     return connection.uploadRecord( record )
@@ -257,7 +244,7 @@ function _submitRecord() {
                 msg += '<br/>' + t( 'alert.submissionsuccess.redirectmsg' );
                 gui.alert( msg, t( 'alert.submissionsuccess.heading' ), level );
                 setTimeout( function() {
-                    location.href = settings.returnUrl;
+                    location.href = decodeURIComponent( settings.returnUrl );
                 }, 1500 );
             } else {
                 msg = ( msg.length > 0 ) ? msg : t( 'alert.submissionsuccess.msg' );
@@ -288,19 +275,19 @@ function _getRecordName() {
 function _confirmRecordName( recordName, errorMsg ) {
     return new Promise( function( resolve, reject ) {
         var texts = {
-                msg: '',
-                heading: t( 'formfooter.savedraft.label' ),
-                errorMsg: errorMsg
+            msg: '',
+            heading: t( 'formfooter.savedraft.label' ),
+            errorMsg: errorMsg
+        };
+        var choices = {
+            posButton: t( 'confirm.save.posButton' ),
+            negButton: t( 'confirm.default.negButton' ),
+            posAction: function( values ) {
+                resolve( values[ 'record-name' ] );
             },
-            choices = {
-                posButton: t( 'confirm.save.posButton' ),
-                negButton: t( 'confirm.default.negButton' ),
-                posAction: function( values ) {
-                    resolve( values[ 'record-name' ] );
-                },
-                negAction: reject
-            },
-            inputs = '<label><span>' + t( 'confirm.save.name' ) + '</span>' +
+            negAction: reject
+        };
+        var inputs = '<label><span>' + t( 'confirm.save.name' ) + '</span>' +
             '<span class="or-hint active">' + t( 'confirm.save.hint' ) + '</span>' +
             '<input name="record-name" type="text" value="' + recordName + '"required />' + '</label>';
 
@@ -308,20 +295,8 @@ function _confirmRecordName( recordName, errorMsg ) {
     } );
 }
 
-function _confirmRecordRename( oldName, newName, errMsg ) {
-    return new Promise( function( resolve, reject ) {
-        gui.prompt( {
-                msg: t( 'confirm.save.renamemsg', {
-                    currentName: '"' + oldName + '"',
-                    newName: '"' + newName + '"'
-                } )
-            }, {
-                posAction: resolve,
-                negAction: reject
-            }, '<label><span>' + t( 'confirm.save.name' ) + '</span><span>' + t( 'confirm.save.hint' ) + '</span>' +
-            '<input name="record-name" type="text" required /></label>' );
-    } );
-}
+// save the translation in case ever required in the future
+// t( 'confirm.save.renamemsg', {} )
 
 function _saveRecord( recordName, confirmed, errorMsg ) {
     var record;
@@ -353,6 +328,7 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
         'xml': form.getDataStr(),
         'name': recordName,
         'instanceId': form.getInstanceID(),
+        'deprecateId': form.getDeprecatedID(),
         'enketoId': settings.enketoId,
         'files': fileManager.getCurrentFiles().map( function( file ) {
             return ( typeof file === 'string' ) ? {
@@ -378,6 +354,10 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
                 gui.feedback( t( 'alert.recordsavesuccess.draftmsg' ), 3 );
             } else {
                 gui.feedback( t( 'alert.recordsavesuccess.finalmsg' ), 3 );
+                // The timeout simply avoids showing two messages at the same time:
+                // 1. "added to queue"
+                // 2. "successfully submitted"
+                setTimeout( records.uploadQueue, 5 * 1000 );
             }
         } )
         .catch( function( error ) {
@@ -395,6 +375,11 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
 function _autoSaveRecord() {
     var record;
 
+    // do not auto-save a record if the record was loaded from storage
+    if ( form.getRecordName() ) {
+        return Promise.resolve();
+    }
+
     // build the variable portions of the record object
     record = {
         'xml': form.getDataStr(),
@@ -409,7 +394,7 @@ function _autoSaveRecord() {
     };
 
     // save the record
-    records.updateAutoSavedRecord( record )
+    return records.updateAutoSavedRecord( record )
         .then( function() {
             console.log( 'autosave successful' );
         } )
@@ -480,6 +465,34 @@ function _setEventHandlers() {
         records.uploadQueue();
     } );
 
+    $( '.record-list__button-bar__button.export' ).on( 'click', function() {
+        var createDownloadLink = '<a class="vex-dialog-link" id="download-export-create" href="#">' +
+            t( 'alert.export.alternativequestion' ) + '</a>';
+
+        records.exportToZip( form.getSurveyName() )
+            .then( function( zipFile ) {
+                // Hack for stupid Safari and iOS browsers
+                $( document ).off( 'click.export' ).one( 'click.export', '#download-export-create', function( event ) {
+                    _handleAlternativeDownloadRequest.call( this, event, zipFile );
+                } );
+
+                gui.alert( t( 'alert.export.success.msg' ) + createDownloadLink, t( 'alert.export.success.heading' ), 'normal' );
+            } )
+            .catch( function( error ) {
+                var message = t( 'alert.export.error.msg', {
+                    errors: error.message
+                } );
+                if ( error.exportFile ) {
+                    // Hack for stupid Safari and iOS browsers
+                    $( document ).off( 'click.export' ).one( 'click.export', '#download-export-create', function( event ) {
+                        _handleAlternativeDownloadRequest.call( this, event, error.exportFile );
+                    } );
+                    message += '<p>' + t( 'alert.export.error.filecreatedmsg' ) + '</p>' + createDownloadLink;
+                }
+                gui.alert( message, t( 'alert.export.error.heading' ) );
+            } );
+    } );
+
     $doc.on( 'click', '.record-list__records__record[data-draft="true"]', function() {
         _loadRecord( $( this ).attr( 'data-id' ), false );
     } );
@@ -507,13 +520,46 @@ function _setEventHandlers() {
     } );
 
     $( '.form-footer [name="draft"]' ).on( 'change', function() {
-        var text = ( $( this ).prop( 'checked' ) ) ? t( "formfooter.savedraft.btn" ) : t( "formfooter.submit.btn" );
+        var text = ( $( this ).prop( 'checked' ) ) ? t( 'formfooter.savedraft.btn' ) : t( 'formfooter.submit.btn' );
         $( '#submit-form i' ).text( ' ' + text );
     } ).closest( '.draft' ).toggleClass( 'hide', !settings.offline );
 
     if ( settings.offline ) {
         $doc.on( 'valuechange.enketo', _autoSaveRecord );
     }
+}
+
+function _handleAlternativeDownloadRequest( event, zipFile ) {
+    var $loader;
+    var $link;
+
+    event.preventDefault();
+
+    $loader = $( '<div class="loader-animation-small" style="margin: 10px auto 0 auto;"/>' );
+    $( event.target ).replaceWith( $loader );
+
+    connection.getDownloadUrl( zipFile )
+        .then( function( downloadUrl ) {
+            $link = $( '<a class="vex-dialog-link" href="' + downloadUrl +
+                '" download target="_blank">' + zipFile.name + '</a>' );
+            $loader.replaceWith( $link );
+            $link.one( 'click', function() {
+                this.remove();
+                return true;
+            } );
+        } )
+        .catch( function( error ) {
+            gui.alert( t( 'alert.export.error.linknotcreated' ) );
+        } );
+
+    return false;
+}
+
+function _setLogoutLinkVisibility() {
+    var visible = document.cookie.split( '; ' ).some( function( rawCookie ) {
+        return rawCookie.indexOf( '__enketo_logout=' ) !== -1;
+    } );
+    $( '.form-footer .logout' ).toggleClass( 'hide', !visible );
 }
 
 function _setDraftStatus( status ) {

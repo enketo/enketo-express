@@ -1,6 +1,6 @@
 'use strict';
 
-var Promise = require( 'q' ).Promise;
+var Promise = require( 'lie' );
 var utils = require( '../lib/utils' );
 var TError = require( '../lib/custom-error' ).TranslatedError;
 var config = require( './config-model' ).server;
@@ -23,7 +23,7 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @return {[type]}    [description]
  */
 function getSurvey( id ) {
-    var msg, error;
+    var error;
 
     return new Promise( function( resolve, reject ) {
         if ( !id ) {
@@ -46,7 +46,7 @@ function getSurvey( id ) {
                     error.status = 406;
                     reject( error );
                 } else {
-                    debug( 'object retrieved from database for id "' + id + '"', obj );
+                    // debug( 'object retrieved from database for id "' + id + '"', obj );
                     obj.enketoId = id;
                     // no need to wait for result of updating lastAccessed 
                     client.hset( 'id:' + id, 'lastAccessed', new Date().toISOString() );
@@ -179,7 +179,7 @@ function _addSurvey( openRosaKey, survey ) {
     } );
 }
 
-function addSubmission( id ) {
+function incrSubmissions( id ) {
     return new Promise( function( resolve, reject ) {
         client.multi()
             .incr( 'submission:counter' )
@@ -195,15 +195,17 @@ function addSubmission( id ) {
 }
 
 function getNumberOfSurveys( server ) {
-    var error, tasks, number;
+    var error;
+    var cleanServerUrl;
 
     return new Promise( function( resolve, reject ) {
-        if ( !server ) {
+        cleanServerUrl = ( server === '' ) ? '' : utils.cleanUrl( server );
+        if ( !cleanServerUrl && cleanServerUrl !== '' ) {
             error = new Error( 'Survey information not complete or invalid' );
             error.status = 400;
             reject( error );
         } else {
-            client.keys( "or:" + utils.cleanUrl( server ) + "*", function( err, keys ) {
+            client.keys( 'or:' + cleanServerUrl + '[/,]*', function( err, keys ) {
                 if ( error ) {
                     reject( error );
                 } else if ( keys ) {
@@ -222,15 +224,18 @@ function getNumberOfSurveys( server ) {
 }
 
 function getListOfSurveys( server ) {
-    var error, tasks, list;
+    var error;
+    var list;
+    var cleanServerUrl;
 
     return new Promise( function( resolve, reject ) {
-        if ( !server ) {
+        cleanServerUrl = ( server === '' ) ? '' : utils.cleanUrl( server );
+        if ( !cleanServerUrl && cleanServerUrl !== '' ) {
             error = new Error( 'Survey information not complete or invalid' );
             error.status = 400;
             reject( error );
         } else {
-            client.keys( "or:" + utils.cleanUrl( server ) + "*", function( err, keys ) {
+            client.keys( 'or:' + cleanServerUrl + '[/,]*', function( err, keys ) {
                 if ( error ) {
                     reject( error );
                 } else if ( keys ) {
@@ -258,7 +263,6 @@ function getListOfSurveys( server ) {
 }
 
 function _getEnketoId( openRosaKey ) {
-    var iterator;
 
     return new Promise( function( resolve, reject ) {
         if ( !openRosaKey ) {
@@ -266,13 +270,13 @@ function _getEnketoId( openRosaKey ) {
             error.status = 400;
             reject( error );
         } else {
-            debug( 'getting id for : ' + openRosaKey );
+            // debug( 'getting id for : ' + openRosaKey );
             client.get( openRosaKey, function( error, id ) {
-                debug( 'result', error, id );
+                // debug( 'result', error, id );
                 if ( error ) {
                     reject( error );
                 } else if ( id === '' ) {
-                    error = new Error( "ID for this survey is missing" );
+                    error = new Error( 'ID for this survey is missing' );
                     error.status = 406;
                     reject( error );
                 } else if ( id ) {
@@ -303,7 +307,9 @@ function _getActiveSurveys( openRosaIds ) {
                 return getSurvey( id ).catch( _404Empty );
             } );
         } )
-        .then( Promise.all )
+        .then( function( tasks ) {
+            return Promise.all( tasks );
+        } )
         .then( function( surveys ) {
             return surveys.filter( _nonEmpty );
         } );
@@ -349,5 +355,5 @@ module.exports = {
     getId: getEnketoIdFromSurveyObject,
     getNumber: getNumberOfSurveys,
     getList: getListOfSurveys,
-    addSubmission: addSubmission
+    incrementSubmissions: incrSubmissions
 };

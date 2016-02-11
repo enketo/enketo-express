@@ -2,6 +2,159 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.23.2] - 2016-02-10
+----------------------
+##### Changed
+- Form section headers are now left-aligned again.
+
+##### Fixed
+- In pages mode, adding a repeat to the current page scrolls to top of page.
+- Constraint is evaluated twice when form value is changed (performance).
+- Deleted default values re-appear when a record is loaded.
+- Form scrolls to first question upon load.
+
+[1.23.1] - 2016-02-09
+----------------------
+##### Changed
+- Make form updates propagate much faster in offline-capable views.
+
+##### Fixed
+- Min() and max() return undefined for empty values.
+- Parallel batch uploads may cause lost data in ODK Aggregate.
+
+[1.23.0] - 2016-02-01
+----------------------
+##### Added
+- Support for dynamic required expressions.
+- Support for jr:requiredMsg.
+- Basic support for big-image form attributes on itext values.
+- Vietnamese translation.
+
+##### Changed
+- Updated Spanish, Slovak and Dutch translations.
+
+##### Fixed
+- Existing XForm content of secondary external instances not properly cleared if nodename is not 'root' or if multiple root-level nodes are present.
+- Rogue XML namespace added in ODK Collect submission causes namespace incompatibility error when loaded for editing.
+
+[1.22.1] - 2016-01-08
+---------------------
+##### Added
+- Persian translation.
+
+##### Changed
+- Updated Dutch translation.
+
+##### Fixed
+- Empty lines in external CSV data result in empty items.
+- Media files in recovered auto-saved record get lost during saving as a regular record.
+- Auto-saving did not work with records loaded from storage. Only enabled for new records now.
+
+[1.22.0] - 2016-01-01 
+---------------------
+##### Added
+- Export functionality.
+- Add-to-homescreen guidance for iOS/Safari, Android/Chrome and Android/Firefox.
+
+##### Changed
+- Links are underlined.
+- Updated German, Dutch and Slovak translations.
+
+##### Fixed
+- Under some conditions surveys/list and surveys/number return too many results.
+- Multiple span elements on same line get rendered as one span.
+- Media files not removed from browser storage after submission.
+- Media files from camera app in iOS get overwritten because the same filename is provided by the iOS camera pp.
+
+[1.21.2] - 2015-12-18
+---------------------
+##### Changed
+- Attempt to upload queue immediately after saving a final record.
+
+##### Fixed
+- If users logs out, queue cannot be submitted, no login UI shown.
+- OpenRosa authentication: a change in auth status for one user causes global appCache refresh.
+
+[1.21.1] - 2015-12-07
+---------------------
+##### Changed
+- Show helpful "Use Safari on iOS" message when unsupported iOS browser is used.
+- Updated Slovak, Dutch and Norwegian translations.
+
+##### Fixed
+- Empty error dialog when form fails to load.
+- Form footer margins incorrect.
+- Media & data form resource retrieval does not work with "external authentication".
+- Media missing from submission in offline-capable views.
+
+##### Removed
+- "Experimental" warning message
+
+[1.21.0] - 2015-12-01
+---------------------
+##### Added
+- InstanceID logging of successful submissions (optional feature, **off by default**).
+
+##### Fixed
+- Submission counters not updated upon successful submission.
+- Node 4 incompatibility.
+
+[1.20.4] - 2015-11-25
+---------------------
+##### Added
+- Slovak translation.
+
+##### Changed
+- Updated Italian, Dutch and German translations.
+- Redirect all IE users to /modern-browsers page.
+
+##### Fixed
+- Clicking brand logo link with '#' value messes up offline views.
+- Several issues where updating form media files did not properly update the form caches on server and client.
+- File uploads in Chrome in offline-capable view fail to load after an hour (workaround for browser bug).
+- If accompanying file for record cannot be retrieved, upload is blocked forever.
+- NodeJS 0.12 incompatibility.
+
+[1.20.3] - 2015-11-13
+---------------------
+##### Fixed
+- If form resource retrieval fails, it won't be re-attempted upon next load
+- Chevron icons in timepicker not shown.
+- Current() does not switch context instance for relative paths in an XPath predicate.
+
+[1.20.2] - 2015-11-02
+---------------------
+##### Changed
+- Make form updates propagate quicker in offline webform views.
+
+##### Fixed
+- Themes with hyphen in name do not register.
+- A label or hint that contains a \<span\> element without other markdown is not rendered as HTML.
+- False 'Form has updated' messages appear continously every 20 minutes.
+
+[1.20.1] - 2015-10-23
+---------------------
+##### Fixed
+- External data loading failing.
+- Encoded return URLs were not decoded.
+
+[1.20.0] - 2015-10-22
+---------------------
+##### Added
+- Ability to link to custom library to obtain account info.
+
+##### Changed
+- Previews now only allowed for forms hosted on linked server.
+
+##### Fixed
+- API /surveys/list and /surveys/number return error when linked server is "".
+- Styling of load error dialog sometimes messed up.
+
+[1.19.3] - 2015-10-21
+----------------------
+##### Fixed
+- Media uploads failing 
+
 [1.19.2] - 2015-10-19
 ----------------------
 ##### Fixed
@@ -362,7 +515,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 -----------
 ##### Fixed
 - Repeat groups not working when they have no \<group\> wrapper.
-- Multipe markdown links in a note are merged into one.
+- Multiple markdown links in a note are merged into one.
 
 [1.5.0] - 2014-12-30
 -----------
@@ -411,12 +564,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [1.2.0] - 2014-11-11
 -----------
-Added
+##### Added
 - External authentication support.
 
 [1.1.1] - 2014-11-08
 -----------
-Fixed
+##### Fixed
 - Instance API endpoint does not add return URL to response.
 
 [1.1.0] - 2014-11-08

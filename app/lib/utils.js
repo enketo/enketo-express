@@ -1,7 +1,7 @@
 'use strict';
 
 var crypto = require( 'crypto' );
-var debug = require( 'debug' )( 'utils' );
+// var debug = require( 'debug' )( 'utils' );
 
 /** 
  * Returns a unique, predictable openRosaKey from a survey oject
@@ -19,7 +19,7 @@ function getOpenRosaKey( survey, prefix ) {
 
 /**
  * cleans a Server URL so it becomes useful as a db key
- * It strips the protocol, removes a trailing slash, and converts to lowercase
+ * It strips the protocol, removes a trailing slash, removes www, and converts to lowercase
  * @param  {string} url [description]
  * @return {string=}     [description]
  */
@@ -30,10 +30,10 @@ function cleanUrl( url ) {
         url = url.substring( 0, url.length - 1 );
     }
     matches = url.match( /https?\:\/\/(www\.)?(.+)/ );
-    if ( matches.length > 2 ) {
+    if ( matches && matches.length > 2 ) {
         return matches[ 2 ].toLowerCase();
     }
-    return null;
+    return cleanUrl;
 }
 
 function isValidUrl( url ) {
@@ -48,7 +48,7 @@ function md5( message ) {
 }
 
 function randomString( howMany, chars ) {
-    chars = chars || "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+    chars = chars || 'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
     var rnd = crypto.randomBytes( howMany ),
         value = new Array( howMany ),
         len = chars.length;
@@ -58,6 +58,18 @@ function randomString( howMany, chars ) {
     }
 
     return value.join( '' );
+}
+
+function pickRandomItemFromArray( array ) {
+    var random;
+    if ( !Array.isArray( array ) || array.length === 0 ) {
+        return null;
+    }
+    random = Math.floor( Math.random() * array.length );
+    if ( !array[ random ] ) {
+        return null;
+    }
+    return array[ random ];
 }
 
 // not recursive, only goes one property level deep
@@ -93,5 +105,6 @@ module.exports = {
     isValidUrl: isValidUrl,
     md5: md5,
     randomString: randomString,
+    pickRandomItemFromArray: pickRandomItemFromArray,
     areOwnPropertiesEqual: areOwnPropertiesEqual
 };

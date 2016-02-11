@@ -87,6 +87,12 @@
         }
     },
     "confirm": {
+        "autosaveload": {
+            "heading": "Nicht gespeicherter Datensatz gefunden",
+            "msg": "Enketo hat einen nicht gespeicherten Datensatz gefunden. Möchten Sie diesen Datensatz laden oder verwerfen?",
+            "negButton": "Löschen",
+            "posButton": "Datensatz laden"
+        },
         "default": {
             "heading": "Sind Sie sicher?",
             "msg": "Bitte bestätigen Sie diese Aktion",
@@ -139,6 +145,10 @@
             "unkownerror": "Beim Speichern is ein unbekannter Fehler aufgetreten."
         }
     },
+    "constraint": {
+        "invalid": "Dieser Wert ist nicht erlaubt",
+        "required": "Dieses Feld muss ausgefüllt werden"
+    },
     "contact": {
         "admin": "Kontaktieren Sie den Ersteller der Umfrage bitte.",
         "support": "Bitte kontaktieren Sie __supportEmail__'"
@@ -148,10 +158,12 @@
     },
     "error": {
         "code": "Fehlercode: __code__",
+        "dataloadfailed": "Daten konnten nicht aus __url__ laden",
         "econnrefused": "Konnte nicht mit Server verbinden",
         "encryptionnotsupported": "Dieses Formular erfordert lokale Verschlüsselung von Datensätzen. Leider wird dies noch nicht unterstützt. Wir empfehlen die Verwendung von ODK Collect für die Datensammlung mit diesem Formular.",
         "instancenotfound": "Datensatz nicht vorhanden. Er ist wahrscheinlich abgelaufen.",
         "invalidediturl": "Keine gültige Bearbeitungs-URL",
+        "loadfailed": "Fehler beim laden __resource__",
         "notfoundinformlist": "Formular mit ID __formId__ wurde nicht in /formList gefunden",
         "pagenotfound": "Seite nicht gefunden",
         "surveyidnotactive": "Umfrage mit dieser ID ist nicht mehr aktiv",
@@ -189,15 +201,20 @@
     },
     "langs": {
         "ar": "Arabisch",
+        "cs": "Tschechisch",
         "de": "Deutsch",
         "el": "Griechisch",
         "en": "Englisch",
         "es": "Spanisch",
+        "fr": "Französisch",
         "he": "Hebräisch",
         "hi": "Indisch",
+        "it": "Italienisch",
         "km": "Khmer",
         "nl": "Niederländisch",
+        "no": "Norwegisch",
         "ro": "Rumänisch",
+        "sk": "Slowakisch",
         "supported": "Unterstützte Sprachen:",
         "sw": "Suaheli",
         "th": "Thailändisch",
@@ -215,7 +232,7 @@
         },
         "offline": {
             "heading": "Kein Zugriff auf die angeforderte Seite",
-            "msg1": "Diese Seite ist nur zugänglich, wenn der Browser über eine Internetverbindung vefügt und der Server zugänglich ist (es sei denn, die Seite existiert nicht)."
+            "msg1": "Diese Seite ist nur erreichbar wenn der Browser eine Internet verbindung hat und der Server erreichbar ist (außer die Seite existiert nicht)."
         }
     },
     "prompt": {
@@ -240,13 +257,16 @@
     },
     "store": {
         "error": {
-            "notavailable": "Browser Speicher erforderlich ist, aber nicht verfügbar ist, ist beschädigt oder nicht beschreibbar. Wenn Sie im Modus \"Private-Browsing\" sind Sie in regelmäßigen Modus zu wechseln, ansonsten auf einen anderen Browser umzuschalten. (Fehler: __error__)"
+            "iosusesafari": "Ihr iOS-Browser ist nicht in der Lage, diese Form laufen. Auf iOS, empfehlen wir die Safari verwenden.",
+            "notavailable": "Browser Speicher erforderlich ist, aber nicht verfügbar ist, ist beschädigt oder nicht beschreibbar. Wenn Sie im Modus \"Private-Browsing\" sind Sie in regelmäßigen Modus zu wechseln, ansonsten auf einen anderen Browser umzuschalten. (Fehler: __error__)",
+            "notsupported": "Ihr Browser ist nicht in der Lage, dieses Formular ausführen. Wir empfehlen, einen modernen Browser zu verwenden."
         }
     },
     "submission": {
         "http0": "Fehlgeschlagen (offline?).",
         "http2xx": "Unerwartete Antwort beim Datenversand.",
         "http400": "Der Datenserver hat keine Daten akzeptiert.",
+        "http401": "Authentifizierung Problem mit Datenserver.",
         "http403": "Nicht erlaubt Daten zu diesem Datenserver zu übermitteln.",
         "http404": "Sende-Service wurde auf dem Datenserver nicht gefunden.",
         "http413": "Datenmenge ist zu groß.",
