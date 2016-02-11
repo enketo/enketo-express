@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
-var account = require( '../models/account-model' ),
-    auth = require( 'basic-auth' ),
-    express = require( 'express' ),
-    router = express.Router(),
-    debug = require( 'debug' )( 'account-controller' );
+var account = require( '../models/account-model' );
+var auth = require( 'basic-auth' );
+var express = require( 'express' );
+var router = express.Router();
+var debug = require( 'debug' )( 'account-controller' );
 
 module.exports = function( app ) {
     app.use( '/accounts/api/v1', router );
@@ -49,7 +49,7 @@ function authCheck( req, res, next ) {
 
 function getExistingAccount( req, res, next ) {
     return account.get( {
-            openRosaServer: req.query.server_url,
+            linkedServer: req.query.server_url,
             key: req.query.api_key
         } )
         .then( function( account ) {
@@ -60,7 +60,7 @@ function getExistingAccount( req, res, next ) {
 
 function getNewOrExistingAccount( req, res, next ) {
     return account.set( {
-            openRosaServer: req.body.server_url || req.query.server_url,
+            linkedServer: req.body.server_url || req.query.server_url,
             key: req.body.api_key || req.query.api_key
         } )
         .then( function( account ) {
@@ -71,7 +71,7 @@ function getNewOrExistingAccount( req, res, next ) {
 
 function updateExistingAccount( req, res, next ) {
     return account.update( {
-            openRosaServer: req.body.server_url || req.query.server_url,
+            linkedServer: req.body.server_url || req.query.server_url,
             key: req.body.api_key || req.query.api_key
         } )
         .then( function( account ) {
@@ -82,7 +82,7 @@ function updateExistingAccount( req, res, next ) {
 
 function removeAccount( req, res, next ) {
     return account.remove( {
-            openRosaServer: req.body.server_url || req.query.server_url,
+            linkedServer: req.body.server_url || req.query.server_url,
             key: req.body.api_key || req.query.api_key
         } ).then( function( account ) {
             _render( 204, null, res );
@@ -122,7 +122,7 @@ function _render( status, body, res ) {
 
 function _renameProps( account ) {
     return {
-        server_url: account.openRosaServer,
+        server_url: account.linkedServer,
         api_key: account.key
     };
 }

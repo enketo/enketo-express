@@ -1,40 +1,40 @@
 /* global describe, require, it, beforeEach, afterEach */
-"use strict";
+'use strict';
 
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var Q = require( "q" ),
-    chai = require( "chai" ),
-    expect = chai.expect,
-    chaiAsPromised = require( "chai-as-promised" ),
-    request = require( 'supertest' ),
-    app = require( '../../config/express' ),
-    config = require( "../../app/models/config-model" ).server,
-    accountModel = require( '../../app/models/account-model' );
+var Promise = require( 'lie' );
+var chai = require( 'chai' );
+var expect = chai.expect;
+var chaiAsPromised = require( 'chai-as-promised' );
+var request = require( 'supertest' );
+var app = require( '../../config/express' );
+var config = require( '../../app/models/config-model' ).server;
+var accountModel = require( '../../app/models/account-model' );
 
 chai.use( chaiAsPromised );
 
 describe( 'Account manager API', function() {
-    var validAccountManagerApiKey = config[ 'account manager api key' ],
-        invalidAccountManagerApiKey = 'bad',
-        validAuth = {
-            'Authorization': 'Basic ' + new Buffer( validAccountManagerApiKey + ':' ).toString( 'base64' )
-        },
-        invalidAuth = {
-            'Authorization': 'Basic ' + new Buffer( invalidAccountManagerApiKey + ':' ).toString( 'base64' )
-        },
-        validServer1 = 'https://octestserver1.com',
-        validServer2 = 'https://octestserver2.com',
-        invalidServer = 'octestserver1.com',
-        validApiKey1 = 'abcde',
-        validApiKey2 = '12345',
-        invalidApiKey = 'bad';
+    var validAccountManagerApiKey = config[ 'account manager api key' ];
+    var invalidAccountManagerApiKey = 'bad';
+    var validAuth = {
+        'Authorization': 'Basic ' + new Buffer( validAccountManagerApiKey + ':' ).toString( 'base64' )
+    };
+    var invalidAuth = {
+        'Authorization': 'Basic ' + new Buffer( invalidAccountManagerApiKey + ':' ).toString( 'base64' )
+    };
+    var validServer1 = 'https://octestserver1.com';
+    var validServer2 = 'https://octestserver2.com';
+    var invalidServer = 'octestserver1.com';
+    var validApiKey1 = 'abcde';
+    var validApiKey2 = '12345';
+    var invalidApiKey = 'bad';
 
     beforeEach( function( done ) {
         // add survey if it doesn't exist in the db
         accountModel.set( {
-            openRosaServer: validServer1,
+            linkedServer: validServer1,
             key: validApiKey1,
         } ).then( function() {
             done();
@@ -43,12 +43,12 @@ describe( 'Account manager API', function() {
 
     afterEach( function( done ) {
         // remove the test accounts
-        Q.all( [
+        Promise.all( [
             accountModel.remove( {
-                openRosaServer: validServer1
+                linkedServer: validServer1
             } ),
             accountModel.remove( {
-                openRosaServer: validServer2
+                linkedServer: validServer2
             } )
         ] ).then( function() {
             done();
@@ -238,11 +238,11 @@ describe( 'Account manager API', function() {
                 key: ''
             }
         ].forEach( function( test ) {
-            var authDesc = test.auth === true ? 'valid' : ( test.auth === false ? 'invalid' : 'empty' ),
-                auth = test.auth === true ? validAuth : ( test.auth === false ? invalidAuth : {} ),
-                accountServer = ( typeof test.server !== 'undefined' ) ? test.server : validServer1,
-                accountKey = ( typeof test.key !== 'undefined' ) ? test.key : validApiKey1,
-                dataSendMethod = ( test.method === 'get' ) ? 'query' : 'send';
+            var authDesc = test.auth === true ? 'valid' : ( test.auth === false ? 'invalid' : 'empty' );
+            var auth = test.auth === true ? validAuth : ( test.auth === false ? invalidAuth : {} );
+            var accountServer = ( typeof test.server !== 'undefined' ) ? test.server : validServer1;
+            var accountKey = ( typeof test.key !== 'undefined' ) ? test.key : validApiKey1;
+            var dataSendMethod = ( test.method === 'get' ) ? 'query' : 'send';
 
             it( test.method.toUpperCase() + ' /accounts/api/v1/account with ' + authDesc + ' authentication and ' + accountServer +
                 ', ' + accountKey + ' responds with ' + test.status,
