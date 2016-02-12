@@ -68,17 +68,17 @@
         "gulp": "3.9.x",
         "i18next-parser": "0.3.x",
         "karma": "0.13.x",
-        "karma-browserify": "4.4.x",
+        "karma-browserify": "5.0.x",
         "karma-chrome-launcher": "0.2.x",
         "karma-firefox-launcher": "0.1.x",
         "karma-mocha": "0.2.x",
         "karma-opera-launcher": "0.3.x",
-        "karma-phantomjs-launcher": "0.2.x",
+        "karma-phantomjs-launcher": "1.0.x",
         "karma-safari-launcher": "0.1.x",
         "karma-sinon-chai": "1.1.x",
-        "mocha": "2.3.x",
-        "phantomjs": "1.9.x",
-        "supertest": "1.1.x"
+        "mocha": "2.4.x",
+        "phantomjs": "2.1.x",
+        "supertest": "1.2.x"
     },
     "aliasify": {
         "aliases": {

@@ -1,15 +1,7 @@
 /* global describe, require, it, beforeEach, expect, Blob */
 'use strict';
 
-/**
- * ***********************************************************************************************************
- * Once PhantomJS 2.0 can be used for testing we can move these tests to the general (headless+browser) spec
- * ***********************************************************************************************************
- *
- * When using actual browsers for testing be careful that an open browser window with the same domain, may
- * lock up indexedDb!
- *
- */
+global.Promise = require( 'lie' );
 
 // TODO: when chai-as-promised adapter is working, convert these tests using .eventually.
 

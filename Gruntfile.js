@@ -119,11 +119,11 @@ module.exports = function( grunt ) {
                 reporters: [ 'dots' ]
             },
             headless: {
-                configFile: 'test/client/config/headless-karma.conf.js',
+                configFile: 'test/client/config/karma.conf.js',
                 browsers: [ 'PhantomJS' ]
             },
             browsers: {
-                configFile: 'test/client/config/browser-karma.conf.js',
+                configFile: 'test/client/config/karma.conf.js',
                 browsers: [ 'Chrome', 'ChromeCanary', 'Firefox', 'Opera' /*,'Safari'*/ ],
             }
         },
@@ -186,9 +186,9 @@ module.exports = function( grunt ) {
     } );
 
     grunt.registerTask( 'default', [ 'sass', 'compile', 'uglify' ] );
-    grunt.registerTask( 'compile', [ 'client-config-file:create', 'browserify:production', 'client-config-file:remove' ] );
-    grunt.registerTask( 'compile-dev', [ 'client-config-file:create', 'browserify:development', 'client-config-file:remove' ] );
+    grunt.registerTask( 'compile', [ 'client-config-file:create', 'browserify:production' ] );
+    grunt.registerTask( 'compile-dev', [ 'client-config-file:create', 'browserify:development' ] );
     grunt.registerTask( 'test', [ 'env:test', 'compile', 'sass', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
-    grunt.registerTask( 'test-browser', [ 'env:test', 'sass', 'client-config-file:create', 'karma:browsers', 'client-config-file:remove' ] );
+    grunt.registerTask( 'test-browser', [ 'env:test', 'sass', 'client-config-file:create', 'karma:browsers' ] );
     grunt.registerTask( 'develop', [ 'env:develop', 'compile-dev', 'concurrent:develop' ] );
 };
