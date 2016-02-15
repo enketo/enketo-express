@@ -2,7 +2,7 @@
 
 var Promise = require( 'lie' );
 var config = require( './config-model' ).server;
-var TError = require( '../lib/custom-error' ).TranslatedError;
+//var TError = require( '../lib/custom-error' ).TranslatedError;
 var client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
     auth_pass: config.redis.main.password
 } );

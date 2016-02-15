@@ -3,7 +3,7 @@
 var browser;
 var os;
 var ua = navigator.userAgent;
-var platform = navigator.platform;
+//var platform = navigator.platform;
 
 browser = {
     isChrome: function() {

@@ -548,7 +548,7 @@ function _handleAlternativeDownloadRequest( event, zipFile ) {
                 return true;
             } );
         } )
-        .catch( function( error ) {
+        .catch( function() {
             gui.alert( t( 'alert.export.error.linknotcreated' ) );
         } );
 

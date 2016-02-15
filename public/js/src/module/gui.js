@@ -350,7 +350,6 @@ function alertHomeScreenGuidance() {
 function _getHomeScreenGuidance() {
     var imageClass1;
     var imageClass2;
-    var guidanceKey;
     var browser = sniffer.browser;
     var os = sniffer.os;
 

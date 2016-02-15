@@ -1,6 +1,5 @@
 'use strict';
 
-var stream = require( 'stream' );
 var express = require( 'express' );
 var router = express.Router();
 var path = require( 'path' );
@@ -61,7 +60,7 @@ function getExportFile( req, res, next ) {
 
         readStream = fs.createReadStream( filePath );
 
-        readStream.on( 'error', function( error ) {
+        readStream.on( 'error', function() {
             next( 'route' );
         } );
 
