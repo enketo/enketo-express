@@ -148,6 +148,54 @@ function csvToXml( csv ) {
     return xmlStr;
 }
 
+/**
+ * Generates a querystring from an object or an array of objects with `name` and `value` properties.
+ * 
+ * @param  {{name: string, value: *}|<{name: string, value: *}>} obj [description]
+ * @return {[type]}     [description]
+ */
+function getQueryString( obj ) {
+    var arr;
+    var serialized;
+
+    if ( !Array.isArray( obj ) ) {
+        arr = [ obj ];
+    } else {
+        arr = obj;
+    }
+
+    serialized = arr.reduce( function( previousValue, item ) {
+        var addition = '';
+        if ( item && typeof item.name !== 'undefined' && typeof item.value !== 'undefined' && item.value !== '' && item.value !== null ) {
+            addition = ( previousValue ) ? '&' : '';
+            addition += _serializeQueryComponent( item.name, item.value );
+        }
+        return previousValue + addition;
+    }, '' );
+
+    return ( serialized.length > 0 ) ? '?' + serialized : '';
+}
+
+function _serializeQueryComponent( name, value ) {
+    var n;
+    var serialized = '';
+
+    // for both arrays of single-level objects and regular single-level objects
+    if ( typeof value === 'object' ) {
+        for ( n in value ) {
+            if ( value.hasOwnProperty( n ) ) {
+                if ( serialized ) {
+                    serialized += '&';
+                }
+                serialized += encodeURIComponent( name ) + '[' + encodeURIComponent( n ) + ']' +
+                    '=' + encodeURIComponent( value[ n ] );
+            }
+        }
+        return serialized;
+    }
+    return encodeURIComponent( name ) + '=' + encodeURIComponent( value );
+}
+
 function _throwInvalidXmlNodeName( name ) {
     // Note: this is more restrictive than XML spec.
     // We cannot accept namespaces prefixes because there is no way of knowing the namespace uri in CSV.
@@ -164,5 +212,6 @@ module.exports = {
     dataUriToBlob: dataUriToBlob,
     getThemeFromFormStr: getThemeFromFormStr,
     getTitleFromFormStr: getTitleFromFormStr,
-    csvToXml: csvToXml
+    csvToXml: csvToXml,
+    getQueryString: getQueryString
 };

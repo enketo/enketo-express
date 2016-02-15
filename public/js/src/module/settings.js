@@ -1,61 +1,60 @@
 'use strict';
 
 var config = require( 'enketo-config' );
-
-var queryParams = _getAllQueryParams(),
-    settings = {},
-    settingsMap = [ {
-        q: 'return',
-        s: 'returnUrl'
-    }, {
-        q: 'returnURL',
-        s: 'returnUrl'
-    }, {
-        q: 'returnUrl',
-        s: 'returnUrl'
-    }, {
-        q: 'showbranch',
-        s: 'showBranch'
-    }, {
-        q: 'debug',
-        s: 'debug'
-    }, {
-        q: 'touch',
-        s: 'touch'
-    }, {
-        q: 'server',
-        s: 'serverUrl'
-    }, {
-        q: 'serverURL',
-        s: 'serverUrl'
-    }, {
-        q: 'serverUrl',
-        s: 'serverUrl'
-    }, {
-        q: 'form',
-        s: 'xformUrl'
-    }, {
-        q: 'id',
-        s: 'xformId'
-    }, {
-        q: 'formName',
-        s: 'xformId'
-    }, {
-        q: 'instanceId',
-        s: 'instanceId'
-    }, {
-        q: 'instance_id',
-        s: 'instanceId'
-    }, {
-        q: 'entityId',
-        s: 'entityId'
-    }, {
-        q: 'source',
-        s: 'source'
-    }, {
-        q: 'parentWindowOrigin',
-        s: 'parentWindowOrigin'
-    } ];
+var queryParams = _getAllQueryParams();
+var settings = {};
+var settingsMap = [ {
+    q: 'return',
+    s: 'returnUrl'
+}, {
+    q: 'returnURL',
+    s: 'returnUrl'
+}, {
+    q: 'returnUrl',
+    s: 'returnUrl'
+}, {
+    q: 'showbranch',
+    s: 'showBranch'
+}, {
+    q: 'debug',
+    s: 'debug'
+}, {
+    q: 'touch',
+    s: 'touch'
+}, {
+    q: 'server',
+    s: 'serverUrl'
+}, {
+    q: 'serverURL',
+    s: 'serverUrl'
+}, {
+    q: 'serverUrl',
+    s: 'serverUrl'
+}, {
+    q: 'form',
+    s: 'xformUrl'
+}, {
+    q: 'id',
+    s: 'xformId'
+}, {
+    q: 'formName',
+    s: 'xformId'
+}, {
+    q: 'instanceId',
+    s: 'instanceId'
+}, {
+    q: 'instance_id',
+    s: 'instanceId'
+}, {
+    q: 'entityId',
+    s: 'entityId'
+}, {
+    q: 'source',
+    s: 'source'
+}, {
+    q: 'parentWindowOrigin',
+    s: 'parentWindowOrigin'
+} ];
 
 // rename query string parameters to settings, but only if they do not exist already
 settingsMap.forEach( function( obj ) {
@@ -83,6 +82,12 @@ for ( var prop in config ) {
     if ( config.hasOwnProperty( prop ) ) {
         settings[ prop ] = config[ prop ];
     }
+}
+
+// add submission parameter value
+if ( settings.submissionParameter && settings.submissionParameter.name ) {
+    // sets to undefined when necessary
+    settings.submissionParameter.value = queryParams[ settings.submissionParameter.name ];
 }
 
 // add enketoId

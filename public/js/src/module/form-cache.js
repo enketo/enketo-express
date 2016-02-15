@@ -5,8 +5,10 @@
 'use strict';
 
 var store = require( './store' );
+var settings = require( './settings' );
 var connection = require( './connection' );
 var $ = require( 'jquery' );
+var assign = require( 'lodash/object/assign' );
 
 var hash;
 
@@ -15,6 +17,8 @@ function init( survey ) {
         .then( function() {
             return get( survey );
         } )
+        .then( _removeQueryString )
+        .then( _processDynamicData )
         .then( function( result ) {
             if ( result ) {
                 return result;
@@ -38,6 +42,50 @@ function set( survey ) {
 
 function remove( survey ) {
     return store.survey.remove( survey.enketoId );
+}
+
+function _removeQueryString( survey ) {
+    var bareUrl = window.location.pathname + window.location.hash;
+
+    history.replaceState( null, '', bareUrl );
+
+    return survey;
+}
+
+function _processDynamicData( survey ) {
+    // TODO: In the future this method could perhaps be used to also store
+    // dynamic defaults. However, the issue would be to figure out how to clear
+    // those defaults.
+    if ( !survey ) {
+        return survey;
+    }
+    return store.dynamicData.get( survey.enketoId )
+        .then( function( data ) {
+            var newData = {
+                enketoId: survey.enketoId
+            };
+            assign( newData, data );
+            // Compare settings data with stored data to determine what to update. 
+            if ( settings.submissionParameter.name ) {
+                if ( settings.submissionParameter.value ) {
+                    // use the settings value
+                    newData.submissionParameter = settings.submissionParameter;
+                } else if ( settings.submissionParameter.value === '' ) {
+                    // delete value
+                    delete newData.submissionParameter;
+                } else if ( data && data.submissionParameter && data.submissionParameter.value ) {
+                    // use the stored value
+                    settings.submissionParameter.value = data.submissionParameter.value;
+                }
+            } else {
+                delete newData.submissionParameter;
+            }
+
+            return store.dynamicData.update( newData );
+        } )
+        .then( function() {
+            return survey;
+        } );
 }
 
 function _setUpdateIntervals( survey ) {

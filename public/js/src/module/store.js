@@ -14,6 +14,7 @@ var blobEncoding;
 var propertyStore;
 var recordStore;
 var surveyStore;
+var dataStore;
 var dump;
 var available = false;
 var databaseName = 'enketo';
@@ -24,7 +25,7 @@ function init() {
         .then( function() {
             return db.open( {
                 server: databaseName,
-                version: 1,
+                version: 2,
                 schema: {
                     // the surveys
                     surveys: {
@@ -92,6 +93,20 @@ function init() {
                         },
                         indexes: {
                             key: {
+                                unique: true
+                            }
+                        }
+                    },
+                    // Dynamic data, passed by via querystring is stored in a separate table, 
+                    // because its update mechanism is separate from the survey + resources. 
+                    // Otherwise the all-or-nothing form+resources update would remove this data.
+                    data: {
+                        key: {
+                            keyPath: 'enketoId',
+                            autoIncrement: false
+                        },
+                        indexes: {
+                            enketoId: {
                                 unique: true
                             }
                         }
@@ -394,6 +409,43 @@ surveyStore = {
     }
 };
 
+dataStore = {
+    /** 
+     * Obtains the stored dynamic data belonging to a form.
+     * 
+     * @param  {string} id [description]
+     * @return {Promise}    promise that resolves with data object
+     */
+    get: function( id ) {
+        return server.data.get( id )
+            .then( _firstItemOnly );
+    },
+    /**
+     * Updates the dynamic data belonging to a form
+     *
+     * @param  {{enketoId: string, submissionParameter: {name: string, value: string}}} data object with dynamic data
+     * @return {Promise}        promise that resolves with data object
+     */
+    update: function( data ) {
+        if ( !data.enketoId ) {
+            throw new Error( 'Dynamic data object not complete' );
+        }
+
+        return server.data.update( data )
+            .then( _firstItemOnly );
+    },
+    /**
+     * Removes the dynamic data belonging to a form
+     *
+     * @param  {string} id [description]
+     * @return {Promise}    [description]
+     */
+    remove: function( id ) {
+        return dataStore.remove( id );
+    }
+};
+
+
 recordStore = {
     /** 
      * Obtains a single record (XML + files)
@@ -414,6 +466,7 @@ recordStore = {
                 record.files.forEach( function( fileKey ) {
                     tasks.push( recordStore.file.get( record.instanceId, fileKey ) );
                 } );
+
                 return Promise.all( tasks )
                     .then( function( files ) {
                         // filter out the failed files (= undefined)
@@ -853,6 +906,7 @@ module.exports = {
     isAvailable: isAvailable,
     property: propertyStore,
     survey: surveyStore,
+    dynamicData: dataStore,
     record: recordStore,
     flush: flush,
     dump: dump

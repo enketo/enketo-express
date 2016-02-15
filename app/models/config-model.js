@@ -57,7 +57,10 @@ module.exports = {
         modernBrowsersURL: 'modern-browsers',
         supportEmail: config.support.email,
         themesSupported: config[ 'themes supported' ],
-        languagesSupported: config[ 'languages supported' ]
+        languagesSupported: config[ 'languages supported' ],
+        submissionParameter: {
+            name: config[ 'query parameter to pass to submission' ]
+        }
     },
     getThemesSupported: getThemesSupported
 };

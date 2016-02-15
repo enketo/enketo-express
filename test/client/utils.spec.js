@@ -141,4 +141,81 @@ describe( 'Client Utilities', function() {
 
     } );
 
+    describe( 'querystring builder', function() {
+        [
+            // simple object
+            [ {
+                name: 'debug',
+                value: true
+            }, '?debug=true' ],
+            // simple array
+            [
+                [ {
+                    name: 'debug',
+                    value: false
+                }, {
+                    name: 'ecid',
+                    value: 'abcd'
+                } ], '?debug=false&ecid=abcd'
+            ],
+            // empty results
+            [ 'string', '' ],
+            [ {
+                debug: true
+            }, '' ],
+            [ {
+                name: 'ecid',
+                value: ''
+            }, '' ],
+            [ {
+                name: 'ecid',
+                value: undefined
+            }, '' ],
+            [ {
+                name: 'ecid',
+                value: null
+            }, '' ],
+            [
+                [ 'string', {} ], ''
+            ],
+            [
+                [ {
+                    debug: true
+                }, {
+                    something: 'that'
+                } ], ''
+            ],
+            // encoding
+            [ {
+                name: 'ecid',
+                value: 'a value'
+            }, '?ecid=a%20value' ],
+            // value is object
+            [ {
+                name: 'd',
+                value: {
+                    '/a/b': 'c',
+                    '/b/c': 'd and e'
+                }
+            }, '?d[%2Fa%2Fb]=c&d[%2Fb%2Fc]=d%20and%20e' ],
+            // complex combo
+            [
+                [ {
+                    name: 'ecid',
+                    value: 'abcd'
+                }, {
+                    name: 'd',
+                    value: {
+                        '/a/b': 'c',
+                        '/b/c': 'd and e'
+                    }
+                } ], '?ecid=abcd&d[%2Fa%2Fb]=c&d[%2Fb%2Fc]=d%20and%20e'
+            ],
+        ].forEach( function( test ) {
+            it( 'generates ' + test[ 1 ] + ' from ' + JSON.stringify( test[ 0 ] ) + ' correctly', function() {
+                expect( utils.getQueryString( test[ 0 ] ) ).to.equal( test[ 1 ] );
+            } );
+        } );
+    } );
+
 } );
