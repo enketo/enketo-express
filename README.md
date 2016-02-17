@@ -3,7 +3,7 @@ Enketo Express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express
 
 [![Enketo Logo](https://enketo.org/private_media/images/logo-black.png "Enketo Logo")](https://enketo.org)
 
-A light-weight node.js version of Enketo Smart Paper. Chock-full of [badass rockstar tech](https://www.youtube.com/watch?v=bzkRVzciAZg).
+The modern Enketo Smart Paper web application.
 
 ### How to install a test/development server
 
