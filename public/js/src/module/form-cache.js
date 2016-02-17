@@ -269,14 +269,14 @@ function _getElementsGroupedBySrc( $form ) {
 
 function _updateCache( survey ) {
 
-    console.debug( 'checking for survey update' );
+    console.log( 'Checking for survey update...' );
 
     connection.getFormPartsHash( survey )
         .then( function( version ) {
             if ( hash === version ) {
-                console.debug( 'Cached survey is up to date!', hash );
+                console.log( 'Cached survey is up to date!', hash );
             } else {
-                console.debug( 'Cached survey is outdated! old:', hash, 'new:', version );
+                console.log( 'Cached survey is outdated! old:', hash, 'new:', version );
                 return connection.getFormParts( survey )
                     .then( function( formParts ) {
                         // media will be updated next time the form is loaded if resources is undefined
@@ -288,7 +288,7 @@ function _updateCache( survey ) {
                     .then( function( result ) {
                         // set the hash so that subsequent update checks won't redownload the form
                         hash = result.hash;
-                        console.debug( 'Survey is now updated in the store. Need to refresh.' );
+                        console.log( 'Survey is now updated in the store. Need to refresh.' );
                         $( document ).trigger( 'formupdated' );
                     } );
             }

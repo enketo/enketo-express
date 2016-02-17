@@ -36,10 +36,7 @@ function init() {
     if ( typeof window.console.debug === 'undefined' ) {
         console.debug = console.log;
     }
-    if ( !settings.debug ) {
-        window.console.log = function() {};
-        window.console.debug = function() {};
-    }
+
     // override feature detection (for development purposes)
     if ( settings.touch ) {
         support.touch = true;

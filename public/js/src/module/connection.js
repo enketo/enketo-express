@@ -96,7 +96,7 @@ function uploadRecord( record ) {
             } );
         }, Promise.resolve() )
         .then( function( results ) {
-            console.debug( 'results of all batches submitted', results );
+            console.log( 'results of all batches submitted', results );
             return results[ 0 ];
         } );
 }
@@ -225,7 +225,7 @@ function _prepareFormDataArray( record ) {
         batches = _divideIntoBatches( sizes, maxSize );
     }
 
-    console.debug( 'splitting record into ' + batches.length + ' batches to reduce submission size ', batches );
+    console.log( 'splitting record into ' + batches.length + ' batches to reduce submission size ', batches );
 
     batches.forEach( function( batch ) {
         var batchPrepped;

@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added 
 - Submission parameter now passed in offline-capable views too.
 
+##### Removed
+- Special client-side debugging mode. It is now always outputting log messages to the console.
+
 [1.23.2] - 2016-02-10
 ----------------------
 ##### Changed
