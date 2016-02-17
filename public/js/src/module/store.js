@@ -123,12 +123,15 @@ function init() {
             available = true;
         } )
         .catch( function( error ) {
-            console.error( 'store initialization error', error.message );
+            console.error( 'store initialization error', error );
             // make error more useful and throw it further down the line
-            error = ( typeof error === 'string' ) ? new Error( error ) : error;
-            error = error ? error : new Error( t( 'store.error.notavailable', {
-                error: error.message
-            } ) );
+            if ( typeof error === 'string' ) {
+                error = new Error( error );
+            } else if ( !( error instanceof Error ) ) {
+                error = new Error( t( 'store.error.notavailable', {
+                    error: JSON.stringify( error )
+                } ) );
+            }
             error.status = 500;
             throw error;
         } );
