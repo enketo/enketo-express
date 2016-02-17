@@ -52,8 +52,10 @@ function get( instanceId ) {
 function set( record ) {
     return getAutoSavedRecord()
         .then( function( autoSavedRecord ) {
-            // add files from autoSavedRecord
-            record.files = autoSavedRecord.files;
+            // Add files from autoSavedRecord
+            if ( autoSavedRecord ) {
+                record.files = autoSavedRecord.files;
+            }
             return store.record.set( record );
         } )
         .then( _updateRecordList );

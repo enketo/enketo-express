@@ -3,11 +3,15 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
+----------------------
 ##### Added 
 - Submission parameter now passed in offline-capable views too.
 
 ##### Removed
 - Special client-side debugging mode. It is now always outputting log messages to the console.
+
+##### Fixed
+- Submit and Save-as-Draft fail in offline-capable views if no values were changed.
 
 [1.23.2] - 2016-02-10
 ----------------------
