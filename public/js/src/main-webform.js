@@ -10,7 +10,8 @@ var controller = require( './module/controller-webform' );
 var settings = require( './module/settings' );
 var connection = require( './module/connection' );
 var FormModel = require( 'enketo-core/src/js/Form-model' );
-var t = require( './module/translator' );
+var translator = require( './module/translator' );
+var t = translator.t;
 var store = require( './module/store' );
 var utils = require( './module/utils' );
 var formCache = require( './module/form-cache' );
@@ -30,7 +31,8 @@ _setEmergencyHandlers();
 
 if ( settings.offline ) {
     console.log( 'App in offline-capable mode.' );
-    formCache.init( survey )
+    translator.init( survey )
+        .then( formCache.init )
         .then( _addBranding )
         .then( _swapTheme )
         .then( _init )
@@ -45,7 +47,9 @@ if ( settings.offline ) {
         .catch( _showErrorOrAuthenticate );
 } else {
     console.log( 'App in online-only mode.' );
-    connection.getFormParts( survey )
+    translator.init( survey )
+        .then( connection.getFormParts )
+        .then( translator.init )
         .then( _addBranding )
         .then( _swapTheme )
         .then( _init )

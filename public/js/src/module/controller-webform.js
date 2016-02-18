@@ -9,7 +9,7 @@ var connection = require( './connection' );
 var settings = require( './settings' );
 var Form = require( 'enketo-core' );
 var fileManager = require( './file-manager' );
-var t = require( './translator' );
+var t = require( './translator' ).t;
 var records = require( './records-queue' );
 var $ = require( 'jquery' );
 

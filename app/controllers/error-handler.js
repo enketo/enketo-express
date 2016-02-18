@@ -47,8 +47,8 @@ module.exports = {
         }
     },
     '404': function( req, res, next ) {
-        var err = new Error( req.i18n.t( 'error.pagenotfound' ) );
-        err.status = 404;
-        next( err );
+        var error = new Error( req.i18n.t( 'error.pagenotfound' ) );
+        error.status = 404;
+        next( error );
     }
 };
