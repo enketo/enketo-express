@@ -58,4 +58,164 @@ describe( 'Client Utilities', function() {
         } );
 
     } );
+
+
+    describe( 'blob <-> dataURI conversion', function() {
+
+        var aBlob1 = new Blob( [ '<a id="a"><b id="b">hey!</b></a>' ], {
+                type: 'text/xml'
+            } ),
+            aBlob1Type = aBlob1.type,
+            aBlob1Size = aBlob1.size,
+            aBlob2 = new Blob( [ '<a id="a">将来の仏教研究は急速に発展す</a>' ], {
+                type: 'text/xml'
+            } ),
+            aBlob2Size = aBlob2.size,
+            aBlob2Type = aBlob2.type;
+
+        it( 'converts a blob to a string', function( done ) {
+            utils.blobToDataUri( aBlob1 )
+                .then( function( result ) {
+                    expect( result ).to.be.a( 'string' );
+                    done();
+                } );
+        } );
+
+        it( 'converts a blob to dataUri and back to same blob', function( done ) {
+            utils.blobToDataUri( aBlob1 )
+                .then( utils.dataUriToBlob )
+                .then( function( result ) {
+                    expect( result.size ).to.equal( aBlob1Size );
+                    expect( result.type ).to.equal( aBlob1Type );
+                    expect( result ).to.be.an.instanceof( Blob );
+                    done();
+                } );
+        } );
+
+        it( 'converts a blob cotaining Unicode to dataUri and back to same blob', function( done ) {
+            utils.blobToDataUri( aBlob2 )
+                .then( utils.dataUriToBlob )
+                .then( function( result ) {
+                    expect( result.size ).to.equal( aBlob2Size );
+                    expect( result.type ).to.equal( aBlob2Type );
+                    expect( result ).to.be.an.instanceof( Blob );
+                    done();
+                } );
+        } );
+
+        it( 'fails to convert a string', function( done ) {
+            utils.blobToDataUri( 'a string' )
+                .then( utils.dataUriToBlob )
+                .catch( function( e ) {
+                    expect( e.message ).to.contain( 'TypeError' );
+                    done();
+                } );
+        } );
+
+        it( 'fails to convert undefined', function( done ) {
+            utils.blobToDataUri( undefined )
+                .then( utils.dataUriToBlob )
+                .catch( function( e ) {
+                    expect( e.message ).to.contain( 'TypeError' );
+                    done();
+                } );
+        } );
+
+        it( 'fails to convert false', function( done ) {
+            utils.blobToDataUri( false )
+                .then( utils.dataUriToBlob )
+                .catch( function( e ) {
+                    expect( e.message ).to.contain( 'TypeError' );
+                    done();
+                } );
+        } );
+
+        it( 'fails to convert null', function( done ) {
+            utils.blobToDataUri( null )
+                .then( utils.dataUriToBlob )
+                .catch( function( e ) {
+                    expect( e.message ).to.contain( 'TypeError' );
+                    done();
+                } );
+        } );
+
+    } );
+
+    describe( 'querystring builder', function() {
+        [
+            // simple object
+            [ {
+                name: 'debug',
+                value: true
+            }, '?debug=true' ],
+            // simple array
+            [
+                [ {
+                    name: 'debug',
+                    value: false
+                }, {
+                    name: 'ecid',
+                    value: 'abcd'
+                } ], '?debug=false&ecid=abcd'
+            ],
+            // empty results
+            [ 'string', '' ],
+            [ {
+                debug: true
+            }, '' ],
+            [ {
+                name: 'ecid',
+                value: ''
+            }, '' ],
+            [ {
+                name: 'ecid',
+                value: undefined
+            }, '' ],
+            [ {
+                name: 'ecid',
+                value: null
+            }, '' ],
+            [
+                [ 'string', {} ], ''
+            ],
+            [
+                [ {
+                    debug: true
+                }, {
+                    something: 'that'
+                } ], ''
+            ],
+            // encoding
+            [ {
+                name: 'ecid',
+                value: 'a value'
+            }, '?ecid=a%20value' ],
+            // value is object
+            [ {
+                name: 'd',
+                value: {
+                    '/a/b': 'c',
+                    '/b/c': 'd and e'
+                }
+            }, '?d[%2Fa%2Fb]=c&d[%2Fb%2Fc]=d%20and%20e' ],
+            // complex combo
+            [
+                [ {
+                    name: 'ecid',
+                    value: 'abcd'
+                }, {
+                    name: 'd',
+                    value: {
+                        '/a/b': 'c',
+                        '/b/c': 'd and e'
+                    }
+                } ], '?ecid=abcd&d[%2Fa%2Fb]=c&d[%2Fb%2Fc]=d%20and%20e'
+            ],
+        ].forEach( function( test ) {
+            it( 'generates ' + test[ 1 ] + ' from ' + JSON.stringify( test[ 0 ] ) + ' correctly', function() {
+                expect( utils.getQueryString( test[ 0 ] ) ).to.equal( test[ 1 ] );
+            } );
+        } );
+    } );
+
 } );

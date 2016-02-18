@@ -66,6 +66,12 @@ function getManifest( html, lang ) {
                 // calculate the hash to serve as the manifest version number
                 hash = _calculateHash( html, resources );
 
+                // add explicit entries in case user never lands on URL without querystring
+                // otherwise they may never get added as a Master entry
+                resources = resources.concat( [
+                    '/_/'
+                ] );
+
                 // determine version
                 _getVersionObj( versionKey )
                     .then( function( obj ) {

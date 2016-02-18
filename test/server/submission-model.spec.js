@@ -1,10 +1,9 @@
-/* global describe, require, it, beforeEach, afterEach */
+/* global describe, require, it, afterEach */
 'use strict';
 
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var Promise = require( 'lie' );
 var chai = require( 'chai' );
 var expect = chai.expect;
 var chaiAsPromised = require( 'chai-as-promised' );

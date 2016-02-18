@@ -5,8 +5,10 @@
 'use strict';
 
 var store = require( './store' );
+var settings = require( './settings' );
 var connection = require( './connection' );
 var $ = require( 'jquery' );
+var assign = require( 'lodash/object/assign' );
 
 var hash;
 
@@ -15,6 +17,8 @@ function init( survey ) {
         .then( function() {
             return get( survey );
         } )
+        .then( _removeQueryString )
+        .then( _processDynamicData )
         .then( function( result ) {
             if ( result ) {
                 return result;
@@ -38,6 +42,50 @@ function set( survey ) {
 
 function remove( survey ) {
     return store.survey.remove( survey.enketoId );
+}
+
+function _removeQueryString( survey ) {
+    var bareUrl = window.location.pathname + window.location.hash;
+
+    history.replaceState( null, '', bareUrl );
+
+    return survey;
+}
+
+function _processDynamicData( survey ) {
+    // TODO: In the future this method could perhaps be used to also store
+    // dynamic defaults. However, the issue would be to figure out how to clear
+    // those defaults.
+    if ( !survey ) {
+        return survey;
+    }
+    return store.dynamicData.get( survey.enketoId )
+        .then( function( data ) {
+            var newData = {
+                enketoId: survey.enketoId
+            };
+            assign( newData, data );
+            // Compare settings data with stored data to determine what to update. 
+            if ( settings.submissionParameter.name ) {
+                if ( settings.submissionParameter.value ) {
+                    // use the settings value
+                    newData.submissionParameter = settings.submissionParameter;
+                } else if ( settings.submissionParameter.value === '' ) {
+                    // delete value
+                    delete newData.submissionParameter;
+                } else if ( data && data.submissionParameter && data.submissionParameter.value ) {
+                    // use the stored value
+                    settings.submissionParameter.value = data.submissionParameter.value;
+                }
+            } else {
+                delete newData.submissionParameter;
+            }
+
+            return store.dynamicData.update( newData );
+        } )
+        .then( function() {
+            return survey;
+        } );
 }
 
 function _setUpdateIntervals( survey ) {
@@ -221,14 +269,14 @@ function _getElementsGroupedBySrc( $form ) {
 
 function _updateCache( survey ) {
 
-    console.debug( 'checking for survey update' );
+    console.log( 'Checking for survey update...' );
 
     connection.getFormPartsHash( survey )
         .then( function( version ) {
             if ( hash === version ) {
-                console.debug( 'Cached survey is up to date!', hash );
+                console.log( 'Cached survey is up to date!', hash );
             } else {
-                console.debug( 'Cached survey is outdated! old:', hash, 'new:', version );
+                console.log( 'Cached survey is outdated! old:', hash, 'new:', version );
                 return connection.getFormParts( survey )
                     .then( function( formParts ) {
                         // media will be updated next time the form is loaded if resources is undefined
@@ -240,7 +288,7 @@ function _updateCache( survey ) {
                     .then( function( result ) {
                         // set the hash so that subsequent update checks won't redownload the form
                         hash = result.hash;
-                        console.debug( 'Survey is now updated in the store. Need to refresh.' );
+                        console.log( 'Survey is now updated in the store. Need to refresh.' );
                         $( document ).trigger( 'formupdated' );
                     } );
             }

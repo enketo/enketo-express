@@ -15,7 +15,6 @@ var CONNECTION_URL = '/connection';
 var TRANSFORM_URL = '/transform/xform' + location.search;
 var TRANSFORM_HASH_URL = '/transform/xform/hash';
 var EXPORT_URL = '/export/get-url';
-var SUBMISSION_URL = ( settings.enketoId ) ? '/submission/' + settings.enketoIdPrefix + settings.enketoId + location.search : null;
 var INSTANCE_URL = ( settings.enketoId ) ? '/submission/' + settings.enketoIdPrefix + settings.enketoId : null;
 var MAX_SIZE_URL = ( settings.enketoId ) ? '/submission/max-size/' + settings.enketoIdPrefix + settings.enketoId : null;
 var DEFAULT_MAX_SIZE = 5 * 1024 * 1024;
@@ -97,7 +96,7 @@ function uploadRecord( record ) {
             } );
         }, Promise.resolve() )
         .then( function( results ) {
-            console.debug( 'results of all batches submitted', results );
+            console.log( 'results of all batches submitted', results );
             return results[ 0 ];
         } );
 }
@@ -132,7 +131,10 @@ function getDownloadUrl( zipFile ) {
  */
 function _uploadBatch( recordBatch ) {
     return new Promise( function( resolve, reject ) {
-        $.ajax( SUBMISSION_URL, {
+        // submission URL is dynamic
+        var submissionUrl = ( settings.enketoId ) ? '/submission/' + settings.enketoIdPrefix + settings.enketoId +
+            utils.getQueryString( settings.submissionParameter ) : null;
+        $.ajax( submissionUrl, {
                 type: 'POST',
                 data: recordBatch.formData,
                 cache: false,
@@ -223,7 +225,7 @@ function _prepareFormDataArray( record ) {
         batches = _divideIntoBatches( sizes, maxSize );
     }
 
-    console.debug( 'splitting record into ' + batches.length + ' batches to reduce submission size ', batches );
+    console.log( 'splitting record into ' + batches.length + ' batches to reduce submission size ', batches );
 
     batches.forEach( function( batch ) {
         var batchPrepped;

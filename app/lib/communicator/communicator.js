@@ -199,7 +199,6 @@ function getUpdatedRequestOptions( options ) {
  */
 function _request( options ) {
     var error;
-    var r;
     var method;
 
     return new Promise( function( resolve, reject ) {
@@ -217,7 +216,7 @@ function _request( options ) {
 
         debug( 'sending ' + method + ' request to url: ' + options.url );
 
-        r = request[ method ]( options, function( error, response, body ) {
+        request[ method ]( options, function( error, response, body ) {
             if ( error ) {
                 debug( 'Error occurred when requesting ' + options.url, error );
                 reject( error );

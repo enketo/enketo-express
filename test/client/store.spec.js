@@ -1,15 +1,7 @@
 /* global describe, require, it, beforeEach, expect, Blob */
 'use strict';
 
-/**
- * ***********************************************************************************************************
- * Once PhantomJS 2.0 can be used for testing we can move these tests to the general (headless+browser) spec
- * ***********************************************************************************************************
- *
- * When using actual browsers for testing be careful that an open browser window with the same domain, may
- * lock up indexedDb!
- *
- */
+global.Promise = require( 'lie' );
 
 // TODO: when chai-as-promised adapter is working, convert these tests using .eventually.
 
@@ -406,14 +398,14 @@ describe( 'Client Storage', function() {
             surveyA.enketoId = surveyA.enketoId + Math.random();
 
             store.survey.set( surveyA )
-                .then( function( result ) {
+                .then( function() {
                     surveyA.resources = [ resourceA, resourceB ];
                     return store.survey.update( surveyA );
                 } )
-                .then( function( result ) {
+                .then( function() {
                     return store.survey.remove( surveyA.enketoId );
                 } )
-                .then( function( result ) {
+                .then( function() {
                     return store.survey.resource.get( surveyA.enketoId, url );
                 } )
                 .then( function( result ) {
@@ -586,7 +578,7 @@ describe( 'Client Storage', function() {
                 .then( function() {
                     return store.record.set( recordA );
                 } )
-                .catch( function( e ) {
+                .catch( function() {
                     // Firefox failure? => https://github.com/aaronpowell/db.js/issues/98
                     expect( true ).to.equal( true );
                 } )

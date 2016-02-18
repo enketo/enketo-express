@@ -10,8 +10,6 @@ function init() {
     if ( window.applicationCache ) {
         var status = window.applicationCache.status;
 
-        console.log( 'Initializing applicationCache, current status', status );
-
         if ( status === window.applicationCache.IDLE ) {
             _reportOfflineLaunchCapable();
         } else if ( status === window.applicationCache.UPDATEREADY ) {

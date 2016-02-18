@@ -14,6 +14,7 @@ var blobEncoding;
 var propertyStore;
 var recordStore;
 var surveyStore;
+var dataStore;
 var dump;
 var available = false;
 var databaseName = 'enketo';
@@ -24,7 +25,7 @@ function init() {
         .then( function() {
             return db.open( {
                 server: databaseName,
-                version: 1,
+                version: 2,
                 schema: {
                     // the surveys
                     surveys: {
@@ -95,13 +96,26 @@ function init() {
                                 unique: true
                             }
                         }
+                    },
+                    // Dynamic data, passed by via querystring is stored in a separate table, 
+                    // because its update mechanism is separate from the survey + resources. 
+                    // Otherwise the all-or-nothing form+resources update would remove this data.
+                    data: {
+                        key: {
+                            keyPath: 'enketoId',
+                            autoIncrement: false
+                        },
+                        indexes: {
+                            enketoId: {
+                                unique: true
+                            }
+                        }
                     }
                 }
             } );
         } )
         .then( function( s ) {
             server = s;
-            console.debug( 'WHoohoeeee, we\'ve got ourselves a database! Now let\'s check if it works properly.' );
         } )
         .then( _isWriteable )
         .then( _setBlobStorageEncoding )
@@ -109,12 +123,15 @@ function init() {
             available = true;
         } )
         .catch( function( error ) {
-            console.error( 'store initialization error', error.message );
+            console.error( 'store initialization error', error );
             // make error more useful and throw it further down the line
-            error = ( typeof error === 'string' ) ? new Error( error ) : error;
-            error = error ? error : new Error( t( 'store.error.notavailable', {
-                error: error.message
-            } ) );
+            if ( typeof error === 'string' ) {
+                error = new Error( error );
+            } else if ( !( error instanceof Error ) ) {
+                error = new Error( t( 'store.error.notavailable', {
+                    error: JSON.stringify( error )
+                } ) );
+            }
             error.status = 500;
             throw error;
         } );
@@ -166,7 +183,7 @@ function _canStoreBlobs() {
      * https://github.com/kobotoolbox/enketo-express/issues/155
      */
     if ( sniffer.browser.isChrome() ) {
-        console.debug( 'This is Chrome which has a blob/file storage problem.' );
+        console.log( 'This is Chrome which has a blob/file storage problem.' );
         return Promise.reject();
     }
 
@@ -180,11 +197,11 @@ function _setBlobStorageEncoding() {
 
     return _canStoreBlobs()
         .then( function() {
-            console.debug( 'This browser is able to store blobs directly' );
+            console.log( 'This browser is able to store blobs directly' );
             blobEncoding = false;
         } )
         .catch( function() {
-            console.debug( 'This browser is not able to store blobs directly, so blobs will be Base64 encoded' );
+            console.log( 'This browser is not able to store blobs directly, so blobs will be Base64 encoded' );
             blobEncoding = true;
         } );
 }
@@ -243,9 +260,6 @@ surveyStore = {
      * @return {[type]}    [description]
      */
     get: function( id ) {
-
-        console.debug( 'attempting to obtain survey from storage', id );
-
         return server.surveys.get( id )
             .then( _firstItemOnly );
     },
@@ -256,9 +270,6 @@ surveyStore = {
      * @return {Promise}        [description]
      */
     set: function( survey ) {
-
-        console.debug( 'attempting to store new survey' );
-
         if ( !survey.form || !survey.model || !survey.enketoId || !survey.hash ) {
             throw new Error( 'Survey not complete' );
         }
@@ -275,8 +286,6 @@ surveyStore = {
         var resourceKeys;
         var tasks = [];
         var obsoleteResources = [];
-
-        console.debug( 'attempting to update a stored survey' );
 
         if ( !survey.form || !survey.model || !survey.enketoId ) {
             throw new Error( 'Survey not complete' );
@@ -345,7 +354,6 @@ surveyStore = {
             .then( function( survey ) {
                 resources = survey.resources || [];
                 resources.forEach( function( resource ) {
-                    console.debug( 'adding removal of ', resource, 'to remove task queue' );
                     tasks.push( surveyStore.resource.remove( id, resource ) );
                 } );
                 tasks.push( server.surveys.remove( id ) );
@@ -394,6 +402,43 @@ surveyStore = {
     }
 };
 
+dataStore = {
+    /** 
+     * Obtains the stored dynamic data belonging to a form.
+     * 
+     * @param  {string} id [description]
+     * @return {Promise}    promise that resolves with data object
+     */
+    get: function( id ) {
+        return server.data.get( id )
+            .then( _firstItemOnly );
+    },
+    /**
+     * Updates the dynamic data belonging to a form
+     *
+     * @param  {{enketoId: string, submissionParameter: {name: string, value: string}}} data object with dynamic data
+     * @return {Promise}        promise that resolves with data object
+     */
+    update: function( data ) {
+        if ( !data.enketoId ) {
+            throw new Error( 'Dynamic data object not complete' );
+        }
+
+        return server.data.update( data )
+            .then( _firstItemOnly );
+    },
+    /**
+     * Removes the dynamic data belonging to a form
+     *
+     * @param  {string} id [description]
+     * @return {Promise}    [description]
+     */
+    remove: function( id ) {
+        return dataStore.remove( id );
+    }
+};
+
+
 recordStore = {
     /** 
      * Obtains a single record (XML + files)
@@ -414,6 +459,7 @@ recordStore = {
                 record.files.forEach( function( fileKey ) {
                     tasks.push( recordStore.file.get( record.instanceId, fileKey ) );
                 } );
+
                 return Promise.all( tasks )
                     .then( function( files ) {
                         // filter out the failed files (= undefined)
@@ -463,8 +509,6 @@ recordStore = {
     set: function( record ) {
         var fileKeys;
 
-        console.debug( 'attempting to store new record', record );
-
         if ( !record.instanceId || !record.enketoId || !record.name || !record.xml ) {
             return Promise.reject( new Error( 'Record not complete' ) );
         }
@@ -490,7 +534,7 @@ recordStore = {
             .then( propertyStore.incrementRecordCount )
             .then( function() {
                 var tasks = [];
-                console.debug( 'added the record, now checking files' );
+
                 record.files.forEach( function( file ) {
                     // file can be a string if it was loaded from storage and remained unchanged
                     if ( file && file.item && file.item instanceof Blob ) {
@@ -500,7 +544,6 @@ recordStore = {
                 return Promise.all( tasks );
             } )
             .then( function() {
-                console.debug( 'all save tasks completed!' );
                 return record;
             } );
     },
@@ -514,8 +557,6 @@ recordStore = {
         var fileKeys;
         var tasks = [];
         var obsoleteFiles = [];
-
-        console.debug( 'attempting to update a stored record' );
 
         if ( !record.instanceId || !record.enketoId || !record.name || !record.xml ) {
             throw new Error( 'Record not complete' );
@@ -583,7 +624,6 @@ recordStore = {
             .then( function( record ) {
                 files = record.files || [];
                 files.forEach( function( fileKey ) {
-                    console.debug( 'adding removal of ', fileKey, 'to remove task queue' );
                     tasks.push( recordStore.file.remove( instanceId, fileKey ) );
                 } );
                 tasks.push( server.records.remove( instanceId ) );
@@ -853,6 +893,7 @@ module.exports = {
     isAvailable: isAvailable,
     property: propertyStore,
     survey: surveyStore,
+    dynamicData: dataStore,
     record: recordStore,
     flush: flush,
     dump: dump

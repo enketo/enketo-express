@@ -29,7 +29,7 @@ var survey = {
 _setEmergencyHandlers();
 
 if ( settings.offline ) {
-    console.debug( 'in offline mode' );
+    console.log( 'App in offline-capable mode.' );
     formCache.init( survey )
         .then( _addBranding )
         .then( _swapTheme )
@@ -44,7 +44,7 @@ if ( settings.offline ) {
         } )
         .catch( _showErrorOrAuthenticate );
 } else {
-    console.debug( 'in online mode' );
+    console.log( 'App in online-only mode.' );
     connection.getFormParts( survey )
         .then( _addBranding )
         .then( _swapTheme )
