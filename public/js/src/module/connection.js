@@ -5,7 +5,7 @@
 'use strict';
 
 var settings = require( './settings' );
-var t = require( './translator' );
+var t = require( './translator' ).t;
 var utils = require( './utils' );
 var $ = require( 'jquery' );
 

@@ -1,52 +1,70 @@
 'use strict';
 
 var settings = require( './settings' );
-var i18next = require( 'i18next-client' );
+var i18next = require( 'i18next' );
+var XHR = require( 'i18next-xhr-backend' );
+var LanguageDetector = require( 'i18next-browser-languagedetector' );
 var $ = require( 'jquery' );
-
-var options;
+var init;
+var t;
+var htmlParagraphsPostProcessor;
 
 // The postProcessor assumes that array values with line breaks should be divided into HTML paragraphs.
-i18next.addPostProcessor( 'htmlParagraphs', function( value, key ) {
-    var paragraphs = value.split( '\n' );
-    return ( paragraphs.length > 1 ) ? '<p>' + paragraphs.join( '</p><p>' ) + '</p>' : value;
-} );
-
-options = {
-    // path where language files are available
-    // resGetPath: '/locales/__lng__/translation.json',
-    // load a fallback language
-    fallbackLng: 'en',
-    // allow language override with 'lang' query parameter
-    detectLngQS: 'lang',
-    // only load unspecific languages (i.e. without country code - may need to be changed at some stage)
-    load: 'unspecific',
-    // avoid uselessly attempting to obtain unsupported languages
-    lngWhitelist: settings.languagesSupported,
-    // always use htmlLineParagrahs post processor
-    postProcess: 'htmlParagraphs',
-    // don't use cookies, always detect
-    useCookie: false,
-    // use custom loader to avoid query string timestamp (messes up applicationCache)
-    customLoad: function( lng, ns, options, loadComplete ) {
-        // load the file for given language and namespace
-        $.ajax( {
-                url: '/locales/__lng__/translation.json'.replace( '__lng__', lng ),
-                async: false
-            } )
-            .done( function( data ) {
-                loadComplete( null, data );
-            } )
-            .fail( function( error ) {
-                loadComplete( error );
-            } );
+htmlParagraphsPostProcessor = {
+    type: 'postProcessor',
+    name: 'htmlParagraphsPostProcessor',
+    process: function( value, key ) {
+        var paragraphs = value.split( '\n' );
+        return ( paragraphs.length > 1 ) ? '<p>' + paragraphs.join( '</p><p>' ) + '</p>' : value;
     }
 };
 
-i18next.init( options );
+/**
+ * Initializes translator and resolves **when translations have been loaded**.
+ * 
+ * @param  {=*?} something can be anything
+ * @return {Promise}       promise resolving the original something argument
+ */
+init = function( something ) {
+    return new Promise( function( resolve, reject ) {
+        i18next
+            .use( XHR )
+            .use( LanguageDetector )
+            .use( htmlParagraphsPostProcessor )
+            .init( {
+                whitelist: settings.languagesSupported,
+                fallbackLng: 'en',
+                backend: {
+                    loadPath: '/locales/__lng__/translation.json',
+                },
+                detection: {
+                    order: [ 'querystring', 'navigator' ],
+                    lookupQuerystring: 'lang',
+                    caches: []
+                },
+                interpolation: {
+                    prefix: '__',
+                    suffix: '__'
+                },
+                postProcess: [ 'htmlParagraphsPostProcessor' ]
+            }, function( error ) {
+                if ( error ) {
+                    reject( error );
+                } else {
+                    resolve( something );
+                }
+            } );
+    } );
+};
 
-module.exports = i18next.t;
+t = function( key, options ) {
+    return i18next.t( key, options );
+};
 
+module.exports = {
+    init: init,
+    t: t
+};
 
 /**
  * add keys from XSL stylesheets manually

@@ -28,7 +28,7 @@ function getManifest( req, res ) {
             if ( err ) {
                 reject( err );
             } else {
-                manifest.get( html, req.i18n.lng() )
+                manifest.get( html, req.i18n.language )
                     .then( resolve )
                     .catch( reject );
             }

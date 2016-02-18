@@ -9,7 +9,7 @@ var connection = require( './connection' );
 var gui = require( './gui' );
 var settings = require( './settings' );
 var exporter = require( './exporter' );
-var t = require( './translator' );
+var t = require( './translator' ).t;
 var $ = require( 'jquery' );
 
 var $exportButton;

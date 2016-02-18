@@ -7,7 +7,7 @@
 var support = require( 'enketo-core/src/js/support' );
 var settings = require( './settings' );
 var printForm = require( 'enketo-core/src/js/print' );
-var t = require( './translator' );
+var t = require( './translator' ).t;
 var sniffer = require( './sniffer' );
 var dialog = require( './vex.dialog.custom' );
 var $ = require( 'jquery' );

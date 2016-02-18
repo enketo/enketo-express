@@ -7,7 +7,7 @@
 var db = require( 'db.js' );
 var utils = require( './utils' );
 var sniffer = require( './sniffer' );
-var t = require( './translator' );
+var t = require( './translator' ).t;
 
 var server;
 var blobEncoding;

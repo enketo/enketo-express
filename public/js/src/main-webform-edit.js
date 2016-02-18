@@ -9,9 +9,9 @@ var gui = require( './module/gui' );
 var controller = require( './module/controller-webform' );
 var settings = require( './module/settings' );
 var connection = require( './module/connection' );
-var t = require( './module/translator' );
+var translator = require( './module/translator' );
+var t = translator.t;
 var utils = require( './module/utils' );
-
 var $loader = $( '.form__loader' );
 var $form = $( 'form.or' );
 var $buttons = $( '.form-header__button--print, button#submit-form' );
@@ -23,27 +23,31 @@ var survey = {
     instanceId: settings.instanceId
 };
 
-Promise.all( [
-    connection.getFormParts( survey ),
-    connection.getExistingInstance( survey )
-] ).then( function( responses ) {
-    var formParts = responses[ 0 ];
-    formParts.instance = responses[ 1 ].instance;
+translator.init( survey )
+    .then( function( survey ) {
+        return Promise.all( [
+            connection.getFormParts( survey ),
+            connection.getExistingInstance( survey )
+        ] );
+    } )
+    .then( function( responses ) {
+        var formParts = responses[ 0 ];
+        formParts.instance = responses[ 1 ].instance;
 
-    if ( formParts.form && formParts.model && formParts.instance ) {
-        gui.swapTheme( responses[ 0 ].theme || utils.getThemeFromFormStr( responses[ 0 ].form ) )
-            .then( function() {
+        if ( formParts.form && formParts.model && formParts.instance ) {
+            gui.swapTheme( responses[ 0 ].theme || utils.getThemeFromFormStr( responses[ 0 ].form ) )
+                .then( function() {
 
-                _init( formParts );
-            } )
-            .then( connection.getMaximumSubmissionSize )
-            .then( function( maxSize ) {
-                settings.maxSize = maxSize;
-            } );
-    } else {
-        throw new Error( t( 'error.unknown' ) );
-    }
-} ).catch( _showErrorOrAuthenticate );
+                    _init( formParts );
+                } )
+                .then( connection.getMaximumSubmissionSize )
+                .then( function( maxSize ) {
+                    settings.maxSize = maxSize;
+                } );
+        } else {
+            throw new Error( t( 'error.unknown' ) );
+        }
+    } ).catch( _showErrorOrAuthenticate );
 
 function _showErrorOrAuthenticate( error ) {
     $loader.addClass( 'fail' );

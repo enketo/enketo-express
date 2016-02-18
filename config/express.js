@@ -8,7 +8,9 @@ var fs = require( 'fs' );
 var favicon = require( 'serve-favicon' );
 var config = require( '../app/models/config-model' ).server;
 var logger = require( 'morgan' );
-var i18n = require( 'i18next' );
+var i18next = require( 'i18next' );
+var I18nextBackend = require( 'i18next-node-fs-backend' );
+var i18nextMiddleware = require( 'i18next-express-middleware' );
 var compression = require( 'compression' );
 var errorHandler = require( '../app/controllers/error-handler' );
 var controllersPath = path.join( __dirname, '../app/controllers' );
@@ -33,20 +35,26 @@ app.set( 'view engine', 'jade' );
 app.set( 'json spaces', 4 );
 
 // setup i18next
-i18n.init( {
-    // don't bother with these routes
-    ignoreRoutes: [ 'css/', 'fonts/', 'images/', 'js/', 'lib/' ],
-    // only attemp to translate the supported languages
-    supportedLngs: app.get( 'languages supported' ),
-    // allow query string lang override
-    detectLngQS: 'lang',
-    // fallback language
-    fallbackLng: 'en',
-    // don't use cookies, always detect 
-    useCookie: false
-} );
-// make i18n apphelper available in jade templates
-i18n.registerAppHelper( app );
+i18next
+    .use( i18nextMiddleware.LanguageDetector )
+    .use( I18nextBackend )
+    .init( {
+        //debug: true, // DEBUG
+        whitelist: app.get( 'languages supported' ),
+        fallbackLng: 'en',
+        backend: {
+            loadPath: path.resolve( __dirname, '../locales/__lng__/translation.json' )
+        },
+        detection: {
+            order: [ 'querystring', 'header' ],
+            lookupQuerystring: 'lang',
+            caches: false,
+        },
+        interpolation: {
+            prefix: '__',
+            suffix: '__'
+        }
+    } );
 
 // middleware
 app.use( compression() );
@@ -55,7 +63,9 @@ app.use( bodyParser.urlencoded( {
     extended: true
 } ) );
 app.use( cookieParser( app.get( 'encryption key' ) ) );
-app.use( i18n.handle );
+app.use( i18nextMiddleware.handle( i18next, {
+    /*ignoreRoutes: [ '/css', '/fonts', '/images', '/js' ]*/
+} ) );
 app.use( favicon( path.resolve( __dirname, '../public/images/favicon.ico' ) ) );
 app.use( express.static( path.resolve( __dirname, '../public' ) ) );
 app.use( '/locales', express.static( path.resolve( __dirname, '../locales' ) ) );
@@ -69,23 +79,8 @@ app.use( function( req, res, next ) {
     res.locals.logo = req.app.get( 'logo' );
     res.locals.defaultTheme = req.app.get( 'default theme' ).replace( 'theme-', '' ) || 'kobo';
     res.locals.title = req.app.get( 'app name' );
-    res.locals.directionality = function() {
-        // TODO: remove this when https://github.com/i18next/i18next/pull/413 is merged, copied to node-i18next, and published.
-        // After that we can just access i18n.dir(), in the jade template
-        var currentLng = i18n.lng();
-        var rtlLangs = [ 'ar', 'shu', 'sqr', 'ssh', 'xaa', 'yhd', 'yud', 'aao', 'abh', 'abv', 'acm',
-            'acq', 'acw', 'acx', 'acy', 'adf', 'ads', 'aeb', 'aec', 'afb', 'ajp', 'apc', 'apd', 'arb',
-            'arq', 'ars', 'ary', 'arz', 'auz', 'avl', 'ayh', 'ayl', 'ayn', 'ayp', 'bbz', 'pga', 'he',
-            'iw', 'ps', 'pbt', 'pbu', 'pst', 'prp', 'prd', 'ur', 'ydd', 'yds', 'yih', 'ji', 'yi', 'hbo',
-            'men', 'xmn', 'fa', 'jpr', 'peo', 'pes', 'prs', 'dv', 'sam'
-        ];
-
-        if ( rtlLangs.some( function( lang ) {
-                return new RegExp( '^' + lang ).test( currentLng );
-            } ) ) {
-            return 'rtl';
-        }
-        return 'ltr';
+    res.locals.dir = function( lng ) {
+        return i18next.dir( lng );
     };
     next();
 } );
@@ -105,7 +100,8 @@ app.use( logger( ( app.get( 'env' ) === 'development' ? 'dev' : 'tiny' ) ) );
 app.use( errorHandler[ '404' ] );
 if ( app.get( 'env' ) === 'development' ) {
     app.use( errorHandler.development );
+} else {
+    app.use( errorHandler.production );
 }
-app.use( errorHandler.production );
 
 module.exports = app;
