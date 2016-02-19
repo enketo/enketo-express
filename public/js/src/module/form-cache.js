@@ -65,7 +65,9 @@ function _processDynamicData( survey ) {
                 enketoId: survey.enketoId
             };
             assign( newData, data );
-            // Compare settings data with stored data to determine what to update. 
+            // Carefully compare settings data with stored data to determine what to update.
+
+            // submissionParameter
             if ( settings.submissionParameter.name ) {
                 if ( settings.submissionParameter.value ) {
                     // use the settings value
@@ -79,6 +81,22 @@ function _processDynamicData( survey ) {
                 }
             } else {
                 delete newData.submissionParameter;
+            }
+
+            // parentWindowOrigin
+            if ( typeof settings.parentWindowOrigin !== 'undefined' ) {
+                if ( settings.parentWindowOrigin ) {
+                    // use the settings value
+                    newData.parentWindowOrigin = settings.parentWindowOrigin;
+                } else if ( settings.parentWindowOrigin === '' ) {
+                    // delete value
+                    delete newData.parentWindowOrigin;
+                } else if ( data && data.parentWindowOrigin ) {
+                    // use the stored value
+                    settings.parentWindowOrigin = data.parentWindowOrigin;
+                }
+            } else {
+                delete newData.parentWindowOrigin;
             }
 
             return store.dynamicData.update( newData );

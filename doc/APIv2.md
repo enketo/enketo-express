@@ -8,8 +8,11 @@ This is a temporary document with quick notes on the changes of API v2 with API 
 # /survey endpoint
 In API v2 this always returns an **online-only** webform!
 
-# the new /survey/offline endpoint (doesn't exist in API v1)
+# the new /survey/offline endpoint 
 In API v2 this always returns an **offline-enabled** webform (if offline capability is enabled in config) as the value for offline_url. If offline capability is disabled this endpoint will return a 405 Not Allowed.
+
+# the new /survey/offline/iframe endpoint 
+Returns offline-capable iframe-friendly webform. Note that the offline-capability might not make sense if the parentWindow is not offline-capable (i.e. the page you're adding the iframed form too). 
 
 # defaults
 All /survey/* endpoints, except /survey/offline, now accept `defaults[]` parameters to dynamically set form defaults.
@@ -19,13 +22,13 @@ curl --user APIKEY: -d "server_url=https://ona.io/enketo&form_id=widgets&default
 The returned URL contains the 'feature' (and not the Database), so a single survey can be served with different default to different users.
 
 # /survey/all endpoint
-Returns both url (online-only) and offline_url (offline-capable) url properties for each survey. Does not return 'subdomain' property any more. Returns new enketo_id property to replace this.
+Returns both url (online-only) and `offline_url` (offline-capable) url properties for each survey. Does not return 'subdomain' property any more. Returns new enketo_id property to replace this. Also accepts `parent_window_origin` parameter (see under /iframe).
 
 # /surveys/list endpoint
-Returns list of surveys with **all urls** (like survey/all).
+Returns list of surveys with **all urls** (like survey/all). Also accepts `parent_window_origin` parameter (see under /iframe).
 
 # postMessage
-All */iframe endpoints now accept a `parent_window_origin` parameter to enable an iframed webform to post messages to its parent window.
+All */iframe endpoints, survey/all, and surveys/list now accept a `parent_window_origin` parameter to enable an iframed webform to post messages to its parent window.
 
 Messages currently supported are:
 
