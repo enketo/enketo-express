@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Added 
 - Submission parameter now passed in offline-capable views too.
+- Full-featured iframe-friendly offline-capable webform views.
+
+##### Changed
+- Webform URL format for iframe-friendly views (**WARNING: Always use API to get webform URLs to avoid regressions for your app.**)
 
 ##### Removed
 - Special client-side debugging mode. It is now always outputting log messages to the console.

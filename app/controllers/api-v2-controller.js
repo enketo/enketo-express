@@ -24,9 +24,9 @@ router
     .all( '*', authCheck )
     .all( '*', _setQuotaUsed )
     .all( '*', _setDefaultsQueryParam )
-    .all( '/*/iframe', _setIframeQueryParams )
-    .all( '/survey/all', _setIframeQueryParams )
-    .all( '/surveys/list', _setIframeQueryParams )
+    .all( '/*/iframe', _setIframe )
+    .all( '/survey/all', _setIframe )
+    .all( '/surveys/list', _setIframe )
     .all( '/survey/preview*', function( req, res, next ) {
         req.webformType = 'preview';
         next();
@@ -43,7 +43,7 @@ router
         req.webformType = 'edit';
         next();
     } )
-    .all( '/survey/offline', function( req, res, next ) {
+    .all( '/survey/offline*', function( req, res, next ) {
         var error;
         if ( req.app.get( 'offline enabled' ) ) {
             req.webformType = 'offline';
@@ -58,9 +58,11 @@ router
     .get( '/survey', getExistingSurvey )
     .get( '/survey/offline', getExistingSurvey )
     .get( '/survey/iframe', getExistingSurvey )
+    .get( '/survey/offline/iframe', getExistingSurvey )
     .post( '/survey', getNewOrExistingSurvey )
     .post( '/survey/offline', getNewOrExistingSurvey )
     .post( '/survey/iframe', getNewOrExistingSurvey )
+    .post( '/survey/offline/iframe', getNewOrExistingSurvey )
     .delete( '/survey', deactivateSurvey )
     .get( '/survey/preview', getExistingSurvey )
     .get( '/survey/preview/iframe', getExistingSurvey )
@@ -285,10 +287,10 @@ function _setDefaultsQueryParam( req, res, next ) {
     next();
 }
 
-function _setIframeQueryParams( req, res, next ) {
+function _setIframe( req, res, next ) {
     var parentWindowOrigin = req.body.parent_window_origin || req.query.parent_window_origin;
 
-    req.iframeQueryParam = 'iframe=true';
+    req.iframe = true;
     if ( parentWindowOrigin ) {
         req.parentWindowOriginParam = 'parentWindowOrigin=' + encodeURIComponent( decodeURIComponent( parentWindowOrigin ) );
     }
@@ -319,6 +321,9 @@ function _generateQueryString( params ) {
 function _generateWebformUrls( id, req ) {
     var queryString;
     var obj = {};
+    var IFRAMEPATH = 'i/';
+    var OFFLINEPATH = '_/';
+    var iframePart = ( req.iframe ) ? IFRAMEPATH : '';
     var protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol;
     var baseUrl = protocol + '://' + req.headers.host + '/';
     var idPartOnline = '::' + id;
@@ -328,33 +333,45 @@ function _generateWebformUrls( id, req ) {
 
     switch ( req.webformType ) {
         case 'preview':
-            queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
-            obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
+            queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
+            obj.preview_url = baseUrl + 'preview/' + iframePart + idPartOnline + queryString;
             break;
         case 'edit':
             // no defaults query parameter in edit view
-            queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.body.instance_id, req.parentWindowOriginParam, req.returnQueryParam ] );
-            obj.edit_url = baseUrl + 'edit/' + idPartOnline + queryString;
+            queryString = _generateQueryString( [ 'instance_id=' + req.body.instance_id, req.parentWindowOriginParam, req.returnQueryParam ] );
+            obj.edit_url = baseUrl + 'edit/' + iframePart + idPartOnline + queryString;
             break;
         case 'all':
             // non-iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam ] );
             obj.url = baseUrl + idPartOnline + queryString;
-            obj.offline_url = baseUrl + '_/' + idPartOffline;
+            obj.offline_url = baseUrl + OFFLINEPATH + idPartOffline;
             obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // iframe views
-            queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
-            obj.iframe_url = baseUrl + idPartOnline + queryString;
-            obj.preview_iframe_url = baseUrl + 'preview/' + idPartOnline + queryString;
+            queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
+            obj.iframe_url = baseUrl + IFRAMEPATH + idPartOnline + queryString;
+            obj.offline_iframe_url = baseUrl + OFFLINEPATH + IFRAMEPATH + idPartOffline;
+            obj.preview_iframe_url = baseUrl + 'preview/' + IFRAMEPATH + idPartOnline + queryString;
             // rest
             obj.enketo_id = id;
             break;
         case 'offline':
-            obj.offline_url = baseUrl + '_/' + idPartOffline;
+            queryString = _generateQueryString( [ req.parentWindowOriginParam ] );
+            if ( iframePart ) {
+                obj.offline_iframe_url = baseUrl + OFFLINEPATH + iframePart + idPartOffline + queryString;
+            } else {
+                obj.offline_url = baseUrl + OFFLINEPATH + idPartOffline;
+            }
+
             break;
         default:
-            queryString = _generateQueryString( [ req.iframeQueryParam, req.defaultsQueryParam, req.parentWindowOriginParam ] );
-            obj.url = baseUrl + idPartOnline + queryString;
+            queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
+            if ( iframePart ) {
+                obj.iframe_url = baseUrl + iframePart + idPartOnline + queryString;
+            } else {
+                obj.url = baseUrl + idPartOnline + queryString;
+            }
+
             break;
     }
 

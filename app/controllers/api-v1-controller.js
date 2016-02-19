@@ -21,7 +21,7 @@ router
     } )
     .all( '*', authCheck )
     .all( '*', _setQuotaUsed )
-    .all( '/*/iframe', _setIframeQueryParam )
+    .all( '/*/iframe', _setIframe )
     .all( '/survey/preview*', function( req, res, next ) {
         req.webformType = 'preview';
         next();
@@ -245,8 +245,8 @@ function _setQuotaUsed( req, res, next ) {
         } );
 }
 
-function _setIframeQueryParam( req, res, next ) {
-    req.iframeQueryParam = 'iframe=true';
+function _setIframe( req, res, next ) {
+    req.iframe = true;
     next();
 }
 
@@ -273,38 +273,40 @@ function _generateQueryString( params ) {
 function _generateWebformUrls( id, req ) {
     var queryString;
     var obj = {};
+    var IFRAMEPATH = 'i/';
+    var iframePart = ( req.iframe ) ? IFRAMEPATH : '';
     var protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol;
     var baseUrl = protocol + '://' + req.headers.host + '/';
     var idPartOnline = '::' + id;
     var idPartOffline = '#' + id;
-    var offline = req.app.get( 'offline enabled' ) && !req.iframeQueryParam;
+    var offline = req.app.get( 'offline enabled' );
 
     req.webformType = req.webformType || 'default';
 
     switch ( req.webformType ) {
         case 'preview':
-            queryString = _generateQueryString( [ req.iframeQueryParam ] );
-            obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
+            obj.preview_url = baseUrl + 'preview/' + iframePart + idPartOnline;
             break;
         case 'edit':
-            queryString = _generateQueryString( [ req.iframeQueryParam, 'instance_id=' + req.body.instance_id, req.returnQueryParam ] );
-            obj.edit_url = baseUrl + 'edit/' + idPartOnline + queryString;
+            queryString = _generateQueryString( [ 'instance_id=' + req.body.instance_id, req.returnQueryParam ] );
+            obj.edit_url = baseUrl + 'edit/' + iframePart + idPartOnline + queryString;
             break;
         case 'all':
             // non-iframe views
-            queryString = _generateQueryString( [] );
-            obj.url = ( offline ) ? baseUrl + '_/' + idPartOffline : baseUrl + idPartOnline + queryString;
-            obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
+            obj.url = ( offline ) ? baseUrl + '_/' + idPartOffline : baseUrl + idPartOnline;
+            obj.preview_url = baseUrl + 'preview/' + idPartOnline;
             // iframe views
-            queryString = _generateQueryString( [ 'iframe=true' ] );
-            obj.iframe_url = baseUrl + idPartOnline + queryString;
-            obj.preview_iframe_url = baseUrl + 'preview/' + idPartOnline + queryString;
+            obj.iframe_url = baseUrl + IFRAMEPATH + idPartOnline;
+            obj.preview_iframe_url = baseUrl + 'preview/' + IFRAMEPATH + idPartOnline;
             // enketo-legacy
             obj.subdomain = '';
             break;
         default:
-            queryString = _generateQueryString( [ req.iframeQueryParam ] );
-            obj.url = ( offline ) ? baseUrl + '_/' + idPartOffline : baseUrl + idPartOnline + queryString;
+            if ( iframePart ) {
+                obj.iframe_url = ( offline ) ? baseUrl + '_/' + iframePart + idPartOffline : baseUrl + iframePart + idPartOnline;
+            } else {
+                obj.url = ( offline ) ? baseUrl + '_/' + idPartOffline : baseUrl + idPartOnline;
+            }
             break;
     }
 

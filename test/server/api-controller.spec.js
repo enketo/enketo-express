@@ -86,7 +86,7 @@ describe( 'api', function() {
         it( test.method.toUpperCase() + ' /api/v' + version + endpoint + ' with ' + authDesc + ' authentication and ' + server + ', ' +
             id + ', ' + ret + ', ' + instance + ', ' + instanceId + ', ' + test.theme +
             ', parentWindowOrigin: ' + test.parentWindowOrigin + ', defaults: ' + JSON.stringify( test.defaults ) +
-            ' responds with ' + test.status,
+            ' responds with ' + test.status + ' when offline enabled: ' + offlineEnabled,
             function( done ) {
                 app.set( 'offline enabled', offlineEnabled );
 
@@ -237,6 +237,20 @@ describe( 'api', function() {
                 offline: false
             } );
 
+            // test online responses for /survey/iframe endpoint (differs in v2)
+            testResponse( {
+                version: version,
+                endpoint: '/survey/iframe',
+                method: 'post',
+                auth: true,
+                status: 200,
+                res: {
+                    property: 'iframe_url',
+                    expected: /\/i\/::[A-z0-9]{4}/
+                },
+                offline: false
+            } );
+
             // test offline responses for /survey endpoint (differs in v2)
             testResponse( {
                 version: version,
@@ -247,6 +261,20 @@ describe( 'api', function() {
                 res: {
                     property: 'url',
                     expected: /\/_\/#[A-z0-9]{4}/
+                },
+                offline: true
+            } );
+
+            // test offline responses for /survey/iframe endpoint (differs in v2)
+            testResponse( {
+                version: version,
+                endpoint: '/survey/iframe',
+                method: 'post',
+                auth: true,
+                status: 200,
+                res: {
+                    property: 'iframe_url',
+                    expected: /\/_\/i\/#[A-z0-9]{4}/
                 },
                 offline: true
             } );
@@ -471,6 +499,17 @@ describe( 'api', function() {
                 offline: false
             }, {
                 version: version,
+                endpoint: '/survey/iframe',
+                method: 'post',
+                auth: true,
+                status: 200,
+                res: {
+                    property: 'iframe_url',
+                    expected: /\/i\/::[A-z0-9]{4}/
+                },
+                offline: false
+            }, {
+                version: version,
                 endpoint: '/survey',
                 method: 'post',
                 auth: true,
@@ -478,6 +517,17 @@ describe( 'api', function() {
                 res: {
                     property: 'url',
                     expected: /\/::[A-z0-9]{4}/
+                },
+                offline: true
+            }, {
+                version: version,
+                endpoint: '/survey/iframe',
+                method: 'post',
+                auth: true,
+                status: 200,
+                res: {
+                    property: 'iframe_url',
+                    expected: /\/i\/::[A-z0-9]{4}/
                 },
                 offline: true
             },
@@ -491,6 +541,13 @@ describe( 'api', function() {
                 offline: false
             }, {
                 version: version,
+                endpoint: '/survey/offline/iframe',
+                method: 'post',
+                auth: true,
+                status: 405,
+                offline: false
+            }, {
+                version: version,
                 endpoint: '/survey/offline',
                 method: 'post',
                 auth: true,
@@ -498,6 +555,17 @@ describe( 'api', function() {
                 res: {
                     property: 'offline_url',
                     expected: /\/_\/#[A-z0-9]{4}/
+                },
+                offline: true
+            }, {
+                version: version,
+                endpoint: '/survey/offline/iframe',
+                method: 'post',
+                auth: true,
+                status: 200,
+                res: {
+                    property: 'offline_iframe_url',
+                    expected: /\/_\/i\/#[A-z0-9]{4}/
                 },
                 offline: true
             },
@@ -620,6 +688,7 @@ describe( 'api', function() {
                 method: 'get',
                 status: 200,
                 res: {
+                    property: 'iframe_url',
                     expected: /[^parentWindowOrigin\[\]]+/
                 }
             }, {
@@ -628,6 +697,7 @@ describe( 'api', function() {
                 method: 'get',
                 status: 200,
                 res: {
+                    property: 'iframe_url',
                     expected: /[^parentWindowOrigin\[\]]+/
                 }
             },
@@ -638,8 +708,19 @@ describe( 'api', function() {
                 method: 'post',
                 status: 200,
                 res: {
+                    property: 'iframe_url',
                     expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
                 }
+            }, {
+                endpoint: '/survey/offline/iframe',
+                parentWindowOrigin: 'http://example.com/',
+                method: 'post',
+                status: 200,
+                res: {
+                    property: 'offline_iframe_url',
+                    expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                },
+                offline: true
             }, {
                 endpoint: '/survey/preview/iframe',
                 parentWindowOrigin: 'http://example.com/',

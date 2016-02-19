@@ -24,13 +24,29 @@ router.param( 'enketo_id', function( req, res, next, id ) {
     }
 } );
 
+router.param( 'mod', function( req, rex, next, mod ) {
+    if ( mod === 'i' ) {
+        req.iframe = true;
+        next();
+    } else {
+        req.iframe = false;
+        next( 'route' );
+    }
+} );
+
 router
     .get( '*', loggedInCheck )
-    .get( '/_', offlineWebform )
+    .get( '' )
+    .get( '/_/', offlineWebform )
+    .get( '/_/:mod', offlineWebform )
     .get( '/:enketo_id', webform )
+    .get( '/:mod/:enketo_id', webform )
     .get( '/preview/:enketo_id', preview )
+    .get( '/preview/:mod/:enketo_id', preview )
     .get( '/preview', preview )
+    .get( '/preview/:mod', preview )
     .get( '/edit/:enketo_id', edit )
+    .get( '/edit/:mod/:enketo_id', edit )
     .get( '/xform/:enketo_id', xform )
     .get( '/connection', function( req, res ) {
         res.status = 200;
@@ -58,8 +74,8 @@ function offlineWebform( req, res, next ) {
 function webform( req, res, next ) {
     var options = {
         manifest: req.manifest,
-        iframe: !!req.query.iframe,
-        logout: req.logout
+        // only enable deprecated query string support for online-only forms
+        iframe: req.iframe || ( !req.manifest && !!req.query.iframe ),
     };
 
     _renderWebform( req, res, next, options );
@@ -68,8 +84,7 @@ function webform( req, res, next ) {
 function preview( req, res, next ) {
     var options = {
         type: 'preview',
-        iframe: !!req.query.iframe,
-        logout: req.logout,
+        iframe: req.iframe || !!req.query.iframe,
         notification: utils.pickRandomItemFromArray( config.notifications )
     };
 
@@ -80,8 +95,7 @@ function edit( req, res, next ) {
     var error,
         options = {
             type: 'edit',
-            iframe: !!req.query.iframe,
-            logout: req.logout
+            iframe: req.iframe
         };
 
     if ( req.query.instance_id ) {
