@@ -2,7 +2,7 @@
 
 var config = require( '../../config/default-config' );
 var localConfig = require( '../../config/config' );
-var merge = require( 'lodash/object/merge' );
+var merge = require( 'lodash/merge' );
 var path = require( 'path' );
 var fs = require( 'fs' );
 var themePath = path.join( __dirname, '../../public/css' );

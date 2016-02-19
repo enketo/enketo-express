@@ -8,7 +8,7 @@ var store = require( './store' );
 var settings = require( './settings' );
 var connection = require( './connection' );
 var $ = require( 'jquery' );
-var assign = require( 'lodash/object/assign' );
+var assign = require( 'lodash/assign' );
 
 var hash;
 
