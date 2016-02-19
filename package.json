@@ -47,7 +47,7 @@
         "libxslt": "0.6.3",
         "lie": "3.0.x",
         "load-grunt-tasks": "3.x.x",
-        "lodash": "3.10.x",
+        "lodash": "4.5.x",
         "morgan": "1.x.x",
         "papaparse": "4.1.x",
         "redis": "2.4.x",
