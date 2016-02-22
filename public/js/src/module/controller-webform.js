@@ -535,7 +535,7 @@ function _handleAlternativeDownloadRequest( event, zipFile ) {
 
     event.preventDefault();
 
-    $loader = $( '<div class="loader-animation-small" style="margin: 10px auto 0 auto;"/>' );
+    $loader = $( '<div class="loader-animation-small" style="margin: 20px auto 0 auto;"/>' );
     $( event.target ).replaceWith( $loader );
 
     connection.getDownloadUrl( zipFile )

@@ -18,7 +18,8 @@ block content
       include component/_form-header
       | !{form}
       unless form
-        div.form__loader
+        .form__loader
+          .form__loader__image
       include component/_form-footer
   if manifest
     include component/_side-slider
