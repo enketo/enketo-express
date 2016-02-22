@@ -82,6 +82,7 @@ app.use( function( req, res, next ) {
     res.locals.dir = function( lng ) {
         return i18next.dir( lng );
     };
+    res.locals.draftEnabled = !req.app.get( 'disable save as draft' );
     next();
 } );
 

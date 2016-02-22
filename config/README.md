@@ -74,3 +74,6 @@ For most form servers this item does nothing. If you would like to pass a partic
 #### logo
 * source: The logo at the top of each form. Can be a Data URI or just a path to a image file you place in public/images, e.g. `"/images/mylogo.png"`.
 * href: The optional link to redirect to if the logo is clicked by the user.
+
+#### disable save as draft
+Completely disable save-as-draft functionality in offline-capable webforms by settings this to true.
