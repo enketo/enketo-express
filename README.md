@@ -1,9 +1,7 @@
 Enketo Express [![Build Status](https://travis-ci.org/kobotoolbox/enketo-express.svg?branch=master)](https://travis-ci.org/kobotoolbox/enketo-express) [![Dependency Status](https://david-dm.org/kobotoolbox/enketo-express.svg)](https://david-dm.org/kobotoolbox/enketo-express) [![Codacy Badge](https://api.codacy.com/project/badge/grade/609aaf6fa764454f901f1c8a427264ff)](https://www.codacy.com/app/martijnr/enketo-express)
 ==============
 
-[![Enketo Logo](https://enketo.org/private_media/images/logo-black.png "Enketo Logo")](https://enketo.org)
-
-The modern Enketo Smart Paper web application.
+_The modern [Enketo Smart Paper](https://enketo.org) web application._
 
 ### How to install a test/development server
 
@@ -119,7 +117,7 @@ Alternatively, you could make use of _external authentication_, i.e. the authent
 To make use of external authentication set the following in config/config.json:
 
 * linked form and data server -> authentication -> managed by enketo -> `false`
-* linked form and data server -> authentication -> external login url that sets cookie -> e.g. http://example.com/login?return={RETURNURL}, where {RETURNURL} will be set by enketo.
+* linked form and data server -> authentication -> external login url that sets cookie -> e.g. `http://example.com/login?return={RETURNURL}`, where {RETURNURL} will be set by enketo.
 
 
 ### Security
