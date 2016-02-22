@@ -20,7 +20,7 @@ module.exports = function( grunt ) {
             dev: {
                 script: 'app.js',
                 options: {
-                    watch: [ 'app' ],
+                    watch: [ 'app', 'config' ],
                     //nodeArgs: [ '--debug' ],
                     env: {
                         NODE_ENV: 'development',
