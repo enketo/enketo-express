@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function( grunt ) {
-    var JS_INCLUDE = [ '**/*.js', '!node_modules/**', '!test/**/*.spec.js', '!public/lib/**/*.js', '!public/js/*-bundle.js', '!public/js/*-bundle.min.js' ];
+    var JS_INCLUDE = [ '**/*.js', '!node_modules/**', '!test/**/*.spec.js', '!public/js/*-bundle.js', '!public/js/*-bundle.min.js' ];
     var pkg = grunt.file.readJSON( 'package.json' );
 
     require( 'time-grunt' )( grunt );
@@ -19,16 +19,9 @@ module.exports = function( grunt ) {
         nodemon: {
             dev: {
                 script: 'app.js',
-                watch: JS_INCLUDE,
                 options: {
+                    watch: [ 'app' ],
                     //nodeArgs: [ '--debug' ],
-                    callback: function( nodemon ) {
-                        nodemon.on( 'restart', function() {
-                            setTimeout( function() {
-                                require( 'fs' ).writeFileSync( '.rebooted', 'rebooted' );
-                            }, 1000 );
-                        } );
-                    },
                     env: {
                         NODE_ENV: 'development',
                         DEBUG: '*, -express:*, -send, -compression, -body-parser:*'
@@ -37,6 +30,9 @@ module.exports = function( grunt ) {
             }
         },
         sass: {
+            options: {
+                sourceMap: false
+            },
             compile: {
                 cwd: 'app/views/styles',
                 dest: 'public/css',
@@ -49,11 +45,22 @@ module.exports = function( grunt ) {
             }
         },
         watch: {
+            config: {
+                files: [ 'config/*.json' ],
+                tasks: [ 'client-config-file:create' ]
+            },
             sass: {
-                files: [ '.rebooted', 'config/config.json', 'app/views/styles/**/*.scss', 'app/views/**/*.jade' ],
+                files: [ 'app/views/styles/**/*.scss' ],
                 tasks: [ 'sass' ],
                 options: {
-                    spawn: true,
+                    spawn: false,
+                    livereload: true
+                }
+            },
+            jade: {
+                files: [ 'app/views/**/*.jade' ],
+                options: {
+                    spawn: false,
                     livereload: true
                 }
             },
@@ -62,10 +69,10 @@ module.exports = function( grunt ) {
                 tasks: [ 'shell:translation' ]
             },
             js: {
-                files: JS_INCLUDE,
+                files: [ 'public/js/src/**/*.js' ],
                 tasks: [ 'compile-dev' ],
                 options: {
-                    spawn: true,
+                    spawn: false,
                     livereload: true
                 }
             }
