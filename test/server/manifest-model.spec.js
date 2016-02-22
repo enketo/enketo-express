@@ -40,15 +40,9 @@ describe( 'Manifest Model', function() {
             expect( result ).to.contain( '/css/theme-formhub.css' );
             expect( result ).to.contain( '/css/theme-grid.css' );
             expect( result ).to.contain( '/fonts/fontawesome-webfont.woff' );
-            expect( result ).to.contain( '/fonts/fontawesome-webfont.svg' );
             expect( result ).to.contain( '/fonts/OpenSans-Regular-webfont.woff' );
-            expect( result ).to.contain( '/fonts/OpenSans-Regular-webfont.ttf' );
-            expect( result ).to.contain( '/fonts/OpenSans-Regular-webfont.svg' );
             expect( result ).to.contain( '/fonts/OpenSans-Bold-webfont.woff' );
-            expect( result ).to.contain( '/fonts/OpenSans-Bold-webfont.svg' );
             expect( result ).to.contain( '/fonts/enketo-icons-v2.woff' );
-            expect( result ).to.contain( '/fonts/enketo-icons-v2.ttf' );
-            expect( result ).to.contain( '/fonts/enketo-icons-v2.svg' );
             expect( result ).to.contain( '/js/src/module/gui.js' );
         } );
 

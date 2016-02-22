@@ -15,7 +15,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Special client-side debugging mode. It is now always outputting log messages to the console.
 
 ##### Fixed
-- Submit and Save-as-Draft fail in offline-capable views if no values were changed.
+- Submit and Save-as-draft fail in offline-capable views if no values were changed.
+- Submit and Save-as-draft buttons have incorrect font.
 
 [1.23.2] - 2016-02-10
 ----------------------
