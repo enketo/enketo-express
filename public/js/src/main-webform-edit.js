@@ -41,13 +41,18 @@ translator.init( survey )
                     _init( formParts );
                 } )
                 .then( connection.getMaximumSubmissionSize )
-                .then( function( maxSize ) {
-                    settings.maxSize = maxSize;
-                } );
+                .then( _updateMaxSizeSetting );
         } else {
             throw new Error( t( 'error.unknown' ) );
         }
     } ).catch( _showErrorOrAuthenticate );
+
+function _updateMaxSizeSetting( maxSize ) {
+    if ( maxSize ) {
+        // overwrite default max size
+        settings.maxSize = maxSize;
+    }
+}
 
 function _showErrorOrAuthenticate( error ) {
     $loader.addClass( 'fail' );

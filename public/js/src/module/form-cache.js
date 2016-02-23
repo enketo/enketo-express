@@ -163,7 +163,7 @@ function updateMaxSubmissionSize( survey ) {
         return connection.getMaximumSubmissionSize()
             .then( function( maxSize ) {
                 survey.maxSize = maxSize;
-                return survey;
+                return store.survey.update( survey );
             } );
     } else {
         return Promise.resolve( survey );
@@ -171,7 +171,7 @@ function updateMaxSubmissionSize( survey ) {
 }
 
 /**
- * Loads survey resources either from the store or via HTTP (and stores them)
+ * Loads survey resources either from the store or via HTTP (and stores them).
  *
  * @param  {[type]} survey [description]
  * @return {Promise}        [description]

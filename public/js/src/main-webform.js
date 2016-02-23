@@ -39,7 +39,7 @@ if ( settings.offline ) {
         .then( formCache.updateMaxSubmissionSize )
         .then( formCache.updateMedia )
         .then( function( s ) {
-            settings.maxSize = s.maxSize;
+            _updateMaxSizeSetting( s.maxSize );
             _setFormCacheEventHandlers();
             _setAppCacheEventHandlers();
             appCache.init();
@@ -54,10 +54,15 @@ if ( settings.offline ) {
         .then( _swapTheme )
         .then( _init )
         .then( connection.getMaximumSubmissionSize )
-        .then( function( maxSize ) {
-            settings.maxSize = maxSize;
-        } )
+        .then( _updateMaxSizeSetting )
         .catch( _showErrorOrAuthenticate );
+}
+
+function _updateMaxSizeSetting( maxSize ) {
+    if ( maxSize ) {
+        // overwrite default max size
+        settings.maxSize = maxSize;
+    }
 }
 
 function _showErrorOrAuthenticate( error ) {
