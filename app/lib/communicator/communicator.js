@@ -104,7 +104,7 @@ function getMaxSize( survey ) {
 
     return _request( options )
         .then( function( response ) {
-            return response.headers[ 'x-openrosa-accept-content-length' ] || 5 * 1024 * 1024;
+            return response.headers[ 'x-openrosa-accept-content-length' ];
         } );
 }
 

@@ -17,7 +17,6 @@ var TRANSFORM_HASH_URL = '/transform/xform/hash';
 var EXPORT_URL = '/export/get-url';
 var INSTANCE_URL = ( settings.enketoId ) ? '/submission/' + settings.enketoIdPrefix + settings.enketoId : null;
 var MAX_SIZE_URL = ( settings.enketoId ) ? '/submission/max-size/' + settings.enketoIdPrefix + settings.enketoId : null;
-var DEFAULT_MAX_SIZE = 5 * 1024 * 1024;
 var ABSOLUTE_MAX_SIZE = 100 * 1024 * 1024;
 
 /**
@@ -310,7 +309,8 @@ function getMaximumSubmissionSize() {
     var maxSubmissionSize;
 
     return new Promise( function( resolve ) {
-        if ( MAX_SIZE_URL ) {
+
+        if ( MAX_SIZE_URL && settings.type !== 'preview' && settings.type !== 'app' ) {
             $.ajax( MAX_SIZE_URL, {
                     type: 'GET',
                     timeout: 5 * 1000,
@@ -321,15 +321,16 @@ function getMaximumSubmissionSize() {
                         maxSubmissionSize = ( Number( response.maxSize ) > ABSOLUTE_MAX_SIZE ) ? ABSOLUTE_MAX_SIZE : Number( response.maxSize );
                         resolve( maxSubmissionSize );
                     } else {
+                        console.error( 'Error retrieving maximum submission size. Unexpected response: ', response );
                         // Note that in /previews the MAX_SIZE_URL is null, which will immediately call this handler
-                        resolve( DEFAULT_MAX_SIZE );
+                        resolve( null );
                     }
                 } )
                 .fail( function() {
-                    resolve( DEFAULT_MAX_SIZE );
+                    resolve( null );
                 } );
         } else {
-            resolve( DEFAULT_MAX_SIZE );
+            resolve( null );
         }
     } );
 }

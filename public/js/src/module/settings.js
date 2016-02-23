@@ -3,6 +3,7 @@
 var config = require( 'enketo-config' );
 var queryParams = _getAllQueryParams();
 var settings = {};
+var DEFAULT_MAX_SIZE = 5 * 1024 * 1024;
 var settingsMap = [ {
     q: 'return',
     s: 'returnUrl'
@@ -89,6 +90,12 @@ if ( settings.submissionParameter && settings.submissionParameter.name ) {
     // sets to undefined when necessary
     settings.submissionParameter.value = queryParams[ settings.submissionParameter.name ];
 }
+
+// set default maxSubmissionSize
+settings.maxSize = DEFAULT_MAX_SIZE;
+
+// add type
+settings.type = ( window.location.pathname.indexOf( '/preview' ) === 0 ) ? 'preview' : 'other';
 
 // add enketoId
 settings.enketoIdPrefix = '::';
