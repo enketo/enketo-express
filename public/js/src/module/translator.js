@@ -34,6 +34,7 @@ init = function( something ) {
             .init( {
                 whitelist: settings.languagesSupported,
                 fallbackLng: 'en',
+                joinArrays: '\n',
                 backend: {
                     loadPath: '/locales/__lng__/translation.json',
                 },

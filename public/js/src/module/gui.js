@@ -96,7 +96,6 @@ function setEventHandlers() {
     } );
 
     $( '.side-slider__app-version' ).on( 'click', function() {
-        console.debug( 'toggling' );
         $( '.side-slider__advanced' ).toggleClass( 'hide' );
     } );
 }
