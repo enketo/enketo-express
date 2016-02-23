@@ -245,7 +245,8 @@ describe( 'api', function() {
                 auth: true,
                 status: 200,
                 res: {
-                    property: 'iframe_url',
+                    // in api/v1 this returns `url`, in api/v2 this returns `iframe_url`
+                    property: 'url',
                     expected: /\/i\/::[A-z0-9]{4}/
                 },
                 offline: false
@@ -273,7 +274,8 @@ describe( 'api', function() {
                 auth: true,
                 status: 200,
                 res: {
-                    property: 'iframe_url',
+                    // in api/v1 this returns `url`, in api/v2 this returns `iframe_url`
+                    property: 'url',
                     expected: /\/_\/i\/#[A-z0-9]{4}/
                 },
                 offline: true

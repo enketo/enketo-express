@@ -8,6 +8,9 @@ This is a temporary document with quick notes on the changes of API v2 with API 
 # /survey endpoint
 In API v2 this always returns an **online-only** webform!
 
+# /survey/iframe endpoint
+In API v1 this returned the `url` parameter. In API v2 this returns the `iframe_url` parameter.
+
 # the new /survey/offline endpoint 
 In API v2 this always returns an **offline-enabled** webform (if offline capability is enabled in config) as the value for offline_url. If offline capability is disabled this endpoint will return a 405 Not Allowed.
 

@@ -521,7 +521,7 @@ function _setEventHandlers() {
 
     $( '.form-footer [name="draft"]' ).on( 'change', function() {
         var text = ( $( this ).prop( 'checked' ) ) ? t( 'formfooter.savedraft.btn' ) : t( 'formfooter.submit.btn' );
-        $( '#submit-form i' ).text( ' ' + text );
+        $( '#submit-form' ).get( 0 ).lastChild.textContent = text;
     } ).closest( '.draft' ).toggleClass( 'hide', !settings.offline );
 
     if ( settings.offline ) {
@@ -535,7 +535,7 @@ function _handleAlternativeDownloadRequest( event, zipFile ) {
 
     event.preventDefault();
 
-    $loader = $( '<div class="loader-animation-small" style="margin: 10px auto 0 auto;"/>' );
+    $loader = $( '<div class="loader-animation-small" style="margin: 20px auto 0 auto;"/>' );
     $( event.target ).replaceWith( $loader );
 
     connection.getDownloadUrl( zipFile )

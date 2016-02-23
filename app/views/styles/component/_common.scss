@@ -35,12 +35,21 @@ progress {
 }
 
 .form__loader {
-    @include loader-image(250px);
     @include flex(1);
-    margin: 70px auto 10px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 50px;
     &.fail {
-        background: none;
+        .form__loader__image {
+            border: transparent;
+            animation: none;
+        }
     }
+}
+
+.form__loader__image {
+    @include loader-image(100px);
 }
 
 .loader-animation-small {
