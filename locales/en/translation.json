@@ -182,7 +182,7 @@
   },
   "contact": {
     "admin": "Contact the survey administrator please.",
-    "support": "Contact __supportEmail__ please.'"
+    "support": "Contact __supportEmail__ please."
   },
   "enketo": {
     "power": "Powered by"
@@ -283,7 +283,9 @@
   "record-list": {
     "export": "Export",
     "msg1": "Records are stored inside your browser until they have been uploaded (even if you turn off your computer or go offline).",
-    "msg2": "Queued records, except those marked as draft __icon__, are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available. To force an upload in between automatic attempts, click Upload.",
+    "msg2": "Queued records, except those marked as draft __icon__, are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
+    "msg2-nodraft": "Queued records are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
+    "msg3": "To force an upload in between automatic attempts, click Upload.",
     "norecords": "no records queued",
     "title": "Queue",
     "upload": "Upload"
