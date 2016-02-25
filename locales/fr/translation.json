@@ -182,7 +182,7 @@
     },
     "contact": {
         "admin": "S'il vous plaît contactez l'administrateur de cette enquête ",
-        "support": "S'il vous plaît contactez __supportEmail__.'"
+        "support": "S'il vous plaît contactez __supportEmail__."
     },
     "enketo": {
         "power": "Propulsé par"
@@ -283,7 +283,9 @@
     "record-list": {
         "export": "Exporter",
         "msg1": "Les enregistrements sont sauvegardés par le navigateur jusqu'à ce qu'ils soient transmis au serveur (même si l'ordinateur est éteint ou déconnecté).",
-        "msg2": "Queued records, except those marked as draft __icon__, are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available. To force an upload in between automatic attempts, click Upload.",
+        "msg2": "Queued records, except those marked as draft __icon__, are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
+        "msg2-nodraft": "Queued records are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
+        "msg3": "To force an upload in between automatic attempts, click Upload.",
         "norecords": "aucun enregistrement dans la file d'attente",
         "title": "File d'attente",
         "upload": "Upload"

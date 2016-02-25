@@ -182,7 +182,7 @@
     },
     "contact": {
         "admin": "Contacteer de enquete administrateur aub.",
-        "support": "Contacteer __supportEmail__ aub."
+        "support": "Contacteer __supportEmail__ alsjeblieft."
     },
     "enketo": {
         "power": "Powered by"
@@ -283,7 +283,9 @@
     "record-list": {
         "export": "Exporteer",
         "msg1": "Records worden in je browser opgeslagen totdat ze verzonden zijn (zelfs als je het apparaat uitzet of geen Internet verbinding hebt).",
-        "msg2": "Opgeslagen records, behalve degene die als draft __icon__ gemarkeerd, worden automatisch verzonden in de achtergrond, elke 5 minuten als deze pagina open is en een Internet verbinding aanwezig is. Om een verzending te forceren tussen automatische pogingen in, klik op Verzend. ",
+        "msg2": "Opgeslagen records, behalve degene die als draft __icon__ gemarkeerd, worden automatisch verzonden in de achtergrond, elke 5 minuten als deze pagina open is en een Internet verbinding aanwezig is.",
+        "msg2-nodraft": "Opgeslagen records worden automatisch verzonden in de achtergrond, elke 5 minuten als deze pagina open is en een Internet verbinding aanwezig is.",
+        "msg3": "Om een verzending te forceren tussen automatische pogingen in, klik op Verzend.",
         "norecords": "geen records aanwezig",
         "title": "Records",
         "upload": "Verzend"

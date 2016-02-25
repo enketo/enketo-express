@@ -283,7 +283,9 @@
     "record-list": {
         "export": "Xuất ra",
         "msg1": "Các bản ghi được lưu trữ bên trong trình duyệt của bạn cho đến khi chúng được tải lên (ngay cả khi bạn tắt máy hoặc offline).",
-        "msg2": "Ngoại trừ các bản ghi được đánh dấu như bản nháp _icon_, các bản ghi trong hàng đợi được tải lên một cách tự động, cứ mỗi 5 phút một lần khi trang web được mở và kết nối Internet sẵn sàng. Để thúc đẩy nhanh hơn việc tải lên, hãy kích Upload.",
+        "msg2": "Ngoại trừ các bản ghi được đánh dấu như bản nháp _icon_, các bản ghi trong hàng đợi được tải lên một cách tự động, cứ mỗi 5 phút một lần khi trang web được mở và kết nối Internet sẵn sàng.",
+        "msg2-nodraft": "Queued records are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
+        "msg3": "Để thúc đẩy nhanh hơn việc tải lên, hãy kích Upload.",
         "norecords": "Không có bản ghi nào vào hàng đợi",
         "title": "Hàng đợi",
         "upload": "Tải lên"

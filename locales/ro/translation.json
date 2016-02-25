@@ -3,6 +3,24 @@
         "flushdb": "Ștergeți Memoria"
     },
     "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "To add this form to your Home screen, click the browser settings icon __image1__ and select: 'Add to Home screen'."
+            },
+            "androidfirefox": {
+                "msg": [
+                    "To add this form to your Homescreen:",
+                    "1. Add this page to your Firefox bookmarks by clicking the settings icon __image1__ and then the star icon __image2__.",
+                    "2. Open your bookmarks by opening a new page and clicking the Bookmarks tab.",
+                    "3. Click-and-hold your form until a pop-up menu appears.",
+                    "4. Select 'Add to Home Screen'."
+                ]
+            },
+            "heading": "Add to Home Screen",
+            "iossafari": {
+                "msg": "To add this form to your Home screen, click the share icon __image1__ in the top right of your browser, and select: '+ Add to Home Screen'."
+            }
+        },
         "appupdated": {
             "heading": "Aplicația a fost actualizată!",
             "msg": "O nouă versiune a acestei aplicații a fost descărcată. Dați refresh acestei pagini pentru a încărca conținutul actualizat."
@@ -10,6 +28,19 @@
         "default": {
             "button": "Închide",
             "heading": "Alertă"
+        },
+        "export": {
+            "alternativequestion": "alternative download - online",
+            "error": {
+                "filecreatedmsg": "Nevertheless, an incomplete export file was still created.",
+                "heading": "Export Error",
+                "linknotcreated": "Failed to create an export link for unsubmitted records. Are you online?",
+                "msg": "Errors occurred during creating of the record export file for unsubmitted records. Errors: __errors__"
+            },
+            "success": {
+                "heading": "Export Created",
+                "msg": "Export file created for all unsubmitted records belonging to this form."
+            }
         },
         "formupdated": {
             "heading": "Formular actualizat!",
@@ -87,6 +118,12 @@
         }
     },
     "confirm": {
+        "autosaveload": {
+            "heading": "Unsaved Record Found",
+            "msg": "Enketo has found an unsaved record. Would you like to load this record or discard it?",
+            "negButton": "Discard",
+            "posButton": "Load Record"
+        },
         "default": {
             "heading": "Sunteți sigur(ă)?",
             "msg": "Sunteți rugat(ă) să confirmați această acțiune",
@@ -139,19 +176,25 @@
             "unkownerror": "O eroare necunoscută s-a petrecut în timpul salvării datelor."
         }
     },
+    "constraint": {
+        "invalid": "Value not allowed",
+        "required": "This field is required"
+    },
     "contact": {
         "admin": "Sunteți rugat(ă) să contactați administratorul sondajului.",
-        "support": "Contactați __supportEmail__.'"
+        "support": "Contactați __supportEmail__."
     },
     "enketo": {
         "power": "Powered by"
     },
     "error": {
         "code": "Cod Eroare: __code__",
+        "dataloadfailed": "Failed to load data from __url__",
         "econnrefused": "Nu s-a putut realiza conexiunea cu Server-ul",
         "encryptionnotsupported": "Acest formular necesită criptarea locala a înregistrărilor. Din păcate această funcționalitate nu este încă inclusă. Recomandăm să folosiți ODK Collect pentru a înregistra date cu acest formular.",
         "instancenotfound": "Înregistrarea nu poate fi găsită. Este posibil că a expirat.",
         "invalidediturl": "Nu este un URL valid",
+        "loadfailed": "Failed to load __resource__",
         "notfoundinformlist": "Formularul cu ID __formId__ nu a fost găsit în /formList",
         "pagenotfound": "Pagina nu a fost găsită",
         "surveyidnotactive": "Sondajul cu acest ID nu mai este activ",
@@ -189,19 +232,26 @@
     },
     "langs": {
         "ar": "Arabă",
+        "cs": "Czech",
         "de": "Germană",
         "el": "Greacă",
         "en": "Engleză",
         "es": "Spaniolă",
+        "fa": "Persian",
+        "fr": "French",
         "he": "Ebraică",
         "hi": "Hindusă",
+        "it": "Italian",
         "km": "Khmer",
         "nl": "Olandeză",
+        "no": "Norwegian",
         "ro": "Română",
+        "sk": "Slovak",
         "supported": "Limbi susținute:",
         "sw": "Swahili",
         "th": "Tailandeză",
-        "vi": "Vietnameză"
+        "vi": "Vietnameză",
+        "zh": "Chinese"
     },
     "page": {
         "modernbrowsers": {
@@ -215,7 +265,7 @@
         },
         "offline": {
             "heading": "Pagina cerută nu poate fi accesată",
-            "msg1": "Această pagină este disponibilă numai atunci când navigatorul este contectat la internet și serverul este accesibil (dacă pagina există, desigur)."
+            "msg1": "This page is only accessible when the browser has an Internet connection and the server is accessible (unless the page does not exist)."
         }
     },
     "prompt": {
@@ -233,20 +283,25 @@
     "record-list": {
         "export": "Exportă",
         "msg1": "Înregistrările sunt salvate în navigatorul dvs până când au fost încărcate (chiar dacă vă deconectați de la internet sau închideți calculatorul).",
-        "msg2": "Înregistrările puse în coadă, cu excepția celor marcate drept Proiect __icon__, sunt încărcate în mod automat, la fiecare 5 minute atunci când pagina este deschisă și o conexiune internet este disponibilă. Dacă doriți să încărcați între aceste rutine automate, apăsați Încărcați.",
+        "msg2": "Înregistrările puse în coadă, cu excepția celor marcate drept Proiect __icon__, sunt încărcate în mod automat, la fiecare 5 minute atunci când pagina este deschisă și o conexiune internet este disponibilă.",
+        "msg2-nodraft": "Înregistrările puse în coadă sunt încărcate în mod automat, la fiecare 5 minute atunci când pagina este deschisă și o conexiune internet este disponibilă.",
+        "msg3": "Dacă doriți să încărcați între aceste rutine automate, apăsați Încărcați.",
         "norecords": "nicio înregistrare nu este în coadă",
         "title": "Coadă",
         "upload": "Încarcă"
     },
     "store": {
         "error": {
-            "notavailable": "Memoria navigatorului este necesară dar nu este disponibilă, este coruptă, sau nu există permisiune să fie scrisă. Dacă sunteți în modul de navigare 'privat', schimbați la modul normal, sau folosiți un alt navigator. (eroare: __error__)"
+            "iosusesafari": "Your iOS browser is not able to run this form. On iOS, we recommend using Safari.",
+            "notavailable": "Memoria navigatorului este necesară dar nu este disponibilă, este coruptă, sau nu există permisiune să fie scrisă. Dacă sunteți în modul de navigare 'privat', schimbați la modul normal, sau folosiți un alt navigator. (eroare: __error__)",
+            "notsupported": "Your browser is not able to run this form. We recommend using a modern browser."
         }
     },
     "submission": {
         "http0": "Eșuat (offline?).",
         "http2xx": "Răspuns neașteptat în timpul încărcării informațiilor.",
         "http400": "Serverul de date nu a acceptat informațiile.",
+        "http401": "Authentication problem with data server.",
         "http403": "Nu este permisă transmiterea de informații către acest server de date.",
         "http404": "Serviciu de trimitere nu a fost găsit pe serverul de date.",
         "http413": "Informațiile au o dimensiune prea mare.",

@@ -3,24 +3,55 @@
         "flushdb": "Futa hifadhi"
     },
     "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "To add this form to your Home screen, click the browser settings icon __image1__ and select: 'Add to Home screen'."
+            },
+            "androidfirefox": {
+                "msg": [
+                    "To add this form to your Homescreen:",
+                    "1. Add this page to your Firefox bookmarks by clicking the settings icon __image1__ and then the star icon __image2__.",
+                    "2. Open your bookmarks by opening a new page and clicking the Bookmarks tab.",
+                    "3. Click-and-hold your form until a pop-up menu appears.",
+                    "4. Select 'Add to Home Screen'."
+                ]
+            },
+            "heading": "Add to Home Screen",
+            "iossafari": {
+                "msg": "To add this form to your Home screen, click the share icon __image1__ in the top right of your browser, and select: '+ Add to Home Screen'."
+            }
+        },
         "appupdated": {
             "heading": "Programu imesahihishwa!",
-            "msg": "Toleo mpya la hii programu kimepakuliwa. Tafadhali onyesha upya ukurasa wa tovuti kuonyesha programu iliyo na masisihisho."
+            "msg": "Toleo jipya la hii programu limepakuliwa. Tafadhali onyesha upya ukurasa wa tovuti ili kutazama toleo hili."
         },
         "default": {
             "button": "Funga",
             "heading": "Arifu"
         },
+        "export": {
+            "alternativequestion": "alternative download - online",
+            "error": {
+                "filecreatedmsg": "Nevertheless, an incomplete export file was still created.",
+                "heading": "Export Error",
+                "linknotcreated": "Failed to create an export link for unsubmitted records. Are you online?",
+                "msg": "Errors occurred during creating of the record export file for unsubmitted records. Errors: __errors__"
+            },
+            "success": {
+                "heading": "Export Created",
+                "msg": "Export file created for all unsubmitted records belonging to this form."
+            }
+        },
         "formupdated": {
             "heading": "Fomu imesahihishwa!",
-            "msg": "Toleo mpya la hii programu kimepakuliwa. Tafadhali onyesha upya ukurasa wa tovuti kuonyesha programu iliyo na masisihisho."
+            "msg": "Toleo jipya la fomu hii limepakuliwa. Onyesha upya ukurasa wa tovuti kutazama toleo hili."
         },
         "loaderror": {
-            "editadvice": "Unashauriwa kutobadilisha rekodi hii mpaka isawazishwe.",
-            "entryadvice": "Unashauriwa usitumie fomu hii kuingiza data mpaka isawazishwe.",
+            "editadvice": "Unashauriwa kutohariri rekodi hii hadi jambo hili litatuliwe",
+            "entryadvice": "Unashauriwa usitumie fomu hii kuingiza data mpaka jambo hili litatuliwe",
             "heading": "Onyesha kosa",
-            "msg1": "Kosa limetokea tukipakia fomu hii.",
-            "msg2": "Tafadhali wasiliana nasi kupitia _emailLink_ utupe kiungo la jedwali hili na ujumbe uliochapishwa kwenye kosa lililo hapo chini",
+            "msg1": "Kosa limetokea tukipakua fomu hii.",
+            "msg2": "Tafadhali wasiliana nasi kupitia _anwani_ utupe kiungo cha ukurasa huu na ujumbe uliochapishwa hapa chini",
             "heading_plural": "Onyesha kosa",
             "msg1_plural": "Kosa limetokea tukipakia fomu hii.",
             "msg2_plural": "Tafadhali wasiliana nasi kupitia _emailLink_ utupe kiungo la jedwali hili na ujumbe uliochapishwa kwenye kosa lililo hapo chini"
@@ -87,6 +118,12 @@
         }
     },
     "confirm": {
+        "autosaveload": {
+            "heading": "hariri ambayo haijahifadhiwa imepatikana",
+            "msg": "Hariri ambayo haijahifadhiwa imepatikana. Ungependa kuihifadhi hariri hii au kuifuta?",
+            "negButton": "Futa",
+            "posButton": "Pakia rekodi"
+        },
         "default": {
             "heading": "Una uhakika?",
             "msg": "Tafadhali thibitisha hiki kitendo!",
@@ -98,14 +135,14 @@
             "msg": [
                 "Hatua hii itasababisha kuondolewa kwa data yako yote iliyo kwenye foleni na fomu zako zote kutoka kwenye Kivinjari Wavuti. Utapoteza data yako kabisa. Chukua hatua hii kama hifadhi ya kivinjari imevurugika.",
                 "Funga kivinjari zote za Enketo kwanza.",
-                "Jedwali hili litapakiwa tena. Ukiona kosa, rudia hatua uliyofanya.",
-                "Unauhakika unataka kufanya hivi?"
+                "ukurasa huu utaonyeshwa upya. Ukiona kosa, rudia hatua hii.",
+                "Una uhakika unataka kufanya hivi?"
             ],
             "posButton": "Futa kila kitu"
         },
         "discardcurrent": {
             "heading": "Hariri ambazo hazijahifadhiwa",
-            "msg": "Fomu ya sasa ina mabadiliko ambayo hayajahifadhiwa. Ungependa kupakia rekodi bila kuhifadhi mabiliko uliyofanya kwa fomu hii?",
+            "msg": "Fomu ya sasa ina mabadiliko ambayo hayajahifadhiwa. Ungependa kupakia rekodi bila kuhifadhi mabadiliko uliyofanya kwa fomu hii?",
             "posButton": "Endelea bila kuhifadhi"
         },
         "login": {
@@ -131,7 +168,7 @@
         },
         "save": {
             "existingerror": "Jina au kitambulisho la rekodi hii tayari liko.",
-            "hint": "Jina hili linakuwezesha upate rasimu uliyo nayo kwa urahisi ukija kuiimalizia baadaye.",
+            "hint": "Jina hili linakuwezesha kuipata rasimu yako kwa urahisi kwa minajili ya kuimalizia baadaye.",
             "msg": "Haujahifadhi mabadiliko uliyo fanya, je, unataka kuendelea bila kuhifadhi mabadiliko haya?",
             "name": "Jina la rekodi",
             "posButton": "Hifadhi na Ufunge",
@@ -139,27 +176,33 @@
             "unkownerror": "Kosa tusilolijua limetendeka tulipokuwa tukijaribu kuhifadhi data."
         }
     },
+    "constraint": {
+        "invalid": "Jibu uliloingiza haliruhisiwi",
+        "required": "Jibu la kipengee hiki linahitajika"
+    },
     "contact": {
         "admin": "Tafadhali wasiliana na msimamizi wa utafiti huu. ",
-        "support": "Wasiliniana na wasaaidizi kupitia __auni__  tafadhali."
+        "support": "Tafadhali wasiliana na wasaidizi kupitia __auni__ ."
     },
     "enketo": {
         "power": "Imetengenezwa na"
     },
     "error": {
         "code": "Msimbo wa kosa:",
+        "dataloadfailed": "Failed to load data from __url__",
         "econnrefused": "Haikuweza kuwasiliana na kompyuta kuu",
         "encryptionnotsupported": "Fomu hii inahitaji usimbaji fiche wa ndani kwenye rekodi zinazohifadhiwa. Kwa bahati mbaya, programu hili halina formula saidizi kufanya ufiche huu. Tunakushauri utumie programu iitwayo ODK collect kukusanya data kutumia fomu hii.",
-        "instancenotfound": "Rekodi hii haipatikani. Yaweza kuwa ilitolewa kutoka kwenye hifadhi kwa sababu ilikaa hapo kwa mda mwingi.",
+        "instancenotfound": "Rekodi hii haipatikani. Inaweza kuwa imetolewa kwenye hifadhi kwa sababu imekaa hapo kwa muda mrefu.",
         "invalidediturl": "Anwani ya wavuti uliyopeana sio halali",
+        "loadfailed": "Failed to load __resource__",
         "notfoundinformlist": "Fomu lenye kitambulisho nambari __formId__ halikupatikana kwenye /orodha la fomu zote",
         "pagenotfound": "Ukurasa haukupatikana",
         "surveyidnotactive": "Tafiti lililoko na kitambulisho hiki haliko amilifu tena",
-        "surveyidnotfound": "Tafiti lililo na kitambulisho hiki hakijapatikana",
+        "surveyidnotfound": "Tafiti lililo na kitambulisho hiki halijapatikana",
         "unknown": "Kosa tusilolifahamu limetendeka"
     },
     "feedback": {
-        "header": "Taarifa"
+        "header": "Habari"
     },
     "form": {
         "chooseLanguage": "Chagua lugha",
@@ -167,20 +210,20 @@
         "pages": {
             "back": "Rudi",
             "end": "Enda mwisho",
-            "next": "Ijayo",
+            "next": "Ifuatayo",
             "return": "Rudi Mwanzo"
         }
     },
     "formfooter": {
         "savedraft": {
             "btn": "Hifadhi mswadajaribio",
-            "label": "Hifadhi kama mswadajaribio"
+            "label": "Hifadhi kama rasimu"
         },
         "submit": {
             "btn": "Wasilisha"
         },
         "validate": {
-            "btn": "Hakikisha"
+            "btn": "Halalisha"
         }
     },
     "here": "hapa",
@@ -188,34 +231,41 @@
         "msg": "__appTitle__ bado liko tendeshi. Tafadhali tumia Enketo fomu zako kupitia usakinishaji uitwao __serverName__."
     },
     "langs": {
-        "ar": "Arabic",
+        "ar": "Kiarabu",
+        "cs": "Czech",
         "de": "kijerumani",
         "el": "Greek",
         "en": "kiingereza",
-        "es": "Spanish",
+        "es": "kihispania",
+        "fa": "kiajemi",
+        "fr": "kifaransa",
         "he": "Kiebrania",
         "hi": "Hindi",
+        "it": "kiitaliano",
         "km": "Khmer",
         "nl": "Dutch",
+        "no": "Norwegian",
         "ro": "Romanian",
+        "sk": "kislovakia",
         "supported": "Lugha zinazokubaliwa:",
         "sw": "Swahili",
         "th": "Thai",
-        "vi": "Vietnamese"
+        "vi": "Vietnamese",
+        "zh": "kichina"
     },
     "page": {
         "modernbrowsers": {
             "heading": "Browser za kisasa",
             "ie": {
                 "heading": "Kwanini hatupendi kivinjari wavuti za kale za Internet Explorer?",
-                "msg": "Tunaelewa kwamba watu wengine ambao wanafanya kazi kwa urasimu kubwa hawawezi kutumia vivinjari wavuti za kisasa. Kwasababu tunaelewa kwamba utumiaje wa vifaa vinavyofaa kutumia mtandao unaboresha tajiriba, tunawahurumia watumiaje hawa sana. Kwa kawaida, tungejaribu kutafuta njia ingine ya kutumia vivinjari wavuti za kale lakini Enketo hutumia za kisasa pekee. Kwa bahati mbaya, watumiaje hawa hawana bahati."
+                "msg": "Tunaelewa ya kwamba watu wengine, haswa wale wafanyao kwenye urasimu mkubwa, hawana njia ya kupata vivinjari vya kisasa. Kwa sababu tunafahamu vile mtandao unaweza kuwa wa manufaa ukitumika na vifaa vifaavyo, tunawasikitikia sana wale walio kwenye hali hii. Kwa kawaida tungejaribu kutafuta njia nyingine za kuwawezesha kutumia vivnjari vya kale lakini Enketo iko ilivyo sasa kwa sababu ya kuwepo kwa teknolojia ya hali ya juu. Kwa sababu hii, tunasikitika watumizi wa vivinjari vya kale hawataweza kuitumia."
             },
             "msg1": "Samahani, umeelekezwa hapa kwa sababu kivinjari wavuti unayotumia ni ya kale au huenda ikawa kipengele kinachohitajika hakipatikani kwenye hali-tumizi hii.",
             "msg2": "Ikiwa unatumia kivinjari wavuti ya kale, tunapendekeza utafute Kivinjari Wavuti la kisasa."
         },
         "offline": {
-            "heading": "Hautaweza kufikia jedwali uliloomba",
-            "msg1": "Jedwali hili linaweza kupatikana kama kuna mtandao na seva inawasilisha data (hii ni kama jedwali lenyewe liko kwenye seva) "
+            "heading": "Hatuwezi Kuufikia ukurasa ulioomba",
+            "msg1": "Jedwali hili linaweza kupatikana kama kuna mtandao na seva inawasilisha data (hii ni kama jedwali lenyewe liko kwenye seva)"
         }
     },
     "prompt": {
@@ -233,20 +283,25 @@
     "record-list": {
         "export": "Hamisha",
         "msg1": "Rekodi zimehifadhiwa ndani ya kivinjari wavuti mpaka ziwasilishwe kwenye seva (hata ukizima tarakilishi yako au utoke kwenye mtandao).",
-        "msg2": "Rekodi zote zilizo kwenye foleni isipokuwa rasimu __icon__,zitawasilishwa moja kwa moja, kila dakika 5 kivinjari wavuti ikifungiliwa na kukiwa na mtandao. Kulazimisha upakiaji kati ya majaribio moja kwa moja, bonyeza kitufe la kupakia.",
+        "msg2": "Rekodi zote zilizo kwenye foleni isipokuwa rasimu __icon__,zitawasilishwa moja kwa moja, kila dakika 5 kivinjari wavuti ikifungiliwa na kukiwa na mtandao. ",
+        "msg2-nodraft": "Queued records are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
+        "msg3": "Kulazimisha upakiaji kati ya majaribio moja kwa moja, bonyeza kitufe la kupakia.",
         "norecords": "Hakuna rekodi kwa foleni",
         "title": "Foleni",
         "upload": "Pakia"
     },
     "store": {
         "error": {
-            "notavailable": "Hifadhi kwenye kivinjari wavuti unahitajika lakini haupatikani, inawezekana umevurugika au hatukuweza kuandikia. Kama uko kwenye 'Kuvinjari binafsi', tafadhali badilisha urudishe kwa mpangilio wa kawaida, ama tumia kivinjari wavuti nyingine. (Kosa: __error__)"
+            "iosusesafari": "Kisakuzi chako cha IOS hakiwezi kufungua fomu hii. Tunapendekeza kisakuzi cha Safari kuifungua fomu hii.",
+            "notavailable": "Hifadhi kwenye kivinjari wavuti unahitajika lakini haupatikani, inawezekana umevurugika au hatukuweza kuandikia. Kama uko kwenye 'Kuvinjari binafsi', tafadhali badilisha urudishe kwa mpangilio wa kawaida, ama tumia kivinjari wavuti nyingine. (Kosa: __error__)",
+            "notsupported": "Kisakuzi chako hakiwezi kufungua fomu hii. Tafadhali tumia kisakuzi cha kisasa."
         }
     },
     "submission": {
         "http0": "Kosekana (Je, uko nje ya mtandao?).",
         "http2xx": "Jibu lisilotarajiwa wakati wa kuwasilisha data.",
         "http400": "Data seva haikukubali data.",
+        "http401": "Authentication problem with data server.",
         "http403": "Hauruhusiwa kutuma data kwenye hii data seva.",
         "http404": "Huduma ya kuwasilisha data kwenye data seva haikupatikana.",
         "http413": "Data ni kubwa mno.",

@@ -182,7 +182,7 @@
     },
     "contact": {
         "admin": "Prosím, kontaktujte administrátora prieskumu.",
-        "support": "Kontaktujte __supportEmail__ prosím.'"
+        "support": "Kontaktujte __supportEmail__ prosím."
     },
     "enketo": {
         "power": "Poháňané"
@@ -283,7 +283,9 @@
     "record-list": {
         "export": "Exportovať",
         "msg1": "Záznamy sú uložené vo vašom prehliadači, až kým sa neodošlú (aj v prípade, keď vypnete počítač alebo prejdete do offline režimu).",
-        "msg2": "Záznamy vo fronte, s výnimkou tých, ktoré sú označené ako návrh __icon__, sú nahrávané automaticky v pozadí, každých 5 minút, pokým je webová stránka otvorený a pripojenie k internetu je k dispozícii. Ak si chcete vynútiť odoslanie medzi týmito automatickými pokusmi, kliknite na tlačidlo Nahrať.",
+        "msg2": "Záznamy vo fronte, s výnimkou tých, ktoré sú označené ako návrh __icon__, sú nahrávané automaticky v pozadí, každých 5 minút, pokým je webová stránka otvorený a pripojenie k internetu je k dispozícii.",
+        "msg2-nodraft": "Queued records are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
+        "msg3": "Ak si chcete vynútiť odoslanie medzi týmito automatickými pokusmi, kliknite na tlačidlo Nahrať.",
         "norecords": "žiadne záznamy vo fronte",
         "title": "Fronta",
         "upload": "Nahrať"

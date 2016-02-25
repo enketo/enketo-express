@@ -3,6 +3,24 @@
         "flushdb": "Speicher löschen"
     },
     "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "To add this form to your Home screen, click the browser settings icon __image1__ and select: 'Add to Home screen'."
+            },
+            "androidfirefox": {
+                "msg": [
+                    "To add this form to your Homescreen:",
+                    "1. Add this page to your Firefox bookmarks by clicking the settings icon __image1__ and then the star icon __image2__.",
+                    "2. Open your bookmarks by opening a new page and clicking the Bookmarks tab.",
+                    "3. Click-and-hold your form until a pop-up menu appears.",
+                    "4. Select 'Add to Home Screen'."
+                ]
+            },
+            "heading": "Add to Home Screen",
+            "iossafari": {
+                "msg": "To add this form to your Home screen, click the share icon __image1__ in the top right of your browser, and select: '+ Add to Home Screen'."
+            }
+        },
         "appupdated": {
             "heading": "App aktualisiert!",
             "msg": "Eine neue Version dieser Anwendung wurde heruntergeladen. Aktualisieren Sie diese Seite, um die aktualisierte Version zu laden."
@@ -10,6 +28,19 @@
         "default": {
             "button": "Schließen",
             "heading": "Benachrichtigung"
+        },
+        "export": {
+            "alternativequestion": "alternative download - online",
+            "error": {
+                "filecreatedmsg": "Nevertheless, an incomplete export file was still created.",
+                "heading": "Export Error",
+                "linknotcreated": "Failed to create an export link for unsubmitted records. Are you online?",
+                "msg": "Errors occurred during creating of the record export file for unsubmitted records. Errors: __errors__"
+            },
+            "success": {
+                "heading": "Export Created",
+                "msg": "Export file created for all unsubmitted records belonging to this form."
+            }
         },
         "formupdated": {
             "heading": "Formular aktualisiert!",
@@ -151,7 +182,7 @@
     },
     "contact": {
         "admin": "Kontaktieren Sie den Ersteller der Umfrage bitte.",
-        "support": "Bitte kontaktieren Sie __supportEmail__'"
+        "support": "Bitte kontaktieren Sie __supportEmail__."
     },
     "enketo": {
         "power": "Bereitgestellt von"
@@ -206,6 +237,7 @@
         "el": "Griechisch",
         "en": "Englisch",
         "es": "Spanisch",
+        "fa": "Persisch",
         "fr": "Französisch",
         "he": "Hebräisch",
         "hi": "Indisch",
@@ -218,7 +250,8 @@
         "supported": "Unterstützte Sprachen:",
         "sw": "Suaheli",
         "th": "Thailändisch",
-        "vi": "Vietnamesisch"
+        "vi": "Vietnamesisch",
+        "zh": "Chinesisch"
     },
     "page": {
         "modernbrowsers": {
@@ -250,7 +283,9 @@
     "record-list": {
         "export": "Exportieren",
         "msg1": "Die Datensätze werden in Ihrem Browser gespeichert, bis sie hochgeladen wurden (auch wenn Sie den Computer ausschalten oder offline gehen).",
-        "msg2": "Aufzeichnungen in der Warteschlange, mit Ausnahme der als Entwurf __icon__ markiert, werden automatisch hochgeladen, in den Hintergrund, alle 5 Minuten, wenn die Webseite geöffnet ist und eine Internet-Verbindung verfügbar ist. Um einen Upload zwischen automatischen Versuchen zu erzwingen, klicken Sie auf Hochladen.",
+        "msg2": "Aufzeichnungen in der Warteschlange, mit Ausnahme der als Entwurf __icon__ markiert, werden automatisch hochgeladen, in den Hintergrund, alle 5 Minuten, wenn die Webseite geöffnet ist und eine Internet-Verbindung verfügbar ist.",
+        "msg2-nodraft": "Aufzeichnungen in der Warteschlange werden automatisch hochgeladen, in den Hintergrund, alle 5 Minuten, wenn die Webseite geöffnet ist und eine Internet-Verbindung verfügbar ist.",
+        "msg3": "Um einen Upload zwischen automatischen Versuchen zu erzwingen, klicken Sie auf Hochladen.",
         "norecords": "keine Datensätze in der Warteschlange",
         "title": "Warteschlange",
         "upload": "Hochladen"
