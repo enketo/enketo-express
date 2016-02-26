@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased] 
+----------------------
+##### Changed
+- More modest font size for bold text, especially in Grid theme.
+
+##### Fixed
+- Options in select minimal are underlined.
+- Group labels in RTL languages are left-aligned.
+
 [1.24.0] - 2016-02-23
 ----------------------
 ##### Added 
