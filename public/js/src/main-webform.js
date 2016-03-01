@@ -187,6 +187,7 @@ function _init( formParts ) {
         if ( formParts && formParts.form && formParts.model ) {
             $loader.replaceWith( formParts.form );
             $form = $( 'form.or:eq(0)' );
+            translator.localize( $form.get( 0 ) );
             $( document ).ready( function() {
                 // TODO pass $form as first parameter?
                 // controller.init is asynchronous
