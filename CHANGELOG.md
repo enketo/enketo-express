@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Options in select minimal are underlined.
 - Group labels in RTL languages are left-aligned.
+- When offline-capable webform is added to iOS homescreen it doesn't work.
 
 [1.24.0] - 2016-02-23
 ----------------------
