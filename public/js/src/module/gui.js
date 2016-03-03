@@ -7,7 +7,8 @@
 var support = require( 'enketo-core/src/js/support' );
 var settings = require( './settings' );
 var printForm = require( 'enketo-core/src/js/print' );
-var t = require( './translator' ).t;
+var translator = require( './translator' );
+var t = translator.t;
 var sniffer = require( './sniffer' );
 var dialog = require( './vex.dialog.custom' );
 var $ = require( 'jquery' );
@@ -25,7 +26,8 @@ dialog.defaultOptions.className = 'vex-theme-plain';
  * Initializes the GUI module
  */
 function init() {
-    setEventHandlers();
+    translator.init()
+        .then( setEventHandlers );
 
     // avoid Windows console errors
     if ( typeof window.console === 'undefined' ) {

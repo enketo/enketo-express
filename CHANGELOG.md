@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Group labels in RTL languages are left-aligned.
 - When offline-capable webform is added to iOS homescreen it doesn't work.
 - Submit button "busy" state is reset too early.
+- Add-to-homescreen guidance only shows translation key.
 
 [1.24.0] - 2016-02-23
 ----------------------
