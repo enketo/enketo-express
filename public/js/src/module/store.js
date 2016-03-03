@@ -533,15 +533,16 @@ recordStore = {
             .then( _firstItemOnly )
             .then( propertyStore.incrementRecordCount )
             .then( function() {
-                var tasks = [];
-
-                record.files.forEach( function( file ) {
-                    // file can be a string if it was loaded from storage and remained unchanged
-                    if ( file && file.item && file.item instanceof Blob ) {
-                        tasks.push( recordStore.file.update( record.instanceId, file ) );
-                    }
-                } );
-                return Promise.all( tasks );
+                // execution, sequentially
+                return record.files.reduce( function( prevPromise, file ) {
+                    return prevPromise.then( function() {
+                        if ( file && file.item && file.item instanceof Blob ) {
+                            // file can be a string if it was loaded from storage and remained unchanged
+                            return recordStore.file.update( record.instanceId, file );
+                        }
+                        return Promise.resolve();
+                    } );
+                }, Promise.resolve() );
             } )
             .then( function() {
                 return record;
@@ -590,19 +591,23 @@ recordStore = {
                 } );
             } )
             .then( function() {
-                // add new or update existing files
-                record.files.forEach( function( file ) {
-                    // file can be a string if it was loaded from storage and remained unchanged
-                    if ( file && file.item && file.item instanceof Blob ) {
-                        tasks.push( recordStore.file.update( record.instanceId, file ) );
-                    }
-                } );
-                // remove obsolete files
-                obsoleteFiles.forEach( function( key ) {
-                    tasks.push( recordStore.file.remove( record.instanceId, key ) );
-                } );
-                // execution
-                return Promise.all( tasks )
+                // execution, sequentially 
+                return record.files.reduce( function( prevPromise, file ) {
+                        return prevPromise.then( function() {
+                            // file can be a string if it was loaded from storage and remained unchanged
+                            if ( file && file.item && file.item instanceof Blob ) {
+                                return recordStore.file.update( record.instanceId, file );
+                            }
+                            return Promise.resolve();
+                        } );
+                    }, Promise.resolve() )
+                    .then( function() {
+                        return obsoleteFiles.reduce( function( prevPromise, key ) {
+                            return prevPromise.then( function() {
+                                return recordStore.file.remove( record.instanceId, key );
+                            } );
+                        }, Promise.resolve() );
+                    } )
                     .then( function() {
                         // resolving with original record (not the array returned by server.records.update)
                         return record;

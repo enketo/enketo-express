@@ -11,7 +11,7 @@ var Papa = require( 'papaparse' );
  * @return {Promise}
  */
 function blobToDataUri( blob ) {
-    var reader = new window.FileReader();
+    var reader = new FileReader();
 
     return new Promise( function( resolve, reject ) {
         reader.onloadend = function() {
@@ -39,7 +39,7 @@ function blobToDataUri( blob ) {
  * @return {Promise}
  */
 function blobToArrayBuffer( blob ) {
-    var reader = new window.FileReader();
+    var reader = new FileReader();
 
     return new Promise( function( resolve, reject ) {
         reader.onloadend = function() {
