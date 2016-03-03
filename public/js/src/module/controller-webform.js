@@ -412,17 +412,24 @@ function _setEventHandlers() {
         $button.btnBusyState( true );
         setTimeout( function() {
             if ( settings.offline && draft ) {
-                $button.btnBusyState( false );
-                _saveRecord();
+                _saveRecord().then( function() {
+                    $button.btnBusyState( false );
+                } );
             } else {
                 form.validate()
                     .then( function( valid ) {
-                        $button.btnBusyState( false );
+
                         if ( valid ) {
                             if ( settings.offline ) {
-                                return _saveRecord();
+                                return _saveRecord()
+                                    .then( function() {
+                                        $button.btnBusyState( false );
+                                    } );
                             } else {
-                                return _submitRecord();
+                                return _submitRecord()
+                                    .then( function() {
+                                        $button.btnBusyState( false );
+                                    } );
                             }
                         } else {
                             gui.alert( t( 'alert.validationerror.msg' ) );
