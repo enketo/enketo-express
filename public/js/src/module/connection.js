@@ -240,7 +240,8 @@ function _prepareFormDataArray( record ) {
 
         // add any media files to the batch
         batch.forEach( function( fileIndex ) {
-            batchPrepped.formData.append( submissionFiles[ fileIndex ].nodeName, submissionFiles[ fileIndex ].file, submissionFiles[ fileIndex ].file.name );
+            // Not clear what name is appropriate. Since file.name is unique and works, this is used.
+            batchPrepped.formData.append( submissionFiles[ fileIndex ].file.name, submissionFiles[ fileIndex ].file, submissionFiles[ fileIndex ].file.name );
         } );
 
         // push the batch to the array

@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased] 
+[1.24.1] - 2016-03-04 
 ----------------------
 ##### Added
 - French translation.
@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Submit button "busy" state is reset too early.
 - Add-to-homescreen guidance only shows translation key.
 - Exceptions occuring with file inputs on iOS devices.
+- Only last media file in repeated file input is submitted.
 
 [1.24.0] - 2016-02-23
 ----------------------
