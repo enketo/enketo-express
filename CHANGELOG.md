@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - When offline-capable webform is added to iOS homescreen it doesn't work.
 - Submit button "busy" state is reset too early.
 - Add-to-homescreen guidance only shows translation key.
+- Exceptions occuring with file inputs on iOS devices.
 
 [1.24.0] - 2016-02-23
 ----------------------

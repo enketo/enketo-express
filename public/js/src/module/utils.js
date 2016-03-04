@@ -1,6 +1,7 @@
 'use strict';
 
 var Papa = require( 'papaparse' );
+var dataUriCache = {};
 
 //var hasArrayBufferView = new Blob( [ new Uint8Array( 100 ) ] ).size == 100;
 
@@ -10,23 +11,33 @@ var Papa = require( 'papaparse' );
  * @param  {Blob} blob The blob
  * @return {Promise}
  */
-function blobToDataUri( blob ) {
-    var reader = new FileReader();
+function blobToDataUri( blob, filename ) {
+    var reader;
+    var cacheKey = ( filename ) ? filename : ( blob && blob.name ? blob.name : null );
+    var cacheResult = ( cacheKey ) ? dataUriCache[ cacheKey ] : null;
 
     return new Promise( function( resolve, reject ) {
-        reader.onloadend = function() {
-            var base64data = reader.result;
-            resolve( base64data );
-        };
-        reader.onerror = function( e ) {
-            reject( e );
-        };
-
-        // There is some quirky Chrome and Safari behaviour if blob is undefined or a string
-        // so we peform an additional check
-        if ( !( blob instanceof Blob ) ) {
+        if ( cacheResult ) {
+            // Using a cache resolves two issues:
+            // 1. A mysterious and occasional iOS fileReader NOT_FOUND exception when a File is converted a second time.
+            // 2. Reduce rate of linear performance degradation with each image that is added to a record.
+            resolve( cacheResult );
+        } else if ( !( blob instanceof Blob ) ) {
+            // There is some quirky Chrome and Safari behaviour if blob is undefined or a string
+            // so we peform an additional check
             reject( new Error( 'TypeError: Require Blob' ) );
         } else {
+            reader = new FileReader();
+            reader.onloadend = function() {
+                var base64data = reader.result;
+                if ( cacheKey ) {
+                    dataUriCache[ cacheKey ] = base64data;
+                }
+                resolve( base64data );
+            };
+            reader.onerror = function( e ) {
+                reject( e );
+            };
             reader.readAsDataURL( blob );
         }
     } );

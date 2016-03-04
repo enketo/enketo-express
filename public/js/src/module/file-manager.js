@@ -12,6 +12,7 @@
 var store = require( './store' );
 var settings = require( './settings' );
 var $ = require( 'jquery' );
+var utils = require( './utils' );
 var coreUtils = require( 'enketo-core/src/js/utils' );
 
 var supported = typeof FileReader !== 'undefined';
@@ -53,19 +54,11 @@ function isWaitingForPermissions() {
  * as a src attribute.
  *
  * @param  {?string|Object} subject File or filename
+ * @param  {?string} filename filename override
  * @return {[type]}         promise url string or rejection with Error
  */
-function getFileUrl( subject ) {
-    var reader = new FileReader();
-
+function getFileUrl( subject, filename ) {
     return new Promise( function( resolve, reject ) {
-        reader.onload = function( e ) {
-            resolve( e.target.result );
-        };
-        reader.onerror = function( error ) {
-            reject( error );
-        };
-
         if ( !subject ) {
             resolve( null );
         } else if ( typeof subject === 'string' ) {
@@ -76,12 +69,13 @@ function getFileUrl( subject ) {
                 // obtain file from storage
                 store.record.file.get( _getInstanceId(), subject )
                     .then( function( file ) {
-                        console.debug( 'file', file );
                         if ( file.item ) {
                             if ( _isTooLarge( file.item ) ) {
                                 reject( _getMaxSizeError() );
                             } else {
-                                reader.readAsDataURL( file.item );
+                                utils.blobToDataUri( file.item )
+                                    .then( resolve )
+                                    .catch( reject );
                             }
                         } else {
                             reject( new Error( 'File Retrieval Error' ) );
@@ -93,7 +87,9 @@ function getFileUrl( subject ) {
             if ( _isTooLarge( subject ) ) {
                 reject( _getMaxSizeError() );
             } else {
-                reader.readAsDataURL( subject );
+                utils.blobToDataUri( subject, filename )
+                    .then( resolve )
+                    .catch( reject );
             }
         } else {
             reject( new Error( 'Unknown error occurred' ) );
