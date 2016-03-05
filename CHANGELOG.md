@@ -4,8 +4,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased] 
 ----------------------
+##### Added
+- French translation.
+
 ##### Changed
 - More modest font size for bold text, especially in Grid theme.
+- Form UI elements also translatable.
+- Updated Persian translation.
 
 ##### Fixed
 - Options in select minimal are underlined.
