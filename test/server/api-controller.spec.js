@@ -276,7 +276,7 @@ describe( 'api', function() {
                 res: {
                     // in api/v1 this returns `url`, in api/v2 this returns `iframe_url`
                     property: 'url',
-                    expected: /\/_\/i\/#[A-z0-9]{4}/
+                    expected: /\/_\/#[A-z0-9]{4}/
                 },
                 offline: true
             } );
@@ -564,11 +564,7 @@ describe( 'api', function() {
                 endpoint: '/survey/offline/iframe',
                 method: 'post',
                 auth: true,
-                status: 200,
-                res: {
-                    property: 'offline_iframe_url',
-                    expected: /\/_\/i\/#[A-z0-9]{4}/
-                },
+                status: 405,
                 offline: true
             },
             // TESTING THE DEFAULTS[] PARAMETER
@@ -717,12 +713,7 @@ describe( 'api', function() {
                 endpoint: '/survey/offline/iframe',
                 parentWindowOrigin: 'http://example.com/',
                 method: 'post',
-                status: 200,
-                res: {
-                    property: 'offline_iframe_url',
-                    expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
-                },
-                offline: true
+                status: 405
             }, {
                 endpoint: '/survey/preview/iframe',
                 parentWindowOrigin: 'http://example.com/',

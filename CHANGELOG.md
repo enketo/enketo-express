@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Removed
+- Offline-capable iframe-friendly webform views and API endpoints.
+
+
 [1.24.1] - 2016-03-04 
 ----------------------
 ##### Added

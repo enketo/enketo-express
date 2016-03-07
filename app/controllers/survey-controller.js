@@ -36,9 +36,7 @@ router.param( 'mod', function( req, rex, next, mod ) {
 
 router
     .get( '*', loggedInCheck )
-    .get( '' )
     .get( '/_/', offlineWebform )
-    .get( '/_/:mod', offlineWebform )
     .get( '/:enketo_id', webform )
     .get( '/:mod/:enketo_id', webform )
     .get( '/preview/:enketo_id', preview )

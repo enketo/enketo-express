@@ -58,11 +58,9 @@ router
     .get( '/survey', getExistingSurvey )
     .get( '/survey/offline', getExistingSurvey )
     .get( '/survey/iframe', getExistingSurvey )
-    .get( '/survey/offline/iframe', getExistingSurvey )
     .post( '/survey', getNewOrExistingSurvey )
     .post( '/survey/offline', getNewOrExistingSurvey )
     .post( '/survey/iframe', getNewOrExistingSurvey )
-    .post( '/survey/offline/iframe', getNewOrExistingSurvey )
     .delete( '/survey', deactivateSurvey )
     .get( '/survey/preview', getExistingSurvey )
     .get( '/survey/preview/iframe', getExistingSurvey )
@@ -350,19 +348,12 @@ function _generateWebformUrls( id, req ) {
             // iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
             obj.iframe_url = baseUrl + IFRAMEPATH + idPartOnline + queryString;
-            obj.offline_iframe_url = baseUrl + OFFLINEPATH + IFRAMEPATH + idPartOffline;
             obj.preview_iframe_url = baseUrl + 'preview/' + IFRAMEPATH + idPartOnline + queryString;
             // rest
             obj.enketo_id = id;
             break;
         case 'offline':
-            queryString = _generateQueryString( [ req.parentWindowOriginParam ] );
-            if ( iframePart ) {
-                obj.offline_iframe_url = baseUrl + OFFLINEPATH + iframePart + idPartOffline + queryString;
-            } else {
-                obj.offline_url = baseUrl + OFFLINEPATH + idPartOffline;
-            }
-
+            obj.offline_url = baseUrl + OFFLINEPATH + idPartOffline;
             break;
         default:
             queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );

@@ -14,9 +14,6 @@ In API v1 this returned the `url` parameter. In API v2 this returns the `iframe_
 # the new /survey/offline endpoint 
 In API v2 this always returns an **offline-enabled** webform (if offline capability is enabled in config) as the value for offline_url. If offline capability is disabled this endpoint will return a 405 Not Allowed.
 
-# the new /survey/offline/iframe endpoint 
-Returns offline-capable iframe-friendly webform. Note that the offline-capability might not make sense if the parentWindow is not offline-capable (i.e. the page you're adding the iframed form too). 
-
 # defaults
 All /survey/* endpoints, except /survey/offline, now accept `defaults[]` parameters to dynamically set form defaults.
 ```

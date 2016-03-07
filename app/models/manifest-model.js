@@ -69,8 +69,7 @@ function getManifest( html, lang ) {
                 // add explicit entries in case user never lands on URL without querystring
                 // otherwise they may never get added as a Master entry
                 resources = resources.concat( [
-                    '/_/',
-                    '/_/i/'
+                    '/_/'
                 ] );
 
                 // determine version

@@ -303,7 +303,7 @@ function _generateWebformUrls( id, req ) {
             break;
         default:
             if ( iframePart ) {
-                obj.url = ( offline ) ? baseUrl + '_/' + iframePart + idPartOffline : baseUrl + iframePart + idPartOnline;
+                obj.url = ( offline ) ? baseUrl + '_/' + idPartOffline : baseUrl + iframePart + idPartOnline;
             } else {
                 obj.url = ( offline ) ? baseUrl + '_/' + idPartOffline : baseUrl + idPartOnline;
             }
