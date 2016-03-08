@@ -31,7 +31,7 @@ describe( 'Client Storage', function() {
         };
         fileB = {
             name: 'something2.xml',
-            item: new Blob( [ '<html>something2å</html' ], {
+            item: new Blob( [ '<html>something2</html' ], {
                 type: 'text/xml'
             } )
         };
