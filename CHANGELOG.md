@@ -10,6 +10,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Removed
 - Offline-capable iframe-friendly webform views and API endpoints.
 
+##### Fixed
+- Subtle 'required' message cannot be translated.
+- Google maps tile layers not using https.
+
 [1.24.1] - 2016-03-04 
 ----------------------
 ##### Added

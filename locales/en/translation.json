@@ -212,7 +212,8 @@
       "end": "Go to End",
       "next": "Next",
       "return": "Return to Beginning"
-    }
+    },
+    "required": "required"
   },
   "formfooter": {
     "savedraft": {
