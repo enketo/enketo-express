@@ -101,11 +101,13 @@ function updateAutoSavedRecord( record ) {
     // make the record valid
     record.enketoId = settings.enketoId;
 
-    return update( record );
+    return store.record.update( record );
+    // do not update recordList
 }
 
 function removeAutoSavedRecord() {
-    return remove( autoSaveKey );
+    return store.record.remove( autoSaveKey );
+    // do not update recordList
 }
 
 /**

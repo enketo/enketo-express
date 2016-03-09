@@ -241,7 +241,6 @@ function confirm( content, choices ) {
             className: 'btn btn-default small'
         } ],
         callback: function( value ) {
-            console.log( 'closing dialog with value:', value );
             if ( value && typeof choices.posAction !== 'undefined' ) {
                 choices.posAction.call( value );
             } else if ( typeof choices.negAction !== 'undefined' ) {
