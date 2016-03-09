@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.25.0] - 2026-03-09
 ----------------------
 ##### Added
 - Enketo can now be configured with a base path, allowing Enketo to run with other servers on the same (sub)domain.
