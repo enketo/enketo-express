@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Fixed
+- Languages not loaded sometimes.
+- Submit button not re-enabled after validation error.
+
 [1.25.0] - 2026-03-09
 ----------------------
 ##### Added

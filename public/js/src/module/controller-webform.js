@@ -412,24 +412,22 @@ function _setEventHandlers() {
         $button.btnBusyState( true );
         setTimeout( function() {
             if ( settings.offline && draft ) {
-                _saveRecord().then( function() {
-                    $button.btnBusyState( false );
-                } );
+                _saveRecord()
+                    .then( function() {
+                        $button.btnBusyState( false );
+                    } )
+                    .catch( function( e ) {
+                        $button.btnBusyState( false );
+                        throw e;
+                    } );
             } else {
                 form.validate()
                     .then( function( valid ) {
-
                         if ( valid ) {
                             if ( settings.offline ) {
-                                return _saveRecord()
-                                    .then( function() {
-                                        $button.btnBusyState( false );
-                                    } );
+                                return _saveRecord();
                             } else {
-                                return _submitRecord()
-                                    .then( function() {
-                                        $button.btnBusyState( false );
-                                    } );
+                                return _submitRecord();
                             }
                         } else {
                             gui.alert( t( 'alert.validationerror.msg' ) );
@@ -437,6 +435,9 @@ function _setEventHandlers() {
                     } )
                     .catch( function( e ) {
                         gui.alert( e.message );
+                    } )
+                    .then( function() {
+                        $button.btnBusyState( false );
                     } );
             }
         }, 100 );
