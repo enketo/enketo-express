@@ -42,7 +42,7 @@ init = function( something ) {
                 detection: {
                     order: [ 'querystring', 'navigator' ],
                     lookupQuerystring: 'lang',
-                    caches: []
+                    caches: false
                 },
                 interpolation: {
                     prefix: '__',
