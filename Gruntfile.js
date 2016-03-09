@@ -70,7 +70,7 @@ module.exports = function( grunt ) {
             },
             js: {
                 files: [ 'public/js/src/**/*.js' ],
-                tasks: [ 'compile-dev' ],
+                tasks: [ 'js-dev' ],
                 options: {
                     spawn: false,
                     livereload: true
