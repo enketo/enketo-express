@@ -16,7 +16,7 @@ module.exports = function( config ) {
 
         // list of files / patterns to load in the browser
         files: [
-            'test/client/helpers/**/*.js',
+            'public/js/src/module/Array-from.js',
             'test/client/**/*.spec.js', {
                 pattern: 'public/js/src/**/*.js',
                 included: false

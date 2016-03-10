@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Languages not loaded sometimes.
 - Submit button not re-enabled after validation error.
 - Performance degradation after changing a value in the form and upon submitting.
+- Older browsers give "Array.from" error, when loading offline-capable webform.
 
 [1.25.0] - 2026-03-09
 ----------------------
