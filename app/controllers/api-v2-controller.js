@@ -7,7 +7,7 @@ var auth = require( 'basic-auth' );
 var express = require( 'express' );
 var router = express.Router();
 var quotaErrorMessage = 'Forbidden. No quota left';
-// var debug = require( 'debug' )( 'api-controller' );
+// var debug = require( 'debug' )( 'api-controller-v2' );
 
 module.exports = function( app ) {
     app.use( app.get( 'base path' ) + '/api/v2', router );
@@ -17,9 +17,7 @@ module.exports = function( app ) {
 
 router
     .get( '/', function( req, res, next ) {
-        var error = new Error( 'Sorry, the documentation for API v2 has not been created yet.' );
-        error.status = 404;
-        next( error );
+        res.redirect( 'http://apidocs.enketo.org/v2' );
     } )
     .all( '*', authCheck )
     .all( '*', _setQuotaUsed )

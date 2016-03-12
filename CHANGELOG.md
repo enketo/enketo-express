@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ----------------------
+##### Changed
+- Redirect to new API v2 documentation from /api/v2.
+
 ##### Fixed
 - Languages not loaded sometimes.
 - Submit button not re-enabled after validation error.

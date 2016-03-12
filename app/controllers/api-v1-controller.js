@@ -7,7 +7,7 @@ var auth = require( 'basic-auth' );
 var express = require( 'express' );
 var router = express.Router();
 var quotaErrorMessage = 'Forbidden. No quota left';
-var debug = require( 'debug' )( 'api-controller' );
+//var debug = require( 'debug' )( 'api-controller-v1' );
 
 module.exports = function( app ) {
     app.use( app.get( 'base path' ) + '/api/v1', router );
@@ -17,7 +17,7 @@ module.exports = function( app ) {
 
 router
     .get( '/', function( req, res ) {
-        res.redirect( 'http://apidocs.enketo.org' );
+        res.redirect( 'http://apidocs.enketo.org/v1' );
     } )
     .all( '*', authCheck )
     .all( '*', _setQuotaUsed )
@@ -212,7 +212,6 @@ function cacheInstance( req, res, next ) {
         .set( survey )
         .then( surveyModel.getId )
         .then( function( id ) {
-            debug( 'edit url generated:', _generateWebformUrls( id, req ) );
             _render( 201, _generateWebformUrls( id, req ), res );
         } )
         .catch( next );

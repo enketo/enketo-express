@@ -53,7 +53,7 @@ To configure your own custom external authentication also see [this section](#au
 
 ### API
 
-The API is accessible on **/api/v2** and **/api/v1**. Only API v1 is [properly documented](http://apidocs.enketo.org) at the moment. This [temporary note](./doc/APIv2.md) describes the changes introduced by API v2.
+The API is accessible on **/api/v2** and **/api/v1**. See [documentation](http://apidocs.enketo.org) on how to use it.
 
 
 ### How to run
