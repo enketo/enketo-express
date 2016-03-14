@@ -212,7 +212,8 @@
             "end": "Ga naar het Einde",
             "next": "Volgende",
             "return": "Terug naar het Begin"
-        }
+        },
+        "required": "verplicht"
     },
     "formfooter": {
         "savedraft": {
@@ -225,6 +226,17 @@
         "validate": {
             "btn": "Valideer"
         }
+    },
+    "geopicker": {
+        "accuracy": "nauwkeurigheid (m)",
+        "altitude": "hoogte (m)",
+        "closepolygon": "sluit veelhoek",
+        "kmlcoords": "KML coördinaten",
+        "kmlpaste": "plak KML coördinaten hier",
+        "latitude": "breedtegraad (x.y °)",
+        "longitude": "lengtegraad (x.y °)",
+        "points": "punten",
+        "searchPlaceholder": "zoek naar plaats of adres"
     },
     "here": "hier",
     "home": {
@@ -289,6 +301,10 @@
         "norecords": "geen records aanwezig",
         "title": "Records",
         "upload": "Verzend"
+    },
+    "selectpicker": {
+        "noneselected": "niets geselecteerd",
+        "numberselected": "__number__ geselecteerd"
     },
     "store": {
         "error": {

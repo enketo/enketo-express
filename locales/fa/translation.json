@@ -212,7 +212,8 @@
             "end": "رفتن به انتها",
             "next": "بعدی",
             "return": "بازگشت به ابتدا"
-        }
+        },
+        "required": "الزامی"
     },
     "formfooter": {
         "savedraft": {
@@ -225,6 +226,17 @@
         "validate": {
             "btn": "اعتبارسنجی"
         }
+    },
+    "geopicker": {
+        "accuracy": "دقت (متر)",
+        "altitude": "ارتفاع (متر)",
+        "closepolygon": "چندضلعی بسته",
+        "kmlcoords": "مختصات KML",
+        "kmlpaste": "ریختن مختصات KML در اینجا",
+        "latitude": "عرض جغرافیایی (° x.y)",
+        "longitude": "طول جغرافیایی (° x.y)",
+        "points": "نقاط",
+        "searchPlaceholder": "جستجوی مکان یا آدرس"
     },
     "here": "اینجا",
     "home": {
@@ -289,6 +301,10 @@
         "norecords": "رکوردی در صف موجود نیست",
         "title": "صف",
         "upload": "ارسال به سرور"
+    },
+    "selectpicker": {
+        "noneselected": "هیچ یک انتخاب نشده است",
+        "numberselected": "__number__ انتخاب شده است"
     },
     "store": {
         "error": {

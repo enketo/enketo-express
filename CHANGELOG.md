@@ -2,18 +2,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.25.1] - 2016-03-14
 ----------------------
 ##### Changed
 - Redirect to new API v2 documentation from /api/v2.
+- Updated French, Dutch, and Persian translations.
 
 ##### Fixed
-- Languages not loaded sometimes.
+- Languages not loading sometimes.
 - Submit button not re-enabled after validation error.
 - Performance degradation after changing a value in the form and upon submitting.
 - Older browsers give "Array.from" error, when loading offline-capable webform.
 
-[1.25.0] - 2026-03-09
+[1.25.0] - 2016-03-09
 ----------------------
 ##### Added
 - Enketo can now be configured with a base path, allowing Enketo to run with other servers on the same (sub)domain.
