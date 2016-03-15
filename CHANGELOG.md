@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Added
+- Chinese translation
+
 [1.25.1] - 2016-03-14
 ----------------------
 ##### Changed
