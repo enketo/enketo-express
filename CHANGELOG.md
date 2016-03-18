@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Chinese translation
 
+##### Fixed
+- RTL form language right-aligns map layer options.
+- Single-page form in pages mode throws exception and has no submit button.
+
 [1.25.1] - 2016-03-14
 ----------------------
 ##### Changed
