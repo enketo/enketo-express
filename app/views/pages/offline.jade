@@ -1,6 +1,29 @@
 extends ../layout
 
+block style
+    style.
+        .error {
+            margin: 40px 20px 20px 20px;
+            padding: 20px;
+            border: 1px solid #F2616D;
+            position: relative;
+            font-weight: normal;
+            min-height: 100px;
+        }
+
 block content
 
-  h1= t("page.offline.heading")
+  h1.error= t("page.offline.heading")
   p= t("page.offline.msg1") 
+
+  script.
+        var enketoId = _getEnketoId( '#', window.location.hash );
+        var query = location.search;
+        if (enketoId && query) {
+            var bareUrl = window.location.pathname + window.location.hash;
+            location.href = bareUrl;
+        }
+        function _getEnketoId( prefix, haystack ) {
+            var id = new RegExp( prefix ).test( haystack ) ? haystack.substring( haystack.lastIndexOf( prefix ) + prefix.length ) : null;
+            return id;
+        }
