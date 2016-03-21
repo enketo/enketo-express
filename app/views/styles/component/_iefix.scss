@@ -15,4 +15,10 @@
     .form__loader {
         min-height: 200px;
     }
+
+    .option-wrapper > label img{
+        // http://stackoverflow.com/questions/20198137/image-label-for-input-in-a-form-not-clickable-in-ie11
+        display: inline!important;
+        pointer-events: none;
+    }
 }
