@@ -527,10 +527,12 @@ function _setEventHandlers() {
         } ), 7 );
     } );
 
-    $( '.form-footer [name="draft"]' ).on( 'change', function() {
-        var text = ( $( this ).prop( 'checked' ) ) ? t( 'formfooter.savedraft.btn' ) : t( 'formfooter.submit.btn' );
-        $( '#submit-form' ).get( 0 ).lastChild.textContent = text;
-    } ).closest( '.draft' ).toggleClass( 'hide', !settings.offline );
+    if ( settings.draftEnabled !== false ) {
+        $( '.form-footer [name="draft"]' ).on( 'change', function() {
+            var text = ( $( this ).prop( 'checked' ) ) ? t( 'formfooter.savedraft.btn' ) : t( 'formfooter.submit.btn' );
+            $( '#submit-form' ).get( 0 ).lastChild.textContent = text;
+        } ).closest( '.draft' ).toggleClass( 'hide', !settings.offline );
+    }
 
     if ( settings.offline ) {
         $doc.on( 'valuechange.enketo', _autoSaveRecord );

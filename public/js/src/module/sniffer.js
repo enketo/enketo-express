@@ -18,6 +18,9 @@ browser = {
     },
     isFirefox: function() {
         return /firefox|fxios/i.test( ua );
+    },
+    isIe: function() {
+        return ua.indexOf( 'Trident/' ) >= 0;
     }
 };
 

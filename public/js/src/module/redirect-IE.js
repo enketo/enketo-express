@@ -1,6 +1,7 @@
 'use strict';
 
-var trident = global.navigator.userAgent.indexOf( 'Trident/' ) >= 0;
+var sniffer = require( './sniffer' );
+var trident = sniffer.browser.isIe();
 
 if ( trident ) {
     global.location.href = "/modern-browsers";

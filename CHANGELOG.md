@@ -5,7 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [Unreleased]
 ----------------------
 ##### Added
-- Chinese translation
+- Chinese translation.
+- Limited IE11 support.
 
 ##### Fixed
 - RTL form language right-aligns map layer options.
