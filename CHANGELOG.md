@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - RTL form language right-aligns map layer options.
 - Single-page form in pages mode throws exception and has no submit button.
+- Very first time a form is stored in the browser, the query parameter to pass to submissions is not stored.
 
 [1.25.1] - 2016-03-14
 ----------------------

@@ -18,7 +18,6 @@ function init( survey ) {
             return get( survey );
         } )
         .then( _removeQueryString )
-        .then( _processDynamicData )
         .then( function( result ) {
             if ( result ) {
                 return result;
@@ -26,6 +25,7 @@ function init( survey ) {
                 return set( survey );
             }
         } )
+        .then( _processDynamicData )
         .then( _setUpdateIntervals )
         .then( _setResetListener );
 }
