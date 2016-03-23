@@ -784,12 +784,12 @@ function _updateFile( table, id, file ) {
                     } );
             }
         } else {
-            error = new Error( 'DataError. File not complete or id not provided.' );
+            error = new Error( 'DataError. File not complete or ID not provided.' );
             error.name = 'DataError';
             return Promise.reject( error );
         }
     } else {
-        return Promise.reject( new Error( 'Unknown table or issing id or key.' ) );
+        return Promise.reject( new Error( 'Unknown table or missing ID or key.' ) );
     }
 }
 
