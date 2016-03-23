@@ -162,8 +162,13 @@ function updateMaxSubmissionSize( survey ) {
     if ( !survey.maxSize ) {
         return connection.getMaximumSubmissionSize()
             .then( function( maxSize ) {
-                survey.maxSize = maxSize;
-                return store.survey.update( survey );
+                if ( maxSize ) {
+                    survey.maxSize = maxSize;
+                    // Ignore resources. These should not be updated.
+                    delete survey.resources;
+                    return store.survey.update( survey );
+                }
+                return survey;
             } );
     } else {
         return Promise.resolve( survey );
