@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.26.0] - 2016-03-23
 ----------------------
 ##### Added
 - Chinese translation.
@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Single-page form in pages mode throws exception and has no submit button.
 - Very first time a form is stored in the browser, the query parameter to pass to submissions is not stored.
 - When offline, and an attempt is made load a form with an uncached querystring, redirect to querystring-less URL.
+- Submissions broken when basePath is used.
 
 [1.25.1] - 2016-03-14
 ----------------------

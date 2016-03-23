@@ -15,7 +15,6 @@ var CONNECTION_URL = settings.basePath + '/connection';
 var TRANSFORM_URL = settings.basePath + '/transform/xform' + location.search;
 var TRANSFORM_HASH_URL = settings.basePath + '/transform/xform/hash';
 var EXPORT_URL = settings.basePath + '/export/get-url';
-var SUBMISSION_URL = ( settings.enketoId ) ? settings.basePath + '/submission/' + settings.enketoIdPrefix + settings.enketoId + location.search : null;
 var INSTANCE_URL = ( settings.enketoId ) ? settings.basePath + '/submission/' + settings.enketoIdPrefix + settings.enketoId : null;
 var MAX_SIZE_URL = ( settings.enketoId ) ? settings.basePath + '/submission/max-size/' + settings.enketoIdPrefix + settings.enketoId : null;
 var ABSOLUTE_MAX_SIZE = 100 * 1024 * 1024;
@@ -132,7 +131,7 @@ function getDownloadUrl( zipFile ) {
 function _uploadBatch( recordBatch ) {
     return new Promise( function( resolve, reject ) {
         // submission URL is dynamic
-        var submissionUrl = ( settings.enketoId ) ? '/submission/' + settings.enketoIdPrefix + settings.enketoId +
+        var submissionUrl = ( settings.enketoId ) ? settings.basePath + '/submission/' + settings.enketoIdPrefix + settings.enketoId +
             utils.getQueryString( settings.submissionParameter ) : null;
         $.ajax( submissionUrl, {
                 type: 'POST',
