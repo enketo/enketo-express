@@ -1,6 +1,14 @@
 extends ../layout
 
-block content
+block style
+  link(rel='stylesheet', media='all', type='text/css' href='#{basePath}/css/error.css') 
 
-  h1= t("page.offline.heading")
-  p= t("page.offline.msg1") 
+block script
+  if environment == 'production'
+    script(src='#{basePath}/js/enketo-offline-fallback-bundle.min.js')
+  else
+    script(src='#{basePath}/js/enketo-offline-fallback-dev-bundle.js')
+
+block content
+  h1.error(style="margin-bottom: 0; border-bottom: none; min-height: auto;")= t("page.offline.heading")
+  p.error= t("page.offline.msg1") 

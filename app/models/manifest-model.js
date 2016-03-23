@@ -17,10 +17,11 @@ if ( process.env.NODE_ENV === 'test' ) {
     client.select( 15 );
 }
 
-function getManifest( html, lang ) {
+function getManifest( html1, html2, lang ) {
     var hash;
     var version;
-    var doc;
+    var doc1;
+    var doc2;
     var resources;
     var themesSupported;
     var date;
@@ -37,12 +38,14 @@ function getManifest( html, lang ) {
                 resolve( manifest );
             } else {
                 debug( 'building manifest from scratch' );
-                doc = libxml.parseHtml( html );
+                doc1 = libxml.parseHtml( html1 );
+                doc2 = libxml.parseHtml( html2 );
                 resources = [];
                 themesSupported = config[ 'themes supported' ] || [];
 
                 // href attributes of link elements
-                resources = resources.concat( _getLinkHrefs( doc ) );
+                resources = resources.concat( _getLinkHrefs( doc1 ) );
+                resources = resources.concat( _getLinkHrefs( doc2 ) );
 
                 // additional themes
                 resources = resources.concat( _getAdditionalThemes( resources, themesSupported ) );
@@ -54,7 +57,8 @@ function getManifest( html, lang ) {
                 resources = resources.concat( _getResourcesFromCss( resources ) );
 
                 // src attributes
-                resources = resources.concat( _getSrcAttributes( doc ) );
+                resources = resources.concat( _getSrcAttributes( doc1 ) );
+                resources = resources.concat( _getSrcAttributes( doc2 ) );
 
                 // remove non-existing files, empties, duplicates and non-http urls
                 resources = resources
@@ -64,7 +68,7 @@ function getManifest( html, lang ) {
                     .filter( _removeNonExisting );
 
                 // calculate the hash to serve as the manifest version number
-                hash = _calculateHash( html, resources );
+                hash = _calculateHash( html1, html2, resources );
 
                 // add explicit entries in case user never lands on URL without querystring
                 // otherwise they may never get added as a Master entry
@@ -233,9 +237,9 @@ function _removeNonHttpResources( resourceUrl ) {
     return parsedUrl.path && parsedUrl.protocol !== 'data:';
 }
 
-function _calculateHash( html, resources ) {
+function _calculateHash( html1, html2, resources ) {
     var content;
-    var hash = utils.md5( html );
+    var hash = utils.md5( html1 ) + utils.md5( html2 );
 
     resources.forEach( function( resource ) {
         try {

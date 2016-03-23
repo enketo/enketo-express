@@ -41,7 +41,7 @@ describe( 'Manifest Model', function() {
             '</html>';
 
         beforeEach( function( done ) {
-            model.get( html )
+            model.get( html, '<html></html>' )
                 .then( function( manifest ) {
                     result = manifest;
                 } )
