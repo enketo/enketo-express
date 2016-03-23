@@ -196,6 +196,7 @@ function getList( req, res, next ) {
 
 function cacheInstance( req, res, next ) {
     var survey;
+    var enketoId;
 
     if ( req.account.quota < req.account.quotaUsed ) {
         return _render( 403, quotaErrorMessage, res );
@@ -208,11 +209,26 @@ function cacheInstance( req, res, next ) {
         instanceId: req.body.instance_id,
         returnUrl: req.body.return_url
     };
-    instanceModel
-        .set( survey )
-        .then( surveyModel.getId )
+
+    return surveyModel
+        .getId( survey )
         .then( function( id ) {
-            _render( 201, _generateWebformUrls( id, req ), res );
+            if ( !id && req.account.quota <= req.account.quotaUsed ) {
+                return _render( 403, quotaErrorMessage, res );
+            }
+            // Create a new enketo ID.
+            if ( !id ) {
+                return surveyModel.set( survey );
+            }
+            // Do not update properties if ID was found to avoid overwriting theme.
+            return id;
+        } )
+        .then( function( id ) {
+            enketoId = id;
+            return instanceModel.set( survey );
+        } )
+        .then( function() {
+            _render( 201, _generateWebformUrls( enketoId, req ), res );
         } )
         .catch( next );
 }

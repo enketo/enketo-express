@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Fixed
 - If maxSubmissionSize request fails (e.g. unsupported on server) or the maxSubmissionSize value is updated, the form media resources are cleared.
+- If /instance API endpoint is called for a survey that has never been launched the response URL contains a ::null enketo ID.
 
 [1.26.0] - 2016-03-23
 ----------------------
