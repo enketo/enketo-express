@@ -10,15 +10,15 @@
             "androidfirefox": {
                 "msg": [
                     "Pre pridanie tohto formulára na Vašu Domovskú Obrazovku:",
-                    "1. Add this page to your Firefox bookmarks by clicking the settings icon __image1__ and then the star icon __image2__.",
-                    "2. Open your bookmarks by opening a new page and clicking the Bookmarks tab.",
-                    "3. Click-and-hold your form until a pop-up menu appears.",
+                    "1. Pre pridanie tejto stránky do listu záložiek vo Vašom Firefox prehliadači, kliknite na ikonu nastavenia __image1__ a potom na ikonu hviezdy __image2__.",
+                    "2. Otvorte váš list záložiek otvorením novej stránky a kliknutím na tab Záložky.",
+                    "3. Kliknite-a-podržte na formulári až pokým sa nezobrazí vyskakovacie menu.",
                     "4. Vyberte 'Pridať na Domovskú Obrazovku'."
                 ]
             },
             "heading": "Pridať na Domovskú Obrazovku",
             "iossafari": {
-                "msg": "To add this form to your Home screen, click the share icon __image1__ in the top right of your browser, and select: '+ Add to Home Screen'."
+                "msg": "Pre pridanie tohto formulára na Vašu Domovskú Obrazovku, kliknite na ikonu zdieľania __image1__ v pravo hore vo Vašom prehliadači a vyberte možnosť: '+ Pridať na Domovskú Obrazovku'."
             }
         },
         "appupdated": {
@@ -212,7 +212,8 @@
             "end": "Prejsť na Koniec",
             "next": "Ďalej",
             "return": "Späť na Začiatok"
-        }
+        },
+        "required": "povinný"
     },
     "formfooter": {
         "savedraft": {
@@ -225,6 +226,17 @@
         "validate": {
             "btn": "Validovať"
         }
+    },
+    "geopicker": {
+        "accuracy": "presnosť (m)",
+        "altitude": "nadmorská výška (m)",
+        "closepolygon": "uzavretý poligón",
+        "kmlcoords": "KML súradnice",
+        "kmlpaste": "sem vložte KML súradnice",
+        "latitude": "zemepisná šírka (x.y °)",
+        "longitude": "zemepisná dĺžka (x.y °)",
+        "points": "body",
+        "searchPlaceholder": "hľadanie miesta alebo adresy"
     },
     "here": "tu",
     "home": {
@@ -283,12 +295,16 @@
     "record-list": {
         "export": "Exportovať",
         "msg1": "Záznamy sú uložené vo vašom prehliadači, až kým sa neodošlú (aj v prípade, keď vypnete počítač alebo prejdete do offline režimu).",
-        "msg2": "Záznamy vo fronte, s výnimkou tých, ktoré sú označené ako návrh __icon__, sú nahrávané automaticky v pozadí, každých 5 minút, pokým je webová stránka otvorený a pripojenie k internetu je k dispozícii.",
-        "msg2-nodraft": "Queued records are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
+        "msg2": "Záznamy vo fronte, s výnimkou tých, ktoré sú označené ako návrh __icon__, sú nahrávané automaticky na pozadí, každých 5 minút, pokým je webová stránka otvorená a pripojenie k internetu je k dispozícii.",
+        "msg2-nodraft": "Záznamy vo fronte sú nahrávané automaticky na pozadí každých 5 minúť, pokým je webová stránka otvorená a pripojenie k internetu je k dispozícii.",
         "msg3": "Ak si chcete vynútiť odoslanie medzi týmito automatickými pokusmi, kliknite na tlačidlo Nahrať.",
         "norecords": "žiadne záznamy vo fronte",
         "title": "Fronta",
         "upload": "Nahrať"
+    },
+    "selectpicker": {
+        "noneselected": "nie je zadaný",
+        "numberselected": "__number__ vybrané"
     },
     "store": {
         "error": {
