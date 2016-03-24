@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.26.1] - 2016-03-24
 ----------------------
+##### Added
+- Hindi translation.
+
 ##### Changed
 - Updated Slovak translation.
 - Show version on home page.
