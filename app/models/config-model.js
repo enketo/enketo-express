@@ -2,6 +2,7 @@
 
 var config = require( '../../config/default-config' );
 var localConfig = require( '../../config/config' );
+var pkg = require( '../../package' );
 var merge = require( 'lodash/merge' );
 var path = require( 'path' );
 var fs = require( 'fs' );
@@ -39,6 +40,8 @@ function getThemesSupported( themeList ) {
 
     return themes;
 }
+
+config[ 'version' ] = pkg.version;
 
 // detect supported themes
 config[ 'themes supported' ] = getThemesSupported( config[ 'themes supported' ] );
