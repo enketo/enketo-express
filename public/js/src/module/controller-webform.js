@@ -25,8 +25,6 @@ function init( selector, data ) {
     formSelector = selector;
     formData = data;
 
-    connection.init();
-
     return _initializeRecords()
         .then( _checkAutoSavedRecord )
         .then( function( record ) {
