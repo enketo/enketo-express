@@ -178,7 +178,7 @@ function _canStoreBlobs() {
      * and creating an ObjectURL from it, the object URL returns a 404. 
      * Similarly, trying to use FileReader to readAsDataURL, results in a null result.
      *
-     * Last checked in Chrome 46
+     * Last checked in Chrome 49.0.2623.108
      *
      * https://github.com/kobotoolbox/enketo-express/issues/155
      */
