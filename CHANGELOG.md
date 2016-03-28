@@ -4,8 +4,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ----------------------
+##### Changed
+- Wider select minimal widget in all themes. Full 100% of cell in Grid theme.
+- Always show value in select minimal widget when only a single value is selected.
+
 ##### Fixed
 - Values in cloned repeat without jr:template are not emptied.
+- Radio buttons and checkboxes not properly aligned vertically.
+- Select minimal widget not aligned properly in RTL language.
 
 [1.26.1] - 2016-03-24
 ----------------------
