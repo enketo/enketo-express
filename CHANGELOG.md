@@ -2,11 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.26.2] - 2016-03-29
 ----------------------
 ##### Changed
 - Wider select minimal widget in all themes. Full 100% of cell in Grid theme.
 - Always show value in select minimal widget when only a single value is selected.
+- Switched back to transparent icon for browser tabs.
 
 ##### Fixed
 - Values in cloned repeat without jr:template are not emptied.
