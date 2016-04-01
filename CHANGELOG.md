@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased] 
+----------------------
+##### Fixed
+- HTML title not populating when the form title contains numbers or special characters.
+
 [1.26.3] - 2016-04-01
 ----------------------
 ##### Changed

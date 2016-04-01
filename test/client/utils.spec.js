@@ -218,4 +218,18 @@ describe( 'Client Utilities', function() {
         } );
     } );
 
+    describe( 'Title extractor', function() {
+        [
+            [ '<html><head><title></title></head><form><h3 id="form-title">title</h3></form></html>', 'title' ],
+            [ '<html><head><title></title></head><h3 id="form-title">title</h3><form></form></html>', 'title' ],
+            [ '<html><head><title></title></head><form><h3 class="class" id="form-title">title</h3></form></html>', 'title' ],
+            [ '<html><head><title></title></head><form><h3 data-something="something" id="form-title">title</h3></form></html>', 'title' ],
+            [ '<html><head><title></title></head><form><h3 id="form-title">123, this-that :(</h3></form></html>', '123, this-that :(' ],
+        ].forEach( function( test ) {
+            it( 'extracts the title correctly form the form HTML string', function() {
+                expect( utils.getTitleFromFormStr( test[ 0 ] ) ).to.equal( test[ 1 ] );
+            } );
+        } );
+    } );
+
 } );

@@ -122,7 +122,7 @@ function getThemeFromFormStr( formStr ) {
 
 
 function getTitleFromFormStr( formStr ) {
-    var matches = formStr.match( /<\s?h3 [^>]*id="form-title">([A-z\s]+)</ );
+    var matches = formStr.match( /<\s?h3 [^>]*id="form-title">([^<]+)</ );
     return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
 }
 
