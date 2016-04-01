@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.26.3] - 2016-04-01
+----------------------
+##### Changed
+- Select minimal widget is now scrollable and won't stretch form.
+
+##### Fixed
+- Itemset update not retaining existing values when appropriate.
+
 [1.26.2] - 2016-03-29
 ----------------------
 ##### Changed
