@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - HTML title not populating when the form title contains numbers or special characters.
+- Markdown formatting of outputs is not working.
 
 [1.26.3] - 2016-04-01
 ----------------------
