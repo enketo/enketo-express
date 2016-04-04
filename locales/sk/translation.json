@@ -5,11 +5,11 @@
     "alert": {
         "addtohomescreen": {
             "androidchrome": {
-                "msg": "Pre pridanie tohto formulára na Vašu Domovskú Obrazovku, kliknite na ikonu možnosti prehliadača __image1__ a zvolte: 'Pridať na Domovskú Obrazovku'."
+                "msg": "Pre pridanie tohto formulára na Domovskú Obrazovku, kliknite na ikonu možnosti prehliadača __image1__ a zvolte: 'Pridať na Domovskú Obrazovku'."
             },
             "androidfirefox": {
                 "msg": [
-                    "Pre pridanie tohto formulára na Vašu Domovskú Obrazovku:",
+                    "Pre pridanie tohto formulára na Domovskú Obrazovku:",
                     "1. Pre pridanie tejto stránky do listu záložiek vo Vašom Firefox prehliadači, kliknite na ikonu nastavenia __image1__ a potom na ikonu hviezdy __image2__.",
                     "2. Otvorte váš list záložiek otvorením novej stránky a kliknutím na tab Záložky.",
                     "3. Kliknite-a-podržte na formulári až pokým sa nezobrazí vyskakovacie menu.",
@@ -18,7 +18,7 @@
             },
             "heading": "Pridať na Domovskú Obrazovku",
             "iossafari": {
-                "msg": "Pre pridanie tohto formulára na Vašu Domovskú Obrazovku, kliknite na ikonu zdieľania __image1__ v pravo hore vo Vašom prehliadači a vyberte možnosť: '+ Pridať na Domovskú Obrazovku'."
+                "msg": "Pre pridanie tohto formulára na Domovskú Obrazovku, kliknite na ikonu zdieľania __image1__ v pravo hore vo Vašom prehliadači a vyberte možnosť: '+ Pridať na Domovskú Obrazovku'."
             }
         },
         "appupdated": {
@@ -61,7 +61,7 @@
             "msg": "Boli ste odhlásený."
         },
         "offlinesupported": {
-            "heading": "Formulár funguje offline!",
+            "heading": "Formulár funguje v režime offline!",
             "msg": [
                 "Tento formulár môže byť teraz načítaný bez internetového pripojenia na tomto zariadení. Vytvorte si jeho záložku pre ľahký offline prístup.",
                 "Záznamy sú automaticky ukladané vo fronte dát čakajúcich na odoslanie v prehliadači až do chvíle kým nie je k dispozícii pripojenie k Internetu. Keď je aplikácia online, záznamy budú automaticky odoslané - jeden po druhom.",
@@ -71,7 +71,7 @@
         "offlineunsupported": {
             "heading": "Aplikácia nemôžno spustiť v režime offline",
             "msg": "Váš prehliadač nepodporuje offline spustenie aplikácie. Môžete pokračovať na prieskum bez využitia tejto funkcie, alebo sa pozrite na možností pre riešenie tohto problému.",
-            "negButton": "Použi to",
+            "negButton": "Použi",
             "posButton": "Zobraziť možnosti"
         },
         "queuesubmissionsuccess": {
@@ -82,10 +82,10 @@
             "msg": "__recordName__ bol načítaný"
         },
         "recordnotfound": {
-            "msg": "Záznam sa buď nepodarilo získať alebo neobsahuje žiadne dáta."
+            "msg": "Záznam sa nepodarilo získať alebo neobsahuje žiadne dáta."
         },
         "recordsavesuccess": {
-            "draftmsg": "Záznam uložený ako návrh",
+            "draftmsg": "Záznam uložený ako koncept.",
             "finalmsg": "Záznam vložený do fronty dát pre odoslanie."
         },
         "submission": {
@@ -93,15 +93,15 @@
             "redirectmsg": "Budete automaticky presmerovaný po odoslaní dát."
         },
         "submissionerror": {
-            "authrequiredmsg": "Prihlásenie je nevyhnutné. Prosím prihláste sa __here__ použitím inej záložky prehliadača a skúste znovu.",
+            "authrequiredmsg": "Prihlásenie je nevyhnutné. Prosím prihláste sa __here__ použitím inej záložky prehliadača a skúste to ešte raz.",
             "fnfmsg": [
-                "Nasledujúce mediálne súbory sa nepodarilo načítať: __failedFiles__. Odoslanie prebehlo úspešne bez týchto súborov.",
+                "Nasledujúce multimediálne súbory sa nepodarilo načítať: __failedFiles__. Odoslanie prebehlo úspešne bez týchto súborov.",
                 "Prosím, kontaktujte __supportEmail__  pre nahlásenie chyby, a ak je to možné vysvetlite postup ako je možné nahlasovaný problém reprodukovať."
             ],
             "heading": "Odoslanie Zlyhalo"
         },
         "submissionsuccess": {
-            "heading": "Odoslanie bolo Úspešné",
+            "heading": "Odoslanie prebehlo Úspešne",
             "msg": "Vaše dáta boli odoslané!",
             "redirectmsg": "Teraz budete presmerovaný."
         },
@@ -133,7 +133,7 @@
         "deleteall": {
             "heading": "PANIKA!",
             "msg": [
-                "Týmto odstránite všetky vaše dáta čakajúce na odoslanie a vaše formuláre z úložiska prehliadača. Dáta budú permanentne vymazané. Používajte toto nastavenie len ako poslednú možnosť v prípade, že úložisko prehliadača sa zdá byť poškodené.",
+                "Týmto odstránite všetky vaše dáta čakajúce na odoslanie a vaše formuláre z úložiska prehliadača. Dáta budú permanentne vymazané. Použite túto možnosť iba ako poslednú alternatívu v prípade, že úložisko prehliadača sa zdá byť poškodené.",
                 "Najprv zatvorte všetky ostatné záložky prehliadača ktoré Enketo používa.",
                 "Táto stránka bude znovu načítaná. Ak vidíte chybovú hlášku môže byť nevyhnutné túto akciu zopakovať.",
                 "Ste si istý že toto chcete urobiť?"
@@ -152,7 +152,7 @@
                 "Chcete sa prihlásiť teraz alebo neskôr?"
             ],
             "negButton": "Neskôr",
-            "posButton": "Prihlásiť teraz"
+            "posButton": "Prihlásiť"
         },
         "print": {
             "a4": "A4",
@@ -167,8 +167,8 @@
             "reminder": "Nezabudnite neskôr nastaviť tie isté nastavenia tlače v ponuke tlače prehliadača!"
         },
         "save": {
-            "existingerror": "Záznam s rovnakým menom alebo ID už existuje.",
-            "hint": "Tento názov vám umožní ľahko nájsť váš návrh záznamu a dokončiť ho neskôr.",
+            "existingerror": "Záznam s rovnakým názvom alebo ID už existuje.",
+            "hint": "Tento názov vám umožní ľahko nájsť váš koncept záznamu a dokončiť ho neskôr.",
             "msg": "Existujú neuložené zmeny, chcete pokračovať bez ich uloženia?",
             "name": "Názov Záznamu",
             "posButton": "Uložiť & Zavrieť",
@@ -181,11 +181,11 @@
         "required": "Požadované pole"
     },
     "contact": {
-        "admin": "Prosím, kontaktujte administrátora prieskumu.",
+        "admin": "Obráťte sa prosím na správcu prieskumu.",
         "support": "Kontaktujte __supportEmail__ prosím."
     },
     "enketo": {
-        "power": "Poháňané"
+        "power": "Bežiace na"
     },
     "error": {
         "code": "Chybový Kód: __code__",
@@ -217,14 +217,14 @@
     },
     "formfooter": {
         "savedraft": {
-            "btn": "Uložiť Návrh",
-            "label": "Uložiť ako Návrh"
+            "btn": "Uložiť Koncept",
+            "label": "Uložiť ako Koncept"
         },
         "submit": {
             "btn": "Odoslať"
         },
         "validate": {
-            "btn": "Validovať"
+            "btn": "Overiť"
         }
     },
     "geopicker": {
@@ -260,7 +260,7 @@
         "ro": "Rumunčina",
         "sk": "Slovenčina",
         "supported": "Podporované jazyky:",
-        "sw": "Swahilčina",
+        "sw": "Svahilčina",
         "th": "Thajčina",
         "vi": "Vietnamčina",
         "zh": "Čínština"
@@ -272,7 +272,7 @@
                 "heading": "No nemilujte tieto zákerné zastarané verzie Internet Explorera?",
                 "msg": "Chápeme, že niektorí ľudia, najmä tí, ktorí pracujú pre veľké byrokracie, nemajú prístup k najnovším a najlepším prehliadačov. Pretože vieme, aký skvelý by web mohol byť s tými správnymi nástrojmi, máme veľkú empatiu pre užívateľov v tejto nešťastnej situácii. Za normálnych okolností by sme sa snažili poskytnúť riešenia pre podporu niektorých populárne zastaraných prehliadačov. Avšak jeden z dôvodov, prečo Enketo existuje, je dostupnosť niektorých moderných špičkových technológií. Bohužiaľ, užívatelia starších prehliadačov majú teda smolu."
             },
-            "msg1": "Au! Prepáčte, ale pravdepodobne ste sem boli presmerovaní pretože váš prehliadač je zastaraný, alebo ho používate v režime 'ochrany súkromia' a teda sú určité kľúčové funkcie nedostupné.",
+            "msg1": "Ach! Prepáčte, ale pravdepodobne ste sem boli presmerovaní pretože váš prehliadač je zastaraný, alebo ho používate v režime 'ochrany súkromia' a teda sú určité kľúčové funkcie nedostupné.",
             "msg2": "Ak používate zastaraný prehliadač, odporúčame upgrade na najnovšiu verziu jedného z nasledujúcich vynikajúcich moderných prehliadačov:"
         },
         "offline": {
@@ -282,10 +282,10 @@
     },
     "prompt": {
         "default": {
-            "heading": "Vložte údaje"
+            "heading": "Zadajte dáta"
         },
         "login": {
-            "heading": "Zadajte prihlasovacie údaje pre váš __server__ ",
+            "heading": "Zadajte prihlasovacie údaje pre __server__ ",
             "password": "Heslo",
             "remember": "Zapamätať na tomto počítači",
             "submit": "Odoslať",
@@ -295,7 +295,7 @@
     "record-list": {
         "export": "Exportovať",
         "msg1": "Záznamy sú uložené vo vašom prehliadači, až kým sa neodošlú (aj v prípade, keď vypnete počítač alebo prejdete do offline režimu).",
-        "msg2": "Záznamy vo fronte, s výnimkou tých, ktoré sú označené ako návrh __icon__, sú nahrávané automaticky na pozadí, každých 5 minút, pokým je webová stránka otvorená a pripojenie k internetu je k dispozícii.",
+        "msg2": "Záznamy vo fronte, s výnimkou tých, ktoré sú označené ako koncept __icon__, sú nahrávané automaticky na pozadí, každých 5 minút, pokým je webová stránka otvorená a pripojenie k internetu je k dispozícii.",
         "msg2-nodraft": "Záznamy vo fronte sú nahrávané automaticky na pozadí každých 5 minúť, pokým je webová stránka otvorená a pripojenie k internetu je k dispozícii.",
         "msg3": "Ak si chcete vynútiť odoslanie medzi týmito automatickými pokusmi, kliknite na tlačidlo Nahrať.",
         "norecords": "žiadne záznamy vo fronte",
@@ -303,18 +303,18 @@
         "upload": "Nahrať"
     },
     "selectpicker": {
-        "noneselected": "nie je zadaný",
+        "noneselected": "žiadne informácie",
         "numberselected": "__number__ vybrané"
     },
     "store": {
         "error": {
             "iosusesafari": "Váš iOS prehliadač nie je schopný zobraziť tento formulár. Na iOS platforme odporúčame používať Safari.",
-            "notavailable": "Je požadovaný prístup k úložisku prehliadača, ale to nie je k dispozícii, je poškodené, alebo do neho nie je možné zapisovať. Ak ste v režime 'súkromného prehliadania', prepnite prosím do normálneho režimu, alebo použite iný prehliadač. (error: __error__)",
+            "notavailable": "Je požadovaný prístup k úložisku prehliadača, ale to nie je k dispozícii, je poškodený, alebo do neho nie je možné zapisovať. Ak ste v režime 'súkromného prehliadania', prepnite prosím do normálneho režimu, alebo použite iný prehliadač. (error: __error__)",
             "notsupported": "Váš prehliadač nie je schopný zobraziť tento formulár. Odporúčame používať moderný prehliadač."
         }
     },
     "submission": {
-        "http0": "Neúspešne (Offline?).",
+        "http0": "Nepodarilo sa (Offline?).",
         "http2xx": "Neočakávaná odpoveď pri odosielaní dát.",
         "http400": "Dátový server neakceptoval dáta.",
         "http401": "Nastal prolém pri autentikácii s dátovým serverom.",

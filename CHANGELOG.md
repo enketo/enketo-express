@@ -5,7 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [Unreleased] 
 ----------------------
 ##### Added
-- Lao translation
+- Lao translation.
+
+##### Changed
+- Updated Slovak translation.
 
 ##### Fixed
 - HTML title not populating when the form title contains numbers or special characters.
