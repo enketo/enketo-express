@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Added
 - Lao translation.
+- Ability to use piwik for analytics.
 
 ##### Changed
 - Updated Slovak translation.

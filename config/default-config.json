@@ -22,12 +22,19 @@
     "support": {
         "email": "info@kobotoolbox.org"
     },
+    "analytics": "google",
     "google": {
         "analytics": {
             "ua": "",
             "domain": ""
         },
         "api key": ""
+    },
+    "piwik": {
+        "analytics": {
+            "tracker url": "",
+            "site id": ""
+        }
     },
     "maps": [ {
         "name": "streets",
