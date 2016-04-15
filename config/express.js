@@ -75,8 +75,15 @@ app.use( app.get( 'base path' ) + '/locales', express.static( path.resolve( __di
 app.use( function( req, res, next ) {
     res.locals.livereload = req.app.get( 'env' ) === 'development';
     res.locals.environment = req.app.get( 'env' );
-    res.locals.tracking = req.app.get( 'google' ).analytics.ua ? req.app.get( 'google' ).analytics.ua : false;
-    res.locals.trackingDomain = req.app.get( 'google' ).analytics.domain || 'auto';
+    res.locals.analytics = req.app.get( 'analytics' );
+    res.locals.googleAnalytics = {
+        ua: req.app.get( 'google' ).analytics.ua,
+        domain: req.app.get( 'google' ).analytics.domain || 'auto'
+    };
+    res.locals.piwikAnalytics = {
+        trackerUrl: req.app.get( 'piwik' ).analytics[ 'tracker url' ],
+        siteId: req.app.get( 'piwik' ).analytics[ 'site id' ]
+    };
     res.locals.logo = req.app.get( 'logo' );
     res.locals.defaultTheme = req.app.get( 'default theme' ).replace( 'theme-', '' ) || 'kobo';
     res.locals.title = req.app.get( 'app name' );

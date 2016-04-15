@@ -2,13 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased] 
+[1.27.0] - 2016-04-15
 ----------------------
 ##### Added
 - Lao translation.
+- Ability to use piwik for analytics.
 
 ##### Changed
-- Updated Slovak translation.
+- Updated Slovak, German, Dutch translations.
+- Offline capability now enabled by default. **WARNING: to disable offline-capability, make sure to override this in your config.json!**
 
 ##### Fixed
 - HTML title not populating when the form title contains numbers or special characters.

@@ -1,0 +1,4 @@
+if (analytics === 'google' && googleAnalytics.ua )
+	include google-analytics
+else if (analytics === 'piwik' && piwikAnalytics.trackerUrl && (typeof piwikAnalytics.siteId === 'number' || typeof piwikAnalytics.siteId === 'string') )
+	include piwik-analytics
