@@ -17,10 +17,11 @@ if ( process.env.NODE_ENV === 'test' ) {
     client.select( 15 );
 }
 
-function getManifest( html, lang ) {
+function getManifest( html1, html2, lang ) {
     var hash;
     var version;
-    var doc;
+    var doc1;
+    var doc2;
     var resources;
     var themesSupported;
     var date;
@@ -37,12 +38,14 @@ function getManifest( html, lang ) {
                 resolve( manifest );
             } else {
                 debug( 'building manifest from scratch' );
-                doc = libxml.parseHtml( html );
+                doc1 = libxml.parseHtml( html1 );
+                doc2 = libxml.parseHtml( html2 );
                 resources = [];
                 themesSupported = config[ 'themes supported' ] || [];
 
                 // href attributes of link elements
-                resources = resources.concat( _getLinkHrefs( doc ) );
+                resources = resources.concat( _getLinkHrefs( doc1 ) );
+                resources = resources.concat( _getLinkHrefs( doc2 ) );
 
                 // additional themes
                 resources = resources.concat( _getAdditionalThemes( resources, themesSupported ) );
@@ -54,7 +57,8 @@ function getManifest( html, lang ) {
                 resources = resources.concat( _getResourcesFromCss( resources ) );
 
                 // src attributes
-                resources = resources.concat( _getSrcAttributes( doc ) );
+                resources = resources.concat( _getSrcAttributes( doc1 ) );
+                resources = resources.concat( _getSrcAttributes( doc2 ) );
 
                 // remove non-existing files, empties, duplicates and non-http urls
                 resources = resources
@@ -64,13 +68,12 @@ function getManifest( html, lang ) {
                     .filter( _removeNonExisting );
 
                 // calculate the hash to serve as the manifest version number
-                hash = _calculateHash( html, resources );
+                hash = _calculateHash( html1, html2, resources );
 
                 // add explicit entries in case user never lands on URL without querystring
                 // otherwise they may never get added as a Master entry
                 resources = resources.concat( [
-                    '/_/',
-                    '/_/i/'
+                    config[ 'base path' ] + '/_/'
                 ] );
 
                 // determine version
@@ -103,7 +106,7 @@ function _getManifestString( version, resources ) {
         resources.join( '\n' ) + '\n' +
         '\n' +
         'FALLBACK:\n' +
-        '/_ /offline\n' +
+        '/_ ' + config[ 'base path' ] + '/offline\n' +
         '\n' +
         'NETWORK:\n' +
         '*\n';
@@ -164,10 +167,10 @@ function _getTranslations( lang ) {
     var langs = [];
 
     // fallback language
-    langs.push( '/locales/en/translation.json' );
+    langs.push( config[ 'base path' ] + '/locales/en/translation.json' );
 
     if ( lang && lang !== 'en' ) {
-        langs.push( '/locales/' + lang + '/translation.json' );
+        langs.push( config[ 'base path' ] + '/locales/' + lang + '/translation.json' );
     }
 
     return langs;
@@ -193,26 +196,32 @@ function _getResourcesFromCss( resources ) {
 }
 
 function _getResourceContent( resource ) {
-    var rel;
+    var localResourcePath;
     // in try catch in case css file is missing
     try {
-        rel = ( resource.indexOf( '/locales/' ) === 0 ) ? '../../' : '../../public';
-        return fs.readFileSync( path.join( __dirname, rel, url.parse( resource ).pathname ), 'utf8' );
+        localResourcePath = _getLocalPath( resource );
+        return fs.readFileSync( localResourcePath, 'utf8' );
     } catch ( e ) {
         return '';
     }
 }
 
 function _removeNonExisting( resource ) {
-    var rel = ( resource.indexOf( '/locales/' ) === 0 ) ? '../../' : '../../public';
-    var resourcePath = path.join( __dirname, rel, url.parse( resource ).pathname );
+    var localResourcePath = _getLocalPath( resource );
     // TODO: in later versions of node.js, this should be replaced by: fs.accessSync(resourcePath, fs.R_OK)
-    var exists = fs.existsSync( resourcePath );
+    var exists = fs.existsSync( localResourcePath );
 
     if ( !exists ) {
-        debug( 'cannot find', resourcePath );
+        debug( 'cannot find', localResourcePath );
     }
     return exists;
+}
+
+function _getLocalPath( resource ) {
+    var rel = ( resource.indexOf( config[ 'base path' ] + '/locales/' ) === 0 ) ? '../../' : '../../public';
+    var resourceWithoutBase = resource.substring( config[ 'base path' ].length );
+    var localResourcePath = path.join( __dirname, rel, url.parse( resourceWithoutBase ).pathname );
+    return localResourcePath;
 }
 
 function _removeEmpties( resource ) {
@@ -228,9 +237,9 @@ function _removeNonHttpResources( resourceUrl ) {
     return parsedUrl.path && parsedUrl.protocol !== 'data:';
 }
 
-function _calculateHash( html, resources ) {
+function _calculateHash( html1, html2, resources ) {
     var content;
-    var hash = utils.md5( html );
+    var hash = utils.md5( html1 ) + utils.md5( html2 );
 
     resources.forEach( function( resource ) {
         try {

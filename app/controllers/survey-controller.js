@@ -11,7 +11,7 @@ var router = express.Router();
 // var debug = require( 'debug' )( 'survey-controller' );
 
 module.exports = function( app ) {
-    app.use( '/', router );
+    app.use( app.get( 'base path' ) + '/', router );
 };
 
 // duplicate in submission-controller
@@ -36,9 +36,7 @@ router.param( 'mod', function( req, rex, next, mod ) {
 
 router
     .get( '*', loggedInCheck )
-    .get( '' )
     .get( '/_/', offlineWebform )
-    .get( '/_/:mod', offlineWebform )
     .get( '/:enketo_id', webform )
     .get( '/:mod/:enketo_id', webform )
     .get( '/preview/:enketo_id', preview )
@@ -66,7 +64,7 @@ function offlineWebform( req, res, next ) {
         error.status = 405;
         next( error );
     } else {
-        req.manifest = '/_/manifest.appcache';
+        req.manifest = req.app.get( 'base path' ) + '/_/manifest.appcache';
         webform( req, res, next );
     }
 }

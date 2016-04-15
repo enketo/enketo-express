@@ -7,19 +7,17 @@ var auth = require( 'basic-auth' );
 var express = require( 'express' );
 var router = express.Router();
 var quotaErrorMessage = 'Forbidden. No quota left';
-// var debug = require( 'debug' )( 'api-controller' );
+// var debug = require( 'debug' )( 'api-controller-v2' );
 
 module.exports = function( app ) {
-    app.use( '/api/v2', router );
+    app.use( app.get( 'base path' ) + '/api/v2', router );
     // old enketo-legacy URL structure for migration-friendliness
-    app.use( '/api_v2', router );
+    app.use( app.get( 'base path' ) + '/api_v2', router );
 };
 
 router
     .get( '/', function( req, res, next ) {
-        var error = new Error( 'Sorry, the documentation for API v2 has not been created yet.' );
-        error.status = 404;
-        next( error );
+        res.redirect( 'http://apidocs.enketo.org/v2' );
     } )
     .all( '*', authCheck )
     .all( '*', _setQuotaUsed )
@@ -58,11 +56,9 @@ router
     .get( '/survey', getExistingSurvey )
     .get( '/survey/offline', getExistingSurvey )
     .get( '/survey/iframe', getExistingSurvey )
-    .get( '/survey/offline/iframe', getExistingSurvey )
     .post( '/survey', getNewOrExistingSurvey )
     .post( '/survey/offline', getNewOrExistingSurvey )
     .post( '/survey/iframe', getNewOrExistingSurvey )
-    .post( '/survey/offline/iframe', getNewOrExistingSurvey )
     .delete( '/survey', deactivateSurvey )
     .get( '/survey/preview', getExistingSurvey )
     .get( '/survey/preview/iframe', getExistingSurvey )
@@ -221,6 +217,7 @@ function getList( req, res, next ) {
 
 function cacheInstance( req, res, next ) {
     var survey;
+    var enketoId;
 
     if ( req.account.quota < req.account.quotaUsed ) {
         return _render( 403, quotaErrorMessage, res );
@@ -233,11 +230,26 @@ function cacheInstance( req, res, next ) {
         instanceId: req.body.instance_id,
         returnUrl: req.body.return_url
     };
-    instanceModel
-        .set( survey )
-        .then( surveyModel.getId )
+
+    return surveyModel
+        .getId( survey )
         .then( function( id ) {
-            _render( 201, _generateWebformUrls( id, req ), res );
+            if ( !id && req.account.quota <= req.account.quotaUsed ) {
+                return _render( 403, quotaErrorMessage, res );
+            }
+            // Create a new enketo ID.
+            if ( !id ) {
+                return surveyModel.set( survey );
+            }
+            // Do not update properties if ID was found to avoid overwriting theme.
+            return id;
+        } )
+        .then( function( id ) {
+            enketoId = id;
+            return instanceModel.set( survey );
+        } )
+        .then( function() {
+            _render( 201, _generateWebformUrls( enketoId, req ), res );
         } )
         .catch( next );
 }
@@ -325,7 +337,7 @@ function _generateWebformUrls( id, req ) {
     var OFFLINEPATH = '_/';
     var iframePart = ( req.iframe ) ? IFRAMEPATH : '';
     var protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol;
-    var baseUrl = protocol + '://' + req.headers.host + '/';
+    var baseUrl = protocol + '://' + req.headers.host + req.app.get( 'base path' ) + '/';
     var idPartOnline = '::' + id;
     var idPartOffline = '#' + id;
 
@@ -350,19 +362,12 @@ function _generateWebformUrls( id, req ) {
             // iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
             obj.iframe_url = baseUrl + IFRAMEPATH + idPartOnline + queryString;
-            obj.offline_iframe_url = baseUrl + OFFLINEPATH + IFRAMEPATH + idPartOffline;
             obj.preview_iframe_url = baseUrl + 'preview/' + IFRAMEPATH + idPartOnline + queryString;
             // rest
             obj.enketo_id = id;
             break;
         case 'offline':
-            queryString = _generateQueryString( [ req.parentWindowOriginParam ] );
-            if ( iframePart ) {
-                obj.offline_iframe_url = baseUrl + OFFLINEPATH + iframePart + idPartOffline + queryString;
-            } else {
-                obj.offline_url = baseUrl + OFFLINEPATH + idPartOffline;
-            }
-
+            obj.offline_url = baseUrl + OFFLINEPATH + idPartOffline;
             break;
         default:
             queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );

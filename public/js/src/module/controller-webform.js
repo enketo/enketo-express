@@ -25,8 +25,6 @@ function init( selector, data ) {
     formSelector = selector;
     formData = data;
 
-    connection.init();
-
     return _initializeRecords()
         .then( _checkAutoSavedRecord )
         .then( function( record ) {
@@ -412,12 +410,17 @@ function _setEventHandlers() {
         $button.btnBusyState( true );
         setTimeout( function() {
             if ( settings.offline && draft ) {
-                $button.btnBusyState( false );
-                _saveRecord();
+                _saveRecord()
+                    .then( function() {
+                        $button.btnBusyState( false );
+                    } )
+                    .catch( function( e ) {
+                        $button.btnBusyState( false );
+                        throw e;
+                    } );
             } else {
                 form.validate()
                     .then( function( valid ) {
-                        $button.btnBusyState( false );
                         if ( valid ) {
                             if ( settings.offline ) {
                                 return _saveRecord();
@@ -430,6 +433,9 @@ function _setEventHandlers() {
                     } )
                     .catch( function( e ) {
                         gui.alert( e.message );
+                    } )
+                    .then( function() {
+                        $button.btnBusyState( false );
                     } );
             }
         }, 100 );
@@ -519,10 +525,12 @@ function _setEventHandlers() {
         } ), 7 );
     } );
 
-    $( '.form-footer [name="draft"]' ).on( 'change', function() {
-        var text = ( $( this ).prop( 'checked' ) ) ? t( 'formfooter.savedraft.btn' ) : t( 'formfooter.submit.btn' );
-        $( '#submit-form' ).get( 0 ).lastChild.textContent = text;
-    } ).closest( '.draft' ).toggleClass( 'hide', !settings.offline );
+    if ( settings.draftEnabled !== false ) {
+        $( '.form-footer [name="draft"]' ).on( 'change', function() {
+            var text = ( $( this ).prop( 'checked' ) ) ? t( 'formfooter.savedraft.btn' ) : t( 'formfooter.submit.btn' );
+            $( '#submit-form' ).get( 0 ).lastChild.textContent = text;
+        } ).closest( '.draft' ).toggleClass( 'hide', !settings.offline );
+    }
 
     if ( settings.offline ) {
         $doc.on( 'valuechange.enketo', _autoSaveRecord );

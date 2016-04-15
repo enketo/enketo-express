@@ -3,6 +3,24 @@
         "flushdb": "Pulisci Dati"
     },
     "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "To add this form to your Home screen, click the browser settings icon __image1__ and select: 'Add to Home screen'."
+            },
+            "androidfirefox": {
+                "msg": [
+                    "To add this form to your Homescreen:",
+                    "1. Add this page to your Firefox bookmarks by clicking the settings icon __image1__ and then the star icon __image2__.",
+                    "2. Open your bookmarks by opening a new page and clicking the Bookmarks tab.",
+                    "3. Click-and-hold your form until a pop-up menu appears.",
+                    "4. Select 'Add to Home Screen'."
+                ]
+            },
+            "heading": "Add to Home Screen",
+            "iossafari": {
+                "msg": "To add this form to your Home screen, click the share icon __image1__ in the top right of your browser, and select: '+ Add to Home Screen'."
+            }
+        },
         "appupdated": {
             "heading": "App Aggiornata!",
             "msg": "&Egrave; disponibile una nuova versione di questo modulo. Aggiorna la pagina per caricarla."
@@ -10,6 +28,19 @@
         "default": {
             "button": "Chiudi",
             "heading": "Attenzione"
+        },
+        "export": {
+            "alternativequestion": "alternative download - online",
+            "error": {
+                "filecreatedmsg": "Nevertheless, an incomplete export file was still created.",
+                "heading": "Export Error",
+                "linknotcreated": "Failed to create an export link for unsubmitted records. Are you online?",
+                "msg": "Errors occurred during creating of the record export file for unsubmitted records. Errors: __errors__"
+            },
+            "success": {
+                "heading": "Export Created",
+                "msg": "Export file created for all unsubmitted records belonging to this form."
+            }
         },
         "formupdated": {
             "heading": "Modulo Aggiornato!",
@@ -151,7 +182,7 @@
     },
     "contact": {
         "admin": "Prego contattare l'amministratore del sondaggio",
-        "support": "Prego contattare __supportEmail__ ."
+        "support": "Prego contattare __supportEmail__."
     },
     "enketo": {
         "power": "Basato su"
@@ -163,6 +194,7 @@
         "encryptionnotsupported": "Questo modulo richiede la crittografia locale dei record . Sfortunatamente non &egrave; ancora supportata . Per questo modulo si consiglia di utilizzare ODK Collect per la raccolta dei dati.",
         "instancenotfound": "Record non presente. Potrebbe essere scaduto.",
         "invalidediturl": "URL non valido",
+        "loadfailed": "Failed to load __resource__",
         "notfoundinformlist": "Il modulo con ID __formId__ non trovato nella lista form ",
         "pagenotfound": "Pagina non trovata",
         "surveyidnotactive": "Il sondaggio con questo ID non &egrave; pi&ugrave; attivo.",
@@ -200,20 +232,26 @@
     },
     "langs": {
         "ar": "Arabo",
+        "cs": "Czech",
         "de": "Tedesco",
         "el": "Greco",
         "en": "Inglese",
         "es": "Spagnolo",
+        "fa": "Persian",
+        "fr": "French",
         "he": "Ebraico",
         "hi": "Hindi",
+        "it": "Italian",
         "km": "Khmer",
         "nl": "Olandese",
         "no": "Norvegese",
         "ro": "Rumeno",
+        "sk": "Slovak",
         "supported": "Lingue supportate:",
         "sw": "Swahili",
         "th": "Thai",
-        "vi": "Vietnamita"
+        "vi": "Vietnamita",
+        "zh": "Chinese"
     },
     "page": {
         "modernbrowsers": {
@@ -245,20 +283,25 @@
     "record-list": {
         "export": "Esporta",
         "msg1": "I record sono stati salvati nel tuo browser finch&egrave; non verranno caricati (anche spegnendo il computer o effettuando la disconnessione).",
-        "msg2": "I Record in coda , ad eccezione di quelli contrassegnati come progetto __icon__ , vengono caricati automaticamente , in background , ogni 5 minuti quando la pagina web &egrave; aperta e una connessione a Internet &egrave; disponibile . Per forzare un caricamento tra i tentativi automatici , fare clic su Carica .",
+        "msg2": "I Record in coda , ad eccezione di quelli contrassegnati come progetto __icon__ , vengono caricati automaticamente , in background , ogni 5 minuti quando la pagina web &egrave; aperta e una connessione a Internet &egrave; disponibile .",
+        "msg2-nodraft": "I Record in coda vengono caricati automaticamente , in background , ogni 5 minuti quando la pagina web &egrave; aperta e una connessione a Internet &egrave; disponibile .",
+        "msg3": "Per forzare un caricamento tra i tentativi automatici , fare clic su Carica .",
         "norecords": "Nessun record accodato",
         "title": "Coda",
         "upload": "Carica"
     },
     "store": {
         "error": {
-            "notavailable": "&Egrave; necessario effettuare il salvataggio del browser ma non &egrave; disponibile, &egrave; corrotto o non &egrave; scrivibile. Se stai utilizzando la modalità 'navigazione privata' si prega di passare alla modalità normale, altrimenti cambiare browser. (error: __error__)"
+            "iosusesafari": "Your iOS browser is not able to run this form. On iOS, we recommend using Safari.",
+            "notavailable": "&Egrave; necessario effettuare il salvataggio del browser ma non &egrave; disponibile, &egrave; corrotto o non &egrave; scrivibile. Se stai utilizzando la modalità 'navigazione privata' si prega di passare alla modalità normale, altrimenti cambiare browser. (error: __error__)",
+            "notsupported": "Your browser is not able to run this form. We recommend using a modern browser."
         }
     },
     "submission": {
         "http0": "Fallito(Disconnesso?)",
         "http2xx": "Risposta inaspettata durante l' invio dei dati.",
         "http400": "Il Data Server non ha accettato i dati.",
+        "http401": "Authentication problem with data server.",
         "http403": "Non hai i permessi per inserire i dati in questo data server.",
         "http404": "Servizio di invio dati server non trovato.",
         "http413": "Dati troppo grandi",

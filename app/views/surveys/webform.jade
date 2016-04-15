@@ -1,15 +1,15 @@
 extends ../layout
 
 block style
-  link(rel='stylesheet', media='all', type='text/css' href='/css/theme-#{defaultTheme}.css') 
-  link(rel='stylesheet', media='print', type='text/css' href='/css/theme-#{defaultTheme}.print.css') 
+  link(rel='stylesheet', media='all', type='text/css' href='#{basePath}/css/theme-#{defaultTheme}.css') 
+  link(rel='stylesheet', media='print', type='text/css' href='#{basePath}/css/theme-#{defaultTheme}.print.css') 
 
 block script
   - var suffix = (type && type == 'edit') ? '-edit' : ''
   if environment == 'production'
-    script(src='/js/enketo-webform#{suffix}-bundle.min.js')
+    script(src='#{basePath}/js/enketo-webform#{suffix}-bundle.min.js')
   else
-    script(src='/js/enketo-webform#{suffix}-dev-bundle.js')
+    script(src='#{basePath}/js/enketo-webform#{suffix}-dev-bundle.js')
  
 block content
   include component/_notification

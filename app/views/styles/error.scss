@@ -1,3 +1,4 @@
+@import "component/variables";
 @import "../../../node_modules/enketo-core/src/sass/core/fonts";
 @import "component/fonts";
 @import "../../../node_modules/enketo-core/src/sass/core/variables";
@@ -22,5 +23,9 @@ body {
         font-weight: normal;
         font-size: 10px;
         margin: 3px;
+    }
+    + .error {
+        border-top: 0;
+        margin-top: 0;
     }
 }

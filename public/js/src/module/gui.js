@@ -7,7 +7,8 @@
 var support = require( 'enketo-core/src/js/support' );
 var settings = require( './settings' );
 var printForm = require( 'enketo-core/src/js/print' );
-var t = require( './translator' ).t;
+var translator = require( './translator' );
+var t = translator.t;
 var sniffer = require( './sniffer' );
 var dialog = require( './vex.dialog.custom' );
 var $ = require( 'jquery' );
@@ -25,7 +26,8 @@ dialog.defaultOptions.className = 'vex-theme-plain';
  * Initializes the GUI module
  */
 function init() {
-    setEventHandlers();
+    translator.init()
+        .then( setEventHandlers );
 
     // avoid Windows console errors
     if ( typeof window.console === 'undefined' ) {
@@ -109,10 +111,10 @@ function swapTheme( theme ) {
         } else if ( settings.themesSupported.some( function( supportedTheme ) {
                 return theme === supportedTheme;
             } ) ) {
-            var $currentStyleSheet = $( 'link[rel=stylesheet][media=all][href*=theme-]' ),
-                $currentPrintStyleSheet = $( 'link[rel=stylesheet][media=print][href*=theme-]' ),
-                $newStyleSheet = $( '<link rel="stylesheet" media="all" href="/css/theme-' + theme + '.css"/>' ),
-                $newPrintStyleSheet = '<link rel="stylesheet" media="print" href="/css/theme-' + theme + '.print.css"/>';
+            var $currentStyleSheet = $( 'link[rel=stylesheet][media=all][href*=theme-]' );
+            var $currentPrintStyleSheet = $( 'link[rel=stylesheet][media=print][href*=theme-]' );
+            var $newStyleSheet = $( '<link rel="stylesheet" media="all" href="' + settings.basePath + '/css/theme-' + theme + '.css"/>' );
+            var $newPrintStyleSheet = '<link rel="stylesheet" media="print" href="' + settings.basePath + '/css/theme-' + theme + '.print.css"/>';
 
             $newStyleSheet.on( 'load', function() {
                 resolve();
@@ -239,7 +241,6 @@ function confirm( content, choices ) {
             className: 'btn btn-default small'
         } ],
         callback: function( value ) {
-            console.log( 'closing dialog with value:', value );
             if ( value && typeof choices.posAction !== 'undefined' ) {
                 choices.posAction.call( value );
             } else if ( typeof choices.negAction !== 'undefined' ) {

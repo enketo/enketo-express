@@ -16,6 +16,7 @@
     },
     "encryption key": "s0m3v3rys3cr3tk3y",
     "default theme": "oc",
+    "base path": "",
     "log": {
         "submissions": false
     },
@@ -30,8 +31,9 @@
         "api key": ""
     },
     "maps": [ {
-        "tiles": [ "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" ],
-        "attribution": "Map data © <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors"
+        "name": "streets",
+        "tiles": [ "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" ],
+        "attribution": "© <a href=\"http://openstreetmap.org\">OpenStreetMap</a> | <a href=\"www.openstreetmap.org/copyright\">Terms</a>"
     } ],
     "query parameter to pass to submission": "",
     "redis": {

@@ -10,6 +10,6 @@ before_script:
   - cp ./config/default-config.json ./config/config.json
   - chmod 777 ./setup/redis/travis-redis.sh
   - ./setup/redis/travis-redis.sh
-  - grunt sass
+  - grunt css
 services:
   - redis-server

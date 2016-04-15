@@ -205,7 +205,7 @@ function updateMedia( survey ) {
             survey.resources = resources;
             return survey;
         } )
-        // store any resources that were succesfull
+        // store any resources that were succesful
         .then( store.survey.update )
         .then( _loadMedia )
         .catch( function( error ) {

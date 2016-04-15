@@ -1,7 +1,7 @@
 extends layout
 
 block style
-  link(rel='stylesheet', href='/css/index.css') 
+  link(rel='stylesheet', href='#{basePath}/css/index.css') 
 
 block content
   p= t("home.msg", {appTitle: title, serverName: openrosa})
@@ -41,6 +41,8 @@ block content
           span= t("langs.fa")
         when "no"
           span= t("langs.no")
+        when "lo"
+          span= t("langs.lo")
         when "sk"
           span= t("langs.sk")
         when "zh"
@@ -55,3 +57,5 @@ block content
         span= ', '
       else 
         span= '.'
+
+  p= t("version") + ' ' + version

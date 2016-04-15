@@ -1,8 +1,8 @@
 extends ../layout
 
 block style
-  link(rel='stylesheet', media='all', type='text/css' href='/css/theme-#{defaultTheme}.css') 
-  link(rel='stylesheet', media='print', type='text/css' href='/css/theme-#{defaultTheme}.print.css') 
+  link(rel='stylesheet', media='all', type='text/css' href='#{basePath}/css/theme-#{defaultTheme}.css') 
+  link(rel='stylesheet', media='print', type='text/css' href='#{basePath}/css/theme-#{defaultTheme}.print.css') 
  
 block content
   .vex.vex-theme-plain

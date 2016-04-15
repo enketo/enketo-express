@@ -3,6 +3,24 @@
         "flushdb": "Slett Lagring"
     },
     "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "To add this form to your Home screen, click the browser settings icon __image1__ and select: 'Add to Home screen'."
+            },
+            "androidfirefox": {
+                "msg": [
+                    "To add this form to your Homescreen:",
+                    "1. Add this page to your Firefox bookmarks by clicking the settings icon __image1__ and then the star icon __image2__.",
+                    "2. Open your bookmarks by opening a new page and clicking the Bookmarks tab.",
+                    "3. Click-and-hold your form until a pop-up menu appears.",
+                    "4. Select 'Add to Home Screen'."
+                ]
+            },
+            "heading": "Add to Home Screen",
+            "iossafari": {
+                "msg": "To add this form to your Home screen, click the share icon __image1__ in the top right of your browser, and select: '+ Add to Home Screen'."
+            }
+        },
         "appupdated": {
             "heading": "App oppdatert!",
             "msg": "En ny versjon av denne applikasjonen har blitt lastet ned. Oppdater denne siden for å hente inn den nye versjonen."
@@ -10,6 +28,19 @@
         "default": {
             "button": "Lukk",
             "heading": "Advarsel"
+        },
+        "export": {
+            "alternativequestion": "alternative download - online",
+            "error": {
+                "filecreatedmsg": "Nevertheless, an incomplete export file was still created.",
+                "heading": "Export Error",
+                "linknotcreated": "Failed to create an export link for unsubmitted records. Are you online?",
+                "msg": "Errors occurred during creating of the record export file for unsubmitted records. Errors: __errors__"
+            },
+            "success": {
+                "heading": "Export Created",
+                "msg": "Export file created for all unsubmitted records belonging to this form."
+            }
         },
         "formupdated": {
             "heading": "Skjema oppdatert!",
@@ -151,7 +182,7 @@
     },
     "contact": {
         "admin": "Vennligst kontakt administratoren for skjemaet",
-        "support": "Vennligst kontakt __supportEmail__.'"
+        "support": "Vennligst kontakt __supportEmail__."
     },
     "enketo": {
         "power": "Drevet av"
@@ -206,6 +237,7 @@
         "el": "Gresk",
         "en": "Engelsk",
         "es": "Spansk",
+        "fa": "Persian",
         "fr": "French",
         "he": "Hebraisk",
         "hi": "Hindi",
@@ -218,7 +250,8 @@
         "supported": "Støttede språk:",
         "sw": "Swahili",
         "th": "Thai",
-        "vi": "Vietnamesisk"
+        "vi": "Vietnamesisk",
+        "zh": "Chinese"
     },
     "page": {
         "modernbrowsers": {
@@ -250,7 +283,9 @@
     "record-list": {
         "export": "Eksporter",
         "msg1": "Oppføringer er lagret i nettleseren din frem til de er lastet opp (selv om du skrur av datamaskinen eller kobler fra internett).",
-        "msg2": "Oppføringer i køen, bortsett fra de markert som utkast __icon__, blir lastet opp automatisk i bakgrunnen. Dette skjer hvert 5. minutt når websiden er åpen og en internett-tilkobling er tilgjengelig. For å tvinge en opplastning i perioden mellom automatiske forsøk, trykk på Last Opp",
+        "msg2": "Oppføringer i køen, bortsett fra de markert som utkast __icon__, blir lastet opp automatisk i bakgrunnen. Dette skjer hvert 5. minutt når websiden er åpen og en internett-tilkobling er tilgjengelig.",
+        "msg2-nodraft": "Oppføringer i køen blir lastet opp automatisk i bakgrunnen. Dette skjer hvert 5. minutt når websiden er åpen og en internett-tilkobling er tilgjengelig.",
+        "msg3": "For å tvinge en opplastning i perioden mellom automatiske forsøk, trykk på Last Opp",
         "norecords": "ingen oppføringer i køen",
         "title": "Kø",
         "upload": "Last Opp"
@@ -266,6 +301,7 @@
         "http0": "Mislykket (Frakoblet?)",
         "http2xx": "Uforventet svar ved sending av data.",
         "http400": "Dataserveren tok ikke imot dataen.",
+        "http401": "Authentication problem with data server.",
         "http403": "Ikke tillatt å sende data til denne dataserveren.",
         "http404": "Innsendingsservice på dataserveren ble ikke funnet.",
         "http413": "Dataen er for stor.",

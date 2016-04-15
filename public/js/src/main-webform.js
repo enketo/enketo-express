@@ -2,6 +2,7 @@
 
 require( './module/jquery-global' );
 require( './module/promise-by-Q' );
+require( './module/Array-from' );
 
 var $ = require( 'jquery' );
 var gui = require( './module/gui' );
@@ -186,6 +187,7 @@ function _init( formParts ) {
         if ( formParts && formParts.form && formParts.model ) {
             $loader.replaceWith( formParts.form );
             $form = $( 'form.or:eq(0)' );
+            translator.localize( $form.get( 0 ) );
             $( document ).ready( function() {
                 // TODO pass $form as first parameter?
                 // controller.init is asynchronous

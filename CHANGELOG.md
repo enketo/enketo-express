@@ -2,6 +2,107 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased] 
+----------------------
+##### Added
+- Lao translation.
+
+##### Changed
+- Updated Slovak translation.
+
+##### Fixed
+- HTML title not populating when the form title contains numbers or special characters.
+- Markdown formatting of outputs is not working.
+
+[1.26.3] - 2016-04-01
+----------------------
+##### Changed
+- Select minimal widget is now scrollable and won't stretch form.
+
+##### Fixed
+- Itemset update not retaining existing values when appropriate.
+
+[1.26.2] - 2016-03-29
+----------------------
+##### Changed
+- Wider select minimal widget in all themes. Full 100% of cell in Grid theme.
+- Always show value in select minimal widget when only a single value is selected.
+- Switched back to transparent icon for browser tabs.
+
+##### Fixed
+- Values in cloned repeat without jr:template are not emptied.
+- Radio buttons and checkboxes not properly aligned vertically.
+- Select minimal widget not aligned properly in RTL language.
+
+[1.26.1] - 2016-03-24
+----------------------
+##### Added
+- Hindi translation.
+
+##### Changed
+- Updated Slovak translation.
+- Show version on home page.
+
+##### Fixed
+- If maxSubmissionSize request fails (e.g. unsupported on server) or the maxSubmissionSize value is updated, the form media resources are cleared.
+- If /instance API endpoint is called for a survey that has never been launched the response URL contains a ::null enketo ID.
+
+[1.26.0] - 2016-03-23
+----------------------
+##### Added
+- Chinese translation.
+- Limited IE11 support.
+
+##### Fixed
+- RTL form language right-aligns map layer options.
+- Single-page form in pages mode throws exception and has no submit button.
+- Very first time a form is stored in the browser, the query parameter to pass to submissions is not stored.
+- When offline, and an attempt is made load a form with an uncached querystring, redirect to querystring-less URL.
+- Submissions broken when basePath is used.
+
+[1.25.1] - 2016-03-14
+----------------------
+##### Changed
+- Redirect to new API v2 documentation from /api/v2.
+- Updated French, Dutch, and Persian translations.
+
+##### Fixed
+- Languages not loading sometimes.
+- Submit button not re-enabled after validation error.
+- Performance degradation after changing a value in the form and upon submitting.
+- Older browsers give "Array.from" error, when loading offline-capable webform.
+
+[1.25.0] - 2016-03-09
+----------------------
+##### Added
+- Enketo can now be configured with a base path, allowing Enketo to run with other servers on the same (sub)domain.
+
+##### Removed
+- Offline-capable iframe-friendly webform views and API endpoints.
+
+##### Fixed
+- Subtle 'required' message cannot be translated.
+- Google maps tile layers not using https.
+
+[1.24.1] - 2016-03-04 
+----------------------
+##### Added
+- French translation.
+
+##### Changed
+- More modest font size for bold text, especially in Grid theme.
+- Form UI elements also translatable.
+- Updated Persian translation.
+
+##### Fixed
+- Options in select minimal are underlined.
+- Group labels in RTL languages are left-aligned.
+- When offline-capable webform is added to iOS homescreen it doesn't work.
+- Submit button "busy" state is reset too early.
+- Add-to-homescreen guidance only shows translation key.
+- Exceptions occuring with file inputs on iOS devices.
+- Only last media file in repeated file input is submitted.
+
 [1.24.0] - 2016-02-23
 ----------------------
 ##### Added 

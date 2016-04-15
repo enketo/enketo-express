@@ -1,8 +1,9 @@
+// variables
+@import "../component/variables";
+@import "../../../../node_modules/enketo-core/src/sass/core/variables";
+
 // fonts
 @import "../component/fonts";
-
-// variables
-@import "../../../../node_modules/enketo-core/src/sass/core/variables";
 
 // mixins, in the right order
 @import "../../../../node_modules/enketo-core/src/sass/core/mixins";

@@ -7,6 +7,7 @@ var LanguageDetector = require( 'i18next-browser-languagedetector' );
 var $ = require( 'jquery' );
 var init;
 var t;
+var localize;
 var htmlParagraphsPostProcessor;
 
 // The postProcessor assumes that array values with line breaks should be divided into HTML paragraphs.
@@ -36,12 +37,12 @@ init = function( something ) {
                 fallbackLng: 'en',
                 joinArrays: '\n',
                 backend: {
-                    loadPath: '/locales/__lng__/translation.json',
+                    loadPath: settings.basePath + '/locales/__lng__/translation.json',
                 },
                 detection: {
                     order: [ 'querystring', 'navigator' ],
                     lookupQuerystring: 'lang',
-                    caches: []
+                    caches: false
                 },
                 interpolation: {
                     prefix: '__',
@@ -62,9 +63,33 @@ t = function( key, options ) {
     return i18next.t( key, options );
 };
 
+/**
+ * Localizes the descendents of an element based on the data-i18n attribute.
+ * Performance-optimized in Chrome (used bench6 form).
+ * 
+ * @param  {Element} Element [description]
+ */
+localize = function( element ) {
+    var i;
+    var cache = {};
+    var list = element.querySelectorAll( '[data-i18n]' );
+
+    for ( i = 0; i < list.length; i++ ) {
+        var el = list[ i ];
+        var key = el.dataset.i18n;
+        if ( key ) {
+            if ( !cache[ key ] ) {
+                cache[ key ] = t( key );
+            }
+            el.textContent = cache[ key ];
+        }
+    }
+};
+
 module.exports = {
     init: init,
-    t: t
+    t: t,
+    localize: localize
 };
 
 /**

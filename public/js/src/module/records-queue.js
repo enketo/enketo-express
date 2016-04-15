@@ -17,6 +17,7 @@ var $uploadButton;
 var $recordList;
 var $queueNumber;
 var uploadProgress;
+var finalRecordPresent;
 var autoSaveKey = '__autoSave_' + settings.enketoId;
 var uploadOngoing = false;
 
@@ -101,11 +102,13 @@ function updateAutoSavedRecord( record ) {
     // make the record valid
     record.enketoId = settings.enketoId;
 
-    return update( record );
+    return store.record.update( record );
+    // do not update recordList
 }
 
 function removeAutoSavedRecord() {
-    return remove( autoSaveKey );
+    return store.record.remove( autoSaveKey );
+    // do not update recordList
 }
 
 /**
@@ -158,70 +161,77 @@ function uploadQueue() {
     var fails = [];
     var authRequired;
 
-    if ( !uploadOngoing && connection.getOnlineStatus ) {
-
-        uploadOngoing = true;
-        $uploadButton.prop( 'disabled', true );
-
-        store.record.getAll( settings.enketoId, true )
-            .then( function( records ) {
-                if ( !records || records.length === 0 ) {
-                    uploadOngoing = false;
-                    return;
-                }
-                console.debug( 'Uploading queue of ' + records.length + ' records.' );
-                // Perform record uploads sequentially for nicer feedback and to avoid issues when connections are very poor
-                return records.reduce( function( prevPromise, record ) {
-                    return prevPromise.then( function() {
-                        // get the whole record including files
-                        return store.record.get( record.instanceId )
-                            .then( function( record ) {
-                                // convert record.files to a simple <File> array
-                                record.files = record.files.map( function( object ) {
-                                    // do not add name property if already has one (a File will throw exception)
-                                    if ( typeof object.item.name === 'undefined' ) {
-                                        object.item.name = object.name;
-                                    }
-                                    return object.item;
-                                } );
-                                uploadProgress.update( record.instanceId, 'ongoing', '', successes.length + fails.length, records.length );
-                                return connection.uploadRecord( record );
-                            } )
-                            .then( function() {
-                                successes.push( record.name );
-                                uploadProgress.update( record.instanceId, 'success', '', successes.length + fails.length, records.length );
-                                return store.record.remove( record.instanceId )
-                                    .then( function() {
-                                        return store.property.addSubmittedInstanceId( record );
-                                    } );
-                            } )
-                            .catch( function( result ) {
-                                // catch 401 responses (1 of them)
-                                if ( result.status === 401 ) {
-                                    authRequired = true;
-                                }
-                                // if any non HTTP error occurs, output the error.message
-                                errorMsg = result.message || gui.getErrorResponseMsg( result.status );
-                                fails.push( record.name );
-                                uploadProgress.update( record.instanceId, 'error', errorMsg, successes.length + fails.length, records.length );
-                            } )
-                            .then( function() {
-                                if ( successes.length + fails.length === records.length ) {
-                                    uploadOngoing = false;
-                                    if ( authRequired ) {
-                                        gui.confirmLogin();
-                                    } else if ( successes.length > 0 ) {
-                                        // let gui send a feedback message
-                                        $( document ).trigger( 'queuesubmissionsuccess', successes );
-                                    }
-                                    // update the list by properly removing obsolete records, reactivating button(s)
-                                    _updateRecordList();
-                                }
-                            } );
-                    } );
-                }, Promise.resolve() );
-            } );
+    if ( uploadOngoing || !finalRecordPresent ) {
+        return;
     }
+
+    uploadOngoing = true;
+    $uploadButton.prop( 'disabled', true );
+
+    connection.getOnlineStatus()
+        .then( function( appearsOnline ) {
+            if ( !appearsOnline ) {
+                return;
+            }
+            return store.record.getAll( settings.enketoId, true );
+        } )
+        .then( function( records ) {
+            if ( !records || records.length === 0 ) {
+                uploadOngoing = false;
+                return;
+            }
+            console.debug( 'Uploading queue of ' + records.length + ' records.' );
+            // Perform record uploads sequentially for nicer feedback and to avoid issues when connections are very poor
+            return records.reduce( function( prevPromise, record ) {
+                return prevPromise.then( function() {
+                    // get the whole record including files
+                    return store.record.get( record.instanceId )
+                        .then( function( record ) {
+                            // convert record.files to a simple <File> array
+                            record.files = record.files.map( function( object ) {
+                                // do not add name property if already has one (a File will throw exception)
+                                if ( typeof object.item.name === 'undefined' ) {
+                                    object.item.name = object.name;
+                                }
+                                return object.item;
+                            } );
+                            uploadProgress.update( record.instanceId, 'ongoing', '', successes.length + fails.length, records.length );
+                            return connection.uploadRecord( record );
+                        } )
+                        .then( function() {
+                            successes.push( record.name );
+                            uploadProgress.update( record.instanceId, 'success', '', successes.length + fails.length, records.length );
+                            return store.record.remove( record.instanceId )
+                                .then( function() {
+                                    return store.property.addSubmittedInstanceId( record );
+                                } );
+                        } )
+                        .catch( function( result ) {
+                            // catch 401 responses (1 of them)
+                            if ( result.status === 401 ) {
+                                authRequired = true;
+                            }
+                            // if any non HTTP error occurs, output the error.message
+                            errorMsg = result.message || gui.getErrorResponseMsg( result.status );
+                            fails.push( record.name );
+                            uploadProgress.update( record.instanceId, 'error', errorMsg, successes.length + fails.length, records.length );
+                        } )
+                        .then( function() {
+                            if ( successes.length + fails.length === records.length ) {
+                                uploadOngoing = false;
+                                if ( authRequired ) {
+                                    gui.confirmLogin();
+                                } else if ( successes.length > 0 ) {
+                                    // let gui send a feedback message
+                                    $( document ).trigger( 'queuesubmissionsuccess', successes );
+                                }
+                                // update the list by properly removing obsolete records, reactivating button(s)
+                                _updateRecordList();
+                            }
+                        } );
+                } );
+            }, Promise.resolve() );
+        } );
 }
 
 function exportToZip( formTitle ) {
@@ -320,6 +330,7 @@ function _updateRecordList() {
     $exportButton.prop( 'disabled', true );
     $uploadButton.prop( 'disabled', true );
     $recordList = $( '.record-list__records' );
+    finalRecordPresent = false;
 
     // rebuild the list
     return store.record.getAll( settings.enketoId )
@@ -355,6 +366,7 @@ function _updateRecordList() {
             records.forEach( function( record ) {
                 // if there is at least one record not marked as draft
                 if ( !record.draft ) {
+                    finalRecordPresent = true;
                     $uploadButton.prop( 'disabled', false );
                 }
                 $li = uploadProgress._getLi( record.instanceId );

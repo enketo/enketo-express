@@ -2,6 +2,7 @@
 
 var config = require( '../../config/default-config' );
 var localConfig = require( '../../config/config' );
+var pkg = require( '../../package' );
 var merge = require( 'lodash/merge' );
 var path = require( 'path' );
 var fs = require( 'fs' );
@@ -40,6 +41,8 @@ function getThemesSupported( themeList ) {
     return themes;
 }
 
+config[ 'version' ] = pkg.version;
+
 // detect supported themes
 config[ 'themes supported' ] = getThemesSupported( config[ 'themes supported' ] );
 
@@ -47,6 +50,14 @@ config[ 'themes supported' ] = getThemesSupported( config[ 'themes supported' ] 
 config[ 'languages supported' ] = fs.readdirSync( languagePath ).filter( function( file ) {
     return fs.statSync( path.join( languagePath, file ) ).isDirectory();
 } );
+
+// if necessary, correct the base path to use for all routing
+if ( config[ 'base path' ] && config[ 'base path' ].indexOf( '/' ) !== 0 ) {
+    config[ 'base path' ] = '/' + config[ 'base path' ];
+}
+if ( config[ 'base path' ] && config[ 'base path' ].lastIndexOf( '/' ) === config[ 'base path' ].length - 1 ) {
+    config[ 'base path' ] = config[ 'base path' ].substring( 0, config[ 'base path' ].length - 1 );
+}
 
 module.exports = {
     server: config,
@@ -60,7 +71,8 @@ module.exports = {
         languagesSupported: config[ 'languages supported' ],
         submissionParameter: {
             name: config[ 'query parameter to pass to submission' ]
-        }
+        },
+        basePath: config[ 'base path' ]
     },
     getThemesSupported: getThemesSupported
 };

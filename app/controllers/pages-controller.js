@@ -5,14 +5,15 @@ var router = express.Router();
 // var debug = require( 'debug' )( 'pages-controller' );
 
 module.exports = function( app ) {
-    app.use( '/', router );
+    app.use( app.get( 'base path' ) + '/', router );
 };
 
 router
     .get( '/', function( req, res ) {
         res.render( 'index', {
             openrosa: req.app.get( 'linked form and data server' ).name || '?',
-            languages: req.app.get( 'languages supported' )
+            languages: req.app.get( 'languages supported' ),
+            version: req.app.get( 'version' )
         } );
     } )
     .get( '/modern-browsers', function( req, res ) {

@@ -182,7 +182,7 @@
     },
     "contact": {
         "admin": "S'il vous plaît contactez l'administrateur de cette enquête ",
-        "support": "S'il vous plaît contactez __supportEmail__.'"
+        "support": "Contactez __supportEmail__ s'il vous plaît."
     },
     "enketo": {
         "power": "Propulsé par"
@@ -212,7 +212,8 @@
             "end": "Aller à la fin",
             "next": "Suivant",
             "return": "Retourner au début"
-        }
+        },
+        "required": "requis"
     },
     "formfooter": {
         "savedraft": {
@@ -225,6 +226,17 @@
         "validate": {
             "btn": "Valider"
         }
+    },
+    "geopicker": {
+        "accuracy": "précision (m)",
+        "altitude": "altitude (m)",
+        "closepolygon": "fermer le polygone",
+        "kmlcoords": "coordonnées KML",
+        "kmlpaste": "Coller les coordonnées KML ici",
+        "latitude": "latitude (x.y °)",
+        "longitude": "longitude (x.y °)",
+        "points": "points",
+        "searchPlaceholder": "Chercher un lieu ou une adresse"
     },
     "here": "ici",
     "home": {
@@ -283,15 +295,21 @@
     "record-list": {
         "export": "Exporter",
         "msg1": "Les enregistrements sont sauvegardés par le navigateur jusqu'à ce qu'ils soient transmis au serveur (même si l'ordinateur est éteint ou déconnecté).",
-        "msg2": "Queued records, except those marked as draft __icon__, are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available. To force an upload in between automatic attempts, click Upload.",
+        "msg2": "Les enregistrements en file d'attente, à l'exception de ceux marqués comme brouillon __icon__, sont soumis automatiquement en arrière-plan, toutes les 5 minutes, quand la page web est ouverte et la connexion disponible. Pour forcer la transmission entre les tentatives automatiques, cliquer sur Transmettre.",
+        "msg2-nodraft": "Les enregistrements en file d'attente sont transmis autoomatiquement en arrière-plan toutes les 5 minutes, quand la page web est ouverte, et une connexion Internet disponible. ",
+        "msg3": "Pour forcer une transmission entre les tentatives automatiques, cliquez sur Transmettre.",
         "norecords": "aucun enregistrement dans la file d'attente",
         "title": "File d'attente",
-        "upload": "Upload"
+        "upload": "Transmettre"
+    },
+    "selectpicker": {
+        "noneselected": "aucun élément sélectionné",
+        "numberselected": "__number__ sélectionné(s)"
     },
     "store": {
         "error": {
             "iosusesafari": "Votre navigateur iOS ne peut pas exécuter ce formulaire. Sur iOS, nous recommandons d'utiliser Safari.",
-            "notavailable": "Browser storage is required but is not available, is corrupted, or is not writeable. If you are in 'private browsing' mode please switch to regular mode, otherwise switch to another browser. (error: __error__)",
+            "notavailable": "La mémoire du navigateur est requise mais elle est indisponible, corrompue ou en lecture seule. Si vous êtes en mode \"navigation privée\", merci de revenir au mode normal, sinon, utilisez un autre navigateur. (erreur : __error__)",
             "notsupported": "Votre navigateur ne peut pas exécuter ce formulaire. Nous recommandons d'utiliser un navigateur moderne."
         }
     },

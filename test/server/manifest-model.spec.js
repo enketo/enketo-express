@@ -7,8 +7,29 @@ process.env.NODE_ENV = 'test';
 var model = require( '../../app/models/manifest-model' );
 var chai = require( 'chai' );
 var expect = chai.expect;
+var redis = require( 'redis' );
+var config = require( '../../app/models/config-model' ).server;
+config[ 'base path' ] = '';
+var client = redis.createClient( config.redis.cache.port, config.redis.cache.host, {
+    auth_pass: config.redis.cache.password
+} );
 
 describe( 'Manifest Model', function() {
+
+    beforeEach( function( done ) {
+        // select test database and flush it to avoid serving manifest from cache
+        client.select( 15, function( err ) {
+            if ( err ) {
+                return done( err );
+            }
+            client.flushdb( function( err ) {
+                if ( err ) {
+                    return done( err );
+                }
+                done();
+            } );
+        } );
+    } );
 
     describe( 'creating a manifest', function() {
         var result;
@@ -20,10 +41,9 @@ describe( 'Manifest Model', function() {
             '</html>';
 
         beforeEach( function( done ) {
-            model.get( html )
+            model.get( html, '<html></html>' )
                 .then( function( manifest ) {
                     result = manifest;
-
                 } )
                 .then( done, done );
         } );
