@@ -5,18 +5,18 @@
     "alert": {
         "addtohomescreen": {
             "androidchrome": {
-                "msg": "To add this form to your Home screen, click the browser settings icon __image1__ and select: 'Add to Home screen'."
+                "msg": "Um eine Verknüpfung auf dem Startbildschirm zu erstellen bitte im Browser auf das Browser-Menü tippen icon __image1__ and dann \"Zum Startbildschirm hinzufügen\" auswählen."
             },
             "androidfirefox": {
                 "msg": [
-                    "To add this form to your Homescreen:",
-                    "1. Add this page to your Firefox bookmarks by clicking the settings icon __image1__ and then the star icon __image2__.",
+                    "Verknüpfung auf dem Startbildschirm erstellen:",
+                    "1. Firefox Lesezeichen erstellen: Zuerst das Browser-Menü öffnen icon __image1__ and dann das Stern-Symbol icon __image2__ antippen.",
                     "2. Open your bookmarks by opening a new page and clicking the Bookmarks tab.",
                     "3. Click-and-hold your form until a pop-up menu appears.",
                     "4. Select 'Add to Home Screen'."
                 ]
             },
-            "heading": "Add to Home Screen",
+            "heading": "Verknüpfung auf dem Startbildschirm erstellen",
             "iossafari": {
                 "msg": "To add this form to your Home screen, click the share icon __image1__ in the top right of your browser, and select: '+ Add to Home Screen'."
             }
@@ -30,16 +30,16 @@
             "heading": "Benachrichtigung"
         },
         "export": {
-            "alternativequestion": "alternative download - online",
+            "alternativequestion": "Zum Download zur Verfügung - Online",
             "error": {
-                "filecreatedmsg": "Nevertheless, an incomplete export file was still created.",
-                "heading": "Export Error",
-                "linknotcreated": "Failed to create an export link for unsubmitted records. Are you online?",
-                "msg": "Errors occurred during creating of the record export file for unsubmitted records. Errors: __errors__"
+                "filecreatedmsg": "Dennoch wurde eine unvollständige Exportdatei noch erstellt.",
+                "heading": "Export-Fehler",
+                "linknotcreated": "Fehler beim Erstellen eines Export-Links für nicht übertragene Datensätze. Sind Sie online?",
+                "msg": "Fehler beim Erstellen der Exportdateien für die nicht übertragenen Datensätze. Fehler: __errors__"
             },
             "success": {
-                "heading": "Export Created",
-                "msg": "Export file created for all unsubmitted records belonging to this form."
+                "heading": "Export Erstellt",
+                "msg": "Die Exportdatei für alle nicht übertragene Datensätze, die zu dieser Form gehören, wurden erstellt."
             }
         },
         "formupdated": {
@@ -131,7 +131,7 @@
             "posButton": "Bestätigen"
         },
         "deleteall": {
-            "heading": "PANIK!",
+            "heading": "ACHTUNG!",
             "msg": [
                 "Hierdurch werden alle Ihre Daten in der Warteschlange und alle Ihre Formulare aus dem Browserspeicher entfernt. Die Daten sind dann für immer verloren. Verwenden Sie diese Funktion nur als letzte Option wenn der Browserspeicher beschädigt wurde.",
                 "Schließen Sie zuerst alle anderen Enketo Tabs.",
@@ -212,7 +212,8 @@
             "end": "Ans Ende gehen",
             "next": "Weiter",
             "return": "Zurück zum Anfang"
-        }
+        },
+        "required": "erforderlich"
     },
     "formfooter": {
         "savedraft": {
@@ -225,6 +226,17 @@
         "validate": {
             "btn": "Prüfen"
         }
+    },
+    "geopicker": {
+        "accuracy": "Präzision (m)",
+        "altitude": "Höhe (m)",
+        "closepolygon": "geschlossener Polygon",
+        "kmlcoords": "KML Koordinaten",
+        "kmlpaste": "Einfügen von KML Koordinaten",
+        "latitude": "Breite (x.y °)",
+        "longitude": "Länge (x.y °)",
+        "points": "Punkte",
+        "searchPlaceholder": "Suche nach dem Ort oder Adresse"
     },
     "here": "hier",
     "home": {
@@ -243,6 +255,7 @@
         "hi": "Indisch",
         "it": "Italienisch",
         "km": "Khmer",
+        "lo": "Lao",
         "nl": "Niederländisch",
         "no": "Norwegisch",
         "ro": "Rumänisch",
@@ -289,6 +302,10 @@
         "norecords": "keine Datensätze in der Warteschlange",
         "title": "Warteschlange",
         "upload": "Hochladen"
+    },
+    "selectpicker": {
+        "noneselected": "keine Angabe",
+        "numberselected": "__number__ ausgewählt"
     },
     "store": {
         "error": {

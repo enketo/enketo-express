@@ -9,7 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Ability to use piwik for analytics.
 
 ##### Changed
-- Updated Slovak translation.
+- Updated Slovak, German, Dutch translations.
 
 ##### Fixed
 - HTML title not populating when the form title contains numbers or special characters.
