@@ -212,7 +212,8 @@
       "end": "Go to End",
       "next": "Next",
       "return": "Return to Beginning"
-    }
+    },
+    "required": ""
   },
   "formfooter": {
     "savedraft": {
@@ -225,6 +226,17 @@
     "validate": {
       "btn": "Validate"
     }
+  },
+  "geopicker": {
+    "accuracy": "accuracy (m)",
+    "altitude": "altitude (m)",
+    "closepolygon": "close polygon",
+    "kmlcoords": "KML coordinates",
+    "kmlpaste": "paste KML coordinates here",
+    "latitude": "latitude (x.y °)",
+    "longitude": "longitude (x.y °)",
+    "points": "points",
+    "searchPlaceholder": "search for place or address"
   },
   "here": "here",
   "home": {
@@ -290,6 +302,10 @@
     "norecords": "no records queued",
     "title": "Queue",
     "upload": "Upload"
+  },
+  "selectpicker": {
+    "noneselected": "none selected",
+    "numberselected": "__number__ selected"
   },
   "store": {
     "error": {
