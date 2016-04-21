@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Fixed
+- Update check for forms requiring authentication fails in offline-capable webforms.
+
 [1.27.0] - 2016-04-15
 ----------------------
 ##### Added
