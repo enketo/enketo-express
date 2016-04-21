@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Fixed
 - Update check for forms requiring authentication fails in offline-capable webforms.
+- Number inputs in Grid Theme not printing.
+- Value of distress widget not easily visible when printing.
+- Select element on mobile not showing first value in virgin state (e.g. when creating a repeat).
 
 [1.27.0] - 2016-04-15
 ----------------------
