@@ -39,13 +39,8 @@ router
 function getSurveyParts( req, res, next ) {
     var surveyBare;
 
-    _getSurveyParams( req.body )
+    _getSurveyParams( req )
         .then( function( survey ) {
-
-            // for external authentication, pass the cookie(s)
-            survey.cookie = req.headers.cookie;
-            // for OpenRosa authentication, add the credentials
-            survey.credentials = user.getCredentials( req );
             // store a copy of the bare survey object
             surveyBare = JSON.parse( JSON.stringify( survey ) );
 
@@ -87,7 +82,7 @@ function getSurveyParts( req, res, next ) {
  * @return {[type]}        [description]
  */
 function getSurveyHash( req, res, next ) {
-    _getSurveyParams( req.body )
+    _getSurveyParams( req )
         .then( function( survey ) {
             return cacheModel.getHashes( survey );
         } )
@@ -220,21 +215,36 @@ function _getCombinedHash( survey ) {
     return [ String( survey.formHash ), String( survey.mediaHash ), String( survey.xslHash ), String( survey.theme ), String( brandingHash ) ].join( '-' );
 }
 
-function _getSurveyParams( params ) {
+function _setCookieAndCredentials( survey, req ) {
+    // for external authentication, pass the cookie(s)
+    survey.cookie = req.headers.cookie;
+    // for OpenRosa authentication, add the credentials
+    survey.credentials = user.getCredentials( req );
+    return Promise.resolve( survey );
+}
+
+function _getSurveyParams( req ) {
     var error;
     var urlObj;
     var domain;
+    var params = req.body;
 
     if ( params.enketoId ) {
         return surveyModel.get( params.enketoId )
             .then( account.check )
-            .then( _checkQuota );
+            .then( _checkQuota )
+            .then( function( survey ) {
+                return _setCookieAndCredentials( survey, req );
+            } );
     } else if ( params.serverUrl && params.xformId ) {
         return account.check( {
                 openRosaServer: params.serverUrl,
                 openRosaId: params.xformId
             } )
-            .then( _checkQuota );
+            .then( _checkQuota )
+            .then( function( survey ) {
+                return _setCookieAndCredentials( survey, req );
+            } );
     } else if ( params.xformUrl ) {
         urlObj = url.parse( params.xformUrl );
         if ( !urlObj || !urlObj.protocol || !urlObj.host ) {
@@ -256,6 +266,9 @@ function _getSurveyParams( params ) {
                     },
                     account: survey.account
                 } );
+            } )
+            .then( function( survey ) {
+                return _setCookieAndCredentials( survey, req );
             } );
     } else {
         error = new Error( 'Bad Request. Survey information not complete.' );
