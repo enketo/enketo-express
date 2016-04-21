@@ -133,10 +133,19 @@ function _uploadBatch( recordBatch ) {
                 }
             } )
             .fail( function( jqXHR, textStatus ) {
-                // TODO: extract message from XML response?
+                var messageEl = null;
+                var message = null;
+                // 400 is a generic error. Any message returned by the server is probably more useful.
+                // Other more specific statusCodes will get harcoded and translated messages.
+                if ( jqXHR.status === 400 && jqXHR.responseXML ) {
+                    messageEl = jqXHR.responseXML.querySelector( 'OpenRosaResponse > message' );
+                    if ( messageEl ) {
+                        message = messageEl.textContent;
+                    }
+                }
                 reject( {
-                    status: jqXHR.status
-                        // message: textStatus
+                    status: jqXHR.status,
+                    message: message
                 } );
             } );
     } );

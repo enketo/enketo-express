@@ -460,8 +460,6 @@ function getErrorResponseMsg( statusCode ) {
         '5xx': t( 'submission.http500', supportEmailObj )
     };
 
-    console.debug( 'getting msg belonging to ', statusCode );
-
     statusCode = ( typeof statusCode !== 'undefined' ) ? statusCode.toString() : 'undefined';
 
     if ( statusMap[ statusCode ] ) {
