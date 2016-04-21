@@ -251,15 +251,17 @@ function _submitRecord() {
             }
         } )
         .catch( function( result ) {
+            var message;
             result = result || {};
             console.error( 'submission failed', result );
-            if ( result.status && result.status === 401 ) {
-                gui.alert( t( 'alert.submissionerror.authrequiredmsg', {
+            if ( result.status === 401 ) {
+                message = t( 'alert.submissionerror.authrequiredmsg', {
                     here: authLink
-                } ), t( 'alert.submissionerror.heading' ) );
+                } );
             } else {
-                gui.alert( gui.getErrorResponseMsg( result.status ), t( 'alert.submissionerror.heading' ) );
+                message = result.message || gui.getErrorResponseMsg( result.status );
             }
+            gui.alert( message, t( 'alert.submissionerror.heading' ) );
         } );
 }
 

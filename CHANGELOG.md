@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Changed
+- If a submission returns a response with a generic 400 statusCode, output any well-formed OpenRosa response message to the user.
+
 [1.27.1] - 2016-04-21
 ----------------------
 ##### Fixed
