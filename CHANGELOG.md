@@ -2,14 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.28.0] - 2016-04-27
 ----------------------
 ##### Added
 - 11 XPath math functions.
 
 ##### Changed
 - If a submission returns a response with a generic 400 statusCode, output any well-formed OpenRosa response message to the user.
-
+- Updated Persian and Spanish translations.
 
 [1.27.1] - 2016-04-21
 ----------------------
