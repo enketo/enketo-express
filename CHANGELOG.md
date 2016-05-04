@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Added
+- Proper namespace support.
+
+##### Fixed
+- Minor markdown issues.
+
 [1.28.0] - 2016-04-27
 ----------------------
 ##### Added
