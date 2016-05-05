@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Added
 - Proper namespace support.
+- Comment widget.
 
 ##### Fixed
 - Minor markdown issues.
