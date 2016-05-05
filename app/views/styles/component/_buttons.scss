@@ -224,3 +224,7 @@ button::-moz-focus-inner {
 .btn-default.dropdown-toggle {
     padding: 7px 15px;
 }
+
+.or-comment-widget__content__btn-close {
+    @extend .small;
+}

@@ -86,7 +86,7 @@
         },
         "recordsavesuccess": {
             "draftmsg": "Registro guardado como borrador",
-            "finalmsg": "Registro encolado para envío"
+            "finalmsg": "Registro en cola para envío"
         },
         "submission": {
             "msg": "Enviando datos...",
@@ -101,7 +101,7 @@
             "heading": "Envío incorrecto."
         },
         "submissionsuccess": {
-            "heading": "El envío terminó con éxito",
+            "heading": "Envío correcto",
             "msg": "Sus datos fueron enviados al servidor!",
             "redirectmsg": "Ahora será redirigido."
         },
@@ -119,7 +119,7 @@
     },
     "confirm": {
         "autosaveload": {
-            "heading": "Hemos encontrado un registro sin grabar",
+            "heading": "Un registro sin grabar encontrado ",
             "msg": "Enketo ha encontrado un registro sin guardar. ¿Quiere cargar este registro o descartarlo?",
             "negButton": "Descartar",
             "posButton": "Cargar registro"
@@ -212,7 +212,8 @@
             "end": "Ir al final",
             "next": "Siguiente",
             "return": "Volver al principio"
-        }
+        },
+        "required": "requerido"
     },
     "formfooter": {
         "savedraft": {
@@ -225,6 +226,17 @@
         "validate": {
             "btn": "Validar"
         }
+    },
+    "geopicker": {
+        "accuracy": "precisión (m)",
+        "altitude": "altitud (m)",
+        "closepolygon": "cerrar polígono",
+        "kmlcoords": "coordenadas KML",
+        "kmlpaste": "pegar coordenadas KML aquí",
+        "latitude": "latitud (x.y °)",
+        "longitude": "longitud (x.y °)",
+        "points": "puntos",
+        "searchPlaceholder": "buscar lugar o dirección"
     },
     "here": "aquí",
     "home": {
@@ -243,11 +255,12 @@
         "hi": "Hindi",
         "it": "Italiano",
         "km": "Khmer",
+        "lo": "Lao",
         "nl": "Holandés",
         "no": "Noruego",
         "ro": "Rumano",
         "sk": "Eslovaco",
-        "supported": "Idiomas soportados",
+        "supported": "Idiomas soportados:",
         "sw": "Swahili",
         "th": "Tailandés",
         "vi": "Vietnamita",
@@ -258,9 +271,9 @@
             "heading": "Navegadores modernos",
             "ie": {
                 "heading": "¿ Porqué ese poco cariño por esas endiabladamente malignas versiones de Internet Explorer ? ",
-                "msg": "Entendemos que aquellas personas, especialmente aquellas que trabajan para la burocracia no tienen acceso a los últimos y mejores navegadores. Como sabemos como de estupenda puede ser la web con las herramientas correctas, tenemos empatía por los usuarios en tan maltrecha situación. Normalmente intentaríamos buscar la manera de dar soporte a ciertos populares navegadores antiguos. Sin embargo la razón por la que Enketo existe es por la disponibilidad de algunas tecnologías de última hora. Desafortunadamente, los usuarios de navegadores antiguos no van a tener la suerte de poder usar Enketo."
+                "msg": "Entendemos que algunas personas, especialmente aquellas que trabajan en grandes empresas o instituciones no tienen acceso a los últimos y mejores navegadores. Como sabemos como de estupenda puede ser la web con las herramientas correctas, tenemos empatía por los usuarios en esta situación. Normalmente intentaríamos buscar la manera de dar soporte a ciertos  navegadores populares. Sin embargo la razón por la que Enketo existe es por la disponibilidad de algunas tecnologías de última hora. Desafortunadamente, los usuarios de navegadores antiguos no van a tener la suerte de poder usar Enketo."
             },
-            "msg1": "Cáspitas! Lo sentimos pero seguramente usted ha llegado aquí porque su navegador no está actualizado o bien es una versión antigua o quizás tiene algunas características clave para Enketo deshabilitadas porque está usando el modo de navegación de incógnito.",
+            "msg1": "Ay! Lo sentimos pero seguramente usted ha llegado aquí porque su navegador no está actualizado o bien es una versión antigua o quizás tiene algunas características clave para Enketo deshabilitadas porque está usando el modo de navegación de incógnito.",
             "msg2": "Si está utilizando un navegador antiguo le recomendamos que se actualize a una versión reciente de los siguientes excelentes navegadores modernos:"
         },
         "offline": {
@@ -290,15 +303,19 @@
         "title": "Enviar a la cola",
         "upload": "Enviar datos"
     },
+    "selectpicker": {
+        "noneselected": "ninguno seleccionado",
+        "numberselected": "__number__ selected"
+    },
     "store": {
         "error": {
             "iosusesafari": "Su navegador IOS no es capaz de ejecutar este formulario. En IOS recomendamos usar Safari.",
-            "notavailable": "Esta aplicación requiere una característica del navegador llamada almacenamiento de navegador pero en este caso no está disponible, es incorrecto o bien es de solo lectura. Si está navegando en modo 'incógnito' por favor cambie al modo normal, si no quiere puede cambiar a otro navegador. (error: __error__)",
+            "notavailable": "Almacenamiento de navegador requerida pero no disponible, es incorrecto o bien es de solo lectura. Si está navegando en modo 'incógnito' por favor cambie al modo normal, si no quiere puede cambiar a otro navegador. (error: __error__)",
             "notsupported": "Su navegador no es capaz de ejecutar este formulario. Le recomendamos usar un navegador moderno"
         }
     },
     "submission": {
-        "http0": "Fallo (¿Sin conexión de Internet?).",
+        "http0": "Fallo (¿Sin conexión a Internet?).",
         "http2xx": "Respuesta erronea al enviar los datos.",
         "http400": "El servidor de datos no acepta datos.",
         "http401": "Ha habido un problema de autenticación con el servidor de datos.",
