@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Changed
+- Styling of notes (readonly questions).
+
+##### Fixed
+- String literals not excluded from /model/instance[1] injection.
+
 [1.29.0] - 2016-05-05
 ----------------------
 ##### Added
