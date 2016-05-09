@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Styling of notes (readonly questions).
 - Offline-capable URLs now use "x" instead of "_". Old URLs are still working. **WARNING: APIs return different offline-capable URLs.**
+- Home page layout.
 
 ##### Fixed
 - String literals not excluded from /model/instance[1] injection.
