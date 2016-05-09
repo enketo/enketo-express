@@ -36,6 +36,7 @@ router.param( 'mod', function( req, rex, next, mod ) {
 
 router
     .get( '*', loggedInCheck )
+    .get( '/x/', offlineWebform )
     .get( '/_/', offlineWebform )
     .get( '/:enketo_id', webform )
     .get( '/:mod/:enketo_id', webform )
@@ -64,7 +65,7 @@ function offlineWebform( req, res, next ) {
         error.status = 405;
         next( error );
     } else {
-        req.manifest = req.app.get( 'base path' ) + '/_/manifest.appcache';
+        req.manifest = req.app.get( 'base path' ) + '/x/manifest.appcache';
         webform( req, res, next );
     }
 }

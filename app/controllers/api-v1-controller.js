@@ -308,7 +308,7 @@ function _generateWebformUrls( id, req ) {
             break;
         case 'all':
             // non-iframe views
-            obj.url = ( offline ) ? baseUrl + '_/' + idPartOffline : baseUrl + idPartOnline;
+            obj.url = ( offline ) ? baseUrl + 'x/' + idPartOffline : baseUrl + idPartOnline;
             obj.preview_url = baseUrl + 'preview/' + idPartOnline;
             // iframe views
             obj.iframe_url = baseUrl + IFRAMEPATH + idPartOnline;
@@ -318,9 +318,9 @@ function _generateWebformUrls( id, req ) {
             break;
         default:
             if ( iframePart ) {
-                obj.url = ( offline ) ? baseUrl + '_/' + idPartOffline : baseUrl + iframePart + idPartOnline;
+                obj.url = ( offline ) ? baseUrl + 'x/' + idPartOffline : baseUrl + iframePart + idPartOnline;
             } else {
-                obj.url = ( offline ) ? baseUrl + '_/' + idPartOffline : baseUrl + idPartOnline;
+                obj.url = ( offline ) ? baseUrl + 'x/' + idPartOffline : baseUrl + idPartOnline;
             }
             break;
     }

@@ -334,7 +334,7 @@ function _generateWebformUrls( id, req ) {
     var queryString;
     var obj = {};
     var IFRAMEPATH = 'i/';
-    var OFFLINEPATH = '_/';
+    var OFFLINEPATH = 'x/';
     var iframePart = ( req.iframe ) ? IFRAMEPATH : '';
     var protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol;
     var baseUrl = protocol + '://' + req.headers.host + req.app.get( 'base path' ) + '/';

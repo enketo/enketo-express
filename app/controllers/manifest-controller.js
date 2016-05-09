@@ -7,6 +7,8 @@ var router = express.Router();
 // var debug = require( 'debug' )( 'manifest-controller' );
 
 module.exports = function( app ) {
+    app.use( app.get( 'base path' ) + '/x/manifest.appcache*', router );
+    // legacy:
     app.use( app.get( 'base path' ) + '/_/manifest.appcache*', router );
 };
 router
@@ -33,7 +35,7 @@ function getManifest( req, res ) {
 function _getWebformHtml( req, res ) {
     return new Promise( function( resolve, reject ) {
         res.render( 'surveys/webform', {
-            manifest: req.app.get( 'base path' ) + '/_/manifest.appcache'
+            manifest: req.app.get( 'base path' ) + '/x/manifest.appcache'
         }, function( err, html ) {
             if ( err ) {
                 reject( err );
