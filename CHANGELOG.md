@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - String literals not excluded from /model/instance[1] injection.
 - Samsung S7 sms app rewrites "\_" in  http://enke.to/\_/#abcd URL. 
+- Styling issues with # markup in labels, especially in Grid theme.
 
 [1.29.0] - 2016-05-05
 ----------------------
