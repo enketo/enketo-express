@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.29.1] - 2016-05-11
 ----------------------
+##### Added
+- Czech translation.
+
 ##### Changed
 - Styling of notes (readonly questions).
 - Offline-capable URLs now use "x" instead of "_". Old URLs are still working. **WARNING: APIs return different offline-capable URLs.**

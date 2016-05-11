@@ -1,0 +1,329 @@
+{
+    "advanced": {
+        "flushdb": "Vymazat Úložiště"
+    },
+    "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "Pro přidání tohoto formuláře na Výchozí Obrazovku, klikněte na ikonu možnosti prohlížeče __image1__ a zvolte: 'Přidat na Výchozí Obrazovku'."
+            },
+            "androidfirefox": {
+                "msg": [
+                    "Chcete-li přidat tento formulář na Domovskou Obrazovku:",
+                    "1. Pro přidání této stránky do listu záložek ve Vašem Firefox prohlížeči, klikněte na ikonu nastavení __image1__ a pak na ikonu hvězdy __image2__.",
+                    "2. Otevřete váš list záložek otevřením nové stránky a kliknutím na tab Záložky.",
+                    "3. Klikněte-a-podržte na formuláři až dokud se nezobrazí vyskakovací menu.",
+                    "4. Vyberte 'Přidat na Výchozí Obrazovku'."
+                ]
+            },
+            "heading": "Přidat na Domovskou Obrazovku",
+            "iossafari": {
+                "msg": "Pro přidání tohoto formuláře na Výchozí Obrazovku, klikněte na ikonu sdílení __image1__ v pravo nahoře ve Vašem prohlížeči a vyberte možnost: '+ Přidat na Výchozí Obrazovku'."
+            }
+        },
+        "appupdated": {
+            "heading": "App Aktualizována!",
+            "msg": "Nová verze této aplikace byla stažena. Obnovte tuto stránku pro načtení aktualizované verze."
+        },
+        "default": {
+            "button": "Zavřít",
+            "heading": "Výstraha"
+        },
+        "export": {
+            "alternativequestion": "k dispozici ke stažení - online",
+            "error": {
+                "filecreatedmsg": "Nicméně, neúplný export byl přesto vytvořen.",
+                "heading": "Chyba pri Exporte",
+                "linknotcreated": "Nepodařilo se vytvořit odkaz na export pro neodeslané záznamy. Jste stále online?",
+                "msg": "Nastaly chyby při tvorbě exportu pro odeslané záznamy. Chyby: __error__"
+            },
+            "success": {
+                "heading": "Export Vytvořen",
+                "msg": "Export byl vytvořen pro všechny neodeslané záznamy patřící tomuto formuláři."
+            }
+        },
+        "formupdated": {
+            "heading": "Formulář Aktualizovaný!",
+            "msg": "Nová verze tohoto formuláře byla stažena. Obnovte tuto stránku pro načtení aktualizované verze."
+        },
+        "loaderror": {
+            "editadvice": "Doporučuje se neupravovat tenhle záznam dokud se to nevyřeší.",
+            "entryadvice": "Doporučuje se nepoužívat tento formulář pro vkládání dat dokud se to nevyřeší.",
+            "heading": "Chyba při Načítání",
+            "msg1": "Při načítání tohoto formuláře došlo k chybě.",
+            "msg2": "Prosím kontaktujte __emailLink__ s odkazem na tuto stránku a níže zobrazenou chybovou zprávou:",
+            "heading_plural": "Chyby při Načítání",
+            "msg1_plural": "Při čtení tohoto formuláře se vyskytly chyby.",
+            "msg2_plural": "Prosím kontaktujte __emailLink__ s odkazem na tuto stránku a zobrazenými chybovými zprávami:"
+        },
+        "logout": {
+            "heading": "Odhlášen",
+            "msg": "Byly jste odhlášeni."
+        },
+        "offlinesupported": {
+            "heading": "Formulář pracuje v režimu offline!",
+            "msg": [
+                "Tento formulář může být nyní načten bez internetového připojení na tomto zařízení. Vytvořte si jeho záložku pro snadný offline přístup.",
+                "Záznamy jsou automaticky ukládány ve frontě dat čekajících na odeslání v prohlížeči až do chvíle dokud není k dispozici připojení k Internetu. Když je aplikace online, záznamy budou automaticky odeslány - jeden po druhém.",
+                "Teprve po úspěšném odeslání záznamu bude tento odstraněn z fronty dat čekajících na odeslání. Můžete bezpečně zavřít prohlížeč a zařízení s daty čekajícími na odeslání. Ty budou znovu načteny při příštím načtení tohoto formuláře."
+            ]
+        },
+        "offlineunsupported": {
+            "heading": "Aplikaci nelze spustit v režimu offline",
+            "msg": "Váš prohlížeč nepodporuje offline spuštění aplikace. Můžete pokračovat na průzkum bez využití této funkce, nebo se podívejte na možnosti pro řešení tohoto problému.",
+            "negButton": "Použij",
+            "posButton": "Zobrazit možnosti"
+        },
+        "queuesubmissionsuccess": {
+            "msg": "__recordNames__ byl úspěšně odeslán",
+            "msg_plural": "__recordNames__ byly úspěšně odeslány"
+        },
+        "recordloadsuccess": {
+            "msg": "__recordName__ byl načten"
+        },
+        "recordnotfound": {
+            "msg": "Záznam se nepodařilo získat nebo neobsahuje žádná data."
+        },
+        "recordsavesuccess": {
+            "draftmsg": "Záznam uložen jako koncept.",
+            "finalmsg": "Záznam vložen do fronty k odeslání."
+        },
+        "submission": {
+            "msg": "Odesílám...",
+            "redirectmsg": "Budete automaticky přesměrováni po odeslání dat."
+        },
+        "submissionerror": {
+            "authrequiredmsg": "Přihlášení je nezbytné. Prosím přihlašte se __here__ použitím jiné záložky prohlížeče a zkuste to znovu.",
+            "fnfmsg": [
+                "Následující multimediální soubory se nepodařilo načíst: __failedFiles__. Odeslání proběhlo úspěšně bez těchto souborů.",
+                "Prosím, kontaktujte __supportEmail__ pro nahlášení chyby, a pokud je to možné vysvětlete postup jako je možné hlášení problém reprodukovat."
+            ],
+            "heading": "Odeslání Selhalo"
+        },
+        "submissionsuccess": {
+            "heading": "Odeslání proběhlo Úspěšně",
+            "msg": "Vaše data byly odeslány!",
+            "redirectmsg": "Nyní budete přesměrováni."
+        },
+        "validationerror": {
+            "msg": "Formulář obsahuje chyby. Prosím, zkontrolujte pole označená červenou barvou."
+        },
+        "validationsuccess": {
+            "heading": "OK",
+            "msg": "Formulář je validní!"
+        },
+        "xpatherror": {
+            "heading": "Chyba při vyhodnocování Vzorce",
+            "msg": "Došlo k chybě při vyhodnocování vzorce. Prosím kontaktujte __emailLink__ s touto chybou:"
+        }
+    },
+    "confirm": {
+        "autosaveload": {
+            "heading": "Nalezen Neuložený Záznam",
+            "msg": "Enketo našlo neuložený záznam. Chtěli byste nahrát tento záznam, nebo jej odstranit?",
+            "negButton": "Vymazat",
+            "posButton": "Načti Záznam"
+        },
+        "default": {
+            "heading": "Jste si jistý?",
+            "msg": "Potvrďte tuto akci prosím",
+            "negButton": "Zrušit",
+            "posButton": "Potvrdit"
+        },
+        "deleteall": {
+            "heading": "PANIKA!",
+            "msg": [
+                "Tímto odstranit všechny vaše data čekající na odeslání a vaše formuláře z úložiště prohlížeče. Data budou permanentně vymazány. Použijte tuto možnost pouze jako poslední alternativu v případě, že úložiště prohlížeče se zdá být poškozené.",
+                "Nejdřív zavřete všechny ostatní záložky prohlížeče které Enketo používá.",
+                "Tato stránka bude znovu načtená. Pokud vidíte chybovou hlášku může být nezbytné tuto akci zopakovat.",
+                "Jste si jistý že to chcete udělat?"
+            ],
+            "posButton": "Smazat Vše"
+        },
+        "discardcurrent": {
+            "heading": "Neuložené zmeny",
+            "msg": "Tento formulář má neuložené změny. Chtěli byste nahrát záznam bez uložení změn do formuláře na kterém jste dosud pracovali?",
+            "posButton": "Pokračovat bez uložení"
+        },
+        "login": {
+            "heading": "Nutné Přihlášení",
+            "msg": [
+                "Pro odeslání dat čekajících na odeslání se musíte přihlásit. Pokud tak chcete učinit nyní, budete přesměrováni, a ztratíte všechna neuložená data.",
+                "Chtěli byste se přihlásit nyní nebo později?"
+            ],
+            "negButton": "Později",
+            "posButton": "Přihlásit"
+        },
+        "print": {
+            "a4": "A4",
+            "heading": "Zvolte Nastavení Tisku",
+            "landscape": "Orientace na ležato",
+            "letter": "Dopis",
+            "msg": "Pro přípravu optimalizovaného tisku, prosím označte možnosti tisku níže",
+            "orientation": "Orientace Papíru",
+            "portrait": "Portrét",
+            "posButton": "Připravit",
+            "psize": "Velikost Papíru",
+            "reminder": "Nezapomeňte později nastavit stejná nastavení tisku v nabídce tisku prohlížeče!"
+        },
+        "save": {
+            "existingerror": "Záznam se stejným názvem nebo ID již existuje.",
+            "hint": "Tento název vám umožní snadno najít váš koncept záznamu a dokončit jej později.",
+            "msg": "Existují neuložené změny, chcete pokračovat bez jejich uložení?",
+            "name": "Název Záznamu",
+            "posButton": "Uložit & Zavřít",
+            "renamemsg": "Jste si jistý, že chcete přejmenovat __currentName__ na __newName__?",
+            "unkownerror": "Nastala neznámá chyba během pokusu uložit data."
+        }
+    },
+    "constraint": {
+        "invalid": "Hodnota není povolena",
+        "required": "Povinné pole"
+    },
+    "contact": {
+        "admin": "Obraťte se prosím na správce průzkumu.",
+        "support": "Kontaktujte __supportEmail__ prosím."
+    },
+    "enketo": {
+        "power": "Běžící na"
+    },
+    "error": {
+        "code": "Chybový Kód: __code__",
+        "dataloadfailed": "Nepodařilo se načíst data z __url__",
+        "econnrefused": "Nelze se připojit k Serveru",
+        "encryptionnotsupported": "Tento formulář vyžaduje lokální šifrování záznamů. Bohužel tato funkce zatím není podporována. Doporučujeme používat ODK Collect pro sběr dat pomocí tohoto formuláře.",
+        "instancenotfound": "Záznam není k dispozici. To může způsobené být tím že vypršel.",
+        "invalidediturl": "Neplatná URL pre úpravu",
+        "loadfailed": "Nepodařilo se načíst __resource__",
+        "notfoundinformlist": "Formulář s ID __formId__ nebyl nalezen v / formList",
+        "pagenotfound": "Stránka nebyla Nenalezena",
+        "surveyidnotactive": "Průzkum s tímto ID již není aktivní",
+        "surveyidnotfound": "Průzkum s tímto ID nebyl nalezen",
+        "unknown": "Nastala neznámá chyba"
+    },
+    "feedback": {
+        "header": "Informace"
+    },
+    "form": {
+        "chooseLanguage": "Vybrat Jazyk",
+        "logout": "odhlásit",
+        "pages": {
+            "back": "Zpět",
+            "end": "Přejít na Konec",
+            "next": "Další",
+            "return": "Návrat na Začátek"
+        },
+        "required": "požadovaný"
+    },
+    "formfooter": {
+        "savedraft": {
+            "btn": "Uložit Koncept",
+            "label": "Uložit jako Koncept"
+        },
+        "submit": {
+            "btn": "Odeslat"
+        },
+        "validate": {
+            "btn": "Ověřit"
+        }
+    },
+    "geopicker": {
+        "accuracy": "přesnost (m)",
+        "altitude": "nadmořská výška (m)",
+        "closepolygon": "uzavřený polygon",
+        "kmlcoords": "KML souřadnice",
+        "kmlpaste": "sem vložte KML souřadnice",
+        "latitude": "zeměpisná šířka (x.y °)",
+        "longitude": "zeměpisná délka (x.y °)",
+        "points": "body",
+        "searchPlaceholder": "hledání místa nebo adresy"
+    },
+    "here": "tady",
+    "home": {
+        "msg": "__appTitle__ běží! Prosím přistupujte k Enketo formulářům z instalace vašeho __serverName__."
+    },
+    "langs": {
+        "ar": "Arabština",
+        "cs": "Čeština",
+        "de": "Němčina",
+        "el": "Řečtina",
+        "en": "Angličtina",
+        "es": "Španělština",
+        "fa": "Perština",
+        "fr": "Francouzština",
+        "he": "Hebrejština",
+        "hi": "Hindština",
+        "it": "Italština",
+        "km": "Khmerština",
+        "lo": "Laoština",
+        "nl": "Holandština",
+        "no": "Norština",
+        "ro": "Rumunština",
+        "sk": "Slovenština",
+        "supported": "Podporované jazyky:",
+        "sw": "Svahilština",
+        "th": "Thajština",
+        "vi": "Vietnamština",
+        "zh": "Čínština"
+    },
+    "page": {
+        "modernbrowsers": {
+            "heading": "Moderní Prohlížeče",
+            "ie": {
+                "heading": "No nemilujte tyto zákeřné zastaralé verze Internet Exploreru?",
+                "msg": "Chápeme, že někteří lidé, zejména ti, kteří pracují pro velké byrokracie, nemají přístup k nejnovějším a nejlepším prohlížečů. Protože víme, jaký skvělý by web mohl být s těmi správnými nástroji, máme velkou empatii pro uživatele v této nešťastné situaci. Za normálních okolností bychom se snažili poskytnout řešení pro podporu některých populární zastaralých prohlížečů. Nicméně jeden z důvodů, proč Enketo existuje, je dostupnost některých moderních špičkových technologií. Bohužel, uživatelé starších prohlížečů mají tedy smůlu."
+            },
+            "msg1": "Ach! Promiňte, ale pravděpodobně jste se byli přesměrováni protože váš prohlížeč je zastaralý, nebo jej používáte v režimu 'ochrany soukromí' a tudíž jsou určité klíčové funkce nedostupné.",
+            "msg2": "Pokud používáte zastaralý prohlížeč, doporučujeme upgrade na nejnovější verzi jednoho z následujících vynikajících moderních prohlížečů:"
+        },
+        "offline": {
+            "heading": "Nelze získat přístup k požadované stránce",
+            "msg1": "Tato stránka je dostupná pouze, když je prohlížeč připojen k Internetu a server je přístupný (nebo tato stránka neexistuje)."
+        }
+    },
+    "prompt": {
+        "default": {
+            "heading": "Zadejte data"
+        },
+        "login": {
+            "heading": "Zadejte přihlašovací údaje pro __server__",
+            "password": "Heslo",
+            "remember": "Zapamatovat si na tomto počítači",
+            "submit": "Odeslat",
+            "username": "Uživatelské jméno"
+        }
+    },
+    "record-list": {
+        "export": "Exportovat",
+        "msg1": "Záznamy jsou uloženy ve vašem prohlížeči, dokud se neodešlou (i v případě, kdy vypnete počítač nebo přejdete do offline režimu).",
+        "msg2": "Záznamy ve frontě, s výjimkou těch, které jsou označeny jako koncept __icon__, jsou nahrávány automaticky na pozadí, každých 5 minut, dokud je webová stránka otevřená a připojení k internetu je k dispozici.",
+        "msg2-nodraft": "Záznamy ve frontě jsou nahrávány automaticky na pozadí každých 5 minut, dokud je webová stránka otevřená a připojení k internetu je k dispozici.",
+        "msg3": "Pokud si chcete vynutit odeslání mezi těmito automatickými pokusy, klikněte na tlačítko Nahrát.",
+        "norecords": "žádné záznamy ve frontě",
+        "title": "Fronta",
+        "upload": "Nahrát"
+    },
+    "selectpicker": {
+        "noneselected": "žádné informace",
+        "numberselected": "__number__ vybráno"
+    },
+    "store": {
+        "error": {
+            "iosusesafari": "Váš iOS prohlížeč není schopen zobrazit tento formulář. Na iOS platformě doporučujeme používat Safari.",
+            "notavailable": "Je požadovaný přístup k úložišti prohlížeče, ale to není k dispozici, je poškozen, nebo do něj nelze zapisovat. Pokud jste v režimu 'soukromého prohlížení', přepněte prosím do normálního režimu, nebo použijte jiný prohlížeč. (Error: __error__)",
+            "notsupported": "Váš prohlížeč není schopen zobrazit tento formulář. Doporučujeme používat moderní prohlížeč."
+        }
+    },
+    "submission": {
+        "http0": "Nepodařilo se (Offline?).",
+        "http2xx": "Neočekávaná odpověď při odesílání dat.",
+        "http400": "Datový server neakceptoval data.",
+        "http401": "Nastal problém při autentikaci s datovým serverem.",
+        "http403": "Není povoleno posílat data na tento datový server.",
+        "http404": "Služba pro odeslání nebyla nalezena na datovém serveru.",
+        "http413": "Data jsou příliš velké.",
+        "http4xx": "Vyskytla neznáma chyba při odeslání na datovém serveru.",
+        "http500": "Datový server vašeho formuláře nebo Engeto server je nedostupný. Zkuste to prosím později nebo kontaktujte __supportEmail__."
+    },
+    "version": "verze:"
+}
