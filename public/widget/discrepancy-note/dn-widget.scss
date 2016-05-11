@@ -1,0 +1,222 @@
+$padding: 30px;
+
+.or-comment-widget {
+    &__content{
+        @include display-flex;
+        @include flex-direction(row);
+        @include flex-wrap(wrap);
+        .question {
+            width: 100%;
+        }
+        &__query-btns {
+            @include display-flex;
+            @include flex-direction(row);
+            @include flex-wrap(nowrap);
+            @include flex(1);
+            white-space: nowrap;
+            justify-content: flex-end;
+            .btn + .btn {
+                margin-left: 20px;
+            }
+        }
+        &__btn-submit {
+            @extend .small;
+            margin-bottom: 0;
+            margin-top: 10px;
+            &.btn-default {
+                // override .question .btn-default
+                padding: 10px 20px;
+            }
+            
+        }
+        &__user {
+            @include display-flex;
+            @include flex-direction(row);
+            @include flex-wrap(wrap);
+            &__dn-assignee {
+                @include flex(1);
+                display: inline-block;
+                select {
+                    display: inline-block;
+                    margin-left: 10px;
+                    width: 200px;
+                }
+            }
+            &__dn-notify {
+                width: 120px;
+                text-align: right;
+                align-self: center;
+                display: inline-block;
+                margin-right: -10px;
+                margin-left: -10px;
+            }
+        }
+        &__history{
+            margin-bottom: -50px;
+            &.closed {
+                .btn-more-history .icon {
+                    @extend .icon-chevron-down;
+                }
+                tr + tr + tr + tr:not(:last-of-type){
+                    display:none;
+                }
+                .over {
+                    display: inline;
+                }
+            }
+            .over { 
+                display: none;
+            }
+            .btn-more-history {
+                margin-top: 10px;
+                .icon {
+                    @extend .icon-chevron-up;
+                }
+            }
+            table {
+                @include font-normal;
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed;
+            }
+            thead td {
+                padding-left: 25px;
+                width: 95px; 
+                &:first-of-type{
+                    width: 30px;
+                }
+                &:nth-of-type(2){
+                    width: auto;
+                }
+                &:nth-of-type(3){
+                    width: 140px;
+                }
+            }
+            td {
+                padding: 3px 10px 3px 0;
+                border-bottom: 1px solid $gray;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                word-break: break-word;
+                &.wrap{
+                    white-space: normal;
+                    overflow: auto;
+                    text-overflow: initial;
+                }
+            }
+            tbody tr:last-of-type td {
+                border-bottom: none;
+            }
+            tbody td[colspan="4"]{
+                text-align: right;
+            }
+        }
+        .or-appearance-dn {
+            margin-bottom: 20px;
+        }
+        .btn-dn {
+            position: absolute;
+            top: 27px;
+            right: 55px;
+            left: auto;
+            outline: 0;
+        }
+        .tooltip[data-title]:hover:after {
+            @include font-normal;
+            content: attr(data-title);
+            padding: 2px 8px;
+            color: $state-info-text;
+            position: absolute;
+            margin-top: -20px;
+            margin-left: -10px;
+            white-space: nowrap;
+            z-index: 20;
+            border-radius: 3px;
+            border: 1px solid $state-info-border;
+            background-color: $state-info-bg;
+        }
+    }
+}
+
+// legend hack
+legend .btn-dn .icon {
+    position: absolute;
+    top: -2px;
+}
+
+.btn-comment.btn-dn {
+    cursor: pointer;
+    .icon {
+        opacity: 0.9;
+        // this is the "none" state
+        @extend .fa-comment-o;
+    }
+    &.new, &.updated {
+        color: $state-dangerest-text;
+        .icon {
+            opacity: 0.5;
+            @extend .fa-comment;
+        }
+    }
+    &.invalid {
+        @include transition-fast;
+        color: $state-dangerest-text;
+        .icon {
+            font-weight: bold;
+        }
+    }
+    &.closed {
+        .icon {
+            opacity: 1;
+            @extend .fa-comment;      
+        }
+    }
+}
+
+// small screens
+@media screen and (max-width: 500px) { 
+    .or-comment-widget {
+        &__content{
+            &__history{   
+                thead td {
+                    padding-left: 15px;
+                    width: 70px; 
+                    &:nth-of-type(3){
+                        width: 80px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Right-to-left scripts
+.or[dir="rtl"] {
+    .btn-dn {
+        left: 55px;
+    }
+    .or-comment-widget {
+        &__content {
+            &__query-btns {
+                .btn + .btn {
+                    margin-left: auto;
+                    margin-right: 20px;
+                }
+            }
+            &__history{
+                tbody td[colspan="4"]{
+                    text-align: left;
+                }
+            }
+            &__user {
+                &__dn-notify {
+                    text-align: left;
+                    .option-label {
+                        margin-right: 0;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "widget": {
+        "dn": {
+            "assignto": "Assign to:",
+            "closeQueryText": "Close Query",
+            "emptyHistoryText": "No History",
+            "historyText": "History",
+            "notifyText": "Email?"
+        }
+    }
+}
