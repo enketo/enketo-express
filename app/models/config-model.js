@@ -48,7 +48,7 @@ config[ 'themes supported' ] = getThemesSupported( config[ 'themes supported' ] 
 
 // detect supported languages
 config[ 'languages supported' ] = fs.readdirSync( languagePath ).filter( function( file ) {
-    return fs.statSync( path.join( languagePath, file ) ).isDirectory();
+    return file.indexOf( '.' ) !== 0 && fs.statSync( path.join( languagePath, file ) ).isDirectory();
 } );
 
 // if necessary, correct the base path to use for all routing

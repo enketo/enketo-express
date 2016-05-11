@@ -2,6 +2,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.29.1] - 2016-05-11
+----------------------
+##### Added
+- Czech translation.
+
+##### Changed
+- Styling of notes (readonly questions).
+- Offline-capable URLs now use "x" instead of "_". Old URLs are still working. **WARNING: APIs return different offline-capable URLs.**
+- Home page layout.
+
+##### Fixed
+- String literals not excluded from /model/instance[1] injection.
+- Samsung S7 sms app rewrites "\_" in  http://enke.to/\_/#abcd URL. 
+- Styling issues with # markup in labels, especially in Grid theme.
+
 [1.29.0] - 2016-05-05
 ----------------------
 ##### Added

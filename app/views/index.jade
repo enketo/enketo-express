@@ -6,56 +6,56 @@ block style
 block content
   p= t("home.msg", {appTitle: title, serverName: openrosa})
 
-  p= t("langs.supported")
-    each lang in languages
-      case lang
-        when "en"
-          span= t("langs.en")
-        when "ar"
-          span= t("langs.ar")
-        when "fr"
-          span= t("langs.fr")
-        when "es" 
-          span= t("langs.es")
-        when "sw"
-          span= t("langs.sw")
-        when "it"
-          span= t("langs.it")
-        when "he" 
-          span= t("langs.he")
-        when "de"
-          span= t("langs.de")
-        when "hi"
-          span= t("langs.hi")
-        when "ro"
-          span= t("langs.ro")
-        when "el"
-          span= t("langs.el")
-        when "km"
-          span= t("langs.km")
-        when "th"
-          span= t("langs.th")
-        when "vi"
-          span= t("langs.vi")
-        when "fa"
-          span= t("langs.fa")
-        when "no"
-          span= t("langs.no")
-        when "lo"
-          span= t("langs.lo")
-        when "sk"
-          span= t("langs.sk")
-        when "zh"
-          span= t("langs.zh")
-        when "cs"
-          span= t("langs.cs")
-        when "nl"
-          span= t("langs.nl")
-        default
-          span.lang-placeholder
-      if languages[languages.length - 1] !== lang
-        span= ', '
-      else 
-        span= '.'
-
   p= t("version") + ' ' + version
+
+  p= t("langs.supported")
+    ul
+      each lang in languages
+        case lang
+          when "en"
+            li= t("langs.en")
+          when "ar"
+            li= t("langs.ar")
+          when "fr"
+            li= t("langs.fr")
+          when "es" 
+            li= t("langs.es")
+          when "sw"
+            li= t("langs.sw")
+          when "it"
+            li= t("langs.it")
+          when "he" 
+            li= t("langs.he")
+          when "de"
+            li= t("langs.de")
+          when "hi"
+            li= t("langs.hi")
+          when "ro"
+            li= t("langs.ro")
+          when "el"
+            li= t("langs.el")
+          when "km"
+            li= t("langs.km")
+          when "th"
+            li= t("langs.th")
+          when "vi"
+            li= t("langs.vi")
+          when "fa"
+            li= t("langs.fa")
+          when "no"
+            li= t("langs.no")
+          when "lo"
+            li= t("langs.lo")
+          when "sk"
+            li= t("langs.sk")
+          when "zh"
+            li= t("langs.zh")
+          when "cs"
+            li= t("langs.cs")
+          when "nl"
+            li= t("langs.nl")
+          when "cimode"
+            // cimode is added by i18next whitelist
+            |  
+          default
+            li= "unknown (" + lang + ")"

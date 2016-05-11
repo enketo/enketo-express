@@ -73,7 +73,7 @@ function getManifest( html1, html2, lang ) {
                 // add explicit entries in case user never lands on URL without querystring
                 // otherwise they may never get added as a Master entry
                 resources = resources.concat( [
-                    config[ 'base path' ] + '/_/'
+                    config[ 'base path' ] + '/x/'
                 ] );
 
                 // determine version
@@ -106,6 +106,7 @@ function _getManifestString( version, resources ) {
         resources.join( '\n' ) + '\n' +
         '\n' +
         'FALLBACK:\n' +
+        '/x ' + config[ 'base path' ] + '/offline\n' +
         '/_ ' + config[ 'base path' ] + '/offline\n' +
         '\n' +
         'NETWORK:\n' +
