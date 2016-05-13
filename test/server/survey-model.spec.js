@@ -456,4 +456,21 @@ describe( 'Survey Model', function() {
         } );
     } );
 
+    describe( 'creates enketoIds', function() {
+        it( 'without duplicates', function() {
+            var ids = [];
+            var duplicateIds = [];
+
+            for ( var i = 0; i < 1000; i++ ) {
+                var id = model.createEnketoId( i );
+                if ( ids.indexOf( id ) !== -1 ) {
+                    duplicateIds.push( id );
+                } else {
+                    ids.push( id );
+                }
+            }
+            expect( duplicateIds ).to.deep.equal( [] );
+        } );
+
+    } );
 } );

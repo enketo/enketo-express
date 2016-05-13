@@ -8,8 +8,8 @@ var client = require( 'redis' ).createClient( config.redis.main.port, config.red
     auth_pass: config.redis.main.password
 } );
 var pending = {};
-//randomized 'abcdefghijklmnopqrstuvwxyzABCDEFGHUJKLMNOPQRSTUVWXYZ0123456789';
-var CHARS = 'Yp8oyU0HhFQiPz9KZ1SBGvdTqCM6XDnUmkbxNOVLAsEcf5uRe347Wrtlj2awgJ';
+//randomized 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+var CHARS = 'Yp8oyU0HhFQiPz9KZ1SBGvdTqCM6XDnImkbxNOVLAsEcf5uRe347Wrtlj2awgJ';
 var debug = require( 'debug' )( 'survey-model' );
 
 // in test environment, switch to different db
@@ -61,8 +61,8 @@ function setSurvey( survey ) {
     // Set in db:
     // a) a record with key "id:"+ _createEnketoId(client.incr('surveys:counter')) and all survey info
     // b) a record with key "or:"+ _createOpenRosaKey(survey.openRosaUrl, survey.openRosaId) and the enketo_id
-    var error,
-        openRosaKey = utils.getOpenRosaKey( survey );
+    var error;
+    var openRosaKey = utils.getOpenRosaKey( survey );
 
     return new Promise( function( resolve, reject ) {
         if ( !openRosaKey ) {
@@ -325,7 +325,7 @@ function _createEnketoId( iterator ) {
 }
 
 function _num_to_base62( n ) {
-    if ( n > 62 ) {
+    if ( n > 61 ) {
         return _num_to_base62( Math.floor( n / 62 ) ) + CHARS[ n % 62 ];
     } else {
         return CHARS[ n ];
@@ -355,5 +355,6 @@ module.exports = {
     getId: getEnketoIdFromSurveyObject,
     getNumber: getNumberOfSurveys,
     getList: getListOfSurveys,
-    incrementSubmissions: incrSubmissions
+    incrementSubmissions: incrSubmissions,
+    createEnketoId: _createEnketoId
 };
