@@ -3,6 +3,7 @@
 require( './module/jquery-global' );
 require( './module/promise-by-Q' );
 require( './module/Array-from' );
+require( './module/Array-includes' );
 
 var $ = require( 'jquery' );
 var gui = require( './module/gui' );

@@ -28,7 +28,7 @@
         "compression": "1.x.x",
         "cookie-parser": "1.4.x",
         "csurf": "1.8.x",
-        "db.js": "0.13.2",
+        "db.js": "0.15.0",
         "debug": "2.x.x",
         "enketo-core": "4.7.5",
         "enketo-transformer": "1.8.0",
