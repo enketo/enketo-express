@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.29.2] - 2016-05-14
+----------------------
+##### Changed
+- Comment widget styling improvements.
+
+##### Fixed
+- Not showing when comment question is in invalid state.
+- Duplicate Enketo Ids are issued. **WARNING: This is a critical fix. [Recommended to deploy immediately!](https://github.com/kobotoolbox/enketo-express/blob/master/doc/duplicates.md)**
+- Unfixable state of surveys with duplicate Enketo Id. ([Tool](https://github.com/kobotoolbox/enketo-express/blob/master/doc/duplicates.md) added to fix) **
+
 [1.29.1] - 2016-05-11
 ----------------------
 ##### Added
