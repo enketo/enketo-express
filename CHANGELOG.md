@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.29.3] - 2016-05-17
+----------------------
+##### Fixed
+- Extremely slow loading when XForm model contains many nodes.
+
 [1.29.2] - 2016-05-14
 ----------------------
 ##### Changed
