@@ -50,7 +50,7 @@ module.exports = function( grunt ) {
                 tasks: [ 'client-config-file:create' ]
             },
             sass: {
-                files: [ 'app/views/styles/**/*.scss' ],
+                files: [ 'app/views/styles/**/*.scss', 'public/widget/**/*.scss' ],
                 tasks: [ 'sass' ],
                 options: {
                     spawn: false,
@@ -69,7 +69,7 @@ module.exports = function( grunt ) {
                 tasks: [ 'shell:translation' ]
             },
             js: {
-                files: [ 'public/js/src/**/*.js' ],
+                files: [ 'public/js/src/**/*.js', 'public/widget/**/*.js' ],
                 tasks: [ 'js-dev' ],
                 options: {
                     spawn: false,

@@ -17,7 +17,8 @@ gulp.task( 'default', function() {
             '../app/lib/communicator/**/*.js',
             '../app/controllers/**/*.js',
             '../app/models/**/*.js',
-            '../node_modules/enketo-core/src/**/*.js'
+            '../node_modules/enketo-core/src/**/*.js',
+            '../public/widget/**/*.js'
         ] )
         .pipe( i18next( {
             locales: [ 'en' ],
