@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Readonly select widgets are not disabled.
+- Repeat buttons overlapping borders in Grid theme.
 
 [1.29.3] - 2016-05-17
 ----------------------
