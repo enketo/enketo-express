@@ -106,12 +106,6 @@ settings.enketoId = _getEnketoId( '\/' + settings.enketoIdPrefix, window.locatio
 // TODO: check for manifest attribute on html element instead?
 settings.offline = !( new RegExp( '\/' + settings.enketoIdPrefix ).test( window.location.pathname ) ) && !!window.location.hash;
 
-
-// disable save-as-draft (overriding everything) if IE is used
-if ( sniffer.browser.isIe() ) {
-    settings.draftEnabled = false;
-}
-
 function _getEnketoId( prefix, haystack ) {
     var id = new RegExp( prefix ).test( haystack ) ? haystack.substring( haystack.lastIndexOf( prefix ) + prefix.length ) : null;
     return id;
