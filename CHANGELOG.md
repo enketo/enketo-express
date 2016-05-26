@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased] 
+[1.29.4] - 2016-05-26 
 ---------------------
 ##### Changed
 - Comment widget styling improvements.
@@ -10,6 +10,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Readonly select widgets are not disabled.
 - Repeat buttons overlapping borders in Grid theme.
+- IE11 Record loading "Interface not supported" error.
+- IE11 Namespace errors when non-native XPath evaluator is used for namespaced nodes.
 
 [1.29.3] - 2016-05-17
 ----------------------
