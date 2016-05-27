@@ -21,7 +21,8 @@ var survey = {
     serverUrl: settings.serverUrl,
     xformId: settings.xformId,
     xformUrl: settings.xformUrl,
-    instanceId: settings.instanceId
+    instanceId: settings.instanceId,
+    noHashes: !settings.offline
 };
 
 translator.init( survey )

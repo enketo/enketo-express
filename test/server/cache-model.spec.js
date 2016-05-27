@@ -31,7 +31,9 @@ describe( 'Cache Model', function() {
                 hash: 'abc'
             },
             manifest: [ {
-                some: 'manifest'
+                filename: 'users.csv',
+                hash: 'md5:1111',
+                downloadUrl: 'https://my.openrosa.server/xformsMedia/123456/123456.csv',
             } ],
             form: '<form>some form</form>',
             model: '<data>some model</data>'
@@ -197,27 +199,60 @@ describe( 'Cache Model', function() {
 
             return Promise.all( [
                 expect( setPromise ).to.eventually.deep.equal( survey ),
-                expect( checkPromise ).to.eventually.to.eventually.deep.equal( false )
+                expect( checkPromise ).to.eventually.deep.equal( false )
             ] );
 
         } );
-        it( 'returns false when the cache is outdated (manifest removed)', function() {
+        it( 'returns true when the XForm hash remains unchanged but the manifest hash of a mediaFile changes', function() {
             var setPromise;
             var checkPromise;
             var updatedSurvey;
 
             updatedSurvey = JSON.parse( JSON.stringify( survey ) );
+            updatedSurvey.manifest[ 0 ].hash = 'md5:changed';
             setPromise = model.set( survey );
-            delete updatedSurvey.manifest;
             checkPromise = setPromise.then( function() {
                 return model.check( updatedSurvey );
             } );
 
             return Promise.all( [
                 expect( setPromise ).to.eventually.deep.equal( survey ),
-                expect( checkPromise ).to.eventually.to.eventually.deep.equal( false )
+                expect( checkPromise ).to.eventually.equal( true )
             ] );
+        } );
+        it( 'returns false when the XForm hash changes', function() {
+            var setPromise;
+            var checkPromise;
+            var updatedSurvey;
 
+            updatedSurvey = JSON.parse( JSON.stringify( survey ) );
+            setPromise = model.set( survey );
+            updatedSurvey.info.hash = 'def';
+            checkPromise = setPromise.then( function() {
+                return model.check( updatedSurvey );
+            } );
+
+            return Promise.all( [
+                expect( setPromise ).to.eventually.deep.equal( survey ),
+                expect( checkPromise ).to.eventually.deep.equal( false )
+            ] );
+        } );
+        it( 'returns false when the XForm hash remains unchanged but the URL of a mediaFile changes', function() {
+            var setPromise;
+            var checkPromise;
+            var updatedSurvey;
+
+            updatedSurvey = JSON.parse( JSON.stringify( survey ) );
+            updatedSurvey.manifest[ 0 ].downloadUrl = 'http://a-new-url.com';
+            setPromise = model.set( survey );
+            checkPromise = setPromise.then( function() {
+                return model.check( updatedSurvey );
+            } );
+
+            return Promise.all( [
+                expect( setPromise ).to.eventually.deep.equal( survey ),
+                expect( checkPromise ).to.eventually.equal( false )
+            ] );
         } );
         it( 'returns null when instance record not cached', function() {
             survey.openRosaId = 'non-existing';
@@ -225,6 +260,111 @@ describe( 'Cache Model', function() {
         } );
         it( 'returns true when the cache is existing and up-to-date', function() {
             return expect( model.set( survey ).then( model.check ) ).to.eventually.deep.equal( true );
+        } );
+    } );
+
+
+
+    describe( 'getHashes: when obtaining the hashes of a current cached survey', function() {
+        it( 'returns a 400 error when openRosaId is missing', function() {
+            delete survey.openRosaId;
+            return expect( model.getHashes( survey ) ).to.eventually.be.rejected
+                .and.to.have.property( 'status' ).that.equals( 400 );
+        } );
+        it( 'returns a 400 error when openRosaServer is missing', function() {
+            delete survey.openRosaServer;
+            return expect( model.getHashes( survey ) ).to.eventually.be.rejected
+                .and.to.have.property( 'status' ).that.equals( 400 );
+        } );
+        it( 'returns null when survey is not cached', function() {
+            survey.openRosaId = 'non-existing-at-all';
+            return expect( model.getHashes( survey ) ).to.eventually.deep.equal( null );
+        } );
+        it( 'returns the hashes when a cached survey is available', function() {
+            var getPromise = model.set( survey ).then( model.getHashes );
+
+            return expect( getPromise ).to.eventually.have.property( 'formHash' ).that.equals( 'abc' );
+        } );
+        it( 'returns a different formHash when only the XForm hash has been updated', function() {
+            var getHashes1;
+            var getHashes2;
+            var expectedMediaUrlHash = '125d07a4b194812b6dd23be62e60f846';
+            var updatedSurvey = JSON.parse( JSON.stringify( survey ) );
+
+            getHashes1 = model.set( survey ).then( function( s ) {
+                delete s.info;
+                delete s.manifest;
+                return model.getHashes( s );
+            } );
+
+            updatedSurvey.info.hash = 'def';
+
+            getHashes2 = getHashes1.
+            then( function() {
+                    return model.set( updatedSurvey );
+                } )
+                .then( function( s ) {
+                    delete s.info;
+                    delete s.manifest;
+                    return model.getHashes( s );
+                } );
+
+            return Promise.all( [
+                expect( getHashes1 ).to.eventually.have.property( 'formHash' ).that.equals( 'abc' ),
+                expect( getHashes1 ).to.eventually.have.property( 'mediaUrlHash' ).that.equals( expectedMediaUrlHash ),
+
+                expect( getHashes2 ).to.eventually.have.property( 'formHash' ).that.equals( 'def' ),
+                expect( getHashes2 ).to.eventually.have.property( 'mediaUrlHash' ).that.equals( expectedMediaUrlHash ),
+            ] );
+        } );
+        it( 'returns the same mediaUrl hash when manifest resource md5 has been updated', function() {
+            var getHashes1;
+            var getHashes2;
+            var expectedFormHash = 'abc';
+            var expectedMediaUrlHash = '125d07a4b194812b6dd23be62e60f846';
+            var updatedSurvey = JSON.parse( JSON.stringify( survey ) );
+
+            getHashes1 = model.set( survey ).then( model.getHashes );
+
+            updatedSurvey.manifest[ 0 ].hash = 'def';
+
+            getHashes2 = getHashes1.
+            then( function() {
+                    return model.set( updatedSurvey );
+                } )
+                .then( model.getHashes );
+
+            return Promise.all( [
+                expect( getHashes1 ).to.eventually.have.property( 'formHash' ).that.equals( expectedFormHash ),
+                expect( getHashes1 ).to.eventually.have.property( 'mediaUrlHash' ).that.equals( expectedMediaUrlHash ),
+
+                expect( getHashes2 ).to.eventually.have.property( 'formHash' ).that.equals( expectedFormHash ),
+                expect( getHashes2 ).to.eventually.have.property( 'mediaUrlHash' ).that.equals( expectedMediaUrlHash ),
+            ] );
+        } );
+        it( 'returns a different mediaUrlHash when a manifest resource downloadUrl has been updated', function() {
+            var getHashes1;
+            var getHashes2;
+            var expectedFormHash = 'abc';
+            var updatedSurvey = JSON.parse( JSON.stringify( survey ) );
+
+            getHashes1 = model.set( survey ).then( model.getHashes );
+
+            updatedSurvey.manifest[ 0 ].downloadUrl = 'https://a-changed-url.com';
+
+            getHashes2 = getHashes1.
+            then( function() {
+                    return model.set( updatedSurvey );
+                } )
+                .then( model.getHashes );
+
+            return Promise.all( [
+                expect( getHashes1 ).to.eventually.have.property( 'formHash' ).that.equals( expectedFormHash ),
+                expect( getHashes1 ).to.eventually.have.property( 'mediaUrlHash' ).that.equals( '125d07a4b194812b6dd23be62e60f846' ),
+
+                expect( getHashes2 ).to.eventually.have.property( 'formHash' ).that.equals( expectedFormHash ),
+                expect( getHashes2 ).to.eventually.have.property( 'mediaUrlHash' ).that.equals( '0a0c98112322a6a65835d8cd1955f871' ),
+            ] );
         } );
     } );
 

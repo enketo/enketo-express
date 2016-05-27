@@ -314,7 +314,6 @@ function _simplifyFormObj( formObj ) {
             formObj[ prop ] = formObj[ prop ][ 0 ].toString();
         }
     }
-    formObj.manifestUrl = formObj.manifestUrl || null;
 
     return formObj;
 }
