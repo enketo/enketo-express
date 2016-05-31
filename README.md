@@ -42,7 +42,7 @@ See [this tutorial](http://blog.enketo.org/install-enketo-production-ubuntu/) fo
 
 ### How to configure
 
-All configuration is done in config/config.json. Strictly speaking, this file only has to contain the [default properties](./config/default-config.json) that you'd like to override, but it might be safer to include all properties. The configuration items have self-explanatory names and helpful sample values. After editing the configuration, the app will need to be restarted.
+All configuration is done in config/config.json. Strictly speaking, this file only has to contain the [default properties](./config/default-config.json) that you'd like to override, but it is safer to include all properties, to avoid surprises when the default configuration changes. After editing the configuration, the app will need to be restarted.
 
 The default production configuration includes 2 redis instances. You can **greatly simplify installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you might find the vagrant setup steps in [bootstrap.sh](./setup/bootstrap.sh) useful.
 
@@ -55,7 +55,7 @@ To configure your own custom external authentication also see [this section](#au
 
 **Always** use the API to obtain webform URLs. Never try to craft or manipulate Enketo webform URLs yourself. This will make your Enketo integration future proof in case the URL structure changes. The API is stable, but webform URLs definitely are not.
 
-The API is accessible on **/api/v2** and **/api/v1**. See [documentation](http://apidocs.enketo.org) on how to use it.
+The API is accessible on **/api/v2** and **/api/v1**. See the [documentation](http://apidocs.enketo.org) on how to use it.
 
 
 ### How to run
@@ -86,7 +86,7 @@ The easiest way to start the app in development and debugging mode with liverelo
 
 Only the latest modern browser versions on Windows, OS X, Linux, Android and iOS are officially supported. Chrome or Firefox are the best browsers on all platforms except on iOS. On iOS there are no modern browsers due to Apple's restrictions on third party browsers, but Safari is the least bad option.
 
-Saving as draft and editing of existing records is not supported by Internet Explorer 11. That browser also has some styling degradations that are considered acceptable.
+Internet Explorer 11 is still supported has some styling degradations that are considered acceptable. This browser is not recommended.
 
 **Enketo endeavors to show a helpful (multi-lingual) error message on unsupported browsers when the form is loaded to avoid serious issues.**
 

@@ -14,7 +14,6 @@
 * :white_check_mark: Enketo Express supports the pulldata() function (if Pyxform version after Sept 7th was used)
 * :white_check_mark: Enketo Express validates each page in pages mode before a user can go to the next page
 * :white_check_mark: Enketo Express includes an analog scale widget
-* :x: Enketo Express Enketo Express has a degraded experience in Internet Explorer 11 (no saving-as-drafts, no editing). Everything does work fine in Microsoft Edge of course.
 * :white_check_mark: Enketo Express has more useful cross-browser exports including media files, in the ODK format
 * :x: Enketo Express has no [Formtester](https://enketo.org/formtester) app (planning to integrate this functionality in the form previews - it helps to let us know if this is important to you)
 * :x: Enketo Express has no [Forms](https://enketo.org/forms) app (you do not need this)
