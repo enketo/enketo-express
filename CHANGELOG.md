@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Added
 - Support for user-specific dynamic external data documents.
+- Widgets now have access to model's evaluate function.
 
 ##### Changed
 - Updated Persian, Dutch and Czech translations.
