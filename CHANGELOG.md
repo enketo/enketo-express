@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Support for user-specific dynamic external data documents.
 
+##### Changed
+- Updated Persian, Dutch and Czech translations.
+
 [1.29.4] - 2016-05-26 
 ---------------------
 ##### Changed
