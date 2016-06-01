@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Added
+- Support for user-specific dynamic external data documents.
+- Widgets now have access to model's evaluate function.
+
+##### Changed
+- Updated Persian, Dutch and Czech translations.
+
 [1.29.4] - 2016-05-26 
 ---------------------
 ##### Changed

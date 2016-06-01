@@ -333,7 +333,8 @@ function getFormParts( props ) {
                     enketoId: props.enketoId,
                     serverUrl: props.serverUrl,
                     xformId: props.xformId,
-                    xformUrl: props.xformUrl
+                    xformUrl: props.xformUrl,
+                    noHashes: props.noHashes || false
                 }
             } )
             .done( function( data ) {

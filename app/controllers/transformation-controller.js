@@ -41,9 +41,6 @@ function getSurveyParts( req, res, next ) {
 
     _getSurveyParams( req )
         .then( function( survey ) {
-            // store a copy of the bare survey object
-            surveyBare = JSON.parse( JSON.stringify( survey ) );
-
             if ( survey.info ) {
                 _getFormDirectly( survey )
                     .then( function( survey ) {
@@ -54,19 +51,17 @@ function getSurveyParts( req, res, next ) {
                 _authenticate( survey )
                     .then( _getFormFromCache )
                     .then( function( result ) {
-                        if ( result ) {
-                            // immediately serve from cache without first checking for updates
-                            _respond( res, result );
-                            // update cache if necessary, asynchronously AFTER responding
-                            // This is the ONLY mechanism by with an online-only form will be updated
-                            _updateCache( surveyBare );
+                        if ( result && survey.noHashes ) {
+                            _updateCache( result );
+                            return result;
+                        } else if ( result ) {
+                            return _updateCache( result );
                         } else {
-                            _updateCache( surveyBare )
-                                .then( function( survey ) {
-                                    _respond( res, survey );
-                                } )
-                                .catch( next );
+                            return _updateCache( survey );
                         }
+                    } )
+                    .then( function( result ) {
+                        _respond( res, result );
                     } )
                     .catch( next );
             }
@@ -86,9 +81,7 @@ function getSurveyHash( req, res, next ) {
         .then( function( survey ) {
             return cacheModel.getHashes( survey );
         } )
-        .then( function( survey ) {
-            return _updateCache( survey );
-        } )
+        .then( _updateCache )
         .then( function( survey ) {
             if ( survey.hasOwnProperty( 'credentials' ) ) {
                 delete survey.credentials;
@@ -125,14 +118,20 @@ function _updateCache( survey ) {
         .then( cacheModel.check )
         .then( function( upToDate ) {
             if ( !upToDate ) {
-                delete survey.formHash;
-                delete survey.mediaHash;
+                delete survey.xform;
+                delete survey.form;
+                delete survey.model;
                 delete survey.xslHash;
+                delete survey.mediaHash;
+                delete survey.mediaUrlHash;
+                delete survey.formHash;
+                delete survey.media;
                 return _getFormDirectly( survey )
                     .then( cacheModel.set );
             }
             return survey;
         } )
+        .then( _addMediaHashes )
         .catch( function( error ) {
             if ( error.status === 401 || error.status === 404 ) {
                 cacheModel.flush( survey );
@@ -142,6 +141,11 @@ function _updateCache( survey ) {
 
             throw error;
         } );
+}
+
+function _addMediaHashes( survey ) {
+    survey.mediaHash = utils.getXformsManifestHash( survey.manifest, 'all' );
+    return Promise.resolve( survey );
 }
 
 /**
@@ -228,12 +232,14 @@ function _getSurveyParams( req ) {
     var urlObj;
     var domain;
     var params = req.body;
+    var noHashes = ( params.noHashes === 'true' );
 
     if ( params.enketoId ) {
         return surveyModel.get( params.enketoId )
             .then( account.check )
             .then( _checkQuota )
             .then( function( survey ) {
+                survey.noHashes = noHashes;
                 return _setCookieAndCredentials( survey, req );
             } );
     } else if ( params.serverUrl && params.xformId ) {
@@ -243,6 +249,7 @@ function _getSurveyParams( req ) {
             } )
             .then( _checkQuota )
             .then( function( survey ) {
+                survey.noHashes = noHashes;
                 return _setCookieAndCredentials( survey, req );
             } );
     } else if ( params.xformUrl ) {
@@ -268,6 +275,7 @@ function _getSurveyParams( req ) {
                 } );
             } )
             .then( function( survey ) {
+                survey.noHashes = noHashes;
                 return _setCookieAndCredentials( survey, req );
             } );
     } else {

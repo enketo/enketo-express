@@ -325,5 +325,10 @@
         "http4xx": "Onbekend ontvangst probleem op de data server.",
         "http500": "De data server voor deze enquete is niet bereikbaar. Probeer het later nog een keer of contacteer __supportEmail__."
     },
-    "version": "versie:"
+    "version": "versie:",
+    "widget": {
+        "comment": {
+            "update": "Bijwerken"
+        }
+    }
 }

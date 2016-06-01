@@ -17,6 +17,25 @@ function getOpenRosaKey( survey, prefix ) {
     return prefix + cleanUrl( survey.openRosaServer ) + ',' + survey.openRosaId.trim();
 }
 
+function getXformsManifestHash( manifest, type ) {
+    var hash = '';
+    var filtered;
+
+    if ( !manifest || manifest.length === 0 ) {
+        return hash;
+    }
+    if ( type === 'all' ) {
+        return md5( JSON.stringify( manifest ) );
+    }
+    if ( type ) {
+        filtered = manifest.map( function( mediaFile ) {
+            return mediaFile[ type ];
+        } );
+        return md5( JSON.stringify( filtered ) );
+    }
+    return hash;
+}
+
 /**
  * cleans a Server URL so it becomes useful as a db key
  * It strips the protocol, removes a trailing slash, removes www, and converts to lowercase
@@ -101,6 +120,7 @@ function areOwnPropertiesEqual( a, b ) {
 
 module.exports = {
     getOpenRosaKey: getOpenRosaKey,
+    getXformsManifestHash: getXformsManifestHash,
     cleanUrl: cleanUrl,
     isValidUrl: isValidUrl,
     md5: md5,

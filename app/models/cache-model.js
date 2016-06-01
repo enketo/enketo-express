@@ -46,7 +46,7 @@ function getSurvey( survey ) {
                     survey.form = cacheObj.form;
                     survey.model = cacheObj.model;
                     survey.formHash = cacheObj.formHash;
-                    survey.mediaHash = cacheObj.mediaHash;
+                    survey.mediaUrlHash = cacheObj.mediaUrlHash;
                     survey.xslHash = cacheObj.xslHash;
                     resolve( survey );
                 }
@@ -73,14 +73,14 @@ function getSurveyHashes( survey ) {
         } else {
             key = _getKey( survey );
 
-            client.hmget( key, [ 'formHash', 'mediaHash', 'xslHash' ], function( error, hashArr ) {
+            client.hmget( key, [ 'formHash', 'mediaUrlHash', 'xslHash' ], function( error, hashArr ) {
                 if ( error ) {
                     reject( error );
-                } else if ( !hashArr ) {
+                } else if ( !hashArr || !hashArr[ 0 ] || !hashArr[ 2 ] ) {
                     resolve( null );
                 } else {
                     survey.formHash = hashArr[ 0 ];
-                    survey.mediaHash = hashArr[ 1 ];
+                    survey.mediaUrlHash = hashArr[ 1 ];
                     survey.xslHash = hashArr[ 2 ];
                     resolve( survey );
                 }
@@ -127,12 +127,15 @@ function isCacheUpToDate( survey ) {
                     // Adding the hashes to the referenced survey object can be efficient, since this object 
                     // is passed around. The hashes may therefore already have been calculated 
                     // when setting the cache later on.
-                    // mediaHash can be "null" in Redis and null in reality so it is cast to a string
+                    // Note that this server cache only cares about media URLs, not media content.
+                    // This allows the same cache to be used for a form for the OpenRosa server serves different media content,
+                    // e.g. based on the user credentials.
                     _addHashes( survey );
-                    if ( cacheObj.formHash !== survey.formHash || cacheObj.mediaHash !== String( survey.mediaHash ) || cacheObj.xslHash !== survey.xslHash ) {
+                    if ( cacheObj.formHash !== survey.formHash || cacheObj.mediaUrlHash !== String( survey.mediaUrlHash ) || cacheObj.xslHash !== survey.xslHash ) {
                         debug( 'cache is obsolete' );
                         resolve( false );
                     } else {
+                        debug( 'cache is up to date' );
                         resolve( true );
                     }
                 }
@@ -160,7 +163,7 @@ function setSurvey( survey ) {
             _addHashes( survey );
             obj = {
                 formHash: survey.formHash,
-                mediaHash: survey.mediaHash,
+                mediaUrlHash: survey.mediaUrlHash,
                 xslHash: survey.xslHash,
                 form: survey.form,
                 model: survey.model
@@ -205,8 +208,9 @@ function flushSurvey( survey ) {
                     delete survey.form;
                     delete survey.model;
                     delete survey.formHash;
-                    delete survey.xlsHash;
+                    delete survey.xslHash;
                     delete survey.mediaHash;
+                    delete survey.mediaUrlHash;
                     resolve( survey );
                 }
             } );
@@ -257,7 +261,10 @@ function _getKey( survey ) {
  */
 function _addHashes( survey ) {
     survey.formHash = survey.formHash || survey.info.hash;
-    survey.mediaHash = survey.mediaHash || ( ( survey.manifest && survey.manifest.length > 0 ) ? utils.md5( JSON.stringify( survey.manifest ) ) : null );
+    // The mediaUrlHash is generated from the downloadUrls in the manifest. This is used for the server cache
+    // which only needs updating if URLs change. It should never update when only the media content changes. 
+    // This allows using dynamic externa data with user-specific content.
+    survey.mediaUrlHash = survey.mediaUrlHash || utils.getXformsManifestHash( survey.manifest, 'downloadUrl' );
     survey.xslHash = survey.xslHash || transformer.version;
 }
 

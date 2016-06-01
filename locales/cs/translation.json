@@ -13,7 +13,7 @@
                     "1. Pro přidání této stránky do listu záložek ve Vašem Firefox prohlížeči, klikněte na ikonu nastavení __image1__ a pak na ikonu hvězdy __image2__.",
                     "2. Otevřete váš list záložek otevřením nové stránky a kliknutím na tab Záložky.",
                     "3. Klikněte-a-podržte na formuláři až dokud se nezobrazí vyskakovací menu.",
-                    "4. Vyberte 'Přidat na Výchozí Obrazovku'."
+                    "4. Vyberte 'Přidat na Domovskou Obrazovku'."
                 ]
             },
             "heading": "Přidat na Domovskou Obrazovku",
@@ -33,9 +33,9 @@
             "alternativequestion": "k dispozici ke stažení - online",
             "error": {
                 "filecreatedmsg": "Nicméně, neúplný export byl přesto vytvořen.",
-                "heading": "Chyba pri Exporte",
+                "heading": "Chyba při exportu",
                 "linknotcreated": "Nepodařilo se vytvořit odkaz na export pro neodeslané záznamy. Jste stále online?",
-                "msg": "Nastaly chyby při tvorbě exportu pro odeslané záznamy. Chyby: __error__"
+                "msg": "Nastaly chyby při tvorbě exportu pro neodeslané záznamy. Chyby: __error__"
             },
             "success": {
                 "heading": "Export Vytvořen",
@@ -47,30 +47,30 @@
             "msg": "Nová verze tohoto formuláře byla stažena. Obnovte tuto stránku pro načtení aktualizované verze."
         },
         "loaderror": {
-            "editadvice": "Doporučuje se neupravovat tenhle záznam dokud se to nevyřeší.",
-            "entryadvice": "Doporučuje se nepoužívat tento formulář pro vkládání dat dokud se to nevyřeší.",
+            "editadvice": "Doporučuje se neupravovat tenhle záznam dokud to nebude vyřešeno.",
+            "entryadvice": "Nedoporučuje se používat tento formulář pro vkládání dat dokud se to nevyřeší.",
             "heading": "Chyba při Načítání",
             "msg1": "Při načítání tohoto formuláře došlo k chybě.",
             "msg2": "Prosím kontaktujte __emailLink__ s odkazem na tuto stránku a níže zobrazenou chybovou zprávou:",
             "heading_plural": "Chyby při Načítání",
-            "msg1_plural": "Při čtení tohoto formuláře se vyskytly chyby.",
+            "msg1_plural": "Při načítání tohoto formuláře se vyskytly chyby.",
             "msg2_plural": "Prosím kontaktujte __emailLink__ s odkazem na tuto stránku a zobrazenými chybovými zprávami:"
         },
         "logout": {
             "heading": "Odhlášen",
-            "msg": "Byly jste odhlášeni."
+            "msg": "Byli jste odhlášeni."
         },
         "offlinesupported": {
             "heading": "Formulář pracuje v režimu offline!",
             "msg": [
                 "Tento formulář může být nyní načten bez internetového připojení na tomto zařízení. Vytvořte si jeho záložku pro snadný offline přístup.",
-                "Záznamy jsou automaticky ukládány ve frontě dat čekajících na odeslání v prohlížeči až do chvíle dokud není k dispozici připojení k Internetu. Když je aplikace online, záznamy budou automaticky odeslány - jeden po druhém.",
+                "Záznamy jsou automaticky ukládány a čekají na odeslání v prohlížeči až do chvíle, dokud není k dispozici připojení k Internetu. Když je aplikace online, záznamy budou automaticky odeslány - jeden po druhém.",
                 "Teprve po úspěšném odeslání záznamu bude tento odstraněn z fronty dat čekajících na odeslání. Můžete bezpečně zavřít prohlížeč a zařízení s daty čekajícími na odeslání. Ty budou znovu načteny při příštím načtení tohoto formuláře."
             ]
         },
         "offlineunsupported": {
             "heading": "Aplikaci nelze spustit v režimu offline",
-            "msg": "Váš prohlížeč nepodporuje offline spuštění aplikace. Můžete pokračovat na průzkum bez využití této funkce, nebo se podívejte na možnosti pro řešení tohoto problému.",
+            "msg": "Váš prohlížeč nepodporuje spuštění této aplikace v offline režimu. Můžete pokračovat na průzkum bez využití této funkce, nebo se podívejte na možnosti pro řešení tohoto problému.",
             "negButton": "Použij",
             "posButton": "Zobrazit možnosti"
         },
@@ -90,7 +90,7 @@
         },
         "submission": {
             "msg": "Odesílám...",
-            "redirectmsg": "Budete automaticky přesměrováni po odeslání dat."
+            "redirectmsg": "Po odeslání dat budete automaticky přesměrováni."
         },
         "submissionerror": {
             "authrequiredmsg": "Přihlášení je nezbytné. Prosím přihlašte se __here__ použitím jiné záložky prohlížeče a zkuste to znovu.",
@@ -134,9 +134,9 @@
             "heading": "PANIKA!",
             "msg": [
                 "Tímto odstranit všechny vaše data čekající na odeslání a vaše formuláře z úložiště prohlížeče. Data budou permanentně vymazány. Použijte tuto možnost pouze jako poslední alternativu v případě, že úložiště prohlížeče se zdá být poškozené.",
-                "Nejdřív zavřete všechny ostatní záložky prohlížeče které Enketo používá.",
-                "Tato stránka bude znovu načtená. Pokud vidíte chybovou hlášku může být nezbytné tuto akci zopakovat.",
-                "Jste si jistý že to chcete udělat?"
+                "Nejdřív zavřete všechny ostatní záložky prohlížeče, které Enketo používá.",
+                "Tato stránka bude znovu načtena. Pokud vidíte chybovou hlášku, může být nezbytné tuto akci zopakovat.",
+                "Jste si jisti, že to chcete udělat?"
             ],
             "posButton": "Smazat Vše"
         },
@@ -148,7 +148,7 @@
         "login": {
             "heading": "Nutné Přihlášení",
             "msg": [
-                "Pro odeslání dat čekajících na odeslání se musíte přihlásit. Pokud tak chcete učinit nyní, budete přesměrováni, a ztratíte všechna neuložená data.",
+                "Pro odeslání dat čekajících na zpracování se musíte přihlásit. Pokud tak chcete učinit nyní, budete přesměrováni a ztratíte všechna neuložená data.",
                 "Chtěli byste se přihlásit nyní nebo později?"
             ],
             "negButton": "Později",
@@ -172,7 +172,7 @@
             "msg": "Existují neuložené změny, chcete pokračovat bez jejich uložení?",
             "name": "Název Záznamu",
             "posButton": "Uložit & Zavřít",
-            "renamemsg": "Jste si jistý, že chcete přejmenovat __currentName__ na __newName__?",
+            "renamemsg": "Jste si jistí, že chcete přejmenovat __currentName__ na __newName__?",
             "unkownerror": "Nastala neznámá chyba během pokusu uložit data."
         }
     },
@@ -192,8 +192,8 @@
         "dataloadfailed": "Nepodařilo se načíst data z __url__",
         "econnrefused": "Nelze se připojit k Serveru",
         "encryptionnotsupported": "Tento formulář vyžaduje lokální šifrování záznamů. Bohužel tato funkce zatím není podporována. Doporučujeme používat ODK Collect pro sběr dat pomocí tohoto formuláře.",
-        "instancenotfound": "Záznam není k dispozici. To může způsobené být tím že vypršel.",
-        "invalidediturl": "Neplatná URL pre úpravu",
+        "instancenotfound": "Záznam není k dispozici. To může být způsobené tím, že vypršel.",
+        "invalidediturl": "Neplatná URL pro úpravu",
         "loadfailed": "Nepodařilo se načíst __resource__",
         "notfoundinformlist": "Formulář s ID __formId__ nebyl nalezen v / formList",
         "pagenotfound": "Stránka nebyla Nenalezena",
@@ -230,7 +230,7 @@
     "geopicker": {
         "accuracy": "přesnost (m)",
         "altitude": "nadmořská výška (m)",
-        "closepolygon": "uzavřený polygon",
+        "closepolygon": "uzavřít polygon",
         "kmlcoords": "KML souřadnice",
         "kmlpaste": "sem vložte KML souřadnice",
         "latitude": "zeměpisná šířka (x.y °)",
@@ -325,5 +325,10 @@
         "http4xx": "Vyskytla neznáma chyba při odeslání na datovém serveru.",
         "http500": "Datový server vašeho formuláře nebo Engeto server je nedostupný. Zkuste to prosím později nebo kontaktujte __supportEmail__."
     },
-    "version": "verze:"
+    "version": "verze:",
+    "widget": {
+        "comment": {
+            "update": "Update"
+        }
+    }
 }
