@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Changed
 - Updated Persian, Dutch and Czech translations.
+- When requesting /formList, add formID query parameter (for performance).
 
 [1.29.4] - 2016-05-26 
 ---------------------
