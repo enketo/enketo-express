@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.30.0] - 2016-06-08
 ---------------------
 ##### Added
 - Support for user-specific dynamic external data documents.
@@ -11,6 +11,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Updated Persian, Dutch and Czech translations.
 - When requesting /formList, add formID query parameter (for performance).
+- Comment widget now shown below linked question.
+- Comment widget automatically focuses on comment input.
 
 [1.29.4] - 2016-05-26 
 ---------------------
