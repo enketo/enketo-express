@@ -2,7 +2,7 @@
     "name": "enketo-express",
     "description": "Webforms evolved.",
     "homepage": "https://enketo.org",
-    "version": "1.29.4",
+    "version": "1.30.0",
     "main": "./app.js",
     "repository": {
         "type": "git",
@@ -30,7 +30,7 @@
         "csurf": "1.9.x",
         "db.js": "0.15.0",
         "debug": "2.x.x",
-        "enketo-core": "4.7.9",
+        "enketo-core": "4.7.10",
         "enketo-transformer": "1.8.1",
         "express": "4.x.x",
         "grunt": "1.0.x",
