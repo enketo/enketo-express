@@ -19,7 +19,7 @@ var formCache = require( './module/form-cache' );
 var appCache = require( './module/application-cache' );
 
 var $loader = $( '.form__loader' );
-var $buttons = $( '.form-header__button--print, button#validate-form, button#submit-form' );
+var $buttons = $( '.form-header__button--print, button#validate-form, button#submit-form, button#create-ballot' );
 var survey = {
     enketoId: settings.enketoId,
     serverUrl: settings.serverUrl,

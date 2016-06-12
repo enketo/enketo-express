@@ -195,6 +195,28 @@ function _loadRecord( instanceId, confirmed ) {
 }
 
 /**
+ * Shows a QR representation of the model.
+ */
+function _showQR() {
+    var qrSrc;
+    var leafNodeList = form.getModel().evaluate( '//*[not(child::*)]', 'nodes', null, null, true );
+
+    // Some stuff you can do to either create a flat structure or full paths and values:
+    for ( var i = 0; i < leafNodeList.length; i++ ) {
+        var path = form.getModel().getXPath( leafNodeList[ i ], 'instance', true );
+        var value = leafNodeList[ i ].textContent;
+        var nodeName = leafNodeList[ i ].nodeName;
+        console.debug( 'leafnode:', nodeName, value, path );
+    }
+
+    qrSrc = 'http://dbfhrael6egb5.cloudfront.net/wp-content/themes/qr/content/generator/_ui/images/qr_website_active.png';
+
+    gui.alert( '<img src="' + qrSrc + '"/>', 'Result', 'normal' );
+
+    // _resetForm(true);
+}
+
+/**
  * Used to submit a form.
  * This function does not save the record in localStorage
  * and is not used in offline-capable views.
@@ -468,6 +490,33 @@ function _setEventHandlers() {
         }
         return false;
     } );
+
+    $( 'button#create-ballot:not(.disabled)' ).click( function() {
+        if ( typeof form !== 'undefined' ) {
+            var $button = $( this );
+            $button.btnBusyState( true );
+            setTimeout( function() {
+                form.validate()
+                    .then( function( valid ) {
+                        $button.btnBusyState( false );
+                        if ( !valid ) {
+                            gui.alert( t( 'alert.validationerror.msg' ) );
+                        } else {
+                            return _showQR();
+                        }
+                    } )
+                    .catch( function( e ) {
+                        gui.alert( e.message );
+                    } )
+                    .then( function() {
+                        $button.btnBusyState( false );
+                    } );
+            }, 100 );
+        }
+        return false;
+    } );
+
+
 
     $( '.record-list__button-bar__button.upload' ).on( 'click', function() {
         records.uploadQueue();
