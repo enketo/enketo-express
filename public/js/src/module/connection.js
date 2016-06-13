@@ -363,7 +363,7 @@ function _getExternalData( survey ) {
 
         survey.externalData = $( doc ).find( 'instance[id][src]' ).map( function( index, el ) {
             return {
-                id: el.id,
+                id: $( el ).attr( 'id' ),
                 src: $( el ).attr( 'src' )
             };
         } ).get();

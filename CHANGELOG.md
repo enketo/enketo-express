@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.30.1] - 2016-06-10
+---------------------
+##### Fixed
+- External data not working in IE11.
+- XForm without instanceID does not show load error.
+
 [1.30.0] - 2016-06-08
 ---------------------
 ##### Added
