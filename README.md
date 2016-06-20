@@ -37,12 +37,13 @@ The app should now be running on [localhost:8005](http://localhost:8005).
 
 ### How to install a production server
 
-See [this tutorial](http://blog.enketo.org/install-enketo-production-ubuntu/) for detailed instructions.
-
+See [this tutorial](http://blog.enketo.org/install-enketo-production-ubuntu/) for detailed instructions. Another option, for some people, would be to deploy with [Heroku](/docs.heroku.md).
 
 ### How to configure
 
-All configuration is done in config/config.json. Strictly speaking, this file only has to contain the [default properties](./config/default-config.json) that you'd like to override, but it is safer to include all properties, to avoid surprises when the default configuration changes. After editing the configuration, the app will need to be restarted.
+All configuration is normally done in config/config.json. Strictly speaking, this file only has to contain the [default properties](./config/default-config.json) that you'd like to override, but it is safer to include all properties, to avoid surprises when the default configuration changes. After editing the configuration, the app will need to be restarted.
+
+As an alternative, there is an option to use environment variables instead of a config/config.json file. If the config/config.json file is missing Enketo will assume configuration is done with environment variables. A combination of both options is not supported. See [config/sample.env](./config/sample.env) for more information on equivalent environment variable names.
 
 The default production configuration includes 2 redis instances. You can **greatly simplify installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you might find the vagrant setup steps in [bootstrap.sh](./setup/bootstrap.sh) useful.
 
