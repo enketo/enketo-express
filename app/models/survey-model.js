@@ -166,7 +166,6 @@ function _addSurvey( openRosaKey, survey ) {
                     theme: survey.theme || ''
                 } )
                 .set( openRosaKey, id )
-                .bgsave()
                 .exec( function( error, replies ) {
                     delete pending[ openRosaKey ];
                     if ( error ) {
