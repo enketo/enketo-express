@@ -15,13 +15,13 @@ Heroku deployment
 
 ### Heroku configuration 
 
-On Heroku, the regular config.json configuration should not be used (and not be created). Instead Enketo is configured with environment variables using `heroku config:set`. See [../README.md](#how-to-configure)
+On Heroku, the regular config.json configuration should not be used (and not be created). Instead Enketo is configured with environment variables using `heroku config:set`. See [README](../README.md#how-to-configure)
 
 Enketo's JS and CSS **build process** uses configuration variables. This means that every time an environment variable (that is used in browser scripts) is changed, **Enketo needs to rebuild**. In Heroku rebuilds are always triggered with a git push. If there is nothing to push you'll therefore have to trick Heroku into rebuilding by pushing an empty commit like this: `git commit --allow-empty -m "empty commit"`.
 
 ### Redis connections
 
-The key sizing criterion for redis addons seems to be _the number of simultaneous database connections_. It seems Enketo on Heroku is using about 26 connections for _enketo\_redis\_main_ and 18 for _enketo\_redis\_cache **per dyno** (8 threads). Make sure to check your logs to see if the app is exceeding the amount of allowed redis connections. You'll want to **immediately address this critical error state** by either reducing the number of dynos or upgrading your redis addon.
+The key sizing criterion for redis addons seems to be _the number of simultaneous database connections_. It seems Enketo on Heroku is using about 26 connections for _enketo\_redis\_main_ and 18 for _enketo\_redis\_cache_ **per dyno** (8 threads). Make sure to check your logs to see if the app is exceeding the amount of allowed redis connections. You'll want to **immediately address this critical error state** by either reducing the number of dynos or upgrading your redis addon.
 
 ### Warning: before upgrading or downgrading heroku-redis
 
@@ -39,5 +39,5 @@ Before upgrading or downgrading your heroku-redis addon, shut down your server w
 ### Disadvantages of using Heroku
 
 1. Expensive.
-2. Initial Enketo configuration is more cumbersome (editing a structured json file is just easier and more user-friendly).
+2. Initial Enketo configuration is more cumbersome (editing a structured json file is just much easier).
 3. Little control. Requires trust (e.g. for database backups) and relying on support (e.g. for database restoration).
