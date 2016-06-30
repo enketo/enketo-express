@@ -141,7 +141,7 @@ function _logSubmission( id, instanceId, deprecatedId ) {
             if ( notRecorded ) {
                 // increment number of submissions
                 surveyModel.incrementSubmissions( id );
-                // store instanceId
+                // store/log instanceId
                 submissionModel.add( id, instanceId, deprecatedId );
             }
         } )

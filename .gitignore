@@ -13,6 +13,7 @@ config/config.json
 .scratchpad
 .nodemon-*
 .DS_Store
+.env
 enketo-main.rdb
 setup/docker/envfile.txt
 setup/docker/secrets

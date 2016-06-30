@@ -2,10 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.31.0] - 2016-06-29
 ---------------------
 ##### Added
 - Invalid XForms without /meta/instanceID will now be "fixed" by Enketo (temporarily).
+- Ability to configure via environment variables instead of config.json.
+- Documentation for deployment with Heroku
+
+##### Removed
+- Attempt to persist redis in Enketo app itself - **WARNING: persistence is now 100% arranged in your redis configuration!**
 
 [1.30.1] - 2016-06-10
 ---------------------
