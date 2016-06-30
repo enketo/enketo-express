@@ -15,20 +15,20 @@ Heroku deployment
 
 ### Heroku configuration 
 
-On Heroku, the regular config.json configuration should not be used (and not be created). Instead Enketo is configured with environment variables using `heroku config:set`. Just like with config.json, these environment variables will overwrite the default configuration set in [default-config.json](../config/default-config.json). To read how each configuration variable can be set using a (flat) configuration variable name, see [sample.env](../config/sample.env).
+On Heroku, the regular config.json configuration should not be used (and not be created). Instead Enketo is configured with environment variables using `heroku config:set`. See [../README.md](#how-to-configure)
 
-Enketo's JS and CSS **build process** uses configuration variables. This means that every time an environment variable (that is used in browser scripts) is changed, **Enketo needs to rebuild**. In Heroku rebuilds are always triggered with a git push. If there is nothing to push you'll therefore trick Heroku by pushing an empty commit like this: `git commit --allow-empty -m "empty commit"`.
+Enketo's JS and CSS **build process** uses configuration variables. This means that every time an environment variable (that is used in browser scripts) is changed, **Enketo needs to rebuild**. In Heroku rebuilds are always triggered with a git push. If there is nothing to push you'll therefore have to trick Heroku into rebuilding by pushing an empty commit like this: `git commit --allow-empty -m "empty commit"`.
 
 ### Redis connections
 
-The key sizing criterion for redis addons seems to be the number of simultaneous database connections. It seems Enketo on heroku is using about 26 connections for _enketo\_redis\_main_ and 18 for _enketo\_redis\_cache_per dyno (8 threads) soon after starting up the app.
+The key sizing criterion for redis addons seems to be _the number of simultaneous database connections_. It seems Enketo on Heroku is using about 26 connections for _enketo\_redis\_main_ and 18 for _enketo\_redis\_cache **per dyno** (8 threads). Make sure to check your logs to see if the app is exceeding the amount of allowed redis connections. You'll want to **immediately address this critical error state** by either reducing the number of dynos or upgrading your redis addon.
 
 ### Warning: before upgrading or downgrading heroku-redis
 
 Before upgrading or downgrading your heroku-redis addon, shut down your server with `heroku ps:scale web=0`. This avoids 2 potential issues:
 
 1. Any data written to redis during the upgrade/downgrade might get lost forever.
-2. At the time of writing (June 2016), a gigantic bug in heroku-redis seems to cause **all data to get lost forever** if the app is in a panic state due to an _Error: Amount of redis connections exceeds maximum allowed_. This panic state is causing Enketo Express forks to die and continuously re-incarnate.
+2. In the past there have been issues with permanent loss of data when upgrading the addon when the app was in a 'maximum allowed connections exceeded' state. This was fixed by Heroku on June 30th 2016, but the experience means it is wise to take extra care.
 
 ### Advantages of using Heroku
 

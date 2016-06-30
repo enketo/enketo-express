@@ -37,7 +37,7 @@ The app should now be running on [localhost:8005](http://localhost:8005).
 
 ### How to install a production server
 
-See [this tutorial](http://blog.enketo.org/install-enketo-production-ubuntu/) for detailed instructions. Another option, for some people, would be to deploy with [Heroku](/docs.heroku.md).
+See [this tutorial](http://blog.enketo.org/install-enketo-production-ubuntu/) for detailed instructions. Another option, for some people, is to deploy with [Heroku](./doc/heroku.md).
 
 ### How to configure
 

@@ -1,10 +1,9 @@
 Configuration
 ==============
 
-All configuration is done in config/config.json. **Leave config/default-config.json unchanged.** 
-Recommended way to start is to copy config/default-config.json and rename it to config/config.json (`cp config/default-config.json config/config.json`).
+All configuration is done in config/config.json or with equivalent environment variables (see [sample.env](./sample.env)). **Leave config/default-config.json unchanged.** Whichever of these 2 methods you choose, will override the defaults set in config/default-config.json.
 
-The **bold items are required**. Others are optional.
+Below is a complete list of all configuration items. The **bold items are important to set**. Others are less important.
 
 #### app name 
 Just use `"Enketo for [your service name]"`. It is not used much in the app.
