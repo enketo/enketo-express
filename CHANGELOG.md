@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Changed
+- Updated Lao translation.
+
 [1.31.0] - 2016-06-29
 ---------------------
 ##### Added
