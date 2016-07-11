@@ -31,7 +31,16 @@ module.exports = function( grunt ) {
         },
         sass: {
             options: {
-                sourceMap: false
+                sourceMap: false,
+                importer: function( url, prev, done ) {
+                    // fixes relative enketo-core submodule references in npm 3.x.x
+                    if ( grunt.option( 'npmv' ) === '3' && /\/node_modules\//.test( url ) && /\/node_modules\/enketo-core\//.test( prev ) ) {
+                        url = '../../' + url;
+                    }
+                    done( {
+                        file: url
+                    } );
+                }
             },
             compile: {
                 cwd: 'app/views/styles',
@@ -84,6 +93,15 @@ module.exports = function( grunt ) {
                     'gulp',
                     'cd ..'
                 ].join( '&&' )
+            },
+            npmv: {
+                command: 'npm -v',
+                options: {
+                    callback: function( err, stdout, stderr, cb ) {
+                        grunt.option( 'npmv', stdout.split( '.' )[ 0 ] );
+                        cb( err );
+                    }
+                }
             }
         },
         jsbeautifier: {
@@ -205,7 +223,7 @@ module.exports = function( grunt ) {
     grunt.registerTask( 'default', [ 'css', 'js', 'uglify' ] );
     grunt.registerTask( 'js', [ 'client-config-file:create', 'browserify:production' ] );
     grunt.registerTask( 'js-dev', [ 'client-config-file:create', 'browserify:development' ] );
-    grunt.registerTask( 'css', [ 'system-sass-variables:create', 'sass' ] );
+    grunt.registerTask( 'css', [ 'shell:npmv', 'system-sass-variables:create', 'sass' ] );
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
     grunt.registerTask( 'develop', [ 'env:develop', 'js-dev', 'concurrent:develop' ] );

@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Updated Lao translation.
 
+##### Fixed
+- Npm 3 sass build error.
+
 [1.31.0] - 2016-06-29
 ---------------------
 ##### Added
