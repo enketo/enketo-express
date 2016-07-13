@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Changed
 - Updated Lao translation.
+- Show "*" for all questions with a "required" expression.
+- Switched to enketo namespace for "for" attribute.
 
 ##### Fixed
 - Npm 3 sass build error.
