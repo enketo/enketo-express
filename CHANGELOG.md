@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Npm 3 sass build error.
+- Integer and decimal type values convert 'NaN' to '' (reverted ODK Aggregate bug workaround).
 
 [1.31.0] - 2016-06-29
 ---------------------
