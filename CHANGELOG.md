@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.32.0] - 2016-07-15
+---------------------
+##### Added
+- Ability to add additional translation strings in port of EE.
+
+##### Changed
+- Updated Lao translation.
+- Show "*" for all questions with a "required" expression.
+- Switched to enketo namespace for "for" attribute.
+
+##### Fixed
+- Npm 3 sass build error.
+- Integer and decimal type values convert 'NaN' to '' (reverted ODK Aggregate bug workaround).
+
 [1.31.0] - 2016-06-29
 ---------------------
 ##### Added
