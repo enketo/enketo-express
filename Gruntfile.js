@@ -197,6 +197,9 @@ module.exports = function( grunt ) {
             },
             test: {
                 NODE_ENV: 'test'
+            },
+            production: {
+                NODE_ENV: 'production'
             }
         }
     } );
@@ -227,4 +230,5 @@ module.exports = function( grunt ) {
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
     grunt.registerTask( 'develop', [ 'env:develop', 'js-dev', 'concurrent:develop' ] );
+    grunt.registerTask( 'test-and-build', [ 'env:test', 'mochaTest:all', 'karma:headless', 'env:production', 'default' ] );
 };
