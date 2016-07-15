@@ -75,7 +75,7 @@ module.exports = function( grunt ) {
             },
             language: {
                 files: [ 'app/views/**/*.jade', 'app/controllers/**/*.js', 'app/models/**/*.js', 'public/js/src/**/*.js' ],
-                tasks: [ 'shell:translation' ]
+                tasks: [ 'shell:translation', 'i18next' ]
             },
             js: {
                 files: [ 'public/js/src/**/*.js', 'public/widget/**/*.js' ],
@@ -201,9 +201,24 @@ module.exports = function( grunt ) {
             production: {
                 NODE_ENV: 'production'
             }
+        },
+        i18next: {
+            locales: {
+                cwd: 'locales/',
+                expand: true,
+                src: [ '*/' ],
+                include: [ '**/*.json', '!**/translation_old.json', '!**/translation-combined.json' ],
+                rename: function( dest, src ) {
+                    return dest + src + 'translation-combined.json';
+                },
+                dest: 'locales/'
+            }
         }
     } );
 
+    grunt.loadNpmTasks( 'grunt-i18next' );
+
+    // pull request for this task sent to grunt-i18next
     grunt.registerTask( 'client-config-file', 'Temporary client-config file', function( task ) {
         var clientConfigPath = 'public/temp-client-config.json';
         if ( task === 'create' ) {
@@ -223,12 +238,12 @@ module.exports = function( grunt ) {
         grunt.log.writeln( 'File ' + systemSassVariablesPath + ' created' );
     } );
 
-    grunt.registerTask( 'default', [ 'css', 'js', 'uglify' ] );
+    grunt.registerTask( 'default', [ 'i18next', 'css', 'js', 'uglify' ] );
     grunt.registerTask( 'js', [ 'client-config-file:create', 'browserify:production' ] );
     grunt.registerTask( 'js-dev', [ 'client-config-file:create', 'browserify:development' ] );
     grunt.registerTask( 'css', [ 'shell:npmv', 'system-sass-variables:create', 'sass' ] );
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
-    grunt.registerTask( 'develop', [ 'env:develop', 'js-dev', 'concurrent:develop' ] );
+    grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js-dev', 'concurrent:develop' ] );
     grunt.registerTask( 'test-and-build', [ 'env:test', 'mochaTest:all', 'karma:headless', 'env:production', 'default' ] );
 };

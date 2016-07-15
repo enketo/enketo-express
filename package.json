@@ -2,7 +2,7 @@
     "name": "enketo-express",
     "description": "Webforms evolved.",
     "homepage": "https://enketo.org",
-    "version": "1.31.0",
+    "version": "1.32.0",
     "main": "./app.js",
     "engines": {
         "node": "4.4.x",
@@ -64,7 +64,8 @@
         "serve-favicon": "2.x.x",
         "time-grunt": "1.x.x",
         "vex-js": "2.3.x",
-        "xml2js": "0.4.x"
+        "xml2js": "0.4.x",
+        "grunt-18next": "https://github.com/enketo/grunt-i18next.git#f7fed45"
     },
     "devDependencies": {
         "chai": "3.5.x",

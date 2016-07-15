@@ -6,7 +6,7 @@ public/js/*-bundle.js
 public/css/*.css
 public/lib/enketo-core
 public/lib/bower-components
-locales/en/translation_old.json
+locales/*/translation-combined.json
 config/config.json
 .rebooted
 .vagrant
