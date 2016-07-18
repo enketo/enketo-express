@@ -90,6 +90,8 @@
         "karma-sinon-chai": "1.2.x",
         "mocha": "2.5.3",
         "phantomjs": "2.1.x",
+        "sinon": "^1.17.4",
+        "sinon-chai": "^2.8.0",
         "supertest": "1.2.x"
     },
     "aliasify": {
