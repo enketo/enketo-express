@@ -325,5 +325,10 @@
         "http4xx": "Nastal neznámy problém počas odoslania na dátovom serveri.",
         "http500": "Dátový server vášho formulára alebo Enketo server je nedostupný. Skúste to prosím neskôr alebo kontaktujte __supportEmail__."
     },
-    "version": "verzia:"
+    "version": "verzia:",
+    "widget": {
+        "comment": {
+            "update": "Aktualizovať"
+        }
+    }
 }

@@ -325,5 +325,10 @@
         "http4xx": "Unbekanntes Sendeproblem auf Datenserver.",
         "http500": "Der Datenserver für das Formular oder der Enketo Server sind ausgefallen. Bitte versuchen Sie es später noch einmal oder kontaktieren __supportEmail__"
     },
-    "version": "Version:"
+    "version": "Version:",
+    "widget": {
+        "comment": {
+            "update": "Aktualisierung"
+        }
+    }
 }
