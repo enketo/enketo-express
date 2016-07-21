@@ -216,8 +216,6 @@ module.exports = function( grunt ) {
         }
     } );
 
-    grunt.loadNpmTasks( 'grunt-i18next' );
-
     // pull request for this task sent to grunt-i18next
     grunt.registerTask( 'client-config-file', 'Temporary client-config file', function( task ) {
         var clientConfigPath = 'public/temp-client-config.json';

@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.32.1] - 2016-07-21
+---------------------
+##### Changed
+- Updated German, Slovak and Czech translations.
+
+##### Fixed
+- String values are trimmed before added to model.
+- Comment widget scrolling and button hover behavior.
+
 [1.32.0] - 2016-07-15
 ---------------------
 ##### Added
