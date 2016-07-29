@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.32.3] - 2016-07-29
+---------------------
+##### Fixed
+- Offline-capable webforms not working when offline.
+
 [1.32.2] - 2016-07-27
 ---------------------
 ##### Fixed
