@@ -276,9 +276,11 @@ describe( 'Cache Model', function() {
             return expect( model.getHashes( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns null when survey is not cached', function() {
+        it( 'returns the unchanged survey when the survey is not cached', function() {
+            var original;
             survey.openRosaId = 'non-existing-at-all';
-            return expect( model.getHashes( survey ) ).to.eventually.deep.equal( null );
+            original = JSON.parse( JSON.stringify( survey ) );
+            return expect( model.getHashes( survey ) ).to.eventually.deep.equal( original );
         } );
         it( 'returns the hashes when a cached survey is available', function() {
             var getPromise = model.set( survey ).then( model.getHashes );

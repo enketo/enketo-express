@@ -15,7 +15,7 @@ var parser = new require( 'xml2js' ).Parser();
  * @return {[type]}               promise
  */
 function getXFormInfo( survey ) {
-    if ( !survey.openRosaServer ) {
+    if ( !survey || !survey.openRosaServer ) {
         throw new Error( 'No server provided.' );
     }
 

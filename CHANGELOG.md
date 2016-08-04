@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- A potential scenario where the server cache gets never updated.
+
 [1.32.3] - 2016-07-29
 ---------------------
 ##### Fixed
