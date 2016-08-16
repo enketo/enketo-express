@@ -168,10 +168,10 @@ function _getTranslations( lang ) {
     var langs = [];
 
     // fallback language
-    langs.push( config[ 'base path' ] + '/locales/en/translation.json' );
+    langs.push( config[ 'base path' ] + '/locales/en/translation-combined.json' );
 
     if ( lang && lang !== 'en' ) {
-        langs.push( config[ 'base path' ] + '/locales/' + lang + '/translation.json' );
+        langs.push( config[ 'base path' ] + '/locales/' + lang + '/translation-combined.json' );
     }
 
     return langs;

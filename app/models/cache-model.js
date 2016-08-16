@@ -77,7 +77,7 @@ function getSurveyHashes( survey ) {
                 if ( error ) {
                     reject( error );
                 } else if ( !hashArr || !hashArr[ 0 ] || !hashArr[ 2 ] ) {
-                    resolve( null );
+                    resolve( survey );
                 } else {
                     survey.formHash = hashArr[ 0 ];
                     survey.mediaUrlHash = hashArr[ 1 ];
