@@ -105,6 +105,10 @@
       "msg": "Your data was submitted!",
       "redirectmsg": "You will now be redirected."
     },
+    "thanks": {
+      "heading": "Thank you for participating!",
+      "msg": "You can close this window now."
+    },
     "validationerror": {
       "msg": "Form contains errors. Please see fields marked in red."
     },

@@ -41,6 +41,10 @@ router
         req.webformType = 'edit';
         next();
     } )
+    .all( '*/single*', function( req, res, next ) {
+        req.webformType = 'single';
+        next();
+    } )
     .all( '/survey/offline*', function( req, res, next ) {
         var error;
         if ( req.app.get( 'offline enabled' ) ) {
@@ -340,6 +344,7 @@ function _generateWebformUrls( id, req ) {
     var baseUrl = protocol + '://' + req.headers.host + req.app.get( 'base path' ) + '/';
     var idPartOnline = '::' + id;
     var idPartOffline = '#' + id;
+    var queryParts;
 
     req.webformType = req.webformType || 'default';
 
@@ -352,6 +357,13 @@ function _generateWebformUrls( id, req ) {
             // no defaults query parameter in edit view
             queryString = _generateQueryString( [ 'instance_id=' + req.body.instance_id, req.parentWindowOriginParam, req.returnQueryParam ] );
             obj.edit_url = baseUrl + 'edit/' + iframePart + idPartOnline + queryString;
+            break;
+        case 'single':
+            queryParts = [ req.defaultsQueryParam, req.returnQueryParam ];
+            if ( iframePart ) {
+                queryParts.push( req.parentWindowOrigin );
+            }
+            queryString = _generateQueryString( queryParts );
             break;
         case 'all':
             // non-iframe views
