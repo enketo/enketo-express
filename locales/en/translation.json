@@ -220,6 +220,9 @@
     "required": "required"
   },
   "formfooter": {
+    "complete": {
+      "btn": "Complete"
+    },
     "savedraft": {
       "btn": "Save Draft",
       "label": "Save as Draft"

@@ -133,6 +133,25 @@ function getCurrentFiles() {
     return files;
 }
 
+
+/**
+ * Traverses files currently stored in file input elements of open record to find a specific file.
+ *
+ * @return {Promise} array of files
+ */
+function getCurrentFile( filename ) {
+    var f;
+    // relies on all file names to be unique (which they are)
+    getCurrentFiles().some( function( file ) {
+        if ( file.name === filename ) {
+            f = file;
+            return true;
+        }
+    } );
+
+    return f;
+}
+
 /**
  * Obtains the instanceId of the current record.
  * 
@@ -171,5 +190,6 @@ module.exports = {
     isWaitingForPermissions: isWaitingForPermissions,
     init: init,
     getFileUrl: getFileUrl,
-    getCurrentFiles: getCurrentFiles
+    getCurrentFiles: getCurrentFiles,
+    getCurrentFile: getCurrentFile
 };

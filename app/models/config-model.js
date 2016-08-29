@@ -284,7 +284,8 @@ module.exports = {
         submissionParameter: {
             name: config[ 'query parameter to pass to submission' ]
         },
-        basePath: config[ 'base path' ]
+        basePath: config[ 'base path' ],
+        repeatOrdinals: config[ 'repeat ordinals' ]
     },
     getThemesSupported: getThemesSupported
 };
