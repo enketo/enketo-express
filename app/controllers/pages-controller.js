@@ -25,4 +25,9 @@ router
         res.render( 'pages/offline', {
             title: 'Offline'
         } );
+    } )
+    .get( '/thanks', function( req, res ) {
+        res.render( 'surveys/thanks', {
+            title: 'Thanks'
+        } );
     } );

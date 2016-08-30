@@ -43,7 +43,7 @@ function init( selector, data ) {
             $formprogress = $( '.form-progress' );
 
             _setEventHandlers();
-            _setLogoutLinkVisibility();
+            setLogoutLinkVisibility();
 
             if ( loadErrors.length > 0 ) {
                 throw loadErrors;
@@ -201,19 +201,19 @@ function _loadRecord( instanceId, confirmed ) {
  */
 function _submitRecord() {
     var record;
-    var redirect;
+    var redirect = !settings.offline && settings.returnUrl;
     var beforeMsg;
     var authLink;
     var level;
-    var msg = [];
+    var msg = '';
 
     form.getView().$.trigger( 'beforesave' );
 
     beforeMsg = ( redirect ) ? t( 'alert.submission.redirectmsg' ) : '';
     authLink = '<a href="/login" target="_blank">' + t( 'here' ) + '</a>';
 
-    gui.alert( beforeMsg + '<br />' +
-        '<div class="loader-animation-small" style="margin: 10px auto 0 auto;"/>', t( 'alert.submission.msg' ), 'bare' );
+    gui.alert( beforeMsg +
+        '<div class="loader-animation-small" style="margin: 40px auto 0 auto;"/>', t( 'alert.submission.msg' ), 'bare' );
 
     record = {
         'xml': form.getDataStr(),
@@ -228,18 +228,18 @@ function _submitRecord() {
             level = 'success';
 
             if ( result.failedFiles && result.failedFiles.length > 0 ) {
-                msg = [ t( 'alert.submissionerror.fnfmsg', {
+                msg = t( 'alert.submissionerror.fnfmsg', {
                     failedFiles: result.failedFiles.join( ', ' ),
                     supportEmail: settings.supportEmail
-                } ) ];
+                } ) + '<br/>';
                 level = 'warning';
             }
 
             // this event is used in communicating back to iframe parent window
             $( document ).trigger( 'submissionsuccess' );
 
-            if ( settings.returnUrl ) {
-                msg += '<br/>' + t( 'alert.submissionsuccess.redirectmsg' );
+            if ( redirect ) {
+                msg += t( 'alert.submissionsuccess.redirectmsg' );
                 gui.alert( msg, t( 'alert.submissionsuccess.heading' ), level );
                 setTimeout( function() {
                     location.href = decodeURIComponent( settings.returnUrl );
@@ -515,8 +515,8 @@ function _setEventHandlers() {
         }
     } );
 
-    if ( _inIframe() && settings.parentWindowOrigin ) {
-        $doc.on( 'submissionsuccess edited.enketo', _postEventAsMessageToParentWindow );
+    if ( inIframe() && settings.parentWindowOrigin ) {
+        $doc.on( 'submissionsuccess edited.enketo', postEventAsMessageToParentWindow );
     }
 
     $doc.on( 'queuesubmissionsuccess', function() {
@@ -565,7 +565,7 @@ function _handleAlternativeDownloadRequest( event, zipFile ) {
     return false;
 }
 
-function _setLogoutLinkVisibility() {
+function setLogoutLinkVisibility() {
     var visible = document.cookie.split( '; ' ).some( function( rawCookie ) {
         return rawCookie.indexOf( '__enketo_logout=' ) !== -1;
     } );
@@ -585,7 +585,7 @@ function _getDraftStatus() {
  * Determines whether the page is loaded inside an iframe
  * @return {boolean} [description]
  */
-function _inIframe() {
+function inIframe() {
     try {
         return window.self !== window.top;
     } catch ( e ) {
@@ -597,7 +597,7 @@ function _inIframe() {
  * Attempts to send a message to the parent window, useful if the webform is loaded inside an iframe.
  * @param  {{type: string}} event
  */
-function _postEventAsMessageToParentWindow( event ) {
+function postEventAsMessageToParentWindow( event ) {
     if ( event && event.type ) {
         try {
             window.parent.postMessage( JSON.stringify( {
@@ -610,5 +610,8 @@ function _postEventAsMessageToParentWindow( event ) {
 }
 
 module.exports = {
-    init: init
+    init: init,
+    setLogoutLinkVisibility: setLogoutLinkVisibility,
+    inIframe: inIframe,
+    postEventAsmessageToParentWindow: postEventAsMessageToParentWindow
 };

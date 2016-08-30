@@ -1,30 +1,40 @@
 .form-footer {
     position: relative;
+
     &__content {
         @include display-flex;
+
         @include flex-direction(column);
+
         @include flex-wrap(nowrap);
+
         &__main-controls {
             flex: 1;
             margin: 30px auto;
             width: 100%;
             text-align: center;
             position: relative;
+
             .btn {
                 display: inline-block;
                 min-width: 180px;
                 position: static;
                 min-height: 32px;
                 margin-bottom: 30px;
+                margin-left: 20px;
+                margin-right: 20px;
+
                 progress {
                     margin: 0;
                     padding: 0;
                     width: 100%;
                 }
             }
+
             .draft {
-                width: 100%;
                 @include font-normal;
+
+                width: 100%;
                 font-style: italic;
                 text-align: center;
                 display: block;
@@ -33,14 +43,17 @@
                 padding: 0;
                 margin: 0 auto 20px auto;
                 max-width: 250px;
+
                 label {
                     margin-left: 0;
                     width: 100%;
                 }
             }
+
             .previous-page, .next-page {
                 display: none;
             }
+
             .previous-page {
                 // This button is absolutely positioned to avoid
                 // it pushing up other form footer content when it becomes
@@ -50,10 +63,14 @@
                 bottom: 5px;
             }
         }
+
         &__jump-nav {
             @include display-flex;
+
             @include flex-direction(row);
+
             @include flex-wrap(nowrap);
+
             .first-page, .last-page {
                 //width: 50%;
                 flex: 1;
@@ -64,20 +81,25 @@
                 margin-bottom: 0;
                 float: left;
             }
+
             .first-page {
                 &:not(:hover) {
                     border-right: none;
                 }
+
                 &::before {
                     @include enketo-icon;
+
                     content: '\e611' !important;
                     float: left;
                     color: #757474;
                 }
             }
+
             .last-page {
                 &::before {
                     @include enketo-icon;
+
                     content: '\e610' !important;
                     float: right;
                     color: #757474;
@@ -85,18 +107,21 @@
             }
         }
     }
+
     .logout {
         width: 100%;
         display: block;
         margin-bottom: 30px;
         text-align: center;
     }
+
     .enketo-power {
         position: static;
         margin: 0 auto 30px auto;
         left: auto;
         width: 100%;
         line-height: 25px;
+
         img {
             width: 51px;
         }
@@ -109,6 +134,7 @@
             margin-bottom: 0;
         }
     }
+
     &.end {
         .logout {
             margin-bottom: 50px;
@@ -123,7 +149,8 @@
         right: 5px;
         width: auto;
     }
-    .pages ~ .form-footer .enketo-power{
+
+    .pages ~ .form-footer .enketo-power {
         bottom: -105px;
     }
 }

@@ -60,7 +60,7 @@ module.exports = function( grunt ) {
             },
             sass: {
                 files: [ 'app/views/styles/**/*.scss', 'public/widget/**/*.scss' ],
-                tasks: [ 'sass' ],
+                tasks: [ 'shell:npmv', 'sass' ],
                 options: {
                     spawn: false,
                     livereload: true

@@ -2,6 +2,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Added
+- Optional ability to add repeat ordinal attributes to model in enketo namespace.
+- Improved extensibility.
+
+##### Changed
+- Validation logic refactored and behaviour for required field validation sligthly changed. If a required has a value and is then emptied, the background will turn red.
+
+##### Removed
+- Workaround for [ODK Aggregate bug](https://github.com/opendatakit/opendatakit/issues/1116) because it doesn't really solve anything.
+
+##### Fixed
+- Fragile namespace handling in model.
+
 [1.32.4] - 2016-08-15
 ---------------------
 ##### Fixed
