@@ -105,6 +105,10 @@
             "msg": "De records zijn verzonden!",
             "redirectmsg": "Je wordt nu doorgestuurd."
         },
+        "thanks": {
+            "heading": "Bedankt voor uw deelname!",
+            "msg": "U kunt dit venster nu sluiten."
+        },
         "validationerror": {
             "msg": "De enquete bevat fouten. Zie de vragen die rood gekleurd zijn."
         },
@@ -216,6 +220,9 @@
         "required": "verplicht"
     },
     "formfooter": {
+        "complete": {
+            "btn": "Compleet"
+        },
         "savedraft": {
             "btn": "Sla Op als Draft",
             "label": "Sla Op als Draft"

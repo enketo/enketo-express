@@ -105,6 +105,10 @@
             "msg": "Vaše data byly odeslány!",
             "redirectmsg": "Nyní budete přesměrováni."
         },
+        "thanks": {
+            "heading": "Děkujeme za účast!",
+            "msg": "Toto okno může být teď zavřené."
+        },
         "validationerror": {
             "msg": "Formulář obsahuje chyby. Prosím, zkontrolujte pole označená červenou barvou."
         },
@@ -216,6 +220,9 @@
         "required": "požadovaný"
     },
     "formfooter": {
+        "complete": {
+            "btn": "Dokončit"
+        },
         "savedraft": {
             "btn": "Uložit Koncept",
             "label": "Uložit jako Koncept"
