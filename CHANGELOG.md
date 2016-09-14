@@ -2,10 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.33.1] - 2016-09-14
 ---------------------
 ##### Changed
 - Updated Persian translation
+
+##### Fixed
+- Webform previews have incorrect (non-existing) JS bundle reference.
 
 [1.33.0] - 2016-09-07
 ---------------------
