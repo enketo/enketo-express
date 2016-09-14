@@ -5,7 +5,7 @@ block style
   link(rel='stylesheet', media='print', type='text/css' href='#{basePath}/css/theme-#{defaultTheme}.print.css') 
 
 block script
-  - var suffix = (type) ? '-' + type : ''
+  - var suffix = (type && type !== 'preview') ? '-' + type : ''
   if environment == 'production'
     script(src='#{basePath}/js/enketo-webform#{suffix}-bundle.min.js')
   else

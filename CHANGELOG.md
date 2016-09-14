@@ -2,7 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.33.1] - 2016-09-14
+---------------------
+##### Changed
+- Updated Persian translation
+
+##### Fixed
+- Webform previews have incorrect (non-existing) JS bundle reference.
+
+[1.33.0] - 2016-09-07
 ---------------------
 ##### Added
 - Optional ability to add repeat ordinal attributes to model in enketo namespace.
@@ -10,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Changed
 - Validation logic refactored and behaviour for required field validation sligthly changed. If a required has a value and is then emptied, the background will turn red.
+- Updated German, Czech, Dutch and Slovak translations.
 
 ##### Removed
 - Workaround for [ODK Aggregate bug](https://github.com/opendatakit/opendatakit/issues/1116) because it doesn't really solve anything.

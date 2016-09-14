@@ -105,6 +105,10 @@
             "msg": "Ihre Daten wurden gesendet!",
             "redirectmsg": "Sie werden jetzt weitergeleitet."
         },
+        "thanks": {
+            "heading": "Danke für Ihre Teilnahme!",
+            "msg": "Dieses Fenster kann nun geschlossen werden."
+        },
         "validationerror": {
             "msg": "Das formular enthält Fehler. Bitte beachten Sie die rot markierten Felder."
         },
@@ -216,6 +220,9 @@
         "required": "erforderlich"
     },
     "formfooter": {
+        "complete": {
+            "btn": "Vervollständigen"
+        },
         "savedraft": {
             "btn": "Entwurf speichern",
             "label": "Als Entwurf speichern"
