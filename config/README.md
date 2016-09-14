@@ -86,3 +86,6 @@ For most form servers this item does nothing. If you would like to pass a partic
 
 #### disable save as draft
 Completely disable save-as-draft functionality in offline-capable webforms by settings this to true.
+
+#### repeat ordinals
+Whether to add custom http://enketo.org/xforms namespaced `ordinal` and `last-used-ordinal` attributes to repeat nodes in the model. The default is `false`. Most user will not need to set this configuration item.
