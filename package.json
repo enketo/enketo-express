@@ -36,7 +36,7 @@
         "db.js": "0.15.0",
         "debug": "2.x.x",
         "enketo-core": "4.9.0",
-        "enketo-transformer": "1.9.0",
+        "enketo-transformer": "1.10.0",
         "express": "4.x.x",
         "grunt": "1.0.x",
         "grunt-browserify": "5.0.x",
