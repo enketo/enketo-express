@@ -14,6 +14,7 @@
         }
     },
     "encryption key": "s0m3v3rys3cr3tk3y",
+    "less secure encryption key": "this $3cr3t key is crackable",
     "default theme": "kobo",
     "themes supported": [],
     "base path": "",

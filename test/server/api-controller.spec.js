@@ -117,6 +117,7 @@ describe( 'api', function() {
                         instance: instance,
                         instance_id: instanceId,
                         return_url: ret,
+                        allow_multiple: test.multiple === true ? 'true' : test.multiple,
                         defaults: test.defaults,
                         parent_window_origin: test.parentWindowOrigin
                     } )
@@ -569,7 +570,64 @@ describe( 'api', function() {
                     expected: /\/i\/::[A-z0-9]{4}/
                 },
                 offline: true
+            }, {
+                version: version,
+                endpoint: '/survey/single',
+                method: 'get',
+                auth: true,
+                status: 200,
+                res: {
+                    property: 'single_url',
+                    expected: /\/single\/::[a-fA-F0-9]{32}\?/
+                },
+                offline: true
+            }, {
+                version: version,
+                endpoint: '/survey/single/iframe',
+                method: 'get',
+                auth: true,
+                status: 200,
+                res: {
+                    property: 'single_iframe_url',
+                    expected: /\/single\/i\/::[a-fA-F0-9]{32}\?/
+                },
+                offline: true
+            }, {
+                version: version,
+                endpoint: '/survey/single',
+                method: 'post',
+                auth: true,
+                status: 200,
+                res: {
+                    property: 'single_url',
+                    expected: /\/single\/::[a-fA-F0-9]{32}\?/
+                },
+                offline: true
+            }, {
+                version: version,
+                endpoint: '/survey/single/iframe',
+                method: 'post',
+                auth: true,
+                status: 200,
+                res: {
+                    property: 'single_iframe_url',
+                    expected: /\/single\/i\/::[a-fA-F0-9]{32}\?/
+                },
+                offline: true
+            }, {
+                version: version,
+                endpoint: '/survey/single',
+                method: 'post',
+                auth: true,
+                status: 200,
+                multiple: true,
+                res: {
+                    property: 'single_url',
+                    expected: /\/single\/::[A-z0-9]{4}\?/
+                },
+                offline: true
             },
+
             // the /survey/offline endpoint always returns the offline-capable view (if enabled)
             {
                 version: version,
@@ -760,18 +818,18 @@ describe( 'api', function() {
                     property: 'preview_url',
                     expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
                 }
-            },
-            /*{
+
+                // ADD TESTS that compare allow_multiple=true and false and undefined
+            }, {
                 endpoint: '/survey/single/iframe',
                 parentWindowOrigin: 'http://example.com/',
                 method: 'post',
                 status: 200,
                 res: {
-                    property: 'single_url',
-                    expected: /.+\?parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                    property: 'single_iframe_url',
+                    expected: /.+(\&|\?)parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
                 }
-            },*/
-            {
+            }, {
                 endpoint: '/survey/all',
                 parentWindowOrigin: 'http://example.com/',
                 method: 'post',

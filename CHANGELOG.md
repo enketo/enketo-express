@@ -10,6 +10,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - IE11 adds rogue namespaces to ordinal attributes.
 
+[Unreleased] 
+---------------------
+##### Added
+- Advanced single submission webform views and API endpoints.
+
 [1.33.1] - 2016-09-14
 ---------------------
 ##### Changed

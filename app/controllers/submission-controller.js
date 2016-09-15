@@ -9,21 +9,15 @@ var utils = require( '../lib/utils' );
 var request = require( 'request' );
 var express = require( 'express' );
 var router = express.Router();
+var routerUtils = require( '../lib/router-utils' );
 // var debug = require( 'debug' )( 'submission-controller' );
 
 module.exports = function( app ) {
     app.use( app.get( 'base path' ) + '/submission', router );
 };
 
-// duplicate in survey-controller
-router.param( 'enketo_id', function( req, res, next, id ) {
-    if ( /^::[A-z0-9]{4,8}$/.test( id ) ) {
-        req.enketoId = id.substring( 2 );
-        next();
-    } else {
-        next( 'route' );
-    }
-} );
+router.param( 'enketo_id', routerUtils.enketoId );
+router.param( 'encrypted_enketo_id', routerUtils.encryptedEnketoId );
 
 router
     .all( '*', function( req, res, next ) {
@@ -31,8 +25,10 @@ router
         next();
     } )
     .get( '/max-size/:enketo_id', maxSize )
+    .get( '/max-size/:encrypted_enketo_id', maxSize )
     .get( '/:enketo_id', getInstance )
     .post( '/:enketo_id', submit )
+    .post( '/:encrypted_enketo_id', submit )
     .all( '/*', function( req, res, next ) {
         var error = new Error( 'Not allowed' );
         error.status = 405;

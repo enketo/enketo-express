@@ -8,6 +8,7 @@ var userModel = require( '../models/user-model' );
 var config = require( '../models/config-model' ).server;
 var express = require( 'express' );
 var router = express.Router();
+var routerUtils = require( '../lib/router-utils' );
 // var debug = require( 'debug' )( 'survey-controller' );
 
 module.exports = function( app ) {
@@ -15,14 +16,8 @@ module.exports = function( app ) {
 };
 
 // duplicate in submission-controller
-router.param( 'enketo_id', function( req, res, next, id ) {
-    if ( /^::[A-z0-9]{4,8}$/.test( id ) ) {
-        req.enketoId = id.substring( 2 );
-        next();
-    } else {
-        next( 'route' );
-    }
-} );
+router.param( 'enketo_id', routerUtils.enketoId );
+router.param( 'encrypted_enketo_id', routerUtils.encryptedEnketoId );
 
 router.param( 'mod', function( req, rex, next, mod ) {
     if ( mod === 'i' ) {
@@ -44,6 +39,10 @@ router
     .get( '/preview/:mod/:enketo_id', preview )
     .get( '/preview', preview )
     .get( '/preview/:mod', preview )
+    .get( '/single/:enketo_id', single )
+    .get( '/single/:encrypted_enketo_id', single )
+    .get( '/single/:mod/:enketo_id', single )
+    .get( '/single/:mod/:encrypted_enketo_id', single )
     .get( '/edit/:enketo_id', edit )
     .get( '/edit/:mod/:enketo_id', edit )
     .get( '/xform/:enketo_id', xform )
@@ -73,11 +72,22 @@ function offlineWebform( req, res, next ) {
 function webform( req, res, next ) {
     var options = {
         manifest: req.manifest,
-        // only enable deprecated query string support for online-only forms
-        iframe: req.iframe || ( !req.manifest && !!req.query.iframe ),
+        iframe: req.iframe,
     };
 
     _renderWebform( req, res, next, options );
+}
+
+function single( req, res, next ) {
+    var options = {
+        type: 'single',
+        iframe: req.iframe
+    };
+    if ( req.encryptedEnketoId && req.cookies[ req.encryptedEnketoId ] ) {
+        res.redirect( '/thanks?taken=' + req.cookies[ req.encryptedEnketoId ] );
+    } else {
+        _renderWebform( req, res, next, options );
+    }
 }
 
 function preview( req, res, next ) {

@@ -26,6 +26,8 @@ router
         res.set( 'Content-Type', 'application/json' );
         next();
     } )
+    // TODO: would make more sense to use /xform/::enketo_id and /xform/::encrypted_enketo_id etc
+    // routing here perhaps
     .post( '/xform', getSurveyParts )
     .post( '/xform/hash', getSurveyHash );
 
@@ -231,11 +233,17 @@ function _getSurveyParams( req ) {
     var error;
     var urlObj;
     var domain;
+    var enketoId;
     var params = req.body;
     var noHashes = ( params.noHashes === 'true' );
 
     if ( params.enketoId ) {
-        return surveyModel.get( params.enketoId )
+        if ( params.enketoId.length === 32 || params.enketoId.length === 64 ) {
+            enketoId = utils.insecureAes192Decrypt( params.enketoId, req.app.get( 'less secure encryption key' ) );
+        } else {
+            enketoId = params.enketoId;
+        }
+        return surveyModel.get( enketoId )
             .then( account.check )
             .then( _checkQuota )
             .then( function( survey ) {
