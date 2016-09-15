@@ -92,11 +92,6 @@ Internet Explorer 11 is still supported has some styling degradations that are c
 **Enketo endeavors to show a helpful (multi-lingual) error message on unsupported browsers when the form is loaded to avoid serious issues.**
 
 
-### Differences with [enketo/enketo-legacy](https://github.com/enketo/enketo-legacy)
-
-See [this doc](./doc/differences.md)
-
-
 ### Themes
  
 The default theme can be set in config/config.json. The default theme can be overridden in [the form definition](http://xlsform.org/#grid). 
