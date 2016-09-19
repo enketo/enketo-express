@@ -26,6 +26,10 @@ Enable or disable offline functionality. Is either `false` or `true`.
 #### encryption key 
 Enketo will use this to encrypt sensitive information whenever necessary (e.g. for the form server credentials that are stored in a cookie in the user's browser). Never share this key and never change it after the initial configuration (unless it was compromised). No specific key length requirements (I think).
 
+#### less secure encryption key 
+Enketo will use this to symmetrically encrypt enketo IDs for the special single-submission webform views. This encrypt serves a specific purpose but is not used for sensitive. For security reasons it therefore requires a separate key.
+Do not change this key after initial configuration as it will break some webform URLs.
+
 #### default theme 
 The theme to use if the survey has no user-or-api-defined theme. Values could be `"kobo"`, `"formhub"`, `"grid"`, or `"[yourowncustomtheme]"`.
 

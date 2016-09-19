@@ -107,7 +107,8 @@
     },
     "thanks": {
       "heading": "Thank you for participating!",
-      "msg": "You can close this window now."
+      "msg": "You can close this window now.",
+      "msgTaken": "You have already completed this survey."
     },
     "validationerror": {
       "msg": "Form contains errors. Please see fields marked in red."

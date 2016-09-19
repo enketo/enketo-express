@@ -5,6 +5,7 @@ var config = require( 'enketo-config' );
 var queryParams = _getAllQueryParams();
 var settings = {};
 var DEFAULT_MAX_SIZE = 5 * 1024 * 1024;
+var DEFAULT_THANKS_URL = '/thanks';
 var settingsMap = [ {
     q: 'return',
     s: 'returnUrl'
@@ -65,6 +66,9 @@ settingsMap.forEach( function( obj ) {
     }
 } );
 
+// add default return Url
+settings.defaultReturnUrl = DEFAULT_THANKS_URL;
+
 // add defaults object
 settings.defaults = {};
 for ( var p in queryParams ) {
@@ -96,7 +100,13 @@ if ( settings.submissionParameter && settings.submissionParameter.name ) {
 settings.maxSize = DEFAULT_MAX_SIZE;
 
 // add type
-settings.type = ( window.location.pathname.indexOf( '/preview' ) === 0 ) ? 'preview' : 'other';
+if ( window.location.pathname.indexOf( '/preview' ) === 0 ) {
+    settings.type = 'preview';
+} else if ( window.location.pathname.indexOf( '/single' ) === 0 ) {
+    settings.type = 'single';
+} else {
+    settings.type = 'other';
+}
 
 // add enketoId
 settings.enketoIdPrefix = '::';
@@ -105,6 +115,11 @@ settings.enketoId = _getEnketoId( '\/' + settings.enketoIdPrefix, window.locatio
 // determine whether view is offline-capable
 // TODO: check for manifest attribute on html element instead?
 settings.offline = !( new RegExp( '\/' + settings.enketoIdPrefix ).test( window.location.pathname ) ) && !!window.location.hash;
+
+// set multipleAllowed for single webform views
+if ( settings.type === 'single' && settings.enketoId.length !== 32 && settings.enketoId.length !== 64 ) {
+    settings.multipleAllowed = true;
+}
 
 function _getEnketoId( prefix, haystack ) {
     var id = new RegExp( prefix ).test( haystack ) ? haystack.substring( haystack.lastIndexOf( prefix ) + prefix.length ) : null;

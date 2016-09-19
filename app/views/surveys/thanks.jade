@@ -8,5 +8,8 @@ block content
   .vex.vex-theme-plain
     .vex-overlay
     .vex-content
-      h3= t('alert.thanks.heading')
-      p= t('alert.thanks.msg')
+      h3=  t('alert.thanks.heading')
+      if taken
+        p= t('alert.thanks.msgTaken')
+      else 
+        p= t('alert.thanks.msg') 

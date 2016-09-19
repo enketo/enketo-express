@@ -201,7 +201,8 @@ function _loadRecord( instanceId, confirmed ) {
  */
 function _submitRecord() {
     var record;
-    var redirect = !settings.offline && settings.returnUrl;
+    // TODO: after a grace period (say end of 2016): var redirect = settings.type === 'single'
+    var redirect = !settings.offline && ( settings.returnUrl || settings.type === 'single' );
     var beforeMsg;
     var authLink;
     var level;
@@ -239,11 +240,32 @@ function _submitRecord() {
             $( document ).trigger( 'submissionsuccess' );
 
             if ( redirect ) {
+                if ( settings.type === 'single' && !settings.multipleAllowed ) {
+                    var now = new Date();
+                    var age = 31536000;
+                    var d = new Date();
+                    /**
+                     * Manipulate the browser history to work around potential ways to 
+                     * circumvent protection against multiple submissions:
+                     * 1. After redirect, click Back button to load cached version.
+                     */
+                    history.replaceState( {}, '', settings.defaultReturnUrl + '?taken=' + now.getTime() );
+                    /**
+                     * The above replaceState doesn't work in Safari and probably in 
+                     * some other browsers (mobile). It shows the 
+                     * final submission dialog when clicking Back.
+                     * So we remove the form...
+                     */
+                    $( 'form.or' ).empty();
+                    $( 'button#submit-form' ).remove();
+                    d.setTime( d.getTime() + age * 1000 );
+                    document.cookie = settings.enketoId + '=' + now.getTime() + ';path=/single;max-age=' + age + ';expires=' + d.toGMTString() + ';';
+                }
                 msg += t( 'alert.submissionsuccess.redirectmsg' );
                 gui.alert( msg, t( 'alert.submissionsuccess.heading' ), level );
                 setTimeout( function() {
-                    location.href = decodeURIComponent( settings.returnUrl );
-                }, 1500 );
+                    location.href = decodeURIComponent( settings.returnUrl || settings.defaultReturnUrl );
+                }, 1200 );
             } else {
                 msg = ( msg.length > 0 ) ? msg : t( 'alert.submissionsuccess.msg' );
                 gui.alert( msg, t( 'alert.submissionsuccess.heading' ), level );

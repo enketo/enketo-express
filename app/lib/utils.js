@@ -66,6 +66,34 @@ function md5( message ) {
     return hash.digest( 'hex' );
 }
 
+/**
+ * This is not secure encryption as it doesn't use a random cipher. Therefore the result is 
+ * always the same for each text & pw (which is desirable in this case). 
+ * This means the password is vulnerable to be cracked,
+ * and we should use a dedicated low-importance password for this.
+ * 
+ * @param  {string} text The text to be encrypted
+ * @param  {string} pw   The password to use for encryption
+ * @return {string}      The encrypted result.
+ */
+function insecureAes192Encrypt( text, pw ) {
+    var encrypted;
+    var cipher = crypto.createCipher( 'aes192', pw );
+    encrypted = cipher.update( text, 'utf8', 'hex' );
+    encrypted += cipher.final( 'hex' );
+
+    return encrypted;
+}
+
+function insecureAes192Decrypt( encrypted, pw ) {
+    var decrypted;
+    var decipher = crypto.createDecipher( 'aes192', pw );
+    decrypted = decipher.update( encrypted, 'hex', 'utf8' );
+    decrypted += decipher.final( 'utf8' );
+
+    return decrypted;
+}
+
 function randomString( howMany, chars ) {
     chars = chars || 'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
     var rnd = crypto.randomBytes( howMany ),
@@ -126,5 +154,7 @@ module.exports = {
     md5: md5,
     randomString: randomString,
     pickRandomItemFromArray: pickRandomItemFromArray,
-    areOwnPropertiesEqual: areOwnPropertiesEqual
+    areOwnPropertiesEqual: areOwnPropertiesEqual,
+    insecureAes192Decrypt: insecureAes192Decrypt,
+    insecureAes192Encrypt: insecureAes192Encrypt
 };

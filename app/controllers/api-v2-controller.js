@@ -5,6 +5,7 @@ var instanceModel = require( '../models/instance-model' );
 var account = require( '../models/account-model' );
 var auth = require( 'basic-auth' );
 var express = require( 'express' );
+var utils = require( '../lib/utils' );
 var router = express.Router();
 var quotaErrorMessage = 'Forbidden. No quota left';
 // var debug = require( 'debug' )( 'api-controller-v2' );
@@ -41,8 +42,12 @@ router
         req.webformType = 'edit';
         next();
     } )
-    .all( '*/single*', function( req, res, next ) {
+    .all( '/survey/single*', function( req, res, next ) {
         req.webformType = 'single';
+        next();
+    } )
+    .all( '/survey/single/once*', function( req, res, next ) {
+        req.multipleAllowed = false;
         next();
     } )
     .all( '/survey/offline*', function( req, res, next ) {
@@ -64,6 +69,14 @@ router
     .post( '/survey/offline', getNewOrExistingSurvey )
     .post( '/survey/iframe', getNewOrExistingSurvey )
     .delete( '/survey', deactivateSurvey )
+    .get( '/survey/single', getExistingSurvey )
+    .get( '/survey/single/iframe', getExistingSurvey )
+    .get( '/survey/single/once', getExistingSurvey )
+    .get( '/survey/single/once/iframe', getExistingSurvey )
+    .post( '/survey/single', getNewOrExistingSurvey )
+    .post( '/survey/single/iframe', getNewOrExistingSurvey )
+    .post( '/survey/single/once', getNewOrExistingSurvey )
+    .post( '/survey/single/once/iframe', getNewOrExistingSurvey )
     .get( '/survey/preview', getExistingSurvey )
     .get( '/survey/preview/iframe', getExistingSurvey )
     .post( '/survey/preview', getNewOrExistingSurvey )
@@ -344,6 +357,7 @@ function _generateWebformUrls( id, req ) {
     var baseUrl = protocol + '://' + req.headers.host + req.app.get( 'base path' ) + '/';
     var idPartOnline = '::' + id;
     var idPartOffline = '#' + id;
+    var idPartOnce = '::' + utils.insecureAes192Encrypt( id, req.app.get( 'less secure encryption key' ) );
     var queryParts;
 
     req.webformType = req.webformType || 'default';
@@ -361,19 +375,25 @@ function _generateWebformUrls( id, req ) {
         case 'single':
             queryParts = [ req.defaultsQueryParam, req.returnQueryParam ];
             if ( iframePart ) {
-                queryParts.push( req.parentWindowOrigin );
+                queryParts.push( req.parentWindowOriginParam );
             }
             queryString = _generateQueryString( queryParts );
+            obj[ 'single' + ( req.multipleAllowed === false ? '_once' : '' ) + ( iframePart ? '_iframe' : '' ) + '_url' ] = baseUrl +
+                'single/' + iframePart + ( req.multipleAllowed === false ? idPartOnce : idPartOnline ) + queryString;
             break;
         case 'all':
             // non-iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam ] );
             obj.url = baseUrl + idPartOnline + queryString;
+            obj.single_url = baseUrl + idPartOnline + queryString;
+            obj.single_once_url = baseUrl + idPartOnce + queryString;
             obj.offline_url = baseUrl + OFFLINEPATH + idPartOffline;
             obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
             obj.iframe_url = baseUrl + IFRAMEPATH + idPartOnline + queryString;
+            obj.single_iframe_url = baseUrl + IFRAMEPATH + idPartOnline + queryString;
+            obj.single_once_iframe_url = baseUrl + IFRAMEPATH + idPartOnce + queryString;
             obj.preview_iframe_url = baseUrl + 'preview/' + IFRAMEPATH + idPartOnline + queryString;
             // rest
             obj.enketo_id = id;

@@ -28,6 +28,7 @@ router
     } )
     .get( '/thanks', function( req, res ) {
         res.render( 'surveys/thanks', {
-            title: 'Thanks'
+            title: 'Thanks',
+            taken: req.query.taken
         } );
     } );

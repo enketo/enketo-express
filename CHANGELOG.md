@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.33.2] - 2016-09-16
+---------------------
+##### Added
+- Documentation on ordinals.
+
+##### Fixed
+- IE11 adds rogue namespaces to ordinal attributes.
+
+[1.34.0] - 2016-09-19 
+---------------------
+##### Added
+- Advanced and regular single submission webform views and API endpoints.
+
 [1.33.1] - 2016-09-14
 ---------------------
 ##### Changed
