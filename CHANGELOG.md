@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.34.0] - 2016-09-19 
+---------------------
+##### Added
+- Advanced and regular single submission webform views and API endpoints. **WARNING: requires [additional configuration item](https://github.com/kobotoolbox/enketo-express/blob/master/config/README.md#less-secure-encryption-key)!**
+
 [1.33.2] - 2016-09-16
 ---------------------
 ##### Added
@@ -9,11 +14,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - IE11 adds rogue namespaces to ordinal attributes.
-
-[1.34.0] - 2016-09-19 
----------------------
-##### Added
-- Advanced and regular single submission webform views and API endpoints.
 
 [1.33.1] - 2016-09-14
 ---------------------
