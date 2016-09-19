@@ -26,7 +26,6 @@ router
     .all( '/*/iframe', _setIframe )
     .all( '/survey/all', _setIframe )
     .all( '/surveys/list', _setIframe )
-    .all( '*/single*', _setMultipleAllowed )
     .all( '/survey/preview*', function( req, res, next ) {
         req.webformType = 'preview';
         next();
@@ -43,8 +42,12 @@ router
         req.webformType = 'edit';
         next();
     } )
-    .all( '*/single*', function( req, res, next ) {
+    .all( '/survey/single*', function( req, res, next ) {
         req.webformType = 'single';
+        next();
+    } )
+    .all( '/survey/single/once*', function( req, res, next ) {
+        req.multipleAllowed = false;
         next();
     } )
     .all( '/survey/offline*', function( req, res, next ) {
@@ -68,8 +71,12 @@ router
     .delete( '/survey', deactivateSurvey )
     .get( '/survey/single', getExistingSurvey )
     .get( '/survey/single/iframe', getExistingSurvey )
+    .get( '/survey/single/once', getExistingSurvey )
+    .get( '/survey/single/once/iframe', getExistingSurvey )
     .post( '/survey/single', getNewOrExistingSurvey )
     .post( '/survey/single/iframe', getNewOrExistingSurvey )
+    .post( '/survey/single/once', getNewOrExistingSurvey )
+    .post( '/survey/single/once/iframe', getNewOrExistingSurvey )
     .get( '/survey/preview', getExistingSurvey )
     .get( '/survey/preview/iframe', getExistingSurvey )
     .post( '/survey/preview', getNewOrExistingSurvey )
@@ -319,11 +326,6 @@ function _setIframe( req, res, next ) {
     next();
 }
 
-function _setMultipleAllowed( req, res, next ) {
-    req.multipleAllowed = req.body.allow_multiple === 'true' || req.query.allow_multiple === 'true';
-    next();
-}
-
 function _setReturnQueryParam( req, res, next ) {
     var returnUrl = req.body.return_url || req.query.return_url;
 
@@ -355,7 +357,7 @@ function _generateWebformUrls( id, req ) {
     var baseUrl = protocol + '://' + req.headers.host + req.app.get( 'base path' ) + '/';
     var idPartOnline = '::' + id;
     var idPartOffline = '#' + id;
-    var idPartSingle = '::' + ( req.multipleAllowed ? id : utils.insecureAes192Encrypt( id, req.app.get( 'less secure encryption key' ) ) );
+    var idPartOnce = '::' + utils.insecureAes192Encrypt( id, req.app.get( 'less secure encryption key' ) );
     var queryParts;
 
     req.webformType = req.webformType || 'default';
@@ -376,20 +378,22 @@ function _generateWebformUrls( id, req ) {
                 queryParts.push( req.parentWindowOriginParam );
             }
             queryString = _generateQueryString( queryParts );
-            obj[ 'single' + ( iframePart ? '_iframe' : '' ) + '_url' ] = baseUrl +
-                'single/' + iframePart + idPartSingle + queryString;
+            obj[ 'single' + ( req.multipleAllowed === false ? '_once' : '' ) + ( iframePart ? '_iframe' : '' ) + '_url' ] = baseUrl +
+                'single/' + iframePart + ( req.multipleAllowed === false ? idPartOnce : idPartOnline ) + queryString;
             break;
         case 'all':
             // non-iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam ] );
             obj.url = baseUrl + idPartOnline + queryString;
-            obj.single_url = baseUrl + idPartSingle + queryString;
+            obj.single_url = baseUrl + idPartOnline + queryString;
+            obj.single_once_url = baseUrl + idPartOnce + queryString;
             obj.offline_url = baseUrl + OFFLINEPATH + idPartOffline;
             obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
             obj.iframe_url = baseUrl + IFRAMEPATH + idPartOnline + queryString;
-            obj.single_iframe_url = baseUrl + IFRAMEPATH + idPartSingle + queryString;
+            obj.single_iframe_url = baseUrl + IFRAMEPATH + idPartOnline + queryString;
+            obj.single_once_iframe_url = baseUrl + IFRAMEPATH + idPartOnce + queryString;
             obj.preview_iframe_url = baseUrl + 'preview/' + IFRAMEPATH + idPartOnline + queryString;
             // rest
             obj.enketo_id = id;
