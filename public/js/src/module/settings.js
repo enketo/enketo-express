@@ -104,6 +104,8 @@ if ( window.location.pathname.indexOf( '/preview' ) === 0 ) {
     settings.type = 'preview';
 } else if ( window.location.pathname.indexOf( '/single' ) === 0 ) {
     settings.type = 'single';
+} else if ( window.location.pathname.indexOf( '/edit' ) === 0 ) {
+    settings.type = 'edit';
 } else {
     settings.type = 'other';
 }
