@@ -635,5 +635,5 @@ module.exports = {
     init: init,
     setLogoutLinkVisibility: setLogoutLinkVisibility,
     inIframe: inIframe,
-    postEventAsmessageToParentWindow: postEventAsMessageToParentWindow
+    postEventAsMessageToParentWindow: postEventAsMessageToParentWindow
 };

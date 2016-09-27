@@ -15,7 +15,6 @@ module.exports = function( app ) {
     app.use( app.get( 'base path' ) + '/', router );
 };
 
-// duplicate in submission-controller
 router.param( 'enketo_id', routerUtils.enketoId );
 router.param( 'encrypted_enketo_id', routerUtils.encryptedEnketoId );
 
