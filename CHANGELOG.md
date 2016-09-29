@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Documentation on the "comment feature".
 
+##### Fixed
+- XPath functions containing "" or '' and refer to absolute paths sometimes produce incorrect result.
+
 [1.34.0] - 2016-09-19 
 ---------------------
 ##### Added

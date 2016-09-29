@@ -35,7 +35,7 @@
         "csurf": "1.9.x",
         "db.js": "0.15.0",
         "debug": "2.x.x",
-        "enketo-core": "4.9.2",
+        "enketo-core": "4.9.3",
         "enketo-transformer": "1.10.0",
         "express": "4.x.x",
         "grunt": "1.0.x",
