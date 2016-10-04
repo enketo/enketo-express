@@ -4,12 +4,11 @@ var JSZip = require( 'jszip' );
 var store = require( './store' );
 var Promise = require( 'lie' );
 var utils = require( './utils' );
-var saveAs = require( 'jszip/vendor/FileSaver' );
+var fileSaver = require( 'file-saver' );
 
 function recordsToZip( enketoId, formTitle ) {
     var folder;
     var folderName;
-    var content;
     var failures = [];
     var tasks = [];
     var meta = [];
@@ -68,22 +67,24 @@ function recordsToZip( enketoId, formTitle ) {
             }, Promise.resolve() );
         } )
         .then( function() {
-            var error;
-            var filename = name + '_' + _formatDate( new Date() ) + '.zip';
-
             zip.file( 'meta.json', JSON.stringify( meta, null, 4 ) );
-            content = zip.generate( {
+            return zip.generateAsync( {
                 type: 'blob'
             } );
-            saveAs( content, filename );
-            content.name = filename;
-
+        } )
+        .then( function( blob ) {
+            blob.name = name + '_' + _formatDate( new Date() ) + '.zip';
+            fileSaver.saveAs( blob );
+            return blob;
+        } )
+        .then( function( blob ) {
+            var error;
             if ( failures.length > 0 ) {
                 error = new Error( '<ul class="error-list"><li>' + failures.join( '</li><li>' ) + '</li></ul>' );
-                error.exportFile = content;
+                error.exportFile = blob;
                 throw error;
             } else {
-                return content;
+                return blob;
             }
         } );
 }
