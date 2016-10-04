@@ -22,6 +22,7 @@ gulp.task( 'default', function() {
         .pipe( i18next( {
             locales: [ 'en' ],
             functions: [ 't', 'TError' ],
+            ignoreVariables: true,
             // This is very odd, but has something to do with Gulp
             // changing the base to the src argument, in this case
             // apparently to url in the first item of the src argument array
