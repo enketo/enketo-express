@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Documentation on the "comment feature".
 
+##### Changed
+- Tightened up form header with less whitespace especially in pages mode.
+
 ##### Fixed
 - XPath functions containing "" or '' and refer to absolute paths sometimes produce incorrect result.
 
