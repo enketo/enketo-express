@@ -6,32 +6,41 @@
         margin-top: 10px;
         color: $text-color;
     }
+
     .vex-content {
         width: 550px;
         border: 4px solid #ccc;
         border-radius: 4px;
     }
+
     .vex-dialog-button {
         @extend .btn;
+
         margin-top: 20px !important;
         margin-left: 30px !important;
         margin-bottom: 0 !important;
     }
+
     .vex-auto-close-timer {
         position: absolute;
         bottom: 12px;
         color: $text-muted;
     }
+
     .vex-dialog-input input[type=text] {
-        @extend .form-control[type=text];
+        //@include form-control;
+   
     }
+
     .vex-dialog-input input[type=checkbox],
     .vex-dialog-input input[type=radio] {
         margin-right: 10px;
     }
+
     .or-hint.active {
         margin-bottom: 10px;
     }
+
     .vex-dialog-link {
         margin-top: 20px;
         font-size: 0.8em;
@@ -43,28 +52,36 @@
 
 .vex.vex-theme-plain .vex-dialog-input {
     input {
-        @extend .form-control;
+        //@include form-control;
+   
     }
+
     fieldset {
         margin: 20px 0;
     }
+
     legend {
         @include font-bold;
+
         font-size: 16px;
         margin-bottom: 10px;
+
         ~ label {
             display: inline-block;
             width: auto;
             font-weight: normal;
+
             input[type=radio] {
                 width: auto;
                 display: inline-block;
                 height: auto;
                 margin-left: 10px;
             }
+
             &:hover {
                 background: none;
             }
+
             + label {
                 margin-left: 20px;
             }
@@ -75,6 +92,7 @@
 .ios-safari {
     $width: 25px;
     $height: 30px;
+
     display: inline-block;
     width: $width;
     height: $height;
@@ -86,11 +104,14 @@
 
 .android-chrome, .android-firefox-1 {
     @extend .icon;
+
     @extend .icon-ellipsis-v;
+
     padding: 0 5px;
 }
 
 .android-firefox-2 {
     @extend .icon;
+
     @extend .icon-star-o;
 }

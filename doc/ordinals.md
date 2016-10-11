@@ -15,9 +15,9 @@ If a repeat has not been cloned, i.e. there is only one repeat instance, no attr
 
 From the moment a repeat is cloned for the first time, Enketo will start adding the new ordinal attributes (including for the first instance of the repeat) to the repeat node in the XML model.
 
-The `ordinal` attribute in the Enketo XForms namespace indicates a sequential ordinal at the time the repeat was created. The value never changes. If a repeat is deleted, that ordinal number will never be re-used. The ordinal attribute is added to each repeat in a series.
+The `ordinal` attribute in the Enketo XForms namespace indicates a sequential 1-based ordinal at the time the repeat was created. The value never changes. If a repeat is deleted, that ordinal number will never be re-used. The ordinal attribute is added to each repeat in a series.
 
-The `last-used-ordinal` attribute in the Enketo XForms namespace indicates the last ordinal that was used for that particular repeat. This attribute is only added to the first repeat in a series.
+The `last-used-ordinal` attribute in the Enketo XForms namespace indicates the last ordinal value that was used for that particular repeat. This attribute is only added to the first repeat in a series.
 
 Below is a simple example of a model where 5 persons have been created but person 2 and person 5 have been deleted:
 

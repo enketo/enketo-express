@@ -11,30 +11,37 @@ $offline-color: #d15200;
 }
 
 .form-header {
-    text-align: left; // even for rtl UI
+    text-align: left;
+
+    // even for rtl UI
     .branding {
         margin: 0;
         height: 34px;
         display: inline-table;
+
         .logo-wrapper {
             display: table-cell;
             vertical-align: middle;
         }
+
         img {
             height: 100%;
             max-height: 30px;
             max-width: 130px;
             vertical-align: middle;
+
             //margin-left: 16px;
             &:hover {
                 opacity: 0.8;
             }
         }
+
         span {
             display: inline-block;
             color: #444444;
             font-weight: bold;
             font-size: 1.4em;
+
             &:hover {
                 text-decoration: none;
                 opacity: 0.8;
@@ -49,21 +56,25 @@ $offline-color: #d15200;
     left: 0;
     display: block;
     max-width: 100% !important;
+
     // to make sure animation works the very first time
     width: 34px;
+
     // to make sure that it can't be set lower inline
     min-width: 34px !important;
     margin: 0;
     height: 3px;
     background-color: $offline-color;
     z-index: 1000;
+
     @include transition-slow;
 }
 
 [dir="rtl"] {
-    .offline-enabled{
+    .offline-enabled {
         top: 0px;
     }
+
     .form-progress {
         right: 0;
         left: auto;
@@ -72,28 +83,34 @@ $offline-color: #d15200;
 
 .offline-enabled {
     @include transition-fast;
+
     display: block;
     position: fixed;
     top: 3px;
     left: 0;
+
     .offline-enabled__icon {
         width: 34px;
         height: 34px;
         background-color: $offline-color;
-        background-image: url($base-path+"/images/offline-enabled.png");
+        background-image: url($base-path + "/images/offline-enabled.png");
         background-repeat: no-repeat;
         opacity: 1;
+
         @include transition-slow(opacity, 3s);
+
         &.not-enabled {
             height: 0;
             opacity: 0;
             width: 0;
             background: none;
         }
+
         &:hover {
             opacity: 0.8;
         }
     }
+
     .offline-enabled__queue-length {
         cursor: pointer;
         margin-top: 1px;
@@ -106,14 +123,18 @@ $offline-color: #d15200;
         line-height: 15px;
         font-size: 15px;
         opacity: 1;
+
         @include transition-slow(opacity, 3s);
+
         &.hide {
             opacity: 0;
             display: none;
         }
+
         &.submitting {
             color: #ce4f07;
         }
+
         &:hover {
             color: green;
         }
@@ -127,6 +148,7 @@ $offline-color: #d15200;
 
 .form-language-selector {
     padding-right: 20px;
+
     #form-languages {
         display: inline-block;
     }
@@ -140,17 +162,22 @@ $offline-color: #d15200;
     padding: 7px 0 0 20px;
     margin-right: 0;
     float: right;
+
     @include enketo-icon;
+
     outline: 0;
+
     &::before {
         content: '\e60e';
         font-size: 30px;
     }
+
     &:hover {
         color: black;
         background: none;
         opacity: 0.7;
     }
+
     ~ .form-language-selector {
         border-right: 1px solid #999999;
     }
@@ -160,36 +187,34 @@ $offline-color: #d15200;
     position: fixed;
     top: 1px;
     right: 6px;
+
     .icon {
         font-size: 25px;
     }
 }
 
 @media screen and (max-width: $main-breakpoint + 100px) {
-    body {
-        .main {
-            .paper {
-                padding-top: 70px;
-            }
-        }
-    }
     .form-header {
         .branding {
             float: left;
         }
     }
+
     .offline-enabled {
         position: static;
         display: inline-block;
         float: left;
+
         &__icon {
             float: left;
             margin-right: 10px;
             display: block;
+
             &.not-enabled ~ .queue-length {
                 margin-left: 0;
             }
         }
+
         &__queue-length {
             margin-top: 0;
             margin-left: -10px;
@@ -198,27 +223,40 @@ $offline-color: #d15200;
             display: block;
         }
     }
-    .or .form-logo img {
-        margin-top: 45px;
-    }
-     .form-header__button--homescreen {
+
+    .form-header__button--homescreen {
         position: absolute;
         top: 73px;
     }
 }
 
 @media screen and (max-width: $main-breakpoint) {
+    body {
+        .main {
+            .paper {
+                padding-top: 75px;
+            }
+        }
+    }
+
+    .or .form-logo img {
+        margin-top: 25px;
+    }
+
     .offline-enabled {
         .queue-length {
             background-color: rgb(245, 245, 245);
         }
     }
+
     .form-header__button--print {
         display: none;
+
         ~ .form-language-selector {
             border-right: none;
         }
     }
+
     .form-header__button--homescreen {
         top: -2px;
     }
@@ -240,18 +278,21 @@ $offline-color: #d15200;
     body {
         .main {
             .paper {
-                padding-top: 90px;
+                padding-top: 95px;
             }
         }
     }
+
     .form-header {
         border: none;
     }
+
     .form-language-selector {
         padding: 0;
         margin: 7px auto;
         width: 100%;
     }
+
     #form-languages {
         margin: 0;
         width: 100%;

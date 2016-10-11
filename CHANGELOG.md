@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.34.1] - 2016-10-11
+---------------------
+##### Added
+- Documentation on the "comment feature".
+
+##### Changed
+- Tightened up form header and form footer with less whitespace especially in pages mode.
+
+##### Fixed
+- XPath functions containing "" or '' and refer to absolute paths sometimes produce incorrect result.
+
 [1.34.0] - 2016-09-19 
 ---------------------
 ##### Added
