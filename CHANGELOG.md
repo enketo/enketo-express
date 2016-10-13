@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.34.2] - 2016-10-13
 ---------------------
+##### Changed
+- Even less whitespace in form header and footer, especially in pages mode.
+
 ##### Fixed
 - When branch is disabled an exception 'Cannot read property "readonly"' occurs.
 

@@ -231,14 +231,6 @@ $offline-color: #d15200;
 }
 
 @media screen and (max-width: $main-breakpoint) {
-    body {
-        .main {
-            .paper {
-                padding-top: 75px;
-            }
-        }
-    }
-
     .or .form-logo img {
         margin-top: 25px;
     }
@@ -249,11 +241,16 @@ $offline-color: #d15200;
         }
     }
 
+    .form-header .branding {
+        margin: 16px 0;
+    }
+
     .form-header__button--print {
         display: none;
 
         ~ .form-language-selector {
             border-right: none;
+            padding-right: 0;
         }
     }
 
@@ -275,22 +272,18 @@ $offline-color: #d15200;
 }
 
 @media screen and (max-width: 430px) {
-    body {
-        .main {
-            .paper {
-                padding-top: 95px;
-            }
-        }
-    }
-
     .form-header {
         border: none;
-    }
 
-    .form-language-selector {
-        padding: 0;
-        margin: 7px auto;
-        width: 100%;
+        .form-language-selector {
+            padding-bottom: 0;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .branding {
+            margin-bottom: 0;
+        }
     }
 
     #form-languages {

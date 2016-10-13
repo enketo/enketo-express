@@ -80,9 +80,14 @@
                 padding: 9px;
                 margin-bottom: 0;
                 float: left;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .first-page {
+                padding-left: 32px;
+
                 &:not(:hover) {
                     border-right: none;
                 }
@@ -90,6 +95,8 @@
                 &::before {
                     @include enketo-icon;
 
+                    margin-top: 2px;
+                    margin-left: -22px;
                     content: '\e611' !important;
                     float: left;
                     color: #757474;
@@ -97,9 +104,13 @@
             }
 
             .last-page {
+                padding-right: 32px;
+
                 &::before {
                     @include enketo-icon;
 
+                    margin-top: 2px;
+                    margin-right: -22px;
                     content: '\e610' !important;
                     float: right;
                     color: #757474;
@@ -117,7 +128,7 @@
 
     .enketo-power {
         position: static;
-        margin: 0 auto 30px auto;
+        margin: 0 auto 15px auto;
         left: auto;
         width: 100%;
         line-height: 25px;
@@ -146,13 +157,13 @@
 @media screen and (min-width: $main-breakpoint) {
     .form-footer .enketo-power {
         position: absolute;
-        bottom: -100px;
+        bottom: -80px;
         right: 5px;
         width: auto;
     }
 
     .pages ~ .form-footer .enketo-power {
-        bottom: -105px;
+        bottom: -90px;
     }
 }
 
