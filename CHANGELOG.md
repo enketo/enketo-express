@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.34.3] - 2016-10-17
+---------------------
+##### Changed
+- If logo source in config.json is "", remove all branding space in Pages mode on small screens.
+
 [1.34.2] - 2016-10-13
 ---------------------
 ##### Changed
