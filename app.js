@@ -23,4 +23,13 @@ if ( cluster.isMaster ) {
         var msg = 'Worker ' + worker + ' ready for duty at port ' + server.address().port + '! (environment: ' + app.get( 'env' ) + ')';
         console.log( msg );
     } );
+    /**
+     * The goal of this timeout is to time out AFTER the client (browser request) times out.
+     * This avoids nasty issues where a proxied submission is still ongoing but Enketo
+     * drops the connection, potentially resulting in the browser queue not emptying,
+     * despite submitting successfully.
+     *
+     * https://github.com/kobotoolbox/enketo-express/issues/564
+     */
+    server.timeout = app.get( 'timeout' ) + 1000;
 }

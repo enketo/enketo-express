@@ -65,21 +65,36 @@ function submit( req, res, next ) {
         } )
         .then( function( authHeader ) {
             options = {
+                method: 'POST',
                 url: submissionUrl,
                 headers: authHeader ? {
                     'Authorization': authHeader
-                } : {}
+                } : {},
+                timeout: req.app.get( 'timeout' ) + 500
             };
-
             // pipe the request 
-            req.pipe( request( options ) ).on( 'response', function( orResponse ) {
-                if ( orResponse.statusCode === 201 ) {
-                    _logSubmission( id, instanceId, deprecatedId );
-                } else if ( orResponse.statusCode === 401 ) {
-                    // replace the www-authenticate header to avoid browser built-in authentication dialog
-                    orResponse.headers[ 'WWW-Authenticate' ] = 'enketo' + orResponse.headers[ 'WWW-Authenticate' ];
-                }
-            } ).pipe( res );
+            req.pipe( request( options ) )
+                .on( 'response', function( orResponse ) {
+                    console.log( 'response', orResponse );
+                    if ( orResponse.statusCode === 201 ) {
+                        _logSubmission( id, instanceId, deprecatedId );
+                    } else if ( orResponse.statusCode === 401 ) {
+                        // replace the www-authenticate header to avoid browser built-in authentication dialog
+                        orResponse.headers[ 'WWW-Authenticate' ] = 'enketo' + orResponse.headers[ 'WWW-Authenticate' ];
+                    }
+                } )
+                .on( 'error', function( error ) {
+                    if ( error && ( error.code === 'ETIMEDOUT' || error.code === 'ECONNRESET' ) ) {
+                        if ( error.connect === true ) {
+                            error.status = 504;
+                        } else {
+                            error.status = 408;
+                        }
+                    }
+
+                    next( error );
+                } )
+                .pipe( res );
 
         } )
         .catch( next );

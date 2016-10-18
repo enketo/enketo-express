@@ -281,6 +281,7 @@ module.exports = {
         supportEmail: config.support.email,
         themesSupported: config[ 'themes supported' ],
         languagesSupported: config[ 'languages supported' ],
+        timeout: config[ 'timeout' ],
         submissionParameter: {
             name: config[ 'query parameter to pass to submission' ]
         },

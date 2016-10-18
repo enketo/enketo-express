@@ -329,9 +329,11 @@
     "http401": "Authentication problem with data server.",
     "http403": "Not allowed to post data to this data server.",
     "http404": "Submission service on data server not found.",
+    "http408": "Data server timed out.",
     "http413": "Data is too large.",
     "http4xx": "Unknown submission problem on data server.",
-    "http500": "The data server for your form or the Enketo server is down. Please try again later or contact __supportEmail__."
+    "http500": "The data server for your form or the Enketo server is down. Please try again later or contact __supportEmail__.",
+    "http504": "Could not establish connection with data server."
   },
   "version": "version:",
   "widget": {

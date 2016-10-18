@@ -108,6 +108,7 @@ function _uploadBatch( recordBatch ) {
         // submission URL is dynamic
         var submissionUrl = ( settings.enketoId ) ? settings.basePath + '/submission/' + settings.enketoIdPrefix + settings.enketoId +
             utils.getQueryString( settings.submissionParameter ) : null;
+
         $.ajax( submissionUrl, {
                 type: 'POST',
                 data: recordBatch.formData,
@@ -119,7 +120,7 @@ function _uploadBatch( recordBatch ) {
                     'X-OpenRosa-Deprecated-Id': recordBatch.deprecatedId,
                     'X-OpenRosa-Instance-Id': recordBatch.instanceId
                 },
-                timeout: 300 * 1000
+                timeout: settings.timeout
             } )
             .done( function( data, textStatus, jqXHR ) {
                 var result = {
