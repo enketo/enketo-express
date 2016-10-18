@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.34.4] - 2016-10-18
+---------------------
+##### Fixed
+- If repeat has no template, duplicate and conflicting ordinal attributes are added.
+- Loading a record with namespaced attributes utterly fails in IE11.
+- When record contains text nodes as siblings of repeats, new repeats are not added in correct position.
+
 [1.34.3] - 2016-10-17
 ---------------------
 ##### Changed
