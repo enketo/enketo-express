@@ -453,21 +453,23 @@ function getErrorResponseMsg( statusCode ) {
         '401': t( 'submission.http401' ),
         '403': t( 'submission.http403' ) + '<br/>' + contactAdmin,
         '404': t( 'submission.http404' ),
+        '408': t( 'submission.http408' ),
         '4xx': t( 'submission.http4xx' ),
         '413': t( 'submission.http413' ) + '<br/>' + contactSupport,
         '500': t( 'submission.http500', supportEmailObj ),
         '503': t( 'submission.http500', supportEmailObj ),
+        '504': t( 'submission.http504', supportEmailObj ),
         '5xx': t( 'submission.http500', supportEmailObj )
     };
 
     statusCode = ( typeof statusCode !== 'undefined' ) ? statusCode.toString() : 'undefined';
 
     if ( statusMap[ statusCode ] ) {
-        msg = statusMap[ statusCode ];
+        msg = statusMap[ statusCode ] + ' (' + statusCode + ')';
     } else if ( statusMap[ statusCode.replace( statusCode.substring( 1 ), 'xx' ) ] ) {
-        msg = statusMap[ statusCode.replace( statusCode.substring( 1 ), 'xx' ) ];
+        msg = statusMap[ statusCode.replace( statusCode.substring( 1 ), 'xx' ) ] + ' (' + statusCode + ')';
     } else {
-        msg = t( 'error.unknown' );
+        msg = t( 'error.unknown' ) + ' (' + statusCode + ')';
     }
 
     return msg;

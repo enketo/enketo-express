@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- If OpenRosa server takes more than 2 minutes to respond to /submission, records stay stuck in browser queue despite being received.
+
 [1.34.4] - 2016-10-18
 ---------------------
 ##### Fixed
