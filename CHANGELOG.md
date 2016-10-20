@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Changed
+- Allow form to load if external data fails to dowload (but still show strong warning).
+
 [1.34.5] - 2016-10-20
 ---------------------
 ##### Fixed

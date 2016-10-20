@@ -369,12 +369,17 @@ function _getExternalData( survey ) {
             };
         } ).get();
 
-        survey.externalData.forEach( function( instance ) {
+        survey.externalData.forEach( function( instance, index ) {
             tasks.push( _getDataFile( instance.src ).then( function( data ) {
-                // if CSV file, transform to XML String
-                instance.xmlStr = ( typeof data === 'string' ) ? utils.csvToXml( data ) : ( new XMLSerializer() ).serializeToString( data );
-                return instance;
-            } ) );
+                    // if CSV file, transform to XML String
+                    instance.xmlStr = ( typeof data === 'string' ) ? utils.csvToXml( data ) : ( new XMLSerializer() ).serializeToString( data );
+                    return instance;
+                } )
+                .catch( function( e ) {
+                    survey.externalData.splice( index, 1 );
+                    // let external data files fail quietly. Rely on Enketo Core to show error.
+                    console.error( e );
+                } ) );
         } );
     } catch ( e ) {
         return Promise.reject( e );
