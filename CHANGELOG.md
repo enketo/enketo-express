@@ -2,10 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.34.5] - 2016-10-20
 ---------------------
 ##### Fixed
 - If OpenRosa server takes more than 2 minutes to respond to /submission, records stay stuck in browser queue despite being received.
+- Too much whitespace in form header on small iOS 9 devices in Pages mode. 
 
 [1.34.4] - 2016-10-18
 ---------------------
