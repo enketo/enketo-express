@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Allow form to load if external data fails to dowload (but still show strong warning).
 
+##### Fixed
+- XML entities in CSV document are not encoded.
+
 [1.34.5] - 2016-10-20
 ---------------------
 ##### Fixed

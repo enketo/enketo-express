@@ -171,7 +171,7 @@ function csvToXml( csv ) {
     xmlStr = '<root>' +
         rows.map( function( row ) {
             return '<item>' + row.map( function( value, index ) {
-                return '<{n}>{v}</{n}>'.replace( /{n}/g, headers[ index ] ).replace( /{v}/g, value.trim() );
+                return '<{n}>{v}</{n}>'.replace( /{n}/g, headers[ index ] ).replace( /{v}/g, _encodeXmlEntities( value.trim() ) );
             } ).join( '' ) + '</item>';
         } ).join( '' ) +
         '</root>';
@@ -235,6 +235,23 @@ function _throwInvalidXmlNodeName( name ) {
     } else {
         throw new Error( 'CSV column heading "' + name + '" cannot be turned into a valid XML element' );
     }
+}
+
+function _encodeXmlEntities( str ) {
+    return str.replace( /[<>&'"]/g, function( c ) {
+        switch ( c ) {
+            case '<':
+                return '&lt;';
+            case '>':
+                return '&gt;';
+            case '&':
+                return '&amp;';
+            case '\'':
+                return '&apos;';
+            case '"':
+                return '&quot;';
+        }
+    } );
 }
 
 module.exports = {
