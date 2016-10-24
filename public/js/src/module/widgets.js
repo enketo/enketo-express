@@ -20,6 +20,7 @@ var widgets = [
     require( '../../../../node_modules/enketo-core/src/widget/horizontal-choices/horizontalchoices' ),
     require( '../../../../node_modules/enketo-core/src/widget/analog-scale/analog-scalepicker' ),
     require( '../../../../node_modules/enketo-core/src/widget/big-image/image-viewer' ),
+    require( '../../../../node_modules/enketo-core/src/widget/comment/commentwidget' ),
 ];
 
 module.exports = widgets;

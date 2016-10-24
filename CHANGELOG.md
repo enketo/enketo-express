@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Added
+- Comment widget enabled by default.
+
 ##### Changed
 - Allow form to load if external data fails to dowload (but still show strong warning).
 
