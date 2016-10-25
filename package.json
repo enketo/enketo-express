@@ -53,6 +53,7 @@
         "lodash": "4.13.x",
         "morgan": "1.x.x",
         "papaparse": "4.1.x",
+        "qrcode-npm": "0.0.3",
         "redis": "2.5.x",
         "request": "2.72.x",
         "serve-favicon": "2.x.x",

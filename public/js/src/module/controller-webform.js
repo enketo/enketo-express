@@ -12,6 +12,7 @@ var fileManager = require( './file-manager' );
 var t = require( './translator' ).t;
 var records = require( './records-queue' );
 var $ = require( 'jquery' );
+var qrCode = require( 'qrcode-npm' );
 
 var form;
 var formSelector;
@@ -198,21 +199,34 @@ function _loadRecord( instanceId, confirmed ) {
  * Shows a QR representation of the model.
  */
 function _showQR() {
-    var qrSrc;
+    var qrSrc = {}, demoString = '';
     var leafNodeList = form.getModel().evaluate( '//*[not(child::*)]', 'nodes', null, null, true );
+    var qr = qrCode.qrcode(4, 'M');
 
     // Some stuff you can do to either create a flat structure or full paths and values:
     for ( var i = 0; i < leafNodeList.length; i++ ) {
-        var path = form.getModel().getXPath( leafNodeList[ i ], 'instance', true );
+        // let's try flat
         var value = leafNodeList[ i ].textContent;
         var nodeName = leafNodeList[ i ].nodeName;
-        console.debug( 'leafnode:', nodeName, value, path );
+        // and leave out uuid for now
+        if (nodeName !== 'uuid') {
+            qrSrc[nodeName] = value;
+            demoString += nodeName + ': ' + value + '\n';
+        }
     }
 
-    qrSrc = 'http://dbfhrael6egb5.cloudfront.net/wp-content/themes/qr/content/generator/_ui/images/qr_website_active.png';
-
-    gui.alert( '<img src="' + qrSrc + '"/>', 'Result', 'normal' );
-
+    try {
+        qr.addData(JSON.stringify(qrSrc));
+        qr.make();
+        gui.alert( [
+            '<code><pre>',
+                qr.createImgTag(4).replace('<img ', '<img style="float:left;margin-right:10px" '),
+                demoString,
+            '</code></pre>'
+        ].join('') , 'Result', 'normal' );
+    } catch (e) {
+        console.error("There was an error, possibly with generating the QR code:", e, qrSrc);
+    }
     // _resetForm(true);
 }
 
