@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.35.0] - 2016-10-27
+---------------------
+##### Added
+- Comment widget enabled by default.
+
+##### Changed
+- Allow form to load if external data fails to dowload (but still show strong warning).
+
+##### Fixed
+- XML entities in CSV document are not encoded.
+- Empty string literals ('""') are evaluated to 'undefined'.
+- MS Edge does not properly clone repeats.
+- "Different Encoding" error if instance encoding is specified, even if it's compatible.
+
 [1.34.5] - 2016-10-20
 ---------------------
 ##### Fixed
