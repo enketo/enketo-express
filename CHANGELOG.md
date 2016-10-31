@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.35.1] - 2016-10-31
+---------------------
+##### Fixed
+- Repeat names with dots do not create multiple repeats upon loading and do not default values except for the first repeat.
+- Public form.validate() function is skipping constraint validation if xml type is string, binary, select or select1.
+
 [1.35.0] - 2016-10-27
 ---------------------
 ##### Added
