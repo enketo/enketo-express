@@ -107,7 +107,8 @@
         },
         "thanks": {
             "heading": "Danke für Ihre Teilnahme!",
-            "msg": "Dieses Fenster kann nun geschlossen werden."
+            "msg": "Dieses Fenster kann nun geschlossen werden.",
+            "msgTaken": "Sie haben diese Umfrage bereits durchgeführt."
         },
         "validationerror": {
             "msg": "Das formular enthält Fehler. Bitte beachten Sie die rot markierten Felder."
@@ -328,9 +329,11 @@
         "http401": "Authentifizierung Problem mit Datenserver.",
         "http403": "Nicht erlaubt Daten zu diesem Datenserver zu übermitteln.",
         "http404": "Sende-Service wurde auf dem Datenserver nicht gefunden.",
+        "http408": "Data server timed out.",
         "http413": "Datenmenge ist zu groß.",
         "http4xx": "Unbekanntes Sendeproblem auf Datenserver.",
-        "http500": "Der Datenserver für das Formular oder der Enketo Server sind ausgefallen. Bitte versuchen Sie es später noch einmal oder kontaktieren __supportEmail__"
+        "http500": "Der Datenserver für das Formular oder der Enketo Server sind ausgefallen. Bitte versuchen Sie es später noch einmal oder kontaktieren __supportEmail__",
+        "http504": "Verbindung zum Datenserver konnte nicht hergestellt werden."
     },
     "version": "Version:",
     "widget": {

@@ -107,7 +107,8 @@
         },
         "thanks": {
             "heading": "Děkujeme za účast!",
-            "msg": "Toto okno může být teď zavřené."
+            "msg": "Toto okno může být teď zavřené.",
+            "msgTaken": "Tento průzkum jste již dokončili."
         },
         "validationerror": {
             "msg": "Formulář obsahuje chyby. Prosím, zkontrolujte pole označená červenou barvou."
@@ -328,9 +329,11 @@
         "http401": "Nastal problém při autentikaci s datovým serverem.",
         "http403": "Není povoleno posílat data na tento datový server.",
         "http404": "Služba pro odeslání nebyla nalezena na datovém serveru.",
+        "http408": "Spojení s datovým serverem vypršelo.",
         "http413": "Data jsou příliš velké.",
         "http4xx": "Vyskytla neznáma chyba při odeslání na datovém serveru.",
-        "http500": "Datový server vašeho formuláře nebo Engeto server je nedostupný. Zkuste to prosím později nebo kontaktujte __supportEmail__."
+        "http500": "Datový server vašeho formuláře nebo Engeto server je nedostupný. Zkuste to prosím později nebo kontaktujte __supportEmail__.",
+        "http504": "Nepodařilo se navázat spojení s dátovým serverem."
     },
     "version": "verze:",
     "widget": {
