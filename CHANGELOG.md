@@ -2,17 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.35.3] - 2016-11-08
 ---------------------
+##### Added
+- Finnish translation.
+
 ##### Fixed
 - Offline icon position slightly off.
 
 
 [1.35.2] - 2016-11-04
 ---------------------
-##### Added
-- Finnish translation.
-
 ##### Changed
 - Updated Czech, Slovak, German and Dutch translations.
 
