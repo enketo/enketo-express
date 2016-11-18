@@ -5,20 +5,20 @@
     "alert": {
         "addtohomescreen": {
             "androidchrome": {
-                "msg": "Lisätäksesi tämä lomake aloitusnäyttöön, muuta selaimen asetuksiksi kuvake __image1__ ja valitse: 'Lisää aloitusnäyttöön'"
+                "msg": "Lisätäksesi tämä lomake aloitusnäyttöön, muuta selaimen asetuksiksi kuvake __image1__ ja valitse: 'Lisää Koti-valikkoon'"
             },
             "androidfirefox": {
                 "msg": [
-                    "Lisätäksesi tämä lomake aloitusnäyttöön:",
+                    "Lisätäksesi tämä lomake kotivalikkoon:",
                     "Lisätäksesi tämä sivu Firefox-kirjanmerkkeihisi, napsauta asetuskuvaketta __image1__ ja sitten tähtikuvaketta __image2__.",
                     "2. Avaa kirjanmerkkisi avaamalla uusi sivu ja napsauta kirjanmerkkikielekettä.",
                     "3. Näpsäytä-ja-pidä lomakettasi kunnes ponnahdusikkunan lista ilmestyy.",
-                    "4. Valitse 'Lisää aloitusnäyttöön'"
+                    "4. Valitse 'Lisää Koti-valikkoon'"
                 ]
             },
-            "heading": "Lisää aloitusnäyttöön",
+            "heading": "Lisää Koti-valikkoon",
             "iossafari": {
-                "msg": "Lisätäksesi tämä lomake aloitussivulle, napsauta jakokuvaketta __image1__ selaimesi oikeassa yläkulmassa ja valitse: '+ Lisää aloitussivulle'."
+                "msg": "Lisätäksesi tämä lomake kotivalikkoon, napsauta jakokuvaketta __image1__ selaimesi oikeassa yläkulmassa ja valitse: '+ Lisää Koti-valikkoon'."
             }
         },
         "appupdated": {
@@ -258,6 +258,7 @@
         "en": "Englanti",
         "es": "Espanja",
         "fa": "Persia",
+        "fi": "Finnish",
         "fr": "Ranska",
         "he": "Heprea",
         "hi": "Hindi",
@@ -279,7 +280,7 @@
             "heading": "Uudenaikaiset selaimet",
             "ie": {
                 "heading": "Miksi ei rakkautta noille inhottaville, vanhentuneille Internet Explorer versioille?",
-                "msg": "Ymmärrämme että joillain ihmisillä, erityisesti niillä jotka työsketelevät suurissa organisaatioissa, ei ole pääsyä viimeisille ja parhaille selaimille. Koska tiedämme miten mahtava verkko voi olla oikeilla työkaluilla, meillä on runsaasti empatiaa noita epäonnisia käyttäjiä kohtaan. Yleensä yritämme keksiä keinoja tukea joitain suosittuja vanhentuneita selaimia. Kuitenkin Enketon olemassaolo perustuu joidenkin erittäin hienostuneiden, viimeisten teknologioiden mahdollisuuksiin. Valitettavasti vanhentuneiden selainten käyttäjät ovat siksi epäonnisia. "
+                "msg": "Ymmärrämme että erityisesti niillä ihmisillä jotka työsketelevät suurissa organisaatioissa, ei ole pääsyä viimeisille ja parhaille selaimille. Koska tiedämme miten mahtava verkko voi olla oikeilla työkaluilla, meillä on runsaasti empatiaa noita epäonnisia käyttäjiä kohtaan. Yleensä yritämme keksiä keinoja tukea joitain suosittuja vanhentuneita selaimia. Kuitenkin Enketon olemassaolo perustuu joidenkin erittäin hienostuneiden, viimeisten teknologioiden mahdollisuuksiin. Valitettavasti vanhentuneiden selainten käyttäjät ovat siksi epäonnisia. "
             },
             "msg1": "Auts! Pahoittelut, olet tällä sivustolla todennäköisimmin koska selaimesi on vanhentunut tai joitain sen tärkeimpiä ominaisuuksia on suljettu käyttämällä 'yksityisselain' asetuksia. ",
             "msg2": "Jos käytät vanhentunutta selainta, suosittelemme päivittämään viimeisimmä version seuraavista erinomaisista, uudenaikaisista selaimista:"
