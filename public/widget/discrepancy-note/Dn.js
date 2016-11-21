@@ -25,6 +25,7 @@ Comment.prototype.constructor = Comment;
 Comment.prototype._init = function() {
     this.$linkedQuestion = this._getLinkedQuestion( this.element );
     this.$commentQuestion = $( this.element ).closest( '.question' );
+    this.ordinal = 0;
 
     if ( this.$linkedQuestion.length === 1 ) {
         this.notes = this._parseModelFromString( this.element.value );
@@ -306,8 +307,7 @@ Comment.prototype._parseElapsedTime = function( elapsedMilliseconds ) {
 Comment.prototype._addQuery = function( comment, status, assignee, notify ) {
     var n = Date.now();
     this.notes.queries.unshift( {
-        // TODO: generate ID?
-        id: '',
+        id: ( ++this.ordinal ).toString(),
         date_time: this._getFormattedCurrentDatetimeStr(),
         comment: comment,
         status: status,
