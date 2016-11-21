@@ -107,7 +107,8 @@
         },
         "thanks": {
             "heading": "Bedankt voor uw deelname!",
-            "msg": "U kunt dit venster nu sluiten."
+            "msg": "U kunt dit venster nu sluiten.",
+            "msgTaken": "U heeft deze enquete al afgerond."
         },
         "validationerror": {
             "msg": "De enquete bevat fouten. Zie de vragen die rood gekleurd zijn."
@@ -257,6 +258,7 @@
         "en": "Engels",
         "es": "Spaans",
         "fa": "Perzisch",
+        "fi": "Fins",
         "fr": "Frans",
         "he": "Hebreeuws",
         "hi": "Hindi",
@@ -328,9 +330,11 @@
         "http401": "Autorisatie probleem met de data server.",
         "http403": "Niet toegestaan om records te verzenden naar deze server.",
         "http404": "Ontvangst service niet gevonden op data server.",
+        "http408": "Data server time-out.",
         "http413": "Record is te groot.",
         "http4xx": "Onbekend ontvangst probleem op de data server.",
-        "http500": "De data server voor deze enquete is niet bereikbaar. Probeer het later nog een keer of contacteer __supportEmail__."
+        "http500": "De data server voor deze enquete is niet bereikbaar. Probeer het later nog een keer of contacteer __supportEmail__.",
+        "http504": "Kon geen verbinding met data server opzetten."
     },
     "version": "versie:",
     "widget": {

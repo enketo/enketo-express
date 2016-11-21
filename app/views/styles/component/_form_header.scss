@@ -236,6 +236,9 @@ $offline-color: #d15200;
     }
 
     .offline-enabled {
+        // this negates a padding set on the form-header in enketo-core _response.scss
+        margin-left: -14px;
+
         .queue-length {
             background-color: rgb(245, 245, 245);
         }

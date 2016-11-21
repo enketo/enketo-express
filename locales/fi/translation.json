@@ -1,0 +1,345 @@
+{
+    "advanced": {
+        "flushdb": "Tyhjennä tallennus"
+    },
+    "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "Lisätäksesi tämä lomake aloitusnäyttöön, muuta selaimen asetuksiksi kuvake __image1__ ja valitse: 'Lisää Koti-valikkoon'"
+            },
+            "androidfirefox": {
+                "msg": [
+                    "Lisätäksesi tämä lomake kotivalikkoon:",
+                    "Lisätäksesi tämä sivu Firefox-kirjanmerkkeihisi, napsauta asetuskuvaketta __image1__ ja sitten tähtikuvaketta __image2__.",
+                    "2. Avaa kirjanmerkkisi avaamalla uusi sivu ja napsauta kirjanmerkkikielekettä.",
+                    "3. Näpsäytä-ja-pidä lomakettasi kunnes ponnahdusikkunan lista ilmestyy.",
+                    "4. Valitse 'Lisää Koti-valikkoon'"
+                ]
+            },
+            "heading": "Lisää Koti-valikkoon",
+            "iossafari": {
+                "msg": "Lisätäksesi tämä lomake kotivalikkoon, napsauta jakokuvaketta __image1__ selaimesi oikeassa yläkulmassa ja valitse: '+ Lisää Koti-valikkoon'."
+            }
+        },
+        "appupdated": {
+            "heading": "Sovellus päivitetty!",
+            "msg": "Uusi versio tästä sovelluksesta on ladattu. Lataa tämä sivu uudestaan ladataksesi päivitetty versio. "
+        },
+        "default": {
+            "button": "Sulje",
+            "heading": "Hälyytys"
+        },
+        "export": {
+            "alternativequestion": "vaihtoehtoinen lataus - verkossa",
+            "error": {
+                "filecreatedmsg": "Joka tapauksessa epätäydellinen vientitiedosto luotiin. ",
+                "heading": "Vientivirhe",
+                "linknotcreated": "Epäonnistuit luomaan vientilinkkiä tallentamattomille tiedostoille. Oletko verkossa?",
+                "msg": "Virheitä esiintyi luotaessa vientitiedostoa lähettämättömille tietueille. Virheet: __errors__"
+            },
+            "success": {
+                "heading": "Vientitiedosto luotu",
+                "msg": "Vientitiedosto luotiin kaikille tallentamattomille tietueille, jotka kuuluvat tähän lomakkeeseen. "
+            }
+        },
+        "formupdated": {
+            "heading": "Lomake päivitetty!",
+            "msg": "Uusi versio tästä lomakkeesta on ladattu. Päivitä tämä sivu ladataksesi päivitetty versio. "
+        },
+        "loaderror": {
+            "editadvice": "Tämä tietuetta suositellaan olemaan päivittämättä kunnes tämä on selvitetty. ",
+            "entryadvice": "Suositellaan että tätä lomaketta ei käytetä tiedon tallentamiseen ennenkuin tämä on selvitetty. ",
+            "heading": "Latausvirhe",
+            "msg1": "Virhe tätä lomaketta ladattaessa.",
+            "msg2": "Ole yhteydessä __emailLink__ ja liitä mukaan tämän sivun osoite ja alla oleva virheilmoitus:",
+            "heading_plural": "Latausvirheitä",
+            "msg1_plural": "Virheitä esiintyi tätä lomaketta ladattaessa. ",
+            "msg2_plural": "Ota yhteyttä __emailLink__ ja liitä mukaan tämän sivun osoite ja alla oleva virhetieto:"
+        },
+        "logout": {
+            "heading": "Olet kirjautunut ulos",
+            "msg": "Olet kirjautunut ulos. "
+        },
+        "offlinesupported": {
+            "heading": "Lomake toimii ilman verkkoyhteyttä!",
+            "msg": [
+                "Tämä lomake voidaan nyt ladata ja käyttää ilman verkkoyhteyttä tällä laitteella. Merkitse se kirjanmerkkeihisin helpottaaksesi pääsyä ilman verkkoyhteyttä. ",
+                "Tietueet tallennetaan automaattisesti ja ne ovat jonossa selaimellasi kunnes verkkoyhteys on tarjolla. Kun sovellus on verkossa, tietueet lähetetään yksitellen automaattisesti. ",
+                "Tietueesi poistetaan jonosta vasta kun se on lähetetty. Voit turvallisesti sulkea selaimesi ja laitteesi vaikka jonossa on tietoja. Ne ovat siellä kun seuraavan kerran lataat lomakkeen. "
+            ]
+        },
+        "offlineunsupported": {
+            "heading": "Sovellusta ei voitu ladata verkon ulkopuolella. ",
+            "msg": "Ilman verkkoa toimiva sovellus ei toimi selaimellasi. Voit käyttää tätä tutkimusta ilman tätä ominaisuutta tai tarkistaa vaihtoehdot tämän selvittämiseksi. ",
+            "negButton": "Käytä sitä",
+            "posButton": "Näytä vaihtoehdot"
+        },
+        "queuesubmissionsuccess": {
+            "msg": "__recordNames__ lähetettiin onnistuneesti",
+            "msg_plural": "__recordNames__ lähetettiin onnistuneesti"
+        },
+        "recordloadsuccess": {
+            "msg": "__recordName__ on ladattu"
+        },
+        "recordnotfound": {
+            "msg": "Tietuetta ei voitu palauttaa tai se oli tyhjä. "
+        },
+        "recordsavesuccess": {
+            "draftmsg": "Tietue tallennettu luonnokseksi.",
+            "finalmsg": "Tietue tallennettu lähettämistä varten jonoon. "
+        },
+        "submission": {
+            "msg": "Lähetetään...",
+            "redirectmsg": "Sinut ohjataan automaattisesti lähettämisen jälkeen. "
+        },
+        "submissionerror": {
+            "authrequiredmsg": "Todennus vaaditaa. Ole hyvä ja todenna __here__ toisella selainkielekkellä ja yritä uudestaan. ",
+            "fnfmsg": [
+                "Seuraavia mediatiedostoja ei voitu hakea: __failedFiles__. Lähetys tehtiin onnistuneesti ilman näitä tiedostoja. ",
+                "Ole yhteydessä __supportEmail__ raportoidaksesi virhe ja jos mahdollista, selitä kuinka tämä tapahtui. "
+            ],
+            "heading": "Lähetys epäonnistui"
+        },
+        "submissionsuccess": {
+            "heading": "Lähetys onnistui",
+            "msg": "Tietosi lähetettiin!",
+            "redirectmsg": "Sinut ohjataan nyt uudestaan."
+        },
+        "thanks": {
+            "heading": "Kiitos osallistumisestasi!",
+            "msg": "Voit sulkea tämän ikkunan nyt",
+            "msgTaken": "Olet jo täyttänyt tämän kyselyn. "
+        },
+        "validationerror": {
+            "msg": "Lomakkeessa on virheitä. Ole hyvä ja tarkista punaisella merkityt kentät. "
+        },
+        "validationsuccess": {
+            "heading": "OK",
+            "msg": "Lomake on virheetön!"
+        },
+        "xpatherror": {
+            "heading": "Matemaattinen virhe",
+            "msg": "Muotoiluvirhe esiintyi. Ole hyvä ja ota yhteyttä __emailLink__ ja liitä mukaan tämä virheilmoitus:"
+        }
+    },
+    "confirm": {
+        "autosaveload": {
+            "heading": "Tallentamaton tietue löytyi",
+            "msg": "Enketo on löytänyt tallentamattoman tietueen. Haluatko ladata tämän tietueen vai hävittää sen?",
+            "negButton": "Hävitä",
+            "posButton": "Lataa tietue"
+        },
+        "default": {
+            "heading": "Oletko varma?",
+            "msg": "Ole hyvä ja varmista tämä tapahtuma",
+            "negButton": "Peruuta",
+            "posButton": "Varmista"
+        },
+        "deleteall": {
+            "heading": "PANIIKKI!",
+            "msg": [
+                "Tämä poistaa kaikki jonossa olevat tietosi ja kaikki lomakkeesi selaimelta. Tieto häviää lopullisesti. Käytä tätä vaihtoehtoa ainoastaan jos selaimesi tallennus vaikuttaa olevan korruptoitunut.",
+                "Sulje kaikki muut Enketo-selaimen välilehdet ensin. ",
+                "Sivusto ladataan uudestaan. Jos saat virheilmoituksen, sinun täytyy uusia tämä toiminto. ",
+                "Oletko varma että haluat tehdä tämän?"
+            ],
+            "posButton": "Poista kaikki"
+        },
+        "discardcurrent": {
+            "heading": "Tallentamattomia muokkauksia",
+            "msg": "Nykyisessä lomakkeessa on tallentamattomia muutoksia. Haluaisitko ladata tämän tiedoston tallentamatta muutoksia jotka olet tehnyt?",
+            "posButton": "Etene tallentamatta"
+        },
+        "login": {
+            "heading": "Sisäänkirjaus vaaditaan",
+            "msg": [
+                "Sinun täytyy kirjautua sisään lähettääksesi jonossa olevat tietosi. Jos haluat tehdä sen nyt, sinut ohjataan uudestaan ja menetät tallentamattomat tiedot. ",
+                "Haluatko kirjautua sisään nyt vai myöhemmin?"
+            ],
+            "negButton": "Myöhemmin",
+            "posButton": "Kirjaudu sisään nyt"
+        },
+        "print": {
+            "a4": "A4",
+            "heading": "Valitse tulostusasetukset",
+            "landscape": "Vaakasuora",
+            "letter": "Kirje",
+            "msg": "Valitse allaolevista tulostusasetuksistasi saadaksesi optimoitu tuloste",
+            "orientation": "Paperin suunta",
+            "portrait": "Pysty",
+            "posButton": "Valmista",
+            "psize": "Paperin koko",
+            "reminder": "Muista asettaa nämä samat tulostusasetukset selaimen tulostusvalikosta jälkikäteen!"
+        },
+        "save": {
+            "existingerror": "Tämä tiedoston nimi tai tunnus on jo olemassa. ",
+            "hint": "Tämä nimi mahdollistaa luonnoksesi helpon löytämisen myöhemmin viimeistelyä varten. ",
+            "msg": "Tallentamattomia muutoksia, haluatko jatkaa tallentamatta niitä?",
+            "name": "Tietueen nimi",
+            "posButton": "Tallenna & sulje",
+            "renamemsg": "Oletko varma että haluat nimetä __currentName__ uudelleen __newName__?",
+            "unkownerror": "Tuntematon virhe ilmestyi yrittäessäsi tallentaa tietoa."
+        }
+    },
+    "constraint": {
+        "invalid": "Arvo ei ole sallittu",
+        "required": "Tämä kenttä vaaditaan"
+    },
+    "contact": {
+        "admin": "Ota yhteyttä tutkimuksen tekijään, ole hyvä. ",
+        "support": "Ota yhteyttä __supportEmail__ ole hyvä."
+    },
+    "enketo": {
+        "power": "Ylläpitäjä"
+    },
+    "error": {
+        "code": "Virhekoodi: __code__",
+        "dataloadfailed": "Tiedon lataaminen epäonnistui __url__ sivustolta. ",
+        "econnrefused": "Yhteyden luominen palvelimeen ei onnistunut",
+        "encryptionnotsupported": "Tämä lomake vaatii paikallista tietueiden salaamista. Valitettavasti tätä toimintoa ei tueta vielä. Suosittelemme ODK Collectin käyttöä tiedon keräämistä varten tälle lomakkeelle. ",
+        "instancenotfound": "Tietue ei ole saatavilla. Se on saattanut vanhentua. ",
+        "invalidediturl": "Epäkelpo URL muoto",
+        "loadfailed": "__resource__ lataus epäonnistui",
+        "notfoundinformlist": "Lomaketta numerolla __formId__ ei löytynyt /formList",
+        "pagenotfound": "Sivua ei löytynyt",
+        "surveyidnotactive": "Tutkimusta tällä numerolla ei ole enää aktiivisena",
+        "surveyidnotfound": "Tutkimusta tällä numerolla ei löytynyt",
+        "unknown": "Tuntematon virhe esiintyi"
+    },
+    "feedback": {
+        "header": "Tieto"
+    },
+    "form": {
+        "chooseLanguage": "Valitse kieli",
+        "logout": "kirjaudu ulos",
+        "pages": {
+            "back": "Takaisin ",
+            "end": "Mene loppuun",
+            "next": "Seuraava",
+            "return": "Palaa alkuun "
+        },
+        "required": "pakollinen tieto"
+    },
+    "formfooter": {
+        "complete": {
+            "btn": "Valmis"
+        },
+        "savedraft": {
+            "btn": "Tallenna luonnokseksi",
+            "label": "Tallenna luonnokseksi"
+        },
+        "submit": {
+            "btn": "Lähetä"
+        },
+        "validate": {
+            "btn": "Varmista"
+        }
+    },
+    "geopicker": {
+        "accuracy": "tarkkuus (m)",
+        "altitude": "korkeus (m)",
+        "closepolygon": "sulje monikulmio",
+        "kmlcoords": "KML koordinaatit",
+        "kmlpaste": "liitä KML koordinaatit tähän ",
+        "latitude": "leveys (x.y °)",
+        "longitude": "pituus (x.y °)",
+        "points": "pisteet",
+        "searchPlaceholder": "etsi paikkaa tai osoitetta"
+    },
+    "here": "täällä",
+    "home": {
+        "msg": "__appTitle__ on käynnissä! Ole hyvä ja kirjaudu Enketo lomakkeisiin __serverName__ asennuksesta."
+    },
+    "langs": {
+        "ar": "Arabia",
+        "cs": "Tsekki",
+        "de": "Saksa",
+        "el": "Kreikka",
+        "en": "Englanti",
+        "es": "Espanja",
+        "fa": "Persia",
+        "fi": "Finnish",
+        "fr": "Ranska",
+        "he": "Heprea",
+        "hi": "Hindi",
+        "it": "Italia",
+        "km": "Khmer",
+        "lo": "Lao",
+        "nl": "Hollanti",
+        "no": "Norja",
+        "ro": "Romania",
+        "sk": "Slovakia",
+        "supported": "Tuetut kielet:",
+        "sw": "Swahili",
+        "th": "Thai",
+        "vi": "Vietnami",
+        "zh": "Kiina"
+    },
+    "page": {
+        "modernbrowsers": {
+            "heading": "Uudenaikaiset selaimet",
+            "ie": {
+                "heading": "Miksi ei rakkautta noille inhottaville, vanhentuneille Internet Explorer versioille?",
+                "msg": "Ymmärrämme että erityisesti niillä ihmisillä jotka työsketelevät suurissa organisaatioissa, ei ole pääsyä viimeisille ja parhaille selaimille. Koska tiedämme miten mahtava verkko voi olla oikeilla työkaluilla, meillä on runsaasti empatiaa noita epäonnisia käyttäjiä kohtaan. Yleensä yritämme keksiä keinoja tukea joitain suosittuja vanhentuneita selaimia. Kuitenkin Enketon olemassaolo perustuu joidenkin erittäin hienostuneiden, viimeisten teknologioiden mahdollisuuksiin. Valitettavasti vanhentuneiden selainten käyttäjät ovat siksi epäonnisia. "
+            },
+            "msg1": "Auts! Pahoittelut, olet tällä sivustolla todennäköisimmin koska selaimesi on vanhentunut tai joitain sen tärkeimpiä ominaisuuksia on suljettu käyttämällä 'yksityisselain' asetuksia. ",
+            "msg2": "Jos käytät vanhentunutta selainta, suosittelemme päivittämään viimeisimmä version seuraavista erinomaisista, uudenaikaisista selaimista:"
+        },
+        "offline": {
+            "heading": "Pyydetylle sivustolle ei päästy",
+            "msg1": "Tälle sivustolle pääsee ainoastaan verkkoyhteydellä ja selain on saatavilla (ellei sivua ole olemassa). "
+        }
+    },
+    "prompt": {
+        "default": {
+            "heading": "Syötä arvot"
+        },
+        "login": {
+            "heading": "Lataa __server__ tunnuksesi",
+            "password": "Salasana",
+            "remember": "Muista tällä tietokoneella",
+            "submit": "Lähetä",
+            "username": "Käyttäjänimi"
+        }
+    },
+    "record-list": {
+        "export": "Vie",
+        "msg1": "Tietueet on tallennettu palvelimellesi kunnes ne ladataan uudestaan (vaikka sulkisit tietokoneesi tai poistuisit verkosta).",
+        "msg2": "Jonossa olevat tietueet, lukuun ottamatta luonnoksiksi merkittyjä __icon__, ladataan automaattisesti taustalle 5 minuutin välein nettisivun ollessa auki ja verkkoyhteyden toimiessa.",
+        "msg2-nodraft": "Jonossa olevat tietueet ladataan automaatisesti taustalle 5 minuutin välein kun nettisivusto on avoinna ja verkkoyhteys toimii. ",
+        "msg3": "Pakottaksesi lataamaan automaatisten yritysten välissä, paina Lataa",
+        "norecords": "ei tietueita jonossa",
+        "title": "Jono",
+        "upload": "Lataa"
+    },
+    "selectpicker": {
+        "noneselected": "ei mitään valittuna",
+        "numberselected": "__number__ valittu"
+    },
+    "store": {
+        "error": {
+            "iosusesafari": "Sinun IOS selaimesi ei toimi tällä lomakkeella. Suosittelemme Safarin käyttöä IOS käyttöjärjestelmässä.",
+            "notavailable": "Selaintallennusta tarvitaan, mutta sitä ei ole saatavilla, se on korruptoitunut tai sille ei voi kirjoittaa tietoa. Jos olet 'yksityisselai' asetuksissa, ole hyvä ja vaihda yleisiin asetuksiin, muussa tapauksessa käytä toista selainta. (virhe: __error__)",
+            "notsupported": "Selaimesi ei toimi tälle lomakkeella. Suosittelemme käyttämään uudempaa selainta. "
+        }
+    },
+    "submission": {
+        "http0": "Epäonnistui (pois verkosta?).",
+        "http2xx": "Odottamaton vastaus tietoja lähetettäessä. ",
+        "http400": "Tietopalvelin ei hyväksynyt tietoja. ",
+        "http401": "Todentamisongelma tietopalvelimella. ",
+        "http403": "Tälle tietopalvelimelle ei ole sallittua lähettää tietoja. ",
+        "http404": "Tietopalvelimelta ei löytynyt lähetyspalvelua.",
+        "http408": "Tietopalvelimen aika loppui.",
+        "http413": "Tiedosto on liian suuri. ",
+        "http4xx": "Tuntematon lähetysongelma tietopalvelimella. ",
+        "http500": "Tietopalvelin on Enketo-lomakkeellesi ei toimi. Yritä myöhemmin uudestaan tai ole yhteydessä __supportEmail__.",
+        "http504": "Yhteyttä tietopalvelimeen ei saatu."
+    },
+    "version": "versio:",
+    "widget": {
+        "comment": {
+            "update": "Päivitä"
+        }
+    }
+}

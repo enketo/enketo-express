@@ -107,7 +107,8 @@
         },
         "thanks": {
             "heading": "Ďakujeme za účasť!",
-            "msg": "Toto okno môže byť teraz zavreté. "
+            "msg": "Toto okno môže byť teraz zavreté. ",
+            "msgTaken": "Tento prieskum ste už dokončili."
         },
         "validationerror": {
             "msg": "Formulár obsahuje chyby. Prosím, skontrolujte polia označené červenou farbou."
@@ -328,9 +329,11 @@
         "http401": "Nastal prolém pri autentikácii s dátovým serverom.",
         "http403": "Nie je povolené posielať dáta na tento dátový server.",
         "http404": "Služba pre odoslanie nebola nájdená na dátovom serveri.",
+        "http408": "Spojenie s dátovým serverom vypršalo.",
         "http413": "Dáta sú príliš veľké.",
         "http4xx": "Nastal neznámy problém počas odoslania na dátovom serveri.",
-        "http500": "Dátový server vášho formulára alebo Enketo server je nedostupný. Skúste to prosím neskôr alebo kontaktujte __supportEmail__."
+        "http500": "Dátový server vášho formulára alebo Enketo server je nedostupný. Skúste to prosím neskôr alebo kontaktujte __supportEmail__.",
+        "http504": "Nepodarilo sa nadviazať spojenie s dátovým serverom."
     },
     "version": "verzia:",
     "widget": {

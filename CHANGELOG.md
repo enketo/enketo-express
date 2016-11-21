@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased] 
+---------------------
+##### Changed
+- Updated Finnish and Dutch translations.
+
+[1.35.3] - 2016-11-08
+---------------------
+##### Added
+- Finnish translation.
+
+##### Fixed
+- Offline icon position slightly off.
+
+
+[1.35.2] - 2016-11-04
+---------------------
+##### Changed
+- Updated Czech, Slovak, German and Dutch translations.
+
+##### Fixed
+- Min() and max() evaluation causes infinite loop when used with multiple node-set arguments.
+
 [1.35.1] - 2016-10-31
 ---------------------
 ##### Fixed
