@@ -348,31 +348,25 @@ Comment.prototype._getFormattedCurrentDatetimeStr = function() {
 };
 
 Comment.prototype._renderHistory = function() {
-    var type;
-    var msg;
-    var elapsed;
-    var fullName;
     var that = this;
     var emptyText = t( 'widget.dn.emptyHistoryText' ) || 'No History';
     var user = '<span class="icon fa-user"> </span>';
     var clock = '<span class="icon fa-clock-o"> </span>';
-    var types = {
-        comment: '<span class="icon tooltip fa-comment-o" data-title="Query/Comment"> </span>',
-        audit: '<span class="icon tooltip fa-edit" data-title="Audit Event"> </span>'
-    };
+
     var over3 = this.notes.queries.concat( this.notes.logs ).length - 3;
     var $more = over3 > 0 ? $( '<tr><td colspan="4"><span class="over">+' + over3 + '</span>' +
         '<button class="btn-icon-only btn-more-history"><i class="icon"> </i></button></td></tr>' ) : $();
     this.$history.find( 'table' ).empty()
         .append( '<thead><tr><td></td><td></td><td>' + user + '</td><td>' + clock + '</td></tr></thead>' )
         .append( '<tbody>' +
-            ( this.notes.queries.concat( this.notes.logs ).map( function( item ) {
-                type = item.type || 'comment';
-                msg = item.comment || item.message;
-                elapsed = that._getParsedElapsedTime( item.date_time );
-                fullName = that._parseFullName( item.user );
-                return '<tr><td>' + types[ type ] + '</td><td>' + msg + '</td><td>' + fullName + '</td><td>' + elapsed + '</td></tr>';
-            } ).join( '' ) || '<tr><td colspan="2">' + emptyText + '</td><td></td><td></td></tr>' ) +
+            // Queries and logs are processed differently wrt to showing 'Me' for user if user property is missing.
+            ( this.notes.queries.map( function( item ) {
+                    return that._getRows( item, true );
+                } )
+                .concat( this.notes.logs.map( function( item ) {
+                    return that._getRows( item );
+                } ) )
+                .join( '' ) || '<tr><td colspan="2">' + emptyText + '</td><td></td><td></td></tr>' ) +
             '</tbody>'
         )
         .find( 'tbody' )
@@ -385,6 +379,23 @@ Comment.prototype._renderHistory = function() {
     $more.find( '.btn-more-history' ).on( 'click', function() {
         that.$history.toggleClass( 'closed' );
     } );
+};
+
+Comment.prototype._getRows = function( item, me ) {
+    var type;
+    var msg;
+    var elapsed;
+    var fullName;
+    var types = {
+        comment: '<span class="icon tooltip fa-comment-o" data-title="Query/Comment"> </span>',
+        audit: '<span class="icon tooltip fa-edit" data-title="Audit Event"> </span>'
+    };
+    me = me ? t( 'widget.dn.me' ) : '';
+    type = item.type || 'comment';
+    msg = item.comment || item.message;
+    elapsed = this._getParsedElapsedTime( item.date_time );
+    fullName = this._parseFullName( item.user ) || me;
+    return '<tr><td>' + types[ type ] + '</td><td>' + msg + '</td><td>' + fullName + '</td><td>' + elapsed + '</td></tr>';
 };
 
 Comment.prototype._parseFullName = function( user ) {

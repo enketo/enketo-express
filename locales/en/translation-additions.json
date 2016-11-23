@@ -5,7 +5,8 @@
             "closeQueryText": "Close Query",
             "emptyHistoryText": "No History",
             "historyText": "History",
-            "notifyText": "Email?"
+            "notifyText": "Email?",
+            "me": "Me"
         }
     }
 }
