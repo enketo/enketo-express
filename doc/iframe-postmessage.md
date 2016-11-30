@@ -13,6 +13,12 @@ and
 { enketoEvent: 'edited' } 
 ```
 
+and **for fieldsubmission webforms only**:
+
+```
+{ enketoEvent: 'close' }
+```
+
 demo: [http://enketo.github.io/enketo-iframe-demo/](http://enketo.github.io/enketo-iframe-demo/)
 
 The returned URL contains the 'feature' (and it is not stored in Enketo's Database), so a single survey can be iframed on multiple domains by making multiple different API calls.

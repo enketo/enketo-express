@@ -3,6 +3,18 @@ Enketo Express [![Build Status](https://travis-ci.org/OpenClinica/enketo-express
 
 _The modern [Enketo Smart Paper](https://enketo.org) web application._
 
+
+-------
+
+This is a port of [enketo/enketo-express](https://github.com/enketo/enketo-express) that has the following additions:
+
+1. An [account manager](https://swaggerhub.com/api/Enketo/enketo-express-oc-account-manager) to use multiple accounts with a single Enketo installation.
+2. A [fieldsubmission](./doc/fieldsubmission.md) webform view that uses [OpenClinica's Fieldsubmission API](https://swaggerhub.com/api/martijnr/openclinica-fieldsubmission).
+3. An OpenClinica theme: [theme-oc](https://github.com/OpenClinica/enketo-express-oc/tree/master/app/views/styles/theme-oc).
+4. [Advanced comment widgets](./doc/advanced-comment-widgets.md): [discrepancy note widget](./doc/advanced-comment-widgets.md#discrepancy-notes-widget)
+
+-------
+
 ### How to install a test/development server
 
 #### Manually:
@@ -51,12 +63,31 @@ For detailed guidance on each configuration item, see [this document](./config/R
 
 To configure your own custom external authentication also see [this section](#authentication).
 
+------
+
+OpenClinica users, in addition to the above, may want to take special note of these recommended settings:
+
+0. Set a secret value for `"account manager api key"`.
+1. The `"linked form and data server"` should have a non-empty value for `"server url"` to avoid bypassing the Account Manager API. E.g. leave the default value.
+2. Set `"disable save as draft": true`
+3. Set `"repeat ordinals": true`. [This feature](./doc/ordinals.md) is required for the fieldsubmission webform views.
+4. Set `"query parameter to pass to submission": "ecid"`
+
+--------
+
 
 ### API
 
 **Always** use the API to obtain webform URLs. Never try to craft or manipulate Enketo webform URLs yourself. This will make your Enketo integration future proof in case the URL structure changes. The API is stable, but webform URLs definitely are not.
 
 The API is accessible on **/api/v2** and **/api/v1**. See the [documentation](http://apidocs.enketo.org) on how to use it.
+
+---------
+The regular Enketo API v2 has been extended with [additional 'fieldsubmission' endpoints](./doc/fieldsubmission.md) for OpenClinica users.
+
+OpenClinica users have an additional [Account Manager API](https://swaggerhub.com/api/Enketo/enketo-express-oc-account-manager) at their disposal which adds dynamic linking and unlinking of orm/data servers (or studies) to a single Enketo installation.
+
+----------
 
 
 ### How to run
@@ -135,6 +166,11 @@ The user interface was translated by: Katri Jalava (Finnish), Francesc Garre (Sp
 
 _Send a message if you'd like to contribute! We use an easy web interface provided by [Transifex](https://www.transifex.com/projects/p/enketo-express/)._
 
+-------
+
+OpenClinica has a few [additional text strings](./locales/en/translation-additions.json) that can be translated separately.
+
+--------
 
 ### Funding
 
