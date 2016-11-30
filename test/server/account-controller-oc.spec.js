@@ -11,11 +11,12 @@ var chaiAsPromised = require( 'chai-as-promised' );
 var request = require( 'supertest' );
 var app = require( '../../config/express' );
 var config = require( '../../app/models/config-model' ).server;
+config[ 'account lib' ] = undefined;
 var accountModel = require( '../../app/models/account-model' );
 
 chai.use( chaiAsPromised );
 
-describe( 'Account manager API', function() {
+describe( 'OC Account manager API', function() {
     var validAccountManagerApiKey = config[ 'account manager api key' ];
     var invalidAccountManagerApiKey = 'bad';
     var validAuth = {

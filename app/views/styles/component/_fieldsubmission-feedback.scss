@@ -1,0 +1,21 @@
+.fieldsubmission-status {
+    width: 200px;
+    color: #555;
+    font-size: 12px;
+    display: inline-table;
+    height: 34px;
+    vertical-align: middle;
+    margin-left: 10px;
+
+    &.error {
+        color: $state-danger-text;
+    }
+}
+
+@media screen and (max-width: $main-breakpoint + 100px) {
+    .form-header {
+        .fieldsubmission-status {
+            line-height: 34px;
+        }
+    }
+}

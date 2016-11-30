@@ -1,4 +1,4 @@
-/* global describe, require, it */
+/* global describe, require, it, beforeEach, afterEach*/
 'use strict';
 
 // safer to ensure this here (in addition to grunt:env:test)
@@ -10,12 +10,13 @@ var expect = chai.expect;
 var chaiAsPromised = require( 'chai-as-promised' );
 var config = require( '../../app/models/config-model' ).server;
 config[ 'account lib' ] = undefined;
+config[ 'linked form and data server' ][ 'server url' ] = 'http://some.unused.url.com';
 var model = require( '../../app/models/account-model' );
 var app = require( '../../config/express' );
 
 chai.use( chaiAsPromised );
 
-describe( 'Account Model', function() {
+describe( 'OC Account Model', function() {
 
     afterEach( function( done ) {
         // remove the test accounts

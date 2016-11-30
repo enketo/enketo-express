@@ -8,5 +8,34 @@
             "notifyText": "Email?",
             "me": "Me"
         }
+    },
+    "fieldsubmission": {
+        "alert": {
+            "close": {
+                "heading1": "Closing",
+                "heading2": "Warning",
+                "msg1": "Submitting unsaved data...",
+                "msg2": "Not all data has been submitted. If you exit this page, it will be lost.",
+                "msg3": "A Reason for Change is required. Please try again."
+            },
+            "locked": {
+                "heading": "Locked",
+                "msg": "This form or record is locked and submissions cannot be saved."
+            },
+            "complete": {
+                "msg": "Data could not be submitted."
+            }
+        },
+        "prompt": {
+            "rfc": {
+                "heading": "Reason for Change",
+                "label": "Reason for changes to this record"
+            }
+        },
+        "feedback": {
+            "ongoing": "Saving...",
+            "success": "All valid changes saved.",
+            "error": "Failed to save changes."
+        }
     }
 }

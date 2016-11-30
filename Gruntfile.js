@@ -75,7 +75,7 @@ module.exports = function( grunt ) {
             },
             language: {
                 files: [ 'app/views/**/*.jade', 'app/controllers/**/*.js', 'app/models/**/*.js', 'public/js/src/**/*.js' ],
-                tasks: [ 'shell:translation', 'i18next' ]
+                tasks: [ /*'shell:translation', 'i18next'*/]
             },
             js: {
                 files: [ 'public/js/src/**/*.js', 'public/widget/**/*.js' ],
@@ -101,6 +101,12 @@ module.exports = function( grunt ) {
                         grunt.option( 'npmv', stdout.split( '.' )[ 0 ] );
                         cb( err );
                     }
+                }
+            },
+            'test-helper-server': {
+                command: 'node test/client/formdata-helper.js',
+                options: {
+                    async: true
                 }
             }
         },
@@ -157,6 +163,7 @@ module.exports = function( grunt ) {
                 files: {
                     'public/js/enketo-webform-dev-bundle.js': [ 'public/js/src/main-webform.js' ],
                     'public/js/enketo-webform-edit-dev-bundle.js': [ 'public/js/src/main-webform-edit.js' ],
+                    'public/js/enketo-webform-fs-dev-bundle.js': [ 'public/js/src/main-webform-fieldsubmission.js' ],
                     'public/js/enketo-offline-fallback-dev-bundle.js': [ 'public/js/src/main-offline-fallback.js' ]
                 },
                 options: {
@@ -169,6 +176,7 @@ module.exports = function( grunt ) {
                 files: {
                     'public/js/enketo-webform-bundle.js': [ 'public/js/src/main-webform.js' ],
                     'public/js/enketo-webform-edit-bundle.js': [ 'public/js/src/main-webform-edit.js' ],
+                    'public/js/enketo-webform-fs-bundle.js': [ 'public/js/src/main-webform-fieldsubmission.js' ],
                     'public/js/enketo-offline-fallback-bundle.js': [ 'public/js/src/main-offline-fallback.js' ]
                 },
             },
@@ -187,6 +195,7 @@ module.exports = function( grunt ) {
                 files: {
                     'public/js/enketo-webform-bundle.min.js': [ 'public/js/enketo-webform-bundle.js' ],
                     'public/js/enketo-webform-edit-bundle.min.js': [ 'public/js/enketo-webform-edit-bundle.js' ],
+                    'public/js/enketo-webform-fs-bundle.min.js': [ 'public/js/enketo-webform-fs-bundle.js' ],
                     'public/js/enketo-offline-fallback-bundle.min.js': [ 'public/js/enketo-offline-fallback-bundle.js' ],
                 },
             },
@@ -240,8 +249,8 @@ module.exports = function( grunt ) {
     grunt.registerTask( 'js', [ 'client-config-file:create', 'browserify:production' ] );
     grunt.registerTask( 'js-dev', [ 'client-config-file:create', 'browserify:development' ] );
     grunt.registerTask( 'css', [ 'shell:npmv', 'system-sass-variables:create', 'sass' ] );
-    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
-    grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'shell:test-helper-server', 'karma:headless', 'shell:test-helper-server:kill', 'jsbeautifier:test', 'jshint' ] );
+    grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'shell:test-helper-server', 'karma:browsers', 'shell:test-helper-server:kill' ] );
     grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js-dev', 'concurrent:develop' ] );
     grunt.registerTask( 'test-and-build', [ 'env:test', 'mochaTest:all', 'karma:headless', 'env:production', 'default' ] );
 };
