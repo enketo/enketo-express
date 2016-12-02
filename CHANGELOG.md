@@ -2,14 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased] 
+[1.36.0] - 2016-12-02 
 ---------------------
 ##### Added
 - ArcGIS widget: multiple basemaps with toggle button.
 - Support for preload attributes on nodes that have a form control. 
 
 ##### Changed
-- Updated Finnish and Dutch translations.
+- Updated Persian, Finnish and Dutch translations.
 - Readonly styling of: likert widget, compact picker, dates, datetimes, and others.
 
 ##### Fixed
