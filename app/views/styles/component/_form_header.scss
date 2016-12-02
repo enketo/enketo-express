@@ -1,36 +1,31 @@
 $offline-color: #d15200;
 
-.preview-header {
-    position: absolute;
-    top: -90px;
-    width: 100%;
-    z-index: 1000;
-    color: #333333;
-    opacity: 0.5;
-    margin: 0;
-}
-
 .form-header {
-    text-align: left;
+    @include display-flex;
+
+    @include flex-wrap(nowrap);
+
+    @include flex-direction(row);
 
     // even for rtl UI
-    .branding {
-        margin: 0;
-        height: 34px;
-        display: inline-table;
+    text-align: left;
+    align-items: flex-end;
+
+    &__branding {
+        order: 1;
+        padding-right: 10px;
 
         .logo-wrapper {
-            display: table-cell;
-            vertical-align: middle;
+            @include display-flex;
+
+            align-items: flex-end;
         }
 
         img {
             height: 100%;
             max-height: 30px;
             max-width: 130px;
-            vertical-align: middle;
 
-            //margin-left: 16px;
             &:hover {
                 opacity: 0.8;
             }
@@ -46,6 +41,51 @@ $offline-color: #d15200;
                 text-decoration: none;
                 opacity: 0.8;
             }
+        }
+    }
+
+    // This filler element makes it easier to keep the same look with RTL UI languages
+    &__filler {
+        order: 20;
+        flex: 1;
+        min-width: 1px;
+        min-height: 1px;
+    }
+
+    .form-language-selector {
+        order: 30;
+    }
+
+    &__button--print {
+        order: 40;
+        background: none;
+        color: black;
+        padding: 0 0 0 20px;
+        margin: 0;
+        margin-right: 0;
+
+        @include enketo-icon;
+
+        outline: 0;
+
+        &::before {
+            content: '\e60e';
+            font-size: 30px;
+        }
+
+        ~ .form-language-selector {
+            border-right: 1px solid #999999;
+        }
+    }
+
+    &__button--homescreen {
+        position: fixed;
+        top: 1px;
+        right: 0;
+        order: 61;
+
+        .icon {
+            font-size: 25px;
         }
     }
 }
@@ -82,8 +122,6 @@ $offline-color: #d15200;
 }
 
 .offline-enabled {
-    @include transition-fast;
-
     display: block;
     position: fixed;
     top: 3px;
@@ -147,63 +185,19 @@ $offline-color: #d15200;
 }
 
 .form-language-selector {
+    margin: 0;
     padding-right: 20px;
+    float: none;
 
     #form-languages {
         display: inline-block;
     }
 }
 
-.form-header__button--print {
-    background: none;
-    color: black;
-    border-radius: 0;
-    border: none;
-    padding: 7px 0 0 20px;
-    margin-right: 0;
-    float: right;
-
-    @include enketo-icon;
-
-    outline: 0;
-
-    &::before {
-        content: '\e60e';
-        font-size: 30px;
-    }
-
-    &:hover {
-        color: black;
-        background: none;
-        opacity: 0.7;
-    }
-
-    ~ .form-language-selector {
-        border-right: 1px solid #999999;
-    }
-}
-
-.form-header__button--homescreen {
-    position: fixed;
-    top: 1px;
-    right: 6px;
-
-    .icon {
-        font-size: 25px;
-    }
-}
-
 @media screen and (max-width: $main-breakpoint + 100px) {
-    .form-header {
-        .branding {
-            float: left;
-        }
-    }
-
     .offline-enabled {
         position: static;
         display: inline-block;
-        float: left;
 
         &__icon {
             float: left;
@@ -223,69 +217,87 @@ $offline-color: #d15200;
             display: block;
         }
     }
-
-    .form-header__button--homescreen {
-        position: absolute;
-        top: 73px;
-    }
 }
 
 @media screen and (max-width: $main-breakpoint) {
+    .form-header {
+        @include flex-wrap(wrap);
+
+        // only content of header has top and bottom padding/margin
+        // This ensures that no space is taking up when the header is completely empty,
+        // i.e. no brand/languages/reason-for-change/fs-feedback
+        padding: 0 16px 0 16px;
+        border-bottom: none;
+
+        &__branding {
+            margin-top: 16px;
+        }
+
+        .form-language-selector {
+            // Safari requires this to be set to 100% instead of 1
+            flex: 100%;
+            padding-bottom: 0;
+        }
+
+        &__button--print {
+            display: none;
+
+            ~ .form-language-selector {
+                border-right: none;
+                padding-right: 0;
+            }
+        }
+
+        &__button--homescreen {
+            top: -2px;
+
+            // ensure it takes up virtually no vertical space if it is the
+            // only element in the form header
+            height: 1px;
+
+            // ensure that reason-for-change is pushed to the side
+            position: static;
+            align-self: flex-start;
+            margin-top: -1px;
+            margin-right: 0;
+        }
+    }
+
+    #form-languages {
+        margin: 0;
+        width: 100%;
+    }
+
     .or .form-logo img {
         margin-top: 25px;
     }
 
     .offline-enabled {
+        // this vertical-aligns to the top, overruling the align-items rule on .form-header
+        align-self: flex-start;
+
         // this negates a padding set on the form-header in enketo-core _response.scss
-        margin-left: -14px;
+        margin-left: -16px;
 
         .queue-length {
             background-color: rgb(245, 245, 245);
         }
     }
-
-    .form-header .branding {
-        margin: 16px 0;
-    }
-
-    .form-header__button--print {
-        display: none;
-
-        ~ .form-language-selector {
-            border-right: none;
-            padding-right: 0;
-        }
-    }
-
-    .form-header__button--homescreen {
-        top: -2px;
-    }
 }
 
-@media screen and (max-width: 600px) {
-    .form-header {
-        height: auto;
-    }
-}
-
-@media screen and (max-width: 490px) {
+@media screen and (max-width: 520px) {
     .form-language-selector {
         padding-right: 0;
     }
-}
 
-@media screen and (max-width: 430px) {
     .form-header {
-        border: none;
-
         .form-language-selector {
-            padding-bottom: 0;
+            order: 100;
+            flex: 1;
             margin: 0 auto;
-            width: 100%;
-        }
 
-        .branding {
-            margin-bottom: 0;
+            // force on new line
+            min-width: 280px;
         }
     }
 
