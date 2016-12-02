@@ -5,10 +5,11 @@ header.form-header
       .offline-enabled__queue-length(title="Records Queued")
   .form-progress
   if (logo.source)
-    a.branding(href="#{logo.href || '#'}")
+    a.form-header__branding(href="#{logo.href || '#'}")
       .logo-wrapper
         img(src="#{logo.source}", alt="brand logo")
-  button.form-header__button--print(onclick="return false;").hide
+  .form-header__filler
+  button.form-header__button--print.btn-icon-only(onclick="return false;").hide
   span.form-language-selector.hide: span= t('form.chooseLanguage')
   button.form-header__button--homescreen.btn-icon-only.hide(type="button")
       i.icon.icon-bookmark-o 

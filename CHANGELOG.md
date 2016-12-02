@@ -2,10 +2,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased] 
+[1.36.0] - 2016-12-02 
 ---------------------
+##### Added
+- ArcGIS widget: multiple basemaps with toggle button.
+- Support for preload attributes on nodes that have a form control. 
+
 ##### Changed
-- Updated Finnish and Dutch translations.
+- Updated Persian, Finnish and Dutch translations.
+- Readonly styling of: likert widget, compact picker, dates, datetimes, and others.
+
+##### Fixed
+- User is able to manipulate readonly widgets: distresspicker, analog-scale-picker, select-desktop-picker, filepickers, geopicker.
+- Calculations do not update: analog-scale-picker, distresspicker, mobile regular select, mobile multiselect picker preview, timepicker, geopicker, esri-geopicker.
+- XPath calculation returing a datetime string for an XML node with type time is not converted, resulting in an invalid time.
+- Geo widget on touchscreens does not hide Google Maps layer when exiting map view
 
 [1.35.3] - 2016-11-08
 ---------------------
