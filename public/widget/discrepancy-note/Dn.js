@@ -30,7 +30,9 @@ Comment.prototype._init = function() {
     if ( this.$linkedQuestion.length === 1 ) {
         this.notes = this._parseModelFromString( this.element.value );
         this.$commentQuestion.addClass( 'hide' );
-        this.$commentButton = $( '<button class="btn-icon-only btn-comment btn-dn" type="button"><i class="icon"> </i></button>' );
+        // Any <button> inside a <label> receives click events if the <label> is clicked!
+        // See http://codepen.io/MartijnR/pen/rWJeOG?editors=1111
+        this.$commentButton = $( '<a class="btn-icon-only btn-comment btn-dn" type="button" href="#"><i class="icon"> </i></a>' );
         this._setCommentButtonState( this.element.value, '', this._getCurrentStatus( this.notes ) );
         this.$linkedQuestion.find( '.question-label' ).last().after( this.$commentButton );
         this._setCommentButtonHandler();
@@ -78,6 +80,7 @@ Comment.prototype._setCommentButtonHandler = function() {
             var errorMsg = that._getCurrentErrorMsg();
             that._showCommentModal( errorMsg );
         }
+        return false;
     } );
 };
 
