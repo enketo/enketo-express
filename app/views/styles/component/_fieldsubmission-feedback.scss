@@ -1,21 +1,44 @@
 .fieldsubmission-status {
-    width: 200px;
+    order: 15;
     color: #555;
     font-size: 12px;
-    display: inline-table;
-    height: 34px;
-    vertical-align: middle;
-    margin-left: 10px;
+    padding-right: 10px;
+    max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &.error {
         color: $state-danger-text;
     }
 }
 
-@media screen and (max-width: $main-breakpoint + 100px) {
+// Watch out, this targeting is deliberate
+.form-header .form-header__button--reason {
+    order: 60;
+    margin: 0 0 0 20px;
+    outline: 0;
+
+    .icon {
+        font-size: 30px;
+        color: black;
+    }
+}
+
+@media screen and (max-width: 410px) {
+    .fieldsubmission-status {
+        order: 65;
+        max-width: 100%;
+        width: 100%;
+        margin-top: 16px;
+    }
+}
+
+@media screen and (max-width: $main-breakpoint) {
     .form-header {
-        .fieldsubmission-status {
-            line-height: 34px;
+        // Watch out, this targeting is deliberate
+        .form-header__button--reason {
+            margin-top: 16px;
         }
     }
 }

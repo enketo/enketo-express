@@ -223,8 +223,8 @@ function _setReasonForChangeUi() {
     reasonForChangeFeature = settings.type === 'edit' && $( formSelector ).hasClass( 'reason' );
 
     if ( reasonForChangeFeature ) {
-        $rfcButton = $( '<button class="form-header__button--reason btn btn-icon-only" style="float:right; outline: 0;">' +
-                '<i class="icon icon-pencil" style="font-size: 30px; padding: 6px 0 6px 6px; color: black;"></i></button>' )
+        $rfcButton = $( '<button class="form-header__button--reason btn-icon-only">' +
+                '<i class="icon icon-pencil"></i></button>' )
             .on( 'click', _showReasonForChangeDialog );
         $( '.form-header__button--print' ).before( $rfcButton );
     }

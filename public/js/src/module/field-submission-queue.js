@@ -243,7 +243,7 @@ FieldSubmissionQueue.prototype._showLockedMsg = function() {
 FieldSubmissionQueue.prototype._uploadStatus = {
     _getBox: function() {
         if ( !this._$box ) {
-            this._$box = $( '<div class="fieldsubmission-status"/>' ).insertAfter( '.form-header .branding' );
+            this._$box = $( '<div class="fieldsubmission-status"/>' ).prependTo( '.form-header' );
         }
         return this._$box;
     },
