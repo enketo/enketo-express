@@ -221,6 +221,7 @@ Comment.prototype._getUserOptions = function() {
                     ' (' + item.querySelector( 'user_name' ).textContent + ')';
             } );
         } catch ( e ) {
+            users = [];
             console.error( e );
         }
     }
