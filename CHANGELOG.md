@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Label of comment widget not shown when used with an analog-scale question.
 - Entire label of complex (geo, analog scale) widget triggers comment button click.
 - Comment icon not displayed inline after non-block label of analog-scale widget.
+- Esri/ArcGIS geopicker does not re-instantiate in a cloned repeat.
 
 [1.36.0] - 2016-12-02 
 ---------------------
