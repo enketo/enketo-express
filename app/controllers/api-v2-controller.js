@@ -385,15 +385,15 @@ function _generateWebformUrls( id, req ) {
             // non-iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam ] );
             obj.url = baseUrl + idPartOnline + queryString;
-            obj.single_url = baseUrl + idPartOnline + queryString;
-            obj.single_once_url = baseUrl + idPartOnce + queryString;
+            obj.single_url = baseUrl + 'single/' + idPartOnline + queryString;
+            obj.single_once_url = baseUrl + 'single/' + idPartOnce + queryString;
             obj.offline_url = baseUrl + OFFLINEPATH + idPartOffline;
             obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
             obj.iframe_url = baseUrl + IFRAMEPATH + idPartOnline + queryString;
-            obj.single_iframe_url = baseUrl + IFRAMEPATH + idPartOnline + queryString;
-            obj.single_once_iframe_url = baseUrl + IFRAMEPATH + idPartOnce + queryString;
+            obj.single_iframe_url = baseUrl + 'single/' + IFRAMEPATH + idPartOnline + queryString;
+            obj.single_once_iframe_url = baseUrl + 'single/' + IFRAMEPATH + idPartOnce + queryString;
             obj.preview_iframe_url = baseUrl + 'preview/' + IFRAMEPATH + idPartOnline + queryString;
             // rest
             obj.enketo_id = id;
