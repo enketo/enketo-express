@@ -29,7 +29,7 @@ Comment.prototype._init = function() {
 
     if ( this.$linkedQuestion.length === 1 ) {
         this.notes = this._parseModelFromString( this.element.value );
-        this.$commentQuestion.addClass( 'hide' );
+        this.$commentQuestion.addClass( 'hide' ).attr( 'role', 'comment' );
         // Any <button> inside a <label> receives click events if the <label> is clicked!
         // See http://codepen.io/MartijnR/pen/rWJeOG?editors=1111
         this.$commentButton = $( '<a class="btn-icon-only btn-comment btn-dn" type="button" href="#"><i class="icon"> </i></a>' );
@@ -134,7 +134,8 @@ Comment.prototype._showCommentModal = function( linkedQuestionErrorMsg ) {
     }
 
     $input = $comment
-        .removeClass( 'or-appearance-comment hide' )
+        .removeClass( 'hide' )
+        .removeAttr( 'role' )
         .find( 'input, textarea' )
         .addClass( 'ignore' )
         .removeAttr( 'name data-for data-type-xml' )
