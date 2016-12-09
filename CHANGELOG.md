@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Comment widget in pages mode without field-list has hidden comment field and shows empty page.
+
 [1.36.1] - 2016-12-08
 ---------------------
 ##### Fixed
