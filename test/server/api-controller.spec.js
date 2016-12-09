@@ -84,6 +84,13 @@ describe( 'api', function() {
             if ( !expected.test( value ) ) {
                 return new Error( 'Response ' + value + ' not matching ' + expected );
             }
+        } else if ( expected instanceof Object ) {
+            // This is where it gets ugly. Strip the port number from URLs...
+            var v = JSON.stringify( value ).replace( /:[0-9]{5}\//g, '/' );
+            var e = JSON.stringify( expected ).replace( /:[0-9]{5}\//g, '/' )
+            if ( v !== e ) {
+                return new Error( 'Response ' + v + ' not matching ' + e );
+            }
         } else {
             return new Error( 'This is not a valid expected value' );
         }
@@ -99,7 +106,6 @@ describe( 'api', function() {
         var instance = typeof test.instance !== 'undefined' ? test.instance : '<data></data>';
         var instanceId = typeof test.instanceId !== 'undefined' ? test.instanceId : 'someUUID:' + Math.random();
         var endpoint = test.endpoint;
-        var resProp = ( test.res && test.res.property ) ? test.res.property : 'url';
         var offlineEnabled = !!test.offline;
         var dataSendMethod = ( test.method === 'get' ) ? 'query' : 'send';
 
@@ -123,7 +129,8 @@ describe( 'api', function() {
                     .expect( test.status )
                     .expect( function( resp ) {
                         if ( test.res && test.res.expected ) {
-                            return responseCheck( resp.body[ resProp ], test.res.expected );
+                            var valueToTest = ( test.res.property ) ? resp.body[ test.res.property ] : resp.body;
+                            return responseCheck( valueToTest, test.res.expected );
                         }
                     } )
                     .end( done );
@@ -526,7 +533,6 @@ describe( 'api', function() {
             // TESTING THE OFFLINE/ONLINE VIEWS (not compatible with v1)
             // the /survey endpoint always returns the online-only view
             {
-                version: version,
                 endpoint: '/survey',
                 method: 'post',
                 auth: true,
@@ -537,7 +543,6 @@ describe( 'api', function() {
                 },
                 offline: false
             }, {
-                version: version,
                 endpoint: '/survey/iframe',
                 method: 'post',
                 auth: true,
@@ -548,7 +553,6 @@ describe( 'api', function() {
                 },
                 offline: false
             }, {
-                version: version,
                 endpoint: '/survey',
                 method: 'post',
                 auth: true,
@@ -559,7 +563,6 @@ describe( 'api', function() {
                 },
                 offline: true
             }, {
-                version: version,
                 endpoint: '/survey/iframe',
                 method: 'post',
                 auth: true,
@@ -570,7 +573,6 @@ describe( 'api', function() {
                 },
                 offline: true
             }, {
-                version: version,
                 endpoint: '/survey/single',
                 method: 'get',
                 auth: true,
@@ -581,7 +583,6 @@ describe( 'api', function() {
                 },
                 offline: true
             }, {
-                version: version,
                 endpoint: '/survey/single/iframe',
                 method: 'get',
                 auth: true,
@@ -592,7 +593,6 @@ describe( 'api', function() {
                 },
                 offline: true
             }, {
-                version: version,
                 endpoint: '/survey/single',
                 method: 'post',
                 auth: true,
@@ -603,7 +603,6 @@ describe( 'api', function() {
                 },
                 offline: true
             }, {
-                version: version,
                 endpoint: '/survey/single/iframe',
                 method: 'post',
                 auth: true,
@@ -617,7 +616,6 @@ describe( 'api', function() {
 
             // /single/once
             {
-                version: version,
                 endpoint: '/survey/single/once',
                 method: 'get',
                 auth: true,
@@ -628,7 +626,6 @@ describe( 'api', function() {
                 },
                 offline: true
             }, {
-                version: version,
                 endpoint: '/survey/single/once/iframe',
                 method: 'get',
                 auth: true,
@@ -639,7 +636,6 @@ describe( 'api', function() {
                 },
                 offline: true
             }, {
-                version: version,
                 endpoint: '/survey/single/once',
                 method: 'post',
                 auth: true,
@@ -650,7 +646,6 @@ describe( 'api', function() {
                 },
                 offline: true
             }, {
-                version: version,
                 endpoint: '/survey/single/once/iframe',
                 method: 'post',
                 auth: true,
@@ -664,21 +659,18 @@ describe( 'api', function() {
 
             // the /survey/offline endpoint always returns the offline-capable view (if enabled)
             {
-                version: version,
                 endpoint: '/survey/offline',
                 method: 'post',
                 auth: true,
                 status: 405,
                 offline: false
             }, {
-                version: version,
                 endpoint: '/survey/offline/iframe',
                 method: 'post',
                 auth: true,
                 status: 405,
                 offline: false
             }, {
-                version: version,
                 endpoint: '/survey/offline',
                 method: 'post',
                 auth: true,
@@ -689,7 +681,6 @@ describe( 'api', function() {
                 },
                 offline: true
             }, {
-                version: version,
                 endpoint: '/survey/offline/iframe',
                 method: 'post',
                 auth: true,
@@ -704,6 +695,7 @@ describe( 'api', function() {
                 method: 'post',
                 status: 200,
                 res: {
+                    property: 'url',
                     expected: /[^?d\[\]]+/
                 }
             }, {
@@ -712,6 +704,7 @@ describe( 'api', function() {
                 method: 'post',
                 status: 200,
                 res: {
+                    property: 'url',
                     expected: /[^?d\[\]]/
                 }
             },
@@ -722,6 +715,7 @@ describe( 'api', function() {
                 method: 'get',
                 status: 200,
                 res: {
+                    property: 'url',
                     expected: /[^?d\[\]]+/
                 }
             }, {
@@ -730,6 +724,7 @@ describe( 'api', function() {
                 method: 'get',
                 status: 200,
                 res: {
+                    property: 'url',
                     expected: /[^?d\[\]]+/
                 }
             },
@@ -743,6 +738,7 @@ describe( 'api', function() {
                 method: 'post',
                 status: 200,
                 res: {
+                    property: 'url',
                     expected: /.+\?d\[%2Fpath%2Fto%2Fnode\]=2%2C3&d\[%2Fpath%2Fto%2Fother%2Fnode\]=5/
                 }
             }, {
@@ -753,6 +749,7 @@ describe( 'api', function() {
                 method: 'post',
                 status: 200,
                 res: {
+                    property: 'url',
                     expected: /.+\?d\[%2Fpath%2Fto%2Fnode\]=%5B%40%5D%3F/
                 }
             }, {
@@ -763,6 +760,7 @@ describe( 'api', function() {
                 method: 'post',
                 status: 200,
                 res: {
+                    property: 'url',
                     expected: /.+\?d\[%2Fpath%2Fto%2Fnode\]=one%20line%0Aanother%20line/
                 }
             }, {
@@ -773,6 +771,7 @@ describe( 'api', function() {
                 method: 'post',
                 status: 200,
                 res: {
+                    property: 'url',
                     expected: /.+\?d\[%2Fpath%2Fto%2Fnode\]=one%20line%0Aanother%20line/
                 }
             },
@@ -797,6 +796,7 @@ describe( 'api', function() {
                 method: 'post',
                 status: 200,
                 res: {
+                    property: 'url',
                     expected: /[^parentWindowOrigin\[\]]+/
                 }
             }, {
@@ -805,6 +805,7 @@ describe( 'api', function() {
                 method: 'post',
                 status: 200,
                 res: {
+                    property: 'url',
                     expected: /[^parentWindowOrigin\[\]]/
                 }
             },
@@ -920,7 +921,6 @@ describe( 'api', function() {
             // TESTING /SURVEYS/LIST RESPONSES THAT DEVIATE FROM V1
             // GET /surveys/list
             {
-                version: version,
                 endpoint: '/surveys/list',
                 method: 'get',
                 auth: true,
@@ -933,7 +933,6 @@ describe( 'api', function() {
             },
             // POST /surveys/list (same)
             {
-                version: version,
                 endpoint: '/surveys/list',
                 method: 'post',
                 auth: true,
@@ -942,6 +941,30 @@ describe( 'api', function() {
                 res: {
                     property: 'forms',
                     expected: /"offline_url":"http:\/\/.*\/::YYYp".*"form_id":"something"/
+                }
+            },
+            // GET /surveys/all)
+            // To easily notice regressions.
+            {
+                endpoint: '/survey/all',
+                method: 'get',
+                auth: true,
+                server: validServer,
+                status: 200,
+                res: {
+                    expected: {
+                        "url": "http://127.0.0.1:58395/::YYYp",
+                        "single_url": "http://127.0.0.1:58395/single/::YYYp",
+                        "single_once_url": "http://127.0.0.1:58395/single/::8fc769a601c9f283e8149e68ba4f5d09",
+                        "offline_url": "http://127.0.0.1:58395/x/#YYYp",
+                        "preview_url": "http://127.0.0.1:58395/preview/::YYYp",
+                        "iframe_url": "http://127.0.0.1:58395/i/::YYYp",
+                        "single_iframe_url": "http://127.0.0.1:58395/single/i/::YYYp",
+                        "single_once_iframe_url": "http://127.0.0.1:58395/single/i/::8fc769a601c9f283e8149e68ba4f5d09",
+                        "preview_iframe_url": "http://127.0.0.1:58395/preview/i/::YYYp",
+                        "enketo_id": "YYYp",
+                        "code": 200
+                    }
                 }
             },
 

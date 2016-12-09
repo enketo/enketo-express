@@ -399,7 +399,9 @@ function _generateWebformUrls( id, req ) {
             obj.url = baseUrl + idPartOnline + queryString;
             obj.single_url = baseUrl + idPartOnline + queryString;
             obj.single_once_url = baseUrl + idPartOnce + queryString;
-            obj.single_fieldsubmission_url = baseUrl + FSPATH + idPartOnline + queryString;
+            obj.single_url = baseUrl + 'single/' + idPartOnline + queryString;
+            obj.single_once_url = baseUrl + 'single/' + idPartOnce + queryString;
+            obj.single_fieldsubmission_url = baseUrl + 'single/' + FSPATH + idPartOnline + queryString;
             obj.offline_url = baseUrl + OFFLINEPATH + idPartOffline;
             obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
             // iframe views
@@ -407,7 +409,9 @@ function _generateWebformUrls( id, req ) {
             obj.iframe_url = baseUrl + IFRAMEPATH + idPartOnline + queryString;
             obj.single_iframe_url = baseUrl + IFRAMEPATH + idPartOnline + queryString;
             obj.single_once_iframe_url = baseUrl + IFRAMEPATH + idPartOnce + queryString;
-            obj.single_fieldsubmission_iframe_url = baseUrl + FSPATH + IFRAMEPATH + idPartOnline + queryString;
+            obj.single_iframe_url = baseUrl + 'single/' + IFRAMEPATH + idPartOnline + queryString;
+            obj.single_once_iframe_url = baseUrl + 'single/' + IFRAMEPATH + idPartOnce + queryString;
+            obj.single_fieldsubmission_iframe_url = baseUrl + 'single/' + FSPATH + IFRAMEPATH + idPartOnline + queryString;
             obj.preview_iframe_url = baseUrl + 'preview/' + IFRAMEPATH + idPartOnline + queryString;
             // rest
             obj.enketo_id = id;
