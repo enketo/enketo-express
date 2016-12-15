@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Fixed
 - Comment widget in pages mode without field-list has hidden comment field and shows empty page.
+- HTML not rendered in modal dialog.
 
 [1.36.1] - 2016-12-08
 ---------------------
