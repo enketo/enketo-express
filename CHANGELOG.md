@@ -2,11 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.36.2] - 2016-12-14
 ---------------------
 ##### Fixed
 - Comment widget in pages mode without field-list has hidden comment field and shows empty page.
 - HTML not rendered in modal dialog.
+- Repeat position injection gets confused if repeat has sibling with nodename that is equal to start of repeat nodename.
 
 [1.36.1] - 2016-12-08
 ---------------------
