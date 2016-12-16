@@ -67,7 +67,8 @@
         "serve-favicon": "2.x.x",
         "time-grunt": "1.x.x",
         "vex-js": "2.3.x",
-        "xml2js": "0.4.x"
+        "xml2js": "0.4.x",
+        "enketo-xpathjs-oc": "https://github.com/openclinica/enketo-xpathjs-oc.git#c13aba4"
     },
     "devDependencies": {
         "chai": "3.5.x",
@@ -103,7 +104,8 @@
             "enketo-config": "./public/temp-client-config.json",
             "widgets": "./public/js/src/module/widgets",
             "translator": "./public/js/src/module/translator",
-            "../../js/file-manager": "./public/js/src/module/file-manager"
+            "../../js/file-manager": "./public/js/src/module/file-manager",
+            "enketo-xpathjs": "enketo-xpathjs-oc"
         }
     }
 }
