@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Excessive submission logging.
+
 [1.36.2] - 2016-12-14
 ---------------------
 ##### Fixed
