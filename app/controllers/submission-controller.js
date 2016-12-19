@@ -75,7 +75,6 @@ function submit( req, res, next ) {
             // pipe the request 
             req.pipe( request( options ) )
                 .on( 'response', function( orResponse ) {
-                    console.log( 'response', orResponse );
                     if ( orResponse.statusCode === 201 ) {
                         _logSubmission( id, instanceId, deprecatedId );
                     } else if ( orResponse.statusCode === 401 ) {

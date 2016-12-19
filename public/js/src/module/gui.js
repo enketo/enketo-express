@@ -89,11 +89,15 @@ function setEventHandlers() {
     }
 
     $doc.on( 'xpatherror', function( ev, error ) {
-        var email = settings[ 'supportEmail' ],
-            link = '<a href="mailto:' + email + '?subject=xpath errors for: ' + location.href + '&body=' + error + '" target="_blank" >' + email + '</a>';
+        var email = settings[ 'supportEmail' ];
+        var link = '<a href="mailto:' + email + '?subject=xpath errors for: ' + location.href + '&body=' + error + '" target="_blank" >' + email + '</a>';
 
         alert( t( 'alert.xpatherror.msg', {
-            emailLink: link
+            emailLink: link,
+            // switch off escaping just for this known safe value
+            interpolation: {
+                escapeValue: false
+            }
         } ) + '<ul class="error-list"><li>' + error + '</li></ul>', t( 'alert.xpatherror.heading' ) );
     } );
 
@@ -327,7 +331,11 @@ function alertLoadErrors( loadErrors, advice ) {
     var link = '<a href="mailto:' + email + '?subject=loading errors for: ' + location.href + '&body=' + errorStringEmail + '" target="_blank" >' + email + '</a>';
     var params = {
         emailLink: link,
-        count: loadErrors.length
+        count: loadErrors.length,
+        // switch off escaping just for this known safe value
+        interpolation: {
+            escapeValue: false
+        }
     };
 
     advice = advice || '';
@@ -370,7 +378,11 @@ function _getHomeScreenGuidance() {
 function _getHomeScreenGuidanceObj( imageClass1, imageClass2 ) {
     return {
         image1: ( imageClass1 ) ? '<span class="' + imageClass1 + '"/>' : '',
-        image2: ( imageClass2 ) ? '<span class="' + imageClass2 + '"/>' : ''
+        image2: ( imageClass2 ) ? '<span class="' + imageClass2 + '"/>' : '',
+        // switch off escaping just for these known safe values
+        interpolation: {
+            escapeValue: false
+        }
     };
 }
 
