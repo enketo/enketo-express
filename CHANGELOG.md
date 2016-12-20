@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Changed
+- Docker setup.
+
 ##### Fixed
 - Excessive submission logging.
 

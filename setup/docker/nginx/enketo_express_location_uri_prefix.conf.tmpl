@@ -1,0 +1,7 @@
+# `envsubst` template.
+# Context: server
+
+# Redirect requests not terminated with a '\'.
+location /${ENKETO_EXPRESS_URI_PREFIX} {
+    return 301 $scheme://$http_host/${ENKETO_EXPRESS_URI_PREFIX}/;
+}

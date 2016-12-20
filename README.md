@@ -30,10 +30,13 @@ _\* sometimes `vagrant up` fails for reasons beyond our control - e.g. if extern
 
 #### Using Docker:
 1. Install [Docker Compose](http://docs.docker.com/compose/install/).
-2. Set Enketo Express's API key, the linked form and data server, and any additional desired configurations in the file `setup/docker/envfile.txt`.
-3. Run `docker-compose up` from project folder and wait until it completes.
+2. Create a [config file](./config/) at `config/config.json` specifying at minimum an API key.
+3. **(Optional)** For HTTPS, copy your SSL certificate and key files to `setup/docker/secrets/ssl.crt` and `setup/docker/secrets/ssl.key` respectively (take care not to commit these files back to any public git repository). Plain HTTP requests to Enketo Express will be automatically redirected to HTTPS.
+4. Execute `docker-compose up -d` from the [`setup/docker`](./setup/docker) directory and wait to see e.g. `Worker 1 ready for duty...`.
+5. To stop, execute `docker-compose stop` from the [`setup/docker`](./setup/docker) directory. Database dumps from the main Redis instance will be mapped into the directory `setup/docker/redis_main_data/`.
 
-The app should now be running on [localhost:8005](http://localhost:8005).
+The app should now be running on [localhost](http://localhost).
+
 
 ### How to install a production server
 

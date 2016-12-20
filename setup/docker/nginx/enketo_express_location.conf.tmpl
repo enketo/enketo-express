@@ -1,0 +1,13 @@
+# `envsubst` template.
+# Context: server
+
+# When using a root URI prefix, redirect requests to the new root that aren't terminated with a '/'.
+${INCLUDE_ROOT_URI_REDIRECT}
+
+location ${ROOT_URI} {
+    include /tmp/enketo_express_nginx/enketo_express_proxy_pass.conf;
+
+    # FIXME: Remove once Enketo Express is relocatable.
+    # Optionally include rules for rewriting root-relative references in the response.
+    ${INCLUDE_REWRITE_RULES}
+}
