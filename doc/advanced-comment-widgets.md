@@ -89,14 +89,16 @@ For each discrepancy note question, add a reference to the question node it refe
 | text | a         | Enter text      |              |               |
 | text | a_comment | Enter a comment | multiline dn | ${a}			|
 
-#### Dynamic required
+#### Dynamic required, constraint, relevant
 
-Optionally, if you'd like to make question "a" required only if there is no comment, you could use the regular XLSForm/XPath syntax. Nothing new here. You could do the same for relevant and constraint logic too.
+Optionally, if you'd like to make question "a" required depending on whether there is a comment, you could use the regular XLSForm/XPath syntax. Nothing new here. You could do the same for relevant and constraint logic too.
 
 | type | name      | label           | appearance   | bind::enk:for | required        |
 |------|-----------|-----------------|--------------|---------------|-----------------|
 | text | a         | Enter text      |              |               | $a_comment = '' |
 | text | a_comment | Enter a comment | multiline dn | ${a}			|                 |
+
+In addition there is `comment-status` function that can be used to check the status of a query. The argument of this function is a single node that stores the DN data structure. This function can be used in any XPath expression. E.g. the above required expression could also be: `${a_comment} = '' or comment-status($a_comment} = 'closed'`.
 
 #### Users list
 
