@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Excessive submission logging.
+- When a question becomes irrelevant, its value is cleared immediately, but should be kept until submission.
 
 [1.36.2] - 2016-12-14
 ---------------------
