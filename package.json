@@ -2,7 +2,7 @@
     "name": "enketo-express",
     "description": "Webforms evolved.",
     "homepage": "https://enketo.org",
-    "version": "1.36.2",
+    "version": "1.36.3",
     "main": "./app.js",
     "engines": {
         "node": "4.4.x",
@@ -62,7 +62,7 @@
         "lodash": "4.17.x",
         "morgan": "1.x.x",
         "papaparse": "4.1.x",
-        "redis": "2.6.2",
+        "redis": "2.6.3",
         "request": "2.79.x",
         "serve-favicon": "2.x.x",
         "time-grunt": "1.x.x",
