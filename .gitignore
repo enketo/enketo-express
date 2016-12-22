@@ -15,8 +15,8 @@ config/config.json
 .DS_Store
 .env
 enketo-main.rdb
-setup/docker/envfile.txt
-setup/docker/secrets
+setup/docker/secrets/*
+setup/docker/redis_main_data/*
 logs/submissions*
 logs/logrotate
 public/temp-client-config.json

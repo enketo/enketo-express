@@ -2,10 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.36.3] - 2016-12-22
 ---------------------
+##### Changed
+- Docker setup.
+
 ##### Fixed
 - Excessive submission logging.
+- When a question becomes irrelevant, its value is cleared immediately, but should be kept until submission.
 
 [1.36.2] - 2016-12-14
 ---------------------

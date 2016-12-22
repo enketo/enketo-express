@@ -1,0 +1,43 @@
+nginx:
+  image: nginx
+  links:
+    - enketo_express
+  ports:
+    - "80:80"
+    - "443:443"
+  env_file:
+    - ./envfile.txt
+  volumes:
+    - ./nginx/:/tmp/enketo_express_nginx/:ro
+    - ./secrets/:/tmp/enketo_express_secrets/:ro
+    - ../../config/:/srv/src/enketo_express/config/
+  command: bash /tmp/enketo_express_nginx/nginx_command.bash
+  restart: always
+
+enketo_express:
+  # image: kobotoolbox/enketo_express
+  build: ../..
+  links:
+    - redis_main
+    - redis_cache
+  env_file:
+    - ./envfile.txt
+  volumes:
+    - ../../config/:/srv/src/enketo_express/config
+    - ./secrets/:/srv/src/enketo_express/setup/docker/secrets/
+  restart: always
+
+redis_main:
+  image: redis:2.6
+  # Map our "main" Redis config into the container.
+  volumes:
+    - ../redis/conf/redis-enketo-main.conf:/etc/redis/redis.conf:ro
+    - ./redis_main_data/:/data/
+  restart: always
+
+redis_cache:
+  image: redis:2.6
+  # Map our "cache" Redis config into the container.
+  volumes:
+    - ../redis/conf/redis-enketo-cache.conf:/etc/redis/redis.conf:ro
+  restart: always

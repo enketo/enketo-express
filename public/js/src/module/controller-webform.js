@@ -17,6 +17,9 @@ var form;
 var formSelector;
 var formData;
 var $formprogress;
+var formOptions = {
+    clearIrrelevantImmediately: false
+};
 
 function init( selector, data ) {
     var advice;
@@ -33,7 +36,7 @@ function init( selector, data ) {
                 data.instanceStr = record.xml;
             }
 
-            form = new Form( formSelector, data );
+            form = new Form( formSelector, data, formOptions );
             loadErrors = form.init();
 
             if ( form.getEncryptionKey() ) {
@@ -121,7 +124,7 @@ function _resetForm( confirmed ) {
         form = new Form( formSelector, {
             modelStr: formData.modelStr,
             external: formData.external
-        } );
+        }, formOptions );
         form.init();
         // formreset event will update the form media:
         form.getView().$.trigger( 'formreset' );
@@ -167,7 +170,7 @@ function _loadRecord( instanceId, confirmed ) {
                     instanceStr: record.xml,
                     external: formData.external,
                     submitted: false
-                } );
+                }, formOptions );
                 loadErrors = form.init();
                 // formreset event will update the form media:
                 form.getView().$.trigger( 'formreset' );

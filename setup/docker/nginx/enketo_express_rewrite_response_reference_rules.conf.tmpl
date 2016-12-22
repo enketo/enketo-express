@@ -1,0 +1,14 @@
+# `envsubst` template.
+# Context: location
+
+# Rewrite root-relative references in the response.
+proxy_set_header Accept-Encoding ""; # No GZip.
+sub_filter_once off;
+sub_filter_types text/html text/css application/javascript application/json;
+sub_filter 'href="/'            'href="/${ENKETO_EXPRESS_URI_PREFIX}/';
+sub_filter 'src="/'             'src="/${ENKETO_EXPRESS_URI_PREFIX}/';
+sub_filter 'src: url("/'        'src: url("/${ENKETO_EXPRESS_URI_PREFIX}/';
+sub_filter 'url:"/'             'url:"/${ENKETO_EXPRESS_URI_PREFIX}/';
+sub_filter '="/transform/xform' '="/${ENKETO_EXPRESS_URI_PREFIX}/transform/xform';
+sub_filter '="/connection'      '="/${ENKETO_EXPRESS_URI_PREFIX}/connection';
+sub_filter '/_/#'               '/${ENKETO_EXPRESS_URI_PREFIX}/_/#';
