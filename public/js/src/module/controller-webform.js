@@ -18,7 +18,7 @@ var formSelector;
 var formData;
 var $formprogress;
 var formOptions = {
-    clearIrrelevantImmediately: false
+    clearIrrelevantImmediately: true
 };
 
 function init( selector, data ) {

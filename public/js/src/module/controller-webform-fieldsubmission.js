@@ -23,6 +23,9 @@ var form;
 var formSelector;
 var formData;
 var $formprogress;
+var formOptions = {
+    clearIrrelevantImmediately: true
+};
 
 function init( selector, data ) {
     var advice;
@@ -33,7 +36,7 @@ function init( selector, data ) {
 
     return new Promise( function( resolve, reject ) {
             $formprogress = $( '.form-progress' );
-            form = new Form( formSelector, data );
+            form = new Form( formSelector, data, formOptions );
 
             // remove submit button before event handlers are set
             _removeSubmitButtonIfNeccessary();
@@ -91,7 +94,7 @@ function _resetForm( confirmed ) {
         form = new Form( formSelector, {
             modelStr: formData.modelStr,
             external: formData.external
-        } );
+        }, formOptions );
         reasonForChange = '';
         form.init();
         form.getView().$
