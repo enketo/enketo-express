@@ -185,7 +185,7 @@ Comment.prototype._showCommentModal = function( linkedQuestionErrorMsg ) {
         if ( $input.val() ) {
             var error;
             var comment = $input.val();
-            var status = this.attributes.name.nodeValue;
+            var status = this.getAttribute( 'name' );
             var assignee = $assignee.find( 'select' ).val();
             var notify = $notify.find( 'input:checked' ).val() === 'true';
             that._addQuery( comment, status, assignee, notify );
@@ -273,7 +273,7 @@ Comment.prototype._parseModelFromString = function( str ) {
 };
 
 Comment.prototype._getParsedElapsedTime = function( datetimeStr ) {
-    var dt = new Date( datetimeStr );
+    var dt = new Date( this._getIsoDatetimeStr( datetimeStr ) );
     if ( typeof datetimeStr !== 'string' || dt.toString() === 'Invalid Date' ) {
         return 'error';
     }
@@ -350,6 +350,15 @@ Comment.prototype._getFormattedCurrentDatetimeStr = function() {
         .replace( 'T', ' ' )
         .replace( /(\.[0-9]{0,3})Z$/, 'Z' )
         .replace( 'Z', ' ' + offset.direction + offset.hrspart + ':' + offset.minspart );
+};
+
+Comment.prototype._getIsoDatetimeStr = function( dateTimeStr ) {
+    var parts;
+    if ( typeof dateTimeStr === 'string' ) {
+        parts = dateTimeStr.split( ' ' );
+        return parts[ 0 ] + 'T' + parts[ 1 ] + parts[ 2 ];
+    }
+    return dateTimeStr;
 };
 
 Comment.prototype._renderHistory = function() {
