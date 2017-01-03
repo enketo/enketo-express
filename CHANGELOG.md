@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Changed
 - Updated Czech, Slovak, German and Swahili translations.
+- Moved down 'Powered by' footer on large screens.
 
 ##### Fixed
 - Branding logo in form header is stretched sometimes.

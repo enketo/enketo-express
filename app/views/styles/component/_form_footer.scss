@@ -157,13 +157,13 @@
 @media screen and (min-width: $main-breakpoint) {
     .form-footer .enketo-power {
         position: absolute;
-        bottom: -80px;
+        bottom: -85px;
         right: 5px;
         width: auto;
     }
 
     .pages ~ .form-footer .enketo-power {
-        bottom: -90px;
+        bottom: -95px;
     }
 }
 
