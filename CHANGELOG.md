@@ -13,6 +13,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Changed
+- Updated Czech, Slovak, German and Swahili translations.
+
 ##### Fixed
 - Branding logo in form header is stretched sometimes.
 

@@ -105,6 +105,11 @@
             "msg": "Data yako imewasilishwa!",
             "redirectmsg": "Utaelekezwa mahali pengine sasa."
         },
+        "thanks": {
+            "heading": "Asante kwa kushiriki!",
+            "msg": "You can close this window now.",
+            "msgTaken": "You have already completed this survey."
+        },
         "validationerror": {
             "msg": "Fomu ziko na makosa. Tafadhali angalia uga zilizo na alama nyekundu."
         },
@@ -212,9 +217,13 @@
             "end": "Enda mwisho",
             "next": "Ifuatayo",
             "return": "Rudi Mwanzo"
-        }
+        },
+        "required": "required"
     },
     "formfooter": {
+        "complete": {
+            "btn": "Complete"
+        },
         "savedraft": {
             "btn": "Hifadhi mswadajaribio",
             "label": "Hifadhi kama rasimu"
@@ -225,6 +234,17 @@
         "validate": {
             "btn": "Halalisha"
         }
+    },
+    "geopicker": {
+        "accuracy": "accuracy (m)",
+        "altitude": "altitude (m)",
+        "closepolygon": "close polygon",
+        "kmlcoords": "KML coordinates",
+        "kmlpaste": "paste KML coordinates here",
+        "latitude": "latitude (x.y °)",
+        "longitude": "longitude (x.y °)",
+        "points": "points",
+        "searchPlaceholder": "search for place or address"
     },
     "here": "hapa",
     "home": {
@@ -238,13 +258,15 @@
         "en": "kiingereza",
         "es": "kihispania",
         "fa": "kiajemi",
+        "fi": "Finnish",
         "fr": "kifaransa",
         "he": "Kiebrania",
         "hi": "Hindi",
         "it": "kiitaliano",
         "km": "Khmer",
+        "lo": "Lao",
         "nl": "Dutch",
-        "no": "Norwegian",
+        "no": "lugha ya Norway",
         "ro": "Romanian",
         "sk": "kislovakia",
         "supported": "Lugha zinazokubaliwa:",
@@ -290,6 +312,10 @@
         "title": "Foleni",
         "upload": "Pakia"
     },
+    "selectpicker": {
+        "noneselected": "none selected",
+        "numberselected": "__number__ selected"
+    },
     "store": {
         "error": {
             "iosusesafari": "Kisakuzi chako cha IOS hakiwezi kufungua fomu hii. Tunapendekeza kisakuzi cha Safari kuifungua fomu hii.",
@@ -304,9 +330,16 @@
         "http401": "Authentication problem with data server.",
         "http403": "Hauruhusiwa kutuma data kwenye hii data seva.",
         "http404": "Huduma ya kuwasilisha data kwenye data seva haikupatikana.",
+        "http408": "Data server timed out.",
         "http413": "Data ni kubwa mno.",
         "http4xx": "Data seva ina utata wakuwasilisha data tusioujua.",
-        "http500": "Hatukuweza kuwasiliana na data seva iliyo na fomu yako au seva ya Enketo. Tafadhali jaribu tena baadaye au wasiliana nasi kupitia __supportEmail__."
+        "http500": "Hatukuweza kuwasiliana na data seva iliyo na fomu yako au seva ya Enketo. Tafadhali jaribu tena baadaye au wasiliana nasi kupitia __supportEmail__.",
+        "http504": "Could not establish connection with data server."
     },
-    "version": "toleo:"
+    "version": "toleo:",
+    "widget": {
+        "comment": {
+            "update": "Update"
+        }
+    }
 }
