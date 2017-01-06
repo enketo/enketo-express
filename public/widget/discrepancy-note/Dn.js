@@ -150,7 +150,7 @@ Comment.prototype._showCommentModal = function( linkedQuestionErrorMsg ) {
     this.$history = $( '<div class="or-comment-widget__content__history closed"><p>' + historyText + '</p><table></table></div>' );
     $user = $( '<div class="or-comment-widget__content__user">' ).append( $assignee ).append( $notify );
 
-    $content = $( '<form onsubmit="return false;" class="or-comment-widget__content"></form>' )
+    $content = $( '<form onsubmit="return false;" class="or-comment-widget__content" autocomplete="off"></form>' )
         .append( $comment )
         .append( $user )
         .append( $closeButton )
@@ -194,6 +194,15 @@ Comment.prototype._showCommentModal = function( linkedQuestionErrorMsg ) {
             error = that._commentHasError();
             that._setCommentButtonState( that.element.value, error, status );
             that._hideCommentModal( that.$linkedQuestion );
+            /*
+             * Any current error state shown in the linked question will not automatically update.
+             * It only updates when its **own** value changes.
+             * See https://github.com/kobotoolbox/enketo-express/issues/608
+             * Since a linked question and a comment belong so closely together, and likely have 
+             * a `required` or `constraint` dependency, it makes sense to 
+             * separately call a validate method on the linked question to update the error state if necessary.
+             */
+            that.options.helpers.input.validate( $( that.$linkedQuestion.get( 0 ).querySelector( 'input, select, textarea' ) ) );
         }
 
         return false;
