@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.36.4] - 2016-01-06
 ---------------------
 ##### Changed
 - Updated Czech, Slovak, German and Swahili translations.
@@ -10,6 +10,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Branding logo in form header is stretched sometimes.
+- Subtle "required" message remains visible for empty questions with dynamic required expressions that evaluate to false().
+- When question has a comment widget and is in an invalid state, this state is not removed when the comment value changes and makes the question valid.
 
 [1.36.3] - 2016-12-22
 ---------------------
