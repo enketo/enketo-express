@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- fixed: Horizontal analog scale label and slider overlap on small screens.
+
 [1.36.4] - 2016-01-06
 ---------------------
 ##### Changed
