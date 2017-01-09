@@ -26,7 +26,7 @@ In XLSForm on the settings sheet, add a column `namespaces` and populate this wi
 
 #### Question
 
-Add a question of type `text`, optionally with appearance `multiline`, preferably immediately after the question node it refers to.
+Add a question of type `text`, optionally with appearance `multiline`, preferably immediately after the question node it refers to (for future printability of records).
 
 | type | name      | label           | appearance |
 |------|-----------|-----------------|------------|
@@ -71,21 +71,21 @@ Optionally, if you'd like to make question "a" required only if there is no comm
     <h:title>My Form</h:title>
     <model>
       <instance>
-        <dn id="myform">
+        <myform id="myform">
           <a/>
           <a_comment/>
           <meta>
             <instanceID/>
           </meta>
-        </dn>
+        </myform>
       </instance>
-      <bind nodeset="/myform/a" required=" /dn/a_comment = ''" type="string"/>
-      <bind enk:for=" /myform/a " nodeset="/dn/a_comment" type="string"/>
-      <bind nodeset="/myform/meta/instanceID" readonly="true()" type="string"/>
+      <bind nodeset="/myform/a" required="/myform/a_comment = ''" type="string"/>
+      <bind nodeset="/myform/a_comment" enk:for="/myform/a"  type="string"/>
+      <bind nodeset="/myform/meta/instanceID" jr:preload="uid" type="string"/>
     </model>
   </h:head>
   <h:body>
-    <input appearance="minimal" ref="/dn/a">
+    <input appearance="minimal" ref="/myform/a">
       <label>Enter text</label>
       <hint>required unless comment provided</hint>
     </input>
