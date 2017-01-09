@@ -44,22 +44,22 @@ A more complex ordinal example with nested repeats could look like this:
 	<person enk:last-used-ordinal=”4” enk:ordinal=”1”>
     	<firstname>krikor</firstname>
     	<award enk:last-used-ordinal="4" enk:ordinal="1">
-    		<name>some price</name>
+    		<name>some prize</name>
     	</award>
     	<award enk:ordinal="4">
-    		<name>some price</name>
+    		<name>some prize</name>
     	</award>
 	</person>
 	<person enk:ordinal=”3”>
         <firstname>jessica</firstname>
         <award enk:last-used-ordinal="3" enk:ordinal="1">
-    		<name>some price</name>
+    		<name>some prize</name>
     	</award>
     	<award enk:ordinal="2">
-    		<name>some price</name>
+    		<name>some prize</name>
     	</award>
     	<award enk:ordinal="3">
-    		<name>some price</name>
+    		<name>some prize</name>
     	</award>
 	</person>
 </data>
