@@ -37,6 +37,7 @@ Comment.prototype._init = function() {
         this.$linkedQuestion.find( '.question-label' ).last().after( this.$commentButton );
         this._setCommentButtonHandler();
         this._setValidationHandler();
+        this._setDisabledHandler();
     }
 };
 
@@ -91,6 +92,53 @@ Comment.prototype._setValidationHandler = function() {
         var value = that.element.value;
         that._setCommentButtonState( value, error );
     } );
+};
+
+Comment.prototype._setDisabledHandler = function() {
+    var observer;
+    var comment;
+    var status;
+    var currentStatus;
+    var linkedVal;
+    var open;
+    var that = this;
+    var target = this.$linkedQuestion.get( 0 ).querySelector( 'input, select, textarea' );
+    var $target = $( target );
+
+    if ( this.options.helpers.input.getRelevant( $target ) ) {
+        observer = new MutationObserver( function( mutations ) {
+            mutations.forEach( function( mutation ) {
+                currentStatus = that._getCurrentStatus( that.notes );
+                open = currentStatus === 'updated' || currentStatus === 'new';
+
+                if ( target.disabled ) {
+                    // getVal() can return an empty array.
+                    linkedVal = that.options.helpers.input.getVal( $target );
+                    // If clearIrrelevantImmediately is true, this condition can only occur upon form loading if a form is loaded
+                    // with a value for an irrelevant question and no open queries.
+                    if ( !open && linkedVal.length > 0 ) {
+                        comment = t( 'widget.dn.containsdatahidden' );
+                        status = 'updated'; //TODO: properly determine status of added audit log
+                    } else if ( open && linkedVal.length === 0 ) {
+                        // This will not be triggered if a form is loaded with a value for an irrelevant question and an open query.
+                        comment = t( 'widget.dn.autoclosed' );
+                        status = 'closed';
+                    }
+                    if ( comment ) {
+                        that._addQuery( 'audit', comment, status, '', false );
+                        $( that.element ).val( JSON.stringify( that.notes ) ).trigger( 'change' );
+                        // error = that._commentHasError();
+                        that._setCommentButtonState( that.element.value, null, status );
+                    }
+                }
+            } );
+        } );
+
+        observer.observe( target, {
+            attributes: true,
+            attributeFilter: [ 'disabled' ]
+        } );
+    }
 };
 
 Comment.prototype._isCommentModalShown = function( $linkedQuestion ) {
@@ -188,7 +236,7 @@ Comment.prototype._showCommentModal = function( linkedQuestionErrorMsg ) {
             var status = this.getAttribute( 'name' );
             var assignee = $assignee.find( 'select' ).val();
             var notify = $notify.find( 'input:checked' ).val() === 'true';
-            that._addQuery( comment, status, assignee, notify );
+            that._addQuery( 'comment', comment, status, assignee, notify );
             $input.val( '' );
             $( that.element ).val( JSON.stringify( that.notes ) ).trigger( 'change' );
             error = that._commentHasError();
@@ -318,9 +366,10 @@ Comment.prototype._parseElapsedTime = function( elapsedMilliseconds ) {
     return Math.round( months / 12 ) + ' year(s)';
 };
 
-Comment.prototype._addQuery = function( comment, status, assignee, notify ) {
+Comment.prototype._addQuery = function( type, comment, status, assignee, notify ) {
     var n = Date.now();
     this.notes.queries.unshift( {
+        type: type || 'comment',
         id: ( ++this.ordinal ).toString(),
         date_time: this._getFormattedCurrentDatetimeStr(),
         comment: comment,

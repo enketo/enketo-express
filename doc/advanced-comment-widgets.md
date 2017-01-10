@@ -17,32 +17,33 @@ The advanced comment widgets extend the generic comment feature by: populating t
 
 ```json
 {
-	"queries": [
-		{ 
-			"id": "",
-			"date_time": "2016-09-01 15:01 -06:00",
-			"comment": "This value seems impossible.",
-			"status": "new",
-			"assigned_to": "Maurice Moss (moss)",
-			"notify": false
-		}
-	],
-	"logs": [
-		{
-			"type": "comment",
-			"assigned_to": "Ada Clare (aclare)",
-			"date_time": "2016-04-22 14:44:20 -06:00",
-			"comment": "This is an older comment.", 
-			"status": "updated",
-			"user": "Maurice Moss (moss)"
-		},
-		{ 
-			"type": "audit",  
-			"message": "Item data value updated from old_value to new_value.",  
-			"date_time" : "2016-05-18 12:44:20 -06:00",
-			"user" : "Jen Barber (jen)",
-		}
-	]
+  "queries": [
+    { 
+      "type": "comment",
+      "id": "",
+      "date_time": "2016-09-01 15:01 -06:00",
+      "comment": "This value seems impossible.",
+      "status": "new",
+      "assigned_to": "Maurice Moss (moss)",
+      "notify": false
+    }
+  ],
+  "logs": [
+    {
+      "type": "comment",
+      "assigned_to": "Ada Clare (aclare)",
+      "date_time": "2016-04-22 14:44:20 -06:00",
+      "comment": "This is an older comment.", 
+      "status": "updated",
+      "user": "Maurice Moss (moss)"
+    },
+    { 
+      "type": "audit",  
+      "message": "Item data value updated from old_value to new_value.",  
+      "date_time" : "2016-05-18 12:44:20 -06:00",
+      "user" : "Jen Barber (jen)",
+    }
+  ]
 }
 ```
 
@@ -87,7 +88,7 @@ For each discrepancy note question, add a reference to the question node it refe
 | type | name      | label           | appearance   | bind::enk:for |
 |------|-----------|-----------------|--------------|---------------|
 | text | a         | Enter text      |              |               |
-| text | a_comment | Enter a comment | multiline dn | ${a}			|
+| text | a_comment | Enter a comment | multiline dn | ${a}          |
 
 #### Dynamic required, constraint, relevant
 
@@ -96,7 +97,7 @@ Optionally, if you'd like to make question "a" required depending on whether the
 | type | name      | label           | appearance   | bind::enk:for | required        |
 |------|-----------|-----------------|--------------|---------------|-----------------|
 | text | a         | Enter text      |              |               | $a_comment = '' |
-| text | a_comment | Enter a comment | multiline dn | ${a}			|                 |
+| text | a_comment | Enter a comment | multiline dn | ${a}          |                 |
 
 In addition there is `comment-status` function that can be used to check the status of a query. The argument of this function is a single node that stores the DN data structure. This function can be used in any XPath expression. E.g. the above required expression could also be: `${a_comment} = '' or comment-status($a_comment} = 'closed'`.
 
@@ -122,10 +123,10 @@ Add a secondary instance with id "_users" to the XForm, with the following (pref
 
 Or alternatively, with the following structure as *\_users.csv*:
 
-| user_name	| first_name | last_name |
+| user_name | first_name | last_name |
 |-----------|------------|-----------|
-| esummer	| Esther |	Summerson|
-| honoria |	Honoria	| Dedlock |
+| esummer   | Esther     | Summerson |
+| honoria   | Honoria    | Dedlock   |
 
 
 

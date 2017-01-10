@@ -6,7 +6,9 @@
             "emptyHistoryText": "No History",
             "historyText": "History",
             "notifyText": "Email?",
-            "me": "Me"
+            "me": "Me",
+            "containsdatahidden": "This field contains data but is currently hidden from view",
+            "autoclosed": "Query closed by system because this item was hidden"
         }
     },
     "fieldsubmission": {
