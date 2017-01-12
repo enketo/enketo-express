@@ -4,11 +4,12 @@ var settings = require( './settings' );
 var i18next = require( 'i18next' );
 var XHR = require( 'i18next-xhr-backend' );
 var LanguageDetector = require( 'i18next-browser-languagedetector' );
-var $ = require( 'jquery' );
 var init;
 var t;
 var localize;
 var htmlParagraphsPostProcessor;
+var initialize;
+
 
 // The postProcessor assumes that array values with line breaks should be divided into HTML paragraphs.
 htmlParagraphsPostProcessor = {
@@ -27,37 +28,42 @@ htmlParagraphsPostProcessor = {
  * @return {Promise}       promise resolving the original something argument
  */
 init = function( something ) {
-    return new Promise( function( resolve, reject ) {
-        i18next
-            .use( XHR )
-            .use( LanguageDetector )
-            .use( htmlParagraphsPostProcessor )
-            .init( {
-                whitelist: settings.languagesSupported,
-                fallbackLng: 'en',
-                joinArrays: '\n',
-                backend: {
-                    loadPath: settings.basePath + '/locales/__lng__/translation-combined.json',
-                },
-                detection: {
-                    order: [ 'querystring', 'navigator' ],
-                    lookupQuerystring: 'lang',
-                    caches: false
-                },
-                interpolation: {
-                    prefix: '__',
-                    suffix: '__'
-                },
-                postProcess: [ 'htmlParagraphsPostProcessor' ]
-            }, function( error ) {
-                if ( error ) {
-                    reject( error );
-                } else {
-                    resolve( something );
-                }
-            } );
-    } );
+    return initialize
+        .then( function() {
+            return something;
+        } );
 };
+
+initialize = new Promise( function( resolve, reject ) {
+    i18next
+        .use( XHR )
+        .use( LanguageDetector )
+        .use( htmlParagraphsPostProcessor )
+        .init( {
+            whitelist: settings.languagesSupported,
+            fallbackLng: 'en',
+            joinArrays: '\n',
+            backend: {
+                loadPath: settings.basePath + '/locales/__lng__/translation-combined.json',
+            },
+            detection: {
+                order: [ 'querystring', 'navigator' ],
+                lookupQuerystring: 'lang',
+                caches: false
+            },
+            interpolation: {
+                prefix: '__',
+                suffix: '__'
+            },
+            postProcess: [ 'htmlParagraphsPostProcessor' ]
+        }, function( error ) {
+            if ( error ) {
+                reject( error );
+            } else {
+                resolve();
+            }
+        } );
+} );
 
 t = function( key, options ) {
     return i18next.t( key, options );
