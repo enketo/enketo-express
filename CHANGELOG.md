@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Fixed
 - fixed: Horizontal analog scale label and slider overlap on small screens.
+- translations were loaded 3 times affecting performance
 
 [1.36.4] - 2016-01-06
 ---------------------
