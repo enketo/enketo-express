@@ -19,9 +19,11 @@ Use as [POST /survey/single](http://apidocs.enketo.org/v2/#/post-survey-single)*
 Use as [POST /survey/single/iframe](http://apidocs.enketo.org/v2/#/post-survey-single-iframe)*
 
 ### POST /instance/fieldsubmission
-Use exactly as [POST /instance](http://apidocs.enketo.org/v2/#/post-instance)*
+Has an optional `complete_button` parameter which is either `"true"` or `"false"`. If omitted, considered `"false"`. This parameter determines whether a _Complete_ button is present in addition to the always-present _Close_ button.
+Otherwise use exactly as [POST /instance](http://apidocs.enketo.org/v2/#/post-instance)*
 
 ### POST /instance/fieldsubmission/iframe
-Use exactly as [POST /instance/iframe](http://apidocs.enketo.org/v2/#/post-instance-iframe)*
+Has an optional `complete_button` parameter which is either `"true"` or `"false"`. If omitted, considered `"false"`. This parameter determines whether a _Complete_ button is present in addition to the always-present _Close_ button.
+Otherwise exactly as [POST /instance/iframe](http://apidocs.enketo.org/v2/#/post-instance-iframe)*
 
 \* The API `defaults` request parameter is not implemented. The response property name will differ. E.g. GET /survey/single/fieldsubmission will return ‘single_fieldsubmission_url’ instead of ‘single_url’.

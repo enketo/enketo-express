@@ -57,6 +57,9 @@ var settingsMap = [ {
 }, {
     q: 'parentWindowOrigin',
     s: 'parentWindowOrigin'
+}, {
+    q: 'completeButton',
+    s: 'completeButton'
 } ];
 
 // rename query string parameters to settings, but only if they do not exist already

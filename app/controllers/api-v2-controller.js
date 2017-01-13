@@ -98,6 +98,7 @@ router
     .get( '/survey/single/fieldsubmission/iframe', getExistingSurvey )
     .post( '/survey/single/fieldsubmission', getNewOrExistingSurvey )
     .post( '/survey/single/fieldsubmission/iframe', getNewOrExistingSurvey )
+    .post( '/instance/fieldsubmission*', _setCompleteButtonParam )
     .post( '/instance/fieldsubmission', cacheInstance )
     .post( '/instance/fieldsubmission/iframe', cacheInstance )
     .all( '*', function( req, res, next ) {
@@ -345,6 +346,15 @@ function _setReturnQueryParam( req, res, next ) {
     next();
 }
 
+function _setCompleteButtonParam( req, res, next ) {
+    var completeButton = req.body.complete_button;
+
+    if ( completeButton ) {
+        req.completeButtonParam = 'completeButton=' + completeButton;
+    }
+    next();
+}
+
 function _generateQueryString( params ) {
     var paramsJoined;
 
@@ -381,7 +391,7 @@ function _generateWebformUrls( id, req ) {
             break;
         case 'edit':
             // no defaults query parameter in edit view
-            queryString = _generateQueryString( [ 'instance_id=' + req.body.instance_id, req.parentWindowOriginParam, req.returnQueryParam ] );
+            queryString = _generateQueryString( [ 'instance_id=' + req.body.instance_id, req.parentWindowOriginParam, req.returnQueryParam, req.completeButtonParam ] );
             obj.edit_url = baseUrl + 'edit/' + fsPart + iframePart + idPartOnline + queryString;
             break;
         case 'single':

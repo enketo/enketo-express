@@ -103,6 +103,7 @@ describe( 'api', function() {
 
         it( test.method.toUpperCase() + ' /api/v' + version + endpoint + ' with ' + authDesc + ' authentication and ' + server + ', ' +
             id + ', ' + ret + ', ' + instance + ', ' + instanceId + ', ' + test.theme +
+            ', completeButton: ' + test.completeButton +
             ', parentWindowOrigin: ' + test.parentWindowOrigin + ', defaults: ' + JSON.stringify( test.defaults ) +
             ' responds with ' + test.status + ' when offline enabled: ' + offlineEnabled,
             function( done ) {
@@ -114,6 +115,7 @@ describe( 'api', function() {
                         form_id: id,
                         instance: instance,
                         instance_id: instanceId,
+                        complete_button: test.completeButton,
                         return_url: ret,
                         defaults: test.defaults,
                         parent_window_origin: test.parentWindowOrigin
@@ -137,6 +139,8 @@ describe( 'api', function() {
                 version: version,
                 endpoint: '/survey/single/fieldsubmission',
                 method: 'get',
+                // test whether completeButton is ignored as it should be
+                completeButton: true,
                 auth: true,
                 status: 200,
                 res: {
@@ -232,6 +236,30 @@ describe( 'api', function() {
                     res: {
                         property: 'edit_url',
                         expected: /.+\?.*returnUrl=http%3A%2F%2Fenke.to/
+                    }
+                },
+                // test completeButton in response
+                {
+                    method: 'post',
+                    auth: true,
+                    ret: 'http://enke.to',
+                    completeButton: 'true',
+                    status: 201,
+                    res: {
+                        property: 'edit_url',
+                        expected: /.+\?.*completeButton=true/
+                    }
+                },
+                // test completeButton in response
+                {
+                    method: 'post',
+                    auth: true,
+                    ret: 'http://enke.to',
+                    completeButton: 'false',
+                    status: 201,
+                    res: {
+                        property: 'edit_url',
+                        expected: /.+\?.*completeButton=false/
                     }
                 },
                 // invalid parameters

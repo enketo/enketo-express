@@ -39,7 +39,7 @@ function init( selector, data ) {
             form = new Form( formSelector, data, formOptions );
 
             // remove submit button before event handlers are set
-            _removeSubmitButtonIfNeccessary();
+            _removeCompleteButtonIfNeccessary();
 
             // set eventhandlers before initializing form
             _setEventHandlers( selector );
@@ -233,8 +233,8 @@ function _setReasonForChangeUi() {
     }
 }
 
-function _removeSubmitButtonIfNeccessary() {
-    if ( settings.type === 'edit' ) {
+function _removeCompleteButtonIfNeccessary() {
+    if ( !settings.completeButton ) {
         $( 'button#finish-form' ).remove();
         $( 'button#close-form' ).removeClass( 'btn-default' ).addClass( 'btn-primary' );
     }
