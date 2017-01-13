@@ -1,6 +1,8 @@
 /* global describe, it, expect */
 'use strict';
 
+global.Promise = require( 'lie' );
+
 var Dn = require( '../../public/widget/discrepancy-note/Dn' );
 var jquery = require( 'jquery' );
 Dn.prototype._init = function() {};
@@ -110,6 +112,6 @@ describe( 'DN object', function() {
             } );
         } );
 
-    } )
+    } );
 
 } );

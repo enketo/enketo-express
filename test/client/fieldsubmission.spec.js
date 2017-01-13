@@ -1,8 +1,9 @@
 /* global describe, it, beforeEach*/
 'use strict';
 
+global.Promise = require( 'lie' );
+
 var chai = require( 'chai' );
-var Promise = require( 'lie' );
 var expect = chai.expect;
 var $ = require( 'jquery' );
 var chaiAsPromised = require( 'chai-as-promised' );
