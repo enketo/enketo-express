@@ -38,6 +38,7 @@ Comment.prototype._init = function() {
         this._setCommentButtonHandler();
         this._setValidationHandler();
         this._setDisabledHandler();
+        this._setValueChangeHandler();
     }
 };
 
@@ -94,6 +95,12 @@ Comment.prototype._setValidationHandler = function() {
     } );
 };
 
+/**
+ * Observes the disabled state of the linked question, and automatically generates
+ * an audit log if:
+ * 1. The question gets disabled and the query is currently 'open'.
+ * 2. The form was loaded with a value for the linked question, but the question was disabled (upon load).s
+ */
 Comment.prototype._setDisabledHandler = function() {
     var observer;
     var comment;
@@ -125,10 +132,7 @@ Comment.prototype._setDisabledHandler = function() {
                         status = 'closed';
                     }
                     if ( comment ) {
-                        that._addQuery( 'audit', comment, status, '', false );
-                        $( that.element ).val( JSON.stringify( that.notes ) ).trigger( 'change' );
-                        // error = that._commentHasError();
-                        that._setCommentButtonState( that.element.value, null, status );
+                        that._addQuery( 'comment', comment, status, '', false );
                     }
                 }
             } );
@@ -139,6 +143,32 @@ Comment.prototype._setDisabledHandler = function() {
             attributeFilter: [ 'disabled' ]
         } );
     }
+};
+
+/**
+ * Listens to a value change of the linked question and generates an audit log if
+ * the value is valid.
+ */
+Comment.prototype._setValueChangeHandler = function() {
+    var that = this;
+    var previousValue = this.options.helpers.input.getVal( $( this.$linkedQuestion.get( 0 ).querySelector( 'input, select, textarea' ) ) );
+
+    this.$linkedQuestion.on( 'valuechange.enketo', function( evt, valid ) {
+        previousValue = ( Array.isArray( previousValue ) ) ? previousValue.join( ', ' ) : previousValue;
+        if ( valid ) {
+            var comment;
+            var currentValue = that.options.helpers.input.getVal( $( evt.target ) );
+            currentValue = ( Array.isArray( currentValue ) ) ? currentValue.join( ', ' ) : currentValue;
+
+            comment = t( 'widget.dn.valuechange', {
+                'new': '"' + currentValue + '"',
+                'previous': '"' + previousValue + '"'
+            } );
+
+            that._addLog( 'audit', comment, '', false );
+            previousValue = currentValue;
+        }
+    } );
 };
 
 Comment.prototype._isCommentModalShown = function( $linkedQuestion ) {
@@ -231,16 +261,12 @@ Comment.prototype._showCommentModal = function( linkedQuestionErrorMsg ) {
 
     $queryButtons.find( '.btn' ).on( 'click', function() {
         if ( $input.val() ) {
-            var error;
             var comment = $input.val();
             var status = this.getAttribute( 'name' );
             var assignee = $assignee.find( 'select' ).val();
             var notify = $notify.find( 'input:checked' ).val() === 'true';
             that._addQuery( 'comment', comment, status, assignee, notify );
             $input.val( '' );
-            $( that.element ).val( JSON.stringify( that.notes ) ).trigger( 'change' );
-            error = that._commentHasError();
-            that._setCommentButtonState( that.element.value, error, status );
             that._hideCommentModal( that.$linkedQuestion );
             /*
              * Any current error state shown in the linked question will not automatically update.
@@ -329,6 +355,18 @@ Comment.prototype._parseModelFromString = function( str ) {
     }
 };
 
+Comment.prototype._datetimeDesc = function( a, b ) {
+    var aDate = new Date( this._getIsoDatetimeStr( a.date_time ) );
+    var bDate = new Date( this._getIsoDatetimeStr( b.date_time ) );
+    if ( bDate.toString() === 'Invalid Date' || aDate > bDate ) {
+        return -1;
+    }
+    if ( aDate.toString() === 'Invalid Date' || aDate < bDate ) {
+        return 1;
+    }
+    return 0;
+};
+
 Comment.prototype._getParsedElapsedTime = function( datetimeStr ) {
     var dt = new Date( this._getIsoDatetimeStr( datetimeStr ) );
     if ( typeof datetimeStr !== 'string' || dt.toString() === 'Invalid Date' ) {
@@ -367,13 +405,35 @@ Comment.prototype._parseElapsedTime = function( elapsedMilliseconds ) {
 };
 
 Comment.prototype._addQuery = function( type, comment, status, assignee, notify ) {
-    var n = Date.now();
+    var that = this;
+    var error;
+    var modelDataStr;
     this.notes.queries.unshift( {
         type: type || 'comment',
         id: ( ++this.ordinal ).toString(),
         date_time: this._getFormattedCurrentDatetimeStr(),
         comment: comment,
         status: status,
+        assigned_to: assignee,
+        notify: notify
+    } );
+
+    // strip logs from model
+    modelDataStr = JSON.stringify( {
+        queries: that.notes.queries
+    } );
+
+    // update XML Model
+    $( this.element ).val( modelDataStr ).trigger( 'change' );
+    error = this._commentHasError();
+    that._setCommentButtonState( that.element.value, error, status );
+};
+
+Comment.prototype._addLog = function( type, comment, assignee, notify ) {
+    this.notes.logs.unshift( {
+        type: type || 'audit',
+        date_time: this._getFormattedCurrentDatetimeStr(),
+        comment: comment,
         assigned_to: assignee,
         notify: notify
     } );
@@ -431,13 +491,9 @@ Comment.prototype._renderHistory = function() {
     this.$history.find( 'table' ).empty()
         .append( '<thead><tr><td></td><td></td><td>' + user + '</td><td>' + clock + '</td></tr></thead>' )
         .append( '<tbody>' +
-            // Queries and logs are processed differently wrt to showing 'Me' for user if user property is missing.
-            ( this.notes.queries.map( function( item ) {
+            ( this.notes.queries.concat( this.notes.logs ).sort( this._datetimeDesc.bind( this ) ).map( function( item ) {
                     return that._getRows( item, true );
                 } )
-                .concat( this.notes.logs.map( function( item ) {
-                    return that._getRows( item );
-                } ) )
                 .join( '' ) || '<tr><td colspan="2">' + emptyText + '</td><td></td><td></td></tr>' ) +
             '</tbody>'
         )
@@ -453,21 +509,20 @@ Comment.prototype._renderHistory = function() {
     } );
 };
 
-Comment.prototype._getRows = function( item, me ) {
-    var type;
+Comment.prototype._getRows = function( item ) {
     var msg;
     var elapsed;
     var fullName;
+    var me;
     var types = {
         comment: '<span class="icon tooltip fa-comment-o" data-title="Query/Comment"> </span>',
         audit: '<span class="icon tooltip fa-edit" data-title="Audit Event"> </span>'
     };
-    me = me ? t( 'widget.dn.me' ) : '';
-    type = item.type || 'comment';
+    me = typeof item.user === 'undefined' ? t( 'widget.dn.me' ) : '';
     msg = item.comment || item.message;
     elapsed = this._getParsedElapsedTime( item.date_time );
     fullName = this._parseFullName( item.user ) || me;
-    return '<tr><td>' + types[ type ] + '</td><td>' + msg + '</td><td>' + fullName + '</td><td>' + elapsed + '</td></tr>';
+    return '<tr><td>' + ( types[ item.type ] || '' ) + '</td><td>' + msg + '</td><td>' + fullName + '</td><td>' + elapsed + '</td></tr>';
 };
 
 Comment.prototype._parseFullName = function( user ) {

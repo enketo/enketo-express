@@ -111,7 +111,51 @@ describe( 'DN object', function() {
                 expect( dn._parseElapsedTime( test[ 0 ] ) ).to.equal( test[ 1 ] );
             } );
         } );
+    } );
 
+    describe( 'sorting queries and logs', function() {
+        var dn = new Dn();
+        var a = {
+            date_time: "2016-09-01 15:01 -06:00"
+        };
+        var b = {
+            date_time: "2016-09-01 14:01 -06:00"
+        };
+        var c = {
+            date_time: "2016-09-01 13:01 -06:00"
+        };
+        var d = {};
+
+        [
+            [ a, b, c, d ],
+            [ a, b, d, c ],
+            [ a, c, d, b ],
+            [ a, c, b, d ],
+            [ a, d, b, c ],
+            [ a, d, c, b ],
+            [ b, a, c, d ],
+            [ b, a, d, c ],
+            [ b, c, a, d ],
+            [ b, c, d, a ],
+            [ b, d, a, c ],
+            [ b, d, c, a ],
+            [ c, a, b, d ],
+            [ c, a, d, b ],
+            [ c, b, a, d ],
+            [ c, b, d, a ],
+            [ c, d, a, b ],
+            [ c, d, b, a ],
+            [ d, a, b, c ],
+            [ d, a, c, b ],
+            [ d, b, a, c ],
+            [ d, b, c, a ],
+            [ d, c, a, b ],
+            [ d, c, b, a ]
+        ].forEach( function( test ) {
+            it( 'sorts by datetime in descending order: ' + JSON.stringify( test ), function() {
+                expect( test.sort( dn._datetimeDesc.bind( dn ) ) ).to.deep.equal( [ a, b, c, d ] );
+            } );
+        } );
     } );
 
 } );
