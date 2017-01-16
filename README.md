@@ -6,7 +6,7 @@ _The modern [Enketo Smart Paper](https://enketo.org) web application._
 
 -------
 
-This is a port of [enketo/enketo-express](https://github.com/enketo/enketo-express) that has the following additions:
+This is a fork of [enketo/enketo-express](https://github.com/enketo/enketo-express) that has the following additions:
 
 1. An [account manager](https://swaggerhub.com/api/Enketo/enketo-express-oc-account-manager) to use multiple accounts with a single Enketo installation.
 2. A [fieldsubmission](./doc/fieldsubmission.md) webform view that uses [OpenClinica's Fieldsubmission API](https://swaggerhub.com/api/martijnr/openclinica-fieldsubmission).
