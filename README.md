@@ -88,7 +88,7 @@ The API is accessible on **/api/v2** and **/api/v1**. See the [documentation](ht
 ---------
 The regular Enketo API v2 has been extended with [additional 'fieldsubmission' endpoints](./doc/fieldsubmission.md) for OpenClinica users.
 
-OpenClinica users have an additional [Account Manager API](https://swaggerhub.com/api/Enketo/enketo-express-oc-account-manager) at their disposal which adds dynamic linking and unlinking of orm/data servers (or studies) to a single Enketo installation.
+OpenClinica users have an additional [Account Manager API](https://swaggerhub.com/api/Enketo/enketo-express-oc-account-manager) at their disposal which adds dynamic linking and unlinking of form/data servers (or studies) to a single Enketo installation.
 
 ----------
 

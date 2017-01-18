@@ -3,6 +3,7 @@
 var Widget = require( '../../../node_modules/enketo-core/src/js/Widget' );
 var $ = require( 'jquery' );
 var t = require( 'translator' ).t;
+var settings = require( '../../js/src/module/settings' );
 var users;
 
 /**
@@ -186,7 +187,7 @@ Comment.prototype._showCommentModal = function( linkedQuestionErrorMsg ) {
     var that = this;
     var $queryButtons = $( '<div class="or-comment-widget__content__query-btns">' );
     var $comment = $( this.element ).closest( '.question' ).clone( false );
-    var noClose = $comment.hasClass( 'or-appearance-no-close' );
+    var noClose = settings.dnCloseButton === false;
     var submitText = t( 'formfooter.submit.btn' ) || 'Submit';
     var updateText = t( 'widget.comment.update' ) || 'Update';
     var closeText = t( 'widget.dn.closeQueryText' ) || 'Close Query';

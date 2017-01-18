@@ -94,11 +94,14 @@ router
     .post( '/instance', cacheInstance )
     .post( '/instance/iframe', cacheInstance )
     .delete( '/instance', removeInstance )
+    .get( '/survey/single/fieldsubmission*', _setDnCloseButtonParam )
+    .post( '/survey/single/fieldsubmission*', _setDnCloseButtonParam )
     .get( '/survey/single/fieldsubmission', getExistingSurvey )
     .get( '/survey/single/fieldsubmission/iframe', getExistingSurvey )
     .post( '/survey/single/fieldsubmission', getNewOrExistingSurvey )
     .post( '/survey/single/fieldsubmission/iframe', getNewOrExistingSurvey )
     .post( '/instance/fieldsubmission*', _setCompleteButtonParam )
+    .post( '/instance/fieldsubmission*', _setDnCloseButtonParam )
     .post( '/instance/fieldsubmission', cacheInstance )
     .post( '/instance/fieldsubmission/iframe', cacheInstance )
     .all( '*', function( req, res, next ) {
@@ -355,6 +358,15 @@ function _setCompleteButtonParam( req, res, next ) {
     next();
 }
 
+function _setDnCloseButtonParam( req, res, next ) {
+    var dnCloseButton = req.body.dn_close_button;
+
+    if ( dnCloseButton ) {
+        req.dnCloseButtonParam = 'dnCloseButton=' + dnCloseButton;
+    }
+    next();
+}
+
 function _generateQueryString( params ) {
     var paramsJoined;
 
@@ -391,11 +403,11 @@ function _generateWebformUrls( id, req ) {
             break;
         case 'edit':
             // no defaults query parameter in edit view
-            queryString = _generateQueryString( [ 'instance_id=' + req.body.instance_id, req.parentWindowOriginParam, req.returnQueryParam, req.completeButtonParam ] );
+            queryString = _generateQueryString( [ 'instance_id=' + req.body.instance_id, req.parentWindowOriginParam, req.returnQueryParam, req.completeButtonParam, req.dnCloseButtonParam ] );
             obj.edit_url = baseUrl + 'edit/' + fsPart + iframePart + idPartOnline + queryString;
             break;
         case 'single':
-            queryParts = [ req.defaultsQueryParam, req.returnQueryParam ];
+            queryParts = [ req.defaultsQueryParam, req.returnQueryParam, req.dnCloseButtonParam ];
             if ( iframePart ) {
                 queryParts.push( req.parentWindowOriginParam );
             }
