@@ -16,12 +16,6 @@ var settingsMap = [ {
     q: 'returnUrl',
     s: 'returnUrl'
 }, {
-    q: 'showbranch',
-    s: 'showBranch'
-}, {
-    q: 'debug',
-    s: 'debug'
-}, {
     q: 'touch',
     s: 'touch'
 }, {
@@ -40,20 +34,11 @@ var settingsMap = [ {
     q: 'id',
     s: 'xformId'
 }, {
-    q: 'formName',
-    s: 'xformId'
-}, {
     q: 'instanceId',
     s: 'instanceId'
 }, {
     q: 'instance_id',
     s: 'instanceId'
-}, {
-    q: 'entityId',
-    s: 'entityId'
-}, {
-    q: 'source',
-    s: 'source'
 }, {
     q: 'parentWindowOrigin',
     s: 'parentWindowOrigin'
@@ -64,7 +49,7 @@ var settingsMap = [ {
 
 // rename query string parameters to settings, but only if they do not exist already
 settingsMap.forEach( function( obj ) {
-    if ( queryParams[ obj.q ] && typeof settings[ obj.s ] === 'undefined' ) {
+    if ( typeof queryParams[ obj.q ] !== 'undefined' && typeof settings[ obj.s ] === 'undefined' ) {
         settings[ obj.s ] = queryParams[ obj.q ];
     }
 } );

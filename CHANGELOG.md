@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed:
+- Client settings do not pick up query parameters with value `false`.
+
 [1.36.5] - 2016-01-18
 ---------------------
 ##### Changed:
