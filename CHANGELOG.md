@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.36.5] - 2016-01-18
 ---------------------
+##### Changed:
+- Valuechange.enketo event now fires _after_ validation and passes validation result.
+
 ##### Fixed
 - fixed: Horizontal analog scale label and slider overlap on small screens.
 - translations were loaded 3 times affecting performance
