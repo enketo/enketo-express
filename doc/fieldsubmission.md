@@ -36,6 +36,8 @@ Has an optional `complete_button` parameter which is either `"true"` or `"false"
 Has an optional `dn_close_button` parameter which is either `"true"` or `"false"`. If omitted, considered `"true"`. This parameter determines 
 whether a _Close_ button is present in the _Discrepancy Notes widget_.
 
+Has an optional `reason_for_change` parameter which is either `"true"` or `"false"`. If omitted, considered `"false"`. This parameter determines whether the user is required to enter a reason for change.
+
 Otherwise, use exactly as [POST /instance](http://apidocs.enketo.org/v2/#/post-instance)*
 
 ### POST /instance/fieldsubmission/iframe
@@ -44,6 +46,8 @@ whether a _Complete_ button is present below the form in addition to the always-
 
 Has an optional `dn_close_button` parameter which is either `"true"` or `"false"`. If omitted, considered `"true"`. This parameter determines 
 whether a _Close_ button is present in the _Discrepancy Notes widget_.
+
+Has an optional `reason_for_change` parameter which is either `"true"` or `"false"`. If omitted, considered `"false"`. This parameter determines whether the user is required to enter a reason for change.
 
 Otherwise, use exactly as [POST /instance/iframe](http://apidocs.enketo.org/v2/#/post-instance-iframe)*
 

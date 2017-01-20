@@ -223,7 +223,7 @@ function _complete( updated ) {
 
 function _setReasonForChangeUi() {
     var $rfcButton;
-    reasonForChangeFeature = settings.type === 'edit' && $( formSelector ).hasClass( 'reason' );
+    reasonForChangeFeature = settings.type === 'edit' && settings.reasonForChange === true;
 
     if ( reasonForChangeFeature ) {
         $rfcButton = $( '<button class="form-header__button--reason btn-icon-only">' +

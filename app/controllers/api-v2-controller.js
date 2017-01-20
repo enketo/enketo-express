@@ -102,6 +102,7 @@ router
     .post( '/survey/single/fieldsubmission/iframe', getNewOrExistingSurvey )
     .post( '/instance/fieldsubmission*', _setCompleteButtonParam )
     .post( '/instance/fieldsubmission*', _setDnCloseButtonParam )
+    .post( '/instance/fieldsubmission*', _setReasonForChangeParam )
     .post( '/instance/fieldsubmission', cacheInstance )
     .post( '/instance/fieldsubmission/iframe', cacheInstance )
     .all( '*', function( req, res, next ) {
@@ -367,6 +368,15 @@ function _setDnCloseButtonParam( req, res, next ) {
     next();
 }
 
+function _setReasonForChangeParam( req, res, next ) {
+    var reasonForChange = req.body.reason_for_change;
+
+    if ( reasonForChange ) {
+        req.reasonForChangeParam = 'reasonForChange=' + reasonForChange;
+    }
+    next();
+}
+
 function _generateQueryString( params ) {
     var paramsJoined;
 
@@ -403,7 +413,7 @@ function _generateWebformUrls( id, req ) {
             break;
         case 'edit':
             // no defaults query parameter in edit view
-            queryString = _generateQueryString( [ 'instance_id=' + req.body.instance_id, req.parentWindowOriginParam, req.returnQueryParam, req.completeButtonParam, req.dnCloseButtonParam ] );
+            queryString = _generateQueryString( [ 'instance_id=' + req.body.instance_id, req.parentWindowOriginParam, req.returnQueryParam, req.completeButtonParam, req.dnCloseButtonParam, req.reasonForChangeParam ] );
             obj.edit_url = baseUrl + 'edit/' + fsPart + iframePart + idPartOnline + queryString;
             break;
         case 'single':
