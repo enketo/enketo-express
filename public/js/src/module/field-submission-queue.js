@@ -12,9 +12,10 @@ var FIELDSUBMISSION_COMPLETE_URL = ( settings.enketoId ) ? settings.basePath + '
 var FIELDSUBMISSION_REASON_URL = ( settings.enketoId ) ? settings.basePath + '/fieldsubmission/reason/' + settings.enketoIdPrefix + settings.enketoId +
     utils.getQueryString( settings.submissionParameter ) : null;
 
-function FieldSubmissionQueue() {
+function FieldSubmissionQueue( isValidFn ) {
     this.submissionQueue = {};
     this.repeatRemovalCounter = 0;
+    this.isValid = isValidFn;
 }
 
 FieldSubmissionQueue.prototype.get = function() {
@@ -107,6 +108,7 @@ FieldSubmissionQueue.prototype._submitAll = function() {
     var _queue;
     var method;
     var url;
+    var status;
     var keyParts;
     var that = this;
     var authRequired;
@@ -157,7 +159,8 @@ FieldSubmissionQueue.prototype._submitAll = function() {
             } )
             .then( function() {
                 that._resetSubmissionInterval();
-                that._uploadStatus.update( Object.keys( that.submissionQueue ).length > 0 ? 'error' : 'success' );
+                status = that.isValid() ? ( Object.keys( that.submissionQueue ).length > 0 ? 'fail' : 'success' ) : 'error';
+                that._uploadStatus.update( status );
                 return true;
             } );
     }
@@ -243,21 +246,21 @@ FieldSubmissionQueue.prototype._showLockedMsg = function() {
 FieldSubmissionQueue.prototype._uploadStatus = {
     _getBox: function() {
         if ( !this._$box ) {
-            this._$box = $( '<div class="fieldsubmission-status"/>' ).prependTo( '.form-header' );
+            this._$box = $( '<div class="fieldsubmission-status"/>' ).prependTo( '.form-header' )
+                .add( $( '<div class="form-footer__feedback fieldsubmission-status"/>' ).prependTo( '.form-footer' ) );
         }
         return this._$box;
     },
     _getText: function( status ) {
-        // TODO translate strings
         return {
-
             ongoing: t( 'fieldsubmission.feedback.ongoing' ),
             success: t( 'fieldsubmission.feedback.success' ),
+            fail: t( 'fieldsubmission.feedback.fail' ),
             error: t( 'fieldsubmission.feedback.error' )
         }[ status ];
     },
     _updateClass: function( status ) {
-        this._getBox().removeClass( 'ongoing success error' ).addClass( status ).text( this._getText( status ) );
+        this._getBox().removeClass( 'ongoing success error fail' ).addClass( status ).text( this._getText( status ) );
     },
     update: function( status ) {
         this._updateClass( status );

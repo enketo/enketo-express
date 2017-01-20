@@ -13,7 +13,7 @@ var fileManager = require( './file-manager' );
 var t = require( './translator' ).t;
 var $ = require( 'jquery' );
 var FieldSubmissionQueue = require( './field-submission-queue' );
-var fieldSubmissionQueue = new FieldSubmissionQueue();
+var fieldSubmissionQueue;
 var rc = require( './controller-webform' );
 var DEFAULT_THANKS_URL = '/thanks';
 var ongoingUpdates = [];
@@ -37,7 +37,7 @@ function init( selector, data ) {
     return new Promise( function( resolve, reject ) {
             $formprogress = $( '.form-progress' );
             form = new Form( formSelector, data, formOptions );
-
+            fieldSubmissionQueue = new FieldSubmissionQueue( form.isValid );
             // remove submit button before event handlers are set
             _removeCompleteButtonIfNeccessary();
 

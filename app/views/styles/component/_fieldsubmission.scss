@@ -8,9 +8,15 @@
     overflow: hidden;
     text-overflow: ellipsis;
 
-    &.error {
+    &.error, &.fail {
         color: $state-danger-text;
     }
+}
+
+.form-footer__feedback.fieldsubmission-status {
+    margin: 10px auto;
+    text-align: center;
+    max-width: 100%;
 }
 
 // Watch out, this targeting is deliberate
@@ -23,6 +29,11 @@
         font-size: 30px;
         color: black;
     }
+}
+
+// Show Close button on every page
+.pages ~ .form-footer .btn#close-form {
+    display: inline-block;
 }
 
 @media screen and (max-width: 410px) {

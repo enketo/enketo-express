@@ -37,8 +37,9 @@
         },
         "feedback": {
             "ongoing": "Saving...",
-            "success": "All valid changes saved.",
-            "error": "Failed to save changes."
+            "success": "All changes saved.",
+            "fail": "Failed to save changes.",
+            "error": "Some of your changes could not be saved. Please correct all errors."
         }
     }
 }

@@ -3,13 +3,14 @@
 @import "alert";
 @import "feedback-bar";
 @import "notification";
-@import "fieldsubmission-feedback";
+@import "fieldsubmission";
 
 html {
     // For some reason a height of 100% causes the body to not extend to the bottom
     // of the form. Setting height to auto fixes this.
     // Both enketo-core and foundation set this to 100%, which is the common approach.
     height: auto;
+
     // to avoid revealing the side-slider in direction rtl when scrolling horizontally
     overflow-x: hidden;
 }
@@ -37,10 +38,12 @@ progress {
 
 .form__loader {
     @include flex(1);
+
     display: flex;
     align-items: center;
     justify-content: center;
     padding-top: 50px;
+
     &.fail {
         .form__loader__image {
             border: transparent;
