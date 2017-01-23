@@ -236,7 +236,6 @@ function _setReasonForChangeUi() {
 function _removeCompleteButtonIfNeccessary() {
     if ( settings.type === 'edit' && !settings.completeButton ) {
         $( 'button#finish-form' ).remove();
-        $( 'button#close-form' ).removeClass( 'btn-default' ).addClass( 'btn-primary' );
     }
 }
 

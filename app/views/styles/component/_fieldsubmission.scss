@@ -33,7 +33,8 @@
 
 // Show Close button on every page
 .pages ~ .form-footer .btn#close-form {
-    display: inline-block;
+    display: block;
+    margin: 0 auto 10px auto;
 }
 
 @media screen and (max-width: 410px) {
