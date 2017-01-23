@@ -1,13 +1,6 @@
 @mixin font-normal {
-    font-family: 'OpenSansRegular', Arial, sans-serif;
+    font-family: 'OpenSans', Arial, sans-serif;
     font-weight: normal;
-    font-style: normal;
-}
-
-@mixin font-bold {
-    font-family: 'OpenSansBold', Arial, sans-serif;
-    font-weight: normal;
-    font-style: normal;
 }
 
 @mixin translate($x, $y) {
@@ -18,7 +11,7 @@
 }
 
 @mixin loader-image($loader-size) {
-    border: $loader-size / 10 solid $brand-primary-color;
+    border: ($loader-size / 10) solid $brand-primary-color;
     border-radius: $loader-size;
     height: $loader-size;
     width: $loader-size;
@@ -32,9 +25,11 @@
         transform: scale(0.5);
         opacity: 0.0;
     }
+
     50% {
         opacity: 0.8;
     }
+
     100% {
         transform: scale(1.2);
         opacity: 0;
