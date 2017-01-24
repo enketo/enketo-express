@@ -62,7 +62,7 @@
         "lodash": "4.17.x",
         "morgan": "1.x.x",
         "papaparse": "4.1.x",
-        "redis": "2.6.3",
+        "redis": "2.6.5",
         "request": "2.79.x",
         "serve-favicon": "2.x.x",
         "time-grunt": "1.x.x",
