@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Fixed:
 - Client settings do not pick up query parameters with value `false`.
+- Pencil icon span escaped in side bar.
 
 [1.36.5] - 2016-01-18
 ---------------------

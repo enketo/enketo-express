@@ -47,7 +47,7 @@
         "grunt-i18next": "0.1.x",
         "grunt-sass": "2.0.x",
         "grunt-shell-spawn": "0.3.x",
-        "i18next": "4.2.x",
+        "i18next": "6.0.x",
         "i18next-browser-languagedetector": "1.0.1",
         "i18next-express-middleware": "1.0.2",
         "i18next-node-fs-backend": "0.1.3",
