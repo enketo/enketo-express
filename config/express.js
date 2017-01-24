@@ -29,7 +29,7 @@ app.set( 'authentication cookie name', '__enketo' );
 
 // views
 app.set( 'views', path.resolve( __dirname, '../app/views' ) );
-app.set( 'view engine', 'jade' );
+app.set( 'view engine', 'pug' );
 
 // pretty json API responses
 app.set( 'json spaces', 4 );

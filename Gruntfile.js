@@ -67,14 +67,14 @@ module.exports = function( grunt ) {
                 }
             },
             jade: {
-                files: [ 'app/views/**/*.jade' ],
+                files: [ 'app/views/**/*.pug' ],
                 options: {
                     spawn: false,
                     livereload: true
                 }
             },
             language: {
-                files: [ 'app/views/**/*.jade', 'app/controllers/**/*.js', 'app/models/**/*.js', 'public/js/src/**/*.js' ],
+                files: [ 'app/views/**/*.pug', 'app/controllers/**/*.js', 'app/models/**/*.js', 'public/js/src/**/*.js' ],
                 tasks: [ 'shell:translation', 'i18next' ]
             },
             js: {

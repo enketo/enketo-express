@@ -13,7 +13,7 @@ var i18next = require( 'i18next-parser' );
 gulp.task( 'default', function() {
     gulp.src( [
             '../public/js/src/**/*.js',
-            '../app/views/**/*.jade',
+            '../app/views/**/*.pug',
             '../app/lib/communicator/**/*.js',
             '../app/controllers/**/*.js',
             '../app/models/**/*.js',
