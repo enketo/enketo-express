@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.37.0] - 2016-01-25
 ---------------------
 ##### Removed:
 - npm 2.x support **Warning: check your npm version. It should be 3.x or 4.x**
@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed:
 - Client settings do not pick up query parameters with value `false`.
 - Pencil icon span escaped in side bar.
+- Click on form header brand without link still changes URL hash.
 
 [1.36.5] - 2016-01-18
 ---------------------

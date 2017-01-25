@@ -24,10 +24,6 @@ $offline-color: #d15200;
         img {
             max-height: 30px;
             max-width: 130px;
-
-            &:hover {
-                opacity: 0.8;
-            }
         }
 
         span {
@@ -41,6 +37,11 @@ $offline-color: #d15200;
                 opacity: 0.8;
             }
         }
+    }
+
+    // Only if .form-header__branding is an <a>nchor
+    a.form-header__branding:hover {
+        opacity: 0.8;
     }
 
     // This filler element makes it easier to keep the same look with RTL UI languages
