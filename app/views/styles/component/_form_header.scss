@@ -251,9 +251,8 @@ $offline-color: #d15200;
         &__button--homescreen {
             top: -2px;
 
-            // ensure it takes up virtually no vertical space if it is the
-            // only element in the form header
-            height: 1px;
+            // TODO: ensure button takes up on vertical space if there is no branding
+            // https://github.com/kobotoolbox/enketo-express/issues/634
 
             // ensure that reason-for-change is pushed to the side
             position: static;

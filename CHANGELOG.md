@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Changed:
+- FF on Android: Simpler Add to Homescreen guidance.
+
+##### Fixed:
+- FF on Android: Add to Homescreen button not clickable.
+
 [1.37.0] - 2016-01-25
 ---------------------
 ##### Removed:

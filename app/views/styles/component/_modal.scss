@@ -101,16 +101,10 @@
     background-repeat: no-repeat;
 }
 
-.android-chrome, .android-firefox-1 {
+.android-chrome {
     @extend .icon;
 
     @extend .icon-ellipsis-v;
 
     padding: 0 5px;
-}
-
-.android-firefox-2 {
-    @extend .icon;
-
-    @extend .icon-star-o;
 }
