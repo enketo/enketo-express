@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Removed:
+- npm 2.x support **Warning: check your npm version. It should be 3.x or 4.x**
+
 ##### Fixed:
 - Client settings do not pick up query parameters with value `false`.
 - Pencil icon span escaped in side bar.
