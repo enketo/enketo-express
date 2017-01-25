@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed:
 - FF on Android: Add to Homescreen button not clickable.
+- Incorrect position of queue icon during loading when offline-capable icon is not yet visible.
 
 [1.37.0] - 2016-01-25
 ---------------------

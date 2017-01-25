@@ -198,21 +198,15 @@ $offline-color: #d15200;
     .offline-enabled {
         position: static;
         display: inline-block;
+        margin-right: 10px;
 
         &__icon {
             float: left;
-            margin-right: 10px;
             display: block;
-
-            &.not-enabled ~ .queue-length {
-                margin-left: 0;
-            }
         }
 
         &__queue-length {
             margin-top: 0;
-            margin-left: -10px;
-            margin-right: 10px;
             float: left;
             display: block;
         }
