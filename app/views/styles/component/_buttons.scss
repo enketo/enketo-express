@@ -243,6 +243,21 @@ button::-moz-focus-inner {
     }
 }
 
+// same but for buttons where the icon is a background image
+.btn-bg-icon-only {
+    margin: 0 10px 0 10px;
+    padding: 0;
+    border: none;
+
+    &:hover, &:focus, &:active, &.active, &:disabled, &.disabled {
+        @include box-shadow-none;
+    }
+
+    &:hover {
+        opacity: 0.5;
+    }
+}
+
 // fixes (would be nice if these weren't necessary):
 
 .question .btn-default {

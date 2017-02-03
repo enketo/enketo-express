@@ -57,21 +57,15 @@ $offline-color: #d15200;
     }
 
     &__button--print {
+        @include icon-print($gray);
+
         order: 40;
-        background: none;
-        color: black;
-        padding: 0 0 0 20px;
+        width: 32px;
+        height: 30px;
         margin: 0;
+        margin-left: 20px;
         margin-right: 0;
-
-        @include enketo-icon;
-
         outline: 0;
-
-        &::before {
-            content: '\e60e';
-            font-size: 30px;
-        }
 
         ~ .form-language-selector {
             border-right: 1px solid #999999;
