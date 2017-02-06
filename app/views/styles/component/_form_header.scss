@@ -24,10 +24,6 @@ $offline-color: #d15200;
         img {
             max-height: 30px;
             max-width: 130px;
-
-            &:hover {
-                opacity: 0.8;
-            }
         }
 
         span {
@@ -43,6 +39,11 @@ $offline-color: #d15200;
         }
     }
 
+    // Only if .form-header__branding is an <a>nchor
+    a.form-header__branding:hover {
+        opacity: 0.8;
+    }
+
     // This filler element makes it easier to keep the same look with RTL UI languages
     &__filler {
         order: 20;
@@ -56,21 +57,15 @@ $offline-color: #d15200;
     }
 
     &__button--print {
+        @include icon-print($gray);
+
         order: 40;
-        background: none;
-        color: black;
-        padding: 0 0 0 20px;
+        width: 32px;
+        height: 30px;
         margin: 0;
+        margin-left: 20px;
         margin-right: 0;
-
-        @include enketo-icon;
-
         outline: 0;
-
-        &::before {
-            content: '\e60e';
-            font-size: 30px;
-        }
 
         ~ .form-language-selector {
             border-right: 1px solid #999999;
@@ -197,21 +192,15 @@ $offline-color: #d15200;
     .offline-enabled {
         position: static;
         display: inline-block;
+        margin-right: 10px;
 
         &__icon {
             float: left;
-            margin-right: 10px;
             display: block;
-
-            &.not-enabled ~ .queue-length {
-                margin-left: 0;
-            }
         }
 
         &__queue-length {
             margin-top: 0;
-            margin-left: -10px;
-            margin-right: 10px;
             float: left;
             display: block;
         }
@@ -250,9 +239,8 @@ $offline-color: #d15200;
         &__button--homescreen {
             top: -2px;
 
-            // ensure it takes up virtually no vertical space if it is the
-            // only element in the form header
-            height: 1px;
+            // TODO: ensure button takes up on vertical space if there is no branding
+            // https://github.com/kobotoolbox/enketo-express/issues/634
 
             // ensure that reason-for-change is pushed to the side
             position: static;

@@ -51,7 +51,7 @@ if [ $ENKETO_EXPRESS_USE_NODE_ENV = "true" ]; then
     nodeenv env
     . env/bin/activate
 else
-    curl -sL https://deb.nodesource.com/setup_4.x | sudo bash -
+    curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
     apt-get install -y nodejs
 fi
 

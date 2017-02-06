@@ -30,18 +30,6 @@ module.exports = function( grunt ) {
             }
         },
         sass: {
-            options: {
-                sourceMap: false,
-                importer: function( url, prev, done ) {
-                    // fixes relative enketo-core submodule references in npm 3.x.x
-                    if ( grunt.option( 'npmv' ) === '3' && /\/node_modules\//.test( url ) && /\/node_modules\/enketo-core\//.test( prev ) ) {
-                        url = '../../' + url;
-                    }
-                    done( {
-                        file: url
-                    } );
-                }
-            },
             compile: {
                 cwd: 'app/views/styles',
                 dest: 'public/css',
@@ -60,21 +48,21 @@ module.exports = function( grunt ) {
             },
             sass: {
                 files: [ 'app/views/styles/**/*.scss', 'public/widget/**/*.scss' ],
-                tasks: [ 'shell:npmv', 'sass' ],
+                tasks: [ 'sass' ],
                 options: {
                     spawn: false,
                     livereload: true
                 }
             },
             jade: {
-                files: [ 'app/views/**/*.jade' ],
+                files: [ 'app/views/**/*.pug' ],
                 options: {
                     spawn: false,
                     livereload: true
                 }
             },
             language: {
-                files: [ 'app/views/**/*.jade', 'app/controllers/**/*.js', 'app/models/**/*.js', 'public/js/src/**/*.js' ],
+                files: [ 'app/views/**/*.pug', 'app/controllers/**/*.js', 'app/models/**/*.js', 'public/js/src/**/*.js' ],
                 tasks: [ /*'shell:translation', 'i18next'*/]
             },
             js: {
@@ -93,15 +81,6 @@ module.exports = function( grunt ) {
                     'gulp',
                     'cd ..'
                 ].join( '&&' )
-            },
-            npmv: {
-                command: 'npm -v',
-                options: {
-                    callback: function( err, stdout, stderr, cb ) {
-                        grunt.option( 'npmv', stdout.split( '.' )[ 0 ] );
-                        cb( err );
-                    }
-                }
             },
             'test-helper-server': {
                 command: 'node test/client/formdata-helper.js',
@@ -248,7 +227,7 @@ module.exports = function( grunt ) {
     grunt.registerTask( 'default', [ 'i18next', 'css', 'js', 'uglify' ] );
     grunt.registerTask( 'js', [ 'client-config-file:create', 'browserify:production' ] );
     grunt.registerTask( 'js-dev', [ 'client-config-file:create', 'browserify:development' ] );
-    grunt.registerTask( 'css', [ 'shell:npmv', 'system-sass-variables:create', 'sass' ] );
+    grunt.registerTask( 'css', [ 'system-sass-variables:create', 'sass' ] );
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'shell:test-helper-server', 'karma:headless', 'shell:test-helper-server:kill', 'jsbeautifier:test', 'jshint' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'shell:test-helper-server', 'karma:browsers', 'shell:test-helper-server:kill' ] );
     grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js-dev', 'concurrent:develop' ] );

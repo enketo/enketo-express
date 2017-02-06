@@ -1,24 +1,15 @@
 @import "../../../lib/font-awesome/scss/font-awesome";
 
 @font-face {
-    font-family: 'OpenSansRegular';
+    font-family: 'OpenSans';
     src: url($base-path + "/fonts/OpenSans-Regular-webfont.woff") format("woff");
     font-weight: normal;
     font-style: normal;
 }
 
-
 @font-face {
-    font-family: 'OpenSansBold';
+    font-family: 'OpenSans';
     src: url($base-path + "/fonts/OpenSans-Bold-webfont.woff") format("woff");
-    font-weight: normal;
-    font-style: normal;
-}
-
-
-@font-face {
-    font-family: 'enketo-icons';
-    src: url($base-path + "/fonts/enketo-icons-v2.woff") format("woff");
-    font-weight: normal;
+    font-weight: bold;
     font-style: normal;
 }

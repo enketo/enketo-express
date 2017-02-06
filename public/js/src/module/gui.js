@@ -354,7 +354,6 @@ function alertHomeScreenGuidance() {
 
 function _getHomeScreenGuidance() {
     var imageClass1;
-    var imageClass2;
     var browser = sniffer.browser;
     var os = sniffer.os;
 
@@ -367,9 +366,7 @@ function _getHomeScreenGuidance() {
         imageClass1 = 'android-chrome';
         homeScreenGuidance = t( 'alert.addtohomescreen.androidchrome.msg', _getHomeScreenGuidanceObj( imageClass1 ) );
     } else if ( os.isAndroid() && browser.isFirefox() ) {
-        imageClass1 = 'android-firefox-1';
-        imageClass2 = 'android-firefox-2';
-        homeScreenGuidance = t( 'alert.addtohomescreen.androidfirefox.msg', _getHomeScreenGuidanceObj( imageClass1, imageClass2 ) );
+        homeScreenGuidance = t( 'alert.addtohomescreen.androidfirefox.msg', _getHomeScreenGuidanceObj() );
     }
 
     return homeScreenGuidance;

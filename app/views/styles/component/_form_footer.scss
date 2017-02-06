@@ -93,13 +93,14 @@
                 }
 
                 &::before {
-                    @include enketo-icon;
+                    @include icon-first(#757474);
 
+                    width: 17px;
+                    height: 16px;
                     margin-top: 2px;
                     margin-left: -22px;
-                    content: '\e611' !important;
+                    content: ' ';
                     float: left;
-                    color: #757474;
                 }
             }
 
@@ -107,13 +108,14 @@
                 padding-right: 32px;
 
                 &::before {
-                    @include enketo-icon;
+                    @include icon-last(#757474);
 
+                    width: 24px;
+                    height: 16px;
                     margin-top: 2px;
                     margin-right: -22px;
-                    content: '\e610' !important;
+                    content: ' ';
                     float: right;
-                    color: #757474;
                 }
             }
         }

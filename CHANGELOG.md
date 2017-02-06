@@ -2,10 +2,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.37.1] - 2016-02-03
 ---------------------
+##### Changed:
+- FF on Android: Simpler Add to Homescreen guidance.
+
+##### Fixed:
+- FF on Android: Add to Homescreen button not clickable.
+- Incorrect position of queue icon during loading when offline-capable icon is not yet visible.
+- Accessiblity issues with radiobuttons, checkboxes, likert, compact.
+
+[1.37.0] - 2016-01-25
+---------------------
+##### Removed:
+- npm 2.x support **Warning: check your npm version. It should be 3.x or 4.x**
+
 ##### Fixed:
 - Client settings do not pick up query parameters with value `false`.
+- Pencil icon span escaped in side bar.
+- Click on form header brand without link still changes URL hash.
 
 [1.36.5] - 2016-01-18
 ---------------------

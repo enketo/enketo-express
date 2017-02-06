@@ -1,10 +1,10 @@
 language: node_js
 sudo: true
 node_js:
-  - "0.10"
-  - "0.12"
   - "4"
+  - "6"
 dist: trusty
+before_install: if [[ `npm -v` < 3 ]]; then npm i -g npm; fi
 before_script:
   - npm install -g grunt-cli
   - chmod 777 ./setup/redis/travis-redis.sh

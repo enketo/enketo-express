@@ -1,0 +1,12 @@
+extends ../layout
+
+block style
+  link(rel='stylesheet', media='all', type='text/css' href=`${basePath}/css/theme-${defaultTheme}.css`) 
+  link(rel='stylesheet', media='print', type='text/css' href=`${basePath}/css/theme-${defaultTheme}.print.css`) 
+ 
+block content
+  .vex.vex-theme-plain
+    .vex-overlay
+    .vex-content
+      h3= t('alert.logout.heading')
+      p= t('alert.logout.msg')

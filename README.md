@@ -19,7 +19,7 @@ This is a fork of [enketo/enketo-express](https://github.com/enketo/enketo-expre
 
 #### Manually:
 
-1. Install JS prerequisites: [Node.js](https://github.com/nodesource/distributions) (4.x LTS recommended), [Grunt Client](http://gruntjs.com), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
+1. Install JS prerequisites: [Node.js](https://github.com/nodesource/distributions) (6.x LTS recommended, older versions will be incompatible soon), [Grunt Client](http://gruntjs.com), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
 2. Install [Redis](http://redis.io/topics/quickstart)
 3. Install build-essential and git (and libfontconfig to run tests) with `(sudo) apt-get install build-essential git libfontconfig`
 4. Clone this repository
