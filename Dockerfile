@@ -7,8 +7,8 @@ ENV ENKETO_SRC_DIR=/srv/src/enketo_express
 ################
 
 # Install Node.
-ADD https://deb.nodesource.com/setup_4.x /tmp/
-RUN bash /tmp/setup_4.x
+ADD https://deb.nodesource.com/setup_6.x /tmp/
+RUN bash /tmp/setup_6.x
 
 COPY ./setup/docker/apt_requirements.txt ${ENKETO_SRC_DIR}/setup/docker/
 WORKDIR ${ENKETO_SRC_DIR}/
