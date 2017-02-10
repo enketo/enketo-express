@@ -95,3 +95,7 @@ Completely disable save-as-draft functionality in offline-capable webforms by se
 
 #### repeat ordinals
 Whether to add custom http://enketo.org/xforms namespaced `ordinal` and `last-used-ordinal` attributes to repeat nodes in the model. The default is `false`. Most user will not need to set this configuration item.
+
+#### validate continuously
+Determines whether Enketo should validate questions immediately if a related question value changes. E.g. if question A has a constraint that depends on question B, this mode would re-validate question A if the value for question B changes. This mode will slow down form traversal. When set to `false` that type of validation is only done at the end when the Submit button is clicked or in Pages mode when the user clicks Next. The default value is `false`.
+

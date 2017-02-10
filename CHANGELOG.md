@@ -2,7 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[1.37.1] - 2016-02-03
+[1.38.0] - 2017-02-10
+---------------------
+##### Added:
+- An optional "validate continuously" mode.
+- Send validated.enketo and invalidated.enketo events with extensible/custom data.
+
+[1.37.1] - 2017-02-03
 ---------------------
 ##### Changed:
 - FF on Android: Simpler Add to Homescreen guidance.
@@ -12,7 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Incorrect position of queue icon during loading when offline-capable icon is not yet visible.
 - Accessiblity issues with radiobuttons, checkboxes, likert, compact.
 
-[1.37.0] - 2016-01-25
+[1.37.0] - 2017-01-25
 ---------------------
 ##### Removed:
 - npm 2.x support **Warning: check your npm version. It should be 3.x or 4.x**
@@ -22,7 +28,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Pencil icon span escaped in side bar.
 - Click on form header brand without link still changes URL hash.
 
-[1.36.5] - 2016-01-18
+[1.36.5] - 2017-01-18
 ---------------------
 ##### Changed:
 - Valuechange.enketo event now fires _after_ validation and passes validation result.
@@ -31,7 +37,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - fixed: Horizontal analog scale label and slider overlap on small screens.
 - translations were loaded 3 times affecting performance
 
-[1.36.4] - 2016-01-06
+[1.36.4] - 2017-01-06
 ---------------------
 ##### Changed
 - Updated Czech, Slovak, German and Swahili translations.

@@ -286,7 +286,8 @@ module.exports = {
             name: config[ 'query parameter to pass to submission' ]
         },
         basePath: config[ 'base path' ],
-        repeatOrdinals: config[ 'repeat ordinals' ]
+        repeatOrdinals: config[ 'repeat ordinals' ],
+        validateContinuously: config[ 'validate continuously' ]
     },
     getThemesSupported: getThemesSupported
 };
