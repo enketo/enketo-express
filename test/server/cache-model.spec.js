@@ -161,7 +161,7 @@ describe( 'Cache Model', function() {
                 expect( promise ).to.eventually.have.property( 'form' ).that.equals( survey.form ),
                 expect( promise ).to.eventually.have.property( 'model' ).that.equals( survey.model ),
                 expect( promise ).to.eventually.have.property( 'xslHash' ).and.to.have.length.above( 2 ),
-                expect( promise ).to.eventually.have.property( 'mediaHash' ).and.to.have.length.above( 2 ),
+                expect( promise ).to.eventually.have.property( 'mediaUrlHash' ).that.equals( '' ),
                 expect( promise ).to.eventually.have.property( 'formHash' ).and.to.have.length.above( 2 )
             ] );
         } );
@@ -171,7 +171,7 @@ describe( 'Cache Model', function() {
                 expect( promise ).to.eventually.have.property( 'form' ).that.equals( survey.form ),
                 expect( promise ).to.eventually.have.property( 'model' ).that.equals( survey.model ),
                 expect( promise ).to.eventually.have.property( 'xslHash' ).and.to.have.length.above( 2 ),
-                expect( promise ).to.eventually.have.property( 'mediaHash' ).and.to.have.length.above( 2 ),
+                expect( promise ).to.eventually.have.property( 'mediaUrlHash' ).and.to.have.length.above( 2 ),
                 expect( promise ).to.eventually.have.property( 'formHash' ).and.to.have.length.above( 2 )
             ] );
         } );
