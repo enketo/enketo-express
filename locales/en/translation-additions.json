@@ -9,7 +9,8 @@
             "me": "Me",
             "containsdatahidden": "This field contains data but is currently hidden from view",
             "autoclosed": "Query closed by system because this item was hidden",
-            "valuechange": "Value changed from __previous__ to __new__"
+            "valuechange": "Value changed from __previous__ to __new__",
+            "becameinvalid": "Value became invalid"
         }
     },
     "fieldsubmission": {

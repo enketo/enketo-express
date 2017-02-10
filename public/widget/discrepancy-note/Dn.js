@@ -89,10 +89,19 @@ Comment.prototype._setCommentButtonHandler = function() {
 
 Comment.prototype._setValidationHandler = function() {
     var that = this;
-    $( 'form.or' ).on( 'validated.enketo', function( evt ) {
-        var error = that._commentHasError();
-        var value = that.element.value;
-        that._setCommentButtonState( value, error );
+
+    // Update query icon if query question is invalid.
+    this.$commentQuestion.on( 'invalidated.enketo', function() {
+        that._setCommentButtonState( that.element.value, true );
+    } );
+
+    // Add query if linked question becomes invalid.
+    this.$linkedQuestion.on( 'invalidated.enketo', function() {
+        var currentStatus = that._getCurrentStatus( that.notes );
+        var open = currentStatus === 'updated' || currentStatus === 'new';
+        var status = open ? 'updated' : 'new';
+        var comment = t( 'widget.dn.becameinvalid' );
+        that._addQuery( 'comment', comment, status, '', false );
     } );
 };
 
@@ -269,15 +278,6 @@ Comment.prototype._showCommentModal = function( linkedQuestionErrorMsg ) {
             that._addQuery( 'comment', comment, status, assignee, notify );
             $input.val( '' );
             that._hideCommentModal( that.$linkedQuestion );
-            /*
-             * Any current error state shown in the linked question will not automatically update.
-             * It only updates when its **own** value changes.
-             * See https://github.com/kobotoolbox/enketo-express/issues/608
-             * Since a linked question and a comment belong so closely together, and likely have 
-             * a `required` or `constraint` dependency, it makes sense to 
-             * separately call a validate method on the linked question to update the error state if necessary.
-             */
-            that.options.helpers.input.validate( $( that.$linkedQuestion.get( 0 ).querySelector( 'input, select, textarea' ) ) );
         }
 
         return false;
