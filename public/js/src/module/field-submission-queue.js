@@ -5,6 +5,7 @@ var t = require( './translator' ).t;
 var utils = require( './utils' );
 var $ = require( 'jquery' );
 var gui = require( './gui' );
+var MD5 = require( 'crypto-js/md5' );
 var FIELDSUBMISSION_URL = ( settings.enketoId ) ? settings.basePath + '/fieldsubmission/' + settings.enketoIdPrefix + settings.enketoId +
     utils.getQueryString( settings.submissionParameter ) : null;
 var FIELDSUBMISSION_COMPLETE_URL = ( settings.enketoId ) ? settings.basePath + '/fieldsubmission/complete/' + settings.enketoIdPrefix + settings.enketoId +
@@ -14,6 +15,7 @@ var FIELDSUBMISSION_REASON_URL = ( settings.enketoId ) ? settings.basePath + '/f
 
 function FieldSubmissionQueue( isValidFn ) {
     this.submissionQueue = {};
+    this.lastAdded = {};
     this.repeatRemovalCounter = 0;
     this.isValid = isValidFn;
 }
@@ -23,7 +25,13 @@ FieldSubmissionQueue.prototype.get = function() {
 };
 
 FieldSubmissionQueue.prototype.addFieldSubmission = function( fieldPath, xmlFragment, instanceId, deprecatedId, file ) {
-    var fd = new FormData();
+    var fd;
+
+    if ( this._duplicateCheck( fieldPath, xmlFragment ) ) {
+        return;
+    }
+
+    fd = new FormData();
 
     if ( fieldPath && xmlFragment && instanceId ) {
 
@@ -64,10 +72,13 @@ FieldSubmissionQueue.prototype.addReasonForChange = function( reason, instanceId
 };
 
 FieldSubmissionQueue.prototype.addRepeatRemoval = function( xmlFragment, instanceId, deprecatedId ) {
-    var fd = new FormData();
+    var fd;
+
+    // No duplicate check necessary for deleting as the event should only fire once.
+
+    fd = new FormData();
     if ( xmlFragment && instanceId ) {
 
-        // TODO: fragment as Blob
         fd.append( 'xml_submission_fragment_file', new Blob( [ xmlFragment ], {
             type: 'text/xml'
         } ), 'xml_submission_fragment_file.xml' );
@@ -117,7 +128,7 @@ FieldSubmissionQueue.prototype._submitAll = function() {
 
         this._uploadStatus.update( 'ongoing' );
 
-        // convert fieldSubmission object to array of objects
+        // convert fieldSubmissionQueue object to array of objects
         _queue = Object.keys( that.submissionQueue ).map( function( key ) {
             return {
                 key: key,
@@ -136,7 +147,7 @@ FieldSubmissionQueue.prototype._submitAll = function() {
                     url = keyParts[ 1 ] === 'reason' ? FIELDSUBMISSION_REASON_URL : FIELDSUBMISSION_URL;
                     return that._submitOne( url, fieldSubmission.fd, method )
                         .catch( function( error ) {
-                            console.debug( 'failed to submit ', fieldSubmission.key, 'adding it back to the queue, ERROR:', error );
+                            console.debug( 'failed to submit ', fieldSubmission.key, 'adding it back to the queue, error:', error );
                             // add back to the fieldSubmission queue if the field value wasn't overwritten in the mean time
                             if ( typeof that.submissionQueue[ fieldSubmission.key ] === 'undefined' ) {
                                 that.submissionQueue[ fieldSubmission.key ] = fieldSubmission.fd;
@@ -236,6 +247,15 @@ FieldSubmissionQueue.prototype._resetSubmissionInterval = function() {
 
 FieldSubmissionQueue.prototype._showLockedMsg = function() {
     gui.alert( t( 'fieldsubmission.alert.locked.msg' ), t( 'fieldsubmission.alert.locked.heading' ) );
+};
+
+FieldSubmissionQueue.prototype._duplicateCheck = function( path, fragment ) {
+    var hash = MD5( fragment ).toString();
+    if ( this.lastAdded[ path ] !== hash ) {
+        this.lastAdded[ path ] = hash;
+        return false;
+    }
+    return true;
 };
 
 /**

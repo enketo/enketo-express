@@ -75,6 +75,8 @@ OpenClinica users, in addition to the above, may want to take special note of th
 2. Set `"disable save as draft": true`
 3. Set `"repeat ordinals": true`. [This feature](./doc/ordinals.md) is required for the fieldsubmission webform views.
 4. Set `"query parameter to pass to submission": "ecid"`
+5. Set `"validate continuously": true`
+6. Set `"default theme": "oc"`
 
 --------
 

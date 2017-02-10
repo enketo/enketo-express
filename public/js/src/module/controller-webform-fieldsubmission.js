@@ -27,6 +27,8 @@ var formOptions = {
     clearIrrelevantImmediately: true
 };
 
+require( './Form-model' );
+
 function init( selector, data ) {
     var advice;
     var loadErrors = [];
@@ -181,11 +183,7 @@ function _complete( updated ) {
     gui.alert( beforeMsg +
         '<div class="loader-animation-small" style="margin: 40px auto 0 auto;"/>', t( 'alert.submission.msg' ), 'bare' );
 
-    return Promise.all( ongoingUpdates )
-        .then( function() {
-            ongoingUpdates = [];
-            return fieldSubmissionQueue.submitAll();
-        } )
+    return fieldSubmissionQueue.submitAll()
         .then( function() {
             var queueLength = Object.keys( fieldSubmissionQueue.get() ).length;
 
@@ -266,54 +264,49 @@ function _setEventHandlers( selector ) {
             if ( $formprogress.length > 0 ) {
                 $formprogress.css( 'width', status + '%' );
             }
-        } );
+        } )
+        // Repeat removal
+        .on( 'removed.enketo', function( event, updated ) {
+            var instanceId = form.getInstanceID();
+            if ( !updated.xmlFragment ) {
+                console.error( 'Could not submit repeat removal fieldsubmission. XML fragment missing.' );
+                return;
+            }
+            if ( !instanceId ) {
+                console.error( 'Could not submit repeat removal fieldsubmission. InstanceID missing' );
+            }
 
-    $doc.on( 'dataupdate.enketo', selector, function( event, updated ) {
-        var instanceId = form.getInstanceID();
-        var file;
-        var update;
-
-        if ( updated.cloned ) {
-            return;
-        }
-        if ( !updated.xmlFragment ) {
-            console.error( 'Could not submit field. XML fragment missing.' );
-            return;
-        }
-        if ( !instanceId ) {
-            console.error( 'Could not submit field. InstanceID missing' );
-            return;
-        }
-        if ( updated.removed ) {
             fieldSubmissionQueue.addRepeatRemoval( updated.xmlFragment, instanceId, form.getDeprecatedID() );
             fieldSubmissionQueue.submitAll();
-        } else if ( updated.fullPath && typeof updated.validCheck !== 'undefined' && updated.requiredCheck !== 'undefined' ) {
-            // This is asynchronous! So when complete() triggers a beforesave event, it will check ongoingUpdates first.
-            update = updated.requiredCheck
-                .then( function( passed ) {
-                    if ( passed ) {
-                        return updated.validCheck;
-                    }
-                } )
-                .then( function( passed ) {
-                    if ( passed ) {
-                        if ( updated.file ) {
-                            file = fileManager.getCurrentFile( updated.file );
-                        }
-                        // Only now will we check for the deprecatedID value, which at this point
-                        // should be (?) populated at the time the instanceID dataupdate event is processed and added fieldSubmission queue.
-                        fieldSubmissionQueue.addFieldSubmission( updated.fullPath, updated.xmlFragment, instanceId, form.getDeprecatedID(), file );
-                        return fieldSubmissionQueue.submitAll();
-                    } else {
-                        console.log( 'Value fails required and/or validation check. It will not submit' );
-                    }
-                } );
+        } )
+        // Field is validated (valid)
+        .on( 'validated.enketo', selector, function( event, updated ) {
+            var instanceId = form.getInstanceID();
+            var file;
+            var update;
+            console.log( 'validated.enketo', updated );
 
-            ongoingUpdates.push( update );
-        } else {
-            console.error( 'Could not submit field. Full path or validation checks are missing.' );
-        }
-    } );
+            if ( !updated.xmlFragment ) {
+                console.error( 'Could not submit field. XML fragment missing.' );
+                return;
+            }
+            if ( !instanceId ) {
+                console.error( 'Could not submit field. InstanceID missing' );
+                return;
+            }
+            if ( !updated.fullPath ) {
+                console.error( 'Could not submit field. Path missing.' );
+            }
+
+            if ( updated.file ) {
+                file = fileManager.getCurrentFile( updated.file );
+            }
+            // Only now will we check for the deprecatedID value, which at this point should be (?) 
+            // populated at the time the instanceID validated.enketo event is processed and added to the fieldSubmission queue.
+            fieldSubmissionQueue.addFieldSubmission( updated.fullPath, updated.xmlFragment, instanceId, form.getDeprecatedID(), file );
+            fieldSubmissionQueue.submitAll();
+
+        } );
 
     $( 'button#close-form' ).click( function() {
         var $button = $( this ).btnBusyState( true );
@@ -331,6 +324,8 @@ function _setEventHandlers( selector ) {
 
     $( 'button#finish-form' ).click( function() {
         var $button = $( this ).btnBusyState( true );
+
+        // form.validate() will trigger fieldsubmissions for timeEnd before it resolves
 
         form.validate()
             .then( function( valid ) {

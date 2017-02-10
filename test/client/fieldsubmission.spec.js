@@ -149,6 +149,18 @@ describe( 'Field Submission', function() {
             return expect( updatedQueueKeys ).to.eventually.deep.equal( [] );
         } );
 
+        it( 'ignores new fieldsubmissions if they are the same as the last for that field', function() {
+            q._submitOne = succeedSubmitOne;
+
+            var updatedQueueKeys = q.submitAll()
+                .then( function( results ) {
+                    q.addFieldSubmission( p1, '1', id );
+                    q.addFieldSubmission( p2, 'a', id );
+                    return Object.keys( q.get() );
+                } );
+            return expect( updatedQueueKeys ).to.eventually.deep.equal( [] );
+        } );
+
         it( 'retains a queue item if submission failed', function() {
             q._submitOne = failSubmitOne;
 
