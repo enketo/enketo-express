@@ -146,22 +146,41 @@ function getTitleFromFormStr( formStr ) {
     return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
 }
 
-function csvToXml( csv ) {
-    var xmlStr;
+function csvToArray( csv ) {
     var options = {
         skipEmptyLines: true
     };
     var result = Papa.parse( csv, options );
-    var rows = result.data;
-    var headers = rows.shift();
-
     if ( result.errors.length ) {
         throw result.errors[ 0 ];
     }
+    return result.data;
+}
+
+function arrayToXml( rows, langMap ) {
+    var xmlStr;
+    var headers = rows.shift();
+    var langAttrs = [];
+
+    langMap = ( typeof langMap !== 'object' ) ? {} : langMap;
 
     // trim the headers
     headers = headers.map( function( header ) {
         return header.trim();
+    } );
+
+    // extract and strip languages
+    headers = headers.map( function( header, index ) {
+        var parts = header.split( '::' );
+        var lang;
+        if ( parts && parts.length === 2 ) {
+            lang = langMap[ parts[ 1 ] ] || parts[ 1 ];
+            langAttrs[ index ] = ' lang="' + lang + '"';
+            return parts[ 0 ];
+        } else {
+            langAttrs[ index ] = '';
+            return header;
+        }
     } );
 
     // check if headers are valid XML node names
@@ -171,12 +190,20 @@ function csvToXml( csv ) {
     xmlStr = '<root>' +
         rows.map( function( row ) {
             return '<item>' + row.map( function( value, index ) {
-                return '<{n}>{v}</{n}>'.replace( /{n}/g, headers[ index ] ).replace( /{v}/g, _encodeXmlEntities( value.trim() ) );
+                return '<{n}{l}>{v}</{n}>'
+                    .replace( /{n}/g, headers[ index ] )
+                    .replace( /{l}/, langAttrs[ index ] )
+                    .replace( /{v}/, _encodeXmlEntities( value.trim() ) );
             } ).join( '' ) + '</item>';
         } ).join( '' ) +
         '</root>';
 
     return xmlStr;
+}
+
+function csvToXml( csv, langMap ) {
+    var result = csvToArray( csv );
+    return arrayToXml( result, langMap );
 }
 
 /**
@@ -262,5 +289,7 @@ module.exports = {
     getThemeFromFormStr: getThemeFromFormStr,
     getTitleFromFormStr: getTitleFromFormStr,
     csvToXml: csvToXml,
+    arrayToXml: arrayToXml,
+    csvToArray: csvToArray,
     getQueryString: getQueryString
 };
