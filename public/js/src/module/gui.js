@@ -90,7 +90,7 @@ function setEventHandlers() {
 
     $doc.on( 'xpatherror', function( ev, error ) {
         var email = settings[ 'supportEmail' ];
-        var link = '<a href="mailto:' + email + '?subject=xpath errors for: ' + location.href + '&body=' + error + '" target="_blank" >' + email + '</a>';
+        var link = '<a href="mailto:' + email + '?subject=xpath errors for: ' + encodeURIComponent( location.href ) + '&body=' + encodeURIComponent( error ) + '" target="_blank" >' + email + '</a>';
 
         alert( t( 'alert.xpatherror.msg', {
             emailLink: link,
@@ -326,9 +326,9 @@ function confirmLogin( msg, serverURL ) {
  */
 function alertLoadErrors( loadErrors, advice ) {
     var errorStringHTML = '<ul class="error-list"><li>' + loadErrors.join( '</li><li>' ) + '</li></ul>';
-    var errorStringEmail = '* ' + loadErrors.join( '* ' );
+    var errorStringEmail = '* ' + loadErrors.join( '\n* ' );
     var email = settings[ 'supportEmail' ];
-    var link = '<a href="mailto:' + email + '?subject=loading errors for: ' + location.href + '&body=' + errorStringEmail + '" target="_blank" >' + email + '</a>';
+    var link = '<a href="mailto:' + email + '?subject=loading errors for: ' + encodeURIComponent( location.href ) + '&body=' + encodeURIComponent( errorStringEmail ) + '" target="_blank" >' + email + '</a>';
     var params = {
         emailLink: link,
         count: loadErrors.length,
