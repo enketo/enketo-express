@@ -245,7 +245,8 @@ function cacheInstance( req, res, next ) {
         openRosaId: req.body.form_id,
         instance: req.body.instance,
         instanceId: req.body.instance_id,
-        returnUrl: req.body.return_url
+        returnUrl: req.body.return_url,
+	instanceAttachments: req.body.instance_attachments
     };
 
     return surveyModel

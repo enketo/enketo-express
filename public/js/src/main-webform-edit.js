@@ -35,6 +35,7 @@ translator.init( survey )
     .then( function( responses ) {
         var formParts = responses[ 0 ];
         formParts.instance = responses[ 1 ].instance;
+	formParts.instanceAttachments = responses[ 1 ].instanceAttachments;
 
         if ( formParts.form && formParts.model && formParts.instance ) {
             gui.swapTheme( responses[ 0 ].theme || utils.getThemeFromFormStr( responses[ 0 ].form ) )
@@ -71,7 +72,8 @@ function _init( formParts ) {
         controller.init( 'form.or:eq(0)', {
             modelStr: formParts.model,
             instanceStr: formParts.instance,
-            external: formParts.externalData
+            external: formParts.externalData,
+	    instanceAttachments: formParts.instanceAttachments
         } ).then( function() {
             $form.add( $buttons ).removeClass( 'hide' );
             $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );

@@ -133,7 +133,8 @@ function getInstance( req, res, next ) {
                     // check if found instance actually belongs to the form
                     if ( utils.getOpenRosaKey( survey ) === survey.openRosaKey ) {
                         res.json( {
-                            instance: survey.instance
+                            instance: survey.instance,
+                            instanceAttachments: JSON.parse( survey.instanceAttachments )
                         } );
                     } else {
                         error = new Error( 'Instance doesn\'t belong to this form' );
