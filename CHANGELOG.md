@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed:
 - Loading error dialog not rendering support email address correctly.
 - Button backgrounds not displaying in Firefox.
+- Incomplete type conversion of int, decimal, time, date and datetime.
 
 [1.38.0] - 2017-02-10
 ---------------------
