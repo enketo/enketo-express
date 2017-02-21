@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased] 
+---------------------
+##### Fixed
+- jr:choice-name() inside a repeat produces incorrect results.
+
 [1.39.0] - 2017-02-20
 ---------------------
 ##### Added: 
