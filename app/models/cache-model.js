@@ -48,6 +48,7 @@ function getSurvey( survey ) {
                     survey.formHash = cacheObj.formHash;
                     survey.mediaUrlHash = cacheObj.mediaUrlHash;
                     survey.xslHash = cacheObj.xslHash;
+                    survey.languageMap = JSON.parse( cacheObj.languageMap || '{}' );
                     resolve( survey );
                 }
             } );
@@ -166,7 +167,8 @@ function setSurvey( survey ) {
                 mediaUrlHash: survey.mediaUrlHash,
                 xslHash: survey.xslHash,
                 form: survey.form,
-                model: survey.model
+                model: survey.model,
+                languageMap: JSON.stringify( survey.languageMap || {} )
             };
 
             key = _getKey( survey );
@@ -211,6 +213,7 @@ function flushSurvey( survey ) {
                     delete survey.xslHash;
                     delete survey.mediaHash;
                     delete survey.mediaUrlHash;
+                    delete survey.languageMap;
                     resolve( survey );
                 }
             } );

@@ -212,7 +212,8 @@ function _respond( res, survey ) {
         // If a form contains no media this hash is null, which would be an empty string upon first load.
         // Subsequent cache checks will however get the string value 'null' causing the form cache to be unnecessarily refreshed
         // on the client.
-        hash: _getCombinedHash( survey )
+        hash: _getCombinedHash( survey ),
+        languageMap: survey.languageMap
     } );
 }
 

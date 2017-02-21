@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.39.0] - 2017-02-20
+---------------------
+##### Added: 
+- CSV conversion for language columns.
+
+##### Fixed:
+- Loading error dialog not rendering support email address correctly.
+- Button backgrounds not displaying in Firefox.
+- Incomplete type conversion of int, decimal, time, date and datetime.
+- Calculation with relevant on readonly field inside repeat not evaluated when it should be.
+
 [1.38.0] - 2017-02-10
 ---------------------
 ##### Added:

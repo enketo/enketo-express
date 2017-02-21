@@ -63,6 +63,21 @@ describe( 'Client Utilities', function() {
             expect( xml ).to.equal( '<root><item><a>a &amp; b</a><b>2</b><c>3</c></item><item><a>5</a><b>6</b><c>7</c></item></root>' );
         } );
 
+        it( 'adds lang attributes', function() {
+            var csv = 'a,b,c,d::english,d::french\n1,2,3,4,5';
+            var xml = utils.csvToXml( csv );
+            expect( xml ).to.equal( '<root><item><a>1</a><b>2</b><c>3</c><d lang="english">4</d><d lang="french">5</d></item></root>' );
+        } );
+
+        it( 'adds converted lang attributes', function() {
+            var csv = 'a,b,c,d::english,d::french\n1,2,3,4,5';
+            var xml = utils.csvToXml( csv, {
+                'english': 'en',
+                'french': 'fr'
+            } );
+            expect( xml ).to.equal( '<root><item><a>1</a><b>2</b><c>3</c><d lang="en">4</d><d lang="fr">5</d></item></root>' );
+        } );
+
     } );
 
 
