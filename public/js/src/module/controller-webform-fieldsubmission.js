@@ -16,7 +16,6 @@ var FieldSubmissionQueue = require( './field-submission-queue' );
 var fieldSubmissionQueue;
 var rc = require( './controller-webform' );
 var DEFAULT_THANKS_URL = '/thanks';
-var ongoingUpdates = [];
 var reasonForChangeFeature = false;
 var reasonForChange = '';
 var form;
@@ -118,7 +117,7 @@ function _close() {
     gui.alert( tAlertCloseMsg + '<br/>' +
         '<div class="loader-animation-small" style="margin: 40px auto 0 auto;"/>', tAlertCloseHeading, 'bare' );
 
-    return Promise.all( ongoingUpdates )
+    return fieldSubmissionQueue.submitAll()
         .then( function() {
             if ( reasonForChangeFeature && !reasonForChange ) {
                 return new Promise( function( resolve, reject ) {
@@ -133,7 +132,6 @@ function _close() {
             }
         } )
         .then( function() {
-            ongoingUpdates = [];
             return fieldSubmissionQueue.submitAll();
         } )
         .then( function() {

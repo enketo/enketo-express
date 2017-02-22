@@ -18,6 +18,7 @@ function FieldSubmissionQueue( isValidFn ) {
     this.lastAdded = {};
     this.repeatRemovalCounter = 0;
     this.isValid = isValidFn;
+    this.queuedSubmitAllRequest = undefined;
 }
 
 FieldSubmissionQueue.prototype.get = function() {
@@ -98,9 +99,29 @@ FieldSubmissionQueue.prototype.addRepeatRemoval = function( xmlFragment, instanc
 FieldSubmissionQueue.prototype.submitAll = function() {
     var that = this;
     if ( this.ongoingSubmissions ) {
+        // store the successive request in a global variable (without executing it)
+        this.queuedSubmitAllRequest = this._submitAll;
         this.ongoingSubmissions = this.ongoingSubmissions
-            .then( function() {
-                return that._submitAll();
+            .then( function( result ) {
+                var request;
+                if ( that.queuedSubmitAllRequest ) {
+                    request = that.queuedSubmitAllRequest();
+                    /*
+                     * Any subsequent submitAll requests that arrived while the first request 
+                     * was ongoing have overwritten the that.queuedSubmitAllRequest variable.
+                     * Only the last request received in this period is relevant.
+                     *
+                     * Before we execute the queued request we set the variable to undefined.
+                     *
+                     * This means that those subsequent requests will only be executed once. 
+                     * Subsequent stacked request immediate return result.
+                     * In other words, the stack of successive submitAll request will never 
+                     * be larger than 2.
+                     */
+                    that.queuedSubmitAllRequest = undefined;
+                    return request;
+                }
+                return result;
             } );
     } else {
         this.ongoingSubmissions = this._submitAll();
@@ -138,6 +159,9 @@ FieldSubmissionQueue.prototype._submitAll = function() {
 
         // empty the fieldSubmission queue
         that.submissionQueue = {};
+
+        // clear submissionInterval to avoid a never-ending loop of submissions if /fieldsubmission is failing
+        that._clearSubmissionInterval();
 
         // submit sequentially
         return _queue.reduce( function( prevPromise, fieldSubmission ) {
@@ -238,12 +262,15 @@ FieldSubmissionQueue.prototype.complete = function( instanceId, deprecatedId ) {
 
 FieldSubmissionQueue.prototype._resetSubmissionInterval = function() {
     var that = this;
-    clearInterval( this.submissionInterval );
+    this._clearSubmissionInterval();
     this.submissionInterval = setInterval( function() {
         that.submitAll();
     }, 1 * 60 * 1000 );
 };
 
+FieldSubmissionQueue.prototype._clearSubmissionInterval = function() {
+    clearInterval( this.submissionInterval );
+};
 
 FieldSubmissionQueue.prototype._showLockedMsg = function() {
     gui.alert( t( 'fieldsubmission.alert.locked.msg' ), t( 'fieldsubmission.alert.locked.heading' ) );
