@@ -2,10 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased] 
+[1.39.1] - 2017-02-23 
 ---------------------
 ##### Fixed
 - jr:choice-name() inside a repeat produces incorrect results.
+- Media labels in itemsets are not shown.
 
 [1.39.0] - 2017-02-20
 ---------------------
