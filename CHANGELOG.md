@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.40.0] - 2017-03-02
+---------------------
+##### Added
+- Autocomplete widget for all browsers except: Safari and all browsers on iOS.
+- Support for truly dynamic repeat count (jr:count attribute).
+
+##### Fixed
+- Select desktop picker options cannot be selected by pressing spacebar.
+- Accessibility issue with file input picker (tab traversal, focus).
+
+[1.39.1] - 2017-02-23 
+---------------------
+##### Fixed
+- jr:choice-name() inside a repeat produces incorrect results.
+- Media labels in itemsets are not shown.
+
 [1.39.0] - 2017-02-20
 ---------------------
 ##### Added: 
