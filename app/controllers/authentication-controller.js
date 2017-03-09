@@ -52,7 +52,7 @@ function login( req, res, next ) {
 function logout( req, res ) {
     res
         .clearCookie( req.app.get( 'authentication cookie name' ) )
-        .clearCookie( '__enketo_meta_uid' )
+        .clearCookie( '__enketo_meta_username' )
         .clearCookie( '__enketo_logout' )
         .render( 'surveys/logout' );
 }
@@ -97,7 +97,7 @@ function setToken( req, res ) {
     res
         .cookie( req.app.get( 'authentication cookie name' ), token, authOptions )
         .cookie( '__enketo_logout', true )
-        .cookie( '__enketo_meta_uid', username, uidOptions );
+        .cookie( '__enketo_meta_username', username, uidOptions );
 
     if ( returnUrl ) {
         res.redirect( returnUrl );

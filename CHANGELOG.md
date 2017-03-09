@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.41.0] - 2017-03-09
+---------------------
+##### Added
+- Ability to add custom data to dataupdate event.
+- Ability to pass session properties (metadata) when instantiating form.
+- Exp10() and log() functions.
+
+##### Changed
+- Updated Spanish translation.
+
+##### Fixed
+- XPath number results not converted to date and datetime when stored.
+
 [1.40.0] - 2017-03-02
 ---------------------
 ##### Added

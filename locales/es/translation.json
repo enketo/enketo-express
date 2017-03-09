@@ -8,13 +8,7 @@
                 "msg": "Para añadir este formulario a su pantalla de Inicio, haga clic en el icono de configuración del navegador __image1__  y seleccione: 'Añadir a Página de Inicio'."
             },
             "androidfirefox": {
-                "msg": [
-                    "Para añadir este formulario a su pantalla inicial:",
-                    "1. Añada esta página a los Marcadores de Firefox haciendo clic en el icono de configuración __image1__  y entonces en el icono de la estrella __image2__",
-                    "2. Para abrir los marcadores abra una nueva página y haga clic en la pestaña Marcadores.",
-                    "3. Haga clic y mantenga pulsado hasta que aparezca un menú popup",
-                    "4. Seleccione 'Añadir a página de Inicio'."
-                ]
+                "msg": "Añade este formulario a la pantalla principal, pulsando un rato la barra de dirección y selecciona 'Añadir a pantalla principal'"
             },
             "heading": "Añadir a la pantalla inicial",
             "iossafari": {
@@ -104,6 +98,11 @@
             "heading": "Envío correcto",
             "msg": "Sus datos fueron enviados al servidor!",
             "redirectmsg": "Ahora será redirigido."
+        },
+        "thanks": {
+            "heading": "Gracias por participar !",
+            "msg": "Puede cerrar esta ventana ahora.",
+            "msgTaken": "Ya ha completado este formulario."
         },
         "validationerror": {
             "msg": "El formulario contiene errores. Por favor revise los campos marcados en rojo."
@@ -216,6 +215,9 @@
         "required": "requerido"
     },
     "formfooter": {
+        "complete": {
+            "btn": "Completado"
+        },
         "savedraft": {
             "btn": "Guardar borrador",
             "label": "Guardar como borrador"
@@ -250,6 +252,7 @@
         "en": "Inglés",
         "es": "Español",
         "fa": "Persa",
+        "fi": "Finlandés",
         "fr": "Francés",
         "he": "Hebreo",
         "hi": "Hindi",
@@ -321,9 +324,16 @@
         "http401": "Ha habido un problema de autenticación con el servidor de datos.",
         "http403": "No tiene permisos para enviar datos a este servidor de datos.",
         "http404": "No hemos podido encontrar el servicio de envío de datos en el servidor de datos",
+        "http408": "Servidor de datos no responde.",
         "http413": "Demasiados datos",
         "http4xx": "Error sin especificar al enviar datos al servidor.",
-        "http500": "El servidor de datos para su formulario o el servidor de Enketo están apagados o no son accesibles. Por favor pruebe de nuevo o contacte con __supportEmail__ ."
+        "http500": "El servidor de datos para su formulario o el servidor de Enketo están apagados o no son accesibles. Por favor pruebe de nuevo o contacte con __supportEmail__ .",
+        "http504": "No puede establecer conexión con el servidor de datos."
     },
-    "version": "versión:"
+    "version": "versión:",
+    "widget": {
+        "comment": {
+            "update": "Actualiza"
+        }
+    }
 }

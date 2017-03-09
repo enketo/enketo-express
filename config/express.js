@@ -25,7 +25,7 @@ for ( var item in config ) {
 }
 app.set( 'port', process.env.PORT || app.get( 'port' ) || 3000 );
 app.set( 'env', process.env.NODE_ENV || 'production' );
-app.set( 'authentication cookie name', '__enketo' );
+app.set( 'authentication cookie name', '__enketo_' );
 
 // views
 app.set( 'views', path.resolve( __dirname, '../app/views' ) );
