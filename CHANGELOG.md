@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+##### Changed
+- Updated Spanish translation.
+
 [1.40.0] - 2017-03-02
 ---------------------
 ##### Added
