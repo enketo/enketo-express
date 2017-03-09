@@ -147,7 +147,7 @@ The development of this application was funded by [KoBo Toolbox (Harvard Humanit
 
 See [the license document](LICENSE) for this application's license.
 
-Note that some of the libraries used in this app have different license. In particular note [this one](https://github.com/enketo/enketo-xpathjs).
+Note that some of the libraries used in this app have a different license. In particular note [this one](https://github.com/enketo/enketo-xpathjs).
 
 Note the 'Powered by Enketo' footer requirement as explained in [enketo-core](https://github.com/enketo/enketo-core#license). This requirement is applicable to all Enketo apps, including this one, unless an exemption was granted.
 
