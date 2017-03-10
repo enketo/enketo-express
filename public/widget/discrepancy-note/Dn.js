@@ -5,6 +5,7 @@ var $ = require( 'jquery' );
 var t = require( 'translator' ).t;
 var settings = require( '../../js/src/module/settings' );
 var users;
+var SYSTEM_USER = 'System';
 
 /**
  * Visually transforms a question into a comment modal that can be shown on its linked question.
@@ -107,7 +108,7 @@ Comment.prototype._setCloseHandler = function() {
             var constraintMsg = $( this ).find( '.or-constraint-msg.active' ).text();
             that._addQuery( t( 'widget.dn.autoconstraint', {
                 constraintMsg: constraintMsg
-            } ), status, '', false );
+            } ), status, '', false, SYSTEM_USER );
         }
     } );
 };
@@ -149,7 +150,7 @@ Comment.prototype._setDisabledHandler = function() {
                         status = 'closed';
                     }
                     if ( comment ) {
-                        that._addQuery( comment, status, '', false );
+                        that._addQuery( comment, status, '', false, SYSTEM_USER );
                     }
                 }
             } );
@@ -410,11 +411,11 @@ Comment.prototype._parseElapsedTime = function( elapsedMilliseconds ) {
     return Math.round( months / 12 ) + ' year(s)';
 };
 
-Comment.prototype._addQuery = function( comment, status, assignee, notify ) {
+Comment.prototype._addQuery = function( comment, status, assignee, notify, user ) {
     var that = this;
     var error;
     var modelDataStr;
-    this.notes.queries.unshift( {
+    var q = {
         type: 'comment',
         id: ( ++this.ordinal ).toString(),
         date_time: this._getFormattedCurrentDatetimeStr(),
@@ -422,7 +423,13 @@ Comment.prototype._addQuery = function( comment, status, assignee, notify ) {
         status: status,
         assigned_to: assignee,
         notify: notify
-    } );
+    };
+
+    if ( user ) {
+        q.user = user;
+    }
+
+    this.notes.queries.unshift( q );
 
     // strip logs from model
     modelDataStr = JSON.stringify( {
@@ -440,6 +447,7 @@ Comment.prototype._addAudit = function( comment, assignee, notify ) {
         type: 'audit',
         date_time: this._getFormattedCurrentDatetimeStr(),
         comment: comment,
+        user: SYSTEM_USER,
         assigned_to: assignee,
         notify: notify
     } );
