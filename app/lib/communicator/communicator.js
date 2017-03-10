@@ -112,8 +112,11 @@ function authenticate( survey ) {
     var options = {
         url: getFormListUrl( survey.openRosaServer, survey.openRosaId ),
         auth: survey.credentials,
+        headers: {
+            cookie: survey.cookie
+        },
         // Formhub has a bug and cannot use the correct HEAD method.
-        method: config[ 'linked form and data server' ][ 'legacy formhub' ] ? 'get' : 'head'
+        method: config[ 'linked form and data server' ][ 'legacy formhub' ] ? 'get' : 'head',
     };
 
     return _request( options )
