@@ -10,7 +10,7 @@
             "containsdatahidden": "This field contains data but is currently hidden from view",
             "autoclosed": "Query closed by system because this item was hidden",
             "valuechange": "Value changed from __previous__ to __new__",
-            "becameinvalid": "Value became invalid"
+            "autoconstraint": "Automatic query for: __constraintMsg__"
         }
     },
     "fieldsubmission": {
@@ -28,6 +28,15 @@
             },
             "complete": {
                 "msg": "Data could not be submitted."
+            }
+        },
+        "confirm": {
+            "autoquery": {
+                "heading1": "Constraints violated",
+                "msg1": "Some values violate constraints.",
+                "msg2": "Would you like to proceed by automatically adding queries for these questions or cancel and do this manually?",
+                "automatic": "Proceed",
+                "manual": "Cancel"
             }
         },
         "prompt": {

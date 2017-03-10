@@ -108,12 +108,35 @@ function _resetForm( confirmed ) {
  * 
  * @return {Promise} [description]
  */
-function _close() {
+function _close( bypassAutoQuery ) {
     var msg = '';
     var tAlertCloseMsg = t( 'fieldsubmission.alert.close.msg1' );
     var tAlertCloseHeading = t( 'fieldsubmission.alert.close.heading1' );
     var authLink = '<a href="/login" target="_blank">' + t( 'here' ) + '</a>';
+    var $violated = form.getView().$.find( '.invalid-constraint' );
 
+    // First check if any constraints have been violated and prompt option to generate automatic queries
+    if ( !bypassAutoQuery && $violated.length ) {
+        return new Promise( function( resolve, reject ) {
+            gui.confirm( {
+                heading: t( 'fieldsubmission.confirm.autoquery.heading1' ),
+                errorMsg: t( 'fieldsubmission.confirm.autoquery.msg1' ),
+                msg: t( 'fieldsubmission.confirm.autoquery.msg2' )
+            }, {
+                posButton: t( 'fieldsubmission.confirm.autoquery.automatic' ),
+                negButton: t( 'fieldsubmission.confirm.autoquery.manual' ),
+                posAction: function() {
+                    _autoAddQueries( $violated );
+                    resolve( true );
+                },
+                negAction: function() {
+                    resolve( false );
+                }
+            } );
+        } );
+    }
+
+    // Start with actually closing, but only proceed once the queue is emptied.
     gui.alert( tAlertCloseMsg + '<br/>' +
         '<div class="loader-animation-small" style="margin: 40px auto 0 auto;"/>', tAlertCloseHeading, 'bare' );
 
@@ -255,6 +278,10 @@ function _showReasonForChangeDialog( postAction ) {
     gui.prompt( content, choices, inputs );
 }
 
+function _autoAddQueries( $questions ) {
+    $questions.trigger( 'addquery.oc' );
+}
+
 function _setEventHandlers( selector ) {
     var $doc = $( document );
     $doc
@@ -277,12 +304,11 @@ function _setEventHandlers( selector ) {
             fieldSubmissionQueue.addRepeatRemoval( updated.xmlFragment, instanceId, form.getDeprecatedID() );
             fieldSubmissionQueue.submitAll();
         } )
-        // Field is validated (valid)
-        .on( 'validated.enketo', selector, function( event, updated ) {
+        // Field is changed
+        .on( 'dataupdate.enketo', selector, function( event, updated ) {
             var instanceId = form.getInstanceID();
             var file;
             var update;
-            console.log( 'validated.enketo', updated );
 
             if ( !updated.xmlFragment ) {
                 console.error( 'Could not submit field. XML fragment missing.' );
@@ -310,8 +336,13 @@ function _setEventHandlers( selector ) {
         var $button = $( this ).btnBusyState( true );
 
         _close()
+            .then( function( again ) {
+                if ( again ) {
+                    return _close( true );
+                }
+            } )
             .catch( function( e ) {
-
+                console.error( e );
             } )
             .then( function() {
                 $button.btnBusyState( false );
@@ -348,6 +379,7 @@ function _setEventHandlers( selector ) {
     }
 
     window.onbeforeunload = function() {
+        _autoAddQueries( form.getView().$.find( '.invalid-constraint' ) );
         if ( Object.keys( fieldSubmissionQueue.get() ).length > 0 ) {
             return 'Any unsaved data will be lost';
         }

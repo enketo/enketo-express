@@ -40,6 +40,7 @@ Comment.prototype._init = function() {
         this._setValidationHandler();
         this._setDisabledHandler();
         this._setValueChangeHandler();
+        this._setCloseHandler();
     }
 };
 
@@ -94,14 +95,20 @@ Comment.prototype._setValidationHandler = function() {
     this.$commentQuestion.on( 'invalidated.enketo', function() {
         that._setCommentButtonState( that.element.value, true );
     } );
+};
 
-    // Add query if linked question becomes invalid.
-    this.$linkedQuestion.on( 'invalidated.enketo', function() {
+Comment.prototype._setCloseHandler = function() {
+    var that = this;
+
+    this.$linkedQuestion.on( 'addquery.oc', function() {
         var currentStatus = that._getCurrentStatus( that.notes );
-        var open = currentStatus === 'updated' || currentStatus === 'new';
-        var status = open ? 'updated' : 'new';
-        var comment = t( 'widget.dn.becameinvalid' );
-        that._addQuery( 'comment', comment, status, '', false );
+        if ( currentStatus !== 'updated' && currentStatus !== 'new' ) {
+            var status = ( currentStatus === '' ) ? 'new' : 'update';
+            var constraintMsg = $( this ).find( '.or-constraint-msg.active' ).text();
+            that._addQuery( t( 'widget.dn.autoconstraint', {
+                constraintMsg: constraintMsg
+            } ), status, '', false );
+        }
     } );
 };
 
@@ -142,7 +149,7 @@ Comment.prototype._setDisabledHandler = function() {
                         status = 'closed';
                     }
                     if ( comment ) {
-                        that._addQuery( 'comment', comment, status, '', false );
+                        that._addQuery( comment, status, '', false );
                     }
                 }
             } );
@@ -163,21 +170,19 @@ Comment.prototype._setValueChangeHandler = function() {
     var that = this;
     var previousValue = this.options.helpers.input.getVal( $( this.$linkedQuestion.get( 0 ).querySelector( 'input, select, textarea' ) ) );
 
-    this.$linkedQuestion.on( 'valuechange.enketo', function( evt, valid ) {
+    this.$linkedQuestion.on( 'valuechange.enketo', function( evt ) {
         previousValue = ( Array.isArray( previousValue ) ) ? previousValue.join( ', ' ) : previousValue;
-        if ( valid ) {
-            var comment;
-            var currentValue = that.options.helpers.input.getVal( $( evt.target ) );
-            currentValue = ( Array.isArray( currentValue ) ) ? currentValue.join( ', ' ) : currentValue;
+        var comment;
+        var currentValue = that.options.helpers.input.getVal( $( evt.target ) );
+        currentValue = ( Array.isArray( currentValue ) ) ? currentValue.join( ', ' ) : currentValue;
 
-            comment = t( 'widget.dn.valuechange', {
-                'new': '"' + currentValue + '"',
-                'previous': '"' + previousValue + '"'
-            } );
+        comment = t( 'widget.dn.valuechange', {
+            'new': '"' + currentValue + '"',
+            'previous': '"' + previousValue + '"'
+        } );
 
-            that._addLog( 'audit', comment, '', false );
-            previousValue = currentValue;
-        }
+        that._addAudit( comment, '', false );
+        previousValue = currentValue;
     } );
 };
 
@@ -275,7 +280,7 @@ Comment.prototype._showCommentModal = function( linkedQuestionErrorMsg ) {
             var status = this.getAttribute( 'name' );
             var assignee = $assignee.find( 'select' ).val();
             var notify = $notify.find( 'input:checked' ).val() === 'true';
-            that._addQuery( 'comment', comment, status, assignee, notify );
+            that._addQuery( comment, status, assignee, notify );
             $input.val( '' );
             that._hideCommentModal( that.$linkedQuestion );
         }
@@ -405,12 +410,12 @@ Comment.prototype._parseElapsedTime = function( elapsedMilliseconds ) {
     return Math.round( months / 12 ) + ' year(s)';
 };
 
-Comment.prototype._addQuery = function( type, comment, status, assignee, notify ) {
+Comment.prototype._addQuery = function( comment, status, assignee, notify ) {
     var that = this;
     var error;
     var modelDataStr;
     this.notes.queries.unshift( {
-        type: type || 'comment',
+        type: 'comment',
         id: ( ++this.ordinal ).toString(),
         date_time: this._getFormattedCurrentDatetimeStr(),
         comment: comment,
@@ -430,9 +435,9 @@ Comment.prototype._addQuery = function( type, comment, status, assignee, notify 
     that._setCommentButtonState( that.element.value, error, status );
 };
 
-Comment.prototype._addLog = function( type, comment, assignee, notify ) {
+Comment.prototype._addAudit = function( comment, assignee, notify ) {
     this.notes.logs.unshift( {
-        type: type || 'audit',
+        type: 'audit',
         date_time: this._getFormattedCurrentDatetimeStr(),
         comment: comment,
         assigned_to: assignee,

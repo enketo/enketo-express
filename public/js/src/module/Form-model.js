@@ -5,10 +5,18 @@
 var Model = require( 'enketo-core/src/js/Form-model' );
 var $ = require( 'jquery' );
 
-Model.prototype.getValidationEventData = function( el, type ) {
-    var fullPath = this.getXPath( el, 'instance', true );
-    var xmlFragment = this.getXmlFragmentStr( el );
-    var file = ( type === 'binary' ) ? el.textContent : undefined;
+Model.prototype.getUpdateEventData = function( el, type ) {
+    var fullPath;
+    var xmlFragment;
+    var file;
+
+    if ( !el ) {
+        console.error( new Error( 'XML Node not found. Form probably contains reference to non-existing XML node.' ) );
+        return {};
+    }
+    fullPath = this.getXPath( el, 'instance', true );
+    xmlFragment = this.getXmlFragmentStr( el );
+    file = ( type === 'binary' ) ? el.textContent : undefined;
     return {
         fullPath: fullPath,
         xmlFragment: xmlFragment,

@@ -38,7 +38,8 @@ $padding: 30px;
 
             &.btn-default {
                 // override .question .btn-default
-                padding: 10px 20px;
+                //padding: 10px 20px;
+           
             }
         }
 
@@ -57,13 +58,13 @@ $padding: 30px;
                 select {
                     display: inline-block;
                     margin-left: 10px;
+                    margin-right: 10px;
                     width: 200px;
                 }
             }
 
             &__dn-notify {
                 width: 120px;
-                text-align: right;
                 align-self: center;
                 display: inline-block;
                 margin-right: -10px;
@@ -265,10 +266,8 @@ legend .btn-dn .icon {
 
             &__user {
                 &__dn-notify {
-                    text-align: left;
-
                     .option-label {
-                        margin-right: 0;
+                        margin-left: 0;
                     }
                 }
             }
