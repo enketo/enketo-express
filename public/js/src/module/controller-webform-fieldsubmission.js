@@ -38,7 +38,7 @@ function init( selector, data ) {
     return new Promise( function( resolve, reject ) {
             $formprogress = $( '.form-progress' );
             form = new Form( formSelector, data, formOptions );
-            fieldSubmissionQueue = new FieldSubmissionQueue( form.isValid );
+            fieldSubmissionQueue = new FieldSubmissionQueue();
             // remove submit button before event handlers are set
             _removeCompleteButtonIfNeccessary();
 

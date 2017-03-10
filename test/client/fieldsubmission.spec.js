@@ -9,9 +9,6 @@ var $ = require( 'jquery' );
 var chaiAsPromised = require( 'chai-as-promised' );
 var utils = require( '../../public/js/src/module/utils' );
 var FieldSubmissionQueue = require( '../../public/js/src/module/field-submission-queue' );
-var formIsValid = function() {
-    return true;
-};
 
 chai.use( chaiAsPromised );
 
@@ -51,7 +48,7 @@ describe( 'Field Submission', function() {
     describe( 'queue', function() {
 
         it( 'adds regular items', function() {
-            var q = new FieldSubmissionQueue( formIsValid );
+            var q = new FieldSubmissionQueue();
             q.addFieldSubmission( p1, '<one>1</one>', id );
             q.addFieldSubmission( p2, '<a>a</a>', id );
 
@@ -65,7 +62,7 @@ describe( 'Field Submission', function() {
         } );
 
         it( 'overwrites older values in the queue for the same node', function() {
-            var q = new FieldSubmissionQueue( formIsValid );
+            var q = new FieldSubmissionQueue();
             q.addFieldSubmission( p1, '<one>1</one>', id );
             q.addFieldSubmission( p1, '<two>2</two>', id );
 
@@ -77,7 +74,7 @@ describe( 'Field Submission', function() {
         } );
 
         it( 'adds edits of already submitted items', function() {
-            var q = new FieldSubmissionQueue( formIsValid );
+            var q = new FieldSubmissionQueue();
             q.addFieldSubmission( p1, '<one>1</one>', id, did );
             q.addFieldSubmission( p2, '<a>a</a>', id, did );
 
@@ -91,7 +88,7 @@ describe( 'Field Submission', function() {
         } );
 
         it( 'overwrites older values of edited already-submitted items', function() {
-            var q = new FieldSubmissionQueue( formIsValid );
+            var q = new FieldSubmissionQueue();
             q.addFieldSubmission( p1, '<one>1</one>', id, did );
             q.addFieldSubmission( p1, '<two>2</two>', id, did );
 
@@ -103,7 +100,7 @@ describe( 'Field Submission', function() {
         } );
 
         it( 'adds items that delete a repeat', function() {
-            var q = new FieldSubmissionQueue( formIsValid );
+            var q = new FieldSubmissionQueue();
             q.addRepeatRemoval( '<one>1</one>', id );
             q.addRepeatRemoval( '<a>a</a>', id, did );
 
@@ -134,7 +131,7 @@ describe( 'Field Submission', function() {
 
         beforeEach( function() {
             i = 0;
-            q = new FieldSubmissionQueue( formIsValid );
+            q = new FieldSubmissionQueue();
             q.addFieldSubmission( p1, '1', id );
             q.addFieldSubmission( p2, 'a', id );
         } );

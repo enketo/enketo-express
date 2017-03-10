@@ -13,11 +13,10 @@ var FIELDSUBMISSION_COMPLETE_URL = ( settings.enketoId ) ? settings.basePath + '
 var FIELDSUBMISSION_REASON_URL = ( settings.enketoId ) ? settings.basePath + '/fieldsubmission/reason/' + settings.enketoIdPrefix + settings.enketoId +
     utils.getQueryString( settings.submissionParameter ) : null;
 
-function FieldSubmissionQueue( isValidFn ) {
+function FieldSubmissionQueue() {
     this.submissionQueue = {};
     this.lastAdded = {};
     this.repeatRemovalCounter = 0;
-    this.isValid = isValidFn;
     this.queuedSubmitAllRequest = undefined;
 }
 
@@ -194,7 +193,7 @@ FieldSubmissionQueue.prototype._submitAll = function() {
             } )
             .then( function() {
                 that._resetSubmissionInterval();
-                status = that.isValid() ? ( Object.keys( that.submissionQueue ).length > 0 ? 'fail' : 'success' ) : 'error';
+                status = Object.keys( that.submissionQueue ).length > 0 ? 'fail' : 'success';
                 that._uploadStatus.update( status );
                 return true;
             } );
@@ -302,8 +301,7 @@ FieldSubmissionQueue.prototype._uploadStatus = {
         return {
             ongoing: t( 'fieldsubmission.feedback.ongoing' ),
             success: t( 'fieldsubmission.feedback.success' ),
-            fail: t( 'fieldsubmission.feedback.fail' ),
-            error: t( 'fieldsubmission.feedback.error' )
+            fail: t( 'fieldsubmission.feedback.fail' )
         }[ status ];
     },
     _updateClass: function( status ) {
