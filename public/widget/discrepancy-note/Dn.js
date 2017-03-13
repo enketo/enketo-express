@@ -447,7 +447,6 @@ Comment.prototype._addAudit = function( comment, assignee, notify ) {
         type: 'audit',
         date_time: this._getFormattedCurrentDatetimeStr(),
         comment: comment,
-        user: SYSTEM_USER,
         assigned_to: assignee,
         notify: notify
     } );
