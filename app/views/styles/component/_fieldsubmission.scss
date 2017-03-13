@@ -20,6 +20,7 @@
 }
 
 // Watch out, this targeting is deliberate
+/*
 .form-header .form-header__button--reason {
     order: 60;
     margin: 0 0 0 20px;
@@ -30,19 +31,115 @@
         color: black;
     }
 }
+*/
 
-// Show Close button on every page
-.pages ~ .form-footer .btn#close-form {
-    display: block;
-    margin: 0 auto 10px auto;
+.pages ~ .form-footer {
+    .form-footer {
+        &__content {
+            &__main-controls {
+                $marg: 15px;
+
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+
+                .btn {
+                    padding-left: 10px;
+                    padding-right: 10px;
+
+                    .icon {
+                        margin-left: 6px;
+                    }
+                }
+
+                .previous-page, .finish-form, .next-page {
+                    margin-left: $marg;
+                    margin-right: $marg;
+                    max-width: calc(33% - (2 * #{$marg}));
+                }
+
+                #finish-form, #close-form {
+                    min-width: 140px;
+                }
+
+                .previous-page, .next-page {
+                    position: static;
+                    min-width: 90px;
+                }
+
+                .previous-page {
+                    order: 1;
+
+                    &.disabled {
+                        display: block;
+                    }
+                }
+
+                #finish-form, #submit-form {
+                    display: block;
+                    visibility: hidden;
+                    order: 2;
+                }
+
+                .next-page {
+                    order: 3;
+
+                    &.disabled {
+                        @extend .btn-default;
+
+                        display: block;
+                    }
+                }
+
+                #close-form {
+                    display: block;
+                    margin: 0 100px 20px 100px;
+                    order: 4;
+                }
+
+                .logout {
+                    order: 5;
+                }
+
+                .enketo-power {
+                    order: 6;
+                }
+            }
+        }
+    }
+
+    &.end {
+        #finish-form, #submit-form {
+            visibility: visible;
+        }
+    }
 }
 
-@media screen and (max-width: 410px) {
+@media screen and (max-width: 430px) {
     .fieldsubmission-status {
         order: 65;
         max-width: 100%;
         width: 100%;
         margin-top: 16px;
+    }
+
+    .pages ~ .form-footer {
+        .form-footer {
+            &__content {
+                &__main-controls {
+                    .previous-page, .next-page {
+                        margin-left: 5px;
+                        margin-right: 5px;
+                        min-width: 40px;
+
+                        span {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

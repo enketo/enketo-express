@@ -19,10 +19,14 @@ section.form-footer
         button#submit-form.btn.btn-primary.hide
           i.icon.icon-check= ' '
           | #{t('formfooter.submit.btn')}
-      a.btn.btn-primary.next-page(href="#")= t('form.pages.next')
+      a.btn.btn-primary.next-page(href="#")
+        span= t('form.pages.next')
+        i.icon.icon-arrow-right
       include _logout
       include _enketo-power
-      a.previous-page.disabled(href="#")= t('form.pages.back')
+      a.btn.btn-default.previous-page.disabled(href="#")
+        i.icon.icon-arrow-left
+        span= t('form.pages.back')
 
     .form-footer__content__jump-nav
       a.btn.btn-default.disabled.first-page(href="#")= t('form.pages.return')
