@@ -2,6 +2,7 @@
 
 var surveyModel = require( '../models/survey-model' );
 var instanceModel = require( '../models/instance-model' );
+var cacheModel = require( '../models/cache-model' );
 var account = require( '../models/account-model' );
 var auth = require( 'basic-auth' );
 var express = require( 'express' );
@@ -69,6 +70,7 @@ router
     .post( '/survey/offline', getNewOrExistingSurvey )
     .post( '/survey/iframe', getNewOrExistingSurvey )
     .delete( '/survey', deactivateSurvey )
+    .delete( '/survey/cache', emptySurveyCache )
     .get( '/survey/single', getExistingSurvey )
     .get( '/survey/single/iframe', getExistingSurvey )
     .get( '/survey/single/once', getExistingSurvey )
@@ -190,6 +192,19 @@ function deactivateSurvey( req, res, next ) {
             } else {
                 _render( 404, 'Survey not found.', res );
             }
+        } )
+        .catch( next );
+}
+
+function emptySurveyCache( req, res, next ) {
+
+    return cacheModel
+        .flush( {
+            openRosaServer: req.body.server_url,
+            openRosaId: req.body.form_id
+        } )
+        .then( function( survey ) {
+            _render( 204, null, res );
         } )
         .catch( next );
 }

@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Added
 - Ability to pass attachments to instance to be edited.
+- Ability to pro-actively flush a survey cache. See [doc](https://apidocs.enketo.org/v2#/delete-survey-cache).
 
 [1.41.1] - 2017-03-14
 ---------------------
