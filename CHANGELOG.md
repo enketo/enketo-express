@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.41.1] - 2017-03-14
 ---------------------
 ##### Fixed
 - Cookies not passed for some communication that uses 'external authentication'.
