@@ -136,7 +136,9 @@ describe( 'Submissions', function() {
                     instanceId: 'b',
                     returnUrl: 'example.com',
                     instance: '<data></data>',
-                    instanceAttachments: {}
+                    instanceAttachments: {
+                        'test.jpg': 'https://example.com'
+                    }
                 } ).then( function() {
                     done();
                 } );
@@ -158,8 +160,7 @@ describe( 'Submissions', function() {
                     openRosaId: validFormId,
                     instanceId: 'c',
                     returnUrl: 'example.com',
-                    instance: '<data></data>',
-                    instanceAttachments: {}
+                    instance: '<data></data>'
                 } ).then( function() {
                     done();
                 } );

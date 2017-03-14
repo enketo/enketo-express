@@ -36,8 +36,8 @@ function init( selector, data ) {
                 data.instanceStr = record.xml;
             }
 
-            if (data.instanceAttachments){
-                fileManager.setInstanceAttachments(data.instanceAttachments);
+            if ( data.instanceAttachments ) {
+                fileManager.setInstanceAttachments( data.instanceAttachments );
             }
 
             form = new Form( formSelector, data, formOptions );

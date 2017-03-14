@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Added
+- Ability to pass attachments to instance to be edited.
+
 [1.41.1] - 2017-03-14
 ---------------------
 ##### Fixed

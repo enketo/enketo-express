@@ -134,7 +134,7 @@ function getInstance( req, res, next ) {
                     if ( utils.getOpenRosaKey( survey ) === survey.openRosaKey ) {
                         res.json( {
                             instance: survey.instance,
-                            instanceAttachments: JSON.parse( survey.instanceAttachments )
+                            instanceAttachments: survey.instanceAttachments
                         } );
                     } else {
                         error = new Error( 'Instance doesn\'t belong to this form' );

@@ -27,7 +27,7 @@ var instanceAttachments;
 function init() {
 
     return new Promise( function( resolve, reject ) {
-       	if ( supported ) {
+        if ( supported ) {
             resolve( true );
         } else {
             reject( new Error( 'FileReader not supported.' ) );
@@ -55,8 +55,8 @@ function isWaitingForPermissions() {
  * Sets instanceAttachments containing filename:url map
  * to use in getFileUrl 
  */
-function setInstanceAttachments(attachments){
-    instanceAttachments=attachments;
+function setInstanceAttachments( attachments ) {
+    instanceAttachments = attachments;
 }
 /**
  * Obtains a url that can be used to show a preview of the file when used
@@ -71,9 +71,9 @@ function getFileUrl( subject, filename ) {
         if ( !subject ) {
             resolve( null );
         } else if ( typeof subject === 'string' ) {
-            if (instanceAttachments && (instanceAttachments.hasOwnProperty(subject) ) ) {
-                resolve( instanceAttachments[subject] );
-	    } else if ( !store.isAvailable() ) {
+            if ( instanceAttachments && ( instanceAttachments.hasOwnProperty( subject ) ) ) {
+                resolve( instanceAttachments[ subject ] );
+            } else if ( !store.isAvailable() ) {
                 // e.g. in an online-only edit view
                 reject( new Error( 'store not available' ) );
             } else {

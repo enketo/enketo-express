@@ -87,7 +87,7 @@ describe( 'api', function() {
         } else if ( expected instanceof Object ) {
             // This is where it gets ugly. Strip the port number from URLs...
             var v = JSON.stringify( value ).replace( /:[0-9]{5}\//g, '/' );
-            var e = JSON.stringify( expected ).replace( /:[0-9]{5}\//g, '/' )
+            var e = JSON.stringify( expected ).replace( /:[0-9]{5}\//g, '/' );
             if ( v !== e ) {
                 return new Error( 'Response ' + v + ' not matching ' + e );
             }

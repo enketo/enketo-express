@@ -246,7 +246,7 @@ function cacheInstance( req, res, next ) {
         instance: req.body.instance,
         instanceId: req.body.instance_id,
         returnUrl: req.body.return_url,
-	instanceAttachments: req.body.instance_attachments
+        instanceAttachments: req.body.instance_attachments
     };
 
     return surveyModel
