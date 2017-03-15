@@ -5,7 +5,7 @@ var $ = require( 'jquery' );
 var t = require( 'translator' ).t;
 var settings = require( '../../js/src/module/settings' );
 var users;
-var SYSTEM_USER = 'System';
+var SYSTEM_USER = 'root';
 
 /**
  * Visually transforms a question into a comment modal that can be shown on its linked question.
