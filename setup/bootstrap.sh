@@ -10,40 +10,52 @@ ENKETO_EXPRESS_UPDATE_REPO=${ENKETO_EXPRESS_UPDATE_REPO:-"true"}
 ENKETO_EXPRESS_USE_NODE_ENV=${ENKETO_EXPRESS_USE_NODE_ENV:-"false"}
 
 # install redis
-echo 'installing redis...'
-add-apt-repository -y ppa:rwky/redis
+echo 'Installing redis...'
+add-apt-repository -y ppa:chris-lea/redis-server
 apt-get update
 apt-get upgrade -y
 apt-get install -y redis-server
 
 # further redis setup with persistence, security, logging, multiple instances, priming 
-echo 'copying enketo redis conf...'
+echo 'Copying enketo redis conf...'
 if [ -f "/etc/redis/redis.conf" ]; then
     mv /etc/redis/redis.conf /etc/redis/redis-origin.conf
     cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/conf/redis-enketo-main.conf /etc/redis/
     cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/conf/redis-enketo-cache.conf /etc/redis/
     chown redis:redis /var/lib/redis/
-    echo 'copying enketo redis-server configs...'
-    mv /etc/init/redis-server.conf /etc/init/redis-server.conf.disabled
-    cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/init/redis-server-enketo-main-vagrant.conf /etc/init/
-    cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/init/redis-server-enketo-cache.conf /etc/init/
+    # echo 'Copying enketo redis-server configs for **Upstart**...'
+    # NOTE: May require setting daemonize=yes in both /etc/redis/*.conf files!
+    # mv /etc/init/redis-server.conf /etc/init/redis-server.conf.disabled
+    # cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/init/redis-server-enketo-main-vagrant.conf /etc/init/
+    # cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/init/redis-server-enketo-cache.conf /etc/init/
+    echo 'Copying enketo redis-server configs for **systemd**...'
+    cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/systemd/system/* /etc/systemd/system/
     if [ -f "/var/lib/redis/redis.rdb" ]; then
 	   rm /var/lib/redis/redis.rdb
     fi
-    echo 'copying enketo default redis db...'
+    echo 'Copying enketo default redis db...'
     cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/enketo-main.rdb /var/lib/redis/
     chown redis:redis /var/lib/redis/enketo-main.rdb
     chmod 660 /var/lib/redis/enketo-main.rdb
 fi
-echo 'starting first enketo redis instance...'
-service redis-server-enketo-main-vagrant restart
-echo 'starting second enketo redis instance...'
-service redis-server-enketo-cache restart
+# echo 'starting first enketo redis instance (Upstart)...'
+# service redis-server-enketo-main-vagrant restart
+# echo 'starting second enketo redis instance (Upstart)...'
+# service redis-server-enketo-cache restart
+# systemctl stop redis
+systemctl disable redis
+systemctl daemon-reload
+echo 'Starting first enketo redis instance (systemd)...'
+systemctl start redis@redis-enketo-main
+systemctl enable redis@redis-enketo-main
+echo 'Starting second enketo redis instance (systemd)...'
+systemctl start redis@redis-enketo-cache
+systemctl enable redis@redis-enketo-cache
 
 # install dependencies, development tools, node, grunt
-echo 'installing some apt-get packages...'
-apt-get install -y build-essential git libfontconfig curl
-echo 'installing nodejs...'
+echo 'Installing some apt-get packages...'
+apt-get install -y build-essential git libfontconfig curl python
+echo 'Installing nodejs...'
 cd $ENKETO_EXPRESS_REPO_DIR
 if [ $ENKETO_EXPRESS_USE_NODE_ENV = "true" ]; then
     apt-get install python-pip
@@ -55,17 +67,19 @@ else
     apt-get install -y nodejs
 fi
 
-# create a local configuration file unless it already exists
-echo 'copying custom configuration unless config.json already exists'
+# Create a local configuration file unless it already exists
+echo 'Copying custom configuration unless config.json already exists'
 if [ ! -f "$ENKETO_EXPRESS_REPO_DIR/config/config.json" ]; then
     cp setup/config/config.json config/config.json
 fi
 
-# remove node_modules if exists because npm builds can be system-specific
+# Remove node_modules if exists because npm builds can be system-specific 
+# (if using both host and vm that would cause problems)
 if [ -d "$ENKETO_EXPRESS_REPO_DIR/node_modules" ]; then
 	rm -R $ENKETO_EXPRESS_REPO_DIR/node_modules
 fi
-#npm -g install npm@2.14.3
+
+# Install all the required Node packages
 npm install -g grunt-cli gulp nodemon mocha
 npm install
 

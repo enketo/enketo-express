@@ -1,0 +1,2 @@
+[Unit]
+Description=Redis target allowing to start/stop all redis@.service instances at once

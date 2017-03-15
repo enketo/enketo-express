@@ -1,0 +1,14 @@
+[Unit]
+Description=Redis
+After=network.target
+PartOf=redis.target
+[Service]
+Type=simple
+User=redis
+Group=redis
+PrivateTmp=true
+PIDFile=/var/run/redis/%i.pid
+ExecStart=/usr/bin/redis-server /etc/redis/%i.conf
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target redis.target
