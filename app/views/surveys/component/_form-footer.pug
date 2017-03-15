@@ -7,10 +7,10 @@ section.form-footer
             input.ignore(type='checkbox', name='draft')
             span.option-label= t('formfooter.savedraft.label')
       if type === 'fs'
-        button#close-form.btn.btn-default.hide #{t('alert.default.button')}
         button#finish-form.btn.btn-primary.hide
           i.icon.icon-check= ' '
           | #{t('formfooter.complete.btn')}
+        button#close-form.btn.btn-default.hide #{t('alert.default.button')}
       else if type === 'preview'
         button#validate-form.btn.btn-primary.hide
           i.icon.icon-check= ' '

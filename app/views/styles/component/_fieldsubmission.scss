@@ -33,6 +33,15 @@
 }
 */
 
+// regular non-pages-mode webform
+.form-footer .form-footer__content__main-controls {
+    #finish-form, #close-form {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
 .pages ~ .form-footer {
     .form-footer {
         &__content {
