@@ -32,7 +32,10 @@ describe( 'Instance Model', function() {
                 openRosaServer: 'http://example.com',
                 instanceId: 'someid',
                 returnUrl: 'http://example.com',
-                instance: '<data></data>'
+                instance: '<data></data>',
+                instanceAttachments: {
+                    'test.jpg': 'https://example.com/test.jpg'
+                }
             };
         } );
 
@@ -76,7 +79,10 @@ describe( 'Instance Model', function() {
                 openRosaServer: 'http://example.com',
                 instanceId: 'someid',
                 returnUrl: 'http://example.com',
-                instance: '<data></data>'
+                instance: '<data></data>',
+                instanceAttachments: {
+                    'test.jpg': 'https://example.com/test.jpg'
+                }
             };
         } );
 

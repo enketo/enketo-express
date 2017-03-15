@@ -135,7 +135,10 @@ describe( 'Submissions', function() {
                     openRosaId: 'differentId',
                     instanceId: 'b',
                     returnUrl: 'example.com',
-                    instance: '<data></data>'
+                    instance: '<data></data>',
+                    instanceAttachments: {
+                        'test.jpg': 'https://example.com'
+                    }
                 } ).then( function() {
                     done();
                 } );

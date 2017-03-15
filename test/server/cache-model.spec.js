@@ -381,7 +381,7 @@ describe( 'Cache Model', function() {
                 } );
             } );
         };
-        it( 'with flushAll, the entire cache becomes empty...', function() {
+        it( 'with flushAll(), the entire cache becomes empty...', function() {
             var count1;
             var count2;
             var survey2 = JSON.parse( JSON.stringify( survey ) );
@@ -396,7 +396,7 @@ describe( 'Cache Model', function() {
                 expect( count2 ).to.eventually.deep.equal( 0 )
             ] );
         } );
-        it( 'with flush, an individual survey cache becomes empty...', function() {
+        it( 'with flush(s), an individual survey cache becomes empty...', function() {
             var get1Promise = model.set( survey ).then( model.get ),
                 get2Promise = get1Promise.then( model.flush ).then( function() {
                     return model.get( survey );

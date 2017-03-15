@@ -14,6 +14,7 @@ config[ 'base path' ] = '';
 var app = require( '../../config/express' );
 var surveyModel = require( '../../app/models/survey-model' );
 var instanceModel = require( '../../app/models/instance-model' );
+var cacheModel = require( '../../app/models/cache-model' );
 var redis = require( 'redis' );
 var client = redis.createClient( config.redis.main.port, config.redis.main.host, {
     auth_pass: config.redis.main.password
@@ -37,13 +38,24 @@ describe( 'api', function() {
     var invalidServer = 'https://someotherserver.com/john';
 
     beforeEach( function( done ) {
-        // add survey if it doesn't exist in the db
-        surveyModel.set( {
+        var s = {
             openRosaServer: validServer,
             openRosaId: validFormId,
-        } ).then( function() {
-            done();
-        } );
+        };
+        // add survey if it doesn't exist in the db
+        surveyModel.set( s )
+            .then( function() {
+                s.info = {
+                    hash: 'a'
+                };
+                s.form = '<form/>';
+                s.model = '<model/>';
+                return cacheModel.set( s );
+            } )
+            .then( function() {
+                done();
+            } );
+
     } );
 
     afterEach( function( done ) {
@@ -87,7 +99,7 @@ describe( 'api', function() {
         } else if ( expected instanceof Object ) {
             // This is where it gets ugly. Strip the port number from URLs...
             var v = JSON.stringify( value ).replace( /:[0-9]{5}\//g, '/' );
-            var e = JSON.stringify( expected ).replace( /:[0-9]{5}\//g, '/' )
+            var e = JSON.stringify( expected ).replace( /:[0-9]{5}\//g, '/' );
             if ( v !== e ) {
                 return new Error( 'Response ' + v + ' not matching ' + e );
             }
@@ -572,7 +584,28 @@ describe( 'api', function() {
                     expected: /\/i\/::[A-z0-9]{4}/
                 },
                 offline: true
+            },
+            // clear survey cache pro-actively
+            {
+                endpoint: '/survey/cache',
+                method: 'delete',
+                auth: true,
+                status: 204
             }, {
+                endpoint: '/survey/cache',
+                method: 'delete',
+                server: invalidServer,
+                auth: true,
+                status: 403 // no account
+            }, {
+                endpoint: '/survey/cache',
+                method: 'delete',
+                id: 'invalidID',
+                auth: true,
+                status: 404 // not found
+            },
+            // single submission
+            {
                 endpoint: '/survey/single',
                 method: 'get',
                 auth: true,

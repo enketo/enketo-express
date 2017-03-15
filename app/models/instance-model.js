@@ -18,6 +18,7 @@ function _cacheInstance( survey ) {
     var error;
     var instanceKey;
     var openRosaKey;
+    var instanceAttachments;
 
     return new Promise( function( resolve, reject ) {
         if ( !survey || !survey.openRosaId || !survey.openRosaServer || !survey.instanceId || !survey.returnUrl || !survey.instance ) {
@@ -27,6 +28,8 @@ function _cacheInstance( survey ) {
         } else {
             instanceKey = 'in:' + survey.instanceId;
             openRosaKey = utils.getOpenRosaKey( survey );
+            instanceAttachments = survey.instanceAttachments || {};
+
             // first check if record exists (i.e. if it is being edited)
             client.hgetall( 'in:' + survey.instanceId, function( err, obj ) {
                 if ( err ) {
@@ -39,7 +42,8 @@ function _cacheInstance( survey ) {
                     client.hmset( instanceKey, {
                         returnUrl: survey.returnUrl,
                         instance: survey.instance,
-                        openRosaKey: openRosaKey
+                        openRosaKey: openRosaKey,
+                        instanceAttachments: JSON.stringify( instanceAttachments )
                     }, function( error ) {
                         if ( error ) {
                             reject( error );
@@ -75,6 +79,7 @@ function _getInstance( survey ) {
                     survey.instance = obj.instance;
                     survey.returnUrl = obj.returnUrl;
                     survey.openRosaKey = obj.openRosaKey;
+                    survey.instanceAttachments = JSON.parse( obj.instanceAttachments );
                     resolve( survey );
                 }
             } );

@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Added
+- Ability to pass attachments to instance to be edited. See [doc](https://apidocs.enketo.org/v2#/post-instance).
+- Ability to pro-actively flush a survey cache. See [doc](https://apidocs.enketo.org/v2#/delete-survey-cache).
+
+##### Changed
+- Use systemd instead of upstart for redis in Vagrant setup.
+
+##### Fixed
+- Vagrant installation issues with redis.
+
 [1.41.1] - 2017-03-14
 ---------------------
 ##### Fixed

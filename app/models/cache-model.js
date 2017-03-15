@@ -203,18 +203,29 @@ function flushSurvey( survey ) {
             reject( error );
         } else {
             key = _getKey( survey );
-            client.del( key, function( error ) {
+
+            client.hgetall( key, function( error, cacheObj ) {
                 if ( error ) {
                     reject( error );
+                } else if ( !cacheObj ) {
+                    error = new Error( 'Survey cache not found.' );
+                    error.status = 404;
+                    reject( error );
                 } else {
-                    delete survey.form;
-                    delete survey.model;
-                    delete survey.formHash;
-                    delete survey.xslHash;
-                    delete survey.mediaHash;
-                    delete survey.mediaUrlHash;
-                    delete survey.languageMap;
-                    resolve( survey );
+                    client.del( key, function( error ) {
+                        if ( error ) {
+                            reject( error );
+                        } else {
+                            delete survey.form;
+                            delete survey.model;
+                            delete survey.formHash;
+                            delete survey.xslHash;
+                            delete survey.mediaHash;
+                            delete survey.mediaUrlHash;
+                            delete survey.languageMap;
+                            resolve( survey );
+                        }
+                    } );
                 }
             } );
         }
