@@ -22,6 +22,7 @@ var form;
 var formSelector;
 var formData;
 var $formprogress;
+var ignoreBeforeUnload = false;
 var formOptions = {
     clearIrrelevantImmediately: true
 };
@@ -92,6 +93,7 @@ function _resetForm( confirmed ) {
     } else {
         //_setDraftStatus( false );
         form.resetView();
+        ignoreBeforeUnload = false;
         form = new Form( formSelector, {
             modelStr: formData.modelStr,
             external: formData.external
@@ -166,6 +168,7 @@ function _close( bypassAutoQuery ) {
 
                 msg += t( 'alert.submissionsuccess.redirectmsg' );
                 gui.alert( msg, t( 'alert.submissionsuccess.heading' ), 'success' );
+                ignoreBeforeUnload = true;
                 setTimeout( function() {
                     location.href = decodeURIComponent( settings.returnUrl || DEFAULT_THANKS_URL );
                 }, 1200 );
@@ -222,6 +225,7 @@ function _complete( updated ) {
 
             msg += t( 'alert.submissionsuccess.redirectmsg' );
             gui.alert( msg, t( 'alert.submissionsuccess.heading' ), 'success' );
+            ignoreBeforeUnload = true;
             setTimeout( function() {
                 location.href = decodeURIComponent( settings.returnUrl || DEFAULT_THANKS_URL );
             }, 1200 );
@@ -379,9 +383,11 @@ function _setEventHandlers( selector ) {
     }
 
     window.onbeforeunload = function() {
-        _autoAddQueries( form.getView().$.find( '.invalid-constraint' ) );
-        if ( Object.keys( fieldSubmissionQueue.get() ).length > 0 ) {
-            return 'Any unsaved data will be lost';
+        if ( !ignoreBeforeUnload ) {
+            _autoAddQueries( form.getView().$.find( '.invalid-constraint' ) );
+            if ( Object.keys( fieldSubmissionQueue.get() ).length > 0 ) {
+                return 'Any unsaved data will be lost';
+            }
         }
     };
 }
