@@ -104,7 +104,7 @@ Comment.prototype._setCloseHandler = function() {
     this.$linkedQuestion.on( 'addquery.oc', function() {
         var currentStatus = that._getCurrentStatus( that.notes );
         if ( currentStatus !== 'updated' && currentStatus !== 'new' ) {
-            var status = ( currentStatus === '' ) ? 'new' : 'update';
+            var status = ( currentStatus === '' ) ? 'new' : 'updated';
             var constraintMsg = $( this ).find( '.or-constraint-msg.active' ).text();
             that._addQuery( t( 'widget.dn.autoconstraint', {
                 constraintMsg: constraintMsg
