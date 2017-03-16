@@ -13,6 +13,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Vagrant installation issues with redis.
+- Exception occurs when forms contains no textarea (multiline text widget).
+- Repeat count updates in pages mode causes unhelpful page flipping behaviour if the repeat has _field-list_ appearance.
+- Negative decimal numbers not converted correctly to integers.
 
 [1.41.1] - 2017-03-14
 ---------------------
