@@ -62,7 +62,7 @@
                     }
                 }
 
-                .previous-page, .finish-form, .next-page {
+                .previous-page, #finish-form, .next-page {
                     margin-left: $marg;
                     margin-right: $marg;
                     max-width: calc(33% - (2 * #{$marg}));
@@ -103,7 +103,7 @@
 
                 #close-form {
                     display: block;
-                    margin: 0 100px 20px 100px;
+                    margin: 0 30% 20px 30%;
                     order: 4;
                 }
 
