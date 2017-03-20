@@ -2,17 +2,23 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[4.42.0] - 2017-03-20
 ---------------------
 ##### Added
 - Ability to pass attachments to instance to be edited. See [doc](https://apidocs.enketo.org/v2#/post-instance).
 - Ability to pro-actively flush a survey cache. See [doc](https://apidocs.enketo.org/v2#/delete-survey-cache).
+- Safari and iOS browser support for autocomplete widget.
+- Ability to disable page validation (default is unchanged).
 
 ##### Changed
 - Use systemd instead of upstart for redis in Vagrant setup.
+- Reduced vertical whitespace between label and radiobuttons/checkboxes.
 
 ##### Fixed
 - Vagrant installation issues with redis.
+- Exception occurs when forms contains no textarea (multiline text widget).
+- Repeat count updates in pages mode causes unhelpful page flipping behaviour if the repeat has _field-list_ appearance.
+- Negative decimal numbers not converted correctly to integers.
 
 [1.41.1] - 2017-03-14
 ---------------------

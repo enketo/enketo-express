@@ -99,3 +99,6 @@ Whether to add custom http://enketo.org/xforms namespaced `ordinal` and `last-us
 #### validate continuously
 Determines whether Enketo should validate questions immediately if a related question value changes. E.g. if question A has a constraint that depends on question B, this mode would re-validate question A if the value for question B changes. This mode will slow down form traversal. When set to `false` that type of validation is only done at the end when the Submit button is clicked or in Pages mode when the user clicks Next. The default value is `false`.
 
+#### validate page
+Determines whether the Next button should trigger validation and block the user from proceeding to next page if validation fails. The default value is `true`.
+

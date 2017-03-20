@@ -42,7 +42,6 @@ fi
 # service redis-server-enketo-main-vagrant restart
 # echo 'starting second enketo redis instance (Upstart)...'
 # service redis-server-enketo-cache restart
-# systemctl stop redis
 systemctl disable redis
 systemctl daemon-reload
 echo 'Starting first enketo redis instance (systemd)...'
