@@ -85,7 +85,7 @@
                     }
                 }
 
-                #finish-form, #submit-form {
+                #finish-form, #submit-form, #validate-form {
                     display: block;
                     visibility: hidden;
                     order: 2;
@@ -119,7 +119,7 @@
     }
 
     &.end {
-        #finish-form, #submit-form {
+        #finish-form, #submit-form, #validate-form {
             visibility: visible;
         }
     }
