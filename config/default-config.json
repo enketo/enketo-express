@@ -63,5 +63,6 @@
     },
     "disable save as draft": false,
     "repeat ordinals": false,
-    "validate continuously": false
+    "validate continuously": false,
+    "validate page": true
 }
