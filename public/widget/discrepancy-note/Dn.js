@@ -61,10 +61,6 @@ Comment.prototype._getLinkedQuestion = function( element ) {
 };
 
 Comment.prototype._setCommentButtonState = function( value, error, state ) {
-    state = state || '';
-    if ( !state && typeof value == 'string' && value.trim() ) {
-        state = 'new';
-    }
     this.$commentButton
         .toggleClass( 'new', state === 'new' )
         .toggleClass( 'closed', state === 'closed' )
