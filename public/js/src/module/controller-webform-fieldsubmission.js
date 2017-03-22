@@ -121,7 +121,7 @@ function _close( bypassAutoQuery ) {
     if ( !bypassAutoQuery && $violated.length ) {
         return new Promise( function( resolve, reject ) {
             gui.confirm( {
-                heading: t( 'fieldsubmission.confirm.autoquery.heading1' ),
+                heading: t( 'alert.default.heading' ),
                 errorMsg: t( 'fieldsubmission.confirm.autoquery.msg1' ),
                 msg: t( 'fieldsubmission.confirm.autoquery.msg2' )
             }, {
@@ -365,7 +365,7 @@ function _setEventHandlers( selector ) {
                 if ( valid ) {
                     return _complete();
                 } else {
-                    gui.alert( t( 'alert.validationerror.msg' ) );
+                    gui.alert( t( 'fieldsubmission.alert.validationerror.msg' ) );
                 }
             } )
             .catch( function( e ) {

@@ -28,13 +28,18 @@
             },
             "complete": {
                 "msg": "Data could not be submitted."
+            },
+            "validationerror": {
+                "msg": "You must address all errors on this form before it can be marked complete. Please update the value or add a query for each field marked in red."
             }
         },
         "confirm": {
             "autoquery": {
-                "heading1": "Constraints violated",
-                "msg1": "Some values violate constraints.",
-                "msg2": "Would you like to proceed by automatically adding queries for these questions or cancel and do this manually?",
+                "msg1": "Some field values have errors.  These must be addressed before the form is closed.",
+                "msg2": [
+                    "Click Cancel to return to the form to manually update the value or add a query for each field marked in red.",
+                    "Click Proceed to continue closing the form now.  A query will be automatically added for each field marked in red."
+                ],
                 "automatic": "Proceed",
                 "manual": "Cancel"
             }
