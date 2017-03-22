@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[4.42.1] - 2017-03-22
+[1.42.1] - 2017-03-22
 ---------------------
 ##### Changed
 - Label of readonly question with a calculate expression is styled as regular question.
@@ -13,7 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Value not cleared from widget UI when it becomes irrelevant and clearIrrelevantImmediately is set to `true`.
 - Autocomplete widget causes exception when branch is hidden or revealed (due to relevant expression).
 
-[4.42.0] - 2017-03-20
+[1.42.0] - 2017-03-20
 ---------------------
 ##### Added
 - Ability to pass attachments to instance to be edited. See [doc](https://apidocs.enketo.org/v2#/post-instance).
