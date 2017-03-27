@@ -1,10 +1,7 @@
 $body-bg: #f0f0f0;
 
-// KoBo blue
+// OC Orange
 $brand-primary-color: #f58220;
+$brand-secondary-color: lighten($brand-primary-color, 35%);
 $repeat-bg: lighten($brand-primary-color, 50%);
-
-// ZURB Foundation library customization
-$primary-color: $brand-primary-color;
-$secondary-color: white;
 $button-border-width: 1px;
