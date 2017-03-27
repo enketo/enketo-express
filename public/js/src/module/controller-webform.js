@@ -285,7 +285,11 @@ function _submitRecord() {
             console.error( 'submission failed', result );
             if ( result.status === 401 ) {
                 message = t( 'alert.submissionerror.authrequiredmsg', {
-                    here: authLink
+                    here: authLink,
+                    // switch off escaping just for this known safe value
+                    interpolation: {
+                        escapeValue: false
+                    }
                 } );
             } else {
                 message = result.message || gui.getErrorResponseMsg( result.status );
