@@ -515,6 +515,7 @@ Comment.prototype._renderHistory = function() {
 
     $more.find( '.btn-more-history' ).on( 'click', function() {
         that.$history.toggleClass( 'closed' );
+        return false;
     } );
 };
 
