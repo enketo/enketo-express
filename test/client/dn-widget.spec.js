@@ -119,10 +119,10 @@ describe( 'DN object', function() {
             date_time: "2016-09-01 15:01 -06:00"
         };
         var b = {
-            date_time: "2016-09-01 14:01 -06:00"
+            date_time: "2016-09-01 14:01:00.001 -06:00"
         };
         var c = {
-            date_time: "2016-09-01 13:01 -06:00"
+            date_time: "2016-09-01 14:01 -06:00"
         };
         var d = {};
 

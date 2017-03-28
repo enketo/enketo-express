@@ -475,7 +475,6 @@ Comment.prototype._getFormattedCurrentDatetimeStr = function() {
 
     return new Date( now.getTime() - ( offset.minstotal * 60 * 1000 ) ).toISOString()
         .replace( 'T', ' ' )
-        .replace( /(\.[0-9]{0,3})Z$/, 'Z' )
         .replace( 'Z', ' ' + offset.direction + offset.hrspart + ':' + offset.minspart );
 };
 
