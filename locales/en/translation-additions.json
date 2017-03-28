@@ -42,6 +42,10 @@
                 ],
                 "automatic": "Proceed",
                 "manual": "Cancel"
+            },
+            "complete": {
+                "msg": "Would you like to complete this record and exit?",
+                "heading": "Confirm Completion"
             }
         },
         "prompt": {

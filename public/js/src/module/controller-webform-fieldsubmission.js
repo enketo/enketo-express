@@ -192,12 +192,31 @@ function _close( bypassAutoQuery ) {
 /**
  * Finishes a submission
  */
-function _complete( updated ) {
+function _complete( bypassConfirmation ) {
     var beforeMsg;
     var authLink;
     var instanceId;
     var deprecatedId;
     var msg = '';
+
+    // First check if any constraints have been violated and prompt option to generate automatic queries
+    if ( !bypassConfirmation ) {
+        return new Promise( function( resolve, reject ) {
+            gui.confirm( {
+                heading: t( 'fieldsubmission.confirm.complete.heading' ),
+                msg: t( 'fieldsubmission.confirm.complete.msg' )
+            }, {
+                posAction: function() {
+                    resolve( true );
+                },
+                negAction: function() {
+                    resolve( false );
+                }
+            } );
+        } );
+    }
+
+
 
     form.getView().$.trigger( 'beforesave' );
 
@@ -359,11 +378,15 @@ function _setEventHandlers( selector ) {
         var $button = $( this ).btnBusyState( true );
 
         // form.validate() will trigger fieldsubmissions for timeEnd before it resolves
-
         form.validate()
             .then( function( valid ) {
                 if ( valid ) {
-                    return _complete();
+                    return _complete()
+                        .then( function( again ) {
+                            if ( again ) {
+                                return _complete( again );
+                            }
+                        } );
                 } else {
                     gui.alert( t( 'fieldsubmission.alert.validationerror.msg' ) );
                 }
