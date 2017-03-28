@@ -87,6 +87,7 @@ app.use( function( req, res, next ) {
     res.locals.logo = req.app.get( 'logo' );
     res.locals.defaultTheme = req.app.get( 'default theme' ).replace( 'theme-', '' ) || 'kobo';
     res.locals.title = req.app.get( 'app name' );
+    res.locals.power = req.app.get( 'powered by' );
     res.locals.dir = function( lng ) {
         return i18next.dir( lng );
     };
