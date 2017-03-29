@@ -150,7 +150,7 @@ function csvToArray( csv ) {
     var options = {
         skipEmptyLines: true
     };
-    var result = Papa.parse( csv, options );
+    var result = Papa.parse( csv.trim(), options );
     if ( result.errors.length ) {
         throw result.errors[ 0 ];
     }

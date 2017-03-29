@@ -57,6 +57,12 @@ describe( 'Client Utilities', function() {
             expect( xml ).to.equal( '<root><item><a>1</a><b>2</b><c>3</c></item><item><a>5</a><b>6</b><c>7</c></item></root>' );
         } );
 
+        it( 'does not get confused by a very small csv string with \r\n linebreaks including an empty line at end', function() {
+            var csv = ' a;b\r\n1;2\r\n5;6\r\n';
+            var xml = utils.csvToXml( csv );
+            expect( xml ).to.equal( '<root><item><a>1</a><b>2</b></item><item><a>5</a><b>6</b></item></root>' );
+        } );
+
         it( 'encodes XML entities', function() {
             var csv = ' a;b;c\n\na & b;2;3\n\n5;6;7\n';
             var xml = utils.csvToXml( csv );

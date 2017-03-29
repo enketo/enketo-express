@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- CSV conversion fails for some CSV files due to inability to detect delimiting character.
+
 [1.42.1] - 2017-03-22
 ---------------------
 ##### Changed
