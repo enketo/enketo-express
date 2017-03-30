@@ -218,7 +218,7 @@ function _submitRecord() {
     form.getView().$.trigger( 'beforesave' );
 
     beforeMsg = ( redirect ) ? t( 'alert.submission.redirectmsg' ) : '';
-    authLink = '<a href="/login" target="_blank">' + t( 'here' ) + '</a>';
+    authLink = '<a href="' + settings.loginUrl + '" target="_blank">' + t( 'here' ) + '</a>';
 
     gui.alert( beforeMsg +
         '<div class="loader-animation-small" style="margin: 40px auto 0 auto;"/>', t( 'alert.submission.msg' ), 'bare' );

@@ -60,7 +60,7 @@ function _updateMaxSizeSetting( maxSize ) {
 function _showErrorOrAuthenticate( error ) {
     $loader.addClass( 'fail' );
     if ( error.status === 401 ) {
-        window.location.href = '/login?return_url=' + encodeURIComponent( window.location.href );
+        window.location.href = settings.loginUrl + '?return_url=' + encodeURIComponent( window.location.href );
     } else {
         gui.alert( error.message, t( 'alert.loaderror.heading' ) );
     }

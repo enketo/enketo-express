@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Fixed
 - CSV conversion fails for some CSV files due to inability to detect delimiting character.
+- Client-side login fails if Enketo is running with basePath set
 
 [1.42.1] - 2017-03-22
 ---------------------

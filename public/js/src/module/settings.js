@@ -5,6 +5,7 @@ var config = require( 'enketo-config' );
 var queryParams = _getAllQueryParams();
 var settings = {};
 var DEFAULT_MAX_SIZE = 5 * 1024 * 1024;
+var DEFAULT_LOGIN_URL = '/login';
 var DEFAULT_THANKS_URL = '/thanks';
 var settingsMap = [ {
     q: 'return',
@@ -51,8 +52,11 @@ settingsMap.forEach( function( obj ) {
     }
 } );
 
+//add default login Url
+settings.loginUrl = config[ 'basePath' ] + DEFAULT_LOGIN_URL;
+
 // add default return Url
-settings.defaultReturnUrl = DEFAULT_THANKS_URL;
+settings.defaultReturnUrl = config[ 'basePath' ] + DEFAULT_THANKS_URL;
 
 // add defaults object
 settings.defaults = {};

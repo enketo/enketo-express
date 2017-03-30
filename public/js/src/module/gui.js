@@ -314,7 +314,7 @@ function confirmLogin( msg, serverURL ) {
             var search = '?return_url=' + encodeURIComponent( location.href );
             search += ( settings.touch ) ? '&touch=' + settings.touch : '';
             search += ( settings.debug ) ? '&debug=' + settings.debug : '';
-            location.href = location.protocol + '//' + location.host + '/login' + search;
+            location.href = location.protocol + '//' + location.host + settings.loginUrl + search;
         }
     } );
 }
