@@ -214,6 +214,9 @@ function _submitRecord() {
     var authLink;
     var level;
     var msg = '';
+    var include = {
+        irrelevant: false
+    };
 
     form.getView().$.trigger( 'beforesave' );
 
@@ -224,7 +227,7 @@ function _submitRecord() {
         '<div class="loader-animation-small" style="margin: 40px auto 0 auto;"/>', t( 'alert.submission.msg' ), 'bare' );
 
     record = {
-        'xml': form.getDataStr(),
+        'xml': form.getDataStr( include ),
         'files': fileManager.getCurrentFiles(),
         'instanceId': form.getInstanceID(),
         'deprecatedId': form.getDeprecatedID()
@@ -335,6 +338,11 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
     var record;
     var saveMethod;
     var draft = _getDraftStatus();
+    var include = ( draft ) ? {
+        irrelevant: true
+    } : {
+        irrelevant: false
+    };
 
     // triggering "beforesave" event to update possible "timeEnd" meta data in form
     form.getView().$.trigger( 'beforesave' );
@@ -358,7 +366,7 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
     // build the record object
     record = {
         'draft': draft,
-        'xml': form.getDataStr(),
+        'xml': form.getDataStr( include ),
         'name': recordName,
         'instanceId': form.getInstanceID(),
         'deprecateId': form.getDeprecatedID(),
