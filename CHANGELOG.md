@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Changed
 - Questions or groups that are irrelevant will no longer be included in submission. **WARNING**
+- Redirect upon submission only enabled for single submission views. Other views will ignore returnUrl parameter.
 
 [1.42.2] - 2017-03-30
 ---------------------

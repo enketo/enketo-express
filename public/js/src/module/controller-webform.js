@@ -208,8 +208,7 @@ function _loadRecord( instanceId, confirmed ) {
  */
 function _submitRecord() {
     var record;
-    // TODO: after a grace period (say end of 2016): var redirect = settings.type === 'single'
-    var redirect = !settings.offline && ( settings.returnUrl || settings.type === 'single' );
+    var redirect = settings.type === 'single';
     var beforeMsg;
     var authLink;
     var level;
@@ -250,7 +249,7 @@ function _submitRecord() {
             $( document ).trigger( 'submissionsuccess' );
 
             if ( redirect ) {
-                if ( settings.type === 'single' && !settings.multipleAllowed ) {
+                if ( !settings.multipleAllowed ) {
                     var now = new Date();
                     var age = 31536000;
                     var d = new Date();
