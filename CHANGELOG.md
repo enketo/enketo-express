@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.42.2] - 2017-03-30
+---------------------
+##### Fixed
+- CSV conversion fails for some CSV files due to inability to detect delimiting character.
+- Client-side login fails if Enketo is running with basePath set
+- In pages mode, if page (group) is relevant but only includes irrelevant questions, it is displayed as an empty page.
+- Inputupdate.enketo event fires even if value hasn't changed.
+
 [1.42.1] - 2017-03-22
 ---------------------
 ##### Changed

@@ -218,7 +218,7 @@ function _submitRecord() {
     form.getView().$.trigger( 'beforesave' );
 
     beforeMsg = ( redirect ) ? t( 'alert.submission.redirectmsg' ) : '';
-    authLink = '<a href="/login" target="_blank">' + t( 'here' ) + '</a>';
+    authLink = '<a href="' + settings.loginUrl + '" target="_blank">' + t( 'here' ) + '</a>';
 
     gui.alert( beforeMsg +
         '<div class="loader-animation-small" style="margin: 40px auto 0 auto;"/>', t( 'alert.submission.msg' ), 'bare' );
@@ -285,7 +285,11 @@ function _submitRecord() {
             console.error( 'submission failed', result );
             if ( result.status === 401 ) {
                 message = t( 'alert.submissionerror.authrequiredmsg', {
-                    here: authLink
+                    here: authLink,
+                    // switch off escaping just for this known safe value
+                    interpolation: {
+                        escapeValue: false
+                    }
                 } );
             } else {
                 message = result.message || gui.getErrorResponseMsg( result.status );
