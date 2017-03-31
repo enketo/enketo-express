@@ -167,7 +167,7 @@ Comment.prototype._setValueChangeHandler = function() {
     var that = this;
     var previousValue = this.options.helpers.input.getVal( $( this.$linkedQuestion.get( 0 ).querySelector( 'input, select, textarea' ) ) );
 
-    this.$linkedQuestion.on( 'valuechange.enketo', function( evt ) {
+    this.$linkedQuestion.on( 'valuechange.enketo inputupdate.enketo', function( evt ) {
         previousValue = ( Array.isArray( previousValue ) ) ? previousValue.join( ', ' ) : previousValue;
         var comment;
         var currentValue = that.options.helpers.input.getVal( $( evt.target ) );
