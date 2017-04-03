@@ -63,7 +63,7 @@
                     }
                 }
 
-                .previous-page, #finish-form, .next-page {
+                .previous-page, #close-form, .next-page {
                     margin-left: $marg;
                     margin-right: $marg;
                     max-width: calc(33% - (2 * #{$marg}));
@@ -86,10 +86,12 @@
                     }
                 }
 
-                #finish-form, #submit-form, #validate-form {
-                    display: block;
-                    visibility: hidden;
+                #close-form, #submit-form, #validate-form {
                     order: 2;
+                }
+
+                #finish-form {
+                    visibility: hidden;
                 }
 
                 .next-page {
@@ -102,7 +104,7 @@
                     }
                 }
 
-                #close-form {
+                #finish-form {
                     display: block;
                     margin: 0 30% 20px 30%;
                     order: 4;
