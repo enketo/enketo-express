@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Changed
+- Questions or groups that are irrelevant will no longer be included in submission. **WARNING**
+- Redirect upon submission only enabled for single submission views. Other views will ignore returnUrl parameter.
+- Hide required “*” when dynamic required expression evaluating to false at the time the input field is validated.
+
 [1.42.2] - 2017-03-30
 ---------------------
 ##### Fixed
@@ -105,7 +112,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [1.37.0] - 2017-01-25
 ---------------------
 ##### Removed:
-- npm 2.x support **Warning: check your npm version. It should be 3.x or 4.x**
+- npm 2.x support **WARNING: check your npm version. It should be 3.x or 4.x**
 
 ##### Fixed:
 - Client settings do not pick up query parameters with value `false`.

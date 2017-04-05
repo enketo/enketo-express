@@ -208,12 +208,14 @@ function _loadRecord( instanceId, confirmed ) {
  */
 function _submitRecord() {
     var record;
-    // TODO: after a grace period (say end of 2016): var redirect = settings.type === 'single'
-    var redirect = !settings.offline && ( settings.returnUrl || settings.type === 'single' );
+    var redirect = settings.type === 'single';
     var beforeMsg;
     var authLink;
     var level;
     var msg = '';
+    var include = {
+        irrelevant: false
+    };
 
     form.getView().$.trigger( 'beforesave' );
 
@@ -224,7 +226,7 @@ function _submitRecord() {
         '<div class="loader-animation-small" style="margin: 40px auto 0 auto;"/>', t( 'alert.submission.msg' ), 'bare' );
 
     record = {
-        'xml': form.getDataStr(),
+        'xml': form.getDataStr( include ),
         'files': fileManager.getCurrentFiles(),
         'instanceId': form.getInstanceID(),
         'deprecatedId': form.getDeprecatedID()
@@ -247,7 +249,7 @@ function _submitRecord() {
             $( document ).trigger( 'submissionsuccess' );
 
             if ( redirect ) {
-                if ( settings.type === 'single' && !settings.multipleAllowed ) {
+                if ( !settings.multipleAllowed ) {
                     var now = new Date();
                     var age = 31536000;
                     var d = new Date();
@@ -335,6 +337,11 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
     var record;
     var saveMethod;
     var draft = _getDraftStatus();
+    var include = ( draft ) ? {
+        irrelevant: true
+    } : {
+        irrelevant: false
+    };
 
     // triggering "beforesave" event to update possible "timeEnd" meta data in form
     form.getView().$.trigger( 'beforesave' );
@@ -358,7 +365,7 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
     // build the record object
     record = {
         'draft': draft,
-        'xml': form.getDataStr(),
+        'xml': form.getDataStr( include ),
         'name': recordName,
         'instanceId': form.getInstanceID(),
         'deprecateId': form.getDeprecatedID(),
