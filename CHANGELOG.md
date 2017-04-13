@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Questions or groups that are irrelevant will no longer be included in submission. **WARNING**
 - Redirect upon submission only enabled for single submission views. Other views will ignore returnUrl parameter.
 - Hide required “*” when dynamic required expression evaluating to false at the time the input field is validated.
+- Updated Slovak and Czech translations.
 
 [1.42.2] - 2017-03-30
 ---------------------
