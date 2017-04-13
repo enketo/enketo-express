@@ -126,7 +126,7 @@ function _setEmergencyHandlers() {
  * @param {[type]} survey [description]
  */
 function _addBranding( survey ) {
-    var $brandImg = $( '.form-header .branding img' );
+    var $brandImg = $( '.form-header__branding img' );
     var attribute = ( settings.offline ) ? 'data-offline-src' : 'src';
 
     if ( survey.branding && survey.branding.source && $brandImg.attr( 'src' ) !== survey.branding.source ) {

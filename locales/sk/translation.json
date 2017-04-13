@@ -8,13 +8,7 @@
                 "msg": "Pre pridanie tohto formulára na Domovskú Obrazovku, kliknite na ikonu možnosti prehliadača __image1__ a zvolte: 'Pridať na Domovskú Obrazovku'."
             },
             "androidfirefox": {
-                "msg": [
-                    "Pre pridanie tohto formulára na Domovskú Obrazovku:",
-                    "1. Pre pridanie tejto stránky do listu záložiek vo Vašom Firefox prehliadači, kliknite na ikonu nastavenia __image1__ a potom na ikonu hviezdy __image2__.",
-                    "2. Otvorte váš list záložiek otvorením novej stránky a kliknutím na tab Záložky.",
-                    "3. Kliknite-a-podržte na formulári až pokým sa nezobrazí vyskakovacie menu.",
-                    "4. Vyberte 'Pridať na Domovskú Obrazovku'."
-                ]
+                "msg": "Pre pridanie tohto formulára na Domovskú Obrazovku, podržte dlho adresnú riadku a zvolte: 'Pridať na Domovskú Obrazovku'."
             },
             "heading": "Pridať na Domovskú Obrazovku",
             "iossafari": {

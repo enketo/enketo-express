@@ -218,8 +218,9 @@ function _respond( res, survey ) {
 }
 
 function _getCombinedHash( survey ) {
+    var FORCE_UPDATE = 1;
     var brandingHash = ( survey.account.branding && survey.account.branding.source ) ? utils.md5( survey.account.branding.source ) : '';
-    return [ String( survey.formHash ), String( survey.mediaHash ), String( survey.xslHash ), String( survey.theme ), String( brandingHash ) ].join( '-' );
+    return [ String( survey.formHash ), String( survey.mediaHash ), String( survey.xslHash ), String( survey.theme ), String( brandingHash ), String( FORCE_UPDATE ) ].join( '-' );
 }
 
 function _setCookieAndCredentials( survey, req ) {
