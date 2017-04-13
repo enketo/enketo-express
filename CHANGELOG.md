@@ -2,13 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
----------------------
+1.43.0] - 2017-04-13
+--------------------
 ##### Changed
 - Questions or groups that are irrelevant will no longer be included in submission. **WARNING**
 - Redirect upon submission only enabled for single submission views. Other views will ignore returnUrl parameter.
 - Hide required “*” when dynamic required expression evaluating to false at the time the input field is validated.
 - Updated Slovak and Czech translations.
+- First repeat in a series has become removable when repeat-count variable is zero.
 
 [1.42.2] - 2017-03-30
 ---------------------
