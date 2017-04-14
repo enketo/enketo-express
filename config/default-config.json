@@ -65,6 +65,5 @@
     "disable save as draft": false,
     "repeat ordinals": false,
     "validate continuously": false,
-    "validate page": true,
-    "first repeat removable": false
+    "validate page": true
 }

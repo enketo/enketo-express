@@ -288,8 +288,7 @@ module.exports = {
         basePath: config[ 'base path' ],
         repeatOrdinals: config[ 'repeat ordinals' ],
         validateContinuously: config[ 'validate continuously' ],
-        validatePage: config[ 'validate page' ],
-        firstRepeatRemovable: config[ 'first repeat removable' ]
+        validatePage: config[ 'validate page' ]
     },
     getThemesSupported: getThemesSupported
 };
