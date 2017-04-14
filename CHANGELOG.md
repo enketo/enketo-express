@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.43.1] - 2017-04-14
+---------------------
+##### Fixed
+- Repeats no longer shown on separate page in pages mode when they have field-list appearance.
+- Loading values into first radiobutton or first checkbox fails to update UI.
+
 1.43.0] - 2017-04-13
 --------------------
 ##### Changed
