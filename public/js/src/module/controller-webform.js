@@ -131,7 +131,7 @@ function _resetForm( confirmed ) {
         }, formOptions );
         form.init();
         // formreset event will update the form media:
-        form.getView().$.trigger( 'formreset' );
+        form.view.$.trigger( 'formreset' );
         if ( records ) {
             records.setActive( null );
         }
@@ -177,7 +177,7 @@ function _loadRecord( instanceId, confirmed ) {
                 }, formOptions );
                 loadErrors = form.init();
                 // formreset event will update the form media:
-                form.getView().$.trigger( 'formreset' );
+                form.view.$.trigger( 'formreset' );
                 _setDraftStatus( true );
                 form.setRecordName( record.name );
                 records.setActive( record.instanceId );
@@ -217,7 +217,7 @@ function _submitRecord() {
         irrelevant: false
     };
 
-    form.getView().$.trigger( 'beforesave' );
+    form.view.$.trigger( 'beforesave' );
 
     beforeMsg = ( redirect ) ? t( 'alert.submission.redirectmsg' ) : '';
     authLink = '<a href="' + settings.loginUrl + '" target="_blank">' + t( 'here' ) + '</a>';
@@ -344,7 +344,7 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
     };
 
     // triggering "beforesave" event to update possible "timeEnd" meta data in form
-    form.getView().$.trigger( 'beforesave' );
+    form.view.$.trigger( 'beforesave' );
 
     // check recordName
     if ( !recordName ) {
