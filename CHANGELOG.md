@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.44.0] - 2017-04-20
+---------------------
+##### Added
+- Ability to customize pretty much everything in Enketo Core (not endorsing doing this though).
+
 [1.43.1] - 2017-04-14
 ---------------------
 ##### Fixed

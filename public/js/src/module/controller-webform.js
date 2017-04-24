@@ -43,7 +43,7 @@ function init( selector, data ) {
             form = new Form( formSelector, data, formOptions );
             loadErrors = form.init();
 
-            if ( form.getEncryptionKey() ) {
+            if ( form.encryptionKey ) {
                 loadErrors.unshift( '<strong>' + t( 'error.encryptionnotsupported' ) + '</strong>' );
             }
 
@@ -114,7 +114,7 @@ function _resetForm( confirmed ) {
     var message;
     var choices;
 
-    if ( !confirmed && form.getEditStatus() ) {
+    if ( !confirmed && form.editStatus ) {
         message = t( 'confirm.save.msg' );
         choices = {
             posAction: function() {
@@ -131,7 +131,7 @@ function _resetForm( confirmed ) {
         }, formOptions );
         form.init();
         // formreset event will update the form media:
-        form.getView().$.trigger( 'formreset' );
+        form.view.$.trigger( 'formreset' );
         if ( records ) {
             records.setActive( null );
         }
@@ -149,7 +149,7 @@ function _loadRecord( instanceId, confirmed ) {
     var choices;
     var loadErrors;
 
-    if ( !confirmed && form.getEditStatus() ) {
+    if ( !confirmed && form.editStatus ) {
         texts = {
             msg: t( 'confirm.discardcurrent.msg' ),
             heading: t( 'confirm.discardcurrent.heading' )
@@ -177,9 +177,9 @@ function _loadRecord( instanceId, confirmed ) {
                 }, formOptions );
                 loadErrors = form.init();
                 // formreset event will update the form media:
-                form.getView().$.trigger( 'formreset' );
+                form.view.$.trigger( 'formreset' );
                 _setDraftStatus( true );
-                form.setRecordName( record.name );
+                form.recordName = record.name;
                 records.setActive( record.instanceId );
 
                 if ( loadErrors.length > 0 ) {
@@ -217,7 +217,7 @@ function _submitRecord() {
         irrelevant: false
     };
 
-    form.getView().$.trigger( 'beforesave' );
+    form.view.$.trigger( 'beforesave' );
 
     beforeMsg = ( redirect ) ? t( 'alert.submission.redirectmsg' ) : '';
     authLink = '<a href="' + settings.loginUrl + '" target="_blank">' + t( 'here' ) + '</a>';
@@ -228,8 +228,8 @@ function _submitRecord() {
     record = {
         'xml': form.getDataStr( include ),
         'files': fileManager.getCurrentFiles(),
-        'instanceId': form.getInstanceID(),
-        'deprecatedId': form.getDeprecatedID()
+        'instanceId': form.instanceID,
+        'deprecatedId': form.deprecatedID
     };
 
     return connection.uploadRecord( record )
@@ -303,7 +303,7 @@ function _submitRecord() {
 function _getRecordName() {
     return records.getCounterValue( settings.enketoId )
         .then( function( count ) {
-            return form.getInstanceName() || form.getRecordName() || form.getSurveyName() + ' - ' + count;
+            return form.instanceName || form.recordName || form.surveyName + ' - ' + count;
         } );
 }
 
@@ -344,7 +344,7 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
     };
 
     // triggering "beforesave" event to update possible "timeEnd" meta data in form
-    form.getView().$.trigger( 'beforesave' );
+    form.view.$.trigger( 'beforesave' );
 
     // check recordName
     if ( !recordName ) {
@@ -367,8 +367,8 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
         'draft': draft,
         'xml': form.getDataStr( include ),
         'name': recordName,
-        'instanceId': form.getInstanceID(),
-        'deprecateId': form.getDeprecatedID(),
+        'instanceId': form.instanceID,
+        'deprecateId': form.deprecatedID,
         'enketoId': settings.enketoId,
         'files': fileManager.getCurrentFiles().map( function( file ) {
             return ( typeof file === 'string' ) ? {
@@ -381,7 +381,7 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
     };
 
     // determine the save method
-    saveMethod = form.getRecordName() ? 'update' : 'set';
+    saveMethod = form.recordName ? 'update' : 'set';
 
     // save the record
     return records[ saveMethod ]( record )
@@ -416,7 +416,7 @@ function _autoSaveRecord() {
     var record;
 
     // do not auto-save a record if the record was loaded from storage
-    if ( form.getRecordName() ) {
+    if ( form.recordName ) {
         return Promise.resolve();
     }
 
@@ -517,7 +517,7 @@ function _setEventHandlers() {
         var createDownloadLink = '<a class="vex-dialog-link" id="download-export-create" href="#">' +
             t( 'alert.export.alternativequestion' ) + '</a>';
 
-        records.exportToZip( form.getSurveyName() )
+        records.exportToZip( form.surveyName )
             .then( function( zipFile ) {
                 // Hack for stupid Safari and iOS browsers
                 $( document ).off( 'click.export' ).one( 'click.export', '#download-export-create', function( event ) {
