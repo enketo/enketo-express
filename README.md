@@ -88,9 +88,7 @@ The easiest way to start the app in development and debugging mode with liverelo
 
 ### Browser support
 
-Only the latest modern browser versions on Windows, OS X, Linux, Android and iOS are officially supported. Chrome or Firefox are the best browsers on all platforms except on iOS. On iOS there are no modern browsers due to Apple's restrictions on third party browsers, but Safari is the least bad option.
-
-Internet Explorer 11 is still supported has some styling degradations that are considered acceptable. This browser is not recommended.
+See [this faq](https://enketo.org/faq/#browsers).
 
 **Enketo endeavors to show a helpful (multi-lingual) error message on unsupported browsers when the form is loaded to avoid serious issues.**
 
@@ -104,7 +102,7 @@ The recommended way to customize themes is to either:
  * Create an issue (and fund or send a pull request) for changes to the existing themes, or
  * Create your own theme in your own enketo-express port and add your custom theme in its own folder [here](app/views/styles). No other changes are required. A succesful rebuild with `grunt`, and your theme will become active when the app starts. The advantage of using this method instead of editing the existing themes, is that you will not have merge conflicts when you update your port! Add a print-specific version of your theme and use the same filenaming convention as the built-in themes.
 
- See also [this further guidance](https://github.com/enketo/enketo-core#notes-for-css-developers)
+ See also [this further guidance](https://github.com/enketo/enketo-core#notes-for-css-developers).
 
 
 ### Authentication
@@ -122,6 +120,7 @@ To make use of external authentication set the following in config/config.json:
 * linked form and data server -> authentication -> managed by enketo -> `false`
 * linked form and data server -> authentication -> external login url that sets cookie -> e.g. `http://example.com/login?return={RETURNURL}`, where {RETURNURL} will be set by enketo.
 
+For more information see [this documentation page](https://enketo.org/develop/auth/).
 
 ### Security
 

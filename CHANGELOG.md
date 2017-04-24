@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Changed
+- Textareas (multiline widget) will autogrow now.
+
 [1.44.0] - 2017-04-20
 ---------------------
 ##### Added
