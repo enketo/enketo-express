@@ -28,6 +28,7 @@ var formOptions = {
 };
 
 require( './Form-model' );
+require( './Form' );
 
 function init( selector, data ) {
     var advice;
@@ -349,7 +350,7 @@ function _setEventHandlers( selector ) {
                 file = fileManager.getCurrentFile( updated.file );
             }
             // Only now will we check for the deprecatedID value, which at this point should be (?) 
-            // populated at the time the instanceID validated.enketo event is processed and added to the fieldSubmission queue.
+            // populated at the time the instanceID dataupdate event is processed and added to the fieldSubmission queue.
             fieldSubmissionQueue.addFieldSubmission( updated.fullPath, updated.xmlFragment, instanceId, form.deprecatedID, file );
             fieldSubmissionQueue.submitAll();
 

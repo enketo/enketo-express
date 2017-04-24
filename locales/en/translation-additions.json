@@ -10,7 +10,8 @@
             "containsdatahidden": "This field contains data but is currently hidden from view",
             "autoclosed": "Query closed by system because this item was hidden",
             "valuechange": "Value changed from __previous__ to __new__",
-            "autoconstraint": "Automatic query for: __constraintMsg__"
+            "autoconstraint": "Automatic query for: __constraintMsg__",
+            "closedmodified": "Data changed after query was closed"
         }
     },
     "fieldsubmission": {

@@ -42,6 +42,7 @@ Comment.prototype._init = function() {
         this._setDisabledHandler();
         this._setValueChangeHandler();
         this._setCloseHandler();
+        this._setConstraintEvaluationHandler();
     }
 };
 
@@ -63,7 +64,7 @@ Comment.prototype._getLinkedQuestion = function( element ) {
 Comment.prototype._setCommentButtonState = function( value, error, state ) {
     this.$commentButton
         .toggleClass( 'new', state === 'new' )
-        .toggleClass( 'closed', state === 'closed' )
+        .toggleClass( 'closed', state === 'closed' || state === 'closed-modified' )
         .toggleClass( 'updated', state === 'updated' )
         .toggleClass( 'invalid', !!error );
 };
@@ -160,19 +161,19 @@ Comment.prototype._setDisabledHandler = function() {
 };
 
 /**
- * Listens to a value change of the linked question and generates an audit log if
- * the value is valid.
+ * Listens to a value change of the linked question and generates an audit log (and optionally a query).
  */
 Comment.prototype._setValueChangeHandler = function() {
     var that = this;
     var previousValue = this.options.helpers.input.getVal( $( this.$linkedQuestion.get( 0 ).querySelector( 'input, select, textarea' ) ) );
 
     this.$linkedQuestion.on( 'valuechange.enketo inputupdate.enketo', function( evt ) {
-        previousValue = ( Array.isArray( previousValue ) ) ? previousValue.join( ', ' ) : previousValue;
         var comment;
         var currentValue = that.options.helpers.input.getVal( $( evt.target ) );
-        currentValue = ( Array.isArray( currentValue ) ) ? currentValue.join( ', ' ) : currentValue;
+        var currentStatus = that._getCurrentStatus( that.notes );
 
+        previousValue = ( Array.isArray( previousValue ) ) ? previousValue.join( ', ' ) : previousValue;
+        currentValue = ( Array.isArray( currentValue ) ) ? currentValue.join( ', ' ) : currentValue;
         comment = t( 'widget.dn.valuechange', {
             'new': '"' + currentValue + '"',
             'previous': '"' + previousValue + '"'
@@ -180,6 +181,31 @@ Comment.prototype._setValueChangeHandler = function() {
 
         that._addAudit( comment, '', false );
         previousValue = currentValue;
+
+        if ( currentStatus === 'closed' ) {
+            comment = t( 'widget.dn.closedmodified' );
+            that._addQuery( comment, 'closed-modified', '', false );
+        }
+    } );
+};
+
+/**
+ * Listen for a custom constraintevaluated.oc event in order to create a query if the status is closed.
+ * 
+ * This listener is meant for the following situation:
+ * 1. a form is loaded with a query for question A with status 'closed' and a constraint that has a dependency on question B
+ * 2. the value of question B is changed, triggering a re-evaluation of the constraint of question A
+ * 3. regardless of the constraint evaluation result, this should add an autoquery to A and change the status to closed-modified
+ */
+Comment.prototype._setConstraintEvaluationHandler = function() {
+    var that = this;
+    this.$linkedQuestion.on( 'constraintevaluated.oc', function() {
+        var currentStatus = that._getCurrentStatus( that.notes );
+        var comment;
+        if ( currentStatus === 'closed' ) {
+            comment = t( 'widget.dn.closedmodified' );
+            that._addQuery( comment, 'closed-modified', '', false );
+        }
     } );
 };
 
@@ -215,7 +241,7 @@ Comment.prototype._showCommentModal = function( linkedQuestionErrorMsg ) {
     var $flag = this.$linkedQuestion.find( '.btn-dn' ).clone( false );
     var status = this._getCurrentStatus( this.notes );
 
-    if ( status === 'new' || status === 'updated' ) {
+    if ( status === 'new' || status === 'updated' || status === 'closed-modified' ) {
         $queryButtons.append( $updateQueryButton ).append( $closeQueryButton );
     } else if ( status === 'closed' ) {
         $queryButtons.append( $updateQueryButton );
