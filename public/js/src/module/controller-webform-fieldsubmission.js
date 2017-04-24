@@ -48,7 +48,7 @@ function init( selector, data ) {
 
             loadErrors = form.init();
 
-            if ( form.getEncryptionKey() ) {
+            if ( form.encryptionKey ) {
                 loadErrors.unshift( '<strong>' + t( 'error.encryptionnotsupported' ) + '</strong>' );
             }
 
@@ -82,7 +82,7 @@ function _resetForm( confirmed ) {
     var message;
     var choices;
 
-    if ( !confirmed && form.getEditStatus() ) {
+    if ( !confirmed && form.editStatus ) {
         message = t( 'confirm.save.msg' );
         choices = {
             posAction: function() {
@@ -100,7 +100,7 @@ function _resetForm( confirmed ) {
         }, formOptions );
         reasonForChange = '';
         form.init();
-        form.getView().$
+        form.view.$
             .trigger( 'formreset' );
     }
 }
@@ -115,7 +115,7 @@ function _close( bypassAutoQuery ) {
     var tAlertCloseMsg = t( 'fieldsubmission.alert.close.msg1' );
     var tAlertCloseHeading = t( 'fieldsubmission.alert.close.heading1' );
     var authLink = '<a href="/login" target="_blank">' + t( 'here' ) + '</a>';
-    var $violated = form.getView().$.find( '.invalid-constraint' );
+    var $violated = form.view.$.find( '.invalid-constraint' );
 
     // First check if any constraints have been violated and prompt option to generate automatic queries
     if ( !bypassAutoQuery && $violated.length ) {
@@ -218,7 +218,7 @@ function _complete( bypassConfirmation ) {
 
 
 
-    form.getView().$.trigger( 'beforesave' );
+    form.view.$.trigger( 'beforesave' );
 
     beforeMsg = t( 'alert.submission.redirectmsg' );
     authLink = '<a href="/login" target="_blank">' + t( 'here' ) + '</a>';
@@ -231,8 +231,8 @@ function _complete( bypassConfirmation ) {
             var queueLength = Object.keys( fieldSubmissionQueue.get() ).length;
 
             if ( queueLength === 0 ) {
-                instanceId = form.getInstanceID();
-                deprecatedId = form.getDeprecatedID();
+                instanceId = form.instanceID;
+                deprecatedId = form.deprecatedID;
                 return fieldSubmissionQueue.complete( instanceId, deprecatedId );
             } else {
                 throw new Error( t( 'fieldsubmission.alert.complete.msg' ) );
@@ -291,7 +291,7 @@ function _showReasonForChangeDialog( postAction ) {
     var choices = {
         posAction: function( data ) {
             reasonForChange = data.reason;
-            fieldSubmissionQueue.addReasonForChange( reasonForChange, form.getInstanceID(), form.getDeprecatedID() );
+            fieldSubmissionQueue.addReasonForChange( reasonForChange, form.instanceID, form.deprecatedID );
             fieldSubmissionQueue.submitAll();
             if ( typeof postAction === 'function' ) {
                 postAction.call();
@@ -315,7 +315,7 @@ function _setEventHandlers( selector ) {
         } )
         // Repeat removal
         .on( 'removed.enketo', function( event, updated ) {
-            var instanceId = form.getInstanceID();
+            var instanceId = form.instanceID;
             if ( !updated.xmlFragment ) {
                 console.error( 'Could not submit repeat removal fieldsubmission. XML fragment missing.' );
                 return;
@@ -324,12 +324,12 @@ function _setEventHandlers( selector ) {
                 console.error( 'Could not submit repeat removal fieldsubmission. InstanceID missing' );
             }
 
-            fieldSubmissionQueue.addRepeatRemoval( updated.xmlFragment, instanceId, form.getDeprecatedID() );
+            fieldSubmissionQueue.addRepeatRemoval( updated.xmlFragment, instanceId, form.deprecatedID );
             fieldSubmissionQueue.submitAll();
         } )
         // Field is changed
         .on( 'dataupdate.enketo', selector, function( event, updated ) {
-            var instanceId = form.getInstanceID();
+            var instanceId = form.instanceID;
             var file;
             var update;
 
@@ -350,7 +350,7 @@ function _setEventHandlers( selector ) {
             }
             // Only now will we check for the deprecatedID value, which at this point should be (?) 
             // populated at the time the instanceID validated.enketo event is processed and added to the fieldSubmission queue.
-            fieldSubmissionQueue.addFieldSubmission( updated.fullPath, updated.xmlFragment, instanceId, form.getDeprecatedID(), file );
+            fieldSubmissionQueue.addFieldSubmission( updated.fullPath, updated.xmlFragment, instanceId, form.deprecatedID, file );
             fieldSubmissionQueue.submitAll();
 
         } );
@@ -407,7 +407,7 @@ function _setEventHandlers( selector ) {
 
     window.onbeforeunload = function() {
         if ( !ignoreBeforeUnload ) {
-            _autoAddQueries( form.getView().$.find( '.invalid-constraint' ) );
+            _autoAddQueries( form.view.$.find( '.invalid-constraint' ) );
             if ( Object.keys( fieldSubmissionQueue.get() ).length > 0 ) {
                 return 'Any unsaved data will be lost';
             }
