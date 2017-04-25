@@ -21,6 +21,9 @@ var formOptions = {
     clearIrrelevantImmediately: true
 };
 
+require( './Form-model' );
+require( './Form' );
+
 function init( selector, data ) {
     var advice;
     var loadErrors = [];
