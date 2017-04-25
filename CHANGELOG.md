@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Added
+- Swedish translations.
+
 ##### Changed
 - Textareas (multiline widget) will autogrow now.
 
