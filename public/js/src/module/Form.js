@@ -1,4 +1,4 @@
-// Extend the Enketo Core Form Model, and expose it for local testing.
+// Extend the Enketo Core Form class, and expose it for local testing.
 
 'use strict';
 
