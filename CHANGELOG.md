@@ -6,9 +6,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Added
 - Swedish translations.
+- Ends-with() and abs() XPath support.
 
 ##### Changed
 - Textareas (multiline widget) will autogrow now.
+
+##### Fixed
+- XPath int() conversion incorrect for negative values.
+- A repeat with a relevant and a repeat-count of 0, throws exception.
 
 [1.44.0] - 2017-04-20
 ---------------------
