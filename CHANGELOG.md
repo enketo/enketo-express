@@ -4,12 +4,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Removed
+- "validated.enketo" event.
+- Subtle "required" text on focus.
+
 ##### Added
 - Swedish translations.
 - Ends-with() and abs() XPath support.
 
 ##### Changed
 - Textareas (multiline widget) will autogrow now.
+- If validatePage is set to `false`, block page navigation for some milliseconds if required to ensure that user sees new error message.
 
 ##### Fixed
 - XPath int() conversion incorrect for negative values.
