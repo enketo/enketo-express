@@ -9,6 +9,7 @@ var widgets = [
     require( '../../../../node_modules/enketo-core/src/widget/select-mobile/selectpicker' ),
     require( '../../../../node_modules/enketo-core/src/widget/select-autocomplete/autocomplete' ),
     require( '../../../../node_modules/enketo-core/src/widget/geo/geopicker' ),
+    require( '../../../../node_modules/enketo-core/src/widget/textarea/textarea' ),
     require( '../../../../node_modules/enketo-core/src/widget/table/tablewidget' ),
     require( '../../../../node_modules/enketo-core/src/widget/radio/radiopicker' ),
     require( '../../../../node_modules/enketo-core/src/widget/date/datepicker-extended' ),

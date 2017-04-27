@@ -1,0 +1,339 @@
+{
+    "advanced": {
+        "flushdb": "Rensa lagring"
+    },
+    "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "För att lägga till detta formulär på din startsidan, klicka på webbläsarens inställningsikon  __image1__ och välj: 'Lägg till på startskärmen'."
+            },
+            "androidfirefox": {
+                "msg": "För att lägga till detta formulär på startskärmen, långklicka i adressfältet och välj 'Lägg till på hemskärmen'."
+            },
+            "heading": "Lägg till på startsidan",
+            "iossafari": {
+                "msg": "För att lägga till detta formulär på startsidan klickar du på dela-ikonen __image1__ i det övre högra hörnet i webbläsaren och väljer: '+ Lägg till på hemskärmen'."
+            }
+        },
+        "appupdated": {
+            "heading": "Appen uppdaterades!",
+            "msg": "En ny version av detta program har laddats ner. Uppdatera sidan för att ladda in den uppdaterade versionen."
+        },
+        "default": {
+            "button": "Stäng",
+            "heading": "Varning"
+        },
+        "export": {
+            "alternativequestion": "alternativ nedladdning - online",
+            "error": {
+                "filecreatedmsg": "En ofullständig exportfil skapades ändå.",
+                "heading": "Fel vid export",
+                "linknotcreated": "Det gick inte att skapa en exportlänk för ej inskickade poster. Är du online?",
+                "msg": "Fel inträffade vid skapande av postexportfilen för ej inskickade poster. Fel: __errors__"
+            },
+            "success": {
+                "heading": "Fel vid export",
+                "msg": "Exportfil skapades för ej inskickade poster som hör till detta formulär."
+            }
+        },
+        "formupdated": {
+            "heading": "Formuläret har uppdaterats!",
+            "msg": "En ny version av detta formulär har laddats ner. Uppdatera denna sida för att ladda in den uppdaterade versionen."
+        },
+        "loaderror": {
+            "editadvice": "Du rekommenderas att inte redigera denna uppgift förrän detta har löst sig.",
+            "entryadvice": "Det rekommenderas att inte använda detta formulär för inmatning av data förrän detta har lösts.",
+            "heading": "Fel vid inläsning",
+            "msg1": "Ett fel uppstod vid inläsning av detta formulär.",
+            "msg2": "Vänligen kontakta __emailLink__ med länken till denna sida och felmeddelandet nedan:",
+            "heading_plural": "Fel vid inläsning",
+            "msg1_plural": "Fel inträffade under inladdning av formuläret.",
+            "msg2_plural": "Vänligen kontakta __emailLink__ med länken till denna sida och felmeddelanden nedan:"
+        },
+        "logout": {
+            "heading": "Utloggad",
+            "msg": "Du har blivit utloggad."
+        },
+        "offlinesupported": {
+            "heading": "Formuläret fungerar offline!",
+            "msg": [
+                "Detta formulär kan nu laddas in och användas utan en internetanslutning på den här enheten. Ange ett bokmärke för enkel åtkomst offline.",
+                "Poster lagras automatiskt och köas i din webbläsare tills en internetanslutning är tillgänglig. När appen är online kommer posterna automatiskt att skickas in - en efter en.",
+                "Först efter det att posten har skickats in kommer den att tas bort från kön. Du kan säkert stänga din webbläsare och enheter med objekt i kön. Dessa kommer att finnas kvar nästa gång du laddar in formuläret."
+            ]
+        },
+        "offlineunsupported": {
+            "heading": "Programmet kan inte starta i offline-läge",
+            "msg": "Offline programstart stöds inte av din webbläsare. Du kan använda undersökningen utan denna funktion eller se alternativ för att lösa detta.",
+            "negButton": "Använd det",
+            "posButton": "Visa alternativ"
+        },
+        "queuesubmissionsuccess": {
+            "msg": "__recordNames__ har skickats in",
+            "msg_plural": "__recordNames__ har skickats in"
+        },
+        "recordloadsuccess": {
+            "msg": "__recordName__ har laddats in"
+        },
+        "recordnotfound": {
+            "msg": "Posten kunde inte hämtas eller innehöll inga uppgifter."
+        },
+        "recordsavesuccess": {
+            "draftmsg": "Posten sparas som utkast.",
+            "finalmsg": "Posten köad för inlämning."
+        },
+        "submission": {
+            "msg": "Skickar...",
+            "redirectmsg": "Du kommer automatiskt att omdirigeras efter inlämningen."
+        },
+        "submissionerror": {
+            "authrequiredmsg": "Autentisering krävs. Vänligen autentisera __here__ i en annan webbläsarflik och försök igen.",
+            "fnfmsg": [
+                "Följande mediafiler kunde inte hämtas: __failedFiles__. Inskickning gjordes utan dessa filer, vilket lyckades.",
+                "Vänligen kontakta __supportEmail__ att rapportera ett fel och om möjligt förklara hur problemet kan reproduceras."
+            ],
+            "heading": "Inskickning misslyckades"
+        },
+        "submissionsuccess": {
+            "heading": "Inlämning lyckades",
+            "msg": "Dina uppgifter skickades in!",
+            "redirectmsg": "Du kommer nu att omdirigeras."
+        },
+        "thanks": {
+            "heading": "Tack för ditt deltagande!",
+            "msg": "Du kan stänga detta fönster nu.",
+            "msgTaken": "Du har redan avslutat den här undersökningen."
+        },
+        "validationerror": {
+            "msg": "Formuläret innehåller fel. Se dem rödmarkerade fälten."
+        },
+        "validationsuccess": {
+            "heading": "OK",
+            "msg": "Formuläret är giltigt!"
+        },
+        "xpatherror": {
+            "heading": "Formulärfel",
+            "msg": "Ett fel inträffade vid utvärdering av formel. Vänligen kontakta __emailLink__ med det här felet:"
+        }
+    },
+    "confirm": {
+        "autosaveload": {
+            "heading": "Osparade uppgifter finns",
+            "msg": "Enketo har hittat en osparad post. Vill du läsa in denna post eller ta bort den?",
+            "negButton": "Släng",
+            "posButton": "Ladda in post"
+        },
+        "default": {
+            "heading": "Är du säker?",
+            "msg": "Bekräfta åtgärden",
+            "negButton": "Avbryt",
+            "posButton": "Bekräfta"
+        },
+        "deleteall": {
+            "heading": "PANIK!",
+            "msg": [
+                "Detta tar bort alla dina köade data och alla formulär från webbläsarens minne. Data kommer att att förloras permanent. Använd detta endast som en sista utväg om webbläsaren minne verkar vara korrupt.",
+                "Stäng övriga Enketo-flikar i webbläsaren först.",
+                "Denna sida kommer att laddas om. Om ett fel uppstår behöver du kanske upprepa denna åtgärd.",
+                "Är du säker på att du vill göra detta?"
+            ],
+            "posButton": "Radera allt"
+        },
+        "discardcurrent": {
+            "heading": "Osparade uppgifter",
+            "msg": "Detta formulär innehåller ändringar som inte sparats. Vill du läsa in en post utan att spara ändringarna i det formulär som du arbetade med?",
+            "posButton": "Fortsätt utan att spara"
+        },
+        "login": {
+            "heading": "Inloggning krävs",
+            "msg": [
+                "För att skicka in dina köade data måste du logga in. Om du vill göra detta nu kommer du att omdirigeras och förlorar information som inte har sparats.",
+                "Vill du logga in nu eller senare?"
+            ],
+            "negButton": "Senare",
+            "posButton": "Logga in nu"
+        },
+        "print": {
+            "a4": "A4",
+            "heading": "Välj utskriftsinställningar",
+            "landscape": "Liggande",
+            "letter": "Letter",
+            "msg": "För att förbereda en optimerad utskrift, välj utskriftsinställningar nedan",
+            "orientation": "Pappersorientering",
+            "portrait": "Stående",
+            "posButton": "Förbered",
+            "psize": "Pappersstorlek",
+            "reminder": "Kom ihåg att ställa in dessa utskriftsinställningar i webbläsarens utskriftsmenyn efteråt!"
+        },
+        "save": {
+            "existingerror": "Detta postnamn eller ID finns redan.",
+            "hint": "Med detta namn kan du enkelt hitta ditt postutkast för att avsluta det senare.",
+            "msg": "Det finns ändringar som inte sparats. Vill du fortsätta utan att spara dem?",
+            "name": "Postnamn",
+            "posButton": "Spara & stäng",
+            "renamemsg": "Är du säker på att du vill byta namn __currentName__ till __newName__?",
+            "unkownerror": "Ett okänt fel uppstod vid sparande av data."
+        }
+    },
+    "constraint": {
+        "invalid": "Ej tillåtet värde",
+        "required": "Detta fält är obligatoriskt"
+    },
+    "contact": {
+        "admin": "Kontakta enkätens administratör.",
+        "support": "Vänligen kontakta__supportEmail__"
+    },
+    "enketo": {
+        "power": "Drivs med"
+    },
+    "error": {
+        "code": "Felkod:__code__",
+        "dataloadfailed": "Misslyckades med att ladda in data från__url__",
+        "econnrefused": "Det gick inte att ansluta till servern",
+        "encryptionnotsupported": "Detta formulär kräver lokal kryptering av poster. Tyvärr stöds detta inte ännu. Vi rekommenderar att du använder ODK Collect för datainsamling med detta formulär.",
+        "instancenotfound": "Post finns inte. Den kan ha blivit ogiltig.",
+        "invalidediturl": "Inte en giltig URL för redigering",
+        "loadfailed": "Det gick inte att läsa in __resource__",
+        "notfoundinformlist": "Formulär med ID __formId__ hittades inte i /formList",
+        "pagenotfound": "Sidan hittades inte",
+        "surveyidnotactive": "Undersökning med detta ID är inte längre aktiv",
+        "surveyidnotfound": "Undersökning med detta ID hittades inte",
+        "unknown": "Ett okänt fel inträffade"
+    },
+    "feedback": {
+        "header": "Information"
+    },
+    "form": {
+        "chooseLanguage": "Välj språk",
+        "logout": "logga ut",
+        "pages": {
+            "back": "Tillbaka",
+            "end": "Gå till sista",
+            "next": "Nästa",
+            "return": "Åter till start"
+        },
+        "required": "obligatoriskt"
+    },
+    "formfooter": {
+        "complete": {
+            "btn": "Färdig"
+        },
+        "savedraft": {
+            "btn": "Spara utkast",
+            "label": "Spara som utkast"
+        },
+        "submit": {
+            "btn": "Skicka"
+        },
+        "validate": {
+            "btn": "Validera"
+        }
+    },
+    "geopicker": {
+        "accuracy": "noggrannhet (m)",
+        "altitude": "altitud (m)",
+        "closepolygon": "avsluta polygon",
+        "kmlcoords": "KML koordinater",
+        "kmlpaste": "klistra in KML koordinater här",
+        "latitude": "latitud (x.y °)",
+        "longitude": "longitud (x.y °)",
+        "points": "punkter",
+        "searchPlaceholder": "sök efter plats eller adress"
+    },
+    "here": "här",
+    "home": {
+        "msg": "__appTitle__ är igång! Vänligen få åtkomst till Enketo-formulär från __serverName__ installationen."
+    },
+    "langs": {
+        "ar": "Arabiska",
+        "cs": "Tjeckiska",
+        "de": "Tyska",
+        "el": "Grekiska",
+        "en": "Engelska",
+        "es": "Spanska",
+        "fa": "Persiska",
+        "fi": "Finska",
+        "fr": "Franska",
+        "he": "Hebreiska",
+        "hi": "Hindi",
+        "it": "Italienska",
+        "km": "Khmer",
+        "lo": "Laotiska",
+        "nl": "Nederländska",
+        "no": "Norska",
+        "ro": "Rumänska",
+        "sk": "Slovakiska",
+        "supported": "Språk som stöds:",
+        "sw": "Swahili",
+        "th": "Thailändska",
+        "vi": "Vietnamesiska",
+        "zh": "Kinesiska"
+    },
+    "page": {
+        "modernbrowsers": {
+            "heading": "Moderna webbläsare",
+            "ie": {
+                "heading": "Varför finns det ingen kärlek till dem ondskefulla daterade versionerna av Internet Explorer?",
+                "msg": "Vi förstår att vissa människor, särskilt de som arbetar för stora byråkratier, inte har tillgång till dem senaste och bästa webbläsarna. Eftersom vi vet hur bra webben skulle kunna vara med de rätt verktygen, har vi stor empati för användare i denna otursamma situation. Normalt sett skulle vi försöka erbjuda lösningar för att stödja vissa populära och föråldrade webbläsare. Dock är anledningen till att  Enketo finns tillgängligheten av spjutspetsteknik. Tyvärr är därför användare av äldre webbläsare utan tur i detta avseende."
+            },
+            "msg1": "Aj då! Du har förmodligen skickas hit eftersom webbläsaren är föråldrad eller kanske har viktiga funktioner avaktiveras genom att använda 'privat surfning'.",
+            "msg2": "Om du använder en gammal webbläsare, rekommenderar vi att du uppgraderar till den senaste versionen av en av följande utmärkta moderna webbläsare:"
+        },
+        "offline": {
+            "heading": "Åtkomst till den begärda sidan ej möjlig",
+            "msg1": "Denna sida är endast tillgänglig när webbläsaren har en Internet-anslutning och servern är tillgänglig (såvida sidan inte existerar)."
+        }
+    },
+    "prompt": {
+        "default": {
+            "heading": "Mata in värden"
+        },
+        "login": {
+            "heading": "Ange dina __server__ behörighetsuppgifter",
+            "password": "Lösenord",
+            "remember": "Kom ihåg mig på den här datorn",
+            "submit": "Skicka",
+            "username": "Användarnamn"
+        }
+    },
+    "record-list": {
+        "export": "Exportera",
+        "msg1": "Poster lagras i din webbläsare tills de har laddats upp (även om du stänger av datorn eller går offline).",
+        "msg2": "Köade poster, utom de som är markerade som utkast __icon__ , överförs automatiskt i bakgrunden var 5:e minut när webbsidan är öppen och en internetanslutning är tillgänglig.",
+        "msg2-nodraft": "Köade poster laddas upp automatiskt i bakgrunden var 5:e minut när webbsidan är öppen och en internetanslutning är tillgänglig.",
+        "msg3": "För att forcera en uppladdning mellan automatiska försök klickar du på 'Ladda upp'.",
+        "norecords": "inga poster är köade",
+        "title": "Kö",
+        "upload": "Ladda upp"
+    },
+    "selectpicker": {
+        "noneselected": "ingen vald",
+        "numberselected": "__number__vald"
+    },
+    "store": {
+        "error": {
+            "iosusesafari": "Din iOS webbläsare kan inte använda det här formuläret. För iOS rekommenderar vi att du använder Safari.",
+            "notavailable": "Webbläsaren kräver lagring men detta är inte tillgänglig, skadat eller inte skrivbart. Om du använder privat surfning, vänligen byta till vanligt läge, annars byt till en annan webbläsare. (Fel: __error__)",
+            "notsupported": "Din webbläsare kan inte använda det här formuläret. Vi rekommenderar att du använder en modern webbläsare."
+        }
+    },
+    "submission": {
+        "http0": "Misslyckades (offline?).",
+        "http2xx": "Oväntat svar vid inskickning av data.",
+        "http400": "Dataserver accepterar inte data.",
+        "http401": "Autentiseringsproblem med dataservern.",
+        "http403": "Ej tillåtet att publicera data till denna dataserver.",
+        "http404": "Inskickningstjänst på dataservern hittades inte.",
+        "http408": "Dataservern har pausats.",
+        "http413": "Datamängden är för stor.",
+        "http4xx": "Okänt problem med att skicka in på dataservern.",
+        "http500": "Dataservern för formuläret eller Enketo-servern är ur funktion. Försök igen senare eller kontakta __supportEmail__.",
+        "http504": "Det gick inte att etablera en anslutning till dataservern."
+    },
+    "version": "version:",
+    "widget": {
+        "comment": {
+            "update": "Uppdatera"
+        }
+    }
+}

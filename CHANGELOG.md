@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.45.0] - 2017-04-27
+---------------------
+##### Removed
+- "validated.enketo" event.
+- Subtle "required" text on focus.
+
+##### Added
+- Swedish translations.
+- Ends-with() and abs() XPath support.
+
+##### Changed
+- Textareas (multiline widget) will autogrow now.
+- If validatePage is set to `false`, block page navigation for some milliseconds if required to ensure that user sees new error message.
+- Always lock scrolling of ArcGIS geo widget until user clicks the map (previously only on touchscreens).
+
+##### Fixed
+- XPath int() conversion incorrect for negative values.
+- A repeat with a relevant and a repeat-count of 0, throws exception.
+- Selectpicker (non-touch) does not show checked status if radiobuttons/checkboxes themselves are clicked.
+
 [1.44.0] - 2017-04-20
 ---------------------
 ##### Added
