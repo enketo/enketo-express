@@ -83,6 +83,7 @@
 
                     &.disabled {
                         display: block;
+                        visibility: hidden;
                     }
                 }
 
@@ -98,9 +99,8 @@
                     order: 3;
 
                     &.disabled {
-                        @extend .btn-default;
-
                         display: block;
+                        visibility: hidden;
                     }
                 }
 
