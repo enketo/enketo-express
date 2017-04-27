@@ -38,9 +38,14 @@ function init( selector, data ) {
     formData = data;
 
     return new Promise( function( resolve, reject ) {
-            $formprogress = $( '.form-progress' );
+
+            if ( data.instanceAttachments ) {
+                fileManager.setInstanceAttachments( data.instanceAttachments );
+            }
+
             form = new Form( formSelector, data, formOptions );
             fieldSubmissionQueue = new FieldSubmissionQueue();
+
             // remove submit button before event handlers are set
             _removeCompleteButtonIfNeccessary();
 
@@ -53,9 +58,9 @@ function init( selector, data ) {
                 loadErrors.unshift( '<strong>' + t( 'error.encryptionnotsupported' ) + '</strong>' );
             }
 
+            $formprogress = $( '.form-progress' );
+
             _setReasonForChangeUi();
-
-
             rc.setLogoutLinkVisibility();
 
             if ( loadErrors.length > 0 ) {

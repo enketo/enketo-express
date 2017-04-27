@@ -33,6 +33,7 @@ translator.init( survey )
                 return connection.getExistingInstance( survey )
                     .then( function( response ) {
                         formParts.instance = response.instance;
+                        formParts.instanceAttachments = response.instanceAttachments;
                         // TODO: this will fail massively if instanceID is not populated (will use POST instead of PUT). Maybe do a check?
                         return formParts;
                     } );
@@ -79,7 +80,8 @@ function _init( formParts ) {
         controller.init( 'form.or:eq(0)', {
             modelStr: formParts.model,
             instanceStr: formParts.instance,
-            external: formParts.externalData
+            external: formParts.externalData,
+            instanceAttachments: formParts.instanceAttachments
         } ).then( function() {
             $form.add( $buttons ).removeClass( 'hide' );
             $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
