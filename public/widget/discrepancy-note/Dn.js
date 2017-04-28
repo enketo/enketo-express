@@ -184,7 +184,7 @@ Comment.prototype._setValueChangeHandler = function() {
 
         if ( currentStatus === 'closed' ) {
             comment = t( 'widget.dn.closedmodified' );
-            that._addQuery( comment, 'closed-modified', '', false );
+            that._addQuery( comment, 'closed-modified', '', false, SYSTEM_USER );
         }
     } );
 };
@@ -204,7 +204,7 @@ Comment.prototype._setConstraintEvaluationHandler = function() {
         var comment;
         if ( currentStatus === 'closed' ) {
             comment = t( 'widget.dn.closedmodified' );
-            that._addQuery( comment, 'closed-modified', '', false );
+            that._addQuery( comment, 'closed-modified', '', false, SYSTEM_USER );
         }
     } );
 };
