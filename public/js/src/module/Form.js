@@ -11,7 +11,7 @@ var constraintUpdate = function( updated ) {
 
     updated = updated || {};
     $nodes = this.getRelatedNodes( 'data-constraint', '', updated );
-    $nodes.trigger( 'constraintevaluated.oc' );
+    $nodes.trigger( 'constraintevaluated.oc', updated );
 };
 var originalInit = Form.prototype.init;
 

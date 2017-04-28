@@ -199,10 +199,15 @@ Comment.prototype._setValueChangeHandler = function() {
  */
 Comment.prototype._setConstraintEvaluationHandler = function() {
     var that = this;
-    this.$linkedQuestion.on( 'constraintevaluated.oc', function() {
-        var currentStatus = that._getCurrentStatus( that.notes );
+    this.$linkedQuestion.on( 'constraintevaluated.oc', function( event, updated ) {
         var comment;
-        if ( currentStatus === 'closed' ) {
+        var currentStatus = that._getCurrentStatus( that.notes );
+        /*
+         * If during a session a query is closed, and this triggers a contraintUpdate of the linked question,
+         * we do not want to generate an autoquery.
+         * TODO: is this check too imprecise for questions inside repeats?
+         */
+        if ( currentStatus === 'closed' && updated.fullPath !== that.element.getAttribute( 'name' ) ) {
             comment = t( 'widget.dn.closedmodified' );
             that._addQuery( comment, 'closed-modified', '', false, SYSTEM_USER );
         }
