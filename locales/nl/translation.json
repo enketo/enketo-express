@@ -5,20 +5,14 @@
     "alert": {
         "addtohomescreen": {
             "androidchrome": {
-                "msg": "Om dit formulier toe te voegen aan uw beginscherm, klikt u op het pictogram browserinstellingen __image1__ en selecteer: 'Zet in beginscherm'."
+                "msg": "Om dit formulier toe te voegen aan uw beginscherm, klikt u op het pictogram browserinstellingen __image1__ en selecteer: 'Toevoegen aan startscherm'."
             },
             "androidfirefox": {
-                "msg": [
-                    "Om dit formulier toe te voegen aan uw beginscherm:",
-                    "1. Voeg deze pagina toe aan uw Firefox bookmarks door te klikken op het pictogram voor instellingen __image1__ en vervolgens het ster pictogram __image2__.",
-                    "2. Open uw bookmarks door een nieuwe pagina te openen en te klikken op het tabblad Bladwijzers.",
-                    "3. Klik-en-houd uw survey tot een pop-up menu verschijnt.",
-                    "4. Selecteer 'Zet in beginscherm'."
-                ]
+                "msg": "Om dit formulier om uw startscherm toe te voegen, klik op de adresbalk voor een paar seconden en selecteer 'Toevoegen aan startscherm'."
             },
-            "heading": "Zet in beginscherm",
+            "heading": "Toevoegen aan startscherm",
             "iossafari": {
-                "msg": "Om dit formulier toe te voegen aan uw beginscherm, klikt u op het pictogram Delen __image1__ in de rechter bovenhoek van uw browser, en selecteer: '+ zet in beginscherm."
+                "msg": "Om dit formulier toe te voegen aan uw startscherm, klikt op het pictogram Delen __image1__ in de rechter bovenhoek van uw browser, en selecteer: '+ toevoegen aan startscherm."
             }
         },
         "appupdated": {
@@ -270,6 +264,7 @@
         "ro": "Roemeens",
         "sk": "Slowaaks",
         "supported": "Talen ondersteund:",
+        "sv": "Zweeds",
         "sw": "Swahili",
         "th": "Thai",
         "vi": "Vietnamees",

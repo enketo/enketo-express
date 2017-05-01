@@ -8,13 +8,7 @@
                 "msg": "Um eine Verknüpfung auf dem Startbildschirm zu erstellen bitte im Browser auf das Browser-Menü tippen icon __image1__ and dann \"Zum Startbildschirm hinzufügen\" auswählen."
             },
             "androidfirefox": {
-                "msg": [
-                    "Verknüpfung auf dem Startbildschirm erstellen:",
-                    "1. Firefox Lesezeichen erstellen: Zuerst das Browser-Menü öffnen icon __image1__ and dann das Stern-Symbol icon __image2__ antippen.",
-                    "2. Open your bookmarks by opening a new page and clicking the Bookmarks tab.",
-                    "3. Click-and-hold your form until a pop-up menu appears.",
-                    "4. Select 'Add to Home Screen'."
-                ]
+                "msg": "To add this form to your Homescreen, long-press the address bar and select 'Add to Home Screen'."
             },
             "heading": "Verknüpfung auf dem Startbildschirm erstellen",
             "iossafari": {
@@ -270,6 +264,7 @@
         "ro": "Rumänisch",
         "sk": "Slowakisch",
         "supported": "Unterstützte Sprachen:",
+        "sv": "Schwedisch",
         "sw": "Suaheli",
         "th": "Thailändisch",
         "vi": "Vietnamesisch",
