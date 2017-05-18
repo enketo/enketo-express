@@ -23,11 +23,6 @@ if [ -f "/etc/redis/redis.conf" ]; then
     cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/conf/redis-enketo-main.conf /etc/redis/
     cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/conf/redis-enketo-cache.conf /etc/redis/
     chown redis:redis /var/lib/redis/
-    # echo 'Copying enketo redis-server configs for **Upstart**...'
-    # NOTE: May require setting daemonize=yes in both /etc/redis/*.conf files!
-    # mv /etc/init/redis-server.conf /etc/init/redis-server.conf.disabled
-    # cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/init/redis-server-enketo-main-vagrant.conf /etc/init/
-    # cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/init/redis-server-enketo-cache.conf /etc/init/
     echo 'Copying enketo redis-server configs for **systemd**...'
     cp -f $ENKETO_EXPRESS_REPO_DIR/setup/redis/systemd/system/* /etc/systemd/system/
     if [ -f "/var/lib/redis/redis.rdb" ]; then
@@ -38,10 +33,6 @@ if [ -f "/etc/redis/redis.conf" ]; then
     chown redis:redis /var/lib/redis/enketo-main.rdb
     chmod 660 /var/lib/redis/enketo-main.rdb
 fi
-# echo 'starting first enketo redis instance (Upstart)...'
-# service redis-server-enketo-main-vagrant restart
-# echo 'starting second enketo redis instance (Upstart)...'
-# service redis-server-enketo-cache restart
 systemctl disable redis
 systemctl daemon-reload
 echo 'Starting first enketo redis instance (systemd)...'
