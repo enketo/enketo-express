@@ -99,15 +99,16 @@ if ( window.location.pathname.indexOf( '/preview' ) === 0 ) {
     settings.type = 'other';
 }
 
-// add enketoId
+// Provide easy way to change online-only prefix if we wanted to in the future
 settings.enketoIdPrefix = '::';
-settings.enketoId = _getEnketoId( '\/' + settings.enketoIdPrefix, window.location.pathname ) || _getEnketoId( '#', window.location.hash );
 
-// determine whether view is offline-capable
-// TODO: check for manifest attribute on html element instead?
-settings.offline = !( new RegExp( '\/' + settings.enketoIdPrefix ).test( window.location.pathname ) ) && !!window.location.hash;
+// Determine whether view is offline-capable
+settings.offline = !!document.querySelector( 'html' ).getAttribute( 'manifest' );
 
-// set multipleAllowed for single webform views
+// Extract Enketo ID
+settings.enketoId = ( settings.offline ) ? _getEnketoId( '#', window.location.hash ) : _getEnketoId( '\/' + settings.enketoIdPrefix, window.location.pathname );
+
+// Det multipleAllowed for single webform views
 if ( settings.type === 'single' && settings.enketoId.length !== 32 && settings.enketoId.length !== 64 ) {
     settings.multipleAllowed = true;
 }

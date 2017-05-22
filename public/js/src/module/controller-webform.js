@@ -18,7 +18,8 @@ var formSelector;
 var formData;
 var $formprogress;
 var formOptions = {
-    clearIrrelevantImmediately: false
+    clearIrrelevantImmediately: false,
+    goTo: settings.type === 'edit' || settings.type === 'preview'
 };
 
 function init( selector, data ) {

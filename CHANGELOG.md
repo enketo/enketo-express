@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Added
+- Ability to jump to a specific question upon load in previews and edit views.
+
 ##### Changed
 - Updated Swedish translations.
 

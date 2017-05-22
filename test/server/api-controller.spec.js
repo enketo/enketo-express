@@ -117,6 +117,7 @@ describe( 'api', function() {
         var ret = typeof test.ret !== 'undefined' ? test.ret : 'http://example.com';
         var instance = typeof test.instance !== 'undefined' ? test.instance : '<data></data>';
         var instanceId = typeof test.instanceId !== 'undefined' ? test.instanceId : 'someUUID:' + Math.random();
+        var goTo = typeof test.goTo !== 'undefined' ? test.goTo : '';
         var endpoint = test.endpoint;
         var offlineEnabled = !!test.offline;
         var dataSendMethod = ( test.method === 'get' ) ? 'query' : 'send';
@@ -135,6 +136,7 @@ describe( 'api', function() {
                         instance: instance,
                         instance_id: instanceId,
                         return_url: ret,
+                        go_to: goTo,
                         defaults: test.defaults,
                         parent_window_origin: test.parentWindowOrigin
                     } )
@@ -950,6 +952,46 @@ describe( 'api', function() {
                 theme: 'gorgeous',
                 method: 'post',
                 status: 200
+            },
+            // TESTING THE GO_TO PARAMETER
+            // go_to parameter is optional
+            {
+                endpoint: '/survey/preview',
+                method: 'post',
+                goTo: '//node',
+                status: 200,
+                res: {
+                    property: 'preview_url',
+                    expected: /.+#\/\/node$/
+                }
+            }, {
+                endpoint: '/survey/preview/iframe',
+                method: 'post',
+                goTo: '//node',
+                status: 200,
+                res: {
+                    property: 'preview_url',
+                    expected: /.+#\/\/node$/
+                }
+            }, {
+                endpoint: '/instance/iframe',
+                parentWindowOrigin: 'http://example.com/',
+                method: 'post',
+                goTo: '//node',
+                status: 201,
+                res: {
+                    property: 'edit_url',
+                    expected: /#\/\/node$/
+                }
+            }, {
+                endpoint: '/survey',
+                method: 'post',
+                goTo: '//node',
+                status: 200,
+                res: {
+                    property: 'url',
+                    expected: /::[A-z0-9]{4,16}$/
+                }
             },
             // TESTING /SURVEYS/LIST RESPONSES THAT DEVIATE FROM V1
             // GET /surveys/list
