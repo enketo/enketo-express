@@ -2,13 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.47.0] - 2017-05-25
 ---------------------
 ##### Added
 - Ability to jump to a specific question upon load in previews and edit views.
 
 ##### Changed
 - Updated Swedish translations.
+
+##### Fixed
+- Timepicker and Datetimepicker issues around empty and default values.
+- When loading a record with nested repeats the second+ series gets inserted out-of-order in the model.
+- When loading a record with nested repeats and additional nested groups, the nested repeats are not cloned in the view.
 
 [1.46.1] - 2017-05-18
 ---------------------
