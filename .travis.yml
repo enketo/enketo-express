@@ -4,7 +4,7 @@ node_js:
   - "4"
   - "6"
 dist: trusty
-before_install: if [[ `npm -v` < 3 ]]; then npm i -g npm; fi
+before_install: if [[ `npm -v` < 3 ]]; then npm i -g npm@4; fi
 before_script:
   - npm install -g grunt-cli
   - chmod 777 ./setup/redis/travis-redis.sh
