@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+[1.47.1] - 2017-06-09
+---------------------
+##### Changed
+- Add loadError if "go to" field cannot be found.
+- Localize %a and $b in format-date() to form locale at time of calculation.
+
+##### Fixed
+- Frozen UI if "go to" field is a comment field whose linked question is hidden.
+
 [1.47.0] - 2017-05-25
 ---------------------
 ##### Added
