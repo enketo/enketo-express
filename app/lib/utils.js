@@ -37,7 +37,7 @@ function getXformsManifestHash( manifest, type ) {
 }
 
 /**
- * cleans a Server URL so it becomes useful as a db key
+ * Cleans a Server URL so it becomes useful as a db key
  * It strips the protocol, removes a trailing slash, removes www, and converts to lowercase
  * @param  {string} url [description]
  * @return {string=}     [description]
@@ -55,8 +55,16 @@ function cleanUrl( url ) {
     return cleanUrl;
 }
 
+/**
+ * The name of this function is deceiving. It checks for a valid server URL and therefore doesn't approve of:
+ * - fragment identifiers
+ * - query strings
+ * 
+ * @param  {[type]}  url [description]
+ * @return {Boolean}     [description]
+ */
 function isValidUrl( url ) {
-    var validUrl = /^(https?:\/\/)(([\da-z\.\-]+)\.([a-z\.]{2,6})|(([0-9]{1,3}\.){3}[0-9]{1,3})|localhost)(:(102[4-9]|10[3-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-4][0-8]{4}|490[0-9]{2}|491[0-4][0-9]|4915[0-1]))?([\/\w \.\-]*)*\/?[\/\w \.\-\=\&\?]*$/;
+    var validUrl = /^(https?:\/\/)(([\da-z\.\-]+)\.([a-z\.]{2,6})|(([0-9]{1,3}\.){3}[0-9]{1,3})|localhost)(:(102[4-9]|10[3-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-4][0-8]{4}|490[0-9]{2}|491[0-4][0-9]|4915[0-1]))?([\/\w \.\-\(\)]*)*\/?[\/\w \.\-]*$/;
     return validUrl.test( url );
 }
 

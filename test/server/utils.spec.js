@@ -132,18 +132,19 @@ describe( 'Utilities', function() {
         } );
     } );
 
-    describe( 'helper to test validity of URLs', function() {
+    describe( 'helper to test validity of Server URLs', function() {
         [
             'http://example.org',
             'http://example.org:8000',
             'https://example.org',
             'https://example.org:8080',
-            'http://example.org/_-?',
             'http://www.example.org',
             'http://sub.example.org',
             'http://23.21.114.69/xlsform/tmp/tmp20lcND/or_other.xml',
             'http://localhost',
-            'https://localhost:8001'
+            'https://localhost:8001',
+            'http://www.opeclinica.com/OpenClinica/rest2/openrosa/study1(TEST)',
+            'http://www.opeclinica.com/OpenClinica/rest2/openrosa/study1(PROD)',
         ].forEach( function( validUrl ) {
             it( 'returns true when checking url: ' + validUrl, function() {
                 expect( utils.isValidUrl( validUrl ) ).to.equal( true );
@@ -157,6 +158,9 @@ describe( 'Utilities', function() {
             'www.example.org',
             'http://example.o',
             'http://example.o/ d',
+            'http://example.org/_-?',
+            'http://example.org/a?b=c',
+            'http://example.org/a#b',
         ].forEach( function( invalidUrl ) {
             it( 'returns false when checking url: ' + invalidUrl, function() {
                 expect( utils.isValidUrl( invalidUrl ) ).to.equal( false );
