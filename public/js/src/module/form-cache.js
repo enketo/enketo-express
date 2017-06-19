@@ -233,14 +233,15 @@ function _reflect( task ) {
             } );
 }
 
-function _loadMedia( survey ) {
+function _loadMedia( survey, $target ) {
     var resourceUrl;
     var URL = window.URL || window.webkitURL;
 
-    _getElementsGroupedBySrc( survey.$form.add( $( '.form-header' ) ) ).forEach( function( elements ) {
+    $target = $target || survey.$form.add( $( '.form-header' ) );
+
+    _getElementsGroupedBySrc( $target ).forEach( function( elements ) {
         var src = elements[ 0 ].dataset.offlineSrc;
-        // TODO: For nicer loading and hiding ugly alt attribute text, 
-        // maybe add style: visibility: hidden until the src is populated?
+
         store.survey.resource.get( survey.enketoId, src )
             .then( function( resource ) {
                 if ( !resource || !resource.item ) {
@@ -263,13 +264,17 @@ function _loadMedia( survey ) {
     //    URL.revokeObjectURL( resourceUrl );
     // } );
 
+    survey.$form.on( 'addrepeat.enketo', function( event ) {
+        _loadMedia( survey, $( event.target ) );
+    } );
+
     return Promise.resolve( survey );
 }
 
-function _getElementsGroupedBySrc( $form ) {
+function _getElementsGroupedBySrc( $target ) {
     var groupedElements = [];
     var urls = {};
-    var $els = $form.find( '[data-offline-src]' );
+    var $els = $target.find( '[data-offline-src]' );
 
     $els.each( function() {
         if ( !urls[ this.dataset.offlineSrc ] ) {

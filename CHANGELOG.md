@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Media files in a repeat group not displayed in repeat clones in offline-capable forms.
+
 [1.47.2] - 2017-06-19
 ---------------------
 ##### Changed
