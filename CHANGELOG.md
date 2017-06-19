@@ -2,10 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.47.2] - 2017-06-19
 ---------------------
 ##### Changed
 - Allow parens in server URL.
+- Reduced swipe sensitivity to avoid accidental "click-swiping" with a mouse.
+
+##### Fixed
+- Page swipe bypasses block-page-navigation-on-new-constraint-error feature.
+- If form in Pages mode has only one page, this page is not shown. 
+- Datetime and date widgets do not update with calculated date when they are not readonly.
 
 [1.47.1] - 2017-06-09
 ---------------------
