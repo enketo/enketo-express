@@ -7,6 +7,7 @@ var account = require( '../models/account-model' );
 var auth = require( 'basic-auth' );
 var express = require( 'express' );
 var utils = require( '../lib/utils' );
+var keys = require( '../lib/router-utils' ).idEncryptionKeys;
 var router = express.Router();
 var quotaErrorMessage = 'Forbidden. No quota left';
 // var debug = require( 'debug' )( 'api-controller-v2' );
@@ -51,6 +52,14 @@ router
         req.multipleAllowed = false;
         next();
     } )
+    .all( '/survey/view*', function( req, res, next ) {
+        req.webformType = 'view';
+        next();
+    } )
+    .all( '/instance/view*', function( req, res, next ) {
+        req.webformType = 'view-instance';
+        next();
+    } )
     .all( '/survey/offline*', function( req, res, next ) {
         var error;
         if ( req.app.get( 'offline enabled' ) ) {
@@ -84,6 +93,10 @@ router
     .get( '/survey/preview/iframe', getExistingSurvey )
     .post( '/survey/preview', getNewOrExistingSurvey )
     .post( '/survey/preview/iframe', getNewOrExistingSurvey )
+    .get( '/survey/view', getExistingSurvey )
+    .get( '/survey/view/iframe', getExistingSurvey )
+    .post( '/survey/view', getNewOrExistingSurvey )
+    .post( '/survey/view/iframe', getNewOrExistingSurvey )
     .get( '/survey/all', getExistingSurvey )
     .post( '/survey/all', getNewOrExistingSurvey )
     .get( '/surveys/number', getNumber )
@@ -92,6 +105,8 @@ router
     .post( '/surveys/list', getList )
     .post( '/instance', cacheInstance )
     .post( '/instance/iframe', cacheInstance )
+    .post( '/instance/view', cacheInstance )
+    .post( '/instance/view/iframe', cacheInstance )
     .delete( '/instance', removeInstance )
     .all( '*', function( req, res, next ) {
         var error = new Error( 'Not allowed.' );
@@ -382,7 +397,8 @@ function _generateWebformUrls( id, req ) {
     var baseUrl = protocol + '://' + req.headers.host + req.app.get( 'base path' ) + '/';
     var idPartOnline = '::' + id;
     var idPartOffline = '#' + id;
-    var idPartOnce = '::' + utils.insecureAes192Encrypt( id, req.app.get( 'less secure encryption key' ) );
+    var idPartOnce = '::' + utils.insecureAes192Encrypt( id, keys.singleOnce );
+    var idPartView = '::' + utils.insecureAes192Encrypt( id, keys.view );
     var queryParts;
 
     req.webformType = req.webformType || 'default';
@@ -405,6 +421,11 @@ function _generateWebformUrls( id, req ) {
             queryString = _generateQueryString( queryParts );
             obj[ 'single' + ( req.multipleAllowed === false ? '_once' : '' ) + ( iframePart ? '_iframe' : '' ) + '_url' ] = baseUrl +
                 'single/' + iframePart + ( req.multipleAllowed === false ? idPartOnce : idPartOnline ) + queryString;
+            break;
+        case 'view':
+        case 'view-instance':
+            queryString = _generateQueryString( req.webformType === 'view-instance' && req.body.instance_id ? [ 'instance_id=' + req.body.instance_id ] : [] );
+            obj[ 'view' + ( iframePart ? '_iframe' : '' ) + '_url' ] = baseUrl + 'view/' + iframePart + idPartView + queryString + hash;
             break;
         case 'all':
             // non-iframe views

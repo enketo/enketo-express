@@ -8,6 +8,8 @@ var cacheModel = require( '../models/cache-model' );
 var account = require( '../models/account-model' );
 var user = require( '../models/user-model' );
 var utils = require( '../lib/utils' );
+var routerUtils = require( '../lib/router-utils' );
+var keys = require( '../lib/router-utils' ).idEncryptionKeys;
 var isArray = require( 'lodash/isArray' );
 var express = require( 'express' );
 var url = require( 'url' );
@@ -20,16 +22,21 @@ module.exports = function( app ) {
     app.use( app.get( 'base path' ) + '/transform', router );
 };
 
+router.param( 'enketo_id', routerUtils.enketoId );
+router.param( 'encrypted_enketo_id_single', routerUtils.encryptedEnketoIdSingle );
+router.param( 'encrypted_enketo_id_view', routerUtils.encryptedEnketoIdView );
+
 router
     .post( '*', function( req, res, next ) {
         // set content-type to json to provide appropriate json Error responses
         res.set( 'Content-Type', 'application/json' );
         next();
     } )
-    // TODO: would make more sense to use /xform/::enketo_id and /xform/::encrypted_enketo_id etc
-    // routing here perhaps
+    .post( '/xform/:enketo_id', getSurveyParts )
+    .post( '/xform/:encrypted_enketo_id_single', getSurveyParts )
+    .post( '/xform/:encrypted_enketo_id_view', getSurveyParts )
     .post( '/xform', getSurveyParts )
-    .post( '/xform/hash', getSurveyHash );
+    .post( '/xform/hash/:enketo_id', getSurveyHash );
 
 /**
  * Obtains HTML Form, XML model, and existing XML instance
@@ -235,17 +242,11 @@ function _getSurveyParams( req ) {
     var error;
     var urlObj;
     var domain;
-    var enketoId;
     var params = req.body;
     var noHashes = ( params.noHashes === 'true' );
 
-    if ( params.enketoId ) {
-        if ( params.enketoId.length === 32 || params.enketoId.length === 64 ) {
-            enketoId = utils.insecureAes192Decrypt( params.enketoId, req.app.get( 'less secure encryption key' ) );
-        } else {
-            enketoId = params.enketoId;
-        }
-        return surveyModel.get( enketoId )
+    if ( req.enketoId ) {
+        return surveyModel.get( req.enketoId )
             .then( account.check )
             .then( _checkQuota )
             .then( function( survey ) {

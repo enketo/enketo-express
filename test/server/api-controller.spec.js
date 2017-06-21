@@ -115,8 +115,8 @@ describe( 'api', function() {
         var server = ( typeof test.server !== 'undefined' ) ? test.server : validServer;
         var id = typeof test.id !== 'undefined' ? ( test.id !== '{{random}}' ? test.id : Math.floor( Math.random() * 10000 ).toString() ) : validFormId;
         var ret = typeof test.ret !== 'undefined' ? test.ret : 'http://example.com';
-        var instance = typeof test.instance !== 'undefined' ? test.instance : '<data></data>';
-        var instanceId = typeof test.instanceId !== 'undefined' ? test.instanceId : 'someUUID:' + Math.random();
+        var instance = test.instance === true ? '<data/>' : test.instance;
+        var instanceId = test.instanceId === true ? 'UUID:' + Math.random() : test.instanceId;
         var goTo = typeof test.goTo !== 'undefined' ? test.goTo : '';
         var endpoint = test.endpoint;
         var offlineEnabled = !!test.offline;
@@ -414,6 +414,7 @@ describe( 'api', function() {
                 {
                     method: 'post',
                     auth: true,
+                    instance: true,
                     instanceId: 'AAA',
                     status: 201,
                     res: {
@@ -426,6 +427,8 @@ describe( 'api', function() {
                 {
                     method: 'post',
                     auth: true,
+                    instance: true,
+                    instanceId: true,
                     id: '{{random}}',
                     status: 201,
                     res: {
@@ -438,6 +441,7 @@ describe( 'api', function() {
                 {
                     method: 'post',
                     auth: true,
+                    instance: true,
                     instanceId: beingEdited,
                     status: 405
                 },
@@ -445,6 +449,8 @@ describe( 'api', function() {
                 {
                     method: 'post',
                     auth: true,
+                    instance: true,
+                    instanceId: true,
                     ret: 'http://enke.to',
                     status: 201,
                     res: {
@@ -456,26 +462,36 @@ describe( 'api', function() {
                 {
                     method: 'post',
                     auth: true,
+                    instance: true,
+                    instanceId: true,
                     id: '',
                     status: 400
                 }, {
                     method: 'post',
                     auth: true,
+                    instance: true,
+                    instanceId: true,
                     instance: '',
                     status: 400
                 }, {
                     method: 'post',
                     auth: true,
+                    instance: true,
+                    instanceId: true,
                     instanceId: '',
                     status: 400
                 }, {
                     method: 'post',
                     auth: true,
+                    instance: true,
+                    instanceId: true,
                     ret: '',
                     status: 400
                 }, {
                     method: 'post',
                     auth: true,
+                    instance: true,
+                    instanceId: true,
                     server: '',
                     status: 400
                 },
@@ -483,22 +499,29 @@ describe( 'api', function() {
                 {
                     method: 'get',
                     auth: true,
+                    instance: true,
+                    instanceId: true,
                     status: 405
                 }, {
                     method: 'put',
                     auth: true,
+                    instance: true,
+                    instanceId: true,
                     status: 405
                 },
                 // removes instance from db
                 {
                     method: 'delete',
                     auth: true,
+                    instanceId: true,
                     status: 204
                 },
                 // no account 
                 {
                     method: 'post',
                     auth: true,
+                    instance: true,
+                    instanceId: true,
                     status: 403,
                     server: 'https://testserver.com/notexist'
                 }
@@ -813,6 +836,8 @@ describe( 'api', function() {
             // /instance endpoint will ignore defaults
             {
                 endpoint: '/instance',
+                instance: true,
+                instanceId: true,
                 defaults: {
                     '/path/to/node': '2,3',
                 },
@@ -911,6 +936,8 @@ describe( 'api', function() {
             }, {
                 endpoint: '/instance/iframe',
                 parentWindowOrigin: 'http://example.com/',
+                instance: true,
+                instanceId: true,
                 method: 'post',
                 status: 201,
                 res: {
@@ -937,6 +964,8 @@ describe( 'api', function() {
                 }
             }, {
                 endpoint: '/instance',
+                instance: true,
+                instanceId: true,
                 parentWindowOrigin: 'http://example.com/',
                 method: 'post',
                 status: 201,
@@ -976,6 +1005,8 @@ describe( 'api', function() {
             }, {
                 endpoint: '/instance/iframe',
                 parentWindowOrigin: 'http://example.com/',
+                instance: true,
+                instanceId: true,
                 method: 'post',
                 goTo: '//node',
                 status: 201,
@@ -1042,7 +1073,113 @@ describe( 'api', function() {
                     }
                 }
             },
-
+            // /survey/view
+            {
+                endpoint: '/survey/view',
+                method: 'get',
+                instance: false,
+                auth: true,
+                status: 200,
+                res: {
+                    property: 'view_url',
+                    expected: /\/view\/::[a-fA-F0-9]{32}$/
+                },
+                offline: true
+            }, {
+                endpoint: '/survey/view/iframe',
+                method: 'get',
+                instance: false,
+                auth: true,
+                status: 200,
+                res: {
+                    property: 'view_iframe_url',
+                    expected: /\/view\/i\/::[a-fA-F0-9]{32}$/
+                },
+                offline: true
+            }, {
+                endpoint: '/survey/view',
+                method: 'post',
+                instance: false,
+                auth: true,
+                status: 200,
+                res: {
+                    property: 'view_url',
+                    expected: /\/view\/::[a-fA-F0-9]{32}$/
+                },
+                offline: true
+            }, {
+                endpoint: '/survey/view/iframe',
+                method: 'post',
+                instance: false,
+                auth: true,
+                status: 200,
+                res: {
+                    property: 'view_iframe_url',
+                    expected: /\/view\/i\/::[a-fA-F0-9]{32}$/
+                },
+                offline: true
+            },
+            // with goto
+            {
+                endpoint: '/survey/view',
+                method: 'post',
+                auth: true,
+                instance: false,
+                goTo: '//node',
+                status: 200,
+                res: {
+                    property: 'view_url',
+                    expected: /\/view\/::[a-fA-F0-9]{32}#\/\/node$/
+                },
+                offline: true
+            },
+            // instance/view
+            {
+                endpoint: '/instance/view',
+                method: 'post',
+                auth: true,
+                status: 400,
+                offline: true
+            }, {
+                endpoint: '/instance/view',
+                method: 'post',
+                auth: true,
+                instance: true,
+                status: 400,
+                offline: true
+            }, {
+                endpoint: '/instance/view',
+                method: 'post',
+                auth: true,
+                instance_id: true,
+                status: 400,
+                offline: true
+            }, {
+                endpoint: '/instance/view',
+                method: 'post',
+                auth: true,
+                instance: true,
+                status: 201,
+                instanceId: 'A',
+                res: {
+                    property: 'view_url',
+                    expected: /\/view\/::[a-fA-F0-9]{32}\?instance_id=A$/
+                },
+                offline: true
+            }, {
+                endpoint: '/instance/view',
+                method: 'post',
+                auth: true,
+                instance: true,
+                goTo: '//node',
+                status: 201,
+                instanceId: 'A',
+                res: {
+                    property: 'view_url',
+                    expected: /\/view\/::[a-fA-F0-9]{32}\?instance_id=A#\/\/node$/
+                },
+                offline: true
+            }
         ].map( function( obj ) {
             obj.auth = true;
             obj.version = version;

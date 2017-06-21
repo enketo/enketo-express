@@ -10,8 +10,9 @@ var utils = require( './utils' );
 var $ = require( 'jquery' );
 var CONNECTION_URL = settings.basePath + '/connection';
 // location.search is added to pass the lang= parameter, in case this is used to override browser/system locale
-var TRANSFORM_URL = settings.basePath + '/transform/xform' + location.search;
-var TRANSFORM_HASH_URL = settings.basePath + '/transform/xform/hash';
+var TRANSFORM_URL = settings.basePath + '/transform/xform' +
+    ( settings.enketoId ? '/' + settings.enketoIdPrefix + settings.enketoId : '' ) + location.search;
+var TRANSFORM_HASH_URL = settings.basePath + '/transform/xform/hash/' + settings.enketoId;
 var EXPORT_URL = settings.basePath + '/export/get-url';
 var INSTANCE_URL = ( settings.enketoId ) ? settings.basePath + '/submission/' + settings.enketoIdPrefix + settings.enketoId : null;
 var MAX_SIZE_URL = ( settings.enketoId ) ? settings.basePath + '/submission/max-size/' + settings.enketoIdPrefix + settings.enketoId : null;
@@ -331,7 +332,6 @@ function getFormParts( props ) {
         $.ajax( TRANSFORM_URL, {
                 type: 'POST',
                 data: {
-                    enketoId: props.enketoId,
                     serverUrl: props.serverUrl,
                     xformId: props.xformId,
                     xformUrl: props.xformUrl,
@@ -482,10 +482,7 @@ function getFormPartsHash( props ) {
 
     return new Promise( function( resolve, reject ) {
         $.ajax( TRANSFORM_HASH_URL, {
-                type: 'POST',
-                data: {
-                    enketoId: props.enketoId
-                }
+                type: 'POST'
             } )
             .done( function( data ) {
                 resolve( data.hash );

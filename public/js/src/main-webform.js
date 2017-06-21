@@ -33,6 +33,9 @@ _setEmergencyHandlers();
 
 if ( settings.offline ) {
     console.log( 'App in offline-capable mode.' );
+    delete survey.serverUrl;
+    delete survey.xformId;
+    delete survey.xformUrl;
     translator.init( survey )
         .then( formCache.init )
         .then( _addBranding )

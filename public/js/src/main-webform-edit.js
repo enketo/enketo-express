@@ -18,9 +18,6 @@ var $form = $( 'form.or' );
 var $buttons = $( '.form-header__button--print, button#submit-form' );
 var survey = {
     enketoId: settings.enketoId,
-    serverUrl: settings.serverUrl,
-    xformId: settings.xformId,
-    xformUrl: settings.xformUrl,
     instanceId: settings.instanceId,
     noHashes: !settings.offline
 };

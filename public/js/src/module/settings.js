@@ -95,6 +95,8 @@ if ( window.location.pathname.indexOf( '/preview' ) === 0 ) {
     settings.type = 'single';
 } else if ( window.location.pathname.indexOf( '/edit' ) === 0 ) {
     settings.type = 'edit';
+} else if ( window.location.pathname.indexOf( '/view' ) === 0 ) {
+    settings.type = 'view';
 } else {
     settings.type = 'other';
 }
@@ -108,7 +110,7 @@ settings.offline = !!document.querySelector( 'html' ).getAttribute( 'manifest' )
 // Extract Enketo ID
 settings.enketoId = ( settings.offline ) ? _getEnketoId( '#', window.location.hash ) : _getEnketoId( '\/' + settings.enketoIdPrefix, window.location.pathname );
 
-// Det multipleAllowed for single webform views
+// Set multipleAllowed for single webform views
 if ( settings.type === 'single' && settings.enketoId.length !== 32 && settings.enketoId.length !== 64 ) {
     settings.multipleAllowed = true;
 }

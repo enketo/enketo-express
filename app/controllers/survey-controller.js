@@ -16,7 +16,8 @@ module.exports = function( app ) {
 };
 
 router.param( 'enketo_id', routerUtils.enketoId );
-router.param( 'encrypted_enketo_id', routerUtils.encryptedEnketoId );
+router.param( 'encrypted_enketo_id_single', routerUtils.encryptedEnketoIdSingle );
+router.param( 'encrypted_enketo_id_view', routerUtils.encryptedEnketoIdView );
 
 router.param( 'mod', function( req, rex, next, mod ) {
     if ( mod === 'i' ) {
@@ -39,9 +40,11 @@ router
     .get( '/preview', preview )
     .get( '/preview/:mod', preview )
     .get( '/single/:enketo_id', single )
-    .get( '/single/:encrypted_enketo_id', single )
+    .get( '/single/:encrypted_enketo_id_single', single )
     .get( '/single/:mod/:enketo_id', single )
-    .get( '/single/:mod/:encrypted_enketo_id', single )
+    .get( '/single/:mod/:encrypted_enketo_id_single', single )
+    .get( '/view/:encrypted_enketo_id_view', view )
+    .get( '/view/:mod/:encrypted_enketo_id_view', view )
     .get( '/edit/:enketo_id', edit )
     .get( '/edit/:mod/:enketo_id', edit )
     .get( '/xform/:enketo_id', xform )
@@ -87,6 +90,15 @@ function single( req, res, next ) {
     } else {
         _renderWebform( req, res, next, options );
     }
+}
+
+function view( req, res, next ) {
+    var options = {
+        type: 'view',
+        iframe: req.iframe
+    };
+
+    _renderWebform( req, res, next, options );
 }
 
 function preview( req, res, next ) {
