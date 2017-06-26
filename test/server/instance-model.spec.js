@@ -54,11 +54,6 @@ describe( 'Instance Model', function() {
             return expect( model.set( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns an 400 error when returnUrl is missing', function() {
-            delete survey.returnUrl;
-            return expect( model.set( survey ) ).to.eventually.be.rejected
-                .and.to.have.property( 'status' ).that.equals( 400 );
-        } );
         it( 'returns an 400 error when instance is missing', function() {
             delete survey.instance;
             return expect( model.set( survey ) ).to.eventually.be.rejected

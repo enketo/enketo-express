@@ -209,7 +209,7 @@ function _loadRecord( instanceId, confirmed ) {
  */
 function _submitRecord() {
     var record;
-    var redirect = settings.type === 'single';
+    var redirect = settings.type === 'single' || settings.type === 'edit';
     var beforeMsg;
     var authLink;
     var level;

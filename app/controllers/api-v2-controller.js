@@ -368,7 +368,7 @@ function _setIframe( req, res, next ) {
 function _setReturnQueryParam( req, res, next ) {
     var returnUrl = req.body.return_url || req.query.return_url;
 
-    if ( returnUrl && ( req.webformType === 'edit' || req.webformType === 'single' ) ) {
+    if ( returnUrl ) {
         req.returnQueryParam = 'returnUrl=' + encodeURIComponent( decodeURIComponent( returnUrl ) );
     }
     next();

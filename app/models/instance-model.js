@@ -21,7 +21,7 @@ function _cacheInstance( survey ) {
     var instanceAttachments;
 
     return new Promise( function( resolve, reject ) {
-        if ( !survey || !survey.openRosaId || !survey.openRosaServer || !survey.instanceId || !survey.returnUrl || !survey.instance ) {
+        if ( !survey || !survey.openRosaId || !survey.openRosaServer || !survey.instanceId || !survey.instance ) {
             error = new Error( 'Bad request. Survey information not complete or invalid' );
             error.status = 400;
             reject( error );
@@ -40,7 +40,7 @@ function _cacheInstance( survey ) {
                     reject( error );
                 } else {
                     client.hmset( instanceKey, {
-                        returnUrl: survey.returnUrl,
+                        returnUrl: survey.returnUrl || '',
                         instance: survey.instance,
                         openRosaKey: openRosaKey,
                         instanceAttachments: JSON.stringify( instanceAttachments )

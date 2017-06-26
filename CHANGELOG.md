@@ -8,6 +8,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - "no-text-transform" style to be used with Grid Theme to prevent uppercasing labels.
 - Readonly views for empty forms and submitted records. See new [/survey/view](https://apidocs.enketo.org/v2#/post-survey-view) and [/instance/view](https://apidocs.enketo.org/v2#/post-instance-view) API endpoints.
 
+##### Fixed
+- Edit views not redirecting upon submission.
+- API /instance/* endpoints required _return_url_ parameter when it should be optional.
+
 [1.47.3] - 2017-06-20
 ---------------------
 ##### Changed
