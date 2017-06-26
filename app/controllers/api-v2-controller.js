@@ -424,7 +424,15 @@ function _generateWebformUrls( id, req ) {
             break;
         case 'view':
         case 'view-instance':
-            queryString = _generateQueryString( req.webformType === 'view-instance' && req.body.instance_id ? [ 'instance_id=' + req.body.instance_id ] : [] );
+            queryParts = [];
+            if ( req.webformType === 'view-instance' ) {
+                queryParts.push( 'instance_id=' + req.body.instance_id );
+            }
+            if ( iframePart ) {
+                queryParts.push( req.parentWindowOriginParam );
+            }
+            queryParts.push( req.returnQueryParam );
+            queryString = _generateQueryString( queryParts );
             obj[ 'view' + ( iframePart ? '_iframe' : '' ) + '_url' ] = baseUrl + 'view/' + iframePart + idPartView + queryString + hash;
             break;
         case 'all':

@@ -485,13 +485,6 @@ describe( 'api', function() {
                     auth: true,
                     instance: true,
                     instanceId: true,
-                    ret: '',
-                    status: 400
-                }, {
-                    method: 'post',
-                    auth: true,
-                    instance: true,
-                    instanceId: true,
                     server: '',
                     status: 400
                 },
@@ -1181,6 +1174,37 @@ describe( 'api', function() {
                     expected: /\/view\/::[a-fA-F0-9]{32}\?instance_id=A$/
                 },
                 offline: true
+            },
+            // return_url
+            {
+                endpoint: '/instance/view',
+                method: 'post',
+                auth: true,
+                instance: true,
+                ret: true,
+                status: 201,
+                instanceId: 'A',
+                res: {
+                    property: 'view_url',
+                    expected: /\/view\/::[a-fA-F0-9]{32}\?instance_id=A&returnUrl=/
+                },
+                offline: true
+            },
+            // check parent window origin
+            {
+                endpoint: '/instance/view/iframe',
+                method: 'post',
+                auth: true,
+                instance: true,
+                status: 201,
+                instanceId: 'A',
+                parentWindowOrigin: 'http://example.com/',
+                ret: true,
+                res: {
+                    property: 'view_iframe_url',
+                    expected: /\/view\/i\/::[a-fA-F0-9]{32}\?instance_id=A&parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                },
+                offline: true
             }, {
                 endpoint: '/instance/view',
                 method: 'post',
@@ -1192,6 +1216,22 @@ describe( 'api', function() {
                 res: {
                     property: 'view_url',
                     expected: /\/view\/::[a-fA-F0-9]{32}\?instance_id=A#\/\/node$/
+                },
+                offline: true
+            },
+            // check parent window origin
+            {
+                endpoint: '/instance/view/iframe',
+                method: 'post',
+                auth: true,
+                instance: true,
+                goTo: '//node',
+                parentWindowOrigin: 'http://example.com/',
+                status: 201,
+                instanceId: 'A',
+                res: {
+                    property: 'view_iframe_url',
+                    expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
                 },
                 offline: true
             }

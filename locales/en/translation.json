@@ -19,6 +19,9 @@
       "heading": "App Updated!",
       "msg": "A new version of this application has been downloaded. Refresh this page to load the updated version."
     },
+    "closing": {
+      "heading": "Closing..."
+    },
     "default": {
       "button": "Close",
       "heading": "Alert"

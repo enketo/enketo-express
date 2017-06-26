@@ -15,7 +15,7 @@ var t = translator.t;
 var utils = require( './module/utils' );
 var $loader = $( '.form__loader' );
 var $form = $( 'form.or' );
-var $buttons = $( '.form-header__button--print, button#submit-form' );
+var $buttons = $( '.form-header__button--print, button#close-form' );
 var survey = {
     enketoId: settings.enketoId,
     instanceId: settings.instanceId,
