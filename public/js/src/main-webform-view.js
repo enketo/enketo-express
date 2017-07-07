@@ -80,6 +80,8 @@ function _convertToReadonly( formParts ) {
     // Note: Enketo made a syntax error by adding the readonly attribute on a <select>
     // Hence, we cannot use .prop('readonly', true). We'll continue the syntax error.
     formParts.form.find( 'input, textarea, select' ).attr( 'readonly', 'readonly' );
+    // Properly make native selects readonly (for touchscreens)
+    formParts.form.find( 'option' ).prop( 'disabled', true );
     // prevent adding an Add/Remove UI on repeats
     formParts.form.find( '.or-repeat-info' ).attr( 'data-repeat-fixed', 'fixed' );
     return formParts;

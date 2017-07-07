@@ -2,11 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.48.2] - 2017-07-07
 ---------------------
 ##### Fixed
 - Emergency temporary workaround for checked state of checkbox in Firefox.
 - Error message when removing irrelevant nodes because the node cannot be found.
+- Readonly select minimal widget is not properly readonly in special readonly views on touchscreens.
 
 [1.48.1] - 2017-07-03
 ---------------------
