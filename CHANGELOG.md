@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.48.3] - 2017-07-10
+---------------------
+#### Fixed
+- Offline-capable views fail to update and load media. **WARNING: recommend immediate update if currently on 1.48.0 or higher**
+
 [1.48.2] - 2017-07-07
 ---------------------
 ##### Fixed
