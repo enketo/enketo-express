@@ -1,6 +1,5 @@
 'use strict';
 
-require( './module/jquery-global' );
 require( './module/promise-by-Q' );
 require( './module/Array-from' );
 require( './module/Array-includes' );
