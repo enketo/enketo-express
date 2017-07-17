@@ -35,7 +35,7 @@ function _encryptedEnketoIdParam( req, res, next, id, key ) {
             req.enketoId = utils.insecureAes192Decrypt( id.substring( 2 ), key );
             next();
         } catch ( e ) {
-            console.error( 'Could not decrypt:', req.encryptedEnketoId );
+            // console.error( 'Could not decrypt:', req.encryptedEnketoId );
             next( 'route' );
         }
     } else {
