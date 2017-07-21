@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- A readonly select minimal (desktop) widget becomes editable when it has a "relevant" expression that evaluates to true.
+
 [1.48.3] - 2017-07-10
 ---------------------
 #### Fixed
