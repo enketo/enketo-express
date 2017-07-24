@@ -1,6 +1,5 @@
 'use strict';
 
-var sniffer = require( './sniffer' );
 var config = require( 'enketo-config' );
 var queryParams = _getAllQueryParams();
 var settings = {};

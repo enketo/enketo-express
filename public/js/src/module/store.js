@@ -145,7 +145,7 @@ function _checkSupport() {
         if ( typeof indexedDB === "object" ) {
             resolve();
         } else {
-            if ( sniffer.os.isIos() ) {
+            if ( sniffer.os.ios ) {
                 error = new Error( t( 'store.error.iosusesafari' ) );
             } else {
                 error = new Error( t( 'store.error.notsupported' ) );
@@ -182,7 +182,7 @@ function _canStoreBlobs() {
      *
      * https://github.com/kobotoolbox/enketo-express/issues/155
      */
-    if ( sniffer.browser.isChrome() ) {
+    if ( sniffer.browser.chrome ) {
         console.log( 'This is Chrome which has a blob/file storage problem.' );
         return Promise.reject();
     }

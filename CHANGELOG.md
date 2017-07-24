@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Changed
+- Touchscreen detection to change widgets and appearance has been tweaked and is now only considering iOS and Android browsers.
+
 ##### Fixed
 - A readonly select minimal (desktop) widget becomes editable when it has a "relevant" expression that evaluates to true.
 

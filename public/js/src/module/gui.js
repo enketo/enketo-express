@@ -359,13 +359,13 @@ function _getHomeScreenGuidance() {
 
     if ( homeScreenGuidance ) {
         // keep calm
-    } else if ( os.isIos() && browser.isSafari() ) {
+    } else if ( os.ios && browser.safari ) {
         imageClass1 = 'ios-safari';
         homeScreenGuidance = t( 'alert.addtohomescreen.iossafari.msg', _getHomeScreenGuidanceObj( imageClass1 ) );
-    } else if ( os.isAndroid() && browser.isChrome() ) {
+    } else if ( os.android && browser.chrome ) {
         imageClass1 = 'android-chrome';
         homeScreenGuidance = t( 'alert.addtohomescreen.androidchrome.msg', _getHomeScreenGuidanceObj( imageClass1 ) );
-    } else if ( os.isAndroid() && browser.isFirefox() ) {
+    } else if ( os.android && browser.firefox ) {
         homeScreenGuidance = t( 'alert.addtohomescreen.androidfirefox.msg', _getHomeScreenGuidanceObj() );
     }
 
