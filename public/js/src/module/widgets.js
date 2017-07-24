@@ -24,6 +24,7 @@ var widgets = [
     require( '../../../../node_modules/enketo-core/src/widget/big-image/image-viewer' ),
     require( '../../../../node_modules/enketo-core/src/widget/comment/commentwidget' ),
     require( '../../../../node_modules/enketo-core/src/widget/image-map/image-map' ),
+    require( '../../../../node_modules/enketo-core/src/widget/date-mobile/datepicker-mobile' ),
 ];
 
 module.exports = widgets;
