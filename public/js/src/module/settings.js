@@ -114,6 +114,9 @@ if ( settings.type === 'single' && settings.enketoId.length !== 32 && settings.e
     settings.multipleAllowed = true;
 }
 
+// A bit crude and hackable by users, but this way also type=view with a record will be caught.
+settings.printRelevantOnly = !!settings.instanceId;
+
 function _getEnketoId( prefix, haystack ) {
     var id = new RegExp( prefix ).test( haystack ) ? haystack.substring( haystack.lastIndexOf( prefix ) + prefix.length ) : null;
     return id;

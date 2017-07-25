@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Changed
 - Touchscreen detection to change widgets and appearance has been tweaked and is now only considering iOS and Android browsers.
+- Hide irrelevant questions from printout if a record is loaded for editing.
 
 ##### Fixed
 - A readonly select minimal (desktop) widget becomes editable when it has a "relevant" expression that evaluates to true.
