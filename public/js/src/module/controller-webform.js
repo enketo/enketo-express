@@ -19,7 +19,7 @@ var formData;
 var $formprogress;
 var formOptions = {
     clearIrrelevantImmediately: false,
-    goTo: settings.type === 'edit' || settings.type === 'preview' || settings.type === 'view',
+    goTo: settings.goTo,
     printRelevantOnly: settings.printRelevantOnly
 };
 
