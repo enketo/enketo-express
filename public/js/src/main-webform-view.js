@@ -96,7 +96,7 @@ function _init( formParts ) {
             instanceAttachments: formParts.instanceAttachments
         } ).then( function() {
             $form.add( $buttons ).removeClass( 'hide' );
-            $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
+            $( 'head>title' ).text( $( '#form-title' ).text() );
         } );
     } );
 }

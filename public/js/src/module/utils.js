@@ -140,8 +140,10 @@ function getThemeFromFormStr( formStr ) {
     return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
 }
 
-
 function getTitleFromFormStr( formStr ) {
+    if ( typeof formStr !== 'string' ) {
+        return console.error( 'Cannot extract form title. Not a string.' );
+    }
     var matches = formStr.match( /<\s?h3 [^>]*id="form-title">([^<]+)</ );
     return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
 }

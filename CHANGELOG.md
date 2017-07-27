@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- HTML title element not populated with form title in readonly views.
+
 [1.49.0] - 2017-07-25
 ---------------------
 ##### Changed
