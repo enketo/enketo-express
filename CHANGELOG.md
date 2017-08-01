@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Added
+- Signature/Draw widget.
+
 ##### Fixed
 - HTML title element not populated with form title in readonly views.
 

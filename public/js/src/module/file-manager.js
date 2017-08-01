@@ -114,15 +114,25 @@ function getFileUrl( subject, filename ) {
  * @return {Promise} array of files
  */
 function getCurrentFiles() {
-    var file;
-    var newFilename;
     var files = [];
-    var $fileInputs = $( 'form.or input[type="file"]' );
+    var $fileInputs = $( 'form.or input[type="file"], form.or input[type="text"][data-drawing="true"]' );
 
     // first get any files inside file input elements
     $fileInputs.each( function() {
-        file = this.files[ 0 ];
-        if ( file ) {
+        var newFilename;
+        var file = null;
+        var canvas = null;
+        if ( this.type === 'file' ) {
+            file = this.files[ 0 ]; // Why doesn't this fail for empty file inputs?
+        } else if ( this.value ) {
+            canvas = $( this ).closest( '.question' )[ 0 ].querySelector( '.draw-widget canvas' );
+            if ( canvas ) {
+                // TODO: In the future, we could do canvas.toBlob()
+                file = utils.dataUriToBlobSync( canvas.toDataURL() );
+                file.name = this.value;
+            }
+        }
+        if ( file && file.name ) {
             // Correct file names by adding a unique-ish postfix
             // First create a clone, because the name property is immutable
             // TODO: in the future, when browser support increase we can invoke

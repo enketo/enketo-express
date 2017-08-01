@@ -17,6 +17,7 @@ var widgets = [
     require( '../../../../node_modules/enketo-core/src/widget/datetime/datetimepicker-extended' ),
     require( '../../../../node_modules/enketo-core/src/widget/compact/compactpicker' ),
     require( '../../../../node_modules/enketo-core/src/widget/file/filepicker' ),
+    require( '../../../../node_modules/enketo-core/src/widget/draw/draw-widget' ),
     require( '../../../../node_modules/enketo-core/src/widget/select-likert/likertitem' ),
     require( '../../../../node_modules/enketo-core/src/widget/distress/distresspicker' ),
     require( '../../../../node_modules/enketo-core/src/widget/horizontal-choices/horizontalchoices' ),
