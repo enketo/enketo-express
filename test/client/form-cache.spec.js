@@ -19,7 +19,7 @@ describe( 'Client Form Cache', function() {
     beforeEach( function() {
         survey = {};
         sandbox = sinon.sandbox.create();
-        getFormPartsSpy = sandbox.stub( connection, 'getFormParts', function( survey ) {
+        getFormPartsSpy = sandbox.stub( connection, 'getFormParts' ).callsFake( function( survey ) {
             return Promise.resolve( {
                 enketoId: survey.enketoId,
                 form: form1,
@@ -27,7 +27,7 @@ describe( 'Client Form Cache', function() {
                 hash: hash1
             } );
         } );
-        getFileSpy = sandbox.stub( connection, 'getMediaFile', function( url ) {
+        getFileSpy = sandbox.stub( connection, 'getMediaFile' ).callsFake( function( url ) {
             return Promise.resolve( {
                 url: url,
                 item: new Blob( [ 'babdf' ], {
