@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Manual date edits do not get propagated to model if Enter key is not pressed.
+
 [1.50.0] - 2017-08-03
 ---------------------
 ##### Added
