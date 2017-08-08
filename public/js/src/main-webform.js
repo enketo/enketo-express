@@ -185,13 +185,11 @@ function _prepareInstance( modelStr, defaults ) {
 
 function _init( formParts ) {
     var error;
-    var $form;
 
     return new Promise( function( resolve, reject ) {
         if ( formParts && formParts.form && formParts.model ) {
             $loader.replaceWith( formParts.form );
-            $form = $( 'form.or:eq(0)' );
-            translator.localize( $form.get( 0 ) );
+            translator.localize( document.querySelector( 'form.or' ) );
             $( document ).ready( function() {
                 // TODO pass $form as first parameter?
                 // controller.init is asynchronous
@@ -199,11 +197,10 @@ function _init( formParts ) {
                     modelStr: formParts.model,
                     instanceStr: _prepareInstance( formParts.model, settings.defaults ),
                     external: formParts.externalData
-                } ).then( function() {
-                    $form.add( $buttons ).removeClass( 'hide' );
+                } ).then( function( form ) {
+                    form.view.$.add( $buttons ).removeClass( 'hide' );
                     $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
-
-                    formParts.$form = $form;
+                    formParts.$form = form.view.$;
                     resolve( formParts );
                 } );
             } );

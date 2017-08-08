@@ -64,14 +64,15 @@ function _showErrorOrAuthenticate( error ) {
 
 function _init( formParts ) {
     $loader.replaceWith( formParts.form );
+    translator.localize( document.querySelector( 'form.or' ) );
     $( document ).ready( function() {
         controller.init( 'form.or:eq(0)', {
             modelStr: formParts.model,
             instanceStr: formParts.instance,
             external: formParts.externalData,
             instanceAttachments: formParts.instanceAttachments
-        } ).then( function() {
-            $form.add( $buttons ).removeClass( 'hide' );
+        } ).then( function( form ) {
+            form.view.$.add( $buttons ).removeClass( 'hide' );
             $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
         } );
     } );

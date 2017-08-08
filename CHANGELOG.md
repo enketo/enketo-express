@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Fixed
 - Manual date edits do not get propagated to model if Enter key is not pressed.
+- Edit and readonly views do not translate default error messages for "constraint" and "required" logic.
 
 [1.50.0] - 2017-08-03
 ---------------------

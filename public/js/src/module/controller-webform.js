@@ -57,6 +57,7 @@ function init( selector, data ) {
             if ( loadErrors.length > 0 ) {
                 throw loadErrors;
             }
+            return form;
         } )
         .catch( function( error ) {
             if ( Array.isArray( error ) ) {
