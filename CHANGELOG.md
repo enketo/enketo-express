@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Manual date edits do not get propagated to model if Enter key is not pressed.
 - Edit and readonly views do not translate default error messages for "constraint" and "required" logic.
+- When loading record with repeats, any select/select1 questions (without appearance "minimal") in non-first repeats are not initialized properly.
 
 [1.50.0] - 2017-08-03
 ---------------------
@@ -157,7 +158,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Repeats no longer shown on separate page in pages mode when they have field-list appearance.
 - Loading values into first radiobutton or first checkbox fails to update UI.
 
-1.43.0] - 2017-04-13
+[1.43.0] - 2017-04-13
 --------------------
 ##### Changed
 - Questions or groups that are irrelevant will no longer be included in submission. **WARNING**
