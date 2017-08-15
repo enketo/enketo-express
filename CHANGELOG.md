@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Fixed
+- In some situations, nested repeat nodes that are relevant are removed from the record string as if they were irrelevant.
+
 [1.50.1] - 2017-08-10
 ---------------------
 ##### Fixed
