@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - In some situations, nested repeat nodes that are relevant are removed from the record string as if they were irrelevant.
 - In tables, the heading row (appearance=label) can be misaligned with the lower rows.
+- Cloned select minimal question with relevant inside repeat is hidden when loading record with multiple repeats.s
 
 [1.50.1] - 2017-08-10
 ---------------------
