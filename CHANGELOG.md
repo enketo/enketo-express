@@ -2,12 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.50.2] - 2017-08-17
 ----------------------
 ##### Fixed
 - In some situations, nested repeat nodes that are relevant are removed from the record string as if they were irrelevant.
 - In tables, the heading row (appearance=label) can be misaligned with the lower rows.
-- Cloned select minimal question with relevant inside repeat is hidden when loading record with multiple repeats.s
+- Cloned select minimal question with relevant inside repeat is hidden when loading record with multiple repeats.
+- Draw/signature widget is instantiated for file input types other than "image".
+- Draw/signature widget is never enabled if it has a relevant expression.
+- File inputs do not always clear properly when they become irrelevant.
 
 [1.50.1] - 2017-08-10
 ---------------------
