@@ -103,4 +103,5 @@ module.exports = {
  *
  * t('constraint.invalid');
  * t('constraint.required');
+ * t('form.required');
  */
