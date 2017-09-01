@@ -44,7 +44,7 @@
             "msg": "A new version of this form has been downloaded. Refresh this page to load the updated version."
         },
         "gotonotfound": {
-            "msg": "Failed to find question \"__path__\" in form. Is it a valid path?"
+            "msg": "Failed to find question \"__path__\" in form. Is the reference to this question correct?"
         },
         "loaderror": {
             "editadvice": "It is recommended not to edit this record until this is resolved.",
