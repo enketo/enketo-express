@@ -2,10 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.51.0] - 2017-09-06
 ----------------------
-##### Addeds
+##### Added
 - Support for appearance="numbers" on text inputs on mobile devices.
+- Fixed input masks for integer and decimal inputs.
 
 ##### Changed
 - Make goto-target-not-found error translatable.
