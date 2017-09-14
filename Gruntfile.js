@@ -188,7 +188,7 @@ module.exports = function( grunt ) {
                 cwd: 'locales/',
                 expand: true,
                 src: [ '*/' ],
-                include: [ '**/*.json', '!**/translation_old.json', '!**/translation-combined.json' ],
+                include: [ '**/translation.json', '**/translation-additions.json' ],
                 rename: function( dest, src ) {
                     return dest + src + 'translation-combined.json';
                 },

@@ -44,7 +44,7 @@
         "grunt-browserify": "5.2.x",
         "grunt-contrib-uglify": "3.0.x",
         "grunt-env": "0.4.x",
-        "grunt-i18next": "0.1.x",
+        "grunt-i18next": "0.2.x",
         "grunt-sass": "2.0.x",
         "grunt-shell-spawn": "0.3.x",
         "i18next": "8.4.x",
