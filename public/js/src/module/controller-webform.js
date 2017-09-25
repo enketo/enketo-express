@@ -217,7 +217,7 @@ function _submitRecord() {
     var level;
     var msg = '';
     var include = {
-        irrelevant: false
+        irrelevant: true // TODO: revert back to false when #824 is fixed
     };
 
     form.view.$.trigger( 'beforesave' );
@@ -343,7 +343,7 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
     var include = ( draft ) ? {
         irrelevant: true
     } : {
-        irrelevant: false
+        irrelevant: true // TODO: revert back to false when #824 is fixeds
     };
 
     // triggering "beforesave" event to update possible "timeEnd" meta data in form
