@@ -4,9 +4,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
-##### Removed
-- Feature that removed any irrelevant nodes from the submission. They are now included as empty nodes. Probably temporary.
-
 ##### Added
 - Ability to overwrite translations (in forks).
 
