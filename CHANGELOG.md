@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.52.0] - 2017-09-26
 ---------------------
 ##### Added
 - Ability to overwrite translations (in forks).
@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Readonly fields with calculation are not cleared in model when they become irrelevant if clearIrrelevantImmediately is set to `true`.
 - Calculated items without form control were calculated even if they were inside an irrelevant group.
+- Radiobuttons inside a repeat are sometimes incorrectly removed from the submission.
 
 [1.51.1] - 2017-09-13
 ---------------------
