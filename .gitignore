@@ -3,9 +3,11 @@
 node_modules
 public/js/*.min.js
 public/js/*-bundle.js
+public/js/widgets.js
 public/css/*.css
 public/lib/enketo-core
 public/lib/bower-components
+app/views/styles/component/_widgets.scss
 locales/*/translation-combined.json
 config/config.json
 .rebooted

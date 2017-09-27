@@ -47,6 +47,9 @@ An array of theme names to enable. This can be used to disable certain themes. I
 #### support
 * **email: The email address your users can contact when they experience problems with the service.**
 
+#### widgets
+An Array of widgets to enable. Enketo Core widgets are simple strings ("note", "select-desktop", "select-mobile", "autocomplete", "geo", "geo-esri", "textarea", "table", "radio", "date", "time", "datetime", "compact", "file", "draw", "likert", "distress", "horizontal", "image-view", "comment", "image-map", "date-mobile"). You can also add custom widgets by adding a local path. See more info [here](../doc/custom-widgets.md). Note that any value for `"widgets"` will completely override the default array in default-config.json, so it's best to start copying the default array value and amend it as desired.
+
 #### analytics
 Which analytics service you'd like to use, either `"google"` or `"piwik"` or if none is required either `""` or `false`.
 

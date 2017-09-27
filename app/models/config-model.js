@@ -3,7 +3,7 @@
 var localConfig;
 var config = require( '../../config/default-config' );
 var pkg = require( '../../package' );
-var merge = require( 'lodash/merge' );
+var mergeWith = require( 'lodash/mergeWith' );
 var path = require( 'path' );
 var fs = require( 'fs' );
 var url = require( 'url' );
@@ -14,7 +14,12 @@ var languagePath = path.join( __dirname, '../../locales' );
 // Merge default and local config files if a local config.json file exists
 try {
     localConfig = require( '../../config/config' );
-    merge( config, localConfig );
+    mergeWith( config, localConfig, function( objValue, srcValue ) {
+        if ( Array.isArray( srcValue ) ) {
+            // Overwrite completely if value in localConfig is an array (do not merge arrays)
+            return srcValue;
+        }
+    } );
 }
 // Override default config with environment variables if a local config.json does not exist
 catch ( err ) {
@@ -28,7 +33,7 @@ catch ( err ) {
  * 
  * @param  {*} config configuration object
  */
-function _updateConfigFromEnv( config ) {
+function _updateConfigFromEnv() {
     var envVarNames = [];
 
     for ( var envVarName in process.env ) {
@@ -276,7 +281,6 @@ module.exports = {
     client: {
         googleApiKey: config.google[ 'api key' ],
         maps: config.maps,
-        widgets: config.widgets,
         modernBrowsersURL: 'modern-browsers',
         supportEmail: config.support.email,
         themesSupported: config[ 'themes supported' ],
