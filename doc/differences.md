@@ -1,4 +1,7 @@
-## Differences between Enketo Express and Enketo Legacy
+Differences between Enketo Express and Enketo Legacy
+==============
+
+## THIS LIST IS NO LONGER UPDATED. THERE ARE MANY MORE DIFFERENCES
 
 #### User Features
 

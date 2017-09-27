@@ -1,4 +1,5 @@
-## Comment Feature
+Comment Feature
+============
 
 The comment feature is an Enketo extension to the OpenRosa XForm spec that allows form designers to add a comment widget to individual questions. If funding allows this could quite easily be extended further by adding a comment to a group or the form as a whole.
 

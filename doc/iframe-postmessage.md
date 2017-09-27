@@ -1,4 +1,6 @@
-# postMessage
+Posting messages from Enketo form in iframe
+============
+
 All [*/iframe](http://apidocs.enketo.org/v2/#post-survey-iframe) endpoints, [survey/all](http://apidocs.enketo.org/v2/#post-survey-all), and [surveys/list](http://apidocs.enketo.org/v2/#post-surveys-list) now accept a `parent_window_origin` parameter to enable an iframed webform to post messages to its parent window.
 
 Messages currently supported are:
