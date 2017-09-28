@@ -48,6 +48,8 @@ router
     .get( '/edit/:enketo_id', edit )
     .get( '/edit/:mod/:enketo_id', edit )
     .get( '/xform/:enketo_id', xform )
+    .get( '/xform/:encrypted_enketo_id_single', xform )
+    .get( '/xform/:encrypted_enketo_id_view', xform )
     .get( '/connection', function( req, res ) {
         res.status = 200;
         res.send( 'connected ' + Math.random() );
