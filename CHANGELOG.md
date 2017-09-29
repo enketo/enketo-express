@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Ability to [add custom widgets](https://github.com/kobotoolbox/enketo-express/blob/master/doc/custom-widgets.md) or [remove default widgets](https://github.com/kobotoolbox/enketo-express/tree/master/config#widgets) in config.json.
 
+##### Fixed
+- With validateContinuously=true, a new repeat instance is immediately validated.
+
 [1.52.0] - 2017-09-26
 ---------------------
 ##### Added
