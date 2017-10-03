@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - With validateContinuously=true, a new repeat instance is immediately validated.
+- Pesky "error" message that sourcemap for bootstrap-datepicker.css is not found (when dev tools are open in browser).
 
 [1.52.0] - 2017-09-26
 ---------------------
