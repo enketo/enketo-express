@@ -48,7 +48,7 @@ module.exports = function( grunt ) {
                 tasks: [ 'client-config-file:create' ]
             },
             sass: {
-                files: [ 'app/views/styles/**/*.scss', 'public/widget/**/*.scss' ],
+                files: [ 'app/views/styles/**/*.scss', 'widget/**/*.scss' ],
                 tasks: [ 'sass' ],
                 options: {
                     spawn: false,
@@ -67,7 +67,7 @@ module.exports = function( grunt ) {
                 tasks: [ 'shell:translation', 'i18next' ]
             },
             js: {
-                files: [ 'public/js/src/**/*.js', 'public/widget/**/*.js' ],
+                files: [ 'public/js/src/**/*.js', 'widget/**/*.js' ],
                 tasks: [ 'js-dev' ],
                 options: {
                     spawn: false,
