@@ -2,7 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[1.53.0]
+[Unreleased]
+----------------------
+##### Fixed
+- Max() and min() fail if nodeset is empty (0 repeats).
+- If first page is not relevant it is still displayed upon load.
+
+[1.53.0] - 2017-10-03
 ----------------------
 ##### Added
 - Ability to [add custom widgets](https://github.com/kobotoolbox/enketo-express/blob/master/doc/custom-widgets.md) or [remove default widgets](https://github.com/kobotoolbox/enketo-express/tree/master/config#widgets) in config.json. **Have an issue? Check whether your config.json contains an old "widgets" property. If so, you'll probably want to just remove it.**
