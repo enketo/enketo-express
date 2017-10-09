@@ -2,11 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.53.1] - 2017-10-09
 ----------------------
 ##### Fixed
 - Max() and min() fail if nodeset is empty (0 repeats).
 - If first page is not relevant it is still displayed upon load.
+- Datepicker not available on iOS browsers.
+- In nested repeats a user-entered repeat count is always taken from the first repeat if current repeat instances in the series are zero.
 
 [1.53.0] - 2017-10-03
 ----------------------
