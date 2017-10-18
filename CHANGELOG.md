@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.55.0] - 2017-10-19
+----------------------
+##### Changed
+- Time format according to ODK XForms Specification (10:12 -> 10:12.00.000-06:00). **WARNING: Make sure your backend is ready for this.**
+
 [1.54.0] - 2017-10-16
 ----------------------
 ##### Added
