@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Changed
+- Track fragment identifier (#abcd) if Google Analytics is enabled, and no longer track querystrings.
+
 [1.55.0] - 2017-10-19
 ----------------------
 ##### Changed
