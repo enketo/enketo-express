@@ -2,10 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.55.1] - 2017-10-27
 ----------------------
 ##### Changed
 - Track fragment identifier (#abcd) if Google Analytics is enabled, and no longer track querystrings.
+
+##### Fixed
+- If repeat = page in Pages mode, the second+ repeat is now shown.
 
 [1.55.0] - 2017-10-19
 ----------------------
