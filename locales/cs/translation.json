@@ -19,6 +19,9 @@
             "heading": "App Aktualizována!",
             "msg": "Nová verze této aplikace byla stažena. Obnovte tuto stránku pro načtení aktualizované verze."
         },
+        "closing": {
+            "heading": "Zavírá se..."
+        },
         "default": {
             "button": "Zavřít",
             "heading": "Výstraha"
@@ -39,6 +42,9 @@
         "formupdated": {
             "heading": "Formulář Aktualizovaný!",
             "msg": "Nová verze tohoto formuláře byla stažena. Obnovte tuto stránku pro načtení aktualizované verze."
+        },
+        "gotonotfound": {
+            "msg": "Failed to find question \"__path__\" in form. Is the reference to this question correct?"
         },
         "loaderror": {
             "editadvice": "Doporučuje se neupravovat tenhle záznam dokud to nebude vyřešeno.",

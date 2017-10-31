@@ -5,19 +5,22 @@
     "alert": {
         "addtohomescreen": {
             "androidchrome": {
-                "msg": "Um eine Verknüpfung auf dem Startbildschirm zu erstellen bitte im Browser auf das Browser-Menü tippen icon __image1__ and dann \"Zum Startbildschirm hinzufügen\" auswählen."
+                "msg": "Um eine Verknüpfung auf dem Startbildschirm zu erstellen bitte im Browser auf das Browser-Menü tippen icon __image1__ und dann \"Zum Startbildschirm hinzufügen\" auswählen."
             },
             "androidfirefox": {
-                "msg": "To add this form to your Homescreen, long-press the address bar and select 'Add to Home Screen'."
+                "msg": "Um eine Verknüpfung auf dem Startbildschirm zu erstellen bitte im Browser auf der Adressleiste lange drücken und dann \"Zum Startbildschirm hinzufügen\" auswählen."
             },
             "heading": "Verknüpfung auf dem Startbildschirm erstellen",
             "iossafari": {
-                "msg": "To add this form to your Home screen, click the share icon __image1__ in the top right of your browser, and select: '+ Add to Home Screen'."
+                "msg": "Um eine Verknüpfung auf dem Startbildschirm zu erstellen bitte rechts oben im Browser auf Teilen tippen icon  __image1__ und dann \"Zum Startbildschirm hinzufügen\" auswählen."
             }
         },
         "appupdated": {
             "heading": "App aktualisiert!",
             "msg": "Eine neue Version dieser Anwendung wurde heruntergeladen. Aktualisieren Sie diese Seite, um die aktualisierte Version zu laden."
+        },
+        "closing": {
+            "heading": "Schließen..."
         },
         "default": {
             "button": "Schließen",
@@ -39,6 +42,9 @@
         "formupdated": {
             "heading": "Formular aktualisiert!",
             "msg": "Eine neue Version dieser Anwendung wurde heruntergeladen. Aktualisieren Sie diese Seite, um die aktualisierte Version zu laden."
+        },
+        "gotonotfound": {
+            "msg": "Failed to find question \"__path__\" in form. Is the reference to this question correct?"
         },
         "loaderror": {
             "editadvice": "Es wird empfohlen, diesen Eintrag nicht zu bearbeiten bis dieser Fehler behoben wurde.",

@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Changed
+- Updated Swedish, Slovak, Czech, German and Dutch translations.
+
 [1.55.1] - 2017-10-27
 ----------------------
 ##### Changed

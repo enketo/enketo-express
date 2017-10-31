@@ -19,6 +19,9 @@
             "heading": "Appen uppdaterades!",
             "msg": "En ny version av detta program har laddats ner. Uppdatera sidan för att ladda in den uppdaterade versionen."
         },
+        "closing": {
+            "heading": "Stänger..."
+        },
         "default": {
             "button": "Stäng",
             "heading": "Varning"
@@ -39,6 +42,9 @@
         "formupdated": {
             "heading": "Formuläret har uppdaterats!",
             "msg": "En ny version av detta formulär har laddats ner. Uppdatera denna sida för att ladda in den uppdaterade versionen."
+        },
+        "gotonotfound": {
+            "msg": "Hittar inte fråga \"__path__\" i formuläret. Är referensen till denna fråga korrekt?"
         },
         "loaderror": {
             "editadvice": "Du rekommenderas att inte redigera denna uppgift förrän detta har löst sig.",

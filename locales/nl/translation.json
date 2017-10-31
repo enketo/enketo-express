@@ -19,6 +19,9 @@
             "heading": "App Bijgewerkt!",
             "msg": "Een nieuwe versie van deze applicatie is gedownload. Vernieuw deze pagina om de bijgewerkte versie te laden."
         },
+        "closing": {
+            "heading": "Sluiten..."
+        },
         "default": {
             "button": "Sluit",
             "heading": "Let op"
@@ -39,6 +42,9 @@
         "formupdated": {
             "heading": "Enquete Bijgewerkt!",
             "msg": "Een nieuwe versie van deze enquete is gedownload. Vernieuw deze pagina om de bijgewerkte versie te laden."
+        },
+        "gotonotfound": {
+            "msg": "Kon vraag \"__path__\" niet vinden. Is de referentie naar deze vraag juist?"
         },
         "loaderror": {
             "editadvice": "Het is aanbevolen dit record niet te verander totdat dit opgelost it.",
