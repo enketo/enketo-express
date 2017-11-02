@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Updated Swedish, Slovak, Czech, German and Dutch translations.
 
+##### Fixed
+- Safari/iOS browsers fail to load Swedish (and others probably) UI language.
+
 [1.55.1] - 2017-10-27
 ----------------------
 ##### Changed

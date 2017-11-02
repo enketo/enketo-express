@@ -46,6 +46,8 @@ initialize = new Promise( function( resolve, reject ) {
             backend: {
                 loadPath: settings.basePath + '/locales/__lng__/translation-combined.json',
             },
+            load: 'languageOnly',
+            lowerCaseLng: true,
             detection: {
                 order: [ 'querystring', 'navigator' ],
                 lookupQuerystring: 'lang',

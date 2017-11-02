@@ -46,6 +46,8 @@ i18next
         backend: {
             loadPath: path.resolve( __dirname, '../locales/__lng__/translation-combined.json' )
         },
+        load: 'languageOnly',
+        lowerCaseLng: true,
         detection: {
             order: [ 'querystring', 'header' ],
             lookupQuerystring: 'lang',
