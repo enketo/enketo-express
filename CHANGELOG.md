@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Fixed
 - A calculated item (without form control) and with a relevant inside a repeat throws an exception when there are 0 repeats and the relevant is evaluated.
-
+- Exception occurs in error page generation when page cannot be found.
 
 [1.55.2] - 2017-11-02
 ----------------------

@@ -26,8 +26,9 @@ module.exports = {
             code: err.status || 500,
             message: getErrorMessage( req, err )
         };
+        var contentType = res.get( 'Content-type' );
         res.status( err.status || 500 );
-        if ( res.get( 'Content-type' ).indexOf( 'application/json' ) === 0 ) {
+        if ( contentType && contentType.indexOf( 'application/json' ) === 0 ) {
             res.json( body );
         } else {
             res.render( 'error', body );
@@ -39,8 +40,9 @@ module.exports = {
             message: getErrorMessage( req, err ),
             stack: err.stack
         };
+        var contentType = res.get( 'Content-type' );
         res.status( err.status || 500 );
-        if ( res.get( 'Content-type' ).indexOf( 'application/json' ) === 0 ) {
+        if ( contentType && contentType.indexOf( 'application/json' ) === 0 ) {
             res.json( body );
         } else {
             res.render( 'error', body );
