@@ -4,9 +4,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ----------------------
+##### Changed
+- Styling of repeat + button in Grid Theme.
+
 ##### Fixed
 - A calculated item (without form control) and with a relevant inside a repeat throws an exception when there are 0 repeats and the relevant is evaluated.
 - Exception occurs in error page generation when page cannot be found.
+- Various issues with repeat + button in Pages Mode when repeat=page.
+- Excessive change events fired by datepicker, timepicker, and datetimepicker when reset button is clicked when value is empty.
 
 [1.55.2] - 2017-11-02
 ----------------------
@@ -22,7 +27,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Track fragment identifier (#abcd) if Google Analytics is enabled, and no longer track querystrings.
 
 ##### Fixed
-- If repeat = page in Pages mode, the second+ repeat is now shown.
+- If repeat = page in Pages mode, the second+ repeat is not shown.
 
 [1.55.0] - 2017-10-19
 ----------------------
