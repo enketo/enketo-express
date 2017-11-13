@@ -200,7 +200,10 @@
         "instancenotfound": "Record not present. It may have expired.",
         "invalidediturl": "Not a valid edit URL",
         "loadfailed": "Failed to load __resource__",
-        "notfoundinformlist": "Form with ID __formId__ not found in /formList",
+        "notfoundinformlist": [
+            "Oops, this form doesn't exist (anymore). Most likely the owner of the form has deleted it, archived it, or disabled it. Please contact the form's owner to confirm.",
+            "Detailed error: Form with ID __formId__ not found in /formList."
+        ],
         "pagenotfound": "Page not Found",
         "surveyidnotactive": "Survey with this ID no longer active",
         "surveyidnotfound": "Survey with this ID not found",

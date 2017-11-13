@@ -2,10 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.55.3]
 ----------------------
 ##### Changed
 - Styling of repeat + button in Grid Theme.
+- Error message when form cannot be found in /formList.
 
 ##### Fixed
 - A calculated item (without form control) and with a relevant inside a repeat throws an exception when there are 0 repeats and the relevant is evaluated.
