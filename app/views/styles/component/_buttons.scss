@@ -260,7 +260,7 @@ button::-moz-focus-inner {
 
 // fixes (would be nice if these weren't necessary):
 
-.question .btn-default {
+.question:not(.or-appearance-literacy) .btn-default {
     padding: 0 15px;
 }
 
