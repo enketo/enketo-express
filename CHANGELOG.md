@@ -2,13 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.55.4] - 2017-11-24
 --------------------
 ##### Changed
 - Visually separate repeat instances in Grid Theme.
 
 ##### Fixed
 - A new repeat with a date field that is not relevant by default does not get the date widget on non-touchscreen devices.
+- Draw/signature widget not working in pages mode sometimes, if it is not on the first page.
 
 [1.55.3] - 2017-11-13
 ---------------------
