@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+--------------------
+##### Removed
+- Temporary touch swipe handling in Pages mode as it was breaking things.
+
 [1.55.4] - 2017-11-24
 --------------------
 ##### Changed
