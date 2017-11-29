@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.55.5] - 2017-11-30
 --------------------
 ##### Fixed
 - When a repeat is removed any logic that depends on repeat position changes is not updated when it should be.
@@ -11,6 +11,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Printing: number input up/down buttons shown in Firefox.
 - Repeat with relevants and parent group without `ref` attribute is not revealed when relevant becomes true.
 - In pages mode, text and number inputs can no longer get focus.
+- Printing: select-one does not show all options in long lists.
+- Printing: styling improvements for draw/distress/likert widgets.
 
 [1.55.4] - 2017-11-24
 --------------------
