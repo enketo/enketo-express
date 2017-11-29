@@ -4,8 +4,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 --------------------
-##### Removed
-- Temporary touch swipe handling in Pages mode as it was breaking things.
+##### Fixed
+- When a repeat is removed any logic that depends on repeat position changes is not updated when it should be.
+- Printing: only first page printed in Firefox.
+- Printing: group collapse carets shown.
+- Printing: number input up/down buttons shown in Firefox.
+- Repeat with relevants and parent group without `ref` attribute is not revealed when relevant becomes true.
+- In pages mode, text and number inputs can no longer get focus.
 
 [1.55.4] - 2017-11-24
 --------------------
