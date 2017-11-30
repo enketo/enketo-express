@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- When swapping to Grid Theme via API or app 'default theme' setting, the proper print dialog is not shown.
+
 [1.55.5] - 2017-11-30
 --------------------
 ##### Fixed

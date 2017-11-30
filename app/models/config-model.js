@@ -284,6 +284,7 @@ module.exports = {
         modernBrowsersURL: 'modern-browsers',
         supportEmail: config.support.email,
         themesSupported: config[ 'themes supported' ],
+        defaultTheme: config[ 'default theme' ],
         languagesSupported: config[ 'languages supported' ],
         timeout: config[ 'timeout' ],
         submissionParameter: {

@@ -147,16 +147,11 @@ function _addBranding( survey ) {
  * @return {[type]}        [description]
  */
 function _swapTheme( survey ) {
-    return new Promise( function( resolve, reject ) {
-        if ( survey.form && survey.model ) {
-            gui.swapTheme( survey.theme || utils.getThemeFromFormStr( survey.form ) )
-                .then( function() {
-                    resolve( survey );
-                } );
-        } else {
-            reject( new Error( 'Received form incomplete' ) );
-        }
-    } );
+    if ( survey.form && survey.model ) {
+        return gui.swapTheme( survey );
+    } else {
+        return Promise.reject( new Error( 'Received form incomplete' ) );
+    }
 }
 
 function _prepareInstance( modelStr, defaults ) {
@@ -196,7 +191,7 @@ function _init( formParts ) {
                 controller.init( 'form.or:eq(0)', {
                     modelStr: formParts.model,
                     instanceStr: _prepareInstance( formParts.model, settings.defaults ),
-                    external: formParts.externalData
+                    external: formParts.externalData,
                 } ).then( function( form ) {
                     form.view.$.add( $buttons ).removeClass( 'hide' );
                     $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );

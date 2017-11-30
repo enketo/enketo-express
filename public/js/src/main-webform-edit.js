@@ -34,17 +34,15 @@ translator.init( survey )
         formParts.instanceAttachments = responses[ 1 ].instanceAttachments;
 
         if ( formParts.form && formParts.model && formParts.instance ) {
-            gui.swapTheme( responses[ 0 ].theme || utils.getThemeFromFormStr( responses[ 0 ].form ) )
-                .then( function() {
-
-                    _init( formParts );
-                } )
-                .then( connection.getMaximumSubmissionSize )
-                .then( _updateMaxSizeSetting );
+            return gui.swapTheme( formParts );
         } else {
             throw new Error( t( 'error.unknown' ) );
         }
-    } ).catch( _showErrorOrAuthenticate );
+    } )
+    .then( _init )
+    .then( connection.getMaximumSubmissionSize )
+    .then( _updateMaxSizeSetting )
+    .catch( _showErrorOrAuthenticate );
 
 function _updateMaxSizeSetting( maxSize ) {
     if ( maxSize ) {
@@ -70,7 +68,7 @@ function _init( formParts ) {
             modelStr: formParts.model,
             instanceStr: formParts.instance,
             external: formParts.externalData,
-            instanceAttachments: formParts.instanceAttachments
+            instanceAttachments: formParts.instanceAttachments,
         } ).then( function( form ) {
             form.view.$.add( $buttons ).removeClass( 'hide' );
             $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );

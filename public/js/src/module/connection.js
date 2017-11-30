@@ -340,6 +340,7 @@ function getFormParts( props ) {
             } )
             .done( function( data ) {
                 data.enketoId = props.enketoId;
+                data.theme = data.theme || utils.getThemeFromFormStr( data.form ) || settings.defaultTheme;
                 _getExternalData( data )
                     .then( resolve )
                     .catch( reject );

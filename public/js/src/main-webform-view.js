@@ -51,10 +51,7 @@ translator.init( survey )
     } )
     .then( function( formParts ) {
         if ( formParts.form && formParts.model ) {
-            return gui.swapTheme( formParts.theme || utils.getThemeFromFormStr( formParts.form ) )
-                .then( function() {
-                    return formParts;
-                } );
+            return gui.swapTheme( formParts );
         } else {
             throw new Error( t( 'error.unknown' ) );
         }
@@ -93,7 +90,7 @@ function _init( formParts ) {
             modelStr: formParts.model,
             instanceStr: formParts.instance,
             external: formParts.externalData,
-            instanceAttachments: formParts.instanceAttachments
+            instanceAttachments: formParts.instanceAttachments,
         } ).then( function( form ) {
             form.view.$.add( $buttons ).removeClass( 'hide' );
             $( 'head>title' ).text( $( '#form-title' ).text() );

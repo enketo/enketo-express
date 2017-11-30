@@ -18,6 +18,7 @@ var pages;
 var homeScreenGuidance;
 var updateStatus;
 var feedbackBar;
+var formTheme;
 
 // Customize vex.dialog.custom.js options
 dialog.defaultOptions.className = 'vex-theme-plain';
@@ -65,7 +66,7 @@ function setEventHandlers() {
     } );
 
     $( '.form-header__button--print' ).on( 'click', function() {
-        printForm( promptPrintSettings );
+        printForm( promptPrintSettings, formTheme );
     } );
 
     $( '.side-slider__toggle, .offline-enabled__queue-length' ).on( 'click', function() {
@@ -106,13 +107,10 @@ function setEventHandlers() {
     } );
 }
 
-function swapTheme( theme ) {
-
+function swapTheme( formParts ) {
+    var theme = formParts.theme;
     return new Promise( function( resolve ) {
-        if ( !theme ) {
-            console.log( 'No theme defined in form or database. Keeping default theme.' );
-            resolve();
-        } else if ( settings.themesSupported.some( function( supportedTheme ) {
+        if ( theme && settings.themesSupported.some( function( supportedTheme ) {
                 return theme === supportedTheme;
             } ) ) {
             var $currentStyleSheet = $( 'link[rel=stylesheet][media=all][href*=theme-]' );
@@ -121,13 +119,15 @@ function swapTheme( theme ) {
             var $newPrintStyleSheet = '<link rel="stylesheet" media="print" href="' + settings.basePath + '/css/theme-' + theme + '.print.css"/>';
 
             $newStyleSheet.on( 'load', function() {
-                resolve();
+                formTheme = theme;
+                resolve( formParts );
             } );
             $currentStyleSheet.replaceWith( $newStyleSheet );
             $currentPrintStyleSheet.replaceWith( $newPrintStyleSheet );
         } else {
             console.log( 'Theme "' + theme + '" is not supported. Keeping default theme.' );
-            resolve();
+            delete formParts.theme;
+            resolve( formParts );
         }
     } );
 }
