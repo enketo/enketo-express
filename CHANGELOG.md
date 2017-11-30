@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Printing: When swapping to Grid Theme via API or app 'default theme' setting, the proper print dialog is not shown.
 - Printing: Non-relevant non-select fields are not greyed out.
+- Printing: Geo widget without "maps" appearance is shown on screen but not on printout.
+- Printing: Geo widget map/zoom selector buttons are shown on printouts.
 
 [1.55.5] - 2017-11-29
 --------------------
