@@ -146,7 +146,7 @@ function getAuthHeader( url, credentials ) {
 
     return new Promise( function( resolve ) {
         var req = request( options, function( error, response ) {
-            if ( response.statusCode === 401 && credentials && credentials.user && credentials.pass ) {
+            if ( !error && response && response.statusCode === 401 && credentials && credentials.user && credentials.pass ) {
                 // Using request's internal library we create an appropiate authorization header.
                 // This is a bit dangerous because internal changes in request/request, could break this code.
                 req.method = 'POST';
