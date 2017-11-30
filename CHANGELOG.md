@@ -5,9 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [Unreleased]
 ---------------------
 ##### Fixed
-- When swapping to Grid Theme via API or app 'default theme' setting, the proper print dialog is not shown.
+- Printing: When swapping to Grid Theme via API or app 'default theme' setting, the proper print dialog is not shown.
+- Printing: Non-relevant non-select fields are not greyed out.
 
-[1.55.5] - 2017-11-30
+[1.55.5] - 2017-11-29
 --------------------
 ##### Fixed
 - When a repeat is removed any logic that depends on repeat position changes is not updated when it should be.
