@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Printing: Non-relevant non-select fields are not greyed out.
 - Printing: Geo widget without "maps" appearance is shown on screen but not on printout.
 - Printing: Geo widget map/zoom selector buttons are shown on printouts.
+- Printing: Various Analog Scale widget styling issues.
 
 [1.55.5] - 2017-11-29
 --------------------
