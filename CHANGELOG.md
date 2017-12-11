@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.55.6] - 2017-12-11
 ---------------------
 ##### Fixed
 - Printing: When swapping to Grid Theme via API or app 'default theme' setting, the proper print dialog is not shown.
@@ -12,6 +12,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Printing: Various Analog Scale widget styling issues.
 - Grid Theme: A table-list/list-no-label question does not have a bottom border.
 - Grid Theme: Top of page sometimes does not have a border.
+- jr:choice-name() function can not handle syntax with more complex XPaths.
+- Nodenames with dots cause an exception during extraction of a serialized model without irrelevant nodes.
 
 [1.55.5] - 2017-11-29
 --------------------
