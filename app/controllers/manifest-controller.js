@@ -28,7 +28,9 @@ function getManifest( req, res ) {
             _getOfflineFallbackHtml( req, res )
         ] )
         .then( function( result ) {
-            return manifest.get( result[ 0 ], result[ 1 ], req.i18n.language );
+            // TODO: if we ever start supporting dialects, we need to change this
+            var lang = req.i18n.language.split( '-' )[ 0 ];
+            return manifest.get( result[ 0 ], result[ 1 ], lang );
         } );
 }
 
