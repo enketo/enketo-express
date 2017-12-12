@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.55.7] - 2017-12-12
 ---------------------
 ##### Fixed
 - Offline loading fails if language code in `Accept-Language` header contains a dialect such as `sv-SE`.
