@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Changed
+- When clicking the label of an upload question, the filepicker will no longer launch.
+
+##### Fixed
+- Datepicker not available on iOS browsers (again, sorry).
+
 [1.55.7] - 2017-12-12
 ---------------------
 ##### Fixed
