@@ -212,6 +212,10 @@
     "feedback": {
         "header": "Information"
     },
+    "filepicker": {
+        "notFound": "File __existing__ could not be found (leave unchanged if already submitted and you want to preserve it).",
+        "waitingForPermissions": "Waiting for user permissions."
+    },
     "form": {
         "chooseLanguage": "Choose Language",
         "logout": "log out",

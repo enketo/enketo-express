@@ -4,6 +4,7 @@ module.exports = function( grunt ) {
     var JS_INCLUDE = [ '**/*.js', '!node_modules/**', '!test/**/*.spec.js', '!public/js/*-bundle.js', '!public/js/*-bundle.min.js' ];
     var pkg = grunt.file.readJSON( 'package.json' );
     var path = require( 'path' );
+    var nodeSass = require( 'node-sass' );
 
     require( 'time-grunt' )( grunt );
     require( 'load-grunt-tasks' )( grunt );
@@ -31,6 +32,15 @@ module.exports = function( grunt ) {
             }
         },
         sass: {
+            options: {
+                functions: {
+                    'base64-url($mimeType, $data)': function( mimeType, data ) {
+                        var base64 = new Buffer( data.getValue() ).toString( 'base64' );
+                        var urlString = 'url("data:' + mimeType.getValue() + ';base64,' + base64 + '")';
+                        return nodeSass.types.String( urlString );
+                    }
+                }
+            },
             compile: {
                 cwd: 'app/views/styles',
                 dest: 'public/css',
