@@ -14,10 +14,6 @@ var settings = require( './settings' );
 var $ = require( 'jquery' );
 var utils = require( './utils' );
 var coreUtils = require( 'enketo-core/src/js/utils' );
-
-var supported = typeof FileReader !== 'undefined';
-var notSupportedAdvisoryMsg = '';
-
 var instanceAttachments;
 
 /**
@@ -25,22 +21,7 @@ var instanceAttachments;
  * @return {[type]} promise boolean or rejection with Error
  */
 function init() {
-
-    return new Promise( function( resolve, reject ) {
-        if ( supported ) {
-            resolve( true );
-        } else {
-            reject( new Error( 'FileReader not supported.' ) );
-        }
-    } );
-}
-
-/**
- * Whether filemanager is supported in browser
- * @return {Boolean}
- */
-function isSupported() {
-    return supported;
+    return Promise.resolve( true );
 }
 
 /**
@@ -206,8 +187,6 @@ function _getMaxSize() {
 }
 
 module.exports = {
-    isSupported: isSupported,
-    notSupportedAdvisoryMsg: notSupportedAdvisoryMsg,
     isWaitingForPermissions: isWaitingForPermissions,
     init: init,
     setInstanceAttachments: setInstanceAttachments,
