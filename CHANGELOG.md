@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.55.10] - 2017-12-25
+----------------------
+##### Changed
+- Image scaling by Image Map widget is more sensitive to screen size to avoid scrolling.
+
+##### Fixed
+- The advertised required transformer version fails to build on Windows 10.
+- In Signature/Draw widget a line can be detected as a page-swipe in Pages mode.
+- If Signature/Draw widget has loaded an existing value and is not on the first page, the drawing won't be shown until clicked.
+- If SVG image in Image Map widget contains inline `style` attribute with fill and stroke the 'selected' state is not shown.
+
 [1.55.9] - 2017-12-22
 ---------------------
 ##### Changed

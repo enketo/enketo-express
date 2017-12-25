@@ -6,6 +6,6 @@ var Form = require( 'enketo-core' );
 
 describe( 'Build checks: ', function() {
     it( 'Transformer matches Core', function() {
-        expect( pkg.dependencies[ 'enketo-transformer' ] ).to.equal( Form.getRequiredTransformerVersion() );
+        expect( pkg.dependencies[ 'enketo-transformer' ] ).to.equal( Form.requiredTransformerVersion );
     } );
 } );
