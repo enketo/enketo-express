@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Added
+- The "query parameter to add to submission" (in config.json) is now also added to all /formList requests.
+
 [1.55.10] - 2017-12-25
 ----------------------
 ##### Changed

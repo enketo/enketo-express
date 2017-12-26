@@ -9,9 +9,8 @@ var t = require( './translator' ).t;
 var utils = require( './utils' );
 var $ = require( 'jquery' );
 var CONNECTION_URL = settings.basePath + '/connection';
-// location.search is added to pass the lang= parameter, in case this is used to override browser/system locale
 var TRANSFORM_URL = settings.basePath + '/transform/xform' +
-    ( settings.enketoId ? '/' + settings.enketoIdPrefix + settings.enketoId : '' ) + location.search;
+    ( settings.enketoId ? '/' + settings.enketoIdPrefix + settings.enketoId : '' );
 var TRANSFORM_HASH_URL = settings.basePath + '/transform/xform/hash/' + settings.enketoIdPrefix + settings.enketoId;
 var EXPORT_URL = settings.basePath + '/export/get-url';
 var INSTANCE_URL = ( settings.enketoId ) ? settings.basePath + '/submission/' + settings.enketoIdPrefix + settings.enketoId : null;
@@ -106,9 +105,10 @@ function getDownloadUrl( zipFile ) {
  */
 function _uploadBatch( recordBatch ) {
     return new Promise( function( resolve, reject ) {
-        // submission URL is dynamic
+        // Submission URL is dynamic, because settings.submissionParameter only gets populated after loading form from
+        // cache in offline mode.
         var submissionUrl = ( settings.enketoId ) ? settings.basePath + '/submission/' + settings.enketoIdPrefix + settings.enketoId +
-            utils.getQueryString( settings.submissionParameter ) : null;
+            _getQuery() : null;
 
         $.ajax( submissionUrl, {
                 type: 'POST',
@@ -329,7 +329,7 @@ function getFormParts( props ) {
     var error;
 
     return new Promise( function( resolve, reject ) {
-        $.ajax( TRANSFORM_URL, {
+        $.ajax( TRANSFORM_URL + _getQuery(), {
                 type: 'POST',
                 data: {
                     serverUrl: props.serverUrl,
@@ -482,7 +482,7 @@ function getFormPartsHash( props ) {
     var error;
 
     return new Promise( function( resolve, reject ) {
-        $.ajax( TRANSFORM_HASH_URL, {
+        $.ajax( TRANSFORM_HASH_URL + _getQuery(), {
                 type: 'POST'
             } )
             .done( function( data ) {
@@ -518,6 +518,11 @@ function getExistingInstance( props ) {
                 reject( error );
             } );
     } );
+}
+
+// Note: settings.submissionParameter is only populated after loading form from cache in offline mode.
+function _getQuery() {
+    return utils.getQueryString( [ settings.languageOverrideParameter, settings.submissionParameter ] );
 }
 
 module.exports = {

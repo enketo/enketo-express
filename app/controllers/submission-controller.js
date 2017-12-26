@@ -52,7 +52,7 @@ function submit( req, res, next ) {
     var options;
     var paramName = req.app.get( 'query parameter to pass to submission' );
     var paramValue = req.query[ paramName ];
-    var query = ( paramValue ) ? '?' + paramName + '=' + paramValue : '';
+    var query = paramValue ? '?' + paramName + '=' + paramValue : '';
     var instanceId = req.headers[ 'x-openrosa-instance-id' ];
     var deprecatedId = req.headers[ 'x-openrosa-deprecated-id' ];
     var id = req.enketoId;

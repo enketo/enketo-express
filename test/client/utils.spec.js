@@ -238,6 +238,12 @@ describe( 'Client Utilities', function() {
                     }
                 } ], '?ecid=abcd&d[%2Fa%2Fb]=c&d[%2Fb%2Fc]=d%20and%20e'
             ],
+            [
+                [ undefined, {
+                    name: 'ecid',
+                    value: 'a'
+                } ], '?ecid=a'
+            ],
         ].forEach( function( test ) {
             it( 'generates ' + test[ 1 ] + ' from ' + JSON.stringify( test[ 0 ] ) + ' correctly', function() {
                 expect( utils.getQueryString( test[ 0 ] ) ).to.equal( test[ 1 ] );

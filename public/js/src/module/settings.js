@@ -84,6 +84,12 @@ if ( settings.submissionParameter && settings.submissionParameter.name ) {
     settings.submissionParameter.value = queryParams[ settings.submissionParameter.name ];
 }
 
+// add language override value
+settings.languageOverrideParameter = queryParams.lang ? {
+    name: 'lang',
+    value: queryParams.lang
+} : undefined;
+
 // set default maxSubmissionSize
 settings.maxSize = DEFAULT_MAX_SIZE;
 
