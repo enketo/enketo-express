@@ -58,7 +58,7 @@ module.exports = function( grunt ) {
                 tasks: [ 'client-config-file:create' ]
             },
             sass: {
-                files: [ 'app/views/styles/**/*.scss', 'widget/**/*.scss' ],
+                files: [ 'app/views/styles/**/*.scss', 'widget/**/*.scss', '!app/views/styles/component/_system_variables.scss' ],
                 tasks: [ 'sass' ],
                 options: {
                     spawn: false,
