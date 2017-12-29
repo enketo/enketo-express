@@ -2,10 +2,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.56.0] - 2017-12-29
 ----------------------
 ##### Added
 - The "query parameter to add to submission" (in config.json) is now also added to all /formList requests.
+
+##### Changed
+- Added workarounds for IE11 to match regular checkbox and radiobutton styling.
+- Modest performance improvement with large repeat counts.
+
+##### Fixed
+- Collapse icon overlaps border on small screens.
+- Black background shown behind radiobuttons and checkboxes on iOS browsers.
+- RTL scripts do not have centered checkboxes/radiobuttons in tables.
+- If preload item is placed inside a repeat with a repeat-count of 0, an exception occurs.
+- RTL scripts with Grid Theme have mislocated repeat numbers and repeat removal button.
 
 [1.55.10] - 2017-12-25
 ----------------------
