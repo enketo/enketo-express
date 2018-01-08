@@ -2,13 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.57.0] - 2018-01-08
 ---------------------
 ##### Added
 - Support for escaping \* and \_ characters in markdown.
 
+##### Changed
+- Invalid dates (and datetimes) such as 2018-12-35 are no longer automically converted to a valid date. They convert to empty now.
+
 ##### Fixed
 - Proper IANA language tag inclusion in XForm does not prevent/override (weak) directionality detection.
+- Printing: datetime picker inputs print below each other in Chrome.
+- Safari invalidates any valid date (and datetime) with segments < 10, e.g. 2018-01-06.
 
 [1.56.1] - 2018-01-01
 ---------------------
