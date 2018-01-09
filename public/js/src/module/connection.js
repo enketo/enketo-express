@@ -334,8 +334,7 @@ function getFormParts( props ) {
                 data: {
                     serverUrl: props.serverUrl,
                     xformId: props.xformId,
-                    xformUrl: props.xformUrl,
-                    noHashes: props.noHashes || false
+                    xformUrl: props.xformUrl
                 }
             } )
             .done( function( data ) {

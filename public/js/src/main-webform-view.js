@@ -16,8 +16,7 @@ var $loader = $( '.form__loader' );
 var $buttons = $( '.form-header__button--print, button#close-form' );
 var survey = {
     enketoId: settings.enketoId,
-    instanceId: settings.instanceId,
-    noHashes: true
+    instanceId: settings.instanceId
 };
 
 // Completely disable calculations in Enketo Core

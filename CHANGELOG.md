@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Changed
+- Server-side form caching mechanism was re-written to support dynamic manifest URLs. **WARNING: test this release extra thoroughly**
+
 [1.58.0] - 2018-01-19
 ---------------------
 ##### Added

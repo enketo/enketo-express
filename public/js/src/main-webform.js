@@ -24,8 +24,7 @@ var survey = {
     serverUrl: settings.serverUrl,
     xformId: settings.xformId,
     xformUrl: settings.xformUrl,
-    defaults: settings.defaults,
-    noHashes: !settings.offline
+    defaults: settings.defaults
 };
 
 _setEmergencyHandlers();

@@ -46,7 +46,6 @@ function getSurvey( survey ) {
                     survey.form = cacheObj.form;
                     survey.model = cacheObj.model;
                     survey.formHash = cacheObj.formHash;
-                    survey.mediaUrlHash = cacheObj.mediaUrlHash;
                     survey.xslHash = cacheObj.xslHash;
                     survey.languageMap = JSON.parse( cacheObj.languageMap || '{}' );
                     resolve( survey );
@@ -74,15 +73,15 @@ function getSurveyHashes( survey ) {
         } else {
             key = _getKey( survey );
 
-            client.hmget( key, [ 'formHash', 'mediaUrlHash', 'xslHash' ], function( error, hashArr ) {
+            client.hmget( key, [ 'formHash', 'xslHash' ], function( error, hashArr ) {
+                console.log( 'hashArr', key, hashArr );
                 if ( error ) {
                     reject( error );
-                } else if ( !hashArr || !hashArr[ 0 ] || !hashArr[ 2 ] ) {
+                } else if ( !hashArr || !hashArr[ 0 ] || !hashArr[ 1 ] ) {
                     resolve( survey );
                 } else {
                     survey.formHash = hashArr[ 0 ];
-                    survey.mediaUrlHash = hashArr[ 1 ];
-                    survey.xslHash = hashArr[ 2 ];
+                    survey.xslHash = hashArr[ 1 ];
                     resolve( survey );
                 }
             } );
@@ -132,7 +131,7 @@ function isCacheUpToDate( survey ) {
                     // This allows the same cache to be used for a form for the OpenRosa server serves different media content,
                     // e.g. based on the user credentials.
                     _addHashes( survey );
-                    if ( cacheObj.formHash !== survey.formHash || cacheObj.mediaUrlHash !== String( survey.mediaUrlHash ) || cacheObj.xslHash !== survey.xslHash ) {
+                    if ( cacheObj.formHash !== survey.formHash || cacheObj.xslHash !== survey.xslHash || cacheObj.mediaUrlHash ) {
                         debug( 'cache is obsolete' );
                         resolve( false );
                     } else {
@@ -164,10 +163,12 @@ function setSurvey( survey ) {
             _addHashes( survey );
             obj = {
                 formHash: survey.formHash,
-                mediaUrlHash: survey.mediaUrlHash,
                 xslHash: survey.xslHash,
                 form: survey.form,
                 model: survey.model,
+                // The mediaUrlHash property is an artefact and no longer used.
+                // When hmset updates the database it would keep it in place, so we explicitly set it to empty.s
+                mediaUrlHash: '',
                 languageMap: JSON.stringify( survey.languageMap || {} )
             };
 
@@ -275,10 +276,6 @@ function _getKey( survey ) {
  */
 function _addHashes( survey ) {
     survey.formHash = survey.formHash || survey.info.hash;
-    // The mediaUrlHash is generated from the downloadUrls in the manifest. This is used for the server cache
-    // which only needs updating if URLs change. It should never update when only the media content changes. 
-    // This allows using dynamic externa data with user-specific content.
-    survey.mediaUrlHash = survey.mediaUrlHash || utils.getXformsManifestHash( survey.manifest, 'downloadUrl' );
     survey.xslHash = survey.xslHash || transformer.version;
 }
 

@@ -18,7 +18,6 @@ var $buttons = $( '.form-header__button--print, button#submit-form' );
 var survey = {
     enketoId: settings.enketoId,
     instanceId: settings.instanceId,
-    noHashes: !settings.offline
 };
 
 translator.init( survey )

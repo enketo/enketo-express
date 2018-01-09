@@ -161,7 +161,6 @@ describe( 'Cache Model', function() {
                 expect( promise ).to.eventually.have.property( 'form' ).that.equals( survey.form ),
                 expect( promise ).to.eventually.have.property( 'model' ).that.equals( survey.model ),
                 expect( promise ).to.eventually.have.property( 'xslHash' ).and.to.have.length.above( 2 ),
-                expect( promise ).to.eventually.have.property( 'mediaUrlHash' ).that.equals( '' ),
                 expect( promise ).to.eventually.have.property( 'formHash' ).and.to.have.length.above( 2 )
             ] );
         } );
@@ -171,7 +170,6 @@ describe( 'Cache Model', function() {
                 expect( promise ).to.eventually.have.property( 'form' ).that.equals( survey.form ),
                 expect( promise ).to.eventually.have.property( 'model' ).that.equals( survey.model ),
                 expect( promise ).to.eventually.have.property( 'xslHash' ).and.to.have.length.above( 2 ),
-                expect( promise ).to.eventually.have.property( 'mediaUrlHash' ).and.to.have.length.above( 2 ),
                 expect( promise ).to.eventually.have.property( 'formHash' ).and.to.have.length.above( 2 )
             ] );
         } );
@@ -237,6 +235,7 @@ describe( 'Cache Model', function() {
                 expect( checkPromise ).to.eventually.deep.equal( false )
             ] );
         } );
+        /* TODO: rewrite for new cache, if necessary
         it( 'returns false when the XForm hash remains unchanged but the URL of a mediaFile changes', function() {
             var setPromise;
             var checkPromise;
@@ -254,6 +253,7 @@ describe( 'Cache Model', function() {
                 expect( checkPromise ).to.eventually.equal( false )
             ] );
         } );
+        */
         it( 'returns null when instance record not cached', function() {
             survey.openRosaId = 'non-existing';
             return expect( model.check( survey ) ).to.eventually.deep.equal( null );
@@ -290,7 +290,6 @@ describe( 'Cache Model', function() {
         it( 'returns a different formHash when only the XForm hash has been updated', function() {
             var getHashes1;
             var getHashes2;
-            var expectedMediaUrlHash = '125d07a4b194812b6dd23be62e60f846';
             var updatedSurvey = JSON.parse( JSON.stringify( survey ) );
 
             getHashes1 = model.set( survey ).then( function( s ) {
@@ -313,12 +312,10 @@ describe( 'Cache Model', function() {
 
             return Promise.all( [
                 expect( getHashes1 ).to.eventually.have.property( 'formHash' ).that.equals( 'abc' ),
-                expect( getHashes1 ).to.eventually.have.property( 'mediaUrlHash' ).that.equals( expectedMediaUrlHash ),
-
-                expect( getHashes2 ).to.eventually.have.property( 'formHash' ).that.equals( 'def' ),
-                expect( getHashes2 ).to.eventually.have.property( 'mediaUrlHash' ).that.equals( expectedMediaUrlHash ),
+                expect( getHashes2 ).to.eventually.have.property( 'formHash' ).that.equals( 'def' )
             ] );
         } );
+        /* TODO: rewrite these tests if necessary, to test the new cache mechanism 
         it( 'returns the same mediaUrl hash when manifest resource md5 has been updated', function() {
             var getHashes1;
             var getHashes2;
@@ -368,6 +365,7 @@ describe( 'Cache Model', function() {
                 expect( getHashes2 ).to.eventually.have.property( 'mediaUrlHash' ).that.equals( '0a0c98112322a6a65835d8cd1955f871' ),
             ] );
         } );
+        */
     } );
 
     describe( 'flush(ing): when attempting to flush the cache', function() {
