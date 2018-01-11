@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Changed
+- Restored pulldown select button height to normal.
+
 [1.57.0] - 2018-01-08
 ---------------------
 ##### Added
