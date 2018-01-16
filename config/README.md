@@ -105,3 +105,7 @@ Determines whether Enketo should validate questions immediately if a related que
 #### validate page
 Determines whether the Next button should trigger validation and block the user from proceeding to next page if validation fails. The default value is `true`.
 
+#### swipe page
+This setting with default `true` value determines whether to enable support for _swiping_ to the next and previous page for forms that are divided into pages.
+
+

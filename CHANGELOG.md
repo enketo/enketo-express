@@ -4,8 +4,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Added
+- Option to turn off page-swipe support.
+
 ##### Changed
 - Restored pulldown select button height to normal.
+
+##### Fixed
+- An output inside a group label that is the parent of a repeat with 0 instances, causes a loading exception.
+- (In Enketo Transformer) Readonly question does not show constraint message.
 
 [1.57.0] - 2018-01-08
 ---------------------

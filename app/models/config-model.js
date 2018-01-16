@@ -293,7 +293,8 @@ module.exports = {
         basePath: config[ 'base path' ],
         repeatOrdinals: config[ 'repeat ordinals' ],
         validateContinuously: config[ 'validate continuously' ],
-        validatePage: config[ 'validate page' ]
+        validatePage: config[ 'validate page' ],
+        swipePage: config[ 'swipe page' ]
     },
     getThemesSupported: getThemesSupported
 };
