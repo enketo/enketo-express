@@ -13,6 +13,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - An output inside a group label that is the parent of a repeat with 0 instances, causes a loading exception.
 - (In Enketo Transformer) Readonly question does not show constraint message.
+- A top-level group with a relevant that refers to a node inside a repeat may not get re-evaluated when the node changes and multiple repeats exist.
+- Notifications/news in form previews are shown on printouts.
 
 [1.57.0] - 2018-01-08
 ---------------------
