@@ -2,19 +2,23 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.58.0] - 2018-01-19
 ---------------------
 ##### Added
 - Option to turn off page-swipe support.
+- Support for escaping \# characters in markdown.
 
 ##### Changed
 - Restored pulldown select button height to normal.
+- Reduced margins around markdown headers.
+- Markdown headers now work at the start of any line, even if not followed by a newline.
 
 ##### Fixed
 - An output inside a group label that is the parent of a repeat with 0 instances, causes a loading exception.
-- (In Enketo Transformer) Readonly question does not show constraint message.
+- Readonly question does not show constraint message.
 - A top-level group with a relevant that refers to a node inside a repeat may not get re-evaluated when the node changes and multiple repeats exist.
 - Notifications/news in form previews are shown on printouts.
+- Markdown headers in the middle of a string are not always ignored.
 
 [1.57.0] - 2018-01-08
 ---------------------
