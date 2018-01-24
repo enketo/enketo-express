@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Server-side form caching mechanism was re-written to support dynamic manifest URLs. **WARNING: test this release extra thoroughly**
 
+##### Fixed
+- Date strings returned by XPath evaluator for question with type 'date' are not considered valid dates and set to ''.
+
 [1.58.0] - 2018-01-19
 ---------------------
 ##### Added
