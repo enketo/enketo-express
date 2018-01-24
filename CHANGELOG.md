@@ -4,11 +4,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Added 
+- External authentication with token.
+
 ##### Changed
 - Server-side form caching mechanism was re-written to support dynamic manifest URLs. **WARNING: test this release extra thoroughly**
+- Configuration for authentication has changed, see [documentation](./config/README.md). **WARNING: update your config.json** (even though old configuration should still work for now).
 
 ##### Fixed
 - Date strings returned by XPath evaluator for question with type 'date' are not considered valid dates and set to ''.
+- When redirecting to an external login URL, the return URL is not encoded.
 
 [1.58.0] - 2018-01-19
 ---------------------

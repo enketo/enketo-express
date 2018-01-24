@@ -7,7 +7,7 @@ _The modern [Enketo Smart Paper](https://enketo.org) web application._
 
 #### Manually:
 
-1. Install JS prerequisites: [Node.js](https://github.com/nodesource/distributions) (6.x LTS recommended, older versions will be incompatible soon), [Grunt Client](http://gruntjs.com), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
+1. Install JS prerequisites: [Node.js](https://github.com/nodesource/distributions) (8.x LTS recommended, and at least 6.x), [Grunt Client](http://gruntjs.com), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
 2. Install [Redis](http://redis.io/topics/quickstart)
 3. Install build-essential and git (and libfontconfig to run tests) with `(sudo) apt-get install build-essential git libfontconfig`
 4. Clone this repository
@@ -107,20 +107,11 @@ The recommended way to customize themes is to either:
 
 ### Authentication
 
-This app can manage [OpenRosa form authentication](https://bitbucket.org/javarosa/javarosa/wiki/AuthenticationAPI) for protected forms, i.e. it is possible to log in to forms with credentials set in your OpenRosa Server (e.g. Aggregate/KoBo/Ona), just like in ODK Collect. 
+This app can manage [OpenRosa form authentication](https://bitbucket.org/javarosa/javarosa/wiki/AuthenticationAPI) for protected forms, i.e. it is possible to log in to forms with credentials set in your OpenRosa Server (e.g. Aggregate/KoBo), just like in ODK Collect. 
 
-To make use of OpenRosa form authentication, set the following in config/config.json:
+Alternatively, you could make use various _external authentication_ methods, i.e. using the authentication management of your form and data server.
 
-* linked form and data server -> authentication -> managed by enketo -> true
-
-Alternatively, you could make use of _external authentication_, i.e. the authentication management of your form and data server. Whenever a request (form, formlist, submission) requires authentication, enketo-express re-directs the user to a login page on the form and data server and simply passes any cookies back to that server whenever it makes any subsequent request. It is up to the form and data server to authenticate based on the cookie content. This mechanism requires any enketo-express webform to have access to these browser cookies so the form/data server and Enketo Express would have to be on the same domain (a different subdomain is possible when setting cross-domain cookies). It also requires the login page to have a mechanism for redirecting the authenticated user back, via a query string parameter.
-
-To make use of external authentication set the following in config/config.json:
-
-* linked form and data server -> authentication -> managed by enketo -> `false`
-* linked form and data server -> authentication -> external login url that sets cookie -> e.g. `http://example.com/login?return={RETURNURL}`, where {RETURNURL} will be set by enketo.
-
-For more information see [this documentation page](https://enketo.org/develop/auth/).
+For more information see [this documentation page](https://enketo.org/develop/auth/) and the [configuration documentation]((./config/README.md#linked-form-and-data-server).
 
 ### Security
 

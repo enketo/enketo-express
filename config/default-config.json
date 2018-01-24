@@ -8,9 +8,8 @@
         "api key": "enketorules",
         "legacy formhub": false,
         "authentication": {
-            "managed by enketo": true,
-            "allow insecure transport": false,
-            "external login url that sets cookie": "http://example.com/login?return={RETURNURL}"
+            "type": "basic",
+            "allow insecure transport": "false"
         }
     },
     "timeout": 300000,

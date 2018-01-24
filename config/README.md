@@ -18,10 +18,51 @@ Enable or disable offline functionality. Is either `false` or `true`.
 * name: The (short) name of your form server. This name will be used in various places in the app to provide feedback to the user. E.g. "ODK Aggregate", "KoboToolbox", "MyCoolService"
 * **server url: Initially this can be an empty string (`""`). This will allow any server that knows the secret api key to use your Enketo installation. If you'd like to lock the usage down to a particular form server for optimimum security, fill in your domain without the protocol. E.g. "kobotoolbox.org". Depending on your form server, you can even specify that the server can only be used for a particular account e.g. "myformhub.org/janedoe". You can also use a regular expression string e.g. "opendatakit\\.appspot\\.com" (it will be used to create a regular expression with RegExp()).**
 * **api key: The api key that will be used to authenticate any API usage, e.g. to launch a form when the 'webform' button is clicked. This is the key (sometimes called _token_) you need to copy in your form server. You can use any hard-to-guess alphanumeric string you want. We're not aware of limitations in length or characters.**
-* authentication -> managed by enketo: Leave at `true` to use default "OpenRosa" form authentication provided by Aggregate/Formhub/KoBo/etc.
-* authentication -> allow insecure transport: For development use, to test default form authentication on a server without an SSL certificate. Should be `false` on a production server to avoid sharing sensitive user credentials.
-* authentication -> external login url that sets cookie: Will only be used if authentication -> managed by enketo is set to `false` and allows a deeper integration for a custom server. It contains a URL on your form/data server where Enketo should redirect a user to when the server returns a 401 response. That url should set a cookie that Enketo will pass to the server whenever it needs to retrieve a form resource or submit data. The url should contain a {RETURNURL} portion which Enketo will populate to send the user back to the webform once authentication has completed. See [README](../README.md#authentication) for more details.
-* legacy formhub -> Formhub is a dead project and therefore has bugs that won't be fixed. Setting this setting to `true` temporarily works around some of these bugs to give you time to switch to a better alternative that is alive.
+* legacy formhub: Formhub is a dead project and therefore has bugs that won't be fixed. Setting this setting to `true` temporarily works around some of these bugs to give you time to switch to a better alternative that is alive.
+* authentication: an object that configures the type of authentication to use. See examples and details below:
+
+Examples of authentication configuration objects:
+
+##### Basic authentication (default ODK)
+
+This is the default authentication that lets Enketo collect credentials from the user and passes those to the server according to the [ODK request specification](https://bitbucket.org/javarosa/javarosa/wiki/AuthenticationAPI) using either Basic or Digest Authorization headers.
+
+* allow insecure transport: For development use, to test default form authentication on a server without an SSL certificate. Should be `false` on a production server to avoid sharing sensitive user credentials.
+
+```json
+"authentication" : {
+        "type": "basic",
+        "allow insecure transport": "false"
+    }
+```
+
+##### External cookie authentication
+
+This allows a deeper integration for a custom server. It configures a (required) `url` on your form/data server where Enketo should redirect a user to when the server returns a 401 response. That url should set a cookie that Enketo will pass to the server whenever it needs to retrieve a form resource or submit data. The url should contain a {RETURNURL} portion which Enketo will populate to send the user back to the webform once authentication has completed.
+
+This mechanism requires any enketo-express webform to have access to these browser cookies so the form/data server and Enketo Express would have to be on the same domain (a different subdomain is possible when setting cross-domain cookies).
+
+```json
+"authentication" : {
+        "type": "cookie",
+        "url": "http://example.com/login?return={RETURNURL}"
+    }
+
+```
+
+##### External token authentication
+
+This allows a deeper integration for a custom server. It configures a (required) `url` on your form/data server where Enketo should redirect a user to when the server returns a 401 response. It also configures a (required) `query parameter` name that is used to share the token. The token value will be passed _unchanged_ via `Authorization: Bearer` Header to any requests to the server.
+
+**At the moment this only works for online-only forms.**
+
+```json
+"authentication" : {
+        "type": "token",
+        "query parameter": "my_token",
+        "url": "http://example.com/login?return={RETURNURL}"
+    }
+```
 
 #### timeout
 Connection timeout in milliseconds used throughout Enketo. This is particularly relevant for submissions from Enketo to the OpenRosa server. 

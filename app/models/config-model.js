@@ -276,6 +276,15 @@ if ( config[ 'base path' ] && config[ 'base path' ].lastIndexOf( '/' ) === confi
     config[ 'base path' ] = config[ 'base path' ].substring( 0, config[ 'base path' ].length - 1 );
 }
 
+// ensure backwards compatibility of old external authentication configurations
+const authentication = config[ 'linked form and data server' ][ 'authentication' ];
+if ( authentication[ 'managed by enketo' ] === false && authentication[ 'external login url that sets cookie' ] ) {
+    authentication.type = 'cookie';
+    authentication.url = authentication[ 'external login url that sets cookie' ];
+}
+delete authentication[ 'external login url that sets cookie' ];
+delete authentication[ 'managed by enketo' ];
+
 module.exports = {
     server: config,
     client: {

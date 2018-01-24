@@ -30,7 +30,7 @@ router.param( 'mod', function( req, rex, next, mod ) {
 } );
 
 router
-    .get( '*', loggedInCheck )
+    //.get( '*', loggedInCheck )
     .get( '/x/', offlineWebform )
     .get( '/_/', offlineWebform )
     .get( '/:enketo_id', webform )
@@ -55,10 +55,11 @@ router
         res.send( 'connected ' + Math.random() );
     } );
 
-function loggedInCheck( req, res, next ) {
-    req.logout = !!userModel.getCredentials( req );
-    next();
-}
+// TODO: I suspect this check is no longer used and can be removed
+//function loggedInCheck( req, res, next ) {
+//    req.logout = !!userModel.getCredentials( req );
+//    next();
+//}
 
 function offlineWebform( req, res, next ) {
     var error;
