@@ -148,23 +148,24 @@ function getAuthHeader( url, credentials ) {
         // Don't bother making Head request first if token was provided.
         if ( credentials.bearer ) {
             resolve( 'Bearer ' + credentials.bearer );
+        } else {
+            // Check if Basic or Digest Authorization header is required and return header if so.
+            var req = request( options, function( error, response ) {
+                if ( !error && response && response.statusCode === 401 && credentials && credentials.user && credentials.pass ) {
+                    // Using request's internal library we create an appropiate authorization header.
+                    // This is a bit dangerous because internal changes in request/request, could break this code.
+                    req.method = 'POST';
+                    auth = new Auth( req );
+                    auth.hasAuth = true;
+                    auth.user = credentials.user;
+                    auth.pass = credentials.pass;
+                    authHeader = auth.onResponse( response );
+                    resolve( authHeader );
+                } else {
+                    resolve( null );
+                }
+            } );
         }
-        // Check if Basic or Digest Authorization header is required and return header if so.
-        var req = request( options, function( error, response ) {
-            if ( !error && response && response.statusCode === 401 && credentials && credentials.user && credentials.pass ) {
-                // Using request's internal library we create an appropiate authorization header.
-                // This is a bit dangerous because internal changes in request/request, could break this code.
-                req.method = 'POST';
-                auth = new Auth( req );
-                auth.hasAuth = true;
-                auth.user = credentials.user;
-                auth.pass = credentials.pass;
-                authHeader = auth.onResponse( response );
-                resolve( authHeader );
-            } else {
-                resolve( null );
-            }
-        } );
     } );
 }
 

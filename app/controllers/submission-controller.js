@@ -10,7 +10,6 @@ var request = require( 'request' );
 var express = require( 'express' );
 var router = express.Router();
 var routerUtils = require( '../lib/router-utils' );
-var url = require( 'url' );
 // var debug = require( 'debug' )( 'submission-controller' );
 
 module.exports = function( app ) {

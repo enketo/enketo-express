@@ -50,7 +50,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Fixed
 - Repeat with field-list and parent group with field-list does not show "+" button and both groups fail to collapse.
-- Dialogs no longer shown to use (**serious regression in 1.55.10**).
+- Dialogs no longer shown to user (**serious regression in 1.55.10**).
 
 [1.56.0] - 2017-12-29
 ----------------------
