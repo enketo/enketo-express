@@ -111,7 +111,7 @@ This app can manage [OpenRosa form authentication](https://bitbucket.org/javaros
 
 Alternatively, you could make use various _external authentication_ methods, i.e. using the authentication management of your form and data server.
 
-For more information see [this documentation page](https://enketo.org/develop/auth/) and the [configuration documentation]((./config/README.md#linked-form-and-data-server).
+For more information see [this documentation page](https://enketo.org/develop/auth/) and the [configuration documentation](./config/README.md#linked-form-and-data-server).
 
 ### Security
 
