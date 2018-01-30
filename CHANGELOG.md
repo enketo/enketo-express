@@ -2,18 +2,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.59.0] - 2018-01-30
 ---------------------
 ##### Added 
 - External authentication with token.
 
 ##### Changed
-- Server-side form caching mechanism was re-written to support dynamic manifest URLs. **WARNING: test this release extra thoroughly**
+- Server-side form caching mechanism was re-written to support dynamic manifest URLs. **WARNING: test this release extra thoroughly wrt form updates**
 - Configuration for authentication has changed, see [documentation](./config/README.md). **WARNING: update your config.json** (even though old configuration should still work for now).
 
 ##### Fixed
 - Date strings returned by XPath evaluator for question with type 'date' are not considered valid dates and set to ''.
 - When redirecting to an external login URL, the return URL is not encoded.
+- Instance('id' )/path/to/node does not work if 'id' is surrounded by whitespace.
+- Markdown headers preceded by whitespace fail to render as header and whitespace trimming is to aggresive.
+- Datepicker with "month-year" and "year" appearance shows full value.
 
 [1.58.0] - 2018-01-19
 ---------------------
