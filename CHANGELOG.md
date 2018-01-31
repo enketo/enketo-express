@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Instances with special characters in instance id attributes cannot to be queried.
+- Namespaces not resolved for secondary instances.
+
 [1.59.0] - 2018-01-30
 ---------------------
 ##### Added 
