@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Changed
+- Repeats without form controls now no longer take up any visual space in the form.
+
 ##### Fixed
 - Instances with special characters in instance id attributes cannot to be queried.
 - Namespaces not resolved for secondary instances.
@@ -21,7 +24,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Date strings returned by XPath evaluator for question with type 'date' are not considered valid dates and set to ''.
 - When redirecting to an external login URL, the return URL is not encoded.
 - Instance('id' )/path/to/node does not work if 'id' is surrounded by whitespace.
-- Markdown headers preceded by whitespace fail to render as header and whitespace trimming is to aggresive.
+- Markdown headers preceded by whitespace fail to render as header and whitespace trimming is too aggresive.
 - Datepicker with "month-year" and "year" appearance shows full value.
 
 [1.58.0] - 2018-01-19
