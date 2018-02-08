@@ -13,7 +13,6 @@ var translator = require( './module/translator' );
 var t = translator.t;
 var utils = require( './module/utils' );
 var $loader = $( '.form__loader' );
-var $form = $( 'form.or' );
 var $buttons = $( '.form-header__button--print, button#submit-form' );
 var survey = {
     enketoId: settings.enketoId,
@@ -47,6 +46,7 @@ function _updateMaxSizeSetting( maxSize ) {
     if ( maxSize ) {
         // overwrite default max size
         settings.maxSize = maxSize;
+        $( 'form.or' ).trigger( 'updateMaxSize' );
     }
 }
 

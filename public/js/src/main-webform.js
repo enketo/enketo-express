@@ -65,6 +65,7 @@ function _updateMaxSizeSetting( maxSize ) {
     if ( maxSize ) {
         // overwrite default max size
         settings.maxSize = maxSize;
+        $( 'form.or' ).trigger( 'updateMaxSize' );
     }
 }
 

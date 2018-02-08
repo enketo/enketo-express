@@ -4,8 +4,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Added
+- File pickers can now (only) be reset by a new reset button.
+- Download functionality to file pickers.
+
 ##### Changed
 - Repeats without form controls now no longer take up any visual space in the form.
+- Show upload placeholder with max file size.
+- Error messages in geopicker are now translatable.
 
 ##### Fixed
 - Instances with special characters in instance id attributes cannot to be queried.
