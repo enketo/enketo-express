@@ -189,6 +189,9 @@
         "admin": "Contact the survey administrator please.",
         "support": "Contact __supportEmail__ please."
     },
+    "drawwidget": {
+        "resetWarning": "This will remove the drawing, signature and/or file. Are you sure you want to do this?"
+    },
     "enketo": {
         "power": "Powered by"
     },

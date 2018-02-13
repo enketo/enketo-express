@@ -63,7 +63,7 @@ function getFileUrl( subject, filename ) {
                 store.record.file.get( _getInstanceId(), subject )
                     .then( function( file ) {
                         if ( file.item ) {
-                            if ( _isTooLarge( file.item ) ) {
+                            if ( isTooLarge( file.item ) ) {
                                 reject( _getMaxSizeError() );
                             } else {
                                 resolve( URL.createObjectURL( file.item ) );
@@ -75,7 +75,7 @@ function getFileUrl( subject, filename ) {
                     .catch( reject );
             }
         } else if ( typeof subject === 'object' ) {
-            if ( _isTooLarge( subject ) ) {
+            if ( isTooLarge( subject ) ) {
                 reject( _getMaxSizeError() );
             } else {
                 resolve( URL.createObjectURL( subject ) );
@@ -165,7 +165,7 @@ function _getInstanceId() {
  * @param  {[type]}  file the File
  * @return {Boolean}
  */
-function _isTooLarge( file ) {
+function isTooLarge( file ) {
     return file && file.size > _getMaxSize();
 }
 
@@ -194,5 +194,6 @@ module.exports = {
     getFileUrl: getFileUrl,
     getCurrentFiles: getCurrentFiles,
     getCurrentFile: getCurrentFile,
+    isTooLarge: isTooLarge,
     getMaxSizeReadable: getMaxSizeReadable
 };
