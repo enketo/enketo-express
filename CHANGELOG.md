@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Instances with special characters in instance id attributes cannot to be queried.
 - Namespaces not resolved for secondary instances.
 - Slowdown with repeat-count that was introduced in 1.58.0.
+- Printing: geo widget with appearance "maps" does not show coordinate fields.
 
 [1.59.0] - 2018-01-30
 ---------------------
