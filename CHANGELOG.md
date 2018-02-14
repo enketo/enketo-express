@@ -20,6 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Namespaces not resolved for secondary instances.
 - Slowdown with repeat-count that was introduced in 1.58.0.
 - Printing: geo widget with appearance "maps" does not show coordinate fields.
+- Printing: Analog scale widget with Grid theme in pages mode is messed up.
 
 [1.59.0] - 2018-01-30
 ---------------------
