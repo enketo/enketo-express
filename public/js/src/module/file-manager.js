@@ -14,7 +14,7 @@ var settings = require( './settings' );
 var $ = require( 'jquery' );
 var utils = require( './utils' );
 var coreUtils = require( 'enketo-core/src/js/utils' );
-var t = require( 'translator' ).t;
+var t = require( './translator' ).t;
 var instanceAttachments;
 
 /**

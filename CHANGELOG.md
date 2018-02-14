@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.60.0] - 2018-02-14
 ---------------------
 ##### Added
 - File pickers can now (only) be reset by a new reset button.
@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Show upload placeholder with max file size.
 - Error messages in geopicker are now translatable.
 - Draw/signature widget requires confirmation before reset.
+- Geo widget and file widget now use consistent (app) modal dialogs instead of inconsistent native dialogs.
 
 ##### Fixed
 - Instances with special characters in instance id attributes cannot to be queried.
