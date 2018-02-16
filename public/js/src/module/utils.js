@@ -2,6 +2,7 @@
 
 var Papa = require( 'papaparse' );
 var dataUriCache = {};
+var coreUtils = require( 'enketo-core/src/js/utils' );
 
 //var hasArrayBufferView = new Blob( [ new Uint8Array( 100 ) ] ).size == 100;
 
@@ -70,26 +71,6 @@ function blobToArrayBuffer( blob ) {
     } );
 }
 
-function blobToString( blob ) {
-    var reader = new FileReader();
-    return new Promise( function( resolve, reject ) {
-        reader.onloadend = function() {
-            resolve( reader.result );
-        };
-        reader.onerror = function( e ) {
-            reject( e );
-        };
-
-        // There is some quirky Chrome and Safari behaviour if blob is undefined or a string
-        // so we peform an additional check
-        if ( !( blob instanceof Blob ) ) {
-            reject( new Error( 'TypeError: Require Blob' ) );
-        } else {
-            reader.readAsText( blob );
-        }
-    } );
-}
-
 /**
  * The inverse of blobToDataUri, that converts a dataURL back to a Blob
  *
@@ -101,7 +82,7 @@ function dataUriToBlob( dataURI ) {
 
     return new Promise( function( resolve, reject ) {
         try {
-            blob = dataUriToBlobSync( dataURI );
+            blob = coreUtils.dataUriToBlobSync( dataURI );
 
             resolve( blob );
         } catch ( e ) {
@@ -110,31 +91,6 @@ function dataUriToBlob( dataURI ) {
     } );
 }
 
-function dataUriToBlobSync( dataURI ) {
-    var byteString;
-    var mimeString;
-    var buffer;
-    var array;
-
-    // convert base64 to raw binary data held in a string
-    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-    byteString = atob( dataURI.split( ',' )[ 1 ] );
-    // separate out the mime component
-    mimeString = dataURI.split( ',' )[ 0 ].split( ':' )[ 1 ].split( ';' )[ 0 ];
-
-    // write the bytes of the string to an ArrayBuffer
-    buffer = new ArrayBuffer( byteString.length );
-    array = new Uint8Array( buffer );
-
-    for ( var i = 0; i < byteString.length; i++ ) {
-        array[ i ] = byteString.charCodeAt( i );
-    }
-
-    // write the ArrayBuffer to a blob
-    return new Blob( [ array ], {
-        type: mimeString
-    } );
-}
 
 function getThemeFromFormStr( formStr ) {
     var matches = formStr.match( /<\s?form .*theme-([A-z\-]+)/ );
@@ -287,9 +243,8 @@ function _encodeXmlEntities( str ) {
 module.exports = {
     blobToDataUri: blobToDataUri,
     blobToArrayBuffer: blobToArrayBuffer,
-    blobToString: blobToString,
     dataUriToBlob: dataUriToBlob,
-    dataUriToBlobSync: dataUriToBlobSync,
+    dataUriToBlobSync: coreUtils.dataUriToBlobSync,
     getThemeFromFormStr: getThemeFromFormStr,
     getTitleFromFormStr: getTitleFromFormStr,
     csvToXml: csvToXml,
