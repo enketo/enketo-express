@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Added
 - Download functionality to draw widgets.
+- Support for "new", "new-front", "new-rear" on media inputs.
 
 [1.60.0] - 2018-02-14
 ---------------------
