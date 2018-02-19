@@ -8,6 +8,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Download functionality to draw widgets.
 - Support for "new", "new-front", "new-rear" on media inputs.
 
+##### Changed
+- Show helpful error message if SVG image cannot be found with Image Map widget.
+
 [1.60.0] - 2018-02-14
 ---------------------
 ##### Added

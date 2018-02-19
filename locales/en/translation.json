@@ -264,6 +264,9 @@
     "home": {
         "msg": "__appTitle__ is running! Please access Enketo forms from your __serverName__ installation."
     },
+    "imagemap": {
+        "svgNotFound": "SVG image could not be found"
+    },
     "langs": {
         "ar": "Arabic",
         "cs": "Czech",
