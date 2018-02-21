@@ -94,6 +94,10 @@
     @extend .fa-download;
 }
 
+.icon-undo {
+    @extend .fa-undo;
+}
+
 @mixin icon-print($color: black) {
     background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' stroke='%23{$color}' fill='%23{$color}' width='34' height='32' viewBox='0 0 34 32'%3E%3Cpath d='M31.109 9.316h-27.423c-1.904 0-3.686 1.904-3.686 3.767v10.41h4.861v8.506h24.709v-8.506h4.861v-10.41c0-1.863-1.458-3.767-3.322-3.767zM27.139 29.165h-19.848v-8.911h19.848v8.911zM31.19 15.797h-2.835v-2.835h2.835v2.835z'%3E%3C/path%3E%3Cpath d='M6.076 0h22.278v5.671h-22.278v-5.671z'%3E%3C/path%3E%3C/svg%3E");
     background-size: 100%;

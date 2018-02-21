@@ -92,10 +92,10 @@ $button-disabled-cursor: $cursor-default-value !default;
         padding-bottom: $padding;
         padding-#{$default-float}: $padding * 2;
 
-        @if $padding == $button-med {
+        @if $padding==$button-med {
             font-size: $button-font-med;
         }
-        @else if $padding == $button-sml {
+        @else if $padding==$button-sml {
             font-size: $button-font-sml;
         }
     }
@@ -105,7 +105,7 @@ $button-disabled-cursor: $cursor-default-value !default;
             padding-top: $padding;
             padding-bottom: $padding + $padding;
         }
-        @else if $padding == false {
+        @else if $padding==false {
             padding-top: 0;
             padding-bottom: 0;
         }
@@ -117,15 +117,13 @@ $button-disabled-cursor: $cursor-default-value !default;
 }
 
 @mixin button-style($bg: $button-bg-color, $radius: true, $disabled: false, $bg-hover: null, $border-color: null) {
-    @if $bg-hover == null {
-        $bg-hover: if($bg == $button-bg-color, $button-bg-hover, scale-color($bg, $lightness: $button-function-factor));
+    @if $bg-hover==null {
+        $bg-hover: if($bg==$button-bg-color, $button-bg-hover, scale-color($bg, $lightness: $button-function-factor));
     }
 
-    @if $border-color == null {
-        $border-color: if($bg == $button-bg-color, $button-border-color, scale-color($bg, $lightness: $button-function-factor));
-    }
-
-    // This find the lightness percentage of the background color.
+    @if $border-color==null {
+        $border-color: if($bg==$button-bg-color, $button-border-color, scale-color($bg, $lightness: $button-function-factor));
+    } // This find the lightness percentage of the background color.
     $bg-lightness: lightness($bg);
     $bg-hover-lightness: lightness($bg-hover);
 
@@ -145,7 +143,10 @@ $button-disabled-cursor: $cursor-default-value !default;
         color: if($bg-hover-lightness > 70%, $button-font-color-alt, $button-font-color);
     }
 
-    &:focus, &:link, &:active, &:visited {
+    &:focus,
+    &:link,
+    &:active,
+    &:visited {
         text-decoration: none;
     }
 
@@ -192,7 +193,8 @@ button {
         @include button-size($padding: $button-sml);
     }
 
-    &.disabled, &[disabled] {
+    &.disabled,
+    &[disabled] {
         @include button-style($bg: $button-bg-color, $disabled: true, $bg_hover: $button-bg-hover, $border_color: $button-border-color);
 
         &.btn-default {
@@ -212,7 +214,8 @@ button::-moz-focus-inner {
 }
 
 @media #{$medium-up} {
-    button, .button {
+    button,
+    .button {
         @include button-base($style: false, $display: inline-block);
 
         @include button-size($padding: false, $full_width: false);
@@ -231,7 +234,12 @@ button::-moz-focus-inner {
 
     opacity: 0.7;
 
-    &:hover, &:focus, &:active, &.active, &:disabled, &.disabled {
+    &:hover,
+    &:focus,
+    &:active,
+    &.active,
+    &:disabled,
+    &.disabled {
         background: none;
 
         @include box-shadow-none;
@@ -249,7 +257,12 @@ button::-moz-focus-inner {
     padding: 0;
     border: none;
 
-    &:hover, &:focus, &:active, &.active, &:disabled, &.disabled {
+    &:hover,
+    &:focus,
+    &:active,
+    &.active,
+    &:disabled,
+    &.disabled {
         @include box-shadow-none;
     }
 
@@ -259,7 +272,6 @@ button::-moz-focus-inner {
 }
 
 // fixes (would be nice if these weren't necessary):
-
 .question:not(.or-appearance-literacy) .btn-default {
     padding: 0 15px;
 }
@@ -270,4 +282,8 @@ button::-moz-focus-inner {
 
 .or-comment-widget__content__btn-update {
     @extend .small;
+}
+
+.draw-widget__undo {
+    font-size: 13px;
 }

@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Download functionality to draw widgets.
 - Support for "new", "new-front", "new-rear" on media inputs.
+- Feature to undo drawing strokes in draw and annotate widgets.
 
 ##### Changed
 - Show helpful error message if SVG image cannot be found with Image Map widget.
@@ -15,6 +16,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - In annotate widget loaded file disappears when screen is resized.
 - Annotate widget not working on touchscreen devices.
 - Annotate widget stretches uploaded image.
+- Downloaded drawings have a different filename from the one stored in the record.
+- Imagemap widget does not work for a group `<g>` of `<path>`s.
+- Imagemap scaling issue when width and height defined in SVG file have units (pt).
 
 [1.60.0] - 2018-02-14
 ---------------------
