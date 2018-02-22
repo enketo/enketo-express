@@ -21,5 +21,6 @@
     "image-view": "../../node_modules/enketo-core/src/widget/big-image/image-viewer",
     "comment": "../../node_modules/enketo-core/src/widget/comment/commentwidget",
     "image-map": "../../node_modules/enketo-core/src/widget/image-map/image-map",
+    "date-native": "../../node_modules/enketo-core/src/widget/date-native/datepicker-native",
     "date-mobile": "../../node_modules/enketo-core/src/widget/date-mobile/datepicker-mobile"
 }
