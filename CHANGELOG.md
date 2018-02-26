@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Changed
+- Chrome bug workaround base64-conversion of blobs has been removed, so blobs are stored as blobs in Chrome now.
+
+##### Fixed
+- Print, Back and First button icons not visible in IE11.
+
 [1.61.0] - 2018-02-21
 ---------------------
 ##### Added

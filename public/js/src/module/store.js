@@ -173,20 +173,6 @@ function _canStoreBlobs() {
         type: 'text/xml'
     } );
 
-    /*
-     * Chrome appears to store blobs fine, but after a few hours, when retreiving a blob,
-     * and creating an ObjectURL from it, the object URL returns a 404. 
-     * Similarly, trying to use FileReader to readAsDataURL, results in a null result.
-     *
-     * Last checked in Chrome 49.0.2623.108
-     *
-     * https://github.com/kobotoolbox/enketo-express/issues/155
-     */
-    if ( sniffer.browser.chrome ) {
-        console.log( 'This is Chrome which has a blob/file storage problem.' );
-        return Promise.reject();
-    }
-
     return propertyStore.update( {
         name: 'testBlobWrite',
         value: aBlob
