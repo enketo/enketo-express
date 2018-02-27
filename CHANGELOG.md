@@ -2,13 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.61.1] - 2018-02-27
 ---------------------
 ##### Changed
 - Chrome bug workaround base64-conversion of blobs has been removed, so blobs are stored as blobs in Chrome now.
+- Show separate custom reset messages for drawing, signature and annotation widgets.
 
 ##### Fixed
 - Print, Back and First button icons not visible in IE11.
+- Date format shown to user in readonly field is different from non-readonly field.
+- Autocomplete widget does not accept options that have multiple subsequent spaces in their label.
+- Draw widget draw color gets reset to the default color after undo-ing strokes.
 
 [1.61.0] - 2018-02-21
 ---------------------

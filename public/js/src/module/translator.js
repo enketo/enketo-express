@@ -107,4 +107,9 @@ module.exports = {
  * t('constraint.invalid');
  * t('constraint.required');
  * t('form.required');
+ * 
+ * // The following 3 are temporary:
+ * t('drawwidget.drawing');
+ * t('drawwidget.signature');
+ * t('drawwidget.annotation');
  */
