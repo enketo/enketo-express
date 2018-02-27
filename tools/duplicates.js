@@ -17,7 +17,7 @@ var fs = require( 'fs' );
 var path = require( 'path' );
 var mode = 'analyze';
 
-process.argv.forEach( function( val, index, array ) {
+process.argv.forEach( function( val ) {
     if ( val === 'remove' ) {
         mode = 'remove';
     }
@@ -30,7 +30,7 @@ if ( mode === 'analyze' ) {
         .catch( function( error ) {
             console.error( error );
         } )
-        .then( function( result ) {
+        .then( function() {
             process.exit( 0 );
         } );
 } else if ( mode === 'remove' ) {
@@ -58,7 +58,6 @@ function removeDuplicateEnketoIds() {
     return getDuplicates()
         .then( function( duplicates ) {
             var tasks = [];
-            var i = 1;
 
             console.log( '\nFound %d duplicate(s).\n', duplicates.length );
 
@@ -74,8 +73,6 @@ function removeDuplicateEnketoIds() {
 
                 removeCache( duplicate.key1 );
                 removeCache( duplicate.key2 );
-
-                i++;
             } );
 
             return Promise.all( tasks );

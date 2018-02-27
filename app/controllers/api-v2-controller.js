@@ -19,7 +19,7 @@ module.exports = function( app ) {
 };
 
 router
-    .get( '/', function( req, res, next ) {
+    .get( '/', function( req, res ) {
         res.redirect( 'http://apidocs.enketo.org/v2' );
     } )
     .all( '*', authCheck )
@@ -219,7 +219,7 @@ function emptySurveyCache( req, res, next ) {
             openRosaServer: req.body.server_url,
             openRosaId: req.body.form_id
         } )
-        .then( function( survey ) {
+        .then( function() {
             _render( 204, null, res );
         } )
         .catch( next );

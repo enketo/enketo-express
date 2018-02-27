@@ -7,7 +7,7 @@ var client = require( 'redis' ).createClient( config.redis.main.port, config.red
     auth_pass: config.redis.main.password
 } );
 var path = require( 'path' );
-var debug = require( 'debug' )( 'submission-model' );
+//var debug = require( 'debug' )( 'submission-model' );
 var logger;
 
 /**
@@ -77,12 +77,12 @@ function isNew( id, instanceId ) {
         } )
         .then( function( alreadyRecorded ) {
             if ( !alreadyRecorded ) {
-                client.lpush( key, instanceId, function( error, res ) {
+                client.lpush( key, instanceId, function( error ) {
                     if ( error ) {
                         console.error( 'Error pushing instanceID into: ' + key );
                     } else {
                         // only store last 100 IDs
-                        client.ltrim( key, 0, 99, function( error, res ) {
+                        client.ltrim( key, 0, 99, function( error ) {
                             if ( error ) {
                                 console.error( 'Error trimming: ' + key );
                             }

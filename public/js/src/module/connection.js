@@ -8,6 +8,7 @@ var settings = require( './settings' );
 var t = require( './translator' ).t;
 var utils = require( './utils' );
 var $ = require( 'jquery' );
+var Promise = require( 'lie' );
 var CONNECTION_URL = settings.basePath + '/connection';
 var TRANSFORM_URL = settings.basePath + '/transform/xform' +
     ( settings.enketoId ? '/' + settings.enketoIdPrefix + settings.enketoId : '' );
@@ -24,20 +25,20 @@ var ABSOLUTE_MAX_SIZE = 100 * 1024 * 1024;
 function getOnlineStatus() {
     var online;
 
-    return new Promise( function( resolve, reject ) {
-        $.ajax( {
-            type: 'GET',
-            url: CONNECTION_URL,
-            cache: false,
-            dataType: 'json',
-            timeout: 3000,
-            complete: function( response ) {
+    return new Promise( function( resolve ) {
+        $.ajax( CONNECTION_URL, {
+                type: 'GET',
+
+                cache: false,
+                dataType: 'json',
+                timeout: 3000
+            } )
+            .done( function( response ) {
                 // It is important to check for the content of the no-cache response as it will
                 // start receiving the fallback page specified in the manifest!
                 online = typeof response.responseText !== 'undefined' && /connected/.test( response.responseText );
                 resolve( online );
-            }
-        } );
+            } );
     } );
 }
 
@@ -134,7 +135,7 @@ function _uploadBatch( recordBatch ) {
                     reject( result );
                 }
             } )
-            .fail( function( jqXHR, textStatus ) {
+            .fail( function( jqXHR ) {
                 var messageEl = null;
                 var message = null;
                 // 400 is a generic error. Any message returned by the server is probably more useful.
@@ -477,7 +478,7 @@ function getManifestVersion( manifestUrl ) {
     } );
 }
 
-function getFormPartsHash( props ) {
+function getFormPartsHash() {
     var error;
 
     return new Promise( function( resolve, reject ) {

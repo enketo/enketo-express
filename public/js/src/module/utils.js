@@ -1,6 +1,7 @@
 'use strict';
 
 var Papa = require( 'papaparse' );
+var Promise = require( 'lie' );
 var dataUriCache = {};
 var coreUtils = require( 'enketo-core/src/js/utils' );
 
@@ -93,7 +94,7 @@ function dataUriToBlob( dataURI ) {
 
 
 function getThemeFromFormStr( formStr ) {
-    var matches = formStr.match( /<\s?form .*theme-([A-z\-]+)/ );
+    var matches = formStr.match( /<\s?form .*theme-([A-z-]+)/ );
     return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
 }
 

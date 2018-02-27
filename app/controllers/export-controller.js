@@ -19,14 +19,14 @@ router
     .post( '/get-url', getExportUrl )
     .get( '/get-file/:filename', getExportFile );
 
-function getExportUrl( req, res, next ) {
+function getExportUrl( req, res ) {
     var filePath;
     var newFilename;
     var busboy = new Busboy( {
         headers: req.headers
     } );
 
-    busboy.on( 'file', function( fieldname, file, filename, encoding, mimetype ) {
+    busboy.on( 'file', function( fieldname, file, filename ) {
         newFilename = PREFIX + ( Math.random() * 1e64 ).toString( 36 ).slice( 2 ) + '-' + filename;
         filePath = path.join( os.tmpDir(), newFilename );
         file.pipe( fs.createWriteStream( filePath ) );

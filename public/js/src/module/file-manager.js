@@ -11,6 +11,7 @@
 
 var store = require( './store' );
 var settings = require( './settings' );
+var Promise = require( 'lie' );
 var $ = require( 'jquery' );
 var utils = require( './utils' );
 var coreUtils = require( 'enketo-core/src/js/utils' );
@@ -48,7 +49,7 @@ function setInstanceAttachments( attachments ) {
  * @param  {?string} filename filename override
  * @return {[type]}         promise url string or rejection with Error
  */
-function getFileUrl( subject, filename ) {
+function getFileUrl( subject /*, filename*/ ) {
     return new Promise( function( resolve, reject ) {
         if ( !subject ) {
             resolve( null );

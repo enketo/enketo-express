@@ -6,6 +6,7 @@
 
 var gui = require( './gui' );
 var connection = require( './connection' );
+var Promise = require( 'lie' );
 var settings = require( './settings' );
 var Form = require( 'enketo-core' );
 var fileManager = require( './file-manager' );

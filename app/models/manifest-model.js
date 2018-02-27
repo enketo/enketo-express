@@ -180,7 +180,7 @@ function _getTranslations( lang ) {
 function _getResourcesFromCss( resources ) {
     var content;
     var matches;
-    var urlReg = /url\(['|"]?([^\)'"]+)['|"]?\)/g;
+    var urlReg = /url\(['|"]?([^)'"]+)['|"]?\)/g;
     var cssReg = /^.+\.css$/;
     var urls = [];
 
@@ -246,7 +246,9 @@ function _calculateHash( html1, html2, resources ) {
         try {
             content = _getResourceContent( resource );
             hash += utils.md5( content );
-        } catch ( e ) {}
+        } catch ( e ) {
+            console.error( e );
+        }
     } );
 
     // shorten hash

@@ -6,6 +6,7 @@
 
 var support = require( 'enketo-core/src/js/support' );
 var settings = require( './settings' );
+var Promise = require( 'lie' );
 var printForm = require( 'enketo-core/src/js/print' );
 var translator = require( './translator' );
 var t = translator.t;
@@ -301,9 +302,9 @@ function prompt( content, choices, inputs ) {
  * @param  {string=} msg       message to show
  * @param  {string=} serverURL serverURL for which authentication is required
  */
-function confirmLogin( msg, serverURL ) {
+function confirmLogin( msg /*, serverURL*/ ) {
     msg = msg || t( 'confirm.login.msg' );
-    serverURL = serverURL || settings.serverURL;
+    //serverURL = serverURL || settings.serverURL;
 
     confirm( {
         msg: msg,

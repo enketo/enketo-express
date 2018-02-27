@@ -9,6 +9,7 @@ var gui = require( './module/gui' );
 var controller = require( './module/controller-webform' );
 var settings = require( './module/settings' );
 var connection = require( './module/connection' );
+var Promise = require( 'lie' );
 var FormModel = require( 'enketo-core/src/js/Form-model' );
 var translator = require( './module/translator' );
 var t = translator.t;

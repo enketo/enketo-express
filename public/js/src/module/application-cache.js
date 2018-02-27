@@ -33,7 +33,9 @@ function _swapCache() {
     try {
         window.applicationCache.swapCache();
         $( document ).trigger( 'applicationupdated' );
-    } catch ( e ) {}
+    } catch ( e ) {
+        console.error( 'Error swapping cache', e );
+    }
 }
 
 function _reportOfflineLaunchCapable( event ) {

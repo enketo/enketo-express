@@ -113,7 +113,7 @@ settings.enketoIdPrefix = '::';
 settings.offline = !!document.querySelector( 'html' ).getAttribute( 'manifest' );
 
 // Extract Enketo ID
-settings.enketoId = ( settings.offline ) ? _getEnketoId( '#', window.location.hash ) : _getEnketoId( '\/' + settings.enketoIdPrefix, window.location.pathname );
+settings.enketoId = ( settings.offline ) ? _getEnketoId( '#', window.location.hash ) : _getEnketoId( '/' + settings.enketoIdPrefix, window.location.pathname );
 
 // Set multipleAllowed for single webform views
 if ( settings.type === 'single' && settings.enketoId.length !== 32 && settings.enketoId.length !== 64 ) {

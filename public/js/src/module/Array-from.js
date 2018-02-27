@@ -33,7 +33,7 @@ if ( !Array.from ) {
 
             // 3. ReturnIfAbrupt(items).
             if ( arrayLike === null ) {
-                throw new TypeError( "Array.from requires an array-like object - not null or undefined" );
+                throw new TypeError( 'Array.from requires an array-like object - not null or undefined' );
             }
 
             // 4. If mapfn is undefined, then let mapping be false.

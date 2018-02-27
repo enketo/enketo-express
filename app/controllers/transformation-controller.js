@@ -185,7 +185,7 @@ function _replaceMediaSources( survey ) {
         survey.model = survey.model.replace( JR_URL, replacer );
 
         if ( media[ 'form_logo.png' ] ) {
-            survey.form = survey.form.replace( /(class=\"form-logo\"\s*>)/, `$1<img src="${media['form_logo.png']}" alt="form logo">` );
+            survey.form = survey.form.replace( /(class="form-logo"\s*>)/, `$1<img src="${media['form_logo.png']}" alt="form logo">` );
         }
     }
 

@@ -109,10 +109,7 @@ module.exports = function( grunt ) {
                 }
             }
         },
-        jshint: {
-            options: {
-                jshintrc: '.jshintrc'
-            },
+        eslint: {
             all: JS_INCLUDE,
         },
         // test server JS
@@ -258,7 +255,7 @@ module.exports = function( grunt ) {
     grunt.registerTask( 'js', [ 'client-config-file:create', 'widgets', 'browserify:production' ] );
     grunt.registerTask( 'js-dev', [ 'client-config-file:create', 'widgets', 'browserify:development' ] );
     grunt.registerTask( 'css', [ 'system-sass-variables:create', 'sass' ] );
-    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'jshint' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'eslint' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
     grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js-dev', 'css', 'concurrent:develop' ] );
     grunt.registerTask( 'test-and-build', [ 'env:test', 'mochaTest:all', 'karma:headless', 'env:production', 'default' ] );

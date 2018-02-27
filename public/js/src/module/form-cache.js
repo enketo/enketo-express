@@ -6,6 +6,7 @@
 
 var store = require( './store' );
 var settings = require( './settings' );
+var Promise = require( 'lie' );
 var connection = require( './connection' );
 var $ = require( 'jquery' );
 var assign = require( 'lodash/assign' );
@@ -143,7 +144,7 @@ function _setResetListener( survey ) {
 }
 
 function _swapMediaSrc( survey ) {
-    survey.form = survey.form.replace( /(src=\"[^"]*\")/g, 'data-offline-$1 src=""' );
+    survey.form = survey.form.replace( /(src="[^"]*")/g, 'data-offline-$1 src=""' );
 
     return Promise.resolve( survey );
 }

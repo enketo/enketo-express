@@ -6,6 +6,7 @@
 
 var db = require( 'db.js' );
 var utils = require( './utils' );
+var Promise = require( 'lie' );
 var sniffer = require( './sniffer' );
 var t = require( './translator' ).t;
 
@@ -142,7 +143,7 @@ function _checkSupport() {
     var error;
     // best to perform this specific check ourselves and not rely on specific error message in db.js.
     return new Promise( function( resolve, reject ) {
-        if ( typeof indexedDB === "object" ) {
+        if ( typeof indexedDB === 'object' ) {
             resolve();
         } else {
             if ( sniffer.os.ios ) {
@@ -542,7 +543,6 @@ recordStore = {
      */
     update: function( record ) {
         var fileKeys;
-        var tasks = [];
         var obsoleteFiles = [];
 
         if ( !record.instanceId || !record.enketoId || !record.name || !record.xml ) {

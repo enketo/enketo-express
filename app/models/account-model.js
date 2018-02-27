@@ -72,7 +72,7 @@ function check( survey ) {
  * @return { boolean } [description]
  */
 function _isAllowed( account, serverUrl ) {
-    return account.linkedServer === '' || new RegExp( 'https?:\/\/' + _stripProtocol( account.linkedServer ) ).test( serverUrl );
+    return account.linkedServer === '' || new RegExp( 'https?://' + _stripProtocol( account.linkedServer ) ).test( serverUrl );
 }
 
 /**

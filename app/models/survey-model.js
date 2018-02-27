@@ -166,7 +166,7 @@ function _addSurvey( openRosaKey, survey ) {
                     theme: survey.theme || ''
                 } )
                 .set( openRosaKey, id )
-                .exec( function( error, replies ) {
+                .exec( function( error ) {
                     delete pending[ openRosaKey ];
                     if ( error ) {
                         reject( error );
@@ -183,7 +183,7 @@ function incrSubmissions( id ) {
         client.multi()
             .incr( 'submission:counter' )
             .hincrby( 'id:' + id, 'submissions', 1 )
-            .exec( function( error, replies ) {
+            .exec( function( error ) {
                 if ( error ) {
                     reject( error );
                 } else {
