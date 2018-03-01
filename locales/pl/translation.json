@@ -1,0 +1,366 @@
+{
+    "advanced": {
+        "flushdb": "Wyczyść schowek"
+    },
+    "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "Aby dodać ten formularz do swojego ekranu głównego kliknij ikonę ustawień przeglądarki __image1__ i wybierz: 'Dodaj do ekranu głównego'."
+            },
+            "androidfirefox": {
+                "msg": "Aby dodać ten formularz do swojego ekranu głównego przytrzymaj długo pasek adresu i wybierz: 'Dodaj do ekranu głównego'."
+            },
+            "heading": "Dodaj do ekranu głównego",
+            "iossafari": {
+                "msg": "Aby dodać ten formularz do swojego ekranu głównego kliknij ikonę udostępniania __image1__ w prawym górnym rogu swojej przeglądarki i wybierz: '+ Dodaj do ekranu głównego'."
+            }
+        },
+        "appupdated": {
+            "heading": "Aplikacja zaktualizowana!",
+            "msg": "Pobrano nową wersję tej aplikacji. Odśwież stronę, aby pobrać zaktualizowaną wersję."
+        },
+        "closing": {
+            "heading": "Zamykanie..."
+        },
+        "default": {
+            "button": "Zamknij",
+            "heading": "Alarm"
+        },
+        "export": {
+            "alternativequestion": "Alternatywne pobranie - online",
+            "error": {
+                "filecreatedmsg": "Tym niemniej, niekompletny plik eksportu został utworzony.",
+                "heading": "Błąd eksportu",
+                "linknotcreated": "Nie udało się utworzyć linku eksportu dla niezatwierdzonych rekordów. Czy jesteś online?",
+                "msg": "Wystąpił błąd podczas tworzenia pliku eksportu dla niezatwierdzonych rekordów. Błędy: __errors__"
+            },
+            "success": {
+                "heading": "Zakończono eksport",
+                "msg": "Eksport został zakończony dla wszystkich niezatwierdzonych rekordów należących do tego formularza."
+            }
+        },
+        "formupdated": {
+            "heading": "Formularz zaktualizowany!",
+            "msg": "Nowa wersja tego formularza została wczytana. Odśwież stronę, aby wczytać zaktualizowaną wersję."
+        },
+        "gotonotfound": {
+            "msg": "Nie udało się odnaleźć pytania \"__path__\" w formularzu. Czy odniesienie do tego pytania jest poprawne?"
+        },
+        "loaderror": {
+            "editadvice": "Kontynuowanie edycji tego rekordu nie jest rekomendowane do momentu rozwiązania problemu.",
+            "entryadvice": "Nie jest rekomendowane używanie tego formularza do zbierania danych do momentu rozwiązania problemu.",
+            "heading": "Błąd wczytywania",
+            "msg1": "Wystąpił błąd podczas wczytywania tego formularza.",
+            "msg2": "Proszę o kontakt z __emailLink__  z linkiem do tej strony i poniższą treścią błędu:",
+            "heading_plural": "Wczytywanie błędów",
+            "msg1_plural": "W czasie wczytywania tego formularza wystąpiły błędy.",
+            "msg2_plural": "Proszę o kontakt z __emailLink__ wraz z linkiem do tej strony i poniższym opisem błędu:"
+        },
+        "logout": {
+            "heading": "Wylogowany",
+            "msg": "Zostałeś wylogowany."
+        },
+        "offlinesupported": {
+            "heading": "Formularz działa w trybie offline!",
+            "msg": [
+                "Ten formularz może teraz zostać wczytać i użyty na tym urządzeniu bez połączenia z Internetem. Dodaj go do zakładek dla łatwiejszego dostępu offline.",
+                "Rekordy są automatycznie przechowywane i kolejkowane w twojej przeglądarce do momentu uzyskania połączenia z Internetem. Gdy aplikacja będzie w trybie online, rekordy zostaną automatycznie zatwierdzone - jeden po drugim.",
+                "Rekord zostanie usunięty z kolejki dopiero po jego poprawnym zatwierdzeniu. Możesz bezpiecznie zamknąć swoją przeglądarkę i urządzenie mając obiekty w kolejce. Wciąż tam będą następnym razem gdy wczytasz formularz."
+            ]
+        },
+        "offlineunsupported": {
+            "heading": "Aplikacja nie może uruchomić się w trybie offline",
+            "msg": "Uruchamianie aplikacji w trybie offline nie jest wspierane przez twoją przeglądarkę. Możesz użyć ankietę bez tej funkcjonalności lub przejrzeć opcje rozwiązania tego problemu:",
+            "negButton": "Użyj",
+            "posButton": "Pokaż opcje"
+        },
+        "queuesubmissionsuccess": {
+            "msg": "__recordNames__ zostały pomyślnie zatwierdzone.",
+            "msg_plural": "__recordNames__  zostały poprawnie zatwierdzone"
+        },
+        "recordloadsuccess": {
+            "msg": "__recordName__  został wczytany"
+        },
+        "recordnotfound": {
+            "msg": "Rekord nie mógł zostać pobrany lub nie zawierał żadnych danych."
+        },
+        "recordsavesuccess": {
+            "draftmsg": "Rekord zapisany jako wersja robocza.",
+            "finalmsg": "Rekord zakolejkowany do zatwierdzenia."
+        },
+        "submission": {
+            "msg": "Zatwierdzanie...",
+            "redirectmsg": "Zostaniesz automatycznie przekierowany po zatwierdzeniu."
+        },
+        "submissionerror": {
+            "authrequiredmsg": "Wymagane uwierzytelnianie. Proszę uwierzytelnić __here__ w innej zakładce przeglądarki i spróbować ponownie.",
+            "fnfmsg": [
+                "Następujące pliki multimedialne nie mogły zostać pobrane: __failedFiles__. Zatwierdzenie było kontynuowane bez tych plików i zakończyło się powodzeniem.",
+                "Proszę o kontakt z __supportEmail__ w celu zgłoszenia błędu, jeśli to możliwe proszę opisać jak może on zostać odtworzony."
+            ],
+            "heading": "Zatwierdzanie nie udało się"
+        },
+        "submissionsuccess": {
+            "heading": "Zatwierdzanie ukończone pomyślnie",
+            "msg": "Twoje dane zostały zatwierdzone!",
+            "redirectmsg": "Teraz zostaniesz przekierowany."
+        },
+        "thanks": {
+            "heading": "Dziękujemy za udział!",
+            "msg": "Możesz teraz zamknąć to okno.",
+            "msgTaken": "Już zakończyłeś tę ankietę."
+        },
+        "validationerror": {
+            "msg": "Formularz zawiera błędy. Zwróć proszę uwagę na pola oznaczone na czerwono."
+        },
+        "validationsuccess": {
+            "heading": "OK",
+            "msg": "Formularz jest poprawny!"
+        },
+        "xpatherror": {
+            "heading": "Błąd formuły",
+            "msg": "Wystąpił błąd oceny formuły. Proszę skontaktuj się z __emailLink__ z następującym błędem:"
+        }
+    },
+    "confirm": {
+        "autosaveload": {
+            "heading": "Znaleziono niezapisany rekord",
+            "msg": "Enketo znalazł niezapisany rekord. Chciałbyś go wczytać, czy odrzucić?",
+            "negButton": "Odrzuć",
+            "posButton": "Wczytaj rekord"
+        },
+        "default": {
+            "heading": "Czy jesteś pewny?",
+            "msg": "Proszę potwierdzić tę akcję",
+            "negButton": "Anuluj",
+            "posButton": "Potwierdź"
+        },
+        "deleteall": {
+            "heading": "PANIKA!",
+            "msg": [
+                "To usunie wszystkie zakolejkowane dane i wszystkie formularze z pamięci przeglądarki. Dane zostaną utracone bezpowrotnie. Użyj tego wyłącznie jako ostatniej deski ratunku w sytuacji gdy pamięć przeglądarki wydaje się uszkodzona.",
+                "Najpierw zamknij wszystkie pozostałe zakładki przeglądarki z Enketo.",
+                "Strona zostanie wczytana ponownie. Jeśli zobaczysz jakikolwiek błąd, być może będziesz musiał powtórzyć tę czynność.",
+                "Czy jesteś pewny, że chcesz to zrobić?"
+            ],
+            "posButton": "Usuń wszystko"
+        },
+        "discardcurrent": {
+            "heading": "Niezapisane zmiany",
+            "msg": "Bieżący formularz ma niezachowane zmiany. Czy chcesz wczytać rekord bez zapisania formularza, nad którym pracowałeś?",
+            "posButton": "Kontynuuj bez zapisywania"
+        },
+        "login": {
+            "heading": "Wymagane zalogowanie",
+            "msg": [
+                "Aby zatwierdzić twoje zakolejkowane dane musisz się zalogować. Jeśli chcesz to zrobić teraz, zostaniesz przekierowany i utracisz niezapisane informacje.",
+                "Chciałbyś zalogować się teraz, czy później?"
+            ],
+            "negButton": "Później",
+            "posButton": "Zaloguj się teraz"
+        },
+        "print": {
+            "a4": "A4",
+            "heading": "Wybierz ustawienia wydruku",
+            "landscape": "Poziomo",
+            "letter": "List",
+            "msg": "Aby przygotować zoptymalizowany wydruk, wybierz proszę poniżej ustawienia wydruku",
+            "orientation": "Orientacja papieru",
+            "portrait": "Pionowo",
+            "posButton": "Przygotuj",
+            "psize": "Rozmiar papieru",
+            "reminder": "Pamiętaj aby później ustawić te same parametry wydruku w menu wydruku w przeglądarce!"
+        },
+        "save": {
+            "existingerror": "Istnieje już taka nazwa lub identyfikator rekordu",
+            "hint": "Ta nazwa pozwoli ci łatwo znaleźć rekord w wersji roboczej, aby go później dokończyć.",
+            "msg": "Istnieją niezapisane dane, czy chcesz kontynuować bez ich zapisu?",
+            "name": "Nazwa rekordu",
+            "posButton": "Zapisz i zamknij",
+            "renamemsg": "Czy jesteś pewny, że chcesz zmienić nazwę __currentName__ na __newName__?",
+            "unkownerror": "W czasie zapisu danych wystąpił nieznany błąd."
+        }
+    },
+    "constraint": {
+        "invalid": "Wartość niedozwolona",
+        "required": "To pole jest wymagane"
+    },
+    "contact": {
+        "admin": "Proszę o kontakt z administratorem ankiety.",
+        "support": "Proszę o kontakt z __supportEmail__."
+    },
+    "drawwidget": {
+        "annotation": "Plik i rysunek",
+        "drawing": "rysunek",
+        "signature": "podpis"
+    },
+    "enketo": {
+        "power": "Zasilane przez"
+    },
+    "error": {
+        "code": "Kod błędu: __code__",
+        "dataloadfailed": "Nie udało się wczytać danych z __url__",
+        "econnrefused": "Nie udało się połączyć z serwerem",
+        "encryptionnotsupported": "Formularz wymaga lokalnego szyfrowania rekordów. Niestety nie jest to jeszcze wspomagane. Rekomendujemy użycie ODK Collect dla zbierania danych dla tego formularza.",
+        "instancenotfound": "Rekord nieobecny. Mógł się przedawnić.",
+        "invalidediturl": "Niepoprawny adres URL",
+        "loadfailed": "Nie udało się wczytać __resource__",
+        "notfoundinformlist": [
+            "Ups, ten formularz (już) nie istnieje. Najprawdopodobniej właściciel formularza go skasował, zarchiwizował lub dezaktywował. Skontaktuj się proszę z właścicielem formularza, aby to potwierdzić.",
+            "Szczegóły błędu: Formularz o identyfikatorze __formId__ nie został odnaleziony w /formList."
+        ],
+        "pagenotfound": "Strona nie została znaleziona",
+        "surveyidnotactive": "Ankieta o takim identyfikatorze nie jest już aktywna",
+        "surveyidnotfound": "Nie znaleziono ankiety o tym identyfikatorze",
+        "unknown": "Wystąpił nieznany błąd"
+    },
+    "feedback": {
+        "header": "Informacja"
+    },
+    "filepicker": {
+        "file": "plik",
+        "notFound": "Plik __existing__ nie został znaleziony (pozostaw niezmieniony, jeśli już został zatwierdzony i chcesz go zachować).",
+        "placeholder": "Kliknij tutaj aby wgrać plik. (< __maxSize__)",
+        "resetWarning": "To usunie __item__. Czy jesteś pewny, że chcesz to zrobić?",
+        "toolargeerror": "Plik jest za duży (> __maxSize__)",
+        "waitingForPermissions": "Oczekiwanie na zezwolenia użytkownika. "
+    },
+    "form": {
+        "chooseLanguage": "Wybierz język",
+        "logout": "wyloguj się",
+        "pages": {
+            "back": "Cofnij",
+            "end": "Idź na koniec",
+            "next": "Następny",
+            "return": "Powrót do początku"
+        },
+        "required": "wymagane"
+    },
+    "formfooter": {
+        "complete": {
+            "btn": "Zakończony"
+        },
+        "savedraft": {
+            "btn": "Zapisz wersję roboczą",
+            "label": "Zapisz jako wersja robocza"
+        },
+        "submit": {
+            "btn": "Zatwierdź"
+        },
+        "validate": {
+            "btn": "Sprawdź poprawność"
+        }
+    },
+    "geopicker": {
+        "accuracy": "dokładność (m)",
+        "altitude": "wysokość (m)",
+        "closepolygon": "zamknij wielokąt",
+        "kmlcoords": "Koordynaty KML",
+        "kmlpaste": "wklej tutaj koordynaty KML",
+        "latitude": "szerokość geograficzna (x.y °)",
+        "longitude": "długość geograficzna (x.y °)",
+        "points": "punkty",
+        "removePoint": "To całkowicie usunie obecną lokalizację z listy lokalizacji i jest nieodwracalne.  Czy jesteś pewny, że chcesz to zrobić?",
+        "searchPlaceholder": "szukaj miejsca lub adresu"
+    },
+    "here": "tutaj",
+    "home": {
+        "msg": "__appTitle__ jest uruchomiona! Wczytaj proszę formularze Enketo ze swojej instalacji __serverName__."
+    },
+    "imagemap": {
+        "svgNotFound": "Obraz SVG nie został znaleziony"
+    },
+    "langs": {
+        "ar": "Arabski",
+        "cs": "Czeski",
+        "de": "Niemiecki",
+        "el": "Grecki",
+        "en": "Angielski",
+        "es": "Hiszpański",
+        "fa": "Perski",
+        "fi": "Fiński",
+        "fr": "Francuski",
+        "he": "Hebrajski",
+        "hi": "Hinduski",
+        "it": "Włoski",
+        "km": "Khmerski",
+        "lo": "Laotański",
+        "nl": "Holenderski",
+        "no": "Norweski",
+        "ro": "Rumuński",
+        "sk": "Słowacki",
+        "supported": "Wspierane języki:",
+        "sv": "Szwedzki",
+        "sw": "Suahili",
+        "th": "Tajski",
+        "vi": "Wietnamski",
+        "zh": "Chiński"
+    },
+    "page": {
+        "modernbrowsers": {
+            "heading": "Nowoczesne przeglądarki",
+            "ie": {
+                "heading": "Nikt nie kocha już starych, złowrogich wersji Internet Explorera?",
+                "msg": "Rozumiemy, że niektóre osoby, szczególnie ci pracujący dla dużych biurokracji, nie mają dostępu do najnowszych i najlepszych przeglądarek. Ponieważ wiemy, jak fantastyczna potrafi być Sieć z odpowiednimi narzędziami, czujemy głęboką więź z użytkownikami w tej niefortunnej sytuacji. Zazwyczaj próbowalibyśmy znaleźć obejścia, aby wesprzeć osoby z niektórymi popularnymi i przestarzałymi przeglądarkami. Jednakże Enketo funkcjonuje dzięki dostępności niektórych super nowoczesnych technologii. W związku z tym użytkownicy starszych przeglądarek mają po prostu ogromnego pecha."
+            },
+            "msg1": "Auć! Przepraszamy, zostałeś tu odesłany prawdopodobnie dlatego, że twoja przeglądarka jest przestarzała lub część z jej kluczowych funkcjo została wyłączona używając trybu 'prywatnego przeglądania'.",
+            "msg2": "Jeśli używasz przestarzałej przeglądarki, rekomendujemy zaktualizowanie do bieżącej wersji jednej z poniższych, doskonałych, nowoczesnych przeglądarek:"
+        },
+        "offline": {
+            "heading": "Nie można uzyskać dostępu do żądanej strony",
+            "msg1": "Ta strona jest dostępna tylko gdy przeglądarka ma połączenie z Internetem i serwer jest osiągalny (chyba, że strona nie istnieje)."
+        }
+    },
+    "prompt": {
+        "default": {
+            "heading": "Wprowadź wartości"
+        },
+        "login": {
+            "heading": "Wprowadź swoje ustawienia __server__",
+            "password": "Hasło",
+            "remember": "Zapamiętaj na tym komputerze",
+            "submit": "Zatwierdź",
+            "username": "Nazwa użytkownika"
+        }
+    },
+    "record-list": {
+        "export": "Eksport",
+        "msg1": "Rekordy są zapisane w twojej przeglądarce do momentu ich wgrania (nawet gdy wyłączysz komputer lub przejdziesz do trybu offline).",
+        "msg2": "Rekordy w kolejce, z wyjątkiem tych oznaczonych jako wersje robocze __icon__, są wgrywane automatycznie, w tle, co 5 minut, gdy strona jest otwarta i dostępne jest połączenie internetowe.",
+        "msg2-nodraft": "Rekordy w kolejce są wgrywane automatycznie, w tle, co 5 minut, gdy strona jest otwarta i dostępne jest połączenie internetowe.",
+        "msg3": "Aby wymusić wgranie pomiędzy automatycznymi próbami, kliknij 'Wgraj'.",
+        "norecords": "brak zakolejkowanych rekordów",
+        "title": "Kolejka",
+        "upload": "Wgraj"
+    },
+    "selectpicker": {
+        "noneselected": "nic nie jest wybrane",
+        "numberselected": "zaznaczono __number__"
+    },
+    "store": {
+        "error": {
+            "iosusesafari": "Twoja przeglądarka iOS nie jest w stanie wyświetlić tego formularza. Na iOS rekomendujemy używanie Safari.",
+            "notavailable": "Pamięć przeglądarki jest niezbędna, a niedostępna, uszkodzona lub w trybie odczytu. Jeśli jesteś w trybie 'prywatnego przeglądania', proszę przełącz się do standardowego trybu, w przeciwnym wypadku skorzystaj z innej przeglądarki. (error: __error__)",
+            "notsupported": "Twoja przeglądarka nie jest w stanie wyświetlić tego formularza. Rekomendujemy użycie nowoczesnej przeglądarki."
+        }
+    },
+    "submission": {
+        "http0": "Niepowodzenie  (Offline?).",
+        "http2xx": "Niespodziewana odpowiedź w czasie zatwierdzania danych.",
+        "http400": "Serwer danych nie zaakceptował danych",
+        "http401": "Problem uwierzytelniania z serwerem danych.",
+        "http403": "Wgrywanie danych na ten serwer danych nie jest dozwolone.",
+        "http404": "Nie znaleziono usługi zatwierdzania na tym serwerze danych.",
+        "http408": "Upłynął limit czasu serwera danych.",
+        "http413": "Ilość danych jest zbyt duża.",
+        "http4xx": "Nieznany problem zatwierdzania na serwerze danych.",
+        "http500": "Nie działa serwer danych dla twojego formularza na serwerze Enketo. Proszę spróbuj ponownie później lub skontaktuj się z __supportEmail__.",
+        "http504": "Nie udało się ustanowić połączenia z serwerem danych."
+    },
+    "version": "wersja:",
+    "widget": {
+        "comment": {
+            "update": "Zaktualizuj"
+        }
+    }
+}
