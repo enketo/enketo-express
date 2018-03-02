@@ -2,10 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed:
+- If existing drawing/signature/annotion is loaded from a http URL (editing submitted record), an exception occurs.
+
 [1.61.2] - 2018-03-02
 ---------------------
 ##### Added
-- Polish translations
+- Polish translations.
 
 ##### Removed:
 - File upload "no preview for this file type" message.
