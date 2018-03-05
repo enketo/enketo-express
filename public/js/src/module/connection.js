@@ -28,16 +28,18 @@ function getOnlineStatus() {
     return new Promise( function( resolve ) {
         $.ajax( CONNECTION_URL, {
                 type: 'GET',
-
                 cache: false,
-                dataType: 'json',
+                dataType: 'text',
                 timeout: 3000
             } )
             .done( function( response ) {
                 // It is important to check for the content of the no-cache response as it will
                 // start receiving the fallback page specified in the manifest!
-                online = typeof response.responseText !== 'undefined' && /connected/.test( response.responseText );
+                online = typeof response === 'string' && /connected/.test( response );
                 resolve( online );
+            } )
+            .fail( function( jqXHR, textStatus ) {
+                console.error( 'Failed to establish connection', textStatus );
             } );
     } );
 }
