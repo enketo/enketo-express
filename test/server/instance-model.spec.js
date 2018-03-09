@@ -1,32 +1,30 @@
 /* global describe, require, it, beforeEach, afterEach */
-'use strict';
-
-var Promise = require( 'lie' );
-var chai = require( 'chai' );
-var expect = chai.expect;
-var chaiAsPromised = require( 'chai-as-promised' );
-var model = require( '../../app/models/instance-model' );
+const Promise = require( 'lie' );
+const chai = require( 'chai' );
+const expect = chai.expect;
+const chaiAsPromised = require( 'chai-as-promised' );
+const model = require( '../../app/models/instance-model' );
 
 chai.use( chaiAsPromised );
 
-describe( 'Instance Model', function() {
+describe( 'Instance Model', () => {
 
-    afterEach( function( done ) {
+    afterEach( done => {
         model.remove( {
                 instanceId: 'someid'
             } )
-            .then( function() {
+            .then( () => {
                 done();
             } )
-            .catch( function() {
+            .catch( () => {
                 done();
             } );
     } );
 
-    describe( 'set: when attempting to cache an instance', function() {
-        var survey;
+    describe( 'set: when attempting to cache an instance', () => {
+        let survey;
 
-        beforeEach( function() {
+        beforeEach( () => {
             survey = {
                 openRosaId: 'widgets',
                 openRosaServer: 'http://example.com',
@@ -39,36 +37,34 @@ describe( 'Instance Model', function() {
             };
         } );
 
-        it( 'returns an 400 error when instanceId is missing', function() {
+        it( 'returns an 400 error when instanceId is missing', () => {
             delete survey.instanceId;
             return expect( model.set( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns an 400 error when openRosaId is missing', function() {
+        it( 'returns an 400 error when openRosaId is missing', () => {
             delete survey.openRosaId;
             return expect( model.set( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns an 400 error when openRosaServer is missing', function() {
+        it( 'returns an 400 error when openRosaServer is missing', () => {
             delete survey.openRosaServer;
             return expect( model.set( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns an 400 error when instance is missing', function() {
+        it( 'returns an 400 error when instance is missing', () => {
             delete survey.instance;
             return expect( model.set( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns the survey object when successful', function() {
-            return expect( model.set( survey ) ).to.eventually.deep.equal( survey );
-        } );
+        it( 'returns the survey object when successful', () => expect( model.set( survey ) ).to.eventually.deep.equal( survey ) );
     } );
 
-    describe( 'get: when attempting to obtain a cached instance', function() {
-        var survey;
-        var promise;
+    describe( 'get: when attempting to obtain a cached instance', () => {
+        let survey;
+        let promise;
 
-        beforeEach( function() {
+        beforeEach( () => {
             survey = {
                 openRosaId: 'widgets',
                 openRosaServer: 'http://example.com',
@@ -81,17 +77,17 @@ describe( 'Instance Model', function() {
             };
         } );
 
-        it( 'returns an 400 error when instanceId is missing', function() {
+        it( 'returns an 400 error when instanceId is missing', () => {
             delete survey.instanceId;
             return expect( model.get( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns an 404 error when instance record not cached', function() {
+        it( 'returns an 404 error when instance record not cached', () => {
             survey.instanceId = 'non-existing';
             return expect( model.get( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 404 );
         } );
-        it( 'returns the survey object with the instance property when successful', function() {
+        it( 'returns the survey object with the instance property when successful', () => {
             promise = model.set( survey ).then( model.get );
             return Promise.all( [
                 expect( promise ).to.eventually
@@ -102,13 +98,10 @@ describe( 'Instance Model', function() {
         } );
     } );
 
-    describe( 'remove: when attempting to remove a cached instance', function() {
-        var survey;
-        var setPromise;
-        var remPromise;
-        var getPromise;
+    describe( 'remove: when attempting to remove a cached instance', () => {
+        let survey;
 
-        beforeEach( function() {
+        beforeEach( () => {
             survey = {
                 openRosaId: 'widgets',
                 instanceId: 'someid',
@@ -118,23 +111,21 @@ describe( 'Instance Model', function() {
             };
         } );
 
-        it( 'returns a 400 error when the instanceId property is not provided in the parameter', function() {
-            setPromise = model.set( survey ).then( model.get );
-            remPromise = setPromise.then( function() {
+        it( 'returns a 400 error when the instanceId property is not provided in the parameter', () => {
+            const setPromise = model.set( survey ).then( model.get );
+            const remPromise = setPromise.then( () => {
                 delete survey.instanceId;
                 return model.remove( survey );
             } );
             return expect( remPromise ).to.eventually.be.rejected.and.to.have.property( 'status' ).that.equals( 400 );
         } );
 
-        it( 'returns the removed instanceId when successful', function() {
-            setPromise = model.set( survey ).then( model.get );
-            remPromise = setPromise.then( model.remove );
-            getPromise = remPromise.then( function() {
-                return model.get( {
-                    instanceId: survey.instanceId
-                } );
-            } );
+        it( 'returns the removed instanceId when successful', () => {
+            const setPromise = model.set( survey ).then( model.get );
+            const remPromise = setPromise.then( model.remove );
+            const getPromise = remPromise.then( () => model.get( {
+                instanceId: survey.instanceId
+            } ) );
 
             return Promise.all( [
                 expect( setPromise ).to.eventually.have.property( 'instance' ).that.equals( survey.instance ),
@@ -143,8 +134,6 @@ describe( 'Instance Model', function() {
             ] );
         } );
 
-        it( 'returns the removed instanceId if the record was already removed or never existed', function() {
-            return expect( model.remove( survey ) ).to.eventually.equal( survey.instanceId );
-        } );
+        it( 'returns the removed instanceId if the record was already removed or never existed', () => expect( model.remove( survey ) ).to.eventually.equal( survey.instanceId ) );
     } );
 } );

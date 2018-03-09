@@ -1,21 +1,19 @@
 /* global describe, require, it */
-'use strict';
-
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var request = require( 'supertest' );
-var config = require( '../../app/models/config-model' ).server;
+const request = require( 'supertest' );
+const config = require( '../../app/models/config-model' ).server;
 config[ 'base path' ] = '';
-var app = require( '../../config/express' );
+const app = require( '../../config/express' );
 
-describe( 'Survey Controller', function() {
+describe( 'Survey Controller', () => {
 
-    describe( 'meta data: ', function() {
-        var endpoints = [ '/_/#abcd', '/x/#abcd', '/::abcd', '/preview', '/preview/::abcd', '/edit/::abcd?instance_id=a' ];
+    describe( 'meta data: ', () => {
+        const endpoints = [ '/_/#abcd', '/x/#abcd', '/::abcd', '/preview', '/preview/::abcd', '/edit/::abcd?instance_id=a' ];
 
-        endpoints.forEach( function( endpoint ) {
-            it( 'endpoint ' + endpoint + ' adds a __enketo_meta_deviceid cookie when absent', function( done ) {
+        endpoints.forEach( endpoint => {
+            it( `endpoint ${endpoint} adds a __enketo_meta_deviceid cookie when absent`, done => {
                 app.set( 'offline enabled', true );
                 request( app ).get( endpoint )
                     .expect( 200 )

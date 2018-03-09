@@ -1,29 +1,27 @@
 /* global describe, require, it, beforeEach, afterEach */
-'use strict';
-
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var Promise = require( 'lie' );
-var chai = require( 'chai' );
-var expect = chai.expect;
-var chaiAsPromised = require( 'chai-as-promised' );
-var redis = require( 'redis' );
-var config = require( '../../app/models/config-model' ).server;
-var client = redis.createClient( config.redis.cache.port, config.redis.cache.host, {
+const Promise = require( 'lie' );
+const chai = require( 'chai' );
+const expect = chai.expect;
+const chaiAsPromised = require( 'chai-as-promised' );
+const redis = require( 'redis' );
+const config = require( '../../app/models/config-model' ).server;
+const client = redis.createClient( config.redis.cache.port, config.redis.cache.host, {
     auth_pass: config.redis.cache.password
 } );
-var model = require( '../../app/models/cache-model' );
+const model = require( '../../app/models/cache-model' );
 
-var survey;
+let survey;
 
 chai.use( chaiAsPromised );
 // select database #15 to use as the test database
 client.select( 15 );
 
-describe( 'Cache Model', function() {
+describe( 'Cache Model', () => {
 
-    beforeEach( function() {
+    beforeEach( () => {
         survey = {
             openRosaServer: 'https://testserver.com/bob',
             openRosaId: 'widgets',
@@ -40,93 +38,79 @@ describe( 'Cache Model', function() {
         };
     } );
 
-    afterEach( function( done ) {
-        model.flushAll().then( function() {
+    afterEach( done => {
+        model.flushAll().then( () => {
             done();
         } );
     } );
 
-    describe( 'set: when attempting to cache a survey', function() {
-        it( 'returns an 400 error when openRosaServer is missing', function() {
+    describe( 'set: when attempting to cache a survey', () => {
+        it( 'returns an 400 error when openRosaServer is missing', () => {
             delete survey.openRosaServer;
             return expect( model.set( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns an 400 error when openRosaId is missing', function() {
+        it( 'returns an 400 error when openRosaId is missing', () => {
             delete survey.openRosaId;
             return expect( model.set( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns an 400 error when info.hash is missing', function() {
+        it( 'returns an 400 error when info.hash is missing', () => {
             delete survey.info.hash;
             return expect( model.set( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns an 400 error when form is missing', function() {
+        it( 'returns an 400 error when form is missing', () => {
             delete survey.form;
             return expect( model.set( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns an 400 error when model is missing', function() {
+        it( 'returns an 400 error when model is missing', () => {
             delete survey.model;
             return expect( model.set( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns the survey object when successful if no manifest was provided', function() {
+        it( 'returns the survey object when successful if no manifest was provided', () => {
             delete survey.manifest;
             return expect( model.set( survey ) ).to.eventually.deep.equal( survey );
         } );
-        it( 'returns the survey object when successful if an empty manifest was provided', function() {
+        it( 'returns the survey object when successful if an empty manifest was provided', () => {
             survey.manifest = [];
             return expect( model.set( survey ) ).to.eventually.deep.equal( survey );
         } );
-        it( 'returns the survey object when successful if a manifest was provided', function() {
-            return expect( model.set( survey ) ).to.eventually.deep.equal( survey );
-        } );
+        it( 'returns the survey object when successful if a manifest was provided', () => expect( model.set( survey ) ).to.eventually.deep.equal( survey ) );
     } );
 
-    describe( 'expiration', function() {
-        var expiration = 30 * 24 * 60 * 60 * 1000;
-        var getTtl = function( key ) {
-            return new Promise( function( resolve, reject ) {
-                client.pttl( key, function( error, ttl ) {
-                    if ( error ) {
-                        reject( error );
-                    }
-                    resolve( ttl );
-                } );
+    describe( 'expiration', () => {
+        const expiration = 30 * 24 * 60 * 60 * 1000;
+        const getTtl = key => new Promise( ( resolve, reject ) => {
+            client.pttl( key, ( error, ttl ) => {
+                if ( error ) {
+                    reject( error );
+                }
+                resolve( ttl );
             } );
-        };
-        it( 'is ' + expiration + ' milliseconds for new cache items', function() {
-            var promise = model.set( survey )
-                .then( function() {
-                    return getTtl( 'ca:testserver.com/bob,widgets' );
-                } );
+        } );
+        it( `is ${expiration} milliseconds for new cache items`, () => {
+            const promise = model.set( survey )
+                .then( () => getTtl( 'ca:testserver.com/bob,widgets' ) );
             return expect( promise ).to.eventually.be.at.most( expiration )
                 .and.to.be.at.least( expiration - 10 );
         } );
-        it( 'is reset to the original expiration every time the cache item is accessed ', function() {
-            var promise1;
-            var promise2;
-            var delayTime = 1 * 1000;
-            var delay = function() {
-                return new Promise( function( resolve ) {
-                    setTimeout( function() {
-                        resolve( true );
-                    }, delayTime );
-                } );
-            };
+        it( 'is reset to the original expiration every time the cache item is accessed ', () => {
+            let promise1;
+            let promise2;
+            const delayTime = 1 * 1000;
+            const delay = () => new Promise( resolve => {
+                setTimeout( () => {
+                    resolve( true );
+                }, delayTime );
+            } );
 
             promise1 = model.set( survey )
                 .then( delay )
-                .then( function() {
-                    return getTtl( 'ca:testserver.com/bob,widgets' );
-                } );
-            promise2 = promise1.then( function() {
-                return model.get( survey );
-            } ).then( function() {
-                return getTtl( 'ca:testserver.com/bob,widgets' );
-            } );
+                .then( () => getTtl( 'ca:testserver.com/bob,widgets' ) );
+            promise2 = promise1.then( () => model.get( survey ) ).then( () => getTtl( 'ca:testserver.com/bob,widgets' ) );
 
             return Promise.all( [
                 expect( promise1 ).to.eventually.be.at.most( expiration - delayTime )
@@ -137,23 +121,23 @@ describe( 'Cache Model', function() {
         } );
     } );
 
-    describe( 'get: when attempting to obtain a cached survey', function() {
-        it( 'returns a 400 error when openRosaServer is missing', function() {
+    describe( 'get: when attempting to obtain a cached survey', () => {
+        it( 'returns a 400 error when openRosaServer is missing', () => {
             delete survey.openRosaServer;
             return expect( model.get( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns a 400 error when openRosaId is missing', function() {
+        it( 'returns a 400 error when openRosaId is missing', () => {
             delete survey.openRosaId;
             return expect( model.get( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns null when instance record not cached', function() {
+        it( 'returns null when instance record not cached', () => {
             survey.openRosaId = 'non-existing';
             return expect( model.get( survey ) ).to.eventually.deep.equal( null );
         } );
-        it( 'returns the survey object with the form and model properties when successful for item without manifest', function() {
-            var promise;
+        it( 'returns the survey object with the form and model properties when successful for item without manifest', () => {
+            let promise;
 
             delete survey.manifest;
             promise = model.set( survey ).then( model.get );
@@ -164,8 +148,8 @@ describe( 'Cache Model', function() {
                 expect( promise ).to.eventually.have.property( 'formHash' ).and.to.have.length.above( 2 )
             ] );
         } );
-        it( 'returns the survey object with the form and model properties when successful', function() {
-            var promise = model.set( survey ).then( model.get );
+        it( 'returns the survey object with the form and model properties when successful', () => {
+            const promise = model.set( survey ).then( model.get );
             return Promise.all( [
                 expect( promise ).to.eventually.have.property( 'form' ).that.equals( survey.form ),
                 expect( promise ).to.eventually.have.property( 'model' ).that.equals( survey.model ),
@@ -175,25 +159,23 @@ describe( 'Cache Model', function() {
         } );
     } );
 
-    describe( 'check: when checking the status of a cached survey', function() {
-        it( 'returns a 400 error when info.hash is missing', function() {
+    describe( 'check: when checking the status of a cached survey', () => {
+        it( 'returns a 400 error when info.hash is missing', () => {
             delete survey.info.hash;
             return expect( model.check( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns false when the cache is outdated (formHash changed)', function() {
-            var setPromise;
-            var checkPromise;
-            var updatedSurvey;
+        it( 'returns false when the cache is outdated (formHash changed)', () => {
+            let setPromise;
+            let checkPromise;
+            let updatedSurvey;
 
             updatedSurvey = JSON.parse( JSON.stringify( survey ) );
             setPromise = model.set( survey );
             updatedSurvey.info = {
                 hash: 'something else'
             };
-            checkPromise = setPromise.then( function() {
-                return model.check( updatedSurvey );
-            } );
+            checkPromise = setPromise.then( () => model.check( updatedSurvey ) );
 
             return Promise.all( [
                 expect( setPromise ).to.eventually.deep.equal( survey ),
@@ -201,34 +183,30 @@ describe( 'Cache Model', function() {
             ] );
 
         } );
-        it( 'returns true when the XForm hash remains unchanged but the manifest hash of a mediaFile changes', function() {
-            var setPromise;
-            var checkPromise;
-            var updatedSurvey;
+        it( 'returns true when the XForm hash remains unchanged but the manifest hash of a mediaFile changes', () => {
+            let setPromise;
+            let checkPromise;
+            let updatedSurvey;
 
             updatedSurvey = JSON.parse( JSON.stringify( survey ) );
             updatedSurvey.manifest[ 0 ].hash = 'md5:changed';
             setPromise = model.set( survey );
-            checkPromise = setPromise.then( function() {
-                return model.check( updatedSurvey );
-            } );
+            checkPromise = setPromise.then( () => model.check( updatedSurvey ) );
 
             return Promise.all( [
                 expect( setPromise ).to.eventually.deep.equal( survey ),
                 expect( checkPromise ).to.eventually.equal( true )
             ] );
         } );
-        it( 'returns false when the XForm hash changes', function() {
-            var setPromise;
-            var checkPromise;
-            var updatedSurvey;
+        it( 'returns false when the XForm hash changes', () => {
+            let setPromise;
+            let checkPromise;
+            let updatedSurvey;
 
             updatedSurvey = JSON.parse( JSON.stringify( survey ) );
             setPromise = model.set( survey );
             updatedSurvey.info.hash = 'def';
-            checkPromise = setPromise.then( function() {
-                return model.check( updatedSurvey );
-            } );
+            checkPromise = setPromise.then( () => model.check( updatedSurvey ) );
 
             return Promise.all( [
                 expect( setPromise ).to.eventually.deep.equal( survey ),
@@ -254,45 +232,43 @@ describe( 'Cache Model', function() {
             ] );
         } );
         */
-        it( 'returns null when instance record not cached', function() {
+        it( 'returns null when instance record not cached', () => {
             survey.openRosaId = 'non-existing';
             return expect( model.check( survey ) ).to.eventually.deep.equal( null );
         } );
-        it( 'returns true when the cache is existing and up-to-date', function() {
-            return expect( model.set( survey ).then( model.check ) ).to.eventually.deep.equal( true );
-        } );
+        it( 'returns true when the cache is existing and up-to-date', () => expect( model.set( survey ).then( model.check ) ).to.eventually.deep.equal( true ) );
     } );
 
 
 
-    describe( 'getHashes: when obtaining the hashes of a current cached survey', function() {
-        it( 'returns a 400 error when openRosaId is missing', function() {
+    describe( 'getHashes: when obtaining the hashes of a current cached survey', () => {
+        it( 'returns a 400 error when openRosaId is missing', () => {
             delete survey.openRosaId;
             return expect( model.getHashes( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns a 400 error when openRosaServer is missing', function() {
+        it( 'returns a 400 error when openRosaServer is missing', () => {
             delete survey.openRosaServer;
             return expect( model.getHashes( survey ) ).to.eventually.be.rejected
                 .and.to.have.property( 'status' ).that.equals( 400 );
         } );
-        it( 'returns the unchanged survey when the survey is not cached', function() {
-            var original;
+        it( 'returns the unchanged survey when the survey is not cached', () => {
+            let original;
             survey.openRosaId = 'non-existing-at-all';
             original = JSON.parse( JSON.stringify( survey ) );
             return expect( model.getHashes( survey ) ).to.eventually.deep.equal( original );
         } );
-        it( 'returns the hashes when a cached survey is available', function() {
-            var getPromise = model.set( survey ).then( model.getHashes );
+        it( 'returns the hashes when a cached survey is available', () => {
+            const getPromise = model.set( survey ).then( model.getHashes );
 
             return expect( getPromise ).to.eventually.have.property( 'formHash' ).that.equals( 'abc' );
         } );
-        it( 'returns a different formHash when only the XForm hash has been updated', function() {
-            var getHashes1;
-            var getHashes2;
-            var updatedSurvey = JSON.parse( JSON.stringify( survey ) );
+        it( 'returns a different formHash when only the XForm hash has been updated', () => {
+            let getHashes1;
+            let getHashes2;
+            const updatedSurvey = JSON.parse( JSON.stringify( survey ) );
 
-            getHashes1 = model.set( survey ).then( function( s ) {
+            getHashes1 = model.set( survey ).then( s => {
                 delete s.info;
                 delete s.manifest;
                 return model.getHashes( s );
@@ -301,10 +277,8 @@ describe( 'Cache Model', function() {
             updatedSurvey.info.hash = 'def';
 
             getHashes2 = getHashes1.
-            then( function() {
-                    return model.set( updatedSurvey );
-                } )
-                .then( function( s ) {
+            then( () => model.set( updatedSurvey ) )
+                .then( s => {
                     delete s.info;
                     delete s.manifest;
                     return model.getHashes( s );
@@ -368,23 +342,21 @@ describe( 'Cache Model', function() {
         */
     } );
 
-    describe( 'flush(ing): when attempting to flush the cache', function() {
-        var getCacheCount = function() {
-            return new Promise( function( resolve, reject ) {
-                client.keys( 'ca:*', function( error, keys ) {
-                    if ( error ) {
-                        reject( error );
-                    }
-                    resolve( keys.length );
-                } );
+    describe( 'flush(ing): when attempting to flush the cache', () => {
+        const getCacheCount = () => new Promise( ( resolve, reject ) => {
+            client.keys( 'ca:*', ( error, keys ) => {
+                if ( error ) {
+                    reject( error );
+                }
+                resolve( keys.length );
             } );
-        };
-        it( 'with flushAll(), the entire cache becomes empty...', function() {
-            var count1;
-            var count2;
-            var survey2 = JSON.parse( JSON.stringify( survey ) );
+        } );
+        it( 'with flushAll(), the entire cache becomes empty...', () => {
+            let count1;
+            let count2;
+            const survey2 = JSON.parse( JSON.stringify( survey ) );
             survey2.openRosaId = 'something_else';
-            count1 = model.set( survey ).then( function() {
+            count1 = model.set( survey ).then( () => {
                 model.set( survey2 );
             } ).then( getCacheCount );
             count2 = count1.then( model.flushAll ).then( getCacheCount );
@@ -394,11 +366,9 @@ describe( 'Cache Model', function() {
                 expect( count2 ).to.eventually.deep.equal( 0 )
             ] );
         } );
-        it( 'with flush(s), an individual survey cache becomes empty...', function() {
-            var get1Promise = model.set( survey ).then( model.get ),
-                get2Promise = get1Promise.then( model.flush ).then( function() {
-                    return model.get( survey );
-                } );
+        it( 'with flush(s), an individual survey cache becomes empty...', () => {
+            const get1Promise = model.set( survey ).then( model.get ),
+                get2Promise = get1Promise.then( model.flush ).then( () => model.get( survey ) );
             return Promise.all( [
                 expect( get1Promise ).to.eventually.have.property( 'form' ).that.equals( survey.form ),
                 expect( get2Promise ).to.eventually.deep.equal( null )

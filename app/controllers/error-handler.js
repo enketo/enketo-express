@@ -1,5 +1,3 @@
-'use strict';
-
 // var debug = require( 'debug' )( 'error-handler' );
 
 function getErrorMessage( req, error ) {
@@ -21,12 +19,12 @@ function getErrorMessage( req, error ) {
 }
 
 module.exports = {
-    production: function( err, req, res ) {
-        var body = {
+    production( err, req, res ) {
+        const body = {
             code: err.status || 500,
             message: getErrorMessage( req, err )
         };
-        var contentType = res.get( 'Content-type' );
+        const contentType = res.get( 'Content-type' );
         res.status( err.status || 500 );
         if ( contentType && contentType.indexOf( 'application/json' ) === 0 ) {
             res.json( body );
@@ -34,13 +32,13 @@ module.exports = {
             res.render( 'error', body );
         }
     },
-    development: function( err, req, res ) {
-        var body = {
+    development( err, req, res ) {
+        const body = {
             code: err.status || 500,
             message: getErrorMessage( req, err ),
             stack: err.stack
         };
-        var contentType = res.get( 'Content-type' );
+        const contentType = res.get( 'Content-type' );
         res.status( err.status || 500 );
         if ( contentType && contentType.indexOf( 'application/json' ) === 0 ) {
             res.json( body );
@@ -49,7 +47,7 @@ module.exports = {
         }
     },
     '404': function( req, res, next ) {
-        var error = new Error( req.i18n.t( 'error.pagenotfound' ) );
+        const error = new Error( req.i18n.t( 'error.pagenotfound' ) );
         error.status = 404;
         next( error );
     }

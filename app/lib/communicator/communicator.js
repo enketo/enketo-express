@@ -1,12 +1,9 @@
-'use strict';
-
-var request = require( 'request' );
-var Auth = require( 'request/lib/auth' ).Auth;
-var TError = require( '../custom-error' ).TranslatedError;
-var Promise = require( 'lie' );
-var config = require( '../../models/config-model' ).server;
-var debug = require( 'debug' )( 'openrosa-communicator' );
-var parser = new require( 'xml2js' ).Parser();
+const request = require( 'request' );
+const Auth = require( 'request/lib/auth' ).Auth;
+const TError = require( '../custom-error' ).TranslatedError;
+const config = require( '../../models/config-model' ).server;
+const debug = require( 'debug' )( 'openrosa-communicator' );
+const parser = new require( 'xml2js' ).Parser();
 
 /**
  * Gets form info
@@ -25,9 +22,7 @@ function getXFormInfo( survey ) {
         headers: {
             cookie: survey.cookie
         }
-    } ).then( function( formListXml ) {
-        return _findFormAddInfo( formListXml, survey );
-    } );
+    } ).then( formListXml => _findFormAddInfo( formListXml, survey ) );
 }
 
 /**
@@ -37,14 +32,13 @@ function getXFormInfo( survey ) {
  * @return {[type]}         promise
  */
 function getXForm( survey ) {
-
     return _request( {
         url: survey.info.downloadUrl,
         auth: survey.credentials,
         headers: {
             cookie: survey.cookie
         }
-    } ).then( function( xform ) {
+    } ).then( xform => {
         survey.xform = xform;
         return Promise.resolve( survey );
     } );
@@ -58,7 +52,6 @@ function getXForm( survey ) {
  * @return {[type]}        promise
  */
 function getManifest( survey ) {
-
     if ( !survey.info.manifestUrl ) {
         // a manifest is optional
         return Promise.resolve( survey );
@@ -71,10 +64,8 @@ function getManifest( survey ) {
                 }
             } )
             .then( _xmlToJson )
-            .then( function( obj ) {
-                survey.manifest = ( obj.manifest && obj.manifest.mediaFile ) ? obj.manifest.mediaFile.map( function( file ) {
-                    return _simplifyFormObj( file );
-                } ) : [];
+            .then( obj => {
+                survey.manifest = ( obj.manifest && obj.manifest.mediaFile ) ? obj.manifest.mediaFile.map( file => _simplifyFormObj( file ) ) : [];
                 return survey;
             } );
     }
@@ -86,14 +77,10 @@ function getManifest( survey ) {
  * @return {[type]}        promise
  */
 function getMaxSize( survey ) {
-    var server;
-    var submissionUrl;
-    var options;
+    const server = survey.openRosaServer;
+    const submissionUrl = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? `${server}submission` : `${server}/submission`;
 
-    server = survey.openRosaServer;
-    submissionUrl = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'submission' : server + '/submission';
-
-    options = {
+    const options = {
         url: submissionUrl,
         auth: survey.credentials,
         headers: {
@@ -103,13 +90,11 @@ function getMaxSize( survey ) {
     };
 
     return _request( options )
-        .then( function( response ) {
-            return response.headers[ 'x-openrosa-accept-content-length' ];
-        } );
+        .then( response => response.headers[ 'x-openrosa-accept-content-length' ] );
 }
 
 function authenticate( survey ) {
-    var options = {
+    const options = {
         url: getFormListUrl( survey.openRosaServer, survey.openRosaId, survey.customParam ),
         auth: survey.credentials,
         headers: {
@@ -120,7 +105,7 @@ function authenticate( survey ) {
     };
 
     return _request( options )
-        .then( function() {
+        .then( () => {
             debug( 'successful (authenticated if it was necessary)' );
             return survey;
         } );
@@ -134,32 +119,30 @@ function authenticate( survey ) {
  * @return {string}             [description]
  */
 function getAuthHeader( url, credentials ) {
-    var auth;
-    var authHeader;
-    var options = {
-        url: url,
+    const options = {
+        url,
         method: 'head',
         headers: {
             'X-OpenRosa-Version': '1.0'
         }
     };
 
-    return new Promise( function( resolve ) {
+    return new Promise( resolve => {
         // Don't bother making Head request first if token was provided.
         if ( credentials && credentials.bearer ) {
-            resolve( 'Bearer ' + credentials.bearer );
+            resolve( `Bearer ${credentials.bearer}` );
         } else {
             // Check if Basic or Digest Authorization header is required and return header if so.
-            var req = request( options, function( error, response ) {
+            const req = request( options, ( error, response ) => {
                 if ( !error && response && response.statusCode === 401 && credentials && credentials.user && credentials.pass ) {
                     // Using request's internal library we create an appropiate authorization header.
                     // This is a bit dangerous because internal changes in request/request, could break this code.
                     req.method = 'POST';
-                    auth = new Auth( req );
+                    const auth = new Auth( req );
                     auth.hasAuth = true;
                     auth.user = credentials.user;
                     auth.pass = credentials.pass;
-                    authHeader = auth.onResponse( response );
+                    const authHeader = auth.onResponse( response );
                     resolve( authHeader );
                 } else {
                     resolve( null );
@@ -170,19 +153,19 @@ function getAuthHeader( url, credentials ) {
 }
 
 function getFormListUrl( server, id, customParam ) {
-    var query = id ? '?formID=' + id : '';
-    var path = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? 'formList' : '/formList';
+    let query = id ? `?formID=${id}` : '';
+    const path = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? 'formList' : '/formList';
 
     if ( customParam ) {
         query += query ? '&' : '?';
-        query += config[ 'query parameter to pass to submission' ] + '=' + customParam;
+        query += `${config[ 'query parameter to pass to submission' ]}=${customParam}`;
     }
 
     return server + path + query;
 }
 
 function getSubmissionUrl( server ) {
-    return ( server.lastIndexOf( '/' ) === server.length - 1 ) ? server + 'submission' : server + '/submission';
+    return ( server.lastIndexOf( '/' ) === server.length - 1 ) ? `${server}submission` : `${server}/submission`;
 }
 
 function getUpdatedRequestOptions( options ) {
@@ -215,10 +198,9 @@ function getUpdatedRequestOptions( options ) {
  * @return {?string=}    promise
  */
 function _request( options ) {
-    var error;
-    var method;
+    let error;
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( typeof options !== 'object' && !options.url ) {
             error = new Error( 'Bad request. No options provided.' );
             error.status = 400;
@@ -228,27 +210,27 @@ function _request( options ) {
         options = getUpdatedRequestOptions( options );
 
         // due to a bug in request/request using options.method with Digest Auth we won't pass method as an option
-        method = options.method;
+        const method = options.method;
         delete options.method;
 
-        debug( 'sending ' + method + ' request to url: ' + options.url );
+        debug( `sending ${method} request to url: ${options.url}` );
 
-        request[ method ]( options, function( error, response, body ) {
+        request[ method ]( options, ( error, response, body ) => {
             if ( error ) {
-                debug( 'Error occurred when requesting ' + options.url, error );
+                debug( `Error occurred when requesting ${options.url}`, error );
                 reject( error );
             } else if ( response.statusCode === 401 ) {
                 error = new Error( 'Forbidden. Authorization Required.' );
                 error.status = response.statusCode;
                 reject( error );
             } else if ( response.statusCode < 200 || response.statusCode >= 300 ) {
-                error = new Error( 'Request to ' + options.url + ' failed.' );
+                error = new Error( `Request to ${options.url} failed.` );
                 error.status = response.statusCode;
                 reject( error );
             } else if ( method === 'head' ) {
                 resolve( response );
             } else {
-                debug( 'response of request to ' + options.url + ' has status code: ', response.statusCode );
+                debug( `response of request to ${options.url} has status code: `, response.statusCode );
                 resolve( body );
             }
         } );
@@ -262,9 +244,8 @@ function _request( options ) {
  * @return {[type]}     promise
  */
 function _xmlToJson( xml ) {
-
-    return new Promise( function( resolve, reject ) {
-        parser.parseString( xml, function( error, data ) {
+    return new Promise( ( resolve, reject ) => {
+        parser.parseString( xml, ( error, data ) => {
             if ( error ) {
                 debug( 'error parsing xml and converting to JSON' );
                 reject( error );
@@ -283,17 +264,17 @@ function _xmlToJson( xml ) {
  * @return {[type]}             promise
  */
 function _findFormAddInfo( formListXml, survey ) {
-    var found;
-    var index;
-    var error;
+    let found;
+    let index;
+    let error;
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         // first convert to JSON to make it easier to work with
         _xmlToJson( formListXml )
-            .then( function( formListObj ) {
+            .then( formListObj => {
                 if ( formListObj.xforms && formListObj.xforms.xform ) {
                     // find the form and stop looking when found
-                    found = formListObj.xforms.xform.some( function( xform, i ) {
+                    found = formListObj.xforms.xform.some( ( xform, i ) => {
                         index = i;
                         return xform.formID.toString() === survey.openRosaId;
                     } );
@@ -301,7 +282,7 @@ function _findFormAddInfo( formListXml, survey ) {
 
                 if ( !found ) {
                     error = new TError( 'error.notfoundinformlist', {
-                        formId: '"' + survey.openRosaId + '"'
+                        formId: `"${survey.openRosaId}"`
                     } );
                     error.status = 404;
                     reject( error );
@@ -324,7 +305,7 @@ function _findFormAddInfo( formListXml, survey ) {
  * @return {[type]}         [description]
  */
 function _simplifyFormObj( formObj ) {
-    for ( var prop in formObj ) {
+    for ( const prop in formObj ) {
         if ( formObj.hasOwnProperty( prop ) && Object.prototype.toString.call( formObj[ prop ] ) === '[object Array]' ) {
             formObj[ prop ] = formObj[ prop ][ 0 ].toString();
         }
@@ -334,13 +315,13 @@ function _simplifyFormObj( formObj ) {
 }
 
 module.exports = {
-    getXFormInfo: getXFormInfo,
-    getXForm: getXForm,
-    getManifest: getManifest,
-    getMaxSize: getMaxSize,
-    authenticate: authenticate,
-    getAuthHeader: getAuthHeader,
-    getFormListUrl: getFormListUrl,
-    getSubmissionUrl: getSubmissionUrl,
-    getUpdatedRequestOptions: getUpdatedRequestOptions
+    getXFormInfo,
+    getXForm,
+    getManifest,
+    getMaxSize,
+    authenticate,
+    getAuthHeader,
+    getFormListUrl,
+    getSubmissionUrl,
+    getUpdatedRequestOptions
 };

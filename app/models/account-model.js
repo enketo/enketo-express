@@ -1,9 +1,6 @@
-'use strict';
-
-var Promise = require( 'lie' );
-var utils = require( '../lib/utils' );
-var config = require( './config-model' ).server;
-var customGetAccount = config[ 'account lib' ] ? require( config[ 'account lib' ] ).getAccount : undefined;
+const utils = require( '../lib/utils' );
+const config = require( './config-model' ).server;
+const customGetAccount = config[ 'account lib' ] ? require( config[ 'account lib' ] ).getAccount : undefined;
 // var debug = require( 'debug' )( 'account-model' );
 
 /**
@@ -12,8 +9,8 @@ var customGetAccount = config[ 'account lib' ] ? require( config[ 'account lib' 
  * @return {[type]}        [description]
  */
 function get( survey ) {
-    var error;
-    var server = _getServer( survey );
+    let error;
+    const server = _getServer( survey );
 
     if ( !server ) {
         error = new Error( 'Bad Request. Server URL missing.' );
@@ -59,7 +56,7 @@ function get( survey ) {
  */
 function check( survey ) {
     return get( survey )
-        .then( function( account ) {
+        .then( account => {
             survey.account = account;
             return survey;
         } );
@@ -72,7 +69,7 @@ function check( survey ) {
  * @return { boolean } [description]
  */
 function _isAllowed( account, serverUrl ) {
-    return account.linkedServer === '' || new RegExp( 'https?://' + _stripProtocol( account.linkedServer ) ).test( serverUrl );
+    return account.linkedServer === '' || new RegExp( `https?://${_stripProtocol( account.linkedServer )}` ).test( serverUrl );
 }
 
 /**
@@ -98,8 +95,7 @@ function _stripProtocol( url ) {
  * @return {{openRosaServer: string, key: string, quota: number}} account object
  */
 function _getAccount( serverUrl ) {
-    var error;
-    var hardcodedAccount = _getHardcodedAccount();
+    const hardcodedAccount = _getHardcodedAccount();
 
     if ( _isAllowed( hardcodedAccount, serverUrl ) ) {
         return Promise.resolve( hardcodedAccount );
@@ -109,7 +105,7 @@ function _getAccount( serverUrl ) {
         return customGetAccount( serverUrl, config[ 'account api url' ] );
     }
 
-    error = new Error( 'Forbidden. This server is not linked with Enketo.' );
+    const error = new Error( 'Forbidden. This server is not linked with Enketo.' );
     error.status = 403;
     return Promise.reject( error );
 }
@@ -119,8 +115,8 @@ function _getAccount( serverUrl ) {
  * @return {[type]} [description]
  */
 function _getHardcodedAccount() {
-    var app = require( '../../config/express' );
-    var linkedServer = app.get( 'linked form and data server' );
+    const app = require( '../../config/express' );
+    const linkedServer = app.get( 'linked form and data server' );
 
     // check if configuration is acceptable
     if ( !linkedServer || typeof linkedServer[ 'server url' ] === 'undefined' || typeof linkedServer[ 'api key' ] === 'undefined' ) {
@@ -148,6 +144,6 @@ function _getServer( survey ) {
 }
 
 module.exports = {
-    get: get,
-    check: check
+    get,
+    check
 };

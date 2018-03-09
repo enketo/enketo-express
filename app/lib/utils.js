@@ -1,6 +1,4 @@
-'use strict';
-
-var crypto = require( 'crypto' );
+const crypto = require( 'crypto' );
 // var debug = require( 'debug' )( 'utils' );
 
 /** 
@@ -14,12 +12,11 @@ function getOpenRosaKey( survey, prefix ) {
     }
     prefix = prefix || 'or:';
     // Server URL is not case sensitive, form ID is case-sensitive
-    return prefix + cleanUrl( survey.openRosaServer ) + ',' + survey.openRosaId.trim();
+    return `${prefix + cleanUrl( survey.openRosaServer )},${survey.openRosaId.trim()}`;
 }
 
 function getXformsManifestHash( manifest, type ) {
-    var hash = '';
-    var filtered;
+    const hash = '';
 
     if ( !manifest || manifest.length === 0 ) {
         return hash;
@@ -28,9 +25,7 @@ function getXformsManifestHash( manifest, type ) {
         return md5( JSON.stringify( manifest ) );
     }
     if ( type ) {
-        filtered = manifest.map( function( mediaFile ) {
-            return mediaFile[ type ];
-        } );
+        const filtered = manifest.map( mediaFile => mediaFile[ type ] );
         return md5( JSON.stringify( filtered ) );
     }
     return hash;
@@ -43,12 +38,11 @@ function getXformsManifestHash( manifest, type ) {
  * @return {string=}     [description]
  */
 function cleanUrl( url ) {
-    var matches;
     url = url.trim();
     if ( url.lastIndexOf( '/' ) === url.length - 1 ) {
         url = url.substring( 0, url.length - 1 );
     }
-    matches = url.match( /https?:\/\/(www\.)?(.+)/ );
+    const matches = url.match( /https?:\/\/(www\.)?(.+)/ );
     if ( matches && matches.length > 2 ) {
         return matches[ 2 ].toLowerCase();
     }
@@ -64,12 +58,12 @@ function cleanUrl( url ) {
  * @return {Boolean}     [description]
  */
 function isValidUrl( url ) {
-    var validUrl = /^(https?:\/\/)(([\da-z.-]+)\.([a-z.]{2,6})|(([0-9]{1,3}\.){3}[0-9]{1,3})|localhost)(:(102[4-9]|10[3-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-4][0-8]{4}|490[0-9]{2}|491[0-4][0-9]|4915[0-1]))?([/\w .\-()]*)*\/?[/\w .-]*$/;
+    const validUrl = /^(https?:\/\/)(([\da-z.-]+)\.([a-z.]{2,6})|(([0-9]{1,3}\.){3}[0-9]{1,3})|localhost)(:(102[4-9]|10[3-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-4][0-8]{4}|490[0-9]{2}|491[0-4][0-9]|4915[0-1]))?([/\w .\-()]*)*\/?[/\w .-]*$/;
     return validUrl.test( url );
 }
 
 function md5( message ) {
-    var hash = crypto.createHash( 'md5' );
+    const hash = crypto.createHash( 'md5' );
     hash.update( message );
     return hash.digest( 'hex' );
 }
@@ -85,8 +79,8 @@ function md5( message ) {
  * @return {string}      The encrypted result.
  */
 function insecureAes192Encrypt( text, pw ) {
-    var encrypted;
-    var cipher = crypto.createCipher( 'aes192', pw );
+    let encrypted;
+    const cipher = crypto.createCipher( 'aes192', pw );
     encrypted = cipher.update( text, 'utf8', 'hex' );
     encrypted += cipher.final( 'hex' );
 
@@ -94,8 +88,8 @@ function insecureAes192Encrypt( text, pw ) {
 }
 
 function insecureAes192Decrypt( encrypted, pw ) {
-    var decrypted;
-    var decipher = crypto.createDecipher( 'aes192', pw );
+    let decrypted;
+    const decipher = crypto.createDecipher( 'aes192', pw );
     decrypted = decipher.update( encrypted, 'hex', 'utf8' );
     decrypted += decipher.final( 'utf8' );
 
@@ -104,11 +98,11 @@ function insecureAes192Decrypt( encrypted, pw ) {
 
 function randomString( howMany, chars ) {
     chars = chars || 'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
-    var rnd = crypto.randomBytes( howMany ),
+    const rnd = crypto.randomBytes( howMany ),
         value = new Array( howMany ),
         len = chars.length;
 
-    for ( var i = 0; i < howMany; i++ ) {
+    for ( let i = 0; i < howMany; i++ ) {
         value[ i ] = chars[ rnd[ i ] % len ];
     }
 
@@ -116,11 +110,10 @@ function randomString( howMany, chars ) {
 }
 
 function pickRandomItemFromArray( array ) {
-    var random;
     if ( !Array.isArray( array ) || array.length === 0 ) {
         return null;
     }
-    random = Math.floor( Math.random() * array.length );
+    const random = Math.floor( Math.random() * array.length );
     if ( !array[ random ] ) {
         return null;
     }
@@ -129,8 +122,8 @@ function pickRandomItemFromArray( array ) {
 
 // not recursive, only goes one property level deep
 function areOwnPropertiesEqual( a, b ) {
-    var prop,
-        results = [];
+    let prop;
+    const results = [];
 
     if ( typeof a !== 'object' || typeof b !== 'object' ) {
         return null;
@@ -155,14 +148,14 @@ function areOwnPropertiesEqual( a, b ) {
 }
 
 module.exports = {
-    getOpenRosaKey: getOpenRosaKey,
-    getXformsManifestHash: getXformsManifestHash,
-    cleanUrl: cleanUrl,
-    isValidUrl: isValidUrl,
-    md5: md5,
-    randomString: randomString,
-    pickRandomItemFromArray: pickRandomItemFromArray,
-    areOwnPropertiesEqual: areOwnPropertiesEqual,
-    insecureAes192Decrypt: insecureAes192Decrypt,
-    insecureAes192Encrypt: insecureAes192Encrypt
+    getOpenRosaKey,
+    getXformsManifestHash,
+    cleanUrl,
+    isValidUrl,
+    md5,
+    randomString,
+    pickRandomItemFromArray,
+    areOwnPropertiesEqual,
+    insecureAes192Decrypt,
+    insecureAes192Encrypt
 };

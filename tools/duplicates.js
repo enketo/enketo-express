@@ -1,23 +1,21 @@
 /* global: console, process, require, Promise */
-'use strict';
-
 /**
  * See https://github.com/kobotoolbox/enketo-express/blob/master/doc/duplicates.md for more information about this tool.
  * 
  * MAKE A BACKUP BEFORE RUNNING THIS SCRIPT TO REMOVE DUPLICATES! 
  */
-var config = require( '../app/models/config-model' ).server;
-var mainClient = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
+const config = require( '../app/models/config-model' ).server;
+const mainClient = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
     auth_pass: config.redis.main.password
 } );
-var cacheClient = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
+const cacheClient = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
     auth_pass: config.redis.cache.password
 } );
-var fs = require( 'fs' );
-var path = require( 'path' );
-var mode = 'analyze';
+const fs = require( 'fs' );
+const path = require( 'path' );
+let mode = 'analyze';
 
-process.argv.forEach( function( val ) {
+process.argv.forEach( val => {
     if ( val === 'remove' ) {
         mode = 'remove';
     }
@@ -27,27 +25,27 @@ if ( mode === 'analyze' ) {
     console.log( '\nLooking for duplicates...\n' );
 
     checkDuplicateEnketoIds()
-        .catch( function( error ) {
+        .catch( error => {
             console.error( error );
         } )
-        .then( function() {
+        .then( () => {
             process.exit( 0 );
         } );
 } else if ( mode === 'remove' ) {
     console.log( '\nLooking for duplicates to remove them...\n' );
     removeDuplicateEnketoIds()
-        .catch( function( error ) {
+        .catch( error => {
             console.error( error );
         } )
-        .then( function() {
+        .then( () => {
             process.exit( 0 );
         } );
 }
 
 function checkDuplicateEnketoIds() {
     return getDuplicates()
-        .then( function( duplicates ) {
-            duplicates.forEach( function( duplicate ) {
+        .then( duplicates => {
+            duplicates.forEach( duplicate => {
                 console.log( 'Duplicate for %s: %s and %s (registered formID: %s)', duplicate.id, duplicate.key1, duplicate.key2, duplicate.openRosaId );
             } );
             console.log( '\nFound %d duplicates.\n', duplicates.length );
@@ -56,14 +54,14 @@ function checkDuplicateEnketoIds() {
 
 function removeDuplicateEnketoIds() {
     return getDuplicates()
-        .then( function( duplicates ) {
-            var tasks = [];
+        .then( duplicates => {
+            const tasks = [];
 
             console.log( '\nFound %d duplicate(s).\n', duplicates.length );
 
-            duplicates.forEach( function( duplicate ) {
-                var or1 = duplicate.key1.split( ',' )[ 1 ];
-                var or2 = duplicate.key2.split( ',' )[ 1 ];
+            duplicates.forEach( duplicate => {
+                const or1 = duplicate.key1.split( ',' )[ 1 ];
+                const or2 = duplicate.key2.split( ',' )[ 1 ];
 
                 if ( or1 !== duplicate.openRosaId && or2 === duplicate.openRosaId ) {
                     tasks.push( remove( duplicate.key1, duplicate.id ) );
@@ -78,14 +76,14 @@ function removeDuplicateEnketoIds() {
             return Promise.all( tasks );
 
         } )
-        .then( function( logs ) {
+        .then( logs => {
             console.log( '\nRemoved %d duplicate(s).\n', logs.length );
             if ( logs.length === 0 ) {
                 return;
             }
-            return new Promise( function( resolve, reject ) {
-                var p = path.join( __dirname, '../logs/duplicates-removed-' + ( new Date().toISOString().replace( ':', '.' ) ) + '.txt' );
-                fs.writeFile( p, logs.join( '\n' ), function( err ) {
+            return new Promise( ( resolve, reject ) => {
+                const p = path.join( __dirname, `../logs/duplicates-removed-${new Date().toISOString().replace( ':', '.' )}.txt` );
+                fs.writeFile( p, logs.join( '\n' ), err => {
                     if ( err ) {
                         reject( err );
                     } else {
@@ -98,22 +96,22 @@ function removeDuplicateEnketoIds() {
 
 function getDuplicates() {
     return getAllKeys()
-        .then( function( keys ) {
-            var tasks = [];
-            keys.forEach( function( key ) {
+        .then( keys => {
+            const tasks = [];
+            keys.forEach( key => {
                 tasks.push( getId( key ) );
             } );
 
             return Promise.all( tasks );
         } )
-        .then( function( objs ) {
-            var duplicates = [];
-            var ids = [];
-            var keys = [];
-            var tasks = [];
+        .then( objs => {
+            const duplicates = [];
+            const ids = [];
+            const keys = [];
+            const tasks = [];
 
-            objs.forEach( function( obj ) {
-                var foundIndex = ids.indexOf( obj.id );
+            objs.forEach( obj => {
+                const foundIndex = ids.indexOf( obj.id );
                 if ( foundIndex === -1 ) {
                     ids.push( obj.id );
                     keys.push( obj.key );
@@ -126,7 +124,7 @@ function getDuplicates() {
                 }
             } );
 
-            duplicates.forEach( function( duplicate ) {
+            duplicates.forEach( duplicate => {
                 tasks.push( getSurveyOpenRosaId( duplicate ) );
             } );
             return Promise.all( tasks );
@@ -134,8 +132,8 @@ function getDuplicates() {
 }
 
 function getAllKeys() {
-    return new Promise( function( resolve, reject ) {
-        mainClient.keys( 'or:*', function( error, keys ) {
+    return new Promise( ( resolve, reject ) => {
+        mainClient.keys( 'or:*', ( error, keys ) => {
             if ( error ) {
                 reject( error );
             } else {
@@ -146,14 +144,14 @@ function getAllKeys() {
 }
 
 function getId( key ) {
-    return new Promise( function( resolve, reject ) {
-        mainClient.get( key, function( error, id ) {
+    return new Promise( ( resolve, reject ) => {
+        mainClient.get( key, ( error, id ) => {
             if ( error ) {
                 reject( error );
             } else {
                 resolve( {
-                    key: key,
-                    id: id
+                    key,
+                    id
                 } );
             }
         } );
@@ -161,8 +159,8 @@ function getId( key ) {
 }
 
 function getSurveyOpenRosaId( duplicate ) {
-    return new Promise( function( resolve, reject ) {
-        mainClient.hgetall( 'id:' + duplicate.id, function( error, survey ) {
+    return new Promise( ( resolve, reject ) => {
+        mainClient.hgetall( `id:${duplicate.id}`, ( error, survey ) => {
             if ( error ) {
                 reject( error );
             } else {
@@ -174,16 +172,16 @@ function getSurveyOpenRosaId( duplicate ) {
 }
 
 function remove( key, id ) {
-    var msg;
-    return new Promise( function( resolve, reject ) {
+    let msg;
+    return new Promise( ( resolve, reject ) => {
         // just remove it, the next time the Enketo button is clicked, it will add a completely new entry and generate a new Id.
-        mainClient.del( key, function( err ) {
+        mainClient.del( key, err => {
             if ( err ) {
-                msg = 'Error: could not remove ' + key + ' for id ' + id;
+                msg = `Error: could not remove ${key} for id ${id}`;
                 console.error( msg );
                 reject( new Error( msg ) );
             } else {
-                msg = 'Removed ' + key + ' for id ' + id;
+                msg = `Removed ${key} for id ${id}`;
                 console.log( msg );
                 resolve( msg );
             }
@@ -192,7 +190,7 @@ function remove( key, id ) {
 }
 
 function removeCache( key ) {
-    var cacheKey = key.replace( 'or:', 'ca:' );
+    const cacheKey = key.replace( 'or:', 'ca:' );
     console.log( 'Removing cache for ', cacheKey );
     // remove cache entries, and ignore results
     cacheClient.del( cacheKey );

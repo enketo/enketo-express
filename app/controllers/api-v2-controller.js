@@ -1,25 +1,23 @@
-'use strict';
-
-var surveyModel = require( '../models/survey-model' );
-var instanceModel = require( '../models/instance-model' );
-var cacheModel = require( '../models/cache-model' );
-var account = require( '../models/account-model' );
-var auth = require( 'basic-auth' );
-var express = require( 'express' );
-var utils = require( '../lib/utils' );
-var keys = require( '../lib/router-utils' ).idEncryptionKeys;
-var router = express.Router();
-var quotaErrorMessage = 'Forbidden. No quota left';
+const surveyModel = require( '../models/survey-model' );
+const instanceModel = require( '../models/instance-model' );
+const cacheModel = require( '../models/cache-model' );
+const account = require( '../models/account-model' );
+const auth = require( 'basic-auth' );
+const express = require( 'express' );
+const utils = require( '../lib/utils' );
+const keys = require( '../lib/router-utils' ).idEncryptionKeys;
+const router = express.Router();
+const quotaErrorMessage = 'Forbidden. No quota left';
 // var debug = require( 'debug' )( 'api-controller-v2' );
 
-module.exports = function( app ) {
-    app.use( app.get( 'base path' ) + '/api/v2', router );
+module.exports = app => {
+    app.use( `${app.get( 'base path' )}/api/v2`, router );
     // old enketo-legacy URL structure for migration-friendliness
-    app.use( app.get( 'base path' ) + '/api_v2', router );
+    app.use( `${app.get( 'base path' )}/api_v2`, router );
 };
 
 router
-    .get( '/', function( req, res ) {
+    .get( '/', ( req, res ) => {
         res.redirect( 'http://apidocs.enketo.org/v2' );
     } )
     .all( '*', authCheck )
@@ -28,45 +26,44 @@ router
     .all( '/*/iframe', _setIframe )
     .all( '/survey/all', _setIframe )
     .all( '/surveys/list', _setIframe )
-    .all( '/survey/preview*', function( req, res, next ) {
+    .all( '/survey/preview*', ( req, res, next ) => {
         req.webformType = 'preview';
         next();
     } )
-    .all( '/survey/all', function( req, res, next ) {
+    .all( '/survey/all', ( req, res, next ) => {
         req.webformType = 'all';
         next();
     } )
-    .all( '/surveys/list', function( req, res, next ) {
+    .all( '/surveys/list', ( req, res, next ) => {
         req.webformType = 'all';
         next();
     } )
-    .all( '/instance*', function( req, res, next ) {
+    .all( '/instance*', ( req, res, next ) => {
         req.webformType = 'edit';
         next();
     } )
-    .all( '/survey/single*', function( req, res, next ) {
+    .all( '/survey/single*', ( req, res, next ) => {
         req.webformType = 'single';
         next();
     } )
-    .all( '/survey/single/once*', function( req, res, next ) {
+    .all( '/survey/single/once*', ( req, res, next ) => {
         req.multipleAllowed = false;
         next();
     } )
-    .all( '/survey/view*', function( req, res, next ) {
+    .all( '/survey/view*', ( req, res, next ) => {
         req.webformType = 'view';
         next();
     } )
-    .all( '/instance/view*', function( req, res, next ) {
+    .all( '/instance/view*', ( req, res, next ) => {
         req.webformType = 'view-instance';
         next();
     } )
-    .all( '/survey/offline*', function( req, res, next ) {
-        var error;
+    .all( '/survey/offline*', ( req, res, next ) => {
         if ( req.app.get( 'offline enabled' ) ) {
             req.webformType = 'offline';
             next();
         } else {
-            error = new Error( 'Not Allowed.' );
+            const error = new Error( 'Not Allowed.' );
             error.status = 405;
             next( error );
         }
@@ -108,26 +105,25 @@ router
     .post( '/instance/view', cacheInstance )
     .post( '/instance/view/iframe', cacheInstance )
     .delete( '/instance', removeInstance )
-    .all( '*', function( req, res, next ) {
-        var error = new Error( 'Not allowed.' );
+    .all( '*', ( req, res, next ) => {
+        const error = new Error( 'Not allowed.' );
         error.status = 405;
         next( error );
     } );
 
 function authCheck( req, res, next ) {
     // check authentication and account
-    var error;
-    var creds = auth( req );
-    var key = ( creds ) ? creds.name : undefined;
-    var server = req.body.server_url || req.query.server_url;
+    const creds = auth( req );
+    const key = ( creds ) ? creds.name : undefined;
+    const server = req.body.server_url || req.query.server_url;
 
     // set content-type to json to provide appropriate json Error responses
     res.set( 'Content-Type', 'application/json' );
 
     account.get( server )
-        .then( function( account ) {
+        .then( account => {
             if ( !key || ( key !== account.key ) ) {
-                error = new Error( 'Not Allowed. Invalid API key.' );
+                const error = new Error( 'Not Allowed. Invalid API key.' );
                 error.status = 401;
                 res
                     .status( error.status )
@@ -152,7 +148,7 @@ function getExistingSurvey( req, res, next ) {
             openRosaServer: req.query.server_url,
             openRosaId: req.query.form_id
         } )
-        .then( function( id ) {
+        .then( id => {
             if ( id ) {
                 _render( 200, _generateWebformUrls( id, req ), res );
             } else {
@@ -163,8 +159,7 @@ function getExistingSurvey( req, res, next ) {
 }
 
 function getNewOrExistingSurvey( req, res, next ) {
-    var status;
-    var survey = {
+    const survey = {
         openRosaServer: req.body.server_url || req.query.server_url,
         openRosaId: req.body.form_id || req.query.form_id,
         theme: req.body.theme || req.query.theme
@@ -176,14 +171,14 @@ function getNewOrExistingSurvey( req, res, next ) {
 
     return surveyModel
         .getId( survey ) // will return id only for existing && active surveys
-        .then( function( id ) {
+        .then( id => {
             if ( !id && req.account.quota <= req.account.quotaUsed ) {
                 return _render( 403, quotaErrorMessage, res );
             }
-            status = ( id ) ? 200 : 201;
+            const status = ( id ) ? 200 : 201;
             // even if id was found still call .set() method to update any properties
             return surveyModel.set( survey )
-                .then( function( id ) {
+                .then( id => {
                     if ( id ) {
                         _render( status, _generateWebformUrls( id, req ), res );
                     } else {
@@ -202,7 +197,7 @@ function deactivateSurvey( req, res, next ) {
             openRosaId: req.body.form_id,
             active: false
         } )
-        .then( function( id ) {
+        .then( id => {
             if ( id ) {
                 _render( 204, null, res );
             } else {
@@ -219,7 +214,7 @@ function emptySurveyCache( req, res, next ) {
             openRosaServer: req.body.server_url,
             openRosaId: req.body.form_id
         } )
-        .then( function() {
+        .then( () => {
             _render( 204, null, res );
         } )
         .catch( next );
@@ -229,11 +224,11 @@ function getNumber( req, res, next ) {
 
     return surveyModel
         .getNumber( req.body.server_url || req.query.server_url )
-        .then( function( number ) {
+        .then( number => {
             if ( number ) {
                 _render( 200, {
                     code: 200,
-                    number: number
+                    number
                 }, res );
             } else {
                 // this cannot be reached I think
@@ -244,12 +239,12 @@ function getNumber( req, res, next ) {
 }
 
 function getList( req, res, next ) {
-    var obj;
+    let obj;
 
     return surveyModel
         .getList( req.body.server_url || req.query.server_url )
-        .then( function( list ) {
-            list = list.map( function( survey ) {
+        .then( list => {
+            list = list.map( survey => {
                 obj = _generateWebformUrls( survey.enketoId, req );
                 obj.form_id = survey.openRosaId;
                 obj.server_url = survey.openRosaServer;
@@ -264,14 +259,13 @@ function getList( req, res, next ) {
 }
 
 function cacheInstance( req, res, next ) {
-    var survey;
-    var enketoId;
+    let enketoId;
 
     if ( req.account.quota < req.account.quotaUsed ) {
         return _render( 403, quotaErrorMessage, res );
     }
 
-    survey = {
+    const survey = {
         openRosaServer: req.body.server_url,
         openRosaId: req.body.form_id,
         instance: req.body.instance,
@@ -282,7 +276,7 @@ function cacheInstance( req, res, next ) {
 
     return surveyModel
         .getId( survey )
-        .then( function( id ) {
+        .then( id => {
             if ( !id && req.account.quota <= req.account.quotaUsed ) {
                 return _render( 403, quotaErrorMessage, res );
             }
@@ -293,11 +287,11 @@ function cacheInstance( req, res, next ) {
             // Do not update properties if ID was found to avoid overwriting theme.
             return id;
         } )
-        .then( function( id ) {
+        .then( id => {
             enketoId = id;
             return instanceModel.set( survey );
         } )
-        .then( function() {
+        .then( () => {
             _render( 201, _generateWebformUrls( enketoId, req ), res );
         } )
         .catch( next );
@@ -311,7 +305,7 @@ function removeInstance( req, res, next ) {
             openRosaId: req.body.form_id,
             instanceId: req.body.instance_id
         } )
-        .then( function( instanceId ) {
+        .then( instanceId => {
             if ( instanceId ) {
                 _render( 204, null, res );
             } else {
@@ -324,7 +318,7 @@ function removeInstance( req, res, next ) {
 function _setQuotaUsed( req, res, next ) {
     surveyModel
         .getNumber( req.account.linkedServer )
-        .then( function( number ) {
+        .then( number => {
             req.account.quotaUsed = number;
             next();
         } )
@@ -332,14 +326,13 @@ function _setQuotaUsed( req, res, next ) {
 }
 
 function _setDefaultsQueryParam( req, res, next ) {
-    var queryParam = '';
-    var map = req.body.defaults || req.query.defaults;
+    let queryParam = '';
+    const map = req.body.defaults || req.query.defaults;
 
     if ( map ) {
-        for ( var prop in map ) {
+        for ( const prop in map ) {
             if ( map.hasOwnProperty( prop ) ) {
-                queryParam += 'd[' + encodeURIComponent( decodeURIComponent( prop ) ) + ']' + '=' +
-                    encodeURIComponent( decodeURIComponent( map[ prop ] ) ) + '&';
+                queryParam += `d[${encodeURIComponent( decodeURIComponent( prop ) )}]=${encodeURIComponent( decodeURIComponent( map[ prop ] ) )}&`;
             }
         }
         req.defaultsQueryParam = queryParam.substring( 0, queryParam.length - 1 );
@@ -349,69 +342,63 @@ function _setDefaultsQueryParam( req, res, next ) {
 }
 
 function _setGoToHash( req, res, next ) {
-    var goTo = req.body.go_to || req.query.go_to;
-    req.goTo = ( goTo ) ? '#' + goTo : '';
+    const goTo = req.body.go_to || req.query.go_to;
+    req.goTo = ( goTo ) ? `#${goTo}` : '';
 
     next();
 }
 
 function _setIframe( req, res, next ) {
-    var parentWindowOrigin = req.body.parent_window_origin || req.query.parent_window_origin;
+    const parentWindowOrigin = req.body.parent_window_origin || req.query.parent_window_origin;
 
     req.iframe = true;
     if ( parentWindowOrigin ) {
-        req.parentWindowOriginParam = 'parentWindowOrigin=' + encodeURIComponent( decodeURIComponent( parentWindowOrigin ) );
+        req.parentWindowOriginParam = `parentWindowOrigin=${encodeURIComponent( decodeURIComponent( parentWindowOrigin ) )}`;
     }
     next();
 }
 
 function _setReturnQueryParam( req, res, next ) {
-    var returnUrl = req.body.return_url || req.query.return_url;
+    const returnUrl = req.body.return_url || req.query.return_url;
 
     if ( returnUrl ) {
-        req.returnQueryParam = 'returnUrl=' + encodeURIComponent( decodeURIComponent( returnUrl ) );
+        req.returnQueryParam = `returnUrl=${encodeURIComponent( decodeURIComponent( returnUrl ) )}`;
     }
     next();
 }
 
-function _generateQueryString( params ) {
-    var paramsJoined;
+function _generateQueryString( params = [] ) {
+    const paramsJoined = params.filter( part => part && part.length > 0 ).join( '&' );
 
-    params = params || [];
-
-    paramsJoined = params.filter( function( part ) {
-        return part && part.length > 0;
-    } ).join( '&' );
-
-    return paramsJoined ? '?' + paramsJoined : '';
+    return paramsJoined ? `?${paramsJoined}` : '';
 }
 
 function _generateWebformUrls( id, req ) {
-    var queryString;
-    var obj = {};
-    var IFRAMEPATH = 'i/';
-    var OFFLINEPATH = 'x/';
-    var hash = req.goTo;
-    var iframePart = ( req.iframe ) ? IFRAMEPATH : '';
-    var protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol;
-    var baseUrl = protocol + '://' + req.headers.host + req.app.get( 'base path' ) + '/';
-    var idPartOnline = '::' + id;
-    var idPartOffline = '#' + id;
-    var idPartOnce = '::' + utils.insecureAes192Encrypt( id, keys.singleOnce );
-    var idPartView = '::' + utils.insecureAes192Encrypt( id, keys.view );
-    var queryParts;
+    let queryString;
+    const obj = {};
+    const IFRAMEPATH = 'i/';
+    const OFFLINEPATH = 'x/';
+    const hash = req.goTo;
+    const iframePart = ( req.iframe ) ? IFRAMEPATH : '';
+    const protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol;
+    const baseUrl = `${protocol}://${req.headers.host}${req.app.get( 'base path' )}/`;
+    const idPartOnline = `::${id}`;
+    const idPartOffline = `#${id}`;
+    const idPartOnce = `::${utils.insecureAes192Encrypt( id, keys.singleOnce )}`;
+    const idPartView = `::${utils.insecureAes192Encrypt( id, keys.view )}`;
+    let queryParts;
 
     req.webformType = req.webformType || 'default';
 
     switch ( req.webformType ) {
         case 'preview':
             queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
-            obj.preview_url = baseUrl + 'preview/' + iframePart + idPartOnline + queryString + hash;
+            obj.preview_url = `${baseUrl}preview/${iframePart}${idPartOnline}${queryString}${hash}`;
             break;
         case 'edit':
             // no defaults query parameter in edit view
-            queryString = _generateQueryString( [ 'instance_id=' + req.body.instance_id, req.parentWindowOriginParam, req.returnQueryParam ] );
-            obj.edit_url = baseUrl + 'edit/' + iframePart + idPartOnline + queryString + hash;
+            queryString = _generateQueryString( [ `instance_id=${req.body.instance_id}`, req.parentWindowOriginParam, req.returnQueryParam ] );
+            obj.edit_url = `${baseUrl}edit/${iframePart}${idPartOnline}${queryString}${hash}`;
             break;
         case 'single':
             queryParts = [ req.defaultsQueryParam, req.returnQueryParam ];
@@ -419,36 +406,35 @@ function _generateWebformUrls( id, req ) {
                 queryParts.push( req.parentWindowOriginParam );
             }
             queryString = _generateQueryString( queryParts );
-            obj[ 'single' + ( req.multipleAllowed === false ? '_once' : '' ) + ( iframePart ? '_iframe' : '' ) + '_url' ] = baseUrl +
-                'single/' + iframePart + ( req.multipleAllowed === false ? idPartOnce : idPartOnline ) + queryString;
+            obj[ `single${req.multipleAllowed === false ? '_once' : ''}${iframePart ? '_iframe' : ''}_url` ] = `${baseUrl}single/${iframePart}${req.multipleAllowed === false ? idPartOnce : idPartOnline}${queryString}`;
             break;
         case 'view':
         case 'view-instance':
             queryParts = [];
             if ( req.webformType === 'view-instance' ) {
-                queryParts.push( 'instance_id=' + req.body.instance_id );
+                queryParts.push( `instance_id=${req.body.instance_id}` );
             }
             if ( iframePart ) {
                 queryParts.push( req.parentWindowOriginParam );
             }
             queryParts.push( req.returnQueryParam );
             queryString = _generateQueryString( queryParts );
-            obj[ 'view' + ( iframePart ? '_iframe' : '' ) + '_url' ] = baseUrl + 'view/' + iframePart + idPartView + queryString + hash;
+            obj[ `view${iframePart ? '_iframe' : ''}_url` ] = `${baseUrl}view/${iframePart}${idPartView}${queryString}${hash}`;
             break;
         case 'all':
             // non-iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam ] );
             obj.url = baseUrl + idPartOnline + queryString;
-            obj.single_url = baseUrl + 'single/' + idPartOnline + queryString;
-            obj.single_once_url = baseUrl + 'single/' + idPartOnce + queryString;
+            obj.single_url = `${baseUrl}single/${idPartOnline}${queryString}`;
+            obj.single_once_url = `${baseUrl}single/${idPartOnce}${queryString}`;
             obj.offline_url = baseUrl + OFFLINEPATH + idPartOffline;
-            obj.preview_url = baseUrl + 'preview/' + idPartOnline + queryString;
+            obj.preview_url = `${baseUrl}preview/${idPartOnline}${queryString}`;
             // iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
             obj.iframe_url = baseUrl + IFRAMEPATH + idPartOnline + queryString;
-            obj.single_iframe_url = baseUrl + 'single/' + IFRAMEPATH + idPartOnline + queryString;
-            obj.single_once_iframe_url = baseUrl + 'single/' + IFRAMEPATH + idPartOnce + queryString;
-            obj.preview_iframe_url = baseUrl + 'preview/' + IFRAMEPATH + idPartOnline + queryString;
+            obj.single_iframe_url = `${baseUrl}single/${IFRAMEPATH}${idPartOnline}${queryString}`;
+            obj.single_once_iframe_url = `${baseUrl}single/${IFRAMEPATH}${idPartOnce}${queryString}`;
+            obj.preview_iframe_url = `${baseUrl}preview/${IFRAMEPATH}${idPartOnline}${queryString}`;
             // rest
             obj.enketo_id = id;
             break;
@@ -469,12 +455,11 @@ function _generateWebformUrls( id, req ) {
     return obj;
 }
 
-function _render( status, body, res ) {
+function _render( status, body = {}, res ) {
     if ( status === 204 ) {
         // send 204 response without a body
         res.status( status ).end();
     } else {
-        body = body || {};
         if ( typeof body === 'string' ) {
             body = {
                 message: body

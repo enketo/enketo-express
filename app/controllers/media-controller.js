@@ -1,14 +1,12 @@
-'use strict';
+const user = require( '../models/user-model' );
+const communicator = require( '../lib/communicator' );
+const request = require( 'request' );
+const express = require( 'express' );
+const router = express.Router();
+const debug = require( 'debug' )( 'media-controller' );
 
-var user = require( '../models/user-model' );
-var communicator = require( '../lib/communicator' );
-var request = require( 'request' );
-var express = require( 'express' );
-var router = express.Router();
-var debug = require( 'debug' )( 'media-controller' );
-
-module.exports = function( app ) {
-    app.use( app.get( 'base path' ) + '/media', router );
+module.exports = app => {
+    app.use( `${app.get( 'base path' )}/media`, router );
 };
 
 router
@@ -22,7 +20,7 @@ function _extractMediaUrl( path ) {
 }
 
 function getMedia( req, res, next ) {
-    var options = communicator.getUpdatedRequestOptions( {
+    const options = communicator.getUpdatedRequestOptions( {
         url: _extractMediaUrl( req.url.substring( '/get/'.length ) ),
         auth: user.getCredentials( req ),
         headers: {
@@ -33,8 +31,8 @@ function getMedia( req, res, next ) {
     // due to a bug in request/request using options.method with Digest Auth we won't pass method as an option
     delete options.method;
 
-    request.get( options ).pipe( res ).on( 'error', function( error ) {
-        debug( 'error retrieving media from OpenRosa server: ' + JSON.stringify( error ) );
+    request.get( options ).pipe( res ).on( 'error', error => {
+        debug( `error retrieving media from OpenRosa server: ${JSON.stringify( error )}` );
         if ( !error.status ) {
             error.status = ( error.code && error.code === 'ENOTFOUND' ) ? 404 : 500;
         }

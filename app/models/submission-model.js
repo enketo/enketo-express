@@ -1,14 +1,10 @@
-'use strict';
-
-var Promise = require( 'lie' );
-var config = require( './config-model' ).server;
-//var TError = require( '../lib/custom-error' ).TranslatedError;
-var client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
+const config = require( './config-model' ).server;
+const client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
     auth_pass: config.redis.main.password
 } );
-var path = require( 'path' );
+const path = require( 'path' );
 //var debug = require( 'debug' )( 'submission-model' );
-var logger;
+let logger;
 
 /**
  * Use a cron job and logrotate service, e.g.:
@@ -60,31 +56,26 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @return {Boolean}            [description]
  */
 function isNew( id, instanceId ) {
-    var key;
-    var error;
-
     if ( !id || !instanceId ) {
-        error = new Error( 'Cannot log instanceID: either enketo ID or instance ID not provided', id, instanceId );
+        const error = new Error( 'Cannot log instanceID: either enketo ID or instance ID not provided', id, instanceId );
         error.status = 400;
         return Promise.reject( error );
     }
 
-    key = 'su:' + id.trim();
+    const key = `su:${id.trim()}`;
 
     return _getLatestSubmissionIds( key )
-        .then( function( latest ) {
-            return _alreadyRecorded( instanceId, latest );
-        } )
-        .then( function( alreadyRecorded ) {
+        .then( latest => _alreadyRecorded( instanceId, latest ) )
+        .then( alreadyRecorded => {
             if ( !alreadyRecorded ) {
-                client.lpush( key, instanceId, function( error ) {
+                client.lpush( key, instanceId, error => {
                     if ( error ) {
-                        console.error( 'Error pushing instanceID into: ' + key );
+                        console.error( `Error pushing instanceID into: ${key}` );
                     } else {
                         // only store last 100 IDs
-                        client.ltrim( key, 0, 99, function( error ) {
+                        client.ltrim( key, 0, 99, error => {
                             if ( error ) {
-                                console.error( 'Error trimming: ' + key );
+                                console.error( `Error trimming: ${key}` );
                             }
                         } );
                     }
@@ -99,20 +90,19 @@ function add( id, instanceId, deprecatedId ) {
     if ( logger ) {
         logger.info( instanceId, {
             enketoId: id,
-            deprecatedId: deprecatedId,
+            deprecatedId,
             submissionSuccess: true
         } );
     }
 }
 
-function _alreadyRecorded( instanceId, list ) {
-    list = list || [];
+function _alreadyRecorded( instanceId, list = [] ) {
     return list.indexOf( instanceId ) !== -1;
 }
 
 function _getLatestSubmissionIds( key ) {
-    return new Promise( function( resolve, reject ) {
-        client.lrange( key, 0, -1, function( error, res ) {
+    return new Promise( ( resolve, reject ) => {
+        client.lrange( key, 0, -1, ( error, res ) => {
             if ( error ) {
                 reject( error );
             } else {
@@ -123,9 +113,9 @@ function _getLatestSubmissionIds( key ) {
 }
 
 function _formatter( options, severity, date, elems ) {
-    var instanceId = '-';
-    var enketoId = '-';
-    var deprecatedId = '-';
+    let instanceId = '-';
+    let enketoId = '-';
+    let deprecatedId = '-';
 
     if ( Array.isArray( elems ) ) {
         instanceId = elems[ 0 ];
@@ -139,6 +129,6 @@ function _formatter( options, severity, date, elems ) {
 }
 
 module.exports = {
-    isNew: isNew,
-    add: add
+    isNew,
+    add
 };

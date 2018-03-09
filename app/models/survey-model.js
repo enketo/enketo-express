@@ -1,16 +1,13 @@
-'use strict';
-
-var Promise = require( 'lie' );
-var utils = require( '../lib/utils' );
-var TError = require( '../lib/custom-error' ).TranslatedError;
-var config = require( './config-model' ).server;
-var client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
+const utils = require( '../lib/utils' );
+const TError = require( '../lib/custom-error' ).TranslatedError;
+const config = require( './config-model' ).server;
+const client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
     auth_pass: config.redis.main.password
 } );
-var pending = {};
+const pending = {};
 //randomized 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-var CHARS = 'Yp8oyU0HhFQiPz9KZ1SBGvdTqCM6XDnImkbxNOVLAsEcf5uRe347Wrtlj2awgJ';
-var debug = require( 'debug' )( 'survey-model' );
+const CHARS = 'Yp8oyU0HhFQiPz9KZ1SBGvdTqCM6XDnImkbxNOVLAsEcf5uRe347Wrtlj2awgJ';
+const debug = require( 'debug' )( 'survey-model' );
 
 // in test environment, switch to different db
 if ( process.env.NODE_ENV === 'test' ) {
@@ -23,16 +20,14 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @return {[type]}    [description]
  */
 function getSurvey( id ) {
-    var error;
-
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( !id ) {
-            error = new Error( new Error( 'Bad request. Form ID required' ) );
+            const error = new Error( new Error( 'Bad request. Form ID required' ) );
             error.status = 400;
             reject( error );
         } else {
             // get from db the record with key: "id:"+id
-            client.hgetall( 'id:' + id, function( error, obj ) {
+            client.hgetall( `id:${id}`, ( error, obj ) => {
                 if ( error ) {
                     reject( error );
                 } else if ( !obj || obj.active === 'false' || obj.active === false ) {
@@ -49,7 +44,7 @@ function getSurvey( id ) {
                     // debug( 'object retrieved from database for id "' + id + '"', obj );
                     obj.enketoId = id;
                     // no need to wait for result of updating lastAccessed 
-                    client.hset( 'id:' + id, 'lastAccessed', new Date().toISOString() );
+                    client.hset( `id:${id}`, 'lastAccessed', new Date().toISOString() );
                     resolve( obj );
                 }
             } );
@@ -58,13 +53,12 @@ function getSurvey( id ) {
 }
 
 function setSurvey( survey ) {
-    // Set in db:
-    // a) a record with key "id:"+ _createEnketoId(client.incr('surveys:counter')) and all survey info
-    // b) a record with key "or:"+ _createOpenRosaKey(survey.openRosaUrl, survey.openRosaId) and the enketo_id
-    var error;
-    var openRosaKey = utils.getOpenRosaKey( survey );
-
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
+        // Set in db:
+        // a) a record with key "id:"+ _createEnketoId(client.incr('surveys:counter')) and all survey info
+        // b) a record with key "or:"+ _createOpenRosaKey(survey.openRosaUrl, survey.openRosaId) and the enketo_id
+        let error;
+        const openRosaKey = utils.getOpenRosaKey( survey );
         if ( !openRosaKey ) {
             error = new Error( 'Bad request. Survey information not complete or invalid' );
             error.status = 400;
@@ -78,7 +72,7 @@ function setSurvey( survey ) {
             pending[ openRosaKey ] = true;
 
             _getEnketoId( openRosaKey )
-                .then( function( id ) {
+                .then( id => {
                     if ( id ) {
                         survey.active = true;
                         delete pending[ openRosaKey ];
@@ -87,7 +81,7 @@ function setSurvey( survey ) {
                         resolve( _addSurvey( openRosaKey, survey ) );
                     }
                 } )
-                .catch( function( error ) {
+                .catch( error => {
                     delete pending[ openRosaKey ];
                     reject( error );
                 } );
@@ -96,17 +90,16 @@ function setSurvey( survey ) {
 }
 
 function updateSurvey( survey ) {
-    var error,
-        openRosaKey = utils.getOpenRosaKey( survey );
-
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
+        const openRosaKey = utils.getOpenRosaKey( survey );
+        let error;
         if ( !openRosaKey ) {
             error = new Error( 'Bad request. Survey information not complete or invalid' );
             error.status = 400;
             reject( error );
         } else {
             _getEnketoId( openRosaKey )
-                .then( function( id ) {
+                .then( id => {
                     if ( id ) {
                         resolve( _updateProperties( id, survey ) );
                     } else {
@@ -115,7 +108,7 @@ function updateSurvey( survey ) {
                         reject( error );
                     }
                 } )
-                .catch( function( error ) {
+                .catch( error => {
                     reject( error );
                 } );
         }
@@ -123,9 +116,8 @@ function updateSurvey( survey ) {
 }
 
 function _updateProperties( id, survey ) {
-    var update = {};
-
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
+        const update = {};
         // create new object only including the updateable properties
         if ( typeof survey.openRosaServer !== 'undefined' ) {
             update.openRosaServer = survey.openRosaServer;
@@ -137,7 +129,7 @@ function _updateProperties( id, survey ) {
         // avoid storing undefined as string 'undefined'
         update.theme = survey.theme || '';
 
-        client.hmset( 'id:' + id, update, function( error ) {
+        client.hmset( `id:${id}`, update, error => {
             if ( error ) {
                 reject( error );
             } else {
@@ -148,13 +140,11 @@ function _updateProperties( id, survey ) {
 }
 
 function _addSurvey( openRosaKey, survey ) {
-    var id;
-
-    return new Promise( function( resolve, reject ) {
-        client.incr( 'survey:counter', function( error, iterator ) {
-            id = _createEnketoId( iterator );
+    return new Promise( ( resolve, reject ) => {
+        client.incr( 'survey:counter', ( error, iterator ) => {
+            const id = _createEnketoId( iterator );
             client.multi()
-                .hmset( 'id:' + id, {
+                .hmset( `id:${id}`, {
                     // explicitly set the properties that need to be saved
                     // this will avoid accidentally saving e.g. transformation results and cookies
                     openRosaServer: survey.openRosaServer,
@@ -166,7 +156,7 @@ function _addSurvey( openRosaKey, survey ) {
                     theme: survey.theme || ''
                 } )
                 .set( openRosaKey, id )
-                .exec( function( error ) {
+                .exec( error => {
                     delete pending[ openRosaKey ];
                     if ( error ) {
                         reject( error );
@@ -179,11 +169,11 @@ function _addSurvey( openRosaKey, survey ) {
 }
 
 function incrSubmissions( id ) {
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         client.multi()
             .incr( 'submission:counter' )
-            .hincrby( 'id:' + id, 'submissions', 1 )
-            .exec( function( error ) {
+            .hincrby( `id:${id}`, 'submissions', 1 )
+            .exec( error => {
                 if ( error ) {
                     reject( error );
                 } else {
@@ -194,22 +184,20 @@ function incrSubmissions( id ) {
 }
 
 function getNumberOfSurveys( server ) {
-    var error;
-    var cleanServerUrl;
-
-    return new Promise( function( resolve, reject ) {
-        cleanServerUrl = ( server === '' ) ? '' : utils.cleanUrl( server );
+    return new Promise( ( resolve, reject ) => {
+        let error;
+        const cleanServerUrl = ( server === '' ) ? '' : utils.cleanUrl( server );
         if ( !cleanServerUrl && cleanServerUrl !== '' ) {
             error = new Error( 'Survey information not complete or invalid' );
             error.status = 400;
             reject( error );
         } else {
-            client.keys( 'or:' + cleanServerUrl + '[/,]*', function( err, keys ) {
+            client.keys( `or:${cleanServerUrl}[/,]*`, ( err, keys ) => {
                 if ( error ) {
                     reject( error );
                 } else if ( keys ) {
                     _getActiveSurveys( keys )
-                        .then( function( surveys ) {
+                        .then( surveys => {
                             resolve( surveys.length );
                         } )
                         .catch( reject );
@@ -223,31 +211,26 @@ function getNumberOfSurveys( server ) {
 }
 
 function getListOfSurveys( server ) {
-    var error;
-    var list;
-    var cleanServerUrl;
-
-    return new Promise( function( resolve, reject ) {
-        cleanServerUrl = ( server === '' ) ? '' : utils.cleanUrl( server );
+    return new Promise( ( resolve, reject ) => {
+        let error;
+        const cleanServerUrl = ( server === '' ) ? '' : utils.cleanUrl( server );
         if ( !cleanServerUrl && cleanServerUrl !== '' ) {
             error = new Error( 'Survey information not complete or invalid' );
             error.status = 400;
             reject( error );
         } else {
-            client.keys( 'or:' + cleanServerUrl + '[/,]*', function( err, keys ) {
+            client.keys( `or:${cleanServerUrl}[/,]*`, ( err, keys ) => {
                 if ( error ) {
                     reject( error );
                 } else if ( keys ) {
                     _getActiveSurveys( keys )
-                        .then( function( surveys ) {
+                        .then( surveys => {
                             surveys.sort( _ascendingLaunchDate );
-                            list = surveys.map( function( survey ) {
-                                return {
-                                    openRosaServer: survey.openRosaServer,
-                                    openRosaId: survey.openRosaId,
-                                    enketoId: survey.enketoId
-                                };
-                            } );
+                            const list = surveys.map( survey => ( {
+                                openRosaServer: survey.openRosaServer,
+                                openRosaId: survey.openRosaId,
+                                enketoId: survey.enketoId
+                            } ) );
 
                             resolve( list );
                         } )
@@ -262,15 +245,14 @@ function getListOfSurveys( server ) {
 }
 
 function _getEnketoId( openRosaKey ) {
-
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( !openRosaKey ) {
-            var error = new Error( 'Survey information not complete or invalid' );
+            const error = new Error( 'Survey information not complete or invalid' );
             error.status = 400;
             reject( error );
         } else {
             // debug( 'getting id for : ' + openRosaKey );
-            client.get( openRosaKey, function( error, id ) {
+            client.get( openRosaKey, ( error, id ) => {
                 // debug( 'result', error, id );
                 if ( error ) {
                     reject( error );
@@ -289,33 +271,23 @@ function _getEnketoId( openRosaKey ) {
 }
 
 function getEnketoIdFromSurveyObject( survey ) {
-    var openRosaKey = utils.getOpenRosaKey( survey );
+    const openRosaKey = utils.getOpenRosaKey( survey );
 
     return _getEnketoId( openRosaKey );
 }
 
 function _getActiveSurveys( openRosaIds ) {
-    var tasks = openRosaIds.map( function( openRosaId ) {
-        return _getEnketoId( openRosaId );
-    } );
+    const tasks = openRosaIds.map( openRosaId => _getEnketoId( openRosaId ) );
 
     return Promise.all( tasks )
-        .then( function( ids ) {
-            return ids.map( function( id ) {
-                // getSurvey rejects with 404 status if survey is not active
-                return getSurvey( id ).catch( _404Empty );
-            } );
-        } )
-        .then( function( tasks ) {
-            return Promise.all( tasks );
-        } )
-        .then( function( surveys ) {
-            return surveys.filter( _nonEmpty );
-        } );
+        .then( ids => ids.map( id => // getSurvey rejects with 404 status if survey is not active
+            getSurvey( id ).catch( _404Empty ) ) )
+        .then( tasks => Promise.all( tasks ) )
+        .then( surveys => surveys.filter( _nonEmpty ) );
 }
 
 function _createEnketoId( iterator ) {
-    var id = _num_to_base62( iterator );
+    let id = _num_to_base62( iterator );
 
     while ( id.length < 4 ) {
         id = CHARS[ 0 ] + id;

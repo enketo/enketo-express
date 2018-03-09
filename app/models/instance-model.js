@@ -1,10 +1,7 @@
-'use strict';
-
-var Promise = require( 'lie' );
-var config = require( './config-model' ).server;
-var TError = require( '../lib/custom-error' ).TranslatedError;
-var utils = require( '../lib/utils' );
-var client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
+const config = require( './config-model' ).server;
+const TError = require( '../lib/custom-error' ).TranslatedError;
+const utils = require( '../lib/utils' );
+const client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
     auth_pass: config.redis.main.password
 } );
 // var debug = require( 'debug' )( 'instance-model' );
@@ -15,23 +12,19 @@ if ( process.env.NODE_ENV === 'test' ) {
 }
 
 function _cacheInstance( survey ) {
-    var error;
-    var instanceKey;
-    var openRosaKey;
-    var instanceAttachments;
-
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
+        let error;
         if ( !survey || !survey.openRosaId || !survey.openRosaServer || !survey.instanceId || !survey.instance ) {
             error = new Error( 'Bad request. Survey information not complete or invalid' );
             error.status = 400;
             reject( error );
         } else {
-            instanceKey = 'in:' + survey.instanceId;
-            openRosaKey = utils.getOpenRosaKey( survey );
-            instanceAttachments = survey.instanceAttachments || {};
+            const instanceKey = `in:${survey.instanceId}`;
+            const openRosaKey = utils.getOpenRosaKey( survey );
+            const instanceAttachments = survey.instanceAttachments || {};
 
             // first check if record exists (i.e. if it is being edited)
-            client.hgetall( 'in:' + survey.instanceId, function( err, obj ) {
+            client.hgetall( `in:${survey.instanceId}`, ( err, obj ) => {
                 if ( err ) {
                     reject( err );
                 } else if ( obj ) {
@@ -42,9 +35,9 @@ function _cacheInstance( survey ) {
                     client.hmset( instanceKey, {
                         returnUrl: survey.returnUrl || '',
                         instance: survey.instance,
-                        openRosaKey: openRosaKey,
+                        openRosaKey,
                         instanceAttachments: JSON.stringify( instanceAttachments )
-                    }, function( error ) {
+                    }, error => {
                         if ( error ) {
                             reject( error );
                         } else {
@@ -60,15 +53,14 @@ function _cacheInstance( survey ) {
 }
 
 function _getInstance( survey ) {
-    var error;
-
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
+        let error;
         if ( !survey || !survey.instanceId ) {
             error = new Error( 'Bad Request. Survey information not complete or invalid' );
             error.status = 400;
             reject( error );
         } else {
-            client.hgetall( 'in:' + survey.instanceId, function( err, obj ) {
+            client.hgetall( `in:${survey.instanceId}`, ( err, obj ) => {
                 if ( err ) {
                     reject( err );
                 } else if ( !obj ) {
@@ -88,15 +80,13 @@ function _getInstance( survey ) {
 }
 
 function _removeInstance( survey ) {
-    var error;
-
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( !survey || !survey.instanceId ) {
-            error = new Error( 'Bad request. Survey information not complete or invalid' );
+            const error = new Error( 'Bad request. Survey information not complete or invalid' );
             error.status = 400;
             reject( error );
         } else {
-            client.del( 'in:' + survey.instanceId, function( err ) {
+            client.del( `in:${survey.instanceId}`, err => {
                 if ( err ) {
                     reject( err );
                 } else {

@@ -1,19 +1,18 @@
-'use strict';
 // From Ben Barkay: http://stackoverflow.com/questions/9210542/node-js-require-cache-possible-to-invalidate
 
 /**
  * Removes a module from the cache
  */
-require.unCache = function( moduleName ) {
+require.unCache = moduleName => {
     // Run over the cache looking for the files
     // loaded by the specified module name
-    require.searchCache( moduleName, function( mod ) {
+    require.searchCache( moduleName, mod => {
         delete require.cache[ mod.id ];
     } );
 
     // Remove cached paths to the module.
     // Thanks to @bentael for pointing this out.
-    Object.keys( module.constructor._pathCache ).forEach( function( cacheKey ) {
+    Object.keys( module.constructor._pathCache ).forEach( cacheKey => {
         if ( cacheKey.indexOf( moduleName ) > 0 ) {
             delete module.constructor._pathCache[ cacheKey ];
         }
@@ -24,9 +23,9 @@ require.unCache = function( moduleName ) {
  * Runs over the cache to search for all the cached
  * files
  */
-require.searchCache = function( moduleName, callback ) {
+require.searchCache = ( moduleName, callback ) => {
     // Resolve the module identified by the specified name
-    var mod = require.resolve( moduleName );
+    let mod = require.resolve( moduleName );
 
     // Check if the module has been resolved and found within
     // the cache
@@ -35,7 +34,7 @@ require.searchCache = function( moduleName, callback ) {
         ( function run( mod ) {
             // Go over each of the module's children and
             // run over it
-            mod.children.forEach( function( child ) {
+            mod.children.forEach( child => {
                 run( child );
             } );
 

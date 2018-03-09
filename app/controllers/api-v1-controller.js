@@ -1,36 +1,34 @@
-'use strict';
-
-var surveyModel = require( '../models/survey-model' );
-var instanceModel = require( '../models/instance-model' );
-var account = require( '../models/account-model' );
-var auth = require( 'basic-auth' );
-var express = require( 'express' );
-var router = express.Router();
-var quotaErrorMessage = 'Forbidden. No quota left';
+const surveyModel = require( '../models/survey-model' );
+const instanceModel = require( '../models/instance-model' );
+const account = require( '../models/account-model' );
+const auth = require( 'basic-auth' );
+const express = require( 'express' );
+const router = express.Router();
+const quotaErrorMessage = 'Forbidden. No quota left';
 //var debug = require( 'debug' )( 'api-controller-v1' );
 
-module.exports = function( app ) {
-    app.use( app.get( 'base path' ) + '/api/v1', router );
+module.exports = app => {
+    app.use( `${app.get( 'base path' )}/api/v1`, router );
     // old enketo-legacy URL structure for migration-friendliness
-    app.use( app.get( 'base path' ) + '/api_v1', router );
+    app.use( `${app.get( 'base path' )}/api_v1`, router );
 };
 
 router
-    .get( '/', function( req, res ) {
+    .get( '/', ( req, res ) => {
         res.redirect( 'http://apidocs.enketo.org/v1' );
     } )
     .all( '*', authCheck )
     .all( '*', _setQuotaUsed )
     .all( '/*/iframe', _setIframe )
-    .all( '/survey/preview*', function( req, res, next ) {
+    .all( '/survey/preview*', ( req, res, next ) => {
         req.webformType = 'preview';
         next();
     } )
-    .all( '/survey/all*', function( req, res, next ) {
+    .all( '/survey/all*', ( req, res, next ) => {
         req.webformType = 'all';
         next();
     } )
-    .all( '/instance*', function( req, res, next ) {
+    .all( '/instance*', ( req, res, next ) => {
         req.webformType = 'edit';
         next();
     } )
@@ -53,24 +51,24 @@ router
     .post( '/instance', cacheInstance )
     .post( '/instance/iframe', cacheInstance )
     .delete( '/instance', removeInstance )
-    .all( '*', function( req, res, next ) {
-        var error = new Error( 'Not allowed' );
+    .all( '*', ( req, res, next ) => {
+        const error = new Error( 'Not allowed' );
         error.status = 405;
         next( error );
     } );
 
 function authCheck( req, res, next ) {
     // check authentication and account
-    var error;
-    var creds = auth( req );
-    var key = ( creds ) ? creds.name : undefined;
-    var server = req.body.server_url || req.query.server_url;
+    let error;
+    const creds = auth( req );
+    const key = ( creds ) ? creds.name : undefined;
+    const server = req.body.server_url || req.query.server_url;
 
     // set content-type to json to provide appropriate json Error responses
     res.set( 'Content-Type', 'application/json' );
 
     account.get( server )
-        .then( function( account ) {
+        .then( account => {
             if ( !key || ( key !== account.key ) ) {
                 error = new Error( 'Not Allowed. Invalid API key.' );
                 error.status = 401;
@@ -97,7 +95,7 @@ function getExistingSurvey( req, res, next ) {
             openRosaServer: req.query.server_url,
             openRosaId: req.query.form_id
         } )
-        .then( function( id ) {
+        .then( id => {
             if ( id ) {
                 _render( 200, _generateWebformUrls( id, req ), res );
             } else {
@@ -108,8 +106,8 @@ function getExistingSurvey( req, res, next ) {
 }
 
 function getNewOrExistingSurvey( req, res, next ) {
-    var status;
-    var survey = {
+    let status;
+    const survey = {
         openRosaServer: req.body.server_url || req.query.server_url,
         openRosaId: req.body.form_id || req.query.form_id
     };
@@ -120,14 +118,14 @@ function getNewOrExistingSurvey( req, res, next ) {
 
     return surveyModel
         .getId( survey ) // will return id only for existing && active surveys
-        .then( function( id ) {
+        .then( id => {
             if ( !id && req.account.quota <= req.account.quotaUsed ) {
                 return _render( 403, quotaErrorMessage, res );
             }
             status = ( id ) ? 200 : 201;
             // even if id was found still call .set() method to update any properties
             return surveyModel.set( survey )
-                .then( function( id ) {
+                .then( id => {
                     if ( id ) {
                         _render( status, _generateWebformUrls( id, req ), res );
                     } else {
@@ -146,7 +144,7 @@ function deactivateSurvey( req, res, next ) {
             openRosaId: req.body.form_id,
             active: false
         } )
-        .then( function( id ) {
+        .then( id => {
             if ( id ) {
                 _render( 204, null, res );
             } else {
@@ -160,11 +158,11 @@ function getNumber( req, res, next ) {
 
     return surveyModel
         .getNumber( req.body.server_url || req.query.server_url )
-        .then( function( number ) {
+        .then( number => {
             if ( number ) {
                 _render( 200, {
                     code: 200,
-                    number: number
+                    number
                 }, res );
             } else {
                 // this cannot be reached I think
@@ -175,12 +173,12 @@ function getNumber( req, res, next ) {
 }
 
 function getList( req, res, next ) {
-    var obj;
+    let obj;
 
     return surveyModel
         .getList( req.body.server_url || req.query.server_url )
-        .then( function( list ) {
-            list = list.map( function( survey ) {
+        .then( list => {
+            list = list.map( survey => {
                 obj = _generateWebformUrls( survey.enketoId, req );
                 obj.form_id = survey.openRosaId;
                 obj.server_url = survey.openRosaServer;
@@ -195,8 +193,8 @@ function getList( req, res, next ) {
 }
 
 function cacheInstance( req, res, next ) {
-    var survey;
-    var enketoId;
+    let survey;
+    let enketoId;
 
     if ( req.account.quota < req.account.quotaUsed ) {
         return _render( 403, quotaErrorMessage, res );
@@ -212,7 +210,7 @@ function cacheInstance( req, res, next ) {
 
     return surveyModel
         .getId( survey )
-        .then( function( id ) {
+        .then( id => {
             if ( !id && req.account.quota <= req.account.quotaUsed ) {
                 return _render( 403, quotaErrorMessage, res );
             }
@@ -223,11 +221,11 @@ function cacheInstance( req, res, next ) {
             // Do not update properties if ID was found to avoid overwriting theme.
             return id;
         } )
-        .then( function( id ) {
+        .then( id => {
             enketoId = id;
             return instanceModel.set( survey );
         } )
-        .then( function() {
+        .then( () => {
             _render( 201, _generateWebformUrls( enketoId, req ), res );
         } )
         .catch( next );
@@ -241,7 +239,7 @@ function removeInstance( req, res, next ) {
             openRosaId: req.body.form_id,
             instanceId: req.body.instance_id
         } )
-        .then( function( instanceId ) {
+        .then( instanceId => {
             if ( instanceId ) {
                 _render( 204, null, res );
             } else {
@@ -254,7 +252,7 @@ function removeInstance( req, res, next ) {
 function _setQuotaUsed( req, res, next ) {
     surveyModel
         .getNumber( req.account.linkedServer )
-        .then( function( number ) {
+        .then( number => {
             req.account.quotaUsed = number;
             next();
         } );
@@ -266,61 +264,55 @@ function _setIframe( req, res, next ) {
 }
 
 function _setReturnQueryParam( req, res, next ) {
-    var returnUrl = req.body.return_url || req.query.return_url;
+    const returnUrl = req.body.return_url || req.query.return_url;
     if ( returnUrl && ( req.webformType === 'edit' || req.webformType === 'single' ) ) {
-        req.returnQueryParam = 'returnUrl=' + encodeURIComponent( decodeURIComponent( returnUrl ) );
+        req.returnQueryParam = `returnUrl=${encodeURIComponent( decodeURIComponent( returnUrl ) )}`;
     }
     next();
 }
 
-function _generateQueryString( params ) {
-    var paramsJoined;
+function _generateQueryString( params = [] ) {
+    const paramsJoined = params.filter( part => part && part.length > 0 ).join( '&' );
 
-    params = params || [];
-
-    paramsJoined = params.filter( function( part ) {
-        return part && part.length > 0;
-    } ).join( '&' );
-
-    return paramsJoined ? '?' + paramsJoined : '';
+    return paramsJoined ? `?${paramsJoined}` : '';
 }
 
 function _generateWebformUrls( id, req ) {
-    var queryString;
-    var obj = {};
-    var IFRAMEPATH = 'i/';
-    var iframePart = ( req.iframe ) ? IFRAMEPATH : '';
-    var protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol;
-    var baseUrl = protocol + '://' + req.headers.host + req.app.get( 'base path' ) + '/';
-    var idPartOnline = '::' + id;
-    var idPartOffline = '#' + id;
-    var offline = req.app.get( 'offline enabled' );
+    let queryString;
+    const obj = {};
+    const IFRAMEPATH = 'i/';
+    const iframePart = ( req.iframe ) ? IFRAMEPATH : '';
+    const protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol;
+    const baseUrl = `${protocol}://${req.headers.host}${req.app.get( 'base path' )}/`;
+    const idPartOnline = `::${id}`;
+    const idPartOffline = `#${id}`;
+    const offline = req.app.get( 'offline enabled' );
 
     req.webformType = req.webformType || 'default';
 
     switch ( req.webformType ) {
         case 'preview':
-            obj.preview_url = baseUrl + 'preview/' + iframePart + idPartOnline;
+            obj.preview_url = `${baseUrl}preview/${iframePart}${idPartOnline}`;
             break;
         case 'edit':
-            queryString = _generateQueryString( [ 'instance_id=' + req.body.instance_id, req.returnQueryParam ] );
-            obj.edit_url = baseUrl + 'edit/' + iframePart + idPartOnline + queryString;
+            queryString = _generateQueryString( [ `instance_id=${req.body.instance_id}`, req.returnQueryParam ] );
+            obj.edit_url = `${baseUrl}edit/${iframePart}${idPartOnline}${queryString}`;
             break;
         case 'all':
             // non-iframe views
-            obj.url = ( offline ) ? baseUrl + 'x/' + idPartOffline : baseUrl + idPartOnline;
-            obj.preview_url = baseUrl + 'preview/' + idPartOnline;
+            obj.url = ( offline ) ? `${baseUrl}x/${idPartOffline}` : baseUrl + idPartOnline;
+            obj.preview_url = `${baseUrl}preview/${idPartOnline}`;
             // iframe views
             obj.iframe_url = baseUrl + IFRAMEPATH + idPartOnline;
-            obj.preview_iframe_url = baseUrl + 'preview/' + IFRAMEPATH + idPartOnline;
+            obj.preview_iframe_url = `${baseUrl}preview/${IFRAMEPATH}${idPartOnline}`;
             // enketo-legacy
             obj.subdomain = '';
             break;
         default:
             if ( iframePart ) {
-                obj.url = ( offline ) ? baseUrl + 'x/' + idPartOffline : baseUrl + iframePart + idPartOnline;
+                obj.url = ( offline ) ? `${baseUrl}x/${idPartOffline}` : baseUrl + iframePart + idPartOnline;
             } else {
-                obj.url = ( offline ) ? baseUrl + 'x/' + idPartOffline : baseUrl + idPartOnline;
+                obj.url = ( offline ) ? `${baseUrl}x/${idPartOffline}` : baseUrl + idPartOnline;
             }
             break;
     }
@@ -328,12 +320,11 @@ function _generateWebformUrls( id, req ) {
     return obj;
 }
 
-function _render( status, body, res ) {
+function _render( status, body = {}, res ) {
     if ( status === 204 ) {
         // send 204 response without a body
         res.status( status ).end();
     } else {
-        body = body || {};
         if ( typeof body === 'string' ) {
             body = {
                 message: body

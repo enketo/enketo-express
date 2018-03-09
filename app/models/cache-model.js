@@ -1,15 +1,12 @@
-'use strict';
-
-var Promise = require( 'lie' );
-var utils = require( '../lib/utils' );
-var transformer = require( 'enketo-transformer' );
-var prefix = 'ca:';
-var expiry = 30 * 24 * 60 * 60;
-var config = require( './config-model' ).server;
-var client = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
+const utils = require( '../lib/utils' );
+const transformer = require( 'enketo-transformer' );
+const prefix = 'ca:';
+const expiry = 30 * 24 * 60 * 60;
+const config = require( './config-model' ).server;
+const client = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
     auth_pass: config.redis.cache.password
 } );
-var debug = require( 'debug' )( 'cache-model' );
+const debug = require( 'debug' )( 'cache-model' );
 
 // in test environment, switch to different db
 if ( process.env.NODE_ENV === 'test' ) {
@@ -23,18 +20,15 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @return {[type]}        [description]
  */
 function getSurvey( survey ) {
-    var key;
-    var error;
-
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
-            error = new Error( 'Bad Request. Survey information to perform cache lookup is not complete.' );
+            const error = new Error( 'Bad Request. Survey information to perform cache lookup is not complete.' );
             error.status = 400;
             reject( error );
         } else {
-            key = _getKey( survey );
+            const key = _getKey( survey );
 
-            client.hgetall( key, function( error, cacheObj ) {
+            client.hgetall( key, ( error, cacheObj ) => {
                 if ( error ) {
                     reject( error );
                 } else if ( !cacheObj ) {
@@ -62,18 +56,15 @@ function getSurvey( survey ) {
  * @return {[type]}        [description]
  */
 function getSurveyHashes( survey ) {
-    var key;
-    var error;
-
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
-            error = new Error( 'Bad Request. Survey information to perform cache lookup is not complete.' );
+            const error = new Error( 'Bad Request. Survey information to perform cache lookup is not complete.' );
             error.status = 400;
             reject( error );
         } else {
-            key = _getKey( survey );
+            const key = _getKey( survey );
 
-            client.hmget( key, [ 'formHash', 'xslHash' ], function( error, hashArr ) {
+            client.hmget( key, [ 'formHash', 'xslHash' ], ( error, hashArr ) => {
                 console.log( 'hashArr', key, hashArr );
                 if ( error ) {
                     reject( error );
@@ -96,12 +87,9 @@ function getSurveyHashes( survey ) {
  * @return {Boolean}        [description]
  */
 function isCacheUpToDate( survey ) {
-    var key;
-    var error;
-
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( !survey || !survey.openRosaServer || !survey.openRosaId || !survey.info.hash ) {
-            error = new Error( 'Bad Request. Survey information to perform cache check is not complete.' );
+            const error = new Error( 'Bad Request. Survey information to perform cache check is not complete.' );
             error.status = 400;
             reject( error );
         } else {
@@ -115,9 +103,9 @@ function isCacheUpToDate( survey ) {
                 manifest: survey.manifest
             };
 
-            key = _getKey( survey );
+            const key = _getKey( survey );
 
-            client.hgetall( key, function( error, cacheObj ) {
+            client.hgetall( key, ( error, cacheObj ) => {
                 if ( error ) {
                     reject( error );
                 } else if ( !cacheObj ) {
@@ -150,18 +138,14 @@ function isCacheUpToDate( survey ) {
  * @param {[type]} survey [description]
  */
 function setSurvey( survey ) {
-    var obj;
-    var key;
-    var error;
-
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( !survey || !survey.openRosaServer || !survey.openRosaId || !survey.info.hash || !survey.form || !survey.model ) {
-            error = new Error( 'Bad Request. Survey information to cache is not complete.' );
+            const error = new Error( 'Bad Request. Survey information to cache is not complete.' );
             error.status = 400;
             reject( error );
         } else {
             _addHashes( survey );
-            obj = {
+            const obj = {
                 formHash: survey.formHash,
                 xslHash: survey.xslHash,
                 form: survey.form,
@@ -172,9 +156,9 @@ function setSurvey( survey ) {
                 languageMap: JSON.stringify( survey.languageMap || {} )
             };
 
-            key = _getKey( survey );
+            const key = _getKey( survey );
 
-            client.hmset( key, obj, function( error ) {
+            client.hmset( key, obj, error => {
                 if ( error ) {
                     reject( error );
                 } else {
@@ -194,18 +178,15 @@ function setSurvey( survey ) {
  * @param {[type]} survey [description]
  */
 function flushSurvey( survey ) {
-    var key;
-    var error;
-
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
-            error = new Error( 'Bad Request. Survey information to cache is not complete.' );
+            const error = new Error( 'Bad Request. Survey information to cache is not complete.' );
             error.status = 400;
             reject( error );
         } else {
-            key = _getKey( survey );
+            const key = _getKey( survey );
 
-            client.hgetall( key, function( error, cacheObj ) {
+            client.hgetall( key, ( error, cacheObj ) => {
                 if ( error ) {
                     reject( error );
                 } else if ( !cacheObj ) {
@@ -213,7 +194,7 @@ function flushSurvey( survey ) {
                     error.status = 404;
                     reject( error );
                 } else {
-                    client.del( key, function( error ) {
+                    client.del( key, error => {
                         if ( error ) {
                             reject( error );
                         } else {
@@ -239,14 +220,13 @@ function flushSurvey( survey ) {
  * @return {[type]} [description]
  */
 function flushAll() {
-
-    return new Promise( function( resolve, reject ) {
-        client.keys( prefix + '*', function( error, keys ) {
+    return new Promise( ( resolve, reject ) => {
+        client.keys( `${prefix}*`, ( error, keys ) => {
             if ( error ) {
                 reject( error );
             }
-            keys.forEach( function( key ) {
-                client.del( key, function( error ) {
+            keys.forEach( key => {
+                client.del( key, error => {
                     if ( error ) {
                         console.error( error );
                     }
@@ -265,7 +245,7 @@ function flushAll() {
  * @return {string}        [description]
  */
 function _getKey( survey ) {
-    var openRosaKey = utils.getOpenRosaKey( survey, prefix );
+    const openRosaKey = utils.getOpenRosaKey( survey, prefix );
     return ( openRosaKey ) ? openRosaKey : null;
 }
 
@@ -285,5 +265,5 @@ module.exports = {
     set: setSurvey,
     check: isCacheUpToDate,
     flush: flushSurvey,
-    flushAll: flushAll
+    flushAll
 };

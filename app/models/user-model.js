@@ -1,5 +1,3 @@
-'use strict';
-
 const jwt = require( 'jwt-simple' );
 const url = require( 'url' );
 // var debug = require( 'debug' )( 'user-model' );
@@ -31,5 +29,5 @@ function getCredentials( req ) {
 }
 
 module.exports = {
-    getCredentials: getCredentials
+    getCredentials
 };

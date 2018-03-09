@@ -1,6 +1,4 @@
 /* global describe, require, it, beforeEach, afterEach */
-'use strict';
-
 /* 
  * These tests use the special test Api Token and Server URLs defined in the API spec
  * at http://apidocs.enketo.org.
@@ -9,40 +7,40 @@
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-var request = require( 'supertest' );
-var app = require( '../../config/express' );
-var surveyModel = require( '../../app/models/survey-model' );
-var instanceModel = require( '../../app/models/instance-model' );
-var redis = require( 'redis' );
-var config = require( '../../app/models/config-model' ).server;
-var client = redis.createClient( config.redis.main.port, config.redis.main.host, {
+const request = require( 'supertest' );
+const app = require( '../../config/express' );
+const surveyModel = require( '../../app/models/survey-model' );
+const instanceModel = require( '../../app/models/instance-model' );
+const redis = require( 'redis' );
+const config = require( '../../app/models/config-model' ).server;
+const client = redis.createClient( config.redis.main.port, config.redis.main.host, {
     auth_pass: config.redis.main.password
 } );
 
-describe( 'Submissions', function() {
-    var enketoId;
-    var nonExistingEnketoId = 'nope';
-    var validServer = 'https://testserver.com/bob';
-    var validFormId = 'something';
+describe( 'Submissions', () => {
+    let enketoId;
+    const nonExistingEnketoId = 'nope';
+    const validServer = 'https://testserver.com/bob';
+    const validFormId = 'something';
 
-    beforeEach( function( done ) {
+    beforeEach( done => {
         // add survey if it doesn't exist in the db
         surveyModel.set( {
             openRosaServer: validServer,
             openRosaId: validFormId,
-        } ).then( function( id ) {
+        } ).then( id => {
             enketoId = id;
             done();
         } );
     } );
 
-    afterEach( function( done ) {
+    afterEach( done => {
         // select test database and flush it
-        client.select( 15, function( err ) {
+        client.select( 15, err => {
             if ( err ) {
                 return done( err );
             }
-            client.flushdb( function( err ) {
+            client.flushdb( err => {
                 if ( err ) {
                     return done( err );
                 }
@@ -51,7 +49,7 @@ describe( 'Submissions', function() {
         } );
     } );
 
-    describe( 'for active/existing Enketo IDs', function() {
+    describe( 'for active/existing Enketo IDs', () => {
 
         [
             // invalid methods
@@ -64,13 +62,12 @@ describe( 'Submissions', function() {
                 data: '<data></data>',
                 status: 405
             }
-        ].forEach( function( test ) {
+        ].forEach( test => {
 
-            it( 'using ' + test.method.toUpperCase() + ' of ' + test.data +
-                ' responds with ' + test.status,
-                function( done ) {
+            it( `using ${test.method.toUpperCase()} of ${test.data} responds with ${test.status}`,
+                done => {
 
-                    request( app )[ test.method ]( '/submission/::' + enketoId )
+                    request( app )[ test.method ]( `/submission/::${enketoId}` )
                         .field( 'xml_submission_file', new Buffer( [ test.data ] ) )
                         .expect( test.status, done );
 
@@ -79,56 +76,56 @@ describe( 'Submissions', function() {
 
     } );
 
-    describe( 'for inactive or non-existing Enketo IDs', function() {
+    describe( 'for inactive or non-existing Enketo IDs', () => {
 
-        beforeEach( function( done ) {
+        beforeEach( done => {
             // de-activate survey
             surveyModel.update( {
                 openRosaServer: validServer,
                 openRosaId: validFormId,
                 active: false
-            } ).then( function( id ) {
+            } ).then( id => {
                 enketoId = id;
                 done();
             } );
         } );
 
-        it( 'using POST of <data></data> to inactive ID responds with 404', function( done ) {
+        it( 'using POST of <data></data> to inactive ID responds with 404', done => {
             request( app )
-                .post( '/submission/::' + enketoId )
+                .post( `/submission/::${enketoId}` )
                 .field( 'xml_submission_file', '<data></data>' )
                 .expect( 404, done );
         } );
 
-        it( 'using POST of <data></data> to non-existing ID responds with 404', function( done ) {
+        it( 'using POST of <data></data> to non-existing ID responds with 404', done => {
             request( app )
-                .post( '/submission/::' + nonExistingEnketoId )
+                .post( `/submission/::${nonExistingEnketoId}` )
                 .field( 'xml_submission_file', '<data></data>' )
                 .expect( 404, done );
         } );
 
     } );
 
-    describe( 'using GET (existing submissions) for an existing/active Enketo IDs', function() {
+    describe( 'using GET (existing submissions) for an existing/active Enketo IDs', () => {
 
-        it( 'responds with 400 if no instanceID provided', function( done ) {
-            request( app ).get( '/submission/::' + enketoId )
+        it( 'responds with 400 if no instanceID provided', done => {
+            request( app ).get( `/submission/::${enketoId}` )
                 .expect( 400, done );
         } );
 
-        it( 'responds with 400 if instanceID is empty', function( done ) {
-            request( app ).get( '/submission/::' + enketoId + '?instanceId=' )
+        it( 'responds with 400 if instanceID is empty', done => {
+            request( app ).get( `/submission/::${enketoId}?instanceId=` )
                 .expect( 400, done );
         } );
 
-        it( 'responds with 404 if instanceID requested is not found', function( done ) {
-            request( app ).get( '/submission/::' + enketoId + '?instanceId=a' )
+        it( 'responds with 404 if instanceID requested is not found', done => {
+            request( app ).get( `/submission/::${enketoId}?instanceId=a` )
                 .expect( 404, done );
         } );
 
-        describe( 'for a valid and existing instanceID that does not belong to the current form', function() {
+        describe( 'for a valid and existing instanceID that does not belong to the current form', () => {
 
-            beforeEach( function( done ) {
+            beforeEach( done => {
                 // add survey if it doesn't exist in the db
                 instanceModel.set( {
                     openRosaServer: validServer,
@@ -139,21 +136,21 @@ describe( 'Submissions', function() {
                     instanceAttachments: {
                         'test.jpg': 'https://example.com'
                     }
-                } ).then( function() {
+                } ).then( () => {
                     done();
                 } );
             } );
 
-            it( 'responds with 400', function( done ) {
-                request( app ).get( '/submission/::' + enketoId + '?instanceId=b' )
+            it( 'responds with 400', done => {
+                request( app ).get( `/submission/::${enketoId}?instanceId=b` )
                     .expect( 400, done );
             } );
 
         } );
 
-        describe( 'for a valid and existing instanceID that belongs to the current form', function() {
+        describe( 'for a valid and existing instanceID that belongs to the current form', () => {
 
-            beforeEach( function( done ) {
+            beforeEach( done => {
                 // add survey if it doesn't exist in the db
                 instanceModel.set( {
                     openRosaServer: validServer,
@@ -161,13 +158,13 @@ describe( 'Submissions', function() {
                     instanceId: 'c',
                     returnUrl: 'example.com',
                     instance: '<data></data>'
-                } ).then( function() {
+                } ).then( () => {
                     done();
                 } );
             } );
 
-            it( 'responds with 200', function( done ) {
-                request( app ).get( '/submission/::' + enketoId + '?instanceId=c' )
+            it( 'responds with 200', done => {
+                request( app ).get( `/submission/::${enketoId}?instanceId=c` )
                     .expect( 200, done );
             } );
 

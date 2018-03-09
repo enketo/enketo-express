@@ -1,10 +1,8 @@
-'use strict';
-
-var utils = require( './utils' );
-var config = require( '../models/config-model' ).server;
-var keys = {
+const utils = require( './utils' );
+const config = require( '../models/config-model' ).server;
+const keys = {
     singleOnce: config[ 'less secure encryption key' ],
-    view: config[ 'less secure encryption key' ] + 'view',
+    view: `${config[ 'less secure encryption key' ]}view`,
 };
 
 function enketoIdParam( req, res, next, id ) {
@@ -40,7 +38,7 @@ function _encryptedEnketoIdParam( req, res, next, id, key ) {
                 req.enketoId = decrypted;
                 next();
             } else {
-                console.error( 'decryption with' + key + 'worked but result is not alphanumeric, ignoring result:', decrypted );
+                console.error( `decryption with${key}worked but result is not alphanumeric, ignoring result:`, decrypted );
                 next( 'route' );
             }
         } catch ( e ) {
@@ -51,8 +49,6 @@ function _encryptedEnketoIdParam( req, res, next, id, key ) {
         next( 'route' );
     }
 }
-
-
 
 module.exports = {
     enketoId: enketoIdParam,

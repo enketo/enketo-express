@@ -1,16 +1,13 @@
-'use strict';
-
-var libxml = require( 'libxslt' ).libxmljs;
-var url = require( 'url' );
-var path = require( 'path' );
-var fs = require( 'fs' );
-var Promise = require( 'lie' );
-var config = require( './config-model' ).server;
-var client = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
+const libxml = require( 'libxslt' ).libxmljs;
+const url = require( 'url' );
+const path = require( 'path' );
+const fs = require( 'fs' );
+const config = require( './config-model' ).server;
+const client = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
     auth_pass: config.redis.cache.password
 } );
-var utils = require( '../lib/utils' );
-var debug = require( 'debug' )( 'manifest-model' );
+const utils = require( '../lib/utils' );
+const debug = require( 'debug' )( 'manifest-model' );
 
 // in test environment, switch to different db
 if ( process.env.NODE_ENV === 'test' ) {
@@ -18,19 +15,12 @@ if ( process.env.NODE_ENV === 'test' ) {
 }
 
 function getManifest( html1, html2, lang ) {
-    var hash;
-    var version;
-    var doc1;
-    var doc2;
-    var resources;
-    var themesSupported;
-    var date;
-    var manifestKey = 'ma:' + lang + '_manifest';
-    var versionKey = 'ma:' + lang + '_version';
+    const manifestKey = `ma:${lang}_manifest`;
+    const versionKey = `ma:${lang}_version`;
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         // each language gets its own manifest
-        client.get( manifestKey, function( error, manifest ) {
+        client.get( manifestKey, ( error, manifest ) => {
             if ( error ) {
                 reject( error );
             } else if ( manifest && manifest !== 'null' ) {
@@ -38,10 +28,10 @@ function getManifest( html1, html2, lang ) {
                 resolve( manifest );
             } else {
                 debug( 'building manifest from scratch' );
-                doc1 = libxml.parseHtml( html1 );
-                doc2 = libxml.parseHtml( html2 );
-                resources = [];
-                themesSupported = config[ 'themes supported' ] || [];
+                const doc1 = libxml.parseHtml( html1 );
+                const doc2 = libxml.parseHtml( html2 );
+                const themesSupported = config[ 'themes supported' ] || [];
+                let resources = [];
 
                 // href attributes of link elements
                 resources = resources.concat( _getLinkHrefs( doc1 ) );
@@ -68,28 +58,28 @@ function getManifest( html1, html2, lang ) {
                     .filter( _removeNonExisting );
 
                 // calculate the hash to serve as the manifest version number
-                hash = _calculateHash( html1, html2, resources );
+                const hash = _calculateHash( html1, html2, resources );
 
                 // add explicit entries in case user never lands on URL without querystring
                 // otherwise they may never get added as a Master entry
                 resources = resources.concat( [
-                    config[ 'base path' ] + '/x/'
+                    `${config[ 'base path' ]}/x/`
                 ] );
 
                 // determine version
                 _getVersionObj( versionKey )
-                    .then( function( obj ) {
-                        version = obj.version;
+                    .then( obj => {
+                        let version = obj.version;
                         if ( obj.hash !== hash ) {
                             // create a new version
-                            date = new Date().toISOString().replace( 'T', '|' );
-                            version = date.substring( 0, date.length - 8 ) + '|' + lang;
+                            const date = new Date().toISOString().replace( 'T', '|' );
+                            version = `${date.substring( 0, date.length - 8 )}|${lang}`;
                             // update stored version, don't wait for result
                             _updateVersionObj( versionKey, hash, version );
                         }
                         manifest = _getManifestString( version, resources );
                         // cache manifest for an hour, don't wait for result
-                        client.set( manifestKey, manifest, 'EX', 1 * 60 * 60, function() {} );
+                        client.set( manifestKey, manifest, 'EX', 1 * 60 * 60, () => {} );
                         resolve( manifest );
                     } );
             }
@@ -99,23 +89,12 @@ function getManifest( html1, html2, lang ) {
 }
 
 function _getManifestString( version, resources ) {
-    return 'CACHE MANIFEST\n' +
-        '# version: ' + version + '\n' +
-        '\n' +
-        'CACHE:\n' +
-        resources.join( '\n' ) + '\n' +
-        '\n' +
-        'FALLBACK:\n' +
-        '/x ' + config[ 'base path' ] + '/offline\n' +
-        '/_ ' + config[ 'base path' ] + '/offline\n' +
-        '\n' +
-        'NETWORK:\n' +
-        '*\n';
+    return `CACHE MANIFEST\n# version: ${version}\n\nCACHE:\n${resources.join( '\n' )}\n\nFALLBACK:\n/x ${config[ 'base path' ]}/offline\n/_ ${config[ 'base path' ]}/offline\n\nNETWORK:\n*\n`;
 }
 
 function _getVersionObj( versionKey ) {
-    return new Promise( function( resolve, reject ) {
-        client.hgetall( versionKey, function( error, obj ) {
+    return new Promise( ( resolve, reject ) => {
+        client.hgetall( versionKey, ( error, obj ) => {
             debug( 'result', obj );
             if ( error ) {
                 reject( error );
@@ -130,32 +109,28 @@ function _getVersionObj( versionKey ) {
 
 function _updateVersionObj( versionKey, hash, version ) {
     client.hmset( versionKey, {
-        hash: hash,
-        version: version
+        hash,
+        version
     } );
 }
 
 function _getLinkHrefs( doc ) {
-    return doc.find( '//link[@href]' ).map( function( element ) {
-        return element.attr( 'href' ).value();
-    } );
+    return doc.find( '//link[@href]' ).map( element => element.attr( 'href' ).value() );
 }
 
 function _getSrcAttributes( doc ) {
-    return doc.find( '//*[@src]' ).map( function( element ) {
-        return element.attr( 'src' ).value();
-    } );
+    return doc.find( '//*[@src]' ).map( element => element.attr( 'src' ).value() );
 }
 
 function _getAdditionalThemes( resources, themes ) {
-    var urls = [];
+    const urls = [];
 
-    resources.forEach( function( resource ) {
-        var themeStyleSheet = /theme-([A-z]+)(\.print)?\.css$/;
+    resources.forEach( resource => {
+        const themeStyleSheet = /theme-([A-z]+)(\.print)?\.css$/;
         if ( themeStyleSheet.test( resource ) ) {
-            var foundTheme = resource.match( themeStyleSheet )[ 1 ];
-            themes.forEach( function( theme ) {
-                var themeUrl = resource.replace( foundTheme, theme );
+            const foundTheme = resource.match( themeStyleSheet )[ 1 ];
+            themes.forEach( theme => {
+                const themeUrl = resource.replace( foundTheme, theme );
                 urls.push( themeUrl );
             } );
         }
@@ -165,28 +140,27 @@ function _getAdditionalThemes( resources, themes ) {
 }
 
 function _getTranslations( lang ) {
-    var langs = [];
+    const langs = [];
 
     // fallback language
-    langs.push( config[ 'base path' ] + '/locales/en/translation-combined.json' );
+    langs.push( `${config[ 'base path' ]}/locales/en/translation-combined.json` );
 
     if ( lang && lang !== 'en' ) {
-        langs.push( config[ 'base path' ] + '/locales/' + lang + '/translation-combined.json' );
+        langs.push( `${config[ 'base path' ]}/locales/${lang}/translation-combined.json` );
     }
 
     return langs;
 }
 
 function _getResourcesFromCss( resources ) {
-    var content;
-    var matches;
-    var urlReg = /url\(['|"]?([^)'"]+)['|"]?\)/g;
-    var cssReg = /^.+\.css$/;
-    var urls = [];
+    const urlReg = /url\(['|"]?([^)'"]+)['|"]?\)/g;
+    const cssReg = /^.+\.css$/;
+    const urls = [];
 
-    resources.forEach( function( resource ) {
+    resources.forEach( resource => {
         if ( cssReg.test( resource ) ) {
-            content = _getResourceContent( resource );
+            const content = _getResourceContent( resource );
+            let matches;
             while ( ( matches = urlReg.exec( content ) ) !== null ) {
                 urls.push( matches[ 1 ] );
             }
@@ -197,10 +171,9 @@ function _getResourcesFromCss( resources ) {
 }
 
 function _getResourceContent( resource ) {
-    var localResourcePath;
     // in try catch in case css file is missing
     try {
-        localResourcePath = _getLocalPath( resource );
+        const localResourcePath = _getLocalPath( resource );
         return fs.readFileSync( localResourcePath, 'utf8' );
     } catch ( e ) {
         return '';
@@ -208,9 +181,9 @@ function _getResourceContent( resource ) {
 }
 
 function _removeNonExisting( resource ) {
-    var localResourcePath = _getLocalPath( resource );
+    const localResourcePath = _getLocalPath( resource );
     // TODO: in later versions of node.js, this should be replaced by: fs.accessSync(resourcePath, fs.R_OK)
-    var exists = fs.existsSync( localResourcePath );
+    const exists = fs.existsSync( localResourcePath );
 
     if ( !exists ) {
         debug( 'cannot find', localResourcePath );
@@ -219,9 +192,9 @@ function _removeNonExisting( resource ) {
 }
 
 function _getLocalPath( resource ) {
-    var rel = ( resource.indexOf( config[ 'base path' ] + '/locales/' ) === 0 ) ? '../../' : '../../public';
-    var resourceWithoutBase = resource.substring( config[ 'base path' ].length );
-    var localResourcePath = path.join( __dirname, rel, url.parse( resourceWithoutBase ).pathname );
+    const rel = ( resource.indexOf( `${config[ 'base path' ]}/locales/` ) === 0 ) ? '../../' : '../../public';
+    const resourceWithoutBase = resource.substring( config[ 'base path' ].length );
+    const localResourcePath = path.join( __dirname, rel, url.parse( resourceWithoutBase ).pathname );
     return localResourcePath;
 }
 
@@ -234,17 +207,16 @@ function _removeDuplicates( resource, position, array ) {
 }
 
 function _removeNonHttpResources( resourceUrl ) {
-    var parsedUrl = url.parse( resourceUrl );
+    const parsedUrl = url.parse( resourceUrl );
     return parsedUrl.path && parsedUrl.protocol !== 'data:';
 }
 
 function _calculateHash( html1, html2, resources ) {
-    var content;
-    var hash = utils.md5( html1 ) + utils.md5( html2 );
+    let hash = utils.md5( html1 ) + utils.md5( html2 );
 
-    resources.forEach( function( resource ) {
+    resources.forEach( resource => {
         try {
-            content = _getResourceContent( resource );
+            const content = _getResourceContent( resource );
             hash += utils.md5( content );
         } catch ( e ) {
             console.error( e );

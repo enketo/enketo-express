@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 
-'use strict';
-
-var cluster = require( 'cluster' );
-var numCPUs = require( 'os' ).cpus().length;
+const cluster = require( 'cluster' );
+const numCPUs = require( 'os' ).cpus().length;
 
 if ( cluster.isMaster ) {
 
     // Fork workers.
-    for ( var i = 0; i < numCPUs; i++ ) {
+    for ( let i = 0; i < numCPUs; i++ ) {
         cluster.fork();
     }
 
@@ -17,10 +15,10 @@ if ( cluster.isMaster ) {
         cluster.fork();
     } );
 } else {
-    var app = require( './config/express' );
-    var server = app.listen( app.get( 'port' ), function() {
-        var worker = ( cluster.worker ) ? cluster.worker.id : 'Master';
-        var msg = 'Worker ' + worker + ' ready for duty at port ' + server.address().port + '! (environment: ' + app.get( 'env' ) + ')';
+    const app = require( './config/express' );
+    const server = app.listen( app.get( 'port' ), () => {
+        const worker = ( cluster.worker ) ? cluster.worker.id : 'Master';
+        const msg = 'Worker ' + worker + ' ready for duty at port ' + server.address().port + '! (environment: ' + app.get( 'env' ) + ')';
         console.log( msg );
     } );
     /**

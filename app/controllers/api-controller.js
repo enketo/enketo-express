@@ -1,13 +1,11 @@
-'use strict';
+const express = require( 'express' );
+const router = express.Router();
 
-var express = require( 'express' );
-var router = express.Router();
-
-module.exports = function( app ) {
-    app.use( app.get( 'base path' ) + '/api', router );
+module.exports = app => {
+    app.use( `${app.get( 'base path' )}/api`, router );
 };
 
 router
-    .get( '/', function( req, res ) {
+    .get( '/', ( req, res ) => {
         res.redirect( 'http://apidocs.enketo.org' );
     } );

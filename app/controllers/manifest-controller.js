@@ -1,20 +1,17 @@
-'use strict';
-
-var manifest = require( '../models/manifest-model' );
-var Promise = require( 'lie' );
-var express = require( 'express' );
-var router = express.Router();
+const manifest = require( '../models/manifest-model' );
+const express = require( 'express' );
+const router = express.Router();
 // var debug = require( 'debug' )( 'manifest-controller' );
 
-module.exports = function( app ) {
-    app.use( app.get( 'base path' ) + '/x/manifest.appcache*', router );
+module.exports = app => {
+    app.use( `${app.get( 'base path' )}/x/manifest.appcache*`, router );
     // legacy:
-    app.use( app.get( 'base path' ) + '/_/manifest.appcache*', router );
+    app.use( `${app.get( 'base path' )}/_/manifest.appcache*`, router );
 };
 router
-    .get( '*', function( req, res, next ) {
+    .get( '*', ( req, res, next ) => {
         getManifest( req, res )
-            .then( function( manifestContent ) {
+            .then( manifestContent => {
                 res
                     .set( 'Content-Type', 'text/cache-manifest' )
                     .send( manifestContent );
@@ -27,18 +24,18 @@ function getManifest( req, res ) {
             _getWebformHtml( req, res ),
             _getOfflineFallbackHtml( req, res )
         ] )
-        .then( function( result ) {
+        .then( result => {
             // TODO: if we ever start supporting dialects, we need to change this
-            var lang = req.i18n.language.split( '-' )[ 0 ];
+            const lang = req.i18n.language.split( '-' )[ 0 ];
             return manifest.get( result[ 0 ], result[ 1 ], lang );
         } );
 }
 
 function _getWebformHtml( req, res ) {
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         res.render( 'surveys/webform', {
-            manifest: req.app.get( 'base path' ) + '/x/manifest.appcache'
-        }, function( err, html ) {
+            manifest: `${req.app.get( 'base path' )}/x/manifest.appcache`
+        }, ( err, html ) => {
             if ( err ) {
                 reject( err );
             } else {
@@ -49,8 +46,8 @@ function _getWebformHtml( req, res ) {
 }
 
 function _getOfflineFallbackHtml( req, res ) {
-    return new Promise( function( resolve, reject ) {
-        res.render( 'pages/offline', {}, function( err, html ) {
+    return new Promise( ( resolve, reject ) => {
+        res.render( 'pages/offline', {}, ( err, html ) => {
             if ( err ) {
                 reject( err );
             } else {

@@ -1,20 +1,17 @@
-'use strict';
-
-var localConfig;
-var config = require( '../../config/default-config' );
-var pkg = require( '../../package' );
-var mergeWith = require( 'lodash/mergeWith' );
-var path = require( 'path' );
-var fs = require( 'fs' );
-var url = require( 'url' );
-var themePath = path.join( __dirname, '../../public/css' );
-var languagePath = path.join( __dirname, '../../locales' );
+const config = require( '../../config/default-config' );
+const pkg = require( '../../package' );
+const mergeWith = require( 'lodash/mergeWith' );
+const path = require( 'path' );
+const fs = require( 'fs' );
+const url = require( 'url' );
+const themePath = path.join( __dirname, '../../public/css' );
+const languagePath = path.join( __dirname, '../../locales' );
 // var debug = require( 'debug' )( 'config-model' );
 
 // Merge default and local config files if a local config.json file exists
 try {
-    localConfig = require( '../../config/config' );
-    mergeWith( config, localConfig, function( objValue, srcValue ) {
+    const localConfig = require( '../../config/config' );
+    mergeWith( config, localConfig, ( objValue, srcValue ) => {
         if ( Array.isArray( srcValue ) ) {
             // Overwrite completely if value in localConfig is an array (do not merge arrays)
             return srcValue;
@@ -34,9 +31,9 @@ catch ( err ) {
  * @param  {*} config configuration object
  */
 function _updateConfigFromEnv() {
-    var envVarNames = [];
+    const envVarNames = [];
 
-    for ( var envVarName in process.env ) {
+    for ( const envVarName in process.env ) {
         if ( process.env.hasOwnProperty( envVarName ) && envVarName.indexOf( 'ENKETO_' ) === 0 ) {
             envVarNames.push( envVarName );
         }
@@ -51,13 +48,13 @@ function _updateConfigFromEnv() {
  * @param  {string} envVarName [description]
  */
 function _updateConfigItemFromEnv( envVarName ) {
-    var parts = envVarName.split( '_' ).slice( 1 ).map( _convertNumbers );
-    var nextNumberIndex = _findNumberIndex( parts );
-    var proceed = true;
-    var part;
-    var settingArr;
-    var setting;
-    var propName;
+    const parts = envVarName.split( '_' ).slice( 1 ).map( _convertNumbers );
+    let nextNumberIndex = _findNumberIndex( parts );
+    let proceed = true;
+    let part;
+    let settingArr;
+    let setting;
+    let propName;
 
     while ( proceed ) {
         proceed = false;
@@ -113,17 +110,14 @@ function _convertType( str ) {
  * @param  {string}     prefix   prefix to use (for nested objects)
  * @return {[*,string]?}         2-item array of object and property name
  */
-function _findSetting( obj, envName, prefix ) {
-    var found;
-    prefix = prefix || '';
-
-    for ( var prop in obj ) {
+function _findSetting( obj, envName, prefix = '' ) {
+    for ( const prop in obj ) {
         if ( obj.hasOwnProperty( prop ) ) {
-            var propEnvStyle = prefix + prop.replace( / /g, '_' ).toUpperCase();
+            const propEnvStyle = prefix + prop.replace( / /g, '_' ).toUpperCase();
             if ( propEnvStyle === envName ) {
                 return [ obj, prop ];
             } else if ( typeof obj[ prop ] === 'object' && obj[ prop ] !== null ) {
-                found = _findSetting( obj[ prop ], envName, propEnvStyle + '_' );
+                const found = _findSetting( obj[ prop ], envName, `${propEnvStyle}_` );
                 if ( found ) {
                     return found;
                 }
@@ -139,11 +133,10 @@ function _findSetting( obj, envName, prefix ) {
  * @return {(Number|String)}     [description]
  */
 function _convertNumbers( str ) {
-    var converted;
     if ( !str ) {
         return str;
     }
-    converted = Number( str );
+    const converted = Number( str );
     return !isNaN( converted ) ? converted : str;
 }
 
@@ -154,10 +147,9 @@ function _convertNumbers( str ) {
  * @param  {Number?} start start index
  * @return {boolean?}      the index or undefined
  */
-function _findNumberIndex( arr, start ) {
-    var i;
-    start = start || 0;
-    arr.some( function( val, index ) {
+function _findNumberIndex( arr, start = 0 ) {
+    let i;
+    arr.some( ( val, index ) => {
         if ( typeof val === 'number' && index >= start ) {
             i = index;
             return true;
@@ -173,7 +165,7 @@ function _findNumberIndex( arr, start ) {
  * @return {*}     empty clone of argument
  */
 function _getEmptyClone( obj ) {
-    var clone = JSON.parse( JSON.stringify( obj ) );
+    const clone = JSON.parse( JSON.stringify( obj ) );
     _emptyObjectProperties( clone );
 
     return clone;
@@ -186,7 +178,7 @@ function _getEmptyClone( obj ) {
  * @return {*}     emptied version of argument
  */
 function _emptyObjectProperties( obj ) {
-    for ( var prop in obj ) {
+    for ( const prop in obj ) {
         // if a simple array of string values
         if ( Array.isArray( obj[ prop ] ) && typeof obj[ prop ][ 0 ] === 'string' ) {
             obj[ prop ] = [];
@@ -202,8 +194,8 @@ function _emptyObjectProperties( obj ) {
  * Overrides any redis settings if a special enviroment URL variable is set.
  */
 function _setRedisConfigFromEnv() {
-    var redisMainUrl = process.env.ENKETO_REDIS_MAIN_URL;
-    var redisCacheUrl = process.env.ENKETO_REDIS_CACHE_URL;
+    const redisMainUrl = process.env.ENKETO_REDIS_MAIN_URL;
+    const redisCacheUrl = process.env.ENKETO_REDIS_CACHE_URL;
 
     if ( redisMainUrl ) {
         config.redis.main = _extractRedisConfigFromUrl( redisMainUrl );
@@ -220,13 +212,13 @@ function _setRedisConfigFromEnv() {
  * @return {{host: String, port: String, password:?String}}
  */
 function _extractRedisConfigFromUrl( redisUrl ) {
-    var parsedUrl = url.parse( redisUrl );
-    var password = parsedUrl.auth && parsedUrl.auth.split( ':' )[ 1 ] ? parsedUrl.auth.split( ':' )[ 1 ] : null;
+    const parsedUrl = url.parse( redisUrl );
+    const password = parsedUrl.auth && parsedUrl.auth.split( ':' )[ 1 ] ? parsedUrl.auth.split( ':' )[ 1 ] : null;
 
     return {
         host: parsedUrl.hostname,
         port: parsedUrl.port,
-        password: password
+        password
     };
 }
 
@@ -238,11 +230,11 @@ function _extractRedisConfigFromUrl( redisUrl ) {
  * @return {Array}
  */
 function getThemesSupported( themeList ) {
-    var themes = [];
+    const themes = [];
 
     if ( fs.existsSync( themePath ) ) {
-        fs.readdirSync( themePath ).forEach( function( file ) {
-            var matches = file.match( /^theme-([A-z-]+)\.css$/ );
+        fs.readdirSync( themePath ).forEach( file => {
+            const matches = file.match( /^theme-([A-z-]+)\.css$/ );
             if ( matches && matches.length > 1 ) {
                 if ( themeList !== undefined && themeList.length ) {
                     if ( themeList.indexOf( matches[ 1 ] ) !== -1 ) {
@@ -264,13 +256,11 @@ config[ 'version' ] = pkg.version;
 config[ 'themes supported' ] = getThemesSupported( config[ 'themes supported' ] );
 
 // detect supported languages
-config[ 'languages supported' ] = fs.readdirSync( languagePath ).filter( function( file ) {
-    return file.indexOf( '.' ) !== 0 && fs.statSync( path.join( languagePath, file ) ).isDirectory();
-} );
+config[ 'languages supported' ] = fs.readdirSync( languagePath ).filter( file => file.indexOf( '.' ) !== 0 && fs.statSync( path.join( languagePath, file ) ).isDirectory() );
 
 // if necessary, correct the base path to use for all routing
 if ( config[ 'base path' ] && config[ 'base path' ].indexOf( '/' ) !== 0 ) {
-    config[ 'base path' ] = '/' + config[ 'base path' ];
+    config[ 'base path' ] = `/${config[ 'base path' ]}`;
 }
 if ( config[ 'base path' ] && config[ 'base path' ].lastIndexOf( '/' ) === config[ 'base path' ].length - 1 ) {
     config[ 'base path' ] = config[ 'base path' ].substring( 0, config[ 'base path' ].length - 1 );
@@ -305,5 +295,5 @@ module.exports = {
         validatePage: config[ 'validate page' ],
         swipePage: config[ 'swipe page' ]
     },
-    getThemesSupported: getThemesSupported
+    getThemesSupported
 };
