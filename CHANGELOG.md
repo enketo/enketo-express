@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+
+##### Fixed:
+- Repeats with images become exponentially slower to load for each new repeat that is added.
+
 [1.61.4] - 2018-03-09
 ---------------------
 ##### Fixed:

@@ -143,6 +143,19 @@ function _setResetListener( survey ) {
     return Promise.resolve( survey );
 }
 
+/**
+ * Handles loading form media for newly added repeats.
+ *
+ * @param {[type]} survey [description]
+ */
+function _setRepeatListener( survey ) {
+    //Instantiate only once, after loadMedia has been completed (once)
+    survey.$form.on( 'addrepeat.enketo', function( event ) {
+        _loadMedia( survey, $( event.target ) );
+    } );
+    return Promise.resolve( survey );
+}
+
 function _swapMediaSrc( survey ) {
     survey.form = survey.form.replace( /(src="[^"]*")/g, 'data-offline-$1 src=""' );
 
@@ -187,7 +200,8 @@ function updateMedia( survey ) {
 
     // if survey.resources exists, the resources are available in the store
     if ( survey.resources ) {
-        return _loadMedia( survey );
+        return _loadMedia( survey )
+            .then( _setRepeatListener );
     }
 
     survey.resources = [];
@@ -209,6 +223,7 @@ function updateMedia( survey ) {
         // store any resources that were succesful
         .then( store.survey.update )
         .then( _loadMedia )
+        .then( _setRepeatListener )
         .catch( function( error ) {
             console.error( 'loadMedia failed', error );
             // Let the flow continue. 
@@ -264,11 +279,6 @@ function _loadMedia( survey, $target ) {
     //    console.log( 'revoking object URL to free up memory' );
     //    URL.revokeObjectURL( resourceUrl );
     // } );
-
-    survey.$form.on( 'addrepeat.enketo', function( event ) {
-        _loadMedia( survey, $( event.target ) );
-    } );
-
     return Promise.resolve( survey );
 }
 
