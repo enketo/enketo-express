@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Changed
 - In Markdown, make a distinction between paragraphs (2+ subsequent new lines) and simple new lines.
+- Positioning of comment widget icon next to question label.
+- Center media inside labels.
 
 ##### Fixed:
 - Repeats with images become exponentially slower to load for each new repeat that is added.
