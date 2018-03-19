@@ -19,7 +19,7 @@ function getErrorMessage( req, error ) {
 }
 
 module.exports = {
-    production( err, req, res ) {
+    production( err, req, res, next ) {
         const body = {
             code: err.status || 500,
             message: getErrorMessage( req, err )
@@ -32,7 +32,7 @@ module.exports = {
             res.render( 'error', body );
         }
     },
-    development( err, req, res ) {
+    development( err, req, res, next ) {
         const body = {
             code: err.status || 500,
             message: getErrorMessage( req, err ),
