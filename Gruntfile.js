@@ -24,7 +24,7 @@ module.exports = grunt => {
                     //nodeArgs: [ '--debug' ],
                     env: {
                         NODE_ENV: 'development',
-                        DEBUG: '*, -express:*, -send, -compression, -body-parser:*'
+                        DEBUG: '*, -express:*, -send, -compression, -body-parser:*, -puppeteer:*'
                     }
                 }
             }

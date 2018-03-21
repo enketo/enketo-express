@@ -6,47 +6,19 @@ var settings = {};
 var DEFAULT_MAX_SIZE = 5 * 1024 * 1024;
 var DEFAULT_LOGIN_URL = '/login';
 var DEFAULT_THANKS_URL = '/thanks';
-var settingsMap = [ {
-    q: 'return',
-    s: 'returnUrl'
-}, {
-    q: 'returnURL',
-    s: 'returnUrl'
-}, {
-    q: 'returnUrl',
-    s: 'returnUrl'
-}, {
-    q: 'touch',
-    s: 'touch'
-}, {
-    q: 'server',
-    s: 'serverUrl'
-}, {
-    q: 'serverURL',
-    s: 'serverUrl'
-}, {
-    q: 'serverUrl',
-    s: 'serverUrl'
-}, {
-    q: 'form',
-    s: 'xformUrl'
-}, {
-    q: 'id',
-    s: 'xformId'
-}, {
-    q: 'instanceId',
-    s: 'instanceId'
-}, {
-    q: 'instance_id',
-    s: 'instanceId'
-}, {
-    q: 'parentWindowOrigin',
-    s: 'parentWindowOrigin'
-} ];
+var settingsMap = [
+    { q: 'return', s: 'returnUrl' }, { q: 'returnURL', s: 'returnUrl' }, 'returnUrl',
+    { q: 'server', s: 'serverUrl' }, { q: 'serverURL', s: 'serverUrl' }, 'serverUrl',
+    { q: 'form', s: 'xformUrl' }, { q: 'id', s: 'xformId' },
+    'instanceId', { q: 'instance_id', s: 'instanceId' },
+    'parentWindowOrigin', 'print', 'format', 'landscape', 'scale', 'touch',
+];
 
 // rename query string parameters to settings, but only if they do not exist already
 settingsMap.forEach( function( obj ) {
-    if ( typeof queryParams[ obj.q ] !== 'undefined' && typeof settings[ obj.s ] === 'undefined' ) {
+    if ( typeof obj === 'string' && typeof queryParams[ obj ] !== 'undefined' && typeof settings[ obj ] === 'undefined' ) {
+        settings[ obj ] = queryParams[ obj ];
+    } else if ( typeof queryParams[ obj.q ] !== 'undefined' && typeof settings[ obj.s ] === 'undefined' ) {
         settings[ obj.s ] = queryParams[ obj.q ];
     }
 } );

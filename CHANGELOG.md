@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Added
+- Ability to directly obtain PDF of empty form or form with a record. See [apidocs.enketo.org](https://apidocs.enketo.org) (3 new endpoints).
+
 [1.61.5] - 2018-03-21
 ---------------------
 ##### Changed

@@ -132,6 +132,9 @@ describe( 'api', () => {
                         instance_id: instanceId,
                         return_url: ret,
                         go_to: goTo,
+                        format: test.format,
+                        margin: test.margin,
+                        landscape: test.landscape,
                         defaults: test.defaults,
                         parent_window_origin: test.parentWindowOrigin
                     } )
@@ -1133,6 +1136,63 @@ describe( 'api', () => {
                 },
                 offline: true
             },
+            // survey/view/pdf
+            {
+                endpoint: '/survey/view/pdf',
+                method: 'get',
+                auth: true,
+                id: 'invalidID',
+                instance: false,
+                status: 404,
+                offline: true
+            }, {
+                endpoint: '/survey/view/pdf',
+                method: 'post',
+                auth: true,
+                margin: '10px',
+                instance: false,
+                status: 400,
+                offline: true
+            }, {
+                endpoint: '/survey/view/pdf',
+                method: 'post',
+                auth: true,
+                margin: '10',
+                instance: false,
+                status: 400,
+                offline: true,
+                res: {
+                    property: 'message',
+                    expected: /Margin/
+                }
+            }, {
+                endpoint: '/survey/view/pdf',
+                method: 'post',
+                auth: true,
+                margin: '1in',
+                format: 'fake',
+                instance: false,
+                status: 400,
+                offline: true,
+                res: {
+                    property: 'message',
+                    expected: /Format/
+                }
+            }, {
+                endpoint: '/survey/view/pdf',
+                method: 'post',
+                auth: true,
+                margin: '1.1cm',
+                format: 'A4',
+                landscape: 'yes',
+                instance: false,
+                status: 400,
+                offline: true,
+                res: {
+                    property: 'message',
+                    expected: /Landscape/
+                }
+            },
             // instance/view
             {
                 endpoint: '/instance/view',
@@ -1169,6 +1229,31 @@ describe( 'api', () => {
                     expected: /\/view\/::[a-fA-F0-9]{32}\?instance_id=A$/
                 },
                 offline: true
+            },
+            // /instance/view/pdf
+            {
+                endpoint: '/instance/view/pdf',
+                method: 'post',
+                auth: true,
+                instance: false,
+                status: 400,
+                offline: true,
+                res: {
+                    property: 'message',
+                    expected: /Survey/
+                }
+            }, {
+                endpoint: '/instance/view/pdf',
+                method: 'post',
+                auth: true,
+                margin: '10px',
+                instance: true,
+                status: 400,
+                offline: true,
+                res: {
+                    property: 'message',
+                    expected: /Margin/
+                }
             },
             // return_url
             {
