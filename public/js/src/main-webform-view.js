@@ -92,6 +92,9 @@ function _init( formParts ) {
         } ).then( function( form ) {
             form.view.$.add( $buttons ).removeClass( 'hide' );
             $( 'head>title' ).text( $( '#form-title' ).text() );
+            if ( settings.print ) {
+                gui.applyPrintStyle();
+            }
         } );
     } );
 }

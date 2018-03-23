@@ -484,7 +484,7 @@ function _generateWebformUrls( id, req ) {
             queryParts = req.body.instance_id ? [ `instance_id=${req.body.instance_id}` ] : [];
             queryParts.push( 'print=true' );
             queryString = _generateQueryString( queryParts );
-            obj.pdf_url = `${baseUrl}${req.body.instance_id ? 'edit/' : ''}${idPartOnline}${queryString}`;
+            obj.pdf_url = `${baseUrl}${req.body.instance_id ? 'view/'+idPartView : idPartOnline}${queryString}`;
             break;
         case 'all':
             // non-iframe views
