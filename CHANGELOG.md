@@ -7,6 +7,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Ability to directly obtain PDF of empty form or form with a record. See [apidocs.enketo.org](https://apidocs.enketo.org) (3 new endpoints).
 
+##### Fixed
+- Print view of Grid Theme form in Pages mode doesn't properly stretch cells in the current page.
+- Markdown headers in Grid Theme are overlapping in print view.
+- Print view of Grid Theme doesn't correct width of last question in form.
+
 [1.61.5] - 2018-03-21
 ---------------------
 ##### Changed
