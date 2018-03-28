@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Print view of Grid Theme form in Pages mode doesn't properly stretch cells in the current page.
 - Markdown headers in Grid Theme are overlapping in print view.
 - Print view of Grid Theme doesn't correct width of last question in form.
+- If the form starts with a lengthy group, the print view shows only the form title on the first page.
 
 [1.61.5] - 2018-03-21
 ---------------------
