@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.63.0] - 2018-04-14
 ---------------------
 ##### Added
 - Portugese translation
@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Updated Spanish, German, Slovak, and Dutch translations.
 - Styling of + button to create a new repeated section.
+- Enketo ID generation is now creating a random string, and longer IDs.
 
 ##### Fixed
 - Add-repeat (+) button not aligned properly in Grid theme when no repeats exist.

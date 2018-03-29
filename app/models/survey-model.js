@@ -5,8 +5,6 @@ const client = require( 'redis' ).createClient( config.redis.main.port, config.r
     auth_pass: config.redis.main.password
 } );
 const pending = {};
-//randomized 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-const CHARS = 'Yp8oyU0HhFQiPz9KZ1SBGvdTqCM6XDnImkbxNOVLAsEcf5uRe347Wrtlj2awgJ';
 const debug = require( 'debug' )( 'survey-model' );
 
 // in test environment, switch to different db
@@ -140,32 +138,33 @@ function _updateProperties( id, survey ) {
 }
 
 function _addSurvey( openRosaKey, survey ) {
-    return new Promise( ( resolve, reject ) => {
-        client.incr( 'survey:counter', ( error, iterator ) => {
-            const id = _createEnketoId( iterator );
-            client.multi()
-                .hmset( `id:${id}`, {
-                    // explicitly set the properties that need to be saved
-                    // this will avoid accidentally saving e.g. transformation results and cookies
-                    openRosaServer: survey.openRosaServer,
-                    openRosaId: survey.openRosaId,
-                    submissions: 0,
-                    launchDate: new Date().toISOString(),
-                    active: true,
-                    // avoid storing string 'undefined'
-                    theme: survey.theme || ''
-                } )
-                .set( openRosaKey, id )
-                .exec( error => {
-                    delete pending[ openRosaKey ];
-                    if ( error ) {
-                        reject( error );
-                    } else {
-                        resolve( id );
-                    }
-                } );
+    // survey:counter no longer serves any purpose, after https://github.com/kobotoolbox/enketo-express/issues/481
+    return _createNewEnketoId()
+        .then( id => {
+            return new Promise( function( resolve, reject ) {
+                client.multi()
+                    .hmset( `id:${id}`, {
+                        // explicitly set the properties that need to be saved
+                        // this will avoid accidentally saving e.g. transformation results and cookies
+                        openRosaServer: survey.openRosaServer,
+                        openRosaId: survey.openRosaId,
+                        submissions: 0,
+                        launchDate: new Date().toISOString(),
+                        active: true,
+                        // avoid storing string 'undefined'
+                        theme: survey.theme || ''
+                    } )
+                    .set( openRosaKey, id )
+                    .exec( error => {
+                        delete pending[ openRosaKey ];
+                        if ( error ) {
+                            reject( error );
+                        } else {
+                            resolve( id );
+                        }
+                    } );
+            } );
         } );
-    } );
 }
 
 function incrSubmissions( id ) {
@@ -286,21 +285,31 @@ function _getActiveSurveys( openRosaIds ) {
         .then( surveys => surveys.filter( _nonEmpty ) );
 }
 
-function _createEnketoId( iterator ) {
-    let id = _num_to_base62( iterator );
-
-    while ( id.length < 4 ) {
-        id = CHARS[ 0 ] + id;
-    }
-    return id;
-}
-
-function _num_to_base62( n ) {
-    if ( n > 61 ) {
-        return _num_to_base62( Math.floor( n / 62 ) ) + CHARS[ n % 62 ];
-    } else {
-        return CHARS[ n ];
-    }
+/**
+ * Generates a new random Enketo ID that has not been used yet, or checks whether a provided id has not been used.
+ * 8 characters keeps the chance of collisions below about 10% until about 10,000,000 IDs have been generated
+ * 
+ * @param {string=} id This is optional, and only really included to write tests for collissions or a future "vanity ID" feature
+ * @param {number=} triesRemaining Avoid infinite loops when collissions become the norm.
+ */
+function _createNewEnketoId( id = utils.randomString( 8 ), triesRemaining = 10 ) {
+    return new Promise( ( resolve, reject ) => {
+        client.hgetall( `id:${id}`, ( error, obj ) => {
+            if ( error ) {
+                reject( error );
+            } else if ( obj ) {
+                if ( triesRemaining-- ) {
+                    resolve( _createNewEnketoId( undefined, triesRemaining ) );
+                } else {
+                    const error = new Error( 'Failed to create unique Enketo ID.' );
+                    error.status = 500;
+                    reject( error );
+                }
+            } else {
+                resolve( id );
+            }
+        } );
+    } );
 }
 
 function _ascendingLaunchDate( a, b ) {
@@ -327,5 +336,5 @@ module.exports = {
     getNumber: getNumberOfSurveys,
     getList: getListOfSurveys,
     incrementSubmissions: incrSubmissions,
-    createEnketoId: _createEnketoId
+    createNewEnketoId: _createNewEnketoId
 };

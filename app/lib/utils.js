@@ -97,17 +97,13 @@ function insecureAes192Decrypt( encrypted, pw ) {
     return decrypted;
 }
 
-function randomString( howMany, chars ) {
-    chars = chars || 'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
-    const rnd = crypto.randomBytes( howMany ),
-        value = new Array( howMany ),
-        len = chars.length;
+function randomString( howMany = 8, chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' ) {
+    const rnd = crypto.randomBytes( howMany );
 
-    for ( let i = 0; i < howMany; i++ ) {
-        value[ i ] = chars[ rnd[ i ] % len ];
-    }
-
-    return value.join( '' );
+    return new Array( howMany )
+        .fill() // create indices, so map can iterate
+        .map( ( val, i ) => chars[ rnd[ i ] % chars.length ] )
+        .join( '' );
 }
 
 function pickRandomItemFromArray( array ) {

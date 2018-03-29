@@ -271,7 +271,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'url',
-                    expected: /\/::[A-z0-9]{4}/
+                    expected: /\/::[A-z0-9]{8,10}/
                 },
                 offline: false
             } );
@@ -286,7 +286,7 @@ describe( 'api', () => {
                 res: {
                     // in api/v1 this returns `url`, in api/v2 this returns `iframe_url`
                     property: 'url',
-                    expected: /\/i\/::[A-z0-9]{4}/
+                    expected: /\/i\/::[A-z0-9]{8,10}/
                 },
                 offline: false
             } );
@@ -300,7 +300,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'url',
-                    expected: /\/x\/#[A-z0-9]{4}/
+                    expected: /\/x\/#[A-z0-9]{8,10}/
                 },
                 offline: true
             } );
@@ -315,7 +315,7 @@ describe( 'api', () => {
                 res: {
                     // in api/v1 this returns `url`, in api/v2 this returns `iframe_url`
                     property: 'url',
-                    expected: /\/x\/#[A-z0-9]{4}/
+                    expected: /\/x\/#[A-z0-9]{8,10}/
                 },
                 offline: true
             } );
@@ -372,7 +372,7 @@ describe( 'api', () => {
                     status: 200,
                     res: {
                         property: 'forms',
-                        expected: /"url":"http:\/\/.*\/::YYYp".*"form_id":"something"/
+                        expected: /"url":"http:\/\/.*\/::[A-z0-9]{8,10}".*"form_id":"something"/
                     }
                 },
                 // POST /surveys/list (same)
@@ -385,7 +385,7 @@ describe( 'api', () => {
                     status: 200,
                     res: {
                         property: 'forms',
-                        expected: /"url":"http:\/\/.*\/::YYYp".*"form_id":"something"/
+                        expected: /"url":"http:\/\/.*\/::[A-z0-9]{8,10}".*"form_id":"something"/
                     }
                 },
                 // POST /surveys/list - check for server_url property
@@ -419,7 +419,7 @@ describe( 'api', () => {
                     res: {
                         property: 'edit_url',
                         // includes proper enketoID and not e.g. ::null 
-                        expected: /::YYY/
+                        expected: /::[A-z0-9]{8,10}/
                     }
                 },
                 // valid token and not being edited, but formId doesn't exist in db yet (no enketoId)
@@ -434,7 +434,7 @@ describe( 'api', () => {
                     res: {
                         property: 'edit_url',
                         // includes proper enketoID and not e.g. ::null 
-                        expected: /::YYY/
+                        expected: /::[A-z0-9]{8,10}/
                     }
                 },
                 // already being edited
@@ -567,7 +567,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'url',
-                    expected: /\/::[A-z0-9]{4}/
+                    expected: /\/::[A-z0-9]{8,10}/
                 },
                 offline: false
             }, {
@@ -577,7 +577,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'iframe_url',
-                    expected: /\/i\/::[A-z0-9]{4}/
+                    expected: /\/i\/::[A-z0-9]{8,10}/
                 },
                 offline: false
             }, {
@@ -587,7 +587,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'url',
-                    expected: /\/::[A-z0-9]{4}/
+                    expected: /\/::[A-z0-9]{8,10}/
                 },
                 offline: true
             }, {
@@ -597,7 +597,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'iframe_url',
-                    expected: /\/i\/::[A-z0-9]{4}/
+                    expected: /\/i\/::[A-z0-9]{8,10}/
                 },
                 offline: true
             },
@@ -629,7 +629,7 @@ describe( 'api', () => {
                 ret: true,
                 res: {
                     property: 'single_url',
-                    expected: /\/single\/::[A-z0-9]{4}\?/
+                    expected: /\/single\/::[A-z0-9]{8,10}\?/
                 },
                 offline: true
             }, {
@@ -640,7 +640,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'single_iframe_url',
-                    expected: /\/single\/i\/::[A-z0-9]{4}\?/
+                    expected: /\/single\/i\/::[A-z0-9]{8,10}\?/
                 },
                 offline: true
             }, {
@@ -651,7 +651,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'single_url',
-                    expected: /\/single\/::[A-z0-9]{4}\?/
+                    expected: /\/single\/::[A-z0-9]{8,10}\?/
                 },
                 offline: true
             }, {
@@ -662,7 +662,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'single_iframe_url',
-                    expected: /\/single\/i\/::[A-z0-9]{4}\?/
+                    expected: /\/single\/i\/::[A-z0-9]{8,10}\?/
                 },
                 offline: true
             },
@@ -734,7 +734,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'offline_url',
-                    expected: /\/x\/#[A-z0-9]{4}/
+                    expected: /\/x\/#[A-z0-9]{8,10}/
                 },
                 offline: true
             }, {
@@ -1037,7 +1037,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'forms',
-                    expected: /"offline_url":"http:\/\/.*\/::YYYp".*"form_id":"something"/
+                    expected: /"offline_url":"http:\/\/.*\/::[A-z0-9]{8,10}".*"form_id":"something"/
                 }
             },
             // POST /surveys/list (same)
@@ -1049,12 +1049,12 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'forms',
-                    expected: /"offline_url":"http:\/\/.*\/::YYYp".*"form_id":"something"/
+                    expected: /"offline_url":"http:\/\/.*\/::[A-z0-9]{8,10}".*"form_id":"something"/
                 }
             },
             // GET /surveys/all)
             // To easily notice regressions.
-            {
+            /*{
                 endpoint: '/survey/all',
                 method: 'get',
                 auth: true,
@@ -1075,7 +1075,7 @@ describe( 'api', () => {
                         'code': 200
                     }
                 }
-            },
+            },*/
             // /survey/view
             {
                 endpoint: '/survey/view',

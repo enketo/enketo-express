@@ -4,7 +4,6 @@ process.env.NODE_ENV = 'test';
 
 const Promise = require( 'lie' );
 const chai = require( 'chai' );
-const expect = chai.expect;
 const chaiAsPromised = require( 'chai-as-promised' );
 const redis = require( 'redis' );
 const config = require( '../../app/models/config-model' ).server;
@@ -14,6 +13,8 @@ const client = redis.createClient( config.redis.main.port, config.redis.main.hos
 } );
 
 chai.use( chaiAsPromised );
+
+const expect = chai.expect;
 
 // help function to ensure subsequent database entries don't have the exact same timestamp
 // redis is fast...
@@ -70,28 +71,29 @@ describe( 'Survey Model', () => {
             return expect( model.set( survey ) ).to.eventually.be.rejected;
         } );
 
-        it( 'returns an enketo id if succesful', () => // the algorithm for the very first survey to be created returns YYYp
-            expect( model.set( survey ) ).to.eventually.equal( 'YYYp' ) );
+        it( 'returns an enketo id if succesful', () =>
+            expect( model.set( survey ) ).to.eventually.match( /^[A-z0-9]{8,10}$/ ) );
 
         it( 'returns a different enketo id if the capitalization of the OpenRosa Form ID changes', () => {
             const surveyDifferent = {
                 openRosaId: 'Survey',
                 openRosaServer: survey.openRosaServer
             };
-            // the algorithm for the second survey to be created returns YYY8
             return Promise.all( [
-                expect( model.set( survey ) ).to.eventually.equal( 'YYYp' ),
-                expect( model.set( surveyDifferent ) ).to.eventually.equal( 'YYY8' ),
-            ] );
+                model.set( survey ),
+                model.set( surveyDifferent )
+            ] ).then( results => {
+                return expect( results[ 0 ] ).not.to.equal( results[ 1 ] );
+            } );
         } );
 
         it( 'returns an enketo id when the survey includes a theme property', () => {
             survey.theme = 'gorgeous';
-            return expect( model.set( survey ) ).to.eventually.equal( 'YYYp' );
+            return expect( model.set( survey ) ).to.eventually.match( /^[A-z0-9]{8,10}$/ );
         } );
 
         it( 'drops nearly simultaneous set requests to avoid db corruption', () => Promise.all( [
-            expect( model.set( survey ) ).to.eventually.equal( 'YYYp' ),
+            expect( model.set( survey ) ).to.eventually.match( /^[A-z0-9]{8,10}$/ ),
             expect( model.set( survey ) ).to.eventually.be.rejected,
             expect( model.set( survey ) ).to.eventually.be.rejected
         ] ) );
@@ -151,7 +153,7 @@ describe( 'Survey Model', () => {
                 return model.update( survey );
             } ).then( model.get );
             return Promise.all( [
-                expect( promise1 ).to.eventually.have.length( 4 ),
+                expect( promise1 ).to.eventually.have.length( 8 ),
                 expect( promise2 ).to.eventually.be.rejected
             ] );
         } );
@@ -254,8 +256,8 @@ describe( 'Survey Model', () => {
             const promise1 = model.set( survey ),
                 promise2 = promise1.then( () => model.getId( survey ) );
             return Promise.all( [
-                expect( promise1 ).to.eventually.equal( 'YYYp' ),
-                expect( promise2 ).to.eventually.equal( 'YYYp' )
+                expect( promise1 ).to.eventually.match( /^[A-z0-9]{8,10}$/ ),
+                expect( promise2 ).to.eventually.match( /^[A-z0-9]{8,10}$/ )
             ] );
         } );
 
@@ -266,7 +268,7 @@ describe( 'Survey Model', () => {
                 return model.getId( survey );
             } );
             return Promise.all( [
-                expect( promise1 ).to.eventually.equal( 'YYYp' ),
+                expect( promise1 ).to.eventually.match( /^[A-z0-9]{8,10}$/ ),
                 expect( promise2 ).to.eventually.be.fulfilled.and.deep.equal( null )
             ] );
         } );
@@ -364,22 +366,21 @@ describe( 'Survey Model', () => {
                 .then( () => model.set( survey3 ) )
                 .then( _wait1ms )
                 .then( () => model.set( survey4 ) )
-                .then( () => model.getList( server ) );
+                .then( () => model.getList( server ) )
+                .then( list => list.map( item => ( { openRosaServer: item.openRosaServer, openRosaId: item.openRosaId } ) ) );
+
+
             return expect( getList ).to.eventually.deep.equal( [ {
                 openRosaServer: server,
-                enketoId: 'YYYp',
                 openRosaId: 'a'
             }, {
                 openRosaServer: server,
-                enketoId: 'YYY8',
                 openRosaId: 'b'
             }, {
                 openRosaServer: `${server}/deep`,
-                enketoId: 'YYYo',
                 openRosaId: 'c'
             } ] );
         } );
-
 
         it( 'obtains the list of active surveys only', () => {
             const getList = model.set( survey1 )
@@ -394,33 +395,72 @@ describe( 'Survey Model', () => {
                     openRosaId: survey1.openRosaId,
                     active: false
                 } ) )
-                .then( () => model.getList( server ) );
-            return expect( getList ).to.eventually.deep.equal( [ {
-                openRosaServer: server,
-                enketoId: 'YYY8',
-                openRosaId: 'b'
-            }, {
-                openRosaServer: `${server}/deep`,
-                enketoId: 'YYYo',
-                openRosaId: 'c'
-            } ] );
+                .then( () => model.getList( server ) )
+                .then( list => list.map( item => item.openRosaId ) );
+
+            return expect( getList ).to.eventually.deep.equal( [ 'b', 'c' ] );
         } );
     } );
 
     describe( 'creates enketoIds', () => {
+        const survey1 = {
+            openRosaId: 'a',
+            openRosaServer: 'https://kobotoolbox.org/enketo'
+        };
+
         it( 'without duplicates', () => {
             const ids = [];
-            const duplicateIds = [];
+            const NUM = 1000;
+            let tests = Promise.resolve();
 
-            for ( let i = 0; i < 1000; i++ ) {
-                const id = model.createEnketoId( i );
-                if ( ids.indexOf( id ) !== -1 ) {
-                    duplicateIds.push( id );
-                } else {
-                    ids.push( id );
-                }
+            for ( let i = 0; i < NUM; i++ ) {
+                tests = tests.then( id => {
+                    if ( ids.indexOf( id ) === -1 ) {
+                        ids.push( id );
+                    }
+                    return model.createNewEnketoId();
+                } );
             }
-            expect( duplicateIds ).to.deep.equal( [] );
+
+            const result = tests.then( () => ids );
+
+            return expect( result ).to.eventually.have.lengthOf( NUM );
+        } );
+
+        // Collission without auto-regeneration of ID.
+        it( 'throws when, an already-used ID is forced', () => {
+            const test = () => {
+                return model.set( survey1 )
+                    .then( id => {
+                        return model.createNewEnketoId( id, 0 );
+                    } );
+            };
+            return expect( test() ).to.be.rejectedWith( /Failed to create/ );
+        } );
+
+        // This tests the loop in createEnketoId when a collission occurs.
+        it( 'when an already-used ID is merely suggested', () => {
+            const test = () => {
+                return model.set( survey1 )
+                    .then( id => {
+                        return model.createNewEnketoId( id );
+                    } );
+            };
+            return expect( test() ).to.eventually.match( /[A-z0-9]{8,10}/ );
+        } );
+
+        // This tests the loop in createEnketoId when a collission occurs.
+        it( 'when an already-used ID is merely suggested', () => {
+            const test = () => {
+                let suggestedId;
+                return model.set( survey1 )
+                    .then( id => {
+                        suggestedId = id;
+                        return model.createNewEnketoId( id );
+                    } )
+                    .then( newId => newId && newId !== suggestedId );
+            };
+            return expect( test() ).to.eventually.equal( true );
         } );
 
     } );
