@@ -126,6 +126,9 @@ function getInstance( req, res, next ) {
                 .then( survey => {
                     // check if found instance actually belongs to the form
                     if ( utils.getOpenRosaKey( survey ) === survey.openRosaKey ) {
+                        // Change URLs of instanceAttachments to local URLs
+                        Object.keys( survey.instanceAttachments ).forEach( key => survey.instanceAttachments[ key ] = utils.toLocalMediaUrl( survey.instanceAttachments[ key ] ) );
+
                         res.json( {
                             instance: survey.instance,
                             instanceAttachments: survey.instanceAttachments

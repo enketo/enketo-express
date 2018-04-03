@@ -1,4 +1,5 @@
 const crypto = require( 'crypto' );
+const config = require( '../models/config-model' ).server;
 // var debug = require( 'debug' )( 'utils' );
 
 /** 
@@ -147,6 +148,18 @@ function areOwnPropertiesEqual( a, b ) {
     return true;
 }
 
+/**
+ * Converts a url to a local (proxied) url.
+ *
+ * @param  {string} url The url to convert.
+ * @return {string}     The converted url.
+ */
+function toLocalMediaUrl( url ) {
+    const localUrl = `${config[ 'base path' ]}/media/get/${url.replace( /(https?):\/\//, '$1/' )}`;
+    return localUrl;
+}
+
+
 module.exports = {
     getOpenRosaKey,
     getXformsManifestHash,
@@ -157,5 +170,6 @@ module.exports = {
     pickRandomItemFromArray,
     areOwnPropertiesEqual,
     insecureAes192Decrypt,
-    insecureAes192Encrypt
+    insecureAes192Encrypt,
+    toLocalMediaUrl
 };

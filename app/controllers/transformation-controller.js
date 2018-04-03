@@ -157,7 +157,7 @@ function _getMediaMap( manifest ) {
         manifest.forEach( file => {
             mediaMap = mediaMap ? mediaMap : {};
             if ( file.downloadUrl ) {
-                mediaMap[ file.filename ] = _toLocalMediaUrl( file.downloadUrl );
+                mediaMap[ file.filename ] = utils.toLocalMediaUrl( file.downloadUrl );
             }
         } );
     }
@@ -186,17 +186,6 @@ function _replaceMediaSources( survey ) {
     }
 
     return survey;
-}
-
-/**
- * Converts a url to a local (proxied) url.
- *
- * @param  {string} url The url to convert.
- * @return {string}     The converted url.
- */
-function _toLocalMediaUrl( url ) {
-    const localUrl = `${config[ 'base path' ]}/media/get/${url.replace( /(https?):\/\//, '$1/' )}`;
-    return localUrl;
 }
 
 function _checkQuota( survey ) {

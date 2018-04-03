@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Download filename may change in filepicker/draw widget if a record with media files is loaded, if the file is not served with the correct name.
+
 [1.62.0] - 2018-04-03
 ---------------------
 ##### Added
