@@ -10,7 +10,6 @@ const isArray = require( 'lodash/isArray' );
 const express = require( 'express' );
 const url = require( 'url' );
 const router = express.Router();
-const config = require( '../models/config-model' ).server;
 
 // var debug = require( 'debug' )( 'transformation-controller' );
 
