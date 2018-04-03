@@ -2,10 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.62.0] - 2018-04-03
 ---------------------
 ##### Added
 - Ability to directly obtain PDF of empty form or form with a record. See [apidocs.enketo.org](https://apidocs.enketo.org) (3 new endpoints).
+
+##### Changed
+- Annotate widget will now no longer allow drawing until an image has been uploaded.
 
 ##### Fixed
 - Print view of Grid Theme form in Pages mode doesn't properly stretch cells in the current page.
@@ -13,6 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Print view of Grid Theme doesn't correct width of last question in form.
 - If the form starts with a lengthy group, the print view shows only the form title on the first page.
 - Loading drawings from existing records, results in blank canvas after window resizing.
+- The image map widget shows 'SVG not found error' in Firefox sometimes, and if so, it fails to scale the image.
 
 [1.61.5] - 2018-03-21
 ---------------------
