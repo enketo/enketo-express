@@ -113,7 +113,7 @@ function swapTheme( formParts ) {
     var $styleSheets = $( 'link[rel=stylesheet][href*=theme-]' );
     var matches = /\/theme-([A-z]+)(\.print)?\.css/.exec( $styleSheets.eq( 0 ).attr( 'href' ) );
     var currentTheme = matches !== null ? matches[ 1 ] : null;
-    
+
     return new Promise( function( resolve ) {
         if ( theme && theme !== currentTheme && settings.themesSupported.some( function( supportedTheme ) {
                 return theme === supportedTheme;
