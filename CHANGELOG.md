@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Changed
+- Loading screen styling.
+
 ##### Fixed
 - Download filename may change in filepicker/draw widget if a record with media files is loaded, if the file is not served with the correct name.
 

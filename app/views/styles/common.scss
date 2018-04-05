@@ -1,0 +1,82 @@
+@import "component/mixins";
+
+// These styles are theme-independent (or should become so) and are loaded separately to avoid flickering during theme-switching.
+html {
+    // For some reason a height of 100% causes the body to not extend to the bottom
+    // of the form. Setting height to auto fixes this.
+    // Both enketo-core and foundation set this to 100%, which is the common approach.
+    //height: auto; // to avoid revealing the side-slider in direction rtl when scrolling horizontally
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    overflow-x: hidden;
+    margin: 0;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 1.3s ease;
+}
+
+// TODO: obsolete?
+progress {
+    display: block;
+    margin: 10px auto;
+}
+
+// TODO: obsolete?
+.preview progress {
+    margin: 80px auto;
+}
+
+.main-loader {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center; //padding-top: 50px;
+    &.fail {
+        .main-loader__image {
+            border: transparent;
+            animation: none;
+        }
+    }
+}
+
+.main-loader__image {
+    @include loader-image(100px);
+}
+
+// avoid flickering during loading
+.main-loader {
+    ~.main,
+    ~.side-slider {
+        display: none;
+    }
+}
+
+.loader-animation-small {
+    @include loader-image(50px);
+}
+
+// TODO: obsolete?
+.page-break {
+    display: none;
+}
+
+.log {
+    word-break: break-all;
+}
+
+
+//IE11 fixes:
+@media all and (-ms-high-contrast: none),
+(-ms-high-contrast: active) {
+    body {
+        height: 100vh;
+    }
+    .main-loader {
+        //flex-basis: auto;
+        //flex-shrink: 0;
+    }
+}

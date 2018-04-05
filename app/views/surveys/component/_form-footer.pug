@@ -7,18 +7,18 @@ section.form-footer
             input.ignore(type='checkbox', name='draft')
             span.option-label= t('formfooter.savedraft.label')
       if type === 'fs'
-        button#close-form.btn.btn-default.hide #{t('alert.default.button')}
-        button#finish-form.btn.btn-primary.hide
+        button#close-form.btn.btn-default #{t('alert.default.button')}
+        button#finish-form.btn.btn-primary
           i.icon.icon-check= ' '
           | #{t('formfooter.complete.btn')}
       else if type === 'preview'
-        button#validate-form.btn.btn-primary.hide
+        button#validate-form.btn.btn-primary
           i.icon.icon-check= ' '
           | #{t('formfooter.validate.btn')}
       else if type === 'view'
         button#close-form.btn.btn-default.hide #{t('alert.default.button')}
       else
-        button#submit-form.btn.btn-primary.hide
+        button#submit-form.btn.btn-primary
           i.icon.icon-check= ' '
           | #{t('formfooter.submit.btn')}
       a.btn.btn-primary.next-page(href="#")= t('form.pages.next')

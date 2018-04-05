@@ -110,12 +110,16 @@ function setEventHandlers() {
 
 function swapTheme( formParts ) {
     var theme = formParts.theme;
+    var $styleSheets = $( 'link[rel=stylesheet][href*=theme-]' );
+    var matches = /\/theme-([A-z]+)(\.print)?\.css/.exec( $styleSheets.eq( 0 ).attr( 'href' ) );
+    var currentTheme = matches !== null ? matches[ 1 ] : null;
+    
     return new Promise( function( resolve ) {
-        if ( theme && settings.themesSupported.some( function( supportedTheme ) {
+        if ( theme && theme !== currentTheme && settings.themesSupported.some( function( supportedTheme ) {
                 return theme === supportedTheme;
             } ) ) {
             var $replacementSheets = [];
-            var $styleSheets = $( 'link[rel=stylesheet][href*=theme-]' ).each( function() {
+            $styleSheets.each( function() {
                 $replacementSheets.push( $( this.outerHTML.replace( /(href=.*\/theme-)[A-z]+((\.print)?\.css)/, '$1' + theme + '$2' ) ) );
             } );
 

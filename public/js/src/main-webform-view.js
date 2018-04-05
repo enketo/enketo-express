@@ -11,8 +11,8 @@ var settings = require( './module/settings' );
 var connection = require( './module/connection' );
 var translator = require( './module/translator' );
 var t = translator.t;
-var $loader = $( '.form__loader' );
-var $buttons = $( '.form-header__button--print, button#close-form' );
+var $loader = $( 'body > .main-loader' );
+var $formheader = $( '.main > .paper > .form-header' );
 var survey = {
     enketoId: settings.enketoId,
     instanceId: settings.instanceId
@@ -81,7 +81,7 @@ function _convertToReadonly( formParts ) {
 }
 
 function _init( formParts ) {
-    $loader.replaceWith( formParts.form );
+    $formheader.after( formParts.form );
     translator.localize( document.querySelector( 'form.or' ) );
     $( document ).ready( function() {
         controller.init( 'form.or:eq(0)', {
@@ -89,8 +89,8 @@ function _init( formParts ) {
             instanceStr: formParts.instance,
             external: formParts.externalData,
             instanceAttachments: formParts.instanceAttachments,
-        } ).then( function( form ) {
-            form.view.$.add( $buttons ).removeClass( 'hide' );
+        } ).then( function() {
+            $loader.remove();
             $( 'head>title' ).text( $( '#form-title' ).text() );
             if ( settings.print ) {
                 gui.applyPrintStyle();

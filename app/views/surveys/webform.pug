@@ -2,6 +2,7 @@ extends ../layout
 
 block style
   - var media = print ? 'all' : 'print';
+  link(rel='stylesheet', media='all', type='text/css' href=`${basePath}/css/common.css`)
   link(rel='stylesheet', media='all', type='text/css' href=`${basePath}/css/theme-${defaultTheme}.css`) 
   link(rel='stylesheet', media=`${media}`, type='text/css' href=`${basePath}/css/theme-${defaultTheme}.print.css`) 
 
@@ -14,13 +15,12 @@ block script
  
 block content
   include component/_notification
+  .main-loader
+    .main-loader__image
   .main
     article.paper
       include component/_form-header
       | !{form}
-      unless form
-        .form__loader
-          .form__loader__image
       include component/_form-footer
   if manifest
     include component/_side-slider

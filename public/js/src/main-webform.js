@@ -18,8 +18,8 @@ var utils = require( './module/utils' );
 var formCache = require( './module/form-cache' );
 var appCache = require( './module/application-cache' );
 
-var $loader = $( '.form__loader' );
-var $buttons = $( '.form-header__button--print, button#validate-form, button#submit-form' );
+var $loader = $( 'body > .main-loader' );
+var $formheader = $( '.main > .paper > .form-header' );
 var survey = {
     enketoId: settings.enketoId,
     serverUrl: settings.serverUrl,
@@ -54,8 +54,8 @@ if ( settings.offline ) {
     translator.init( survey )
         .then( connection.getFormParts )
         .then( translator.init )
-        .then( _addBranding )
         .then( _swapTheme )
+        .then( _addBranding )
         .then( _init )
         .then( connection.getMaximumSubmissionSize )
         .then( _updateMaxSizeSetting )
@@ -184,7 +184,7 @@ function _init( formParts ) {
 
     return new Promise( function( resolve, reject ) {
         if ( formParts && formParts.form && formParts.model ) {
-            $loader.replaceWith( formParts.form );
+            $formheader.after( formParts.form );
             translator.localize( document.querySelector( 'form.or' ) );
             $( document ).ready( function() {
                 // TODO pass $form as first parameter?
@@ -194,8 +194,7 @@ function _init( formParts ) {
                     instanceStr: _prepareInstance( formParts.model, settings.defaults ),
                     external: formParts.externalData,
                 } ).then( function( form ) {
-
-                    form.view.$.add( $buttons ).removeClass( 'hide' );
+                    $loader.remove();
                     $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
                     formParts.$form = form.view.$;
                     if ( settings.print ) {

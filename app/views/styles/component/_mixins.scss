@@ -10,8 +10,9 @@
     transform: translate($x, $y);
 }
 
-@mixin loader-image($loader-size) {
+@mixin loader-image($loader-size, $brand-primary-color: #ccc) {
     border: ($loader-size / 10) solid $brand-primary-color;
+    transition: border-color 1.3s ease;
     border-radius: $loader-size;
     height: $loader-size;
     width: $loader-size;
