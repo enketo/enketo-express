@@ -189,6 +189,11 @@
         "admin": "Contacteer de enquete administrateur aub.",
         "support": "Contacteer __supportEmail__ alsjeblieft."
     },
+    "drawwidget": {
+        "annotation": "bestand en tekening",
+        "drawing": "tekening",
+        "signature": "handtekening"
+    },
     "enketo": {
         "power": "Powered by"
     },
@@ -200,7 +205,10 @@
         "instancenotfound": "Record niet gevonden. Het kan verlopen zijn.",
         "invalidediturl": "Niet een geldig edit URL",
         "loadfailed": "Kon __resource__ niet laden",
-        "notfoundinformlist": "Enquete met ID __formId__ niet gevonden in /formList",
+        "notfoundinformlist": [
+            "Oeps, deze vorm bestaat niet (meer). Waarschijnlijk heeft de eigenaar van het formulier het verwijderd, gearchiveerd of uitgeschakeld. Neem contact op met de eigenaar van het formulier om te bevestigen.",
+            "Gedetailleerde error: Formulier met ID __formId__ niet gevonden in / formList."
+        ],
         "pagenotfound": "Pagina niet gevonden",
         "surveyidnotactive": "Enquete met dit ID is niet langer aktief",
         "surveyidnotfound": "Enquete met dit ID niet gevonden",
@@ -208,6 +216,14 @@
     },
     "feedback": {
         "header": "Informatie"
+    },
+    "filepicker": {
+        "file": "bestand",
+        "notFound": "Bestand __existing__ kan niet gevonden worden (ongewijzigd laten als het al is verzonden en u het wilt behouden).",
+        "placeholder": "Klik hier om het bestand te uploaden. (<__maxSize__)",
+        "resetWarning": "Hiermee wordt de __item__ verwijderd. Weet je zeker dat je dit wilt doen?",
+        "toolargeerror": "Bestand te groot (> __maxSize__)",
+        "waitingForPermissions": "Wachten op gebruiker toestemming."
     },
     "form": {
         "chooseLanguage": "Kies een Taal",
@@ -244,11 +260,15 @@
         "latitude": "breedtegraad (x.y °)",
         "longitude": "lengtegraad (x.y °)",
         "points": "punten",
+        "removePoint": "Hiermee wordt het huidige GPS coordinaat volledig verwijderd uit de lijst met coordinaten en kan dit niet ongedaan worden gemaakt. Weet je zeker dat je dit wilt doen?",
         "searchPlaceholder": "zoek naar plaats of adres"
     },
     "here": "hier",
     "home": {
         "msg": "__appTitle__ werkt! De Enketo enquetes zijn vanaf de __serverName__ installatie toegankelijk."
+    },
+    "imagemap": {
+        "svgNotFound": "SVG-afbeelding kan niet worden gevonden"
     },
     "langs": {
         "ar": "Arabisch",
@@ -267,6 +287,7 @@
         "lo": "Laotiaans",
         "nl": "Nederlands",
         "no": "Noorweegs",
+        "pl": "Pools",
         "ro": "Roemeens",
         "sk": "Slowaaks",
         "supported": "Talen ondersteund:",
