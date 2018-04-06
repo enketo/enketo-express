@@ -44,7 +44,7 @@
             "msg": "Eine neue Version dieser Anwendung wurde heruntergeladen. Aktualisieren Sie diese Seite, um die aktualisierte Version zu laden."
         },
         "gotonotfound": {
-            "msg": "Failed to find question \"__path__\" in form. Is the reference to this question correct?"
+            "msg": "Frage \"__path__\" in Formular nicht gefunden.  Ist der Verweis auf diese Frage korrekt?"
         },
         "loaderror": {
             "editadvice": "Es wird empfohlen, diesen Eintrag nicht zu bearbeiten bis dieser Fehler behoben wurde.",
@@ -189,6 +189,11 @@
         "admin": "Kontaktieren Sie den Ersteller der Umfrage bitte.",
         "support": "Bitte kontaktieren Sie __supportEmail__."
     },
+    "drawwidget": {
+        "annotation": "Datei und Zeichnung",
+        "drawing": "Zeichnung",
+        "signature": "Unterschrift"
+    },
     "enketo": {
         "power": "Bereitgestellt von"
     },
@@ -200,7 +205,10 @@
         "instancenotfound": "Datensatz nicht vorhanden. Er ist wahrscheinlich abgelaufen.",
         "invalidediturl": "Keine gültige Bearbeitungs-URL",
         "loadfailed": "Fehler beim laden __resource__",
-        "notfoundinformlist": "Formular mit ID __formId__ wurde nicht in /formList gefunden",
+        "notfoundinformlist": [
+            "Oops, dieses Formular existiert nicht mehr. Wahrscheinlich wurde es von Besitzer gelöscht, archiviert, oder deaktiviert. Bitte kontaktieren sie zur Bestätigung den Besitzer des Formulars.",
+            "Fehlerdetails: Formular mit ID __formId__ wurde nicht in /formList gefunden."
+        ],
         "pagenotfound": "Seite nicht gefunden",
         "surveyidnotactive": "Umfrage mit dieser ID ist nicht mehr aktiv",
         "surveyidnotfound": "Umfrage mit dieser ID nicht gefunden",
@@ -208,6 +216,14 @@
     },
     "feedback": {
         "header": "Information"
+    },
+    "filepicker": {
+        "file": "Datei",
+        "notFound": "Datei __existing__ konnte nicht gefunden werden (lassen sie es unverändert, wenn Sie bereits abgeschickt haben und sie es behalten wollen).",
+        "placeholder": "Hier klicken um die Datei hochzuladen. (< __maxSize__)",
+        "resetWarning": "Diese Handlung wird das __item__ entfernen. Sind Sie sicher, dass Sie dies tun wollen?",
+        "toolargeerror": "Datei ist zu groß  (> __maxSize__)",
+        "waitingForPermissions": "Warten auf Benutzerberechtigungen."
     },
     "form": {
         "chooseLanguage": "Sprache auswählen",
@@ -244,11 +260,15 @@
         "latitude": "Breite (x.y °)",
         "longitude": "Länge (x.y °)",
         "points": "Punkte",
+        "removePoint": "Diese Handlung wird den aktuellen Geopunkt von den Geopunktliste unwiderrufbar entfernen. Sind Sie sicher, dass Sie dies tun wollen?",
         "searchPlaceholder": "Suche nach dem Ort oder Adresse"
     },
     "here": "hier",
     "home": {
         "msg": "__appTitle__ läuft! Bitte besuchen Sie Enketo Formulare von Ihrer __serverName__ Installation."
+    },
+    "imagemap": {
+        "svgNotFound": "SVG Bild konnte nicht gefunden werden"
     },
     "langs": {
         "ar": "Arabisch",
@@ -267,6 +287,7 @@
         "lo": "Lao",
         "nl": "Niederländisch",
         "no": "Norwegisch",
+        "pl": "Polnisch",
         "ro": "Rumänisch",
         "sk": "Slowakisch",
         "supported": "Unterstützte Sprachen:",

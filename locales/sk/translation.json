@@ -1,6 +1,6 @@
 {
     "advanced": {
-        "flushdb": "Vymazať Úložisko"
+        "flushdb": "Vyčistiť Úložisko"
     },
     "alert": {
         "addtohomescreen": {
@@ -44,7 +44,7 @@
             "msg": "Nová verzia tohto formulára bola stiahnutá. Obnovte túto stránku pre načítanie aktualizovanej verzie."
         },
         "gotonotfound": {
-            "msg": "Failed to find question \"__path__\" in form. Is the reference to this question correct?"
+            "msg": "Nepodarilo sa nájsť otázku \"__path__\" vo formulári. Je odkaz na túto otázku správny?"
         },
         "loaderror": {
             "editadvice": "Odporúča sa neupravovať tento záznam kým sa to nevyrieši.",
@@ -189,6 +189,11 @@
         "admin": "Obráťte sa prosím na správcu prieskumu.",
         "support": "Kontaktujte __supportEmail__ prosím."
     },
+    "drawwidget": {
+        "annotation": "súbor a kresba",
+        "drawing": "kresba",
+        "signature": "podpis"
+    },
     "enketo": {
         "power": "Bežiace na"
     },
@@ -200,7 +205,10 @@
         "instancenotfound": "Záznam nie je k dispozícii. Môže to byť spôsobené tým že expiroval.",
         "invalidediturl": "Neplatná URL pre úpravu",
         "loadfailed": "Nepodarilo sa načítať __resource__",
-        "notfoundinformlist": "Formulár s ID __formId__ nebol nájdený v /formList",
+        "notfoundinformlist": [
+            "Oops, tento formulár už neexistuje. S veľkou pravdepodobnosťou ho vlastník formuláru vymazal, archivoval, alebo zakázal. Prosím, kontaktuje vlastníka formuláru pre potvrdenie.",
+            "Detail chyby: Formulár s ID __formId__ nebol nájdený v /formList"
+        ],
         "pagenotfound": "Stránka nebola Nájdená",
         "surveyidnotactive": "Prieskum s týmto ID už nie je aktívny",
         "surveyidnotfound": "Prieskum s týmto ID nebol nájdený",
@@ -208,6 +216,14 @@
     },
     "feedback": {
         "header": "Infrormácia"
+    },
+    "filepicker": {
+        "file": "súbor",
+        "notFound": "Súbor __existing__ sa nepodarilo nájsť (ponechajte nezmenené ak už bol odoslaný a chcete ho ponechať).",
+        "placeholder": "Kliknite sem pre nahranie súboru. (< __maxSize__)",
+        "resetWarning": "Touto akciou odstránite __item__. Ste si istý že toto chcete urobiť?",
+        "toolargeerror": "Súbor je príliš veľký (> __maxSize__)",
+        "waitingForPermissions": "Čaká sa na užívateľské oprávnenia."
     },
     "form": {
         "chooseLanguage": "Vyberte Jazyk",
@@ -244,11 +260,15 @@
         "latitude": "zemepisná šírka (x.y °)",
         "longitude": "zemepisná dĺžka (x.y °)",
         "points": "body",
+        "removePoint": "Touto akciou úplne a nenávratne odstránite súčasný geolokačný bod z listu geolokacných bodov. Ste si istý že toto chcete urobiť.",
         "searchPlaceholder": "hľadanie miesta alebo adresy"
     },
     "here": "tu",
     "home": {
         "msg": "__appTitle__ beží! Prosím pristupujte k Enketo formulárom z inštalácie vašeho __serverName__ ."
+    },
+    "imagemap": {
+        "svgNotFound": "SVG obrázok sa nepodarilo nájsť"
     },
     "langs": {
         "ar": "Arabčina",
@@ -267,6 +287,7 @@
         "lo": "Laoština",
         "nl": "Holandčina ",
         "no": "Nórčina ",
+        "pl": "Poľština",
         "ro": "Rumunčina",
         "sk": "Slovenčina",
         "supported": "Podporované jazyky:",
