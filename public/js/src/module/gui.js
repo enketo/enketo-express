@@ -424,14 +424,38 @@ function promptPrintSettings( ignore, actions ) {
 }
 
 function applyPrintStyle() {
-    if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
-        var paper = { format: settings.format, landscape: settings.landscape, scale: settings.scale, margin: settings.margin };
-        printHelper.fixGrid( paper );
-    }
-    // allow some time for repainting
-    setTimeout( function() {
-        window.printReady = true;
-    }, 300 );
+    imagesLoaded()
+        .then( function() {
+            if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
+                var paper = { format: settings.format, landscape: settings.landscape, scale: settings.scale, margin: settings.margin };
+                return printHelper.fixGrid( paper );
+            }
+        } )
+        .then( function() {
+            // allow some time for repainting
+            return new Promise( function( resolve ) {
+                setTimeout( resolve, 300 );
+            } );
+        } )
+        .then( function() {
+            window.printReady = true;
+        } )
+        .catch( console.error );
+}
+
+function imagesLoaded() {
+    return new Promise( function( resolve ) {
+        var images = Array.prototype.slice.call( document.images );
+        var interval = setInterval( function() {
+            images = images.filter( function( image ) {
+                return !image.complete;
+            } );
+            if ( images.length === 0 ) {
+                clearInterval( interval );
+                resolve();
+            }
+        }, 150 );
+    } );
 }
 
 function alertCacheUnsupported() {

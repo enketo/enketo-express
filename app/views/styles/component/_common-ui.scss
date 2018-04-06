@@ -7,7 +7,3 @@
 .main-loader__image {
     border-color: $brand-primary-color;
 }
-
-.main {
-    @include transition-fast;
-}

@@ -9,6 +9,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Download filename may change in filepicker/draw widget if a record with media files is loaded, if the file is not served with the correct name.
+- Print button not revealed (regression in 1.62.0).
+- Images in Grid theme print/PDF view overflow into neighboring cells.
 
 [1.62.0] - 2018-04-03
 ---------------------
