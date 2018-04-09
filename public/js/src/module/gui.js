@@ -107,22 +107,23 @@ function setEventHandlers() {
 }
 
 function swapTheme( formParts ) {
-    var theme = formParts.theme;
+    var requestedTheme = formParts.theme;
     var $styleSheets = $( 'link[rel=stylesheet][href*=theme-]' );
     var matches = /\/theme-([A-z]+)(\.print)?\.css/.exec( $styleSheets.eq( 0 ).attr( 'href' ) );
-    var currentTheme = matches !== null ? matches[ 1 ] : null;
+
+    formTheme = matches !== null ? matches[ 1 ] : null;
 
     return new Promise( function( resolve ) {
-        if ( theme && theme !== currentTheme && settings.themesSupported.some( function( supportedTheme ) {
-                return theme === supportedTheme;
+        if ( requestedTheme && requestedTheme !== formTheme && settings.themesSupported.some( function( supportedTheme ) {
+                return requestedTheme === supportedTheme;
             } ) ) {
             var $replacementSheets = [];
             $styleSheets.each( function() {
-                $replacementSheets.push( $( this.outerHTML.replace( /(href=.*\/theme-)[A-z]+((\.print)?\.css)/, '$1' + theme + '$2' ) ) );
+                $replacementSheets.push( $( this.outerHTML.replace( /(href=.*\/theme-)[A-z]+((\.print)?\.css)/, '$1' + requestedTheme + '$2' ) ) );
             } );
-
+            console.log( 'Swapping theme to', requestedTheme );
             $replacementSheets[ 0 ].on( 'load', function() {
-                formTheme = theme;
+                formTheme = requestedTheme;
                 resolve( formParts );
             } );
 
@@ -131,7 +132,7 @@ function swapTheme( formParts ) {
             } );
 
         } else {
-            console.log( 'Theme "' + theme + '" is not supported. Keeping default theme.' );
+            console.log( 'Keeping default theme.' );
             delete formParts.theme;
             resolve( formParts );
         }
