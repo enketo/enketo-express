@@ -407,7 +407,12 @@ function printForm() {
                 .catch( console.error )
                 .then( function() {
                     if ( swapped ) {
-                        setTimeout( printHelper.styleReset, 500 );
+                        return new Promise( function( resolve ) {
+                            setTimeout( function() {
+                                printHelper.styleReset();
+                                resolve();
+                            }, 500 );
+                        } );
                     }
                 } );
         },
