@@ -66,9 +66,7 @@ function setEventHandlers() {
         $( 'body' ).removeClass( 'show-side-slider' );
     } );
 
-    $( '.form-header__button--print' ).on( 'click', function() {
-        printHelper.printForm( promptPrintSettings, formTheme );
-    } );
+    $( '.form-header__button--print' ).on( 'click', printForm );
 
     $( '.side-slider__toggle, .offline-enabled__queue-length' ).on( 'click', function() {
         var $body = $( 'body' );
@@ -393,22 +391,27 @@ function _getHomeScreenGuidanceObj( imageClass1, imageClass2 ) {
 }
 
 /**
- * Prompts for print settings
- *
- * @param  {*} ignore This is here for historic reasons but is ignored
- * @param  {{posAction: Function, negAction: Function, afterAction: Function}} actions Object with actions
+ * Prompts for print settings (for Grid Theme) and prints from the regular view of the form.
  */
-function promptPrintSettings( ignore, actions ) {
+function printForm() {
     var texts = {
         heading: t( 'confirm.print.heading' ),
         msg: t( 'confirm.print.msg' )
     };
     var options = {
         posButton: t( 'confirm.print.posButton' ),
-        posAction: actions.posAction,
+        posAction: function( format ) {
+            var swapped = printHelper.styleToAll();
+            printHelper.fixGrid( format )
+                .then( window.print )
+                .catch( console.error )
+                .then( function() {
+                    if ( swapped ) {
+                        setTimeout( printHelper.styleReset, 500 );
+                    }
+                } );
+        },
         negButton: t( 'alert.default.button' ),
-        negAction: actions.negAction,
-        afterAction: actions.afterAction
     };
     var inputs = '<fieldset><legend>' + t( 'confirm.print.psize' ) + '</legend>' +
         '<label><input name="format" type="radio" value="A4" required checked/><span>' + t( 'confirm.print.a4' ) + '</span></label>' +
@@ -420,9 +423,20 @@ function promptPrintSettings( ignore, actions ) {
         '</fieldset>' +
         '<p class="alert-box info" >' + t( 'confirm.print.reminder' ) + '</p>';
 
-    prompt( texts, options, inputs );
+    return new Promise( function( resolve ) {
+        if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
+            options.afterAction = resolve;
+            prompt( texts, options, inputs );
+        } else {
+            window.print();
+            resolve();
+        }
+    } );
 }
 
+/**
+ * This is function is used by PDF creation functionality from a special print view of the form..
+ */
 function applyPrintStyle() {
     imagesLoaded()
         .then( function() {
