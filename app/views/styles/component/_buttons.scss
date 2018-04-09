@@ -287,3 +287,10 @@ button::-moz-focus-inner {
 .draw-widget__undo {
     font-size: 13px;
 }
+
+.add-repeat-btn,
+.repeat-buttons .remove {
+    .icon {
+        margin-right: 0;
+    }
+}
