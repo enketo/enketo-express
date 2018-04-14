@@ -4,8 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Added
+- Portugese translation
+
 ##### Changed
-- Updated German, Slovak, and Dutch translations.
+- Updated Spanish, German, Slovak, and Dutch translations.
 - Styling of + button to create a new repeated section.
 
 ##### Fixed

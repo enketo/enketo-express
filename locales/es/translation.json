@@ -19,6 +19,9 @@
             "heading": "Aplicación actualizada!",
             "msg": "Hemos descargado una nueva versión de esta aplicación. Refresque esta página para cargar la nueva versión."
         },
+        "closing": {
+            "heading": "Cerrando..."
+        },
         "default": {
             "button": "Cerrar",
             "heading": "Alerta"
@@ -39,6 +42,9 @@
         "formupdated": {
             "heading": "Formulario actualizado!",
             "msg": "Hemos descargado una nueva versión de este formulario. Refresque esta página para cargar la nueva versión."
+        },
+        "gotonotfound": {
+            "msg": "No se pudo encontrar la pregunta \"__path__\" en el formulario. ¿Es correcta la referencia a esta pregunta?"
         },
         "loaderror": {
             "editadvice": "Le recomendamos no editar este registro hasta que esté resuelto.",
@@ -183,6 +189,11 @@
         "admin": "Contacte con el administrador de la encuesta por favor.",
         "support": "Contacte con __supportEmail__ por favor."
     },
+    "drawwidget": {
+        "annotation": "archivo y dibujo",
+        "drawing": "dibujo",
+        "signature": "firma"
+    },
     "enketo": {
         "power": "Powered by"
     },
@@ -194,7 +205,10 @@
         "instancenotfound": "Registro no hallado. Puede haver expirado.",
         "invalidediturl": "Esta URL no es válida",
         "loadfailed": "Error al cargar __resource__",
-        "notfoundinformlist": "Formulario con ID __formId__ no encontrado en /formList",
+        "notfoundinformlist": [
+            "Oops, este formulario no existe (más). Lo más probable es que el propietario del formulario lo haya eliminado, archivado o desactivado. Por favor, póngase en contacto con el propietario del formulario para confirmar.",
+            "Error detallado: Formulario con ID __formId__ no encontrado en /formList."
+        ],
         "pagenotfound": "No hemos encontrado la página",
         "surveyidnotactive": "No hay activa ninguna encuesta con este ID",
         "surveyidnotfound": "No hemos encontrado ninguna encuesta con este ID",
@@ -202,6 +216,14 @@
     },
     "feedback": {
         "header": "Información"
+    },
+    "filepicker": {
+        "file": "archivo",
+        "notFound": "No se pudo encontrar el archivo __existing__ (no lo modifique si ya lo envió y desea preservarlo).",
+        "placeholder": "Haga clic aquí para subir el archivo. (<__maxSize__)",
+        "resetWarning": "Esto eliminará el __item__. ¿Seguro que quieres hacer esto?",
+        "toolargeerror": "Archivo demasiado grande (> __maxSize__)",
+        "waitingForPermissions": "Esperando permisos de usuario."
     },
     "form": {
         "chooseLanguage": "Elija idioma",
@@ -238,11 +260,15 @@
         "latitude": "latitud (x.y °)",
         "longitude": "longitud (x.y °)",
         "points": "puntos",
+        "removePoint": "Esto eliminará completamente el punto geográfico actual de la lista de puntos geográficos y no se puede deshacerlo. ¿Seguro que quieres hacer esto?",
         "searchPlaceholder": "buscar lugar o dirección"
     },
     "here": "aquí",
     "home": {
         "msg": "__appTitle__ en ejecución! Por favor aceda a Enketo forms desde su instalación en  __serverName__."
+    },
+    "imagemap": {
+        "svgNotFound": "No se pudo encontrar la imagen SVG"
     },
     "langs": {
         "ar": "Árabe",
@@ -261,9 +287,11 @@
         "lo": "Lao",
         "nl": "Holandés",
         "no": "Noruego",
+        "pl": "Polaco",
         "ro": "Rumano",
         "sk": "Eslovaco",
         "supported": "Idiomas soportados:",
+        "sv": "Sueco",
         "sw": "Swahili",
         "th": "Tailandés",
         "vi": "Vietnamita",
