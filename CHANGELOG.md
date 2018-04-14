@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Add-repeat (+) button not aligned properly in Grid theme when no repeats exist.
+- Manual date input without hyphen (i.e. large number) is converted to non-sensible date.
 
 [1.62.1] - 2018-04-06
 ---------------------
