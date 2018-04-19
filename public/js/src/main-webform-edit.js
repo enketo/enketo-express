@@ -70,7 +70,6 @@ function _init( formParts ) {
             external: formParts.externalData,
             instanceAttachments: formParts.instanceAttachments,
         } ).then( function() {
-            $loader.remove();
             $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
         } );
     } );

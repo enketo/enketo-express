@@ -194,7 +194,6 @@ function _init( formParts ) {
                     instanceStr: _prepareInstance( formParts.model, settings.defaults ),
                     external: formParts.externalData,
                 } ).then( function( form ) {
-                    $loader.remove();
                     $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
                     formParts.$form = form.view.$;
                     if ( settings.print ) {
