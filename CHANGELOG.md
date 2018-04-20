@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- GoTo functionality no longer working (regression in 1.62.1)
+- Modal dialogs called from widget (e.g. file input reset) no longer working.
+
 [1.63.0] - 2018-04-14
 ---------------------
 ##### Added
