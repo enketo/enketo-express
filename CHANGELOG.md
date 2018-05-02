@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.65.1] - 2018-05-02
 ---------------------
 ##### Changed
 - Hide disabled reset button in draw widget.
@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Comment icon overlaps long label in simple select/select1 questions.
 - Pasted incorrect date value converts to today's date.
+- When a record is loaded with an empty value for a node that has a default value in the XForm, all secondary instance values are emptied. 
 
 [1.65.0] - 2018-04-25
 ---------------------
