@@ -11,7 +11,7 @@ var printHelper = require( 'enketo-core/src/js/print' );
 var translator = require( './translator' );
 var t = translator.t;
 var sniffer = require( './sniffer' );
-var dialog = require( './vex.dialog.custom' );
+var vex = require( 'vex-js' );
 var $ = require( 'jquery' );
 require( './plugin' );
 
@@ -21,8 +21,9 @@ var updateStatus;
 var feedbackBar;
 var formTheme;
 
-// Customize vex.dialog.custom.js options
-dialog.defaultOptions.className = 'vex-theme-plain';
+// Customize vex
+vex.registerPlugin( require( 'vex-dialog-enketo' ) );
+vex.defaultOptions.className = 'vex-theme-plain';
 
 /**
  * Initializes the GUI module
@@ -206,17 +207,15 @@ function feedback( message, duration ) {
 function alert( message, heading, level, duration ) {
     level = level || 'error';
 
-    dialog.alert( {
-        message: message,
+    vex.dialog.alert( {
+        unsafeMessage: message,
         title: heading || t( 'alert.default.heading' ),
         messageClassName: ( level === 'normal' ) ? '' : 'alert-box ' + level,
-        buttons: {
-            YES: {
-                text: t( 'alert.default.button' ),
-                type: 'submit',
-                className: 'btn btn-primary small'
-            }
-        },
+        buttons: [ {
+            text: t( 'alert.default.button' ),
+            type: 'submit',
+            className: 'btn btn-primary small'
+        } ],
         autoClose: duration,
         showCloseButton: true
     } );
@@ -241,18 +240,19 @@ function confirm( content, choices ) {
     choices = choices || {};
     choices.allowAlternativeClose = ( typeof choices.allowAlternativeClose !== 'undefined' ) ? choices.allowAlternativeClose : true;
 
-    dialog.confirm( {
-        message: errorMsg + ( message || t( 'confirm.default.msg' ) ),
+    vex.dialog.confirm( {
+        unsafeMessage: errorMsg + ( message || t( 'confirm.default.msg' ) ),
         title: content.heading || t( 'confirm.default.heading' ),
-        buttons: [ {
-            text: choices.posButton || t( 'confirm.default.posButton' ),
-            type: 'submit',
-            className: 'btn btn-primary small'
-        }, {
-            text: choices.negButton || t( 'confirm.default.negButton' ),
-            type: 'button',
-            className: 'btn btn-default small'
-        } ],
+        buttons: [
+            $.extend( {}, vex.dialog.buttons.YES, {
+                text: choices.posButton || t( 'confirm.default.posButton' ),
+                className: 'btn btn-primary small'
+            } ),
+            $.extend( {}, vex.dialog.buttons.NO, {
+                text: choices.negButton || t( 'confirm.default.negButton' ),
+                className: 'btn btn-default small'
+            } )
+        ],
         callback: function( value ) {
             if ( value && typeof choices.posAction !== 'undefined' ) {
                 choices.posAction.call( value );
@@ -275,18 +275,19 @@ function prompt( content, choices, inputs ) {
     }
 
     choices = choices || {};
-    dialog.prompt( {
-        message: errorMsg + ( message || '' ),
+    vex.dialog.prompt( {
+        unsafeMessage: errorMsg + ( message || '' ),
         title: content.heading || t( 'prompt.default.heading' ),
-        buttons: [ {
-            text: choices.posButton || t( 'confirm.default.posButton' ),
-            type: 'submit',
-            className: 'btn btn-primary small'
-        }, {
-            text: choices.negButton || t( 'confirm.default.negButton' ),
-            type: 'button',
-            className: 'btn btn-default small'
-        } ],
+        buttons: [
+            $.extend( {}, vex.dialog.buttons.YES, {
+                text: choices.posButton || t( 'confirm.default.posButton' ),
+                className: 'btn btn-primary small'
+            } ),
+            $.extend( {}, vex.dialog.buttons.NO, {
+                text: choices.negButton || t( 'confirm.default.negButton' ),
+                className: 'btn btn-default small'
+            } )
+        ],
         input: inputs,
         callback: function( value ) {
             if ( value && typeof choices.posAction !== 'undefined' ) {
