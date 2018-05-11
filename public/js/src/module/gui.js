@@ -396,11 +396,38 @@ function _getHomeScreenGuidanceObj( imageClass1, imageClass2 ) {
  * Prompts for print settings (for Grid Theme) and prints from the regular view of the form.
  */
 function printForm() {
+    var components = getPrintDialogComponents();
     var texts = {
-        heading: t( 'confirm.print.heading' ),
-        msg: t( 'confirm.print.msg' )
+        heading: components.heading,
+        msg: components.msg
     };
     var options = {
+        posButton: components.posButton,
+        posAction: components.posAction,
+        negButton: components.negButton,
+    };
+    var inputs = components.gridInputs + components.gridWarning;
+
+    return new Promise( function( resolve ) {
+        if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
+            options.afterAction = resolve;
+            prompt( texts, options, inputs );
+        } else {
+            window.print();
+            resolve();
+        }
+    } );
+}
+
+/**
+ * Separated this to allow using parts in custom print dialogs.
+ * 
+ */
+function getPrintDialogComponents() {
+    // used function because i18next needs to be initalized for t() to work
+    return {
+        heading: t( 'confirm.print.heading' ),
+        msg: t( 'confirm.print.msg' ),
         posButton: t( 'confirm.print.posButton' ),
         posAction: function( format ) {
             var swapped = printHelper.styleToAll();
@@ -419,26 +446,16 @@ function printForm() {
                 } );
         },
         negButton: t( 'alert.default.button' ),
+        gridInputs: '<fieldset><legend>' + t( 'confirm.print.psize' ) + '</legend>' +
+            '<label><input name="format" type="radio" value="A4" required checked/><span>' + t( 'confirm.print.a4' ) + '</span></label>' +
+            '<label><input name="format" type="radio" value="Letter" required/><span>' + t( 'confirm.print.letter' ) + '</span></label>' +
+            '</fieldset>' +
+            '<fieldset><legend>' + t( 'confirm.print.orientation' ) + '</legend>' +
+            '<label><input name="orientation" type="radio" value="portrait" required checked/><span>' + t( 'confirm.print.portrait' ) + '</span></label>' +
+            '<label><input name="orientation" type="radio" value="landscape" required/><span>' + t( 'confirm.print.landscape' ) + '</span></label>' +
+            '</fieldset>',
+        gridWarning: '<p class="alert-box info" >' + t( 'confirm.print.reminder' ) + '</p>',
     };
-    var inputs = '<fieldset><legend>' + t( 'confirm.print.psize' ) + '</legend>' +
-        '<label><input name="format" type="radio" value="A4" required checked/><span>' + t( 'confirm.print.a4' ) + '</span></label>' +
-        '<label><input name="format" type="radio" value="Letter" required/><span>' + t( 'confirm.print.letter' ) + '</span></label>' +
-        '</fieldset>' +
-        '<fieldset><legend>' + t( 'confirm.print.orientation' ) + '</legend>' +
-        '<label><input name="orientation" type="radio" value="portrait" required checked/><span>' + t( 'confirm.print.portrait' ) + '</span></label>' +
-        '<label><input name="orientation" type="radio" value="landscape" required/><span>' + t( 'confirm.print.landscape' ) + '</span></label>' +
-        '</fieldset>' +
-        '<p class="alert-box info" >' + t( 'confirm.print.reminder' ) + '</p>';
-
-    return new Promise( function( resolve ) {
-        if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
-            options.afterAction = resolve;
-            prompt( texts, options, inputs );
-        } else {
-            window.print();
-            resolve();
-        }
-    } );
 }
 
 /**
@@ -565,5 +582,7 @@ module.exports = {
     alertLoadErrors: alertLoadErrors,
     alertCacheUnsupported: alertCacheUnsupported,
     getErrorResponseMsg: getErrorResponseMsg,
-    applyPrintStyle: applyPrintStyle
+    applyPrintStyle: applyPrintStyle,
+    getPrintDialogComponents: getPrintDialogComponents,
+    printForm: printForm,
 };
