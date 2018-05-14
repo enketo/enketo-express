@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.65.2] - 2018-05-14
 ---------------------
 ##### Fixed
 - Appearance "horizontal" enlarges the last option if the remainder of the options modulo 3 is 1.

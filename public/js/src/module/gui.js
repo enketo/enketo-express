@@ -206,7 +206,7 @@ function feedback( message, duration ) {
  */
 function alert( message, heading, level, duration ) {
     level = level || 'error';
-
+    vex.closeAll();
     vex.dialog.alert( {
         unsafeMessage: message,
         title: heading || t( 'alert.default.heading' ),
@@ -240,6 +240,7 @@ function confirm( content, choices ) {
     choices = choices || {};
     choices.allowAlternativeClose = ( typeof choices.allowAlternativeClose !== 'undefined' ) ? choices.allowAlternativeClose : true;
 
+    vex.closeAll();
     vex.dialog.confirm( {
         unsafeMessage: errorMsg + ( message || t( 'confirm.default.msg' ) ),
         title: content.heading || t( 'confirm.default.heading' ),
@@ -275,6 +276,7 @@ function prompt( content, choices, inputs ) {
     }
 
     choices = choices || {};
+    vex.closeAll();
     vex.dialog.prompt( {
         unsafeMessage: errorMsg + ( message || '' ),
         title: content.heading || t( 'prompt.default.heading' ),
