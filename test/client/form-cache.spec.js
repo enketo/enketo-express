@@ -18,7 +18,7 @@ describe( 'Client Form Cache', function() {
 
     beforeEach( function() {
         survey = {};
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         getFormPartsSpy = sandbox.stub( connection, 'getFormParts' ).callsFake( function( survey ) {
             return Promise.resolve( {
                 enketoId: survey.enketoId,
