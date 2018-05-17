@@ -212,7 +212,7 @@ function alert( message, heading, level, duration ) {
         title: heading || t( 'alert.default.heading' ),
         messageClassName: ( level === 'normal' ) ? '' : 'alert-box ' + level,
         buttons: [ {
-            text: t( 'alert.default.button' ),
+            text: t( 'alert.validationsuccess.heading' ),
             type: 'submit',
             className: 'btn btn-primary small'
         } ],
