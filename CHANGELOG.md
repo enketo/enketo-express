@@ -6,9 +6,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Changed
 - Button text for alert modals to "OK".
+- Improved loading performance.
 
 ##### Fixed
 - Thanks and logout page too dark (regression in 1.65.2).
+- The form language selector is disabled in readonly views.
 
 [1.65.3] - 2018-05-15
 ---------------------
