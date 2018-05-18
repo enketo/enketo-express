@@ -56,7 +56,6 @@ if ( settings.offline ) {
     console.log( 'App in online-only mode.' );
     translator.init( survey )
         .then( connection.getFormParts )
-        .then( translator.init )
         .then( _swapTheme )
         .then( _addBranding )
         .then( _init )
