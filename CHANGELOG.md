@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.65.4] - 2018-05-18
 ---------------------
 ##### Changed
 - Button text for alert modals to "OK".
@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Thanks and logout page too dark (regression in 1.65.2).
 - The form language selector is disabled in readonly views.
+- If app disables offline functionality, a previously cached app continues to work.
 
 [1.65.3] - 2018-05-15
 ---------------------

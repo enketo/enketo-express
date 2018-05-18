@@ -1,6 +1,7 @@
 const manifest = require( '../models/manifest-model' );
 const express = require( 'express' );
 const router = express.Router();
+const config = require( '../models/config-model' ).server;
 // var debug = require( 'debug' )( 'manifest-controller' );
 
 module.exports = app => {
@@ -10,13 +11,19 @@ module.exports = app => {
 };
 router
     .get( '*', ( req, res, next ) => {
-        getManifest( req, res )
-            .then( manifestContent => {
-                res
-                    .set( 'Content-Type', 'text/cache-manifest' )
-                    .send( manifestContent );
-            } )
-            .catch( next );
+        if ( config[ 'offline enabled' ] === false ) {
+            var error = new Error( 'Offline functionality has not been enabled for this application.' );
+            error.status = 404;
+            next( error );
+        } else {
+            getManifest( req, res )
+                .then( manifestContent => {
+                    res
+                        .set( 'Content-Type', 'text/cache-manifest' )
+                        .send( manifestContent );
+                } )
+                .catch( next );
+        }
     } );
 
 function getManifest( req, res ) {
