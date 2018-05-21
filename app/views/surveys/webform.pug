@@ -2,9 +2,9 @@ extends ../layout
 
 block style
   // preload for performance
-  link(rel='preload', as='font', href=`${basePath}/fonts/OpenSans-Bold-webfont.woff`)
-  link(rel='preload', as='font', href=`${basePath}/fonts/OpenSans-Regular-webfont.woff`)
-  link(rel='preload', as='font', href=`${basePath}/fonts/fontawesome-webfont.woff?v=4.6.2`)
+  link(rel='preload', as='font', href=`${basePath}/fonts/OpenSans-Bold-webfont.woff`, type='font/woff', crossorigin)
+  link(rel='preload', as='font', href=`${basePath}/fonts/OpenSans-Regular-webfont.woff`, type='font/woff', crossorigin)
+  link(rel='preload', as='font', href=`${basePath}/fonts/fontawesome-webfont.woff?v=4.6.2`, type='font/woff', crossorigin)
 
   // critical styles inline for performance
   style
