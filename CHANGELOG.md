@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Styling interference occurs when an appearance is added to a question type that doesn't support it.
+
 [1.65.4] - 2018-05-18
 ---------------------
 ##### Changed
