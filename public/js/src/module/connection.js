@@ -374,8 +374,8 @@ function _getExternalData( survey ) {
 
         survey.externalData.forEach( function( instance, index ) {
             tasks.push( _getDataFile( instance.src ).then( function( data ) {
-                    // if CSV file, transform to XML String
-                    instance.xmlStr = ( typeof data === 'string' ) ? utils.csvToXml( data, survey.languageMap ) : ( new XMLSerializer() ).serializeToString( data );
+                    // if CSV file, transform to XML Document
+                    instance.xml = ( typeof data === 'string' ) ? utils.csvToXml( data, survey.languageMap ) : data;
                     return instance;
                 } )
                 .catch( function( e ) {

@@ -1,4 +1,3 @@
-/* global describe, it, expect */
 'use strict';
 
 var utils = require( '../../public/js/src/module/utils' );
@@ -30,49 +29,49 @@ describe( 'Client Utilities', function() {
             var xml = utils.csvToXml( csv );
             var firstItem = '<item><a>1</a><b>2</b><c>3</c><d>4</d></item>';
             var secondItem = '<item><a>5</a><b>6</b><c>7</c><d>8</d></item>';
-            expect( xml ).to.equal( '<root>' + firstItem + secondItem + '</root>' );
+            expect( new XMLSerializer().serializeToString( xml ) ).to.equal( '<root>' + firstItem + secondItem + '</root>' );
         } );
 
         it( 'deals with values that contain a comma', function() {
             var csv = 'a,b,c,d\n1,2,3,"4,2"\n5,6,7,8';
             var xml = utils.csvToXml( csv );
-            expect( xml ).to.contain( '<item><a>1</a><b>2</b><c>3</c><d>4,2</d>' );
+            expect( new XMLSerializer().serializeToString( xml ) ).to.contain( '<item><a>1</a><b>2</b><c>3</c><d>4,2</d>' );
         } );
 
         it( 'can read csv files that uses a semi-colon separator', function() {
             var csv = 'a;b;c;d\n1;2;3;"4;2"\n5;6;7;8';
             var xml = utils.csvToXml( csv );
-            expect( xml ).to.contain( '<item><a>1</a><b>2</b><c>3</c><d>4;2</d>' );
+            expect( new XMLSerializer().serializeToString( xml ) ).to.contain( '<item><a>1</a><b>2</b><c>3</c><d>4;2</d>' );
         } );
 
         it( 'trims column headers and values', function() {
             var csv = ' a     ;b;c;d\n    1    ;2;3;4\n5;6;7;8';
             var xml = utils.csvToXml( csv );
-            expect( xml ).to.contain( '<item><a>1</a><b>2</b><c>3</c><d>4</d>' );
+            expect( new XMLSerializer().serializeToString( xml ) ).to.contain( '<item><a>1</a><b>2</b><c>3</c><d>4</d>' );
         } );
 
         it( 'ignores empty lines', function() {
             var csv = ' a;b;c\n\n1;2;3\n\n5;6;7\n';
             var xml = utils.csvToXml( csv );
-            expect( xml ).to.equal( '<root><item><a>1</a><b>2</b><c>3</c></item><item><a>5</a><b>6</b><c>7</c></item></root>' );
+            expect( new XMLSerializer().serializeToString( xml ) ).to.equal( '<root><item><a>1</a><b>2</b><c>3</c></item><item><a>5</a><b>6</b><c>7</c></item></root>' );
         } );
 
         it( 'does not get confused by a very small csv string with \r\n linebreaks including an empty line at end', function() {
             var csv = ' a;b\r\n1;2\r\n5;6\r\n';
             var xml = utils.csvToXml( csv );
-            expect( xml ).to.equal( '<root><item><a>1</a><b>2</b></item><item><a>5</a><b>6</b></item></root>' );
+            expect( new XMLSerializer().serializeToString( xml ) ).to.equal( '<root><item><a>1</a><b>2</b></item><item><a>5</a><b>6</b></item></root>' );
         } );
 
         it( 'encodes XML entities', function() {
             var csv = ' a;b;c\n\na & b;2;3\n\n5;6;7\n';
             var xml = utils.csvToXml( csv );
-            expect( xml ).to.equal( '<root><item><a>a &amp; b</a><b>2</b><c>3</c></item><item><a>5</a><b>6</b><c>7</c></item></root>' );
+            expect( new XMLSerializer().serializeToString( xml ) ).to.equal( '<root><item><a>a &amp; b</a><b>2</b><c>3</c></item><item><a>5</a><b>6</b><c>7</c></item></root>' );
         } );
 
         it( 'adds lang attributes', function() {
             var csv = 'a,b,c,d::english,d::french\n1,2,3,4,5';
             var xml = utils.csvToXml( csv );
-            expect( xml ).to.equal( '<root><item><a>1</a><b>2</b><c>3</c><d lang="english">4</d><d lang="french">5</d></item></root>' );
+            expect( new XMLSerializer().serializeToString( xml ) ).to.equal( '<root><item><a>1</a><b>2</b><c>3</c><d lang="english">4</d><d lang="french">5</d></item></root>' );
         } );
 
         it( 'adds converted lang attributes', function() {
@@ -81,7 +80,7 @@ describe( 'Client Utilities', function() {
                 'english': 'en',
                 'french': 'fr'
             } );
-            expect( xml ).to.equal( '<root><item><a>1</a><b>2</b><c>3</c><d lang="en">4</d><d lang="fr">5</d></item></root>' );
+            expect( new XMLSerializer().serializeToString( xml ) ).to.equal( '<root><item><a>1</a><b>2</b><c>3</c><d lang="en">4</d><d lang="fr">5</d></item></root>' );
         } );
 
     } );

@@ -118,47 +118,53 @@ function csvToArray( csv ) {
 }
 
 function arrayToXml( rows, langMap ) {
-    var xmlStr;
+    //var xmlStr;
     var headers = rows.shift();
-    var langAttrs = [];
+    //var langAttrs = [];
+    var langs = [];
 
     langMap = ( typeof langMap !== 'object' ) ? {} : langMap;
 
-    // trim the headers
+    // Trim the headings
     headers = headers.map( function( header ) {
         return header.trim();
     } );
 
-    // extract and strip languages
+    // Extract and strip languages from headers
     headers = headers.map( function( header, index ) {
         var parts = header.split( '::' );
         var lang;
         if ( parts && parts.length === 2 ) {
             lang = langMap[ parts[ 1 ] ] || parts[ 1 ];
-            langAttrs[ index ] = ' lang="' + lang + '"';
+            //langAttrs[ index ] = ' lang="' + lang + '"';
+            langs[ index ] = lang;
             return parts[ 0 ];
         } else {
-            langAttrs[ index ] = '';
+            langs[ index ] = '';
             return header;
         }
     } );
 
-    // check if headers are valid XML node names
+    // Check if headers are valid XML node names
     headers.every( _throwInvalidXmlNodeName );
 
-    // create an XML string
-    xmlStr = '<root>' +
-        rows.map( function( row ) {
-            return '<item>' + row.map( function( value, index ) {
-                return '<{n}{l}>{v}</{n}>'
-                    .replace( /{n}/g, headers[ index ] )
-                    .replace( /{l}/, langAttrs[ index ] )
-                    .replace( /{v}/, _encodeXmlEntities( value.trim() ) );
-            } ).join( '' ) + '</item>';
-        } ).join( '' ) +
-        '</root>';
-
-    return xmlStr;
+    // create an XML Document
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString( '<root></root>', 'text/xml' );
+    rows.forEach( function( row ) {
+        var item = xmlDoc.createElement( 'item' );
+        xmlDoc.firstChild.appendChild( item );
+        row.forEach( function( value, index ) {
+            var node = xmlDoc.createElement( headers[ index ] );
+            if ( langs[ index ] ) {
+                node.setAttribute( 'lang', langs[ index ] );
+            }
+            // encoding of XML entities is done automatically
+            node.textContent = value.trim();
+            item.appendChild( node );
+        } );
+    } );
+    return xmlDoc;
 }
 
 function csvToXml( csv, langMap ) {
@@ -222,23 +228,6 @@ function _throwInvalidXmlNodeName( name ) {
     } else {
         throw new Error( 'CSV column heading "' + name + '" cannot be turned into a valid XML element' );
     }
-}
-
-function _encodeXmlEntities( str ) {
-    return str.replace( /[<>&'"]/g, function( c ) {
-        switch ( c ) {
-            case '<':
-                return '&lt;';
-            case '>':
-                return '&gt;';
-            case '&':
-                return '&amp;';
-            case '\'':
-                return '&apos;';
-            case '"':
-                return '&quot;';
-        }
-    } );
 }
 
 module.exports = {

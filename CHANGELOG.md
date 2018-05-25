@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Support for `<sup>` and `<sup>` (superscript and subscript).
 
+##### Changed
+- Performance-optimized itemsets. Cutting-edge browsers can now deal well with 16,500 item documents.
+- Performance-optimized the loading of external data.
+
 [1.65.5] - 2018-05-24
 ---------------------
 ##### Changed
