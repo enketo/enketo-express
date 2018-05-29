@@ -1,8 +1,3 @@
-/* global describe, require, it, beforeEach, afterEach, expect, Blob, sinon */
-'use strict';
-
-global.Promise = require( 'lie' );
-
 var formCache = require( '../../public/js/src/module/form-cache' );
 var connection = require( '../../public/js/src/module/connection' );
 var Promise = require( 'lie' );

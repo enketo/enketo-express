@@ -1,8 +1,3 @@
-/* global describe, require, it, beforeEach, expect, Blob */
-'use strict';
-
-global.Promise = require( 'lie' );
-
 // TODO: when chai-as-promised adapter is working, convert these tests using .eventually.
 
 var store = require( '../../public/js/src/module/store' );
@@ -266,7 +261,7 @@ describe( 'Client Storage', function() {
                 .then( function() {
                     return store.survey.set( surveyA );
                 } )
-                .catch( function( item, e ) {
+                .catch( function() {
                     expect( true ).to.equal( true );
                     done();
                 } );
@@ -462,7 +457,7 @@ describe( 'Client Storage', function() {
             var name = fileA.name;
 
             store.record.file.update( id, fileA )
-                .then( function( stored ) {
+                .then( function(  ) {
                     return store.record.file.get( id, name );
                 } )
                 .then( function( result ) {
@@ -688,7 +683,7 @@ describe( 'Client Storage', function() {
                 name2 = fileB.name;
 
             store.record.set( recordA )
-                .then( function( result ) {
+                .then( function(  ) {
                     recordA.files = [ fileA, fileB ];
                     return store.record.update( recordA );
                 } )
@@ -807,21 +802,21 @@ describe( 'Client Storage', function() {
             recordA.instanceId = recordA.instanceId + Math.random();
 
             store.record.set( recordA )
-                .then( function( result ) {
+                .then( function(  ) {
                     recordA.files = [ fileA, fileB ];
                     return store.record.update( recordA );
                 } )
-                .then( function( result ) {
+                .then( function( ) {
                     return store.record.file.get( recordA.instanceId, name );
                 } )
                 .then( function( result ) {
                     expect( result ).to.have.property( 'item' );
                     expect( result.item ).to.be.an.instanceof( Blob );
                 } )
-                .then( function( result ) {
+                .then( function(  ) {
                     return store.record.remove( recordA.instanceId );
                 } )
-                .then( function( result ) {
+                .then( function(  ) {
                     return store.record.file.get( recordA.instanceId, name );
                 } )
                 .then( function( result ) {

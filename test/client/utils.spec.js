@@ -1,5 +1,3 @@
-'use strict';
-
 var utils = require( '../../public/js/src/module/utils' );
 
 describe( 'Client Utilities', function() {

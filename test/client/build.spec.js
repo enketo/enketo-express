@@ -1,6 +1,3 @@
-/* global describe, it, expect */
-'use strict';
-
 var pkg = require( '../../package.json' );
 var Form = require( 'enketo-core' );
 
