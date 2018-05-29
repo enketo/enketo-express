@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [Unreleased]
 --------------------
 ##### Added
-- Support for `<sup>` and `<sup>` (superscript and subscript).
+- Support for `<sup>` and `<sub>` (superscript and subscript).
 
 ##### Changed
 - Performance-optimized itemsets. Cutting-edge browsers can now deal well with 16,500 item documents.
@@ -54,18 +54,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [1.65.0] - 2018-04-25
 ---------------------
 ##### Added
-- Decimal-time() support.
-- Distance() support.
+- `decimal-time()` support.
+- `distance()` support.
 
 ##### Fixed
 - In Safari, readonly checkboxes and radiobuttons can still be manipulated and WILL modify the record, even if the UI doesn't update.
-- Decimal-date-time() not spec-compliant at all.
+- `decimal-date-time()` not spec-compliant at all.
 - Filepicker and drawing widgets have functional reset button when they are readonly.
 
 [1.64.0] - 2018-04-22
 ---------------------
 ##### Added
-- Basic randomize() support to shuffle nodesets (no support for itemsets with itext labels).
+- Basic `randomize()` support to shuffle nodesets (no support for itemsets with itext labels).
 - 
 ##### Changed
 - Increased linespacing for labels of "select" questions.
@@ -73,7 +73,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - GoTo functionality no longer working (regression in 1.62.1)
 - Modal dialogs called from widget (e.g. file input reset) no longer working.
-- Min() and max() ignore non-last arguments/nodes with value 0.
+- `min()` and `max()` ignore non-last arguments/nodes with value 0.
 - Goto functionality throws exception if target is a comment question that is not inside a group and the form is in Pages Mode.
 
 [1.63.0] - 2018-04-14
