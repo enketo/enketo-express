@@ -27,7 +27,7 @@
     "widgets": [
         "note", "select-desktop", "select-mobile", "autocomplete", "geo", "textarea",
         "table", "radio", "date", "time", "datetime", "compact", "file", "draw",
-        "likert", "distress", "horizontal", "image-view", "comment", "image-map", "date-native", "date-mobile"
+        "likert", "range", "horizontal", "image-view", "comment", "image-map", "date-native", "date-mobile"
     ],
     "analytics": "google",
     "google": {

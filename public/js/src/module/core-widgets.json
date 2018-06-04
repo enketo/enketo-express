@@ -14,7 +14,7 @@
     "compact": "../../node_modules/enketo-core/src/widget/compact/compactpicker",
     "file": "../../node_modules/enketo-core/src/widget/file/filepicker",
     "draw": "../../node_modules/enketo-core/src/widget/draw/draw-widget",
-    "likert": "../../node_modules/enketo-core/src/widget/select-likert/likertitem",
+    "range": "../../node_modules/enketo-core/src/widget/range/range-widget",
     "distress": "../../node_modules/enketo-core/src/widget/distress/distresspicker",
     "horizontal": "../../node_modules/enketo-core/src/widget/horizontal-choices/horizontalchoices",
     "analog-scale": "../../node_modules/enketo-core/src/widget/analog-scale/analog-scalepicker",

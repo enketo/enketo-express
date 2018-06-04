@@ -2,10 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.66.0] - 2018-06-04
 --------------------
 ##### Added
 - Support for `<sup>` and `<sub>` (superscript and subscript).
+- Support for range widget (basic). **Warning: You may need to update your config.json to activate**.
 
 ##### Changed
 - Performance-optimized itemsets. Cutting-edge browsers can now deal well with 16,500 item documents.
