@@ -77,8 +77,8 @@ function getManifest( survey ) {
  * @return {[type]}        promise
  */
 function getMaxSize( survey ) {
-    const server = survey.openRosaServer;
-    const submissionUrl = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? `${server}submission` : `${server}/submission`;
+    // Using survey.xformUrl is non-standard but the only way for previews served from `?form=URL`.
+    const submissionUrl = survey.openRosaServer ? getSubmissionUrl( survey.openRosaServer ) : survey.info.downloadUrl;
 
     const options = {
         url: submissionUrl,

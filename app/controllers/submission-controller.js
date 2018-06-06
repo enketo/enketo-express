@@ -23,7 +23,7 @@ router
         res.set( 'Content-Type', 'application/json' );
         next();
     } )
-    .get( '/max-size/:enketo_id', maxSize )
+    .get( '/max-size/:enketo_id?', maxSize )
     .get( '/max-size/:encrypted_enketo_id_single', maxSize )
     .get( '/:enketo_id', getInstance )
     .get( '/:encrypted_enketo_id_view', getInstance )
@@ -96,18 +96,29 @@ function submit( req, res, next ) {
 }
 
 function maxSize( req, res, next ) {
-    surveyModel.get( req.enketoId )
-        .then( survey => {
-            survey.credentials = userModel.getCredentials( req );
-            return survey;
-        } )
-        .then( communicator.getMaxSize )
-        .then( maxSize => {
-            res.json( {
-                maxSize
-            } );
-        } )
-        .catch( next );
+    if ( req.query.xformUrl ) {
+        // Non-standard way of attempting to obtain max submission size from XForm url directly
+        communicator.getMaxSize( {
+                info: {
+                    downloadUrl: req.query.xformUrl
+                }
+            } )
+            .then( maxSize => {
+                res.json( { maxSize } );
+            } )
+            .catch( next );
+    } else {
+        surveyModel.get( req.enketoId )
+            .then( survey => {
+                survey.credentials = userModel.getCredentials( req );
+                return survey;
+            } )
+            .then( communicator.getMaxSize )
+            .then( maxSize => {
+                res.json( { maxSize } );
+            } )
+            .catch( next );
+    }
 }
 
 /**

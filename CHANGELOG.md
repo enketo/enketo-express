@@ -9,6 +9,7 @@ Unreleased
 - The print dialog for Grid forms does not show radiobuttons in IE11.
 - The button text of offline-capable form sometimes gets stuck on 'Save as Draft' when it should be 'Submit'.
 - Full previews (with Enketo ID) do not show correct maximum submission size in file upload questions.
+- Previews without Enketo ID do not show correct maximum submission size in file upload questions. **Note: make sure that a `HEAD` request to the form URL responds with the correct `X-Openrosa-Accept-Content-Length` header.**
 
 [1.66.1] - 2018-06-04
 ---------------------
