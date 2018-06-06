@@ -22,26 +22,27 @@ $.fn.capitalizeStart = function( numWords ) {
 };
 
 $.fn.btnBusyState = function( busy ) {
-    var $button;
-    var btnContent;
-
     return this.each( function() {
-        $button = $( this );
-        btnContent = $button.data( 'btnContent' );
+        var $button = $( this );
+        var btnContent = $button.find( '.temp' ).html();
 
         if ( busy && !btnContent ) {
             btnContent = $button.html();
-            $button.data( 'btnContent', btnContent );
             $button
                 .empty()
                 .append( '<progress></progress>' )
+                .append( $( '<span class="temp" style="display: none;"/>' ).append( btnContent ) )
                 .attr( 'disabled', true );
         } else if ( !busy && btnContent ) {
-            $button.data( 'btnContent', null );
             $button
                 .empty()
                 .append( btnContent )
                 .removeAttr( 'disabled' );
         }
     } );
+};
+
+// This function facilitates changing button text regardless of its busystate.
+$.fn.btnText = function( text ) {
+    $( this ).add( $( this ).find( 'span' ) ).last()[ 0 ].lastChild.textContent = text;
 };

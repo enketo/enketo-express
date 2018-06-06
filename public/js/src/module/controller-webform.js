@@ -593,7 +593,9 @@ function _setEventHandlers() {
     if ( settings.draftEnabled !== false ) {
         $( '.form-footer [name="draft"]' ).on( 'change', function() {
             var text = ( $( this ).prop( 'checked' ) ) ? t( 'formfooter.savedraft.btn' ) : t( 'formfooter.submit.btn' );
-            $( '#submit-form' ).get( 0 ).lastChild.textContent = text;
+            // Note: using .btnText plugin because button may be in a busy state => https://github.com/kobotoolbox/enketo-express/issues/1043
+            $( '#submit-form' ).btnText( text );
+
         } ).closest( '.draft' ).toggleClass( 'hide', !settings.offline );
     }
 
