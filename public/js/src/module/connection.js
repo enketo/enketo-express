@@ -297,7 +297,7 @@ function getMaximumSubmissionSize() {
 
     return new Promise( function( resolve ) {
 
-        if ( MAX_SIZE_URL && settings.type !== 'preview' && settings.type !== 'app' ) {
+        if ( MAX_SIZE_URL ) {
             $.ajax( MAX_SIZE_URL, {
                     type: 'GET',
                     timeout: 5 * 1000,

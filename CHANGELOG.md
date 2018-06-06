@@ -8,6 +8,7 @@ Unreleased
 - Likert widget not instantiating (regression in 1.66.0)
 - The print dialog for Grid forms does not show radiobuttons in IE11.
 - The button text of offline-capable form sometimes gets stuck on 'Save as Draft' when it should be 'Submit'.
+- Full previews (with Enketo ID) do not show correct maximum submission size in file upload questions.
 
 [1.66.1] - 2018-06-04
 ---------------------
