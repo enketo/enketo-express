@@ -6,6 +6,7 @@ Unreleased
 ----------------------
 ##### Fixed
 - Likert widget not instantiating (regression in 1.66.0)
+- The print dialog for Grid forms does not show radiobuttons in IE11.
 
 [1.66.1] - 2018-06-04
 ---------------------
