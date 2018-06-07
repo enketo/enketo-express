@@ -122,7 +122,8 @@ function _uploadBatch( recordBatch ) {
                 headers: {
                     'X-OpenRosa-Version': '1.0',
                     'X-OpenRosa-Deprecated-Id': recordBatch.deprecatedId,
-                    'X-OpenRosa-Instance-Id': recordBatch.instanceId
+                    'X-OpenRosa-Instance-Id': recordBatch.instanceId,
+                    'Date': new Date().toUTCString()
                 },
                 timeout: settings.timeout
             } )
