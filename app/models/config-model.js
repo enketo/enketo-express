@@ -6,6 +6,7 @@ const fs = require( 'fs' );
 const url = require( 'url' );
 const themePath = path.join( __dirname, '../../public/css' );
 const languagePath = path.join( __dirname, '../../locales' );
+const execSync = require( 'child_process' ).execSync;
 // var debug = require( 'debug' )( 'config-model' );
 
 // Merge default and local config files if a local config.json file exists
@@ -250,7 +251,17 @@ function getThemesSupported( themeList ) {
     return themes;
 }
 
-config[ 'version' ] = pkg.version;
+try {
+    config[ 'version' ] = execSync( 'git describe --tags' );
+} catch ( e ) {
+    // Probably not deployed with git, try special .tag.txt file
+    try {
+        config[ 'version' ] = `${execSync( 'head -1 .tag.txt' )}-r`;
+    } catch ( e ) {
+        // no .tag.txt present, use package.json version
+        config[ 'version' ] = `${pkg.version}-p`;
+    }
+}
 
 // detect supported themes
 config[ 'themes supported' ] = getThemesSupported( config[ 'themes supported' ] );
