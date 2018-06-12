@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Fixed
+- Range widget loading error if relevant is used.
+
 [1.66.3] - 2018-06-11
 ----------------------
 ##### Changed
