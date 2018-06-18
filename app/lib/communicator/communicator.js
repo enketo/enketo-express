@@ -284,7 +284,7 @@ function _findFormAddInfo( formListXml, survey ) {
 
                 if ( !found ) {
                     error = new TError( 'error.notfoundinformlist', {
-                        formId: `"${survey.openRosaId}"`
+                        formId: survey.openRosaId
                     } );
                     error.status = 404;
                     reject( error );
