@@ -2,7 +2,6 @@
 
 var JSZip = require( 'jszip' );
 var store = require( './store' );
-var Promise = require( 'lie' );
 var utils = require( './utils' );
 var fileSaver = require( 'file-saver' );
 

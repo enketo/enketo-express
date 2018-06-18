@@ -1,7 +1,6 @@
 'use strict';
 
 var Papa = require( 'papaparse' );
-var Promise = require( 'lie' );
 var dataUriCache = {};
 var coreUtils = require( 'enketo-core/src/js/utils' );
 

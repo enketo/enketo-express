@@ -12,7 +12,6 @@
 var store = require( './store' );
 var settings = require( './settings' );
 var connection = require( './connection' );
-var Promise = require( 'lie' );
 var $ = require( 'jquery' );
 var utils = require( './utils' );
 var coreUtils = require( 'enketo-core/src/js/utils' );

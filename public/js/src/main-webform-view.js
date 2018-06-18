@@ -1,6 +1,5 @@
 'use strict';
 
-require( './module/promise-by-Q' );
 require( 'enketo-core/src/js/polyfills-ie11' );
 // Workaround for https://github.com/kobotoolbox/enketo-express/issues/990
 // This can probably be removed in the future. Test modal dialogs called from file input widget (when resetting).

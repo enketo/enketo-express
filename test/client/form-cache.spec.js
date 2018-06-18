@@ -1,6 +1,5 @@
 var formCache = require( '../../public/js/src/module/form-cache' );
 var connection = require( '../../public/js/src/module/connection' );
-var Promise = require( 'lie' );
 var $ = require( 'jquery' );
 
 var url1 = '/path/to/source.png';

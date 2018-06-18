@@ -7,7 +7,6 @@
 var store = require( './store' );
 var connection = require( './connection' );
 var gui = require( './gui' );
-var Promise = require( 'lie' );
 var settings = require( './settings' );
 var exporter = require( './exporter' );
 var t = require( './translator' ).t;

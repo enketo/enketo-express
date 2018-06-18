@@ -1,6 +1,5 @@
 'use strict';
 
-var Promise = require( 'lie' );
 var gui = require( './gui' );
 
 /*

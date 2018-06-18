@@ -5,6 +5,9 @@
         "node": false,
         "commonjs": true
     },
+    "globals": {
+        "Promise": true
+    },
     "extends": "eslint:recommended",
     "parserOptions": {
         "sourceType": "module",

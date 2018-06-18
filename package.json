@@ -56,7 +56,6 @@
         "jszip": "^3.1.5",
         "jwt-simple": "0.5.x",
         "libxslt": "0.6.5",
-        "lie": "3.3.x",
         "load-grunt-tasks": "3.x.x",
         "lodash": "4.17.x",
         "morgan": "1.x.x",
@@ -67,8 +66,8 @@
         "request": "2.85.x",
         "serve-favicon": "2.x.x",
         "time-grunt": "1.x.x",
-        "vex-js": "4.1.x",
         "vex-dialog-enketo": "git+https://github.com/enketo/vex-dialog.git#b6e0f01",
+        "vex-js": "4.1.x",
         "xml2js": "0.4.x"
     },
     "devDependencies": {

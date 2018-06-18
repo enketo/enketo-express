@@ -1,5 +1,4 @@
 /* global describe, require, it, beforeEach, afterEach */
-const Promise = require( 'lie' );
 const chai = require( 'chai' );
 const expect = chai.expect;
 const chaiAsPromised = require( 'chai-as-promised' );

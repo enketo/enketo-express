@@ -6,7 +6,6 @@
 
 var store = require( './store' );
 var settings = require( './settings' );
-var Promise = require( 'lie' );
 var connection = require( './connection' );
 var $ = require( 'jquery' );
 var assign = require( 'lodash/assign' );

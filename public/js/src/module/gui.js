@@ -6,7 +6,6 @@
 
 var support = require( 'enketo-core/src/js/support' );
 var settings = require( './settings' );
-var Promise = require( 'lie' );
 var printHelper = require( 'enketo-core/src/js/print' );
 var translator = require( './translator' );
 var t = translator.t;

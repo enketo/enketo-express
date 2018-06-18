@@ -6,7 +6,6 @@
 
 var db = require( 'db.js' );
 var utils = require( './utils' );
-var Promise = require( 'lie' );
 var sniffer = require( './sniffer' );
 var t = require( './translator' ).t;
 
