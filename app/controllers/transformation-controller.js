@@ -265,7 +265,7 @@ function _getSurveyParams( req ) {
             error.status = 400;
             throw error;
         }
-        const xUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.path}`;
+        const xUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
         return account.check( {
                 openRosaServer: xUrl
             } )
