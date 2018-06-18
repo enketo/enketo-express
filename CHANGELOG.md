@@ -2,16 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.67.0] - 2018-06-18
 ----------------------
 ##### Added
 - Ranking widget. **Warning: You may need to update your config.json to activate.**
-- URL widget.
+- URL widget. **Warning: You may need to update your config.json to activate.**
 
 ##### Fixed
 - Range widget loading error if relevant is used.
 - When unfolding collapsed groups, the draw widgets are not functional until the window is resized.
 - Various styling degradations of geo widgets.
+- Dynamic defaults do not work with encoded square brackets.
 
 [1.66.3] - 2018-06-11
 ----------------------

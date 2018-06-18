@@ -33,12 +33,10 @@ settings.defaultReturnUrl = config[ 'basePath' ] + DEFAULT_THANKS_URL;
 settings.defaults = {};
 for ( var p in queryParams ) {
     if ( queryParams.hasOwnProperty( p ) ) {
-        var path;
-        var value;
-        if ( p.search( /d\[(.*)\]/ ) !== -1 ) {
-            path = decodeURIComponent( p.match( /d\[(.*)\]/ )[ 1 ] );
-            value = decodeURIComponent( queryParams[ p ] );
-            settings.defaults[ path ] = value;
+        // URLs with encoded brackets as well us not-encode brackets will work.
+        var matches = decodeURIComponent( p ).match( /d\[(.*)\]/ );
+        if ( matches && matches[ 1 ] ) {
+            settings.defaults[ matches[ 1 ] ] = decodeURIComponent( queryParams[ p ] );
         }
     }
 }

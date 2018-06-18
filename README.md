@@ -44,7 +44,7 @@ See [this tutorial](http://blog.enketo.org/install-enketo-production-ubuntu/) fo
 
 ### How to configure
 
-All configuration is normally done in config/config.json. Strictly speaking, this file only has to contain the [default properties](./config/default-config.json) that you'd like to override, but it is safer to include all properties, to avoid surprises when the default configuration changes. After editing the configuration, the app will need to be restarted.
+All configuration is normally done in config/config.json. This file only has to contain the [default properties](./config/default-config.json) that you'd like to override. For some it may be preferrable to include all properties, to avoid surprises when the default configuration changes. Others may want to reduce hassle and keep the config.json as small as possible to automatically deploy configuration changes (e.g. new widgets). After editing the configuration, the app will need to be restarted.
 
 As an alternative, there is an option to use environment variables instead of a config/config.json file. If the config/config.json file is missing Enketo will assume configuration is done with environment variables. A combination of both options is not supported. See [config/sample.env](./config/sample.env) for more information on equivalent environment variable names.
 

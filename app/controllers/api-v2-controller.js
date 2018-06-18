@@ -391,7 +391,8 @@ function _setDefaultsQueryParam( req, res, next ) {
     if ( map ) {
         for ( const prop in map ) {
             if ( map.hasOwnProperty( prop ) ) {
-                queryParam += `d[${encodeURIComponent( decodeURIComponent( prop ) )}]=${encodeURIComponent( decodeURIComponent( map[ prop ] ) )}&`;
+                const paramKey = `d[${decodeURIComponent( prop )}]`;
+                queryParam += `${encodeURIComponent( paramKey )}=${encodeURIComponent( decodeURIComponent( map[ prop ] ) )}&`;
             }
         }
         req.defaultsQueryParam = queryParam.substring( 0, queryParam.length - 1 );
