@@ -796,7 +796,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'url',
-                    expected: /.+\?d\[%2Fpath%2Fto%2Fnode\]=2%2C3&d\[%2Fpath%2Fto%2Fother%2Fnode\]=5/
+                    expected: /.+\?d%5B%2Fpath%2Fto%2Fnode%5D=2%2C3&d%5B%2Fpath%2Fto%2Fother%2Fnode%5D=5/
                 }
             }, {
                 endpoint: '/survey',
@@ -807,7 +807,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'url',
-                    expected: /.+\?d\[%2Fpath%2Fto%2Fnode\]=%5B%40%5D%3F/
+                    expected: /.+\?d%5B%2Fpath%2Fto%2Fnode%5D=%5B%40%5D%3F/
                 }
             }, {
                 endpoint: '/survey',
@@ -818,7 +818,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'url',
-                    expected: /.+\?d\[%2Fpath%2Fto%2Fnode\]=one%20line%0Aanother%20line/
+                    expected: /.+\?d%5B%2Fpath%2Fto%2Fnode%5D=one%20line%0Aanother%20line/
                 }
             }, {
                 endpoint: '/survey/all',
@@ -829,7 +829,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'url',
-                    expected: /.+\?d\[%2Fpath%2Fto%2Fnode\]=one%20line%0Aanother%20line/
+                    expected: /.+\?d%5B%2Fpath%2Fto%2Fnode%5D=one%20line%0Aanother%20line/
                 }
             },
             // /instance endpoint will ignore defaults
