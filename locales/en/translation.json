@@ -325,6 +325,10 @@
             "username": "Username"
         }
     },
+    "rankwidget": {
+        "clickstart": "Click to start",
+        "tapstart": "Tap to start"
+    },
     "record-list": {
         "export": "Export",
         "msg1": "Records are stored inside your browser until they have been uploaded (even if you turn off your computer or go offline).",

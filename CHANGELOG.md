@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ----------------------
+##### Added
+- Ranking widget. **Warning: You may need to update your config.json to activate.**
+
 ##### Fixed
 - Range widget loading error if relevant is used.
 
@@ -35,7 +38,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 --------------------
 ##### Added
 - Support for `<sup>` and `<sub>` (superscript and subscript).
-- Support for range widget (basic). **Warning: You may need to update your config.json to activate**.
+- Support for range widget (basic). **Warning: You may need to update your config.json to activate.**
 
 ##### Changed
 - Performance-optimized itemsets. Cutting-edge browsers can now deal well with 16,500 item documents.
