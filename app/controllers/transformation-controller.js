@@ -265,9 +265,9 @@ function _getSurveyParams( req ) {
             error.status = 400;
             throw error;
         }
-        const url = `${urlObj.protocol}//${urlObj.host}${urlObj.path}`;
+        const xUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.path}`;
         return account.check( {
-                openRosaServer: url
+                openRosaServer: xUrl
             } )
             .then( survey => // no need to check quota
                 Promise.resolve( {
