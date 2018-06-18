@@ -6,9 +6,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Added
 - Ranking widget. **Warning: You may need to update your config.json to activate.**
+- URL widget.
 
 ##### Fixed
 - Range widget loading error if relevant is used.
+- When unfolding collapsed groups, the draw widgets are not functional until the window is resized.
+- Various styling degradations of geo widgets.
 
 [1.66.3] - 2018-06-11
 ----------------------

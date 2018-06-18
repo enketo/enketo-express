@@ -23,5 +23,6 @@
     "comment": "../../node_modules/enketo-core/src/widget/comment/commentwidget",
     "image-map": "../../node_modules/enketo-core/src/widget/image-map/image-map",
     "date-native": "../../node_modules/enketo-core/src/widget/date-native/datepicker-native",
-    "date-mobile": "../../node_modules/enketo-core/src/widget/date-mobile/datepicker-mobile"
+    "date-mobile": "../../node_modules/enketo-core/src/widget/date-mobile/datepicker-mobile",
+    "url": "../../node_modules/enketo-core/src/widget/url/url-widget"
 }

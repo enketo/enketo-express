@@ -25,7 +25,7 @@
         "email": "support@kobotoolbox.org"
     },
     "widgets": [
-        "note", "select-desktop", "select-mobile", "autocomplete", "geo", "textarea",
+        "note", "select-desktop", "select-mobile", "autocomplete", "geo", "textarea", "url",
         "table", "radio", "date", "time", "datetime", "compact", "file", "draw", "rank",
         "likert", "range", "horizontal", "image-view", "comment", "image-map", "date-native", "date-mobile"
     ],
