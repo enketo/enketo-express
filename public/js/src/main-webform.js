@@ -161,7 +161,6 @@ function _prepareInstance( modelStr, defaults ) {
 
     for ( var path in defaults ) {
         if ( defaults.hasOwnProperty( path ) ) {
-            // TODO full:false support still needs to be added to FormModel.js
             model = model || new FormModel( modelStr, {
                 full: false
             } );
@@ -171,6 +170,7 @@ function _prepareInstance( modelStr, defaults ) {
                 model.node( path ).setVal( defaults[ path ] );
             }
             // TODO would be good to not include nodes that weren't in the defaults parameter
+            // HOWEVER, that would also set number of repeats to 0, which may be undesired
             // TODO would be good to just pass model along instead of converting to string first
             existingInstance = model.getStr();
         }

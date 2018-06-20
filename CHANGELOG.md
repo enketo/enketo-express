@@ -2,10 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[ Unreleased ]
 ---------------------
 ##### Changed
 - Updated Lao and Spanish translations.
+
+##### Fixed
+- In a form containing a group with a single child repeat (and no other repeat sibling questions), fails to load a record where that group is empty. When creating the first repeat after load an exception occurs.
+- Output inside a group that is irrelevant upon loading does not get evaluated the group becomes relevant.
 
 [1.67.0] - 2018-06-18
 ----------------------
