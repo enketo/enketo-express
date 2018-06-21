@@ -9,7 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - In a form containing a group with a single child repeat (and no other repeat sibling questions), fails to load a record where that group is empty. When creating the first repeat after load an exception occurs.
-- Output inside a group that is irrelevant upon loading does not get evaluated the group becomes relevant.
+- Output inside a group that is irrelevant upon loading does not get evaluated when the group becomes relevant.
 
 [1.67.0] - 2018-06-18
 ----------------------
