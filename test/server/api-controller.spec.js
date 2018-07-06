@@ -557,13 +557,31 @@ describe( 'api', () => {
             } ).forEach( testResponse );
         } );
 
-        [
+        [ {
+                endpoint: '/version',
+                method: 'get',
+                auth: false,
+                status: 200,
+                res: {
+                    property: 'version',
+                    expected: /.{6,20}/
+                }
+            },
+            {
+                endpoint: '/version',
+                method: 'post',
+                auth: false,
+                status: 200,
+                res: {
+                    property: 'version',
+                    expected: /.{6,20}/
+                }
+            },
             // TESTING THE OFFLINE/ONLINE VIEWS (not compatible with v1)
             // the /survey endpoint always returns the online-only view
             {
                 endpoint: '/survey',
                 method: 'post',
-                auth: true,
                 status: 200,
                 res: {
                     property: 'url',
@@ -573,7 +591,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/survey/iframe',
                 method: 'post',
-                auth: true,
                 status: 200,
                 res: {
                     property: 'iframe_url',
@@ -583,7 +600,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/survey',
                 method: 'post',
-                auth: true,
                 status: 200,
                 res: {
                     property: 'url',
@@ -593,7 +609,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/survey/iframe',
                 method: 'post',
-                auth: true,
                 status: 200,
                 res: {
                     property: 'iframe_url',
@@ -605,13 +620,11 @@ describe( 'api', () => {
             {
                 endpoint: '/survey/cache',
                 method: 'delete',
-                auth: true,
                 status: 204
             }, {
                 endpoint: '/survey/cache',
                 method: 'delete',
                 server: invalidServer,
-                auth: true,
                 status: 403 // no account
             }, {
                 endpoint: '/survey/cache',
@@ -624,7 +637,6 @@ describe( 'api', () => {
             {
                 endpoint: '/survey/single',
                 method: 'get',
-                auth: true,
                 status: 200,
                 ret: true,
                 res: {
@@ -635,7 +647,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/survey/single/iframe',
                 method: 'get',
-                auth: true,
                 ret: true,
                 status: 200,
                 res: {
@@ -646,7 +657,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/survey/single',
                 method: 'post',
-                auth: true,
                 ret: true,
                 status: 200,
                 res: {
@@ -657,7 +667,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/survey/single/iframe',
                 method: 'post',
-                auth: true,
                 ret: true,
                 status: 200,
                 res: {
@@ -671,7 +680,6 @@ describe( 'api', () => {
             {
                 endpoint: '/survey/single/once',
                 method: 'get',
-                auth: true,
                 ret: true,
                 status: 200,
                 res: {
@@ -682,7 +690,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/survey/single/once/iframe',
                 method: 'get',
-                auth: true,
                 ret: true,
                 status: 200,
                 res: {
@@ -693,7 +700,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/survey/single/once',
                 method: 'post',
-                auth: true,
                 ret: true,
                 status: 200,
                 res: {
@@ -704,7 +710,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/survey/single/once/iframe',
                 method: 'post',
-                auth: true,
                 ret: true,
                 status: 200,
                 res: {
@@ -718,19 +723,16 @@ describe( 'api', () => {
             {
                 endpoint: '/survey/offline',
                 method: 'post',
-                auth: true,
                 status: 405,
                 offline: false
             }, {
                 endpoint: '/survey/offline/iframe',
                 method: 'post',
-                auth: true,
                 status: 405,
                 offline: false
             }, {
                 endpoint: '/survey/offline',
                 method: 'post',
-                auth: true,
                 status: 200,
                 res: {
                     property: 'offline_url',
@@ -740,7 +742,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/survey/offline/iframe',
                 method: 'post',
-                auth: true,
                 status: 405,
                 offline: true
             },
@@ -1032,7 +1033,6 @@ describe( 'api', () => {
             {
                 endpoint: '/surveys/list',
                 method: 'get',
-                auth: true,
                 server: validServer,
                 status: 200,
                 res: {
@@ -1044,7 +1044,6 @@ describe( 'api', () => {
             {
                 endpoint: '/surveys/list',
                 method: 'post',
-                auth: true,
                 server: validServer,
                 status: 200,
                 res: {
@@ -1081,7 +1080,6 @@ describe( 'api', () => {
                 endpoint: '/survey/view',
                 method: 'get',
                 instance: false,
-                auth: true,
                 status: 200,
                 res: {
                     property: 'view_url',
@@ -1092,7 +1090,6 @@ describe( 'api', () => {
                 endpoint: '/survey/view/iframe',
                 method: 'get',
                 instance: false,
-                auth: true,
                 status: 200,
                 res: {
                     property: 'view_iframe_url',
@@ -1103,7 +1100,6 @@ describe( 'api', () => {
                 endpoint: '/survey/view',
                 method: 'post',
                 instance: false,
-                auth: true,
                 status: 200,
                 res: {
                     property: 'view_url',
@@ -1114,7 +1110,6 @@ describe( 'api', () => {
                 endpoint: '/survey/view/iframe',
                 method: 'post',
                 instance: false,
-                auth: true,
                 status: 200,
                 res: {
                     property: 'view_iframe_url',
@@ -1126,7 +1121,6 @@ describe( 'api', () => {
             {
                 endpoint: '/survey/view',
                 method: 'post',
-                auth: true,
                 instance: false,
                 goTo: '//node',
                 status: 200,
@@ -1140,7 +1134,6 @@ describe( 'api', () => {
             {
                 endpoint: '/survey/view/pdf',
                 method: 'get',
-                auth: true,
                 id: 'invalidID',
                 instance: false,
                 status: 404,
@@ -1156,7 +1149,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/survey/view/pdf',
                 method: 'post',
-                auth: true,
                 margin: '10',
                 instance: false,
                 status: 400,
@@ -1168,7 +1160,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/survey/view/pdf',
                 method: 'post',
-                auth: true,
                 margin: '1in',
                 format: 'fake',
                 instance: false,
@@ -1181,7 +1172,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/survey/view/pdf',
                 method: 'post',
-                auth: true,
                 margin: '1.1cm',
                 format: 'A4',
                 landscape: 'yes',
@@ -1197,14 +1187,12 @@ describe( 'api', () => {
             {
                 endpoint: '/instance/view',
                 method: 'post',
-                auth: true,
                 ret: true,
                 status: 400,
                 offline: true
             }, {
                 endpoint: '/instance/view',
                 method: 'post',
-                auth: true,
                 instance: true,
                 ret: true,
                 status: 400,
@@ -1212,7 +1200,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/instance/view',
                 method: 'post',
-                auth: true,
                 instance_id: true,
                 ret: true,
                 status: 400,
@@ -1220,7 +1207,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/instance/view',
                 method: 'post',
-                auth: true,
                 instance: true,
                 status: 201,
                 instanceId: 'A',
@@ -1234,7 +1220,6 @@ describe( 'api', () => {
             {
                 endpoint: '/instance/view/pdf',
                 method: 'post',
-                auth: true,
                 instance: false,
                 status: 400,
                 offline: true,
@@ -1259,7 +1244,6 @@ describe( 'api', () => {
             {
                 endpoint: '/instance/view',
                 method: 'post',
-                auth: true,
                 instance: true,
                 ret: true,
                 status: 201,
@@ -1274,7 +1258,6 @@ describe( 'api', () => {
             {
                 endpoint: '/instance/view/iframe',
                 method: 'post',
-                auth: true,
                 instance: true,
                 status: 201,
                 instanceId: 'A',
@@ -1288,7 +1271,6 @@ describe( 'api', () => {
             }, {
                 endpoint: '/instance/view',
                 method: 'post',
-                auth: true,
                 instance: true,
                 goTo: '//node',
                 status: 201,
@@ -1303,7 +1285,6 @@ describe( 'api', () => {
             {
                 endpoint: '/instance/view/iframe',
                 method: 'post',
-                auth: true,
                 instance: true,
                 goTo: '//node',
                 parentWindowOrigin: 'http://example.com/',
@@ -1316,7 +1297,7 @@ describe( 'api', () => {
                 offline: true
             }
         ].map( obj => {
-            obj.auth = true;
+            obj.auth = typeof obj.auth === 'undefined' ? true : obj.auth;
             obj.version = version;
             return obj;
         } ).forEach( testResponse );

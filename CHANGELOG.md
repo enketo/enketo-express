@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Added
+- api/v2/version endpoint to obtain current Enketo Express version.
+
 [1.67.1] - 2018-06-27
 ---------------------
 ##### Changed
