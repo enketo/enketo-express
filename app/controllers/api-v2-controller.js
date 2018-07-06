@@ -21,6 +21,8 @@ router
     .get( '/', ( req, res ) => {
         res.redirect( 'http://apidocs.enketo.org/v2' );
     } )
+    .get( '/version', getVersion )
+    .post( '/version', getVersion )
     .all( '*', authCheck )
     .all( '*', _setQuotaUsed )
     .all( '*', _setDefaultsQueryParam )
@@ -119,6 +121,11 @@ router
         error.status = 405;
         next( error );
     } );
+
+function getVersion( req, res, next ) {
+    const version = req.app.get( 'version' );
+    _render( 200, { version }, res );
+}
 
 function authCheck( req, res, next ) {
     // check authentication and account

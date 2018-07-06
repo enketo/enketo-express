@@ -252,7 +252,7 @@ function getThemesSupported( themeList ) {
 }
 
 try {
-    config[ 'version' ] = execSync( 'git describe --tags' );
+    config[ 'version' ] = execSync( 'git describe --tags', { encoding: 'utf-8' } ).trim();
 } catch ( e ) {
     // Probably not deployed with git, try special .tag.txt file
     try {
