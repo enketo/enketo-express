@@ -11,6 +11,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Updated Dutch translation.
 
+##### Fixed
+- The form width in IE11 is sometimes too small.
+
 [1.67.1] - 2018-06-27
 ---------------------
 ##### Changed
