@@ -288,6 +288,7 @@
         "nl": "Nederlands",
         "no": "Noorweegs",
         "pl": "Pools",
+        "pt": "Portugees",
         "ro": "Roemeens",
         "sk": "Slowaaks",
         "supported": "Talen ondersteund:",
@@ -323,6 +324,10 @@
             "submit": "Verzend",
             "username": "Gebruikersnaam"
         }
+    },
+    "rankwidget": {
+        "clickstart": "Klik om te starten",
+        "tapstart": "Klik om te starten"
     },
     "record-list": {
         "export": "Exporteer",

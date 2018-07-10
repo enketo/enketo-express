@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Added
 - api/v2/version endpoint to obtain current Enketo Express version.
+- Russian translation.
+
+##### Changed
+- Updated Dutch translation.
 
 [1.67.1] - 2018-06-27
 ---------------------
