@@ -20,7 +20,7 @@ $button-sml: 10px !default;
 $button-med: 16px !default;
 
 // We use this to control the display property.
-$button-display: inline-block !default;
+$button-display: flex !default;
 $button-margin-bottom: 16px !default;
 
 // We use these to control button text styles.
@@ -78,6 +78,8 @@ $button-disabled-cursor: $cursor-default-value !default;
         text-align: $button-font-align;
         -webkit-appearance: none;
         -webkit-border-radius: 0;
+        align-items: center;
+        justify-content: center;
     }
 
     @if $display {
@@ -229,6 +231,7 @@ button::-moz-focus-inner {
     color: $text-color;
     background: none;
     border: none;
+    font-size: 20px;
 
     @include box-shadow-none;
 
@@ -289,7 +292,8 @@ button::-moz-focus-inner {
 }
 
 .add-repeat-btn,
-.repeat-buttons .remove {
+.repeat-buttons .remove,
+.geopicker [name="geodetect"] {
     .icon {
         margin-right: 0;
     }

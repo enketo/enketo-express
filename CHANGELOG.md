@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.68.0] - 2018-07-11
 ---------------------
 ##### Added
 - api/v2/version endpoint to obtain current Enketo Express version.
@@ -13,6 +13,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - The form width in IE11 is sometimes too small.
+- Exceptions thrown with complex jr:choice-name() usage.
+- Various Geo Widget styling issues with buttons, mobile (fullscreen) and RTL scripts.
 
 [1.67.1] - 2018-06-27
 ---------------------
