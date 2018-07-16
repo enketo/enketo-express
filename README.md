@@ -7,7 +7,7 @@ _The modern [Enketo Smart Paper](https://enketo.org) web application._
 
 #### Manually:
 
-1. Install JS prerequisites: [Node.js](https://github.com/nodesource/distributions) (8.x LTS recommended, and at least 6.x), [Grunt Client](http://gruntjs.com), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
+1. Install JS prerequisites: [Node.js](https://github.com/nodesource/distributions) (8.x LTS recommended), [Grunt Client](http://gruntjs.com), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
 2. Install [Redis](http://redis.io/topics/quickstart)
 3. Install build-essential and git (and libfontconfig to run tests) with `(sudo) apt-get install build-essential git libfontconfig`
 4. Clone this repository

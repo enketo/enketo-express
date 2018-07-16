@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Removed 
+- NodeJS 6 support.
+
 ##### Added
 - Support for 'no-ticks' appearance in range widget.
 
