@@ -31,6 +31,7 @@ module.exports = grunt => {
         },
         sass: {
             options: {
+                implementation: nodeSass,
                 functions: {
                     'base64-url($mimeType, $data)': function( mimeType, data ) {
                         const base64 = new Buffer( data.getValue() ).toString( 'base64' );
