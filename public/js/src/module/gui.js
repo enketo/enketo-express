@@ -398,25 +398,21 @@ function printForm() {
     };
     var options = {
         posButton: components.posButton,
-        posAction: components.posAction,
         negButton: components.negButton,
     };
     var inputs = components.gridInputs + components.gridWarning;
 
-    return new Promise( function( resolve ) {
-        if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
-            options.afterAction = resolve;
-            prompt( texts, options, inputs )
-                .then( function( values ) {
-                    if ( values ) {
-                        printGrid( values );
-                    }
-                } );
-        } else {
-            window.print();
-            resolve();
-        }
-    } );
+    if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
+        return prompt( texts, options, inputs )
+            .then( function( values ) {
+                if ( values ) {
+                    printGrid( values );
+                }
+            } );
+    } else {
+        window.print();
+        return Promise.resolve();
+    }
 }
 
 /**
