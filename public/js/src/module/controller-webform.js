@@ -88,33 +88,32 @@ function _initializeRecords() {
 }
 
 function _checkAutoSavedRecord() {
+    var rec;
     if ( !settings.offline ) {
         return Promise.resolve();
     }
     return records.getAutoSavedRecord()
         .then( function( record ) {
-            return new Promise( function( resolve ) {
-                if ( record ) {
-                    gui.confirm( {
-                        heading: t( 'confirm.autosaveload.heading' ),
-                        msg: t( 'confirm.autosaveload.msg' ),
+            if ( record ) {
+                rec = record;
+                return gui.confirm( {
+                    heading: t( 'confirm.autosaveload.heading' ),
+                    msg: t( 'confirm.autosaveload.msg' ),
 
-                    }, {
-                        posButton: t( 'confirm.autosaveload.posButton' ),
-                        negButton: t( 'confirm.autosaveload.negButton' ),
-                        posAction: function() {
-                            resolve( record );
-                        },
-                        negAction: function() {
-                            records.removeAutoSavedRecord();
-                            resolve();
-                        },
-                        allowAlternativeClose: false
-                    } );
-                } else {
-                    resolve();
-                }
-            } );
+                }, {
+                    posButton: t( 'confirm.autosaveload.posButton' ),
+                    negButton: t( 'confirm.autosaveload.negButton' ),
+                    allowAlternativeClose: false
+                } );
+            }
+        } )
+        .then( function( confirmed ) {
+            if ( confirmed ) {
+                return rec;
+            }
+            if ( rec ) {
+                records.removeAutoSavedRecord();
+            }
         } );
 }
 
@@ -124,16 +123,15 @@ function _checkAutoSavedRecord() {
  */
 function _resetForm( confirmed ) {
     var message;
-    var choices;
 
     if ( !confirmed && form.editStatus ) {
         message = t( 'confirm.save.msg' );
-        choices = {
-            posAction: function() {
-                _resetForm( true );
-            }
-        };
-        gui.confirm( message, choices );
+        gui.confirm( message )
+            .then( function( confirmed ) {
+                if ( confirmed ) {
+                    _resetForm( true );
+                }
+            } );
     } else {
         _setDraftStatus( false );
         form.resetView();
@@ -168,11 +166,13 @@ function _loadRecord( instanceId, confirmed ) {
         };
         choices = {
             posButton: t( 'confirm.discardcurrent.posButton' ),
-            posAction: function() {
-                _loadRecord( instanceId, true );
-            }
         };
-        gui.confirm( texts, choices );
+        gui.confirm( texts, choices )
+            .then( function( confirmed ) {
+                if ( confirmed ) {
+                    _loadRecord( instanceId, true );
+                }
+            } );
     } else {
         records.get( instanceId )
             .then( function( record ) {
@@ -320,26 +320,26 @@ function _getRecordName() {
 }
 
 function _confirmRecordName( recordName, errorMsg ) {
-    return new Promise( function( resolve, reject ) {
-        var texts = {
-            msg: '',
-            heading: t( 'formfooter.savedraft.label' ),
-            errorMsg: errorMsg
-        };
-        var choices = {
-            posButton: t( 'confirm.save.posButton' ),
-            negButton: t( 'confirm.default.negButton' ),
-            posAction: function( values ) {
-                resolve( values[ 'record-name' ] );
-            },
-            negAction: reject
-        };
-        var inputs = '<label><span>' + t( 'confirm.save.name' ) + '</span>' +
-            '<span class="or-hint active">' + t( 'confirm.save.hint' ) + '</span>' +
-            '<input name="record-name" type="text" value="' + recordName + '"required />' + '</label>';
+    var texts = {
+        msg: '',
+        heading: t( 'formfooter.savedraft.label' ),
+        errorMsg: errorMsg
+    };
+    var choices = {
+        posButton: t( 'confirm.save.posButton' ),
+        negButton: t( 'confirm.default.negButton' )
+    };
+    var inputs = '<label><span>' + t( 'confirm.save.name' ) + '</span>' +
+        '<span class="or-hint active">' + t( 'confirm.save.hint' ) + '</span>' +
+        '<input name="record-name" type="text" value="' + recordName + '"required />' + '</label>';
 
-        gui.prompt( texts, choices, inputs );
-    } );
+    return gui.prompt( texts, choices, inputs )
+        .then( function( values ) {
+            if ( values ) {
+                return values[ 'record-name' ];
+            }
+            throw new Error( 'Cancelled by user' );
+        } );
 }
 
 // save the translation in case ever required in the future
@@ -371,7 +371,8 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
         return _confirmRecordName( recordName, errorMsg )
             .then( function( name ) {
                 return _saveRecord( name, true );
-            } );
+            } )
+            .catch( function() {} );
     }
 
     // build the record object

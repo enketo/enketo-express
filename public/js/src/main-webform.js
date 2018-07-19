@@ -1,9 +1,6 @@
 'use strict';
 
 require( 'enketo-core/src/js/polyfills-ie11' );
-// Workaround for https://github.com/kobotoolbox/enketo-express/issues/990
-// This can probably be removed in the future. Test modal dialogs called from file input widget (when resetting).
-require( './module/dialog' );
 
 var $ = require( 'jquery' );
 var gui = require( './module/gui' );
@@ -109,16 +106,21 @@ function _setFormCacheEventHandlers() {
 function _setEmergencyHandlers() {
     $( '.side-slider__advanced__button.flush-db' ).on( 'click', function() {
         gui.confirm( {
-            msg: t( 'confirm.deleteall.msg' ),
-            heading: t( 'confirm.deleteall.heading' )
-        }, {
-            posButton: t( 'confirm.deleteall.posButton' ),
-            posAction: function() {
-                store.flush().then( function() {
-                    location.reload();
-                } );
-            }
-        } );
+                msg: t( 'confirm.deleteall.msg' ),
+                heading: t( 'confirm.deleteall.heading' )
+            }, {
+                posButton: t( 'confirm.deleteall.posButton' ),
+            } )
+            .then( function( confirmed ) {
+                if ( !confirmed ) {
+                    throw new Error( 'Cancelled by user' );
+                }
+                return store.flush();
+            } )
+            .then( function() {
+                location.reload();
+            } )
+            .catch( function() {} );
     } );
 }
 

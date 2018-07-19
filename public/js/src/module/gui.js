@@ -218,11 +218,11 @@ function alert( message, heading, level, duration ) {
         autoClose: duration,
         showCloseButton: true
     } );
+    return Promise.resolve();
 }
 
 /**
  * Shows a confirmation dialog
- * TODO: should return Promise as in enketo-core that resolves when confirmed and rejects when not. After that dialog.js becomes obsolete.
  *
  * @param {?(Object.<string, (string|boolean)>|string)=} content - In its simplest form this is just a string but it can
  *                                                         also an object with parameters msg, heading and errorMsg.
@@ -236,33 +236,30 @@ function confirm( content, choices ) {
         errorMsg = '<p class="alert-box error">' + content.errorMsg + '</p>';
     }
 
-    choices = choices || {};
-    choices.allowAlternativeClose = ( typeof choices.allowAlternativeClose !== 'undefined' ) ? choices.allowAlternativeClose : true;
+    return new Promise( function( resolve ) {
+        choices = choices || {};
+        choices.allowAlternativeClose = ( typeof choices.allowAlternativeClose !== 'undefined' ) ? choices.allowAlternativeClose : true;
 
-    vex.closeAll();
-    vex.dialog.confirm( {
-        unsafeMessage: errorMsg + ( message || t( 'confirm.default.msg' ) ),
-        title: content.heading || t( 'confirm.default.heading' ),
-        buttons: [
-            $.extend( {}, vex.dialog.buttons.YES, {
-                text: choices.posButton || t( 'confirm.default.posButton' ),
-                className: 'btn btn-primary small'
-            } ),
-            $.extend( {}, vex.dialog.buttons.NO, {
-                text: choices.negButton || t( 'confirm.default.negButton' ),
-                className: 'btn btn-default small'
-            } )
-        ],
-        callback: function( value ) {
-            if ( value && typeof choices.posAction !== 'undefined' ) {
-                choices.posAction.call( value );
-            } else if ( typeof choices.negAction !== 'undefined' ) {
-                choices.negAction.call( value );
-            }
-        },
-        showCloseButton: choices.allowAlternativeClose,
-        escapeButtonCloses: choices.allowAlternativeClose,
-        overlayClosesOnClick: choices.allowAlternativeClose
+        vex.closeAll();
+        vex.dialog.confirm( {
+            unsafeMessage: errorMsg + ( message || t( 'confirm.default.msg' ) ),
+            title: content.heading || t( 'confirm.default.heading' ),
+            buttons: [
+                $.extend( {}, vex.dialog.buttons.YES, {
+                    text: choices.posButton || t( 'confirm.default.posButton' ),
+                    className: 'btn btn-primary small'
+                } ),
+                $.extend( {}, vex.dialog.buttons.NO, {
+                    text: choices.negButton || t( 'confirm.default.negButton' ),
+                    className: 'btn btn-default small'
+                } )
+            ],
+            callback: resolve,
+            afterClose: resolve,
+            showCloseButton: choices.allowAlternativeClose,
+            escapeButtonCloses: choices.allowAlternativeClose,
+            overlayClosesOnClick: choices.allowAlternativeClose
+        } );
     } );
 }
 
@@ -274,33 +271,27 @@ function prompt( content, choices, inputs ) {
         errorMsg = '<p class="alert-box error">' + content.errorMsg + '</p>';
     }
 
-    choices = choices || {};
-    vex.closeAll();
-    vex.dialog.prompt( {
-        unsafeMessage: errorMsg + ( message || '' ),
-        title: content.heading || t( 'prompt.default.heading' ),
-        buttons: [
-            $.extend( {}, vex.dialog.buttons.YES, {
-                text: choices.posButton || t( 'confirm.default.posButton' ),
-                className: 'btn btn-primary small'
-            } ),
-            $.extend( {}, vex.dialog.buttons.NO, {
-                text: choices.negButton || t( 'confirm.default.negButton' ),
-                className: 'btn btn-default small'
-            } )
-        ],
-        input: inputs,
-        callback: function( value ) {
-            if ( value && typeof choices.posAction !== 'undefined' ) {
-                choices.posAction.call( null, value );
-            } else if ( typeof choices.negAction !== 'undefined' ) {
-                choices.negAction.call( null, value );
-            }
-            if ( typeof choices.afterAction !== 'undefined' ) {
-                choices.afterAction.call( null, value );
-            }
-        },
-        showCloseButton: true
+    return new Promise( function( resolve ) {
+        choices = choices || {};
+
+        vex.closeAll();
+        vex.dialog.prompt( {
+            unsafeMessage: errorMsg + ( message || '' ),
+            title: content.heading || t( 'prompt.default.heading' ),
+            buttons: [
+                $.extend( {}, vex.dialog.buttons.YES, {
+                    text: choices.posButton || t( 'confirm.default.posButton' ),
+                    className: 'btn btn-primary small'
+                } ),
+                $.extend( {}, vex.dialog.buttons.NO, {
+                    text: choices.negButton || t( 'confirm.default.negButton' ),
+                    className: 'btn btn-default small'
+                } )
+            ],
+            input: inputs,
+            callback: resolve,
+            showCloseButton: true
+        } );
     } );
 }
 
@@ -312,21 +303,24 @@ function prompt( content, choices, inputs ) {
  */
 function confirmLogin( msg /*, serverURL*/ ) {
     msg = msg || t( 'confirm.login.msg' );
-    //serverURL = serverURL || settings.serverURL;
 
     confirm( {
-        msg: msg,
-        heading: t( 'confirm.login.heading' )
-    }, {
-        posButton: t( 'confirm.login.posButton' ),
-        negButton: t( 'confirm.login.negButton' ),
-        posAction: function() {
+            msg: msg,
+            heading: t( 'confirm.login.heading' )
+        }, {
+            posButton: t( 'confirm.login.posButton' ),
+            negButton: t( 'confirm.login.negButton' )
+        } )
+        .then( function( confirmed ) {
+            if ( !confirmed ) {
+                return;
+            }
             var search = '?return_url=' + encodeURIComponent( location.href );
             search += ( settings.touch ) ? '&touch=' + settings.touch : '';
             search += ( settings.debug ) ? '&debug=' + settings.debug : '';
             location.href = location.protocol + '//' + location.host + settings.loginUrl + search;
-        }
-    } );
+        } );
+
 }
 
 /**
@@ -412,7 +406,12 @@ function printForm() {
     return new Promise( function( resolve ) {
         if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
             options.afterAction = resolve;
-            prompt( texts, options, inputs );
+            prompt( texts, options, inputs )
+                .then( function( values ) {
+                    if ( values ) {
+                        printGrid( values );
+                    }
+                } );
         } else {
             window.print();
             resolve();
@@ -430,22 +429,6 @@ function getPrintDialogComponents() {
         heading: t( 'confirm.print.heading' ),
         msg: t( 'confirm.print.msg' ),
         posButton: t( 'confirm.print.posButton' ),
-        posAction: function( format ) {
-            var swapped = printHelper.styleToAll();
-            printHelper.fixGrid( format )
-                .then( window.print )
-                .catch( console.error )
-                .then( function() {
-                    if ( swapped ) {
-                        return new Promise( function( resolve ) {
-                            setTimeout( function() {
-                                printHelper.styleReset();
-                                resolve();
-                            }, 500 );
-                        } );
-                    }
-                } );
-        },
         negButton: t( 'alert.default.button' ),
         gridInputs: '<fieldset><legend>' + t( 'confirm.print.psize' ) + '</legend>' +
             '<label><input name="format" type="radio" value="A4" required checked/><span>' + t( 'confirm.print.a4' ) + '</span></label>' +
@@ -457,6 +440,23 @@ function getPrintDialogComponents() {
             '</fieldset>',
         gridWarning: '<p class="alert-box info" >' + t( 'confirm.print.reminder' ) + '</p>',
     };
+}
+
+function printGrid( format ) {
+    var swapped = printHelper.styleToAll();
+    return printHelper.fixGrid( format )
+        .then( window.print )
+        .catch( console.error )
+        .then( function() {
+            if ( swapped ) {
+                return new Promise( function( resolve ) {
+                    setTimeout( function() {
+                        printHelper.styleReset();
+                        resolve();
+                    }, 500 );
+                } );
+            }
+        } );
 }
 
 /**
@@ -501,15 +501,17 @@ function alertCacheUnsupported() {
     var message = t( 'alert.offlineunsupported.msg' );
     var choices = {
         posButton: t( 'alert.offlineunsupported.posButton' ),
-        negButton: t( 'alert.offlineunsupported.negButton' ),
-        posAction: function() {
-            window.location = settings[ 'modernBrowsersURL' ];
-        }
+        negButton: t( 'alert.offlineunsupported.negButton' )
     };
     confirm( {
-        msg: message,
-        heading: t( 'alert.offlineunsupported.heading' )
-    }, choices );
+            msg: message,
+            heading: t( 'alert.offlineunsupported.heading' )
+        }, choices )
+        .then( function( confirmed ) {
+            if ( confirmed ) {
+                window.location = settings[ 'modernBrowsersURL' ];
+            }
+        } );
 }
 
 /**

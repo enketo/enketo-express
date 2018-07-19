@@ -160,7 +160,7 @@ module.exports = grunt => {
                 },
             },
             options: {
-                // ensure that enketo-config and widgets are overridden in **enketo-core**
+                // ensure that several placeholder modules in **enketo-core** are overridden 
                 transform: [
                     [ 'aliasify', {
                         aliases: pkg.aliasify.aliases,

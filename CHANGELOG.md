@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.69.0] - 2018-07-19
 ---------------------
 ##### Removed 
 - NodeJS 6 support.
@@ -12,7 +12,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Range widget in FF, the ticks partially disappear when the widget has a value.
-- Randomize() doesn't work for itemsets that use itext() labels (in enketo-transformer)
+- Randomize() doesn't work for itemsets that use itext() labels (in enketo-transformer).
+- An architectural issue with modal dialogs.
 
 [1.68.0] - 2018-07-11
 ---------------------
