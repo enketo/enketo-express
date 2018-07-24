@@ -1,5 +1,6 @@
 const crypto = require( 'crypto' );
 const config = require( '../models/config-model' ).server;
+const validUrl = require( 'valid-url' );
 // var debug = require( 'debug' )( 'utils' );
 
 /** 
@@ -59,8 +60,7 @@ function cleanUrl( url ) {
  * @return {Boolean}     [description]
  */
 function isValidUrl( url ) {
-    const validUrl = /^(https?:\/\/)(([\da-z.-]+)\.([a-z.]{2,6})|(([0-9]{1,3}\.){3}[0-9]{1,3})|localhost)(:(102[4-9]|10[3-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-4][0-8]{4}|490[0-9]{2}|491[0-4][0-9]|4915[0-1]))?([/\w .\-()]*)*\/?[/\w .-]*$/;
-    return validUrl.test( url );
+    return !!validUrl.isWebUri( url ) && !( /\?/.test( url ) ) && !( /#/.test( url ) );
 }
 
 function md5( message ) {

@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Form previews using the `form` query parameter with a URL value that contains ":" in the path, get stuck in an infinite loop (!).
+
 [1.69.0] - 2018-07-19
 ---------------------
 ##### Removed 

@@ -67,6 +67,7 @@
         "request": "2.87.x",
         "serve-favicon": "2.x.x",
         "time-grunt": "1.x.x",
+        "valid-url": "^1.0.9",
         "vex-dialog-enketo": "git+https://github.com/enketo/vex-dialog.git#b6e0f01",
         "vex-js": "4.1.x",
         "xml2js": "0.4.x"

@@ -153,7 +153,7 @@ describe( 'Utilities', () => {
             ' http://example.org',
             'example.org',
             'www.example.org',
-            'http://example.o',
+            //'http://example.o',
             'http://example.o/ d',
             'http://example.org/_-?',
             'http://example.org/a?b=c',
