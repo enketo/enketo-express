@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Changed
+- In Grid Theme readonly questions with value now have the same whole-cell background color as readonly questions without a value.
+
 ##### Fixed
 - Form previews using the `form` query parameter with a URL value that contains ":" in the path, get stuck in an infinite loop (!).
 
