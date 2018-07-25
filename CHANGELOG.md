@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Form previews using the `form` query parameter with a URL value that contains ":" in the path, get stuck in an infinite loop (!).
+- If an loading error occurs when the form is reset, no message is output to the user.
 
 [1.69.0] - 2018-07-19
 ---------------------

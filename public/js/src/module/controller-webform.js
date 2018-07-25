@@ -139,11 +139,14 @@ function _resetForm( confirmed ) {
             modelStr: formData.modelStr,
             external: formData.external
         }, formOptions );
-        form.init();
+        var loadErrors = form.init();
         // formreset event will update the form media:
         form.view.$.trigger( 'formreset' );
         if ( records ) {
             records.setActive( null );
+        }
+        if ( loadErrors.length > 0 ) {
+            gui.alertLoadErrors( loadErrors );
         }
     }
 }
