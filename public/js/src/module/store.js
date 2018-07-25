@@ -8,6 +8,7 @@ var db = require( 'db.js' );
 var utils = require( './utils' );
 var sniffer = require( './sniffer' );
 var t = require( './translator' ).t;
+var parser = new DOMParser();
 
 var server;
 var blobEncoding;
@@ -137,7 +138,6 @@ function init() {
         } );
 }
 
-
 function _checkSupport() {
     var error;
     // best to perform this specific check ourselves and not rely on specific error message in db.js.
@@ -241,16 +241,17 @@ propertyStore = {
 
 surveyStore = {
     /** 
-     * Obtains a single survey's form HTML and XML model from storage
+     * Obtains a single survey's form HTML and XML model, theme, external instances from storage
      * @param  {[type]} id [description]
      * @return {[type]}    [description]
      */
     get: function( id ) {
         return server.surveys.get( id )
-            .then( _firstItemOnly );
+            .then( _firstItemOnly )
+            .then( _transformExternalDataToXmlDoc );
     },
     /**
-     * Stores a single survey's form HTML and XML model
+     * Stores a single survey's form HTML and XML model, theme, external instances
      *
      * @param {[type]} survey [description]
      * @return {Promise}        [description]
@@ -259,8 +260,9 @@ surveyStore = {
         if ( !survey.form || !survey.model || !survey.enketoId || !survey.hash ) {
             throw new Error( 'Survey not complete' );
         }
-        return server.surveys.add( survey )
-            .then( _firstItemOnly );
+        return server.surveys.add( _transformExternalDataToXmlStr( survey ) )
+            .then( _firstItemOnly )
+            .then( _transformExternalDataToXmlDoc );
     },
     /**
      * Updates a single survey's form HTML and XML model as well any external resources belonging to the form
@@ -294,6 +296,7 @@ surveyStore = {
                         return !resourceKeys || resourceKeys.indexOf( existing ) < 0;
                     } );
                 }
+                _transformExternalDataToXmlStr( survey );
                 // update the existing survey
                 return server.surveys.update( {
                     form: survey.form,
@@ -323,7 +326,8 @@ surveyStore = {
                     .then( function() {
                         // resolving with original survey (not the array returned by server.surveys.update)
                         return survey;
-                    } );
+                    } )
+                    .then( _transformExternalDataToXmlDoc );
             } );
     },
     /**
@@ -682,6 +686,30 @@ function _firstItemOnly( results ) {
         // if not an array
         return Promise.resolve( results );
     }
+}
+
+function _transformExternalDataToXmlStr( survey ) {
+    if ( survey && survey.externalData ) {
+        survey.externalData = survey.externalData.map( function( instance ) {
+            if ( instance.xml instanceof XMLDocument ) {
+                instance.xml = new XMLSerializer().serializeToString( instance.xml.documentElement, 'text/xml' );
+            }
+            return instance;
+        } );
+    }
+    return survey;
+}
+
+function _transformExternalDataToXmlDoc( survey ) {
+    if ( survey && survey.externalData ) {
+        survey.externalData = survey.externalData.map( function( instance ) {
+            if ( typeof instance.xml === 'string' ) {
+                instance.xml = parser.parseFromString( instance.xml, 'text/xml' );
+            }
+            return instance;
+        } );
+    }
+    return survey;
 }
 
 /**
