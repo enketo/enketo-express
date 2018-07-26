@@ -17,7 +17,7 @@ var survey = {
 };
 
 // Completely disable calculations in Enketo Core
-require( 'enketo-core/src/js/calculation' ).update = function() {
+require( 'enketo-core/src/js/calculate' ).update = function() {
     console.log( 'Calculations disabled.' );
 };
 // Completely disable instanceID and deprecatedID population in Enketo Core
