@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 --------------------
+##### Changed
+- Updated German and Slovak translations.
+
 ##### Fixed
 - Download links in file input and draw widgets not working in IE11.
 - The required asterisks (*) do not update in real-time if `validateContinously` is set to `false`.

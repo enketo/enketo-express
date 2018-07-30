@@ -288,7 +288,9 @@
         "nl": "Holandčina ",
         "no": "Nórčina ",
         "pl": "Poľština",
+        "pt": "Portugalčina",
         "ro": "Rumunčina",
+        "ru": "Ruština",
         "sk": "Slovenčina",
         "supported": "Podporované jazyky:",
         "sv": "Švédčina",
@@ -323,6 +325,10 @@
             "submit": "Odoslať",
             "username": "Užívateľské meno"
         }
+    },
+    "rankwidget": {
+        "clickstart": "Kliknutím spustíte",
+        "tapstart": "Klepnutím spustíte"
     },
     "record-list": {
         "export": "Exportovať",
