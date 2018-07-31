@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Updated German and Slovak translations.
 
 ##### Fixed
+- Docker installations fail because the `Dockerfile` specifies NodeJS 6.
 - Download links in file input and draw widgets not working in IE11.
 - The required asterisks (*) do not update in real-time if `validateContinously` is set to `false`.
 
