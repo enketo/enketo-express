@@ -130,7 +130,12 @@ function _updateCache( survey ) {
         .then( _addMediaHash )
         .catch( error => {
             if ( error.status === 401 || error.status === 404 ) {
-                cacheModel.flush( survey );
+                cacheModel.flush( survey )
+                    .catch( e => {
+                        if ( e.status !== 404 ) {
+                            console.error( e );
+                        }
+                    } );
             } else {
                 console.error( 'Unknown Error occurred during attempt to update cache', error );
             }
