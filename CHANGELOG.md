@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Added
+- Enable/disable meridian in timepicker and datetimepicker based upon detected locale preferences.
+
 [1.69.2] - 2018-08-02
 --------------------
 ##### Changed
@@ -11,7 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Docker installations fail because the `Dockerfile` specifies NodeJS 6.
 - Download links in file input and draw widgets not working in IE11.
 - The required asterisks (*) do not update in real-time if `validateContinously` is set to `false`.
-- If a required text input field has a non-whitespace value that is replaced by the user to a white-space-only value the new whitespace-only value is saved and considered valid.
+- If a required text input field has a non-whitespace value that is replaced by the user to a whitespace-only value the new whitespace-only value is saved and considered valid.
 
 [1.69.1] - 2018-07-25
 ---------------------
