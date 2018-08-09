@@ -1,7 +1,7 @@
 #feedback-bar {
     @include transition-slow;
     @include border-box;
-    @include border-radius(0px);
+    border-radius: 0;
     position: fixed;
     z-index: 13;
     top: -100px;
@@ -19,11 +19,12 @@
         text-align: center;
         padding: .6em 0;
         font-size: 1.1em;
-        & + p {
+        &+p {
             border-top: 1px #ddd dashed;
         }
     }
-    .icon-info-circle, .close {
+    .icon-info-circle,
+    .close {
         position: absolute;
         top: 50%;
     }

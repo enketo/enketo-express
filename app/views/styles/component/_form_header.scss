@@ -1,23 +1,18 @@
 $offline-color: #d15200;
 
 .form-header {
-    @include display-flex;
-
-    @include flex-wrap(nowrap);
-
-    @include flex-direction(row);
-
-    // even for rtl UI
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row; // even for rtl UI
     text-align: left;
-    align-items: flex-end;
+    align-items: center;
 
     &__branding {
         order: 1;
         padding-right: 10px;
 
         .logo-wrapper {
-            @include display-flex;
-
+            display: flex;
             align-items: flex-end;
         }
 
@@ -37,14 +32,10 @@ $offline-color: #d15200;
                 opacity: 0.8;
             }
         }
-    }
-
-    // Only if .form-header__branding is an <a>nchor
+    } // Only if .form-header__branding is an <a>nchor
     a.form-header__branding:hover {
         opacity: 0.8;
-    }
-
-    // This filler element makes it easier to keep the same look with RTL UI languages
+    } // This filler element makes it easier to keep the same look with RTL UI languages
     &__filler {
         order: 20;
         flex: 1;
@@ -66,10 +57,6 @@ $offline-color: #d15200;
         margin-left: 20px;
         margin-right: 0;
         outline: 0;
-
-        ~ .form-language-selector {
-            border-right: 1px solid #999999;
-        }
     }
 
     &__button--homescreen {
@@ -82,19 +69,25 @@ $offline-color: #d15200;
             font-size: 25px;
         }
     }
+
+    .pages-toc {
+        order: 70;
+
+        label[for="toc-toggle"] {
+            background: repeating-linear-gradient(black 2px, black 5px, transparent 5px, transparent 12px);
+        }
+    }
 }
+
+
 
 .form-progress {
     position: fixed;
     top: 0;
     left: 0;
     display: block;
-    max-width: 100% !important;
-
-    // to make sure animation works the very first time
-    width: 34px;
-
-    // to make sure that it can't be set lower inline
+    max-width: 100% !important; // to make sure animation works the very first time
+    width: 34px; // to make sure that it can't be set lower inline
     min-width: 34px !important;
     margin: 0;
     height: 3px;
@@ -105,6 +98,10 @@ $offline-color: #d15200;
 }
 
 [dir="rtl"] {
+    .form-header {
+        flex-direction: row-reverse;
+    }
+
     .offline-enabled {
         top: 0px;
     }
@@ -180,8 +177,6 @@ $offline-color: #d15200;
 
 .form-language-selector {
     margin: 0;
-    padding-right: 20px;
-    float: none;
 
     #form-languages {
         display: inline-block;
@@ -209,9 +204,7 @@ $offline-color: #d15200;
 
 @media screen and (max-width: $main-breakpoint) {
     .form-header {
-        @include flex-wrap(wrap);
-
-        // only content of header has top and bottom padding/margin
+        @include flex-wrap(wrap); // only content of header has top and bottom padding/margin
         // This ensures that no space is taking up when the header is completely empty,
         // i.e. no brand/languages/reason-for-change/fs-feedback
         padding: 0 16px 0 16px;
@@ -224,24 +217,19 @@ $offline-color: #d15200;
         .form-language-selector {
             // Safari requires this to be set to 100% instead of 1
             flex: 100%;
+            order: 100;
             padding-bottom: 0;
+            margin: 0 auto; // force on new line
+            min-width: 280px;
         }
 
         &__button--print {
             display: none;
-
-            ~ .form-language-selector {
-                border-right: none;
-                padding-right: 0;
-            }
         }
 
         &__button--homescreen {
-            top: -2px;
-
-            // TODO: ensure button takes up on vertical space if there is no branding
+            top: -2px; // TODO: ensure button takes up on vertical space if there is no branding
             // https://github.com/kobotoolbox/enketo-express/issues/634
-
             // ensure that reason-for-change is pushed to the side
             position: static;
             align-self: flex-start;
@@ -261,35 +249,11 @@ $offline-color: #d15200;
 
     .offline-enabled {
         // this vertical-aligns to the top, overruling the align-items rule on .form-header
-        align-self: flex-start;
-
-        // this negates a padding set on the form-header in enketo-core _response.scss
+        align-self: flex-start; // this negates a padding set on the form-header in enketo-core _response.scss
         margin-left: -16px;
 
         .queue-length {
             background-color: rgb(245, 245, 245);
         }
-    }
-}
-
-@media screen and (max-width: 520px) {
-    .form-language-selector {
-        padding-right: 0;
-    }
-
-    .form-header {
-        .form-language-selector {
-            order: 100;
-            flex: 1;
-            margin: 0 auto;
-
-            // force on new line
-            min-width: 280px;
-        }
-    }
-
-    #form-languages {
-        margin: 0;
-        width: 100%;
     }
 }

@@ -11,7 +11,8 @@ $opposite-direction: right !default;
 
 $default-float: left !default;
 
-$medium-range: 40.063em, 64em !default;
+$medium-range: 40.063em,
+64em !default;
 $screen: "only screen" !default;
 $medium-up: "#{$screen} and (min-width:#{lower-bound($medium-range)})" !default;
 
@@ -135,9 +136,7 @@ $button-disabled-cursor: $cursor-default-value !default;
     &:hover,
     &:focus {
         background-color: $bg-hover;
-    }
-
-    // We control the text color for you based on the background color.
+    } // We control the text color for you based on the background color.
     color: if($bg-lightness > 70%, $button-font-color-alt, $button-font-color);
 
     &:hover,
@@ -150,9 +149,7 @@ $button-disabled-cursor: $cursor-default-value !default;
     &:active,
     &:visited {
         text-decoration: none;
-    }
-
-    // We can set $disabled:true to create a disabled transparent button.
+    } // We can set $disabled:true to create a disabled transparent button.
     @if $disabled {
         cursor: $button-disabled-cursor;
         opacity: $button-disabled-opacity;
@@ -162,10 +159,8 @@ $button-disabled-cursor: $cursor-default-value !default;
         &:focus {
             background-color: $bg;
         }
-    }
-
-    // We can control how much button radius is used.
-    @if $radius == true {
+    } // We can control how much button radius is used.
+    @if $radius==true {
         @include radius($button-radius);
     }
     @else if $radius {
@@ -232,9 +227,7 @@ button::-moz-focus-inner {
     background: none;
     border: none;
     font-size: 20px;
-
-    @include box-shadow-none;
-
+    box-shadow: none;
     opacity: 0.7;
 
     &:hover,
@@ -244,8 +237,7 @@ button::-moz-focus-inner {
     &:disabled,
     &.disabled {
         background: none;
-
-        @include box-shadow-none;
+        box-shadow: none;
     }
 
     &:hover {
@@ -266,7 +258,7 @@ button::-moz-focus-inner {
     &.active,
     &:disabled,
     &.disabled {
-        @include box-shadow-none;
+        box-shadow: none;
     }
 
     &:hover {
