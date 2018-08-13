@@ -2,11 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.70.0] - 2018-09-13
 ---------------------
 ##### Added
 - Enable/disable meridian in timepicker and datetimepicker based upon detected locale preferences.
+- Table of Contents to Pages mode that enables jumping to any page.
 
+##### Fixed
+- Questions with calculations do not re-validate immediately when the value is re-calculated (with `validateContinuously: true`).
+- Labels with words longer the form width, overlap with other form elements.
+- Readonly questions in newly cloned repeats in Grid Theme do not get the proper readonly styling.
+- Whitespace only input triggers a `valuechange.enketo` event but should not.
+  
 [1.69.2] - 2018-08-02
 --------------------
 ##### Changed
