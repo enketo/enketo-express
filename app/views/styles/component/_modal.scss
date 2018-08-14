@@ -29,7 +29,6 @@
 
     .vex-dialog-input input[type=text] {
         //@include form-control;
-   
     }
 
     .vex-dialog-input input[type=checkbox],
@@ -53,7 +52,6 @@
 .vex.vex-theme-plain .vex-dialog-input {
     input {
         //@include form-control;
-   
     }
 
     fieldset {
@@ -65,7 +63,7 @@
         font-size: 16px;
         margin-bottom: 10px;
 
-        ~ label {
+        ~label {
             display: inline-block;
             width: auto;
             font-weight: normal;
@@ -81,7 +79,7 @@
                 background: none;
             }
 
-            + label {
+            +label {
                 margin-left: 20px;
             }
         }
@@ -107,4 +105,10 @@
     @extend .icon-ellipsis-v;
 
     padding: 0 5px;
+}
+
+@media screen and (max-width: 400px) {
+    .vex.vex-theme-plain {
+        padding: 0;
+    }
 }

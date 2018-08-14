@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Modal with lots of text not aligned nicely on small phone screens.
+
 [1.70.0] - 2018-09-13
 ---------------------
 ##### Added
