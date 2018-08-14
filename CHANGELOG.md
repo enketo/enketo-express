@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Fixed
 - Modal with lots of text not aligned nicely on small phone screens.
+- Appearance "placement-map" not showing map in geowidgets. 
 
 [1.70.0] - 2018-09-13
 ---------------------
