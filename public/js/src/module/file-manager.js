@@ -55,7 +55,7 @@ function getFileUrl( subject ) {
         } else if ( typeof subject === 'string' ) {
             if ( instanceAttachments && ( instanceAttachments.hasOwnProperty( subject ) ) ) {
                 resolve( instanceAttachments[ subject ] );
-            } else if ( !store.isAvailable() ) {
+            } else if ( !store.available ) {
                 // e.g. in an online-only edit view
                 reject( new Error( 'store not available' ) );
             } else {

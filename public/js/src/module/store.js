@@ -21,7 +21,6 @@ var available = false;
 var databaseName = 'enketo';
 
 function init() {
-
     return _checkSupport()
         .then( function() {
             return db.open( {
@@ -154,10 +153,6 @@ function _checkSupport() {
             reject( error );
         }
     } );
-}
-
-function isAvailable() {
-    return available;
 }
 
 function _isWriteable() {
@@ -908,7 +903,9 @@ dump = {
 
 module.exports = {
     init: init,
-    isAvailable: isAvailable,
+    get available() {
+        return available;
+    },
     property: propertyStore,
     survey: surveyStore,
     dynamicData: dataStore,

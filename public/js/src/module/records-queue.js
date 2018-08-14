@@ -30,8 +30,7 @@ function init() {
     $uploadButton = $( '.record-list__button-bar__button.upload' );
     $queueNumber = $( '.offline-enabled__queue-length' );
 
-    return store.init()
-        .then( _updateRecordList );
+    return _updateRecordList();
 }
 
 /**
