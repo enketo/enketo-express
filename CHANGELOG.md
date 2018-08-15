@@ -2,13 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+1.70.1] - 2018-08-15
 ---------------------
 ##### Fixed
 - Modal with lots of text not aligned nicely on small phone screens.
 - Appearance "placement-map" not showing map in geowidgets. 
 
-[1.70.0] - 2018-09-13
+[1.70.0] - 2018-08-13
 ---------------------
 ##### Added
 - Enable/disable meridian in timepicker and datetimepicker based upon detected locale preferences.
