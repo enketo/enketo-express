@@ -4,7 +4,7 @@ const TError = require( '../custom-error' ).TranslatedError;
 const config = require( '../../models/config-model' ).server;
 const debug = require( 'debug' )( 'openrosa-communicator' );
 const parser = new require( 'xml2js' ).Parser();
-const TIMEOUT = 60 * 1000;
+const TIMEOUT = config.timeout;
 
 /**
  * Gets form info

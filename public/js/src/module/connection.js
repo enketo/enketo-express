@@ -60,7 +60,6 @@ function uploadRecord( record ) {
     }
 
     batches.forEach( function( batch ) {
-        batch.formData.append( 'Date', new Date().toUTCString() );
         batch.instanceId = record.instanceId;
         batch.deprecatedId = record.deprecatedId;
     } );
@@ -122,8 +121,7 @@ function _uploadBatch( recordBatch ) {
                 headers: {
                     'X-OpenRosa-Version': '1.0',
                     'X-OpenRosa-Deprecated-Id': recordBatch.deprecatedId,
-                    'X-OpenRosa-Instance-Id': recordBatch.instanceId,
-                    'Date': new Date().toUTCString()
+                    'X-OpenRosa-Instance-Id': recordBatch.instanceId
                 },
                 timeout: settings.timeout
             } )

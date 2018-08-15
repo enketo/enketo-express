@@ -60,6 +60,7 @@ function submit( req, res, next ) {
             return communicator.getAuthHeader( submissionUrl, credentials );
         } )
         .then( authHeader => {
+            // Note even though headers is part of these options, it does not overwrite the headers set on the client!
             const options = {
                 method: 'POST',
                 url: submissionUrl,
@@ -69,8 +70,8 @@ function submit( req, res, next ) {
                 timeout: req.app.get( 'timeout' ) + 500
             };
 
-            // TODO: why are all headers overwritten here (X-OpenRosa-Version, Date)
-            // TODO: it looks like cookies are also overwritten, but wouldn't that break submissions to Ona?
+            // The Date header is actually forbidden to set programmatically, but we do it anyway to comply with OpenRosa
+            options.headers[ 'Date' ] = new Date().toUTCString();
 
             // pipe the request 
             req.pipe( request( options ) )
