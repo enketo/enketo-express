@@ -4,6 +4,7 @@ const TError = require( '../custom-error' ).TranslatedError;
 const config = require( '../../models/config-model' ).server;
 const debug = require( 'debug' )( 'openrosa-communicator' );
 const parser = new require( 'xml2js' ).Parser();
+const TIMEOUT = 60 * 1000;
 
 /**
  * Gets form info
@@ -125,7 +126,8 @@ function getAuthHeader( url, credentials ) {
         headers: {
             'X-OpenRosa-Version': '1.0',
             'Date': new Date().toUTCString()
-        }
+        },
+        timeout: TIMEOUT
     };
 
     return new Promise( resolve => {
@@ -176,6 +178,7 @@ function getUpdatedRequestOptions( options ) {
     options.headers = options.headers || {};
     options.headers[ 'X-OpenRosa-Version' ] = '1.0';
     options.headers[ 'Date' ] = new Date().toUTCString();
+    options.timeout = TIMEOUT;
 
     if ( !options.headers.cookie ) {
         // remove undefined cookie
