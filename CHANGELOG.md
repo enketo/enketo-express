@@ -2,7 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-1.70.1] - 2018-08-15
+
+[1.70.2] - 2018-08-23
+----------------------
+##### Changed
+- In readonly views input fields are now shown if empty.
+
+##### Fixed
+- If form in Pages Mode has a repeat as the first page (with field-list), a blank first page is shown.
+
+[1.70.1] - 2018-08-15
 ---------------------
 ##### Fixed
 - Modal with lots of text not aligned nicely on small phone screens.
