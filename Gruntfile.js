@@ -1,5 +1,5 @@
 module.exports = grunt => {
-    const JS_INCLUDE = [ '**/*.js', '!node_modules/**', '!test/**/*.spec.js', '!public/js/*-bundle.js', '!public/js/*-bundle.min.js' ];
+    const JS_INCLUDE = [ '**/*.js', '!node_modules/**', '!test/**/*.spec.js', '!public/js/*-bundle.js', '!public/js/*.min.js' ];
     const pkg = grunt.file.readJSON( 'package.json' );
     const path = require( 'path' );
     const nodeSass = require( 'node-sass' );
