@@ -103,7 +103,8 @@
             "enketo/widgets": "./public/js/widgets",
             "enketo/translator": "./public/js/src/module/translator",
             "enketo/dialog": "./public/js/src/module/gui",
-            "enketo/file-manager": "./public/js/src/module/file-manager"
+            "enketo/file-manager": "./public/js/src/module/file-manager",
+            "enketo/polyfills-ie11": false
         }
     }
 }

@@ -1,7 +1,5 @@
 'use strict';
 
-require( 'enketo-core/src/js/polyfills-ie11' );
-
 var $ = require( 'jquery' );
 var gui = require( './module/gui' );
 var controller = require( './module/controller-webform' );

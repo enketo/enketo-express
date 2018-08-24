@@ -91,6 +91,9 @@ module.exports = grunt => {
                     'gulp',
                     'cd ..'
                 ].join( '&&' )
+            },
+            ie11polyfill: {
+                command: 'curl "https://cdn.polyfill.io/v2/polyfill.min.js?ua=ie%2F11.0.0&features=es2015%2Ces2016%2Ces2017%2Ces2018%2CElement.prototype.matches" -o "public/js/ie11-polyfill.min.js"',
             }
         },
         jsbeautifier: {
@@ -244,12 +247,12 @@ module.exports = grunt => {
         grunt.log.writeln( `File ${WIDGETS_SASS} created` );
     } );
 
-    grunt.registerTask( 'default', [ 'i18next', 'widgets', 'css', 'js', 'uglify' ] );
+    grunt.registerTask( 'default', [ 'shell:ie11polyfill', 'i18next', 'widgets', 'css', 'js', 'uglify' ] );
     grunt.registerTask( 'js', [ 'client-config-file:create', 'widgets', 'browserify:production' ] );
     grunt.registerTask( 'js-dev', [ 'client-config-file:create', 'widgets', 'browserify:development' ] );
     grunt.registerTask( 'css', [ 'system-sass-variables:create', 'sass' ] );
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'eslint' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
-    grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js-dev', 'css', 'concurrent:develop' ] );
+    grunt.registerTask( 'develop', [ 'env:develop', 'shell:ie11polyfill', 'i18next', 'js-dev', 'css', 'concurrent:develop' ] );
     grunt.registerTask( 'test-and-build', [ 'env:test', 'mochaTest:all', 'karma:headless', 'env:production', 'default' ] );
 };

@@ -7,9 +7,9 @@ _The modern [Enketo Smart Paper](https://enketo.org) web application._
 
 #### Manually:
 
-1. Install JS prerequisites: [Node.js](https://github.com/nodesource/distributions) (8.x LTS recommended), [Grunt Client](http://gruntjs.com), and [Node-Gyp](https://github.com/TooTallNate/node-gyp)
+1. Install JS prerequisites: [Node.js](https://github.com/nodesource/distributions) (8.x LTS), [Grunt Client](http://gruntjs.com).
 2. Install [Redis](http://redis.io/topics/quickstart)
-3. Install build-essential and git (and libfontconfig to run tests) with `(sudo) apt-get install build-essential git libfontconfig`
+3. Install build-essential, curl and git with `(sudo) apt-get install build-essential git curl`
 4. Clone this repository
 5. Install dependencies with `npm install` from the project root
 6. Create config/config.json to override values in the [default config](./config/default-config.json). Start with `cp config/default-config.json config/config.json`
@@ -36,7 +36,6 @@ _\* sometimes `vagrant up` fails for reasons beyond our control - e.g. if extern
 5. To stop, execute `docker-compose stop` from the [`setup/docker`](./setup/docker) directory. Database dumps from the main Redis instance will be mapped into the directory `setup/docker/redis_main_data/`.
 
 The app should now be running on [localhost](http://localhost).
-
 
 ### How to install a production server
 
