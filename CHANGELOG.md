@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Improved performance of modern browser (at the expense of Internet Explorer 11 performance) by not loading polyfills unnecessarily.
 
+#### Fixed
+- Loaded year and month-year values not displayed correctly in date (desktop) widget.
+
 [1.70.2] - 2018-08-23
 ----------------------
 ##### Changed
