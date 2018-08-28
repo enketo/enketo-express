@@ -8,6 +8,7 @@ var gui = require( './gui' );
 var connection = require( './connection' );
 var settings = require( './settings' );
 var Form = require( 'enketo-core' );
+require( 'enketo-core/src/js/workarounds-ie11' );
 var fileManager = require( './file-manager' );
 var t = require( './translator' ).t;
 var records = require( './records-queue' );

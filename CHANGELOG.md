@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.70.3] - 2018-08-28
 ----------------------
 ##### Changed
 - Improved performance of modern browser (at the expense of Internet Explorer 11 performance) by not loading polyfills unnecessarily.
