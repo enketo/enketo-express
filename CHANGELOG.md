@@ -9,6 +9,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 #### Fixed
 - Loaded year and month-year values not displayed correctly in date (desktop) widget.
+- Calculation results inside repeats are shown incorrectly to user under certain conditions.
+- When a repeat is removed, calculations inside sibling repeats (e.g. using `position(..)`) are not always re-calculated.
 
 [1.70.2] - 2018-08-23
 ----------------------
