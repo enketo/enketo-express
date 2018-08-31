@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Fixed
+- Range pickers not showing current value "thumb" on printouts.
+- Distresspicker thumb not centered on Chrome and Safari.
+
 [1.70.3] - 2018-08-28
 ----------------------
 ##### Changed
