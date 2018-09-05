@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Range pickers not showing current value "thumb" on printouts.
 - Distresspicker thumb not centered on Chrome and Safari.
+- `jr:choice-name()` function not working with autocomplete questions.
 
 [1.70.3] - 2018-08-28
 ----------------------
