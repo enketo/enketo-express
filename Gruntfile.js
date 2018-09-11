@@ -99,10 +99,10 @@ module.exports = grunt => {
                 command: 'rm -f public/css/*'
             },
             'clean-locales': {
-                command: 'find locales -name "translation-combined.json" -delete'
+                command: 'find locales -name "translation-combined.json" -delete && rm -fr locales/??'
             },
             'clean-js': {
-                command: 'rm -f public/js/build/* && rm -f public/js/*.js'
+                command: 'rm -f public/js/build/* && rm -f public/js/*.js && rm -f public/temp-client-config.json'
             }
         },
         jsbeautifier: {
