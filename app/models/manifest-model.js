@@ -143,10 +143,10 @@ function _getTranslations( lang ) {
     const langs = [];
 
     // fallback language
-    langs.push( `${config[ 'base path' ]}/locales/en/translation-combined.json` );
+    langs.push( `${config[ 'base path' ]}/locales/build/en/translation-combined.json` );
 
     if ( lang && lang !== 'en' ) {
-        langs.push( `${config[ 'base path' ]}/locales/${lang}/translation-combined.json` );
+        langs.push( `${config[ 'base path' ]}/locales/build/${lang}/translation-combined.json` );
     }
 
     return langs;

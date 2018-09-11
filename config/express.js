@@ -44,7 +44,7 @@ i18next
         fallbackLng: 'en',
         joinArrays: '\n',
         backend: {
-            loadPath: path.resolve( __dirname, '../locales/__lng__/translation-combined.json' )
+            loadPath: path.resolve( __dirname, '../locales/build/__lng__/translation-combined.json' )
         },
         load: 'languageOnly',
         lowerCaseLng: true,
@@ -71,7 +71,7 @@ app.use( i18nextMiddleware.handle( i18next, {
 } ) );
 app.use( favicon( path.resolve( __dirname, '../public/images/favicon.ico' ) ) );
 app.use( app.get( 'base path' ), express.static( path.resolve( __dirname, '../public' ) ) );
-app.use( app.get( 'base path' ) + '/locales', express.static( path.resolve( __dirname, '../locales' ) ) );
+app.use( app.get( 'base path' ) + '/locales/build', express.static( path.resolve( __dirname, '../locales/build' ) ) );
 
 // set variables that should be accessible in all view templates
 app.use( function( req, res, next ) {

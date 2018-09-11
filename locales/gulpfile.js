@@ -28,7 +28,7 @@ gulp.task( 'default', function() {
             // apparently to url in the first item of the src argument array
             // Without setting this, the existing translations will 
             // be emptied.
-            output: '../../../locales'
+            output: '../../../locales/src'
         } ) )
-        .pipe( gulp.dest( '.' ) );
+        .pipe( gulp.dest( './src' ) );
 } );

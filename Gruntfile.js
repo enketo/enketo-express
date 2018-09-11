@@ -97,6 +97,9 @@ module.exports = grunt => {
             },
             'clean-css': {
                 command: 'rm -f public/css/*'
+            },
+            'clean-locales': {
+                command: 'find locales -name "translation-combined.json" -delete'
             }
         },
         jsbeautifier: {
@@ -198,14 +201,14 @@ module.exports = grunt => {
         },
         i18next: {
             locales: {
-                cwd: 'locales/',
+                cwd: 'locales/src/',
                 expand: true,
                 src: [ '*/' ],
                 include: [ '**/translation.json', '**/translation-additions.json' ],
                 rename( dest, src ) {
                     return `${dest + src}translation-combined.json`;
                 },
-                dest: 'locales/'
+                dest: 'locales/build/'
             }
         }
     } );
@@ -250,7 +253,8 @@ module.exports = grunt => {
         grunt.log.writeln( `File ${WIDGETS_SASS} created` );
     } );
 
-    grunt.registerTask( 'default', [ 'shell:ie11polyfill', 'i18next', 'widgets', 'css', 'js', 'uglify' ] );
+    grunt.registerTask( 'default', [ 'shell:ie11polyfill', 'locales', 'widgets', 'css', 'js', 'uglify' ] );
+    grunt.registerTask( 'locales', [ 'shell:clean-locales', 'i18next' ] );
     grunt.registerTask( 'js', [ 'client-config-file:create', 'widgets', 'browserify:production' ] );
     grunt.registerTask( 'js-dev', [ 'client-config-file:create', 'widgets', 'browserify:development' ] );
     grunt.registerTask( 'css', [ 'shell:clean-css', 'system-sass-variables:create', 'sass' ] );

@@ -5,7 +5,7 @@ const path = require( 'path' );
 const fs = require( 'fs' );
 const url = require( 'url' );
 const themePath = path.join( __dirname, '../../public/css' );
-const languagePath = path.join( __dirname, '../../locales' );
+const languagePath = path.join( __dirname, '../../locales/src' );
 const execSync = require( 'child_process' ).execSync;
 // var debug = require( 'debug' )( 'config-model' );
 

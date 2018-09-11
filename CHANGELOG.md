@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Changed
 - Performance of form engine (determining index).
+- Clean up translation built files.
 
 ##### Fixed
 - Range pickers not showing current value "thumb" on printouts.
