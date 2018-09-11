@@ -1,4 +1,3 @@
-.rebooted
 .vagrant
 .scratchpad
 .nodemon-*
@@ -8,18 +7,14 @@
 *.sublime-workspace
 *.diff
 node_modules
-public/js/*.min.js
-public/js/*-bundle.js
-public/js/widgets.js
 public/css/*.css
-*/build/*
+**/build/*
 translation_old.json
 app/views/styles/component/_widgets.scss
+app/views/styles/component/_system_variables.scss
 config/config.json
 enketo-main.rdb
 setup/docker/secrets/*
 setup/docker/redis_main_data/*
 logs/submissions*
 logs/logrotate
-public/temp-client-config.json
-app/views/styles/component/_system_variables.scss

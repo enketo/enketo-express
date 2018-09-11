@@ -99,8 +99,8 @@
     },
     "aliasify": {
         "aliases": {
-            "enketo/config": "./public/temp-client-config.json",
-            "enketo/widgets": "./public/js/widgets",
+            "enketo/config": "./public/js/build/temp-client-config.json",
+            "enketo/widgets": "./public/js/build/widgets",
             "enketo/translator": "./public/js/src/module/translator",
             "enketo/dialog": "./public/js/src/module/gui",
             "enketo/file-manager": "./public/js/src/module/file-manager"

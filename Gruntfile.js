@@ -1,5 +1,5 @@
 module.exports = grunt => {
-    const JS_INCLUDE = [ '**/*.js', '!node_modules/**', '!test/**/*.spec.js', '!public/js/*-bundle.js', '!public/js/*.min.js' ];
+    const JS_INCLUDE = [ '**/*.js', '!node_modules/**', '!test/**/*.spec.js', '!public/js/build/*-bundle.js', '!public/js/build/*.min.js' ];
     const pkg = grunt.file.readJSON( 'package.json' );
     const path = require( 'path' );
     const nodeSass = require( 'node-sass' );
@@ -93,13 +93,16 @@ module.exports = grunt => {
                 ].join( '&&' )
             },
             ie11polyfill: {
-                command: 'curl "https://cdn.polyfill.io/v2/polyfill.min.js?ua=ie%2F11.0.0&features=es2015%2Ces2016%2Ces2017%2Ces2018%2Cdefault-3.6" -o "public/js/ie11-polyfill.min.js"',
+                command: 'mkdir -p public/js/build && curl "https://cdn.polyfill.io/v2/polyfill.min.js?ua=ie%2F11.0.0&features=es2015%2Ces2016%2Ces2017%2Ces2018%2Cdefault-3.6" -o "public/js/build/ie11-polyfill.min.js"',
             },
             'clean-css': {
                 command: 'rm -f public/css/*'
             },
             'clean-locales': {
                 command: 'find locales -name "translation-combined.json" -delete'
+            },
+            'clean-js': {
+                command: 'rm -f public/js/build/* && rm -f public/js/*.js'
             }
         },
         jsbeautifier: {
@@ -149,10 +152,10 @@ module.exports = grunt => {
         browserify: {
             development: {
                 files: {
-                    'public/js/enketo-webform-dev-bundle.js': [ 'public/js/src/main-webform.js' ],
-                    'public/js/enketo-webform-edit-dev-bundle.js': [ 'public/js/src/main-webform-edit.js' ],
-                    'public/js/enketo-webform-view-dev-bundle.js': [ 'public/js/src/main-webform-view.js' ],
-                    'public/js/enketo-offline-fallback-dev-bundle.js': [ 'public/js/src/main-offline-fallback.js' ]
+                    'public/js/build/enketo-webform-dev-bundle.js': [ 'public/js/src/main-webform.js' ],
+                    'public/js/build/enketo-webform-edit-dev-bundle.js': [ 'public/js/src/main-webform-edit.js' ],
+                    'public/js/build/enketo-webform-view-dev-bundle.js': [ 'public/js/src/main-webform-view.js' ],
+                    'public/js/build/enketo-offline-fallback-dev-bundle.js': [ 'public/js/src/main-offline-fallback.js' ]
                 },
                 options: {
                     browserifyOptions: {
@@ -162,10 +165,10 @@ module.exports = grunt => {
             },
             production: {
                 files: {
-                    'public/js/enketo-webform-bundle.js': [ 'public/js/src/main-webform.js' ],
-                    'public/js/enketo-webform-edit-bundle.js': [ 'public/js/src/main-webform-edit.js' ],
-                    'public/js/enketo-webform-view-bundle.js': [ 'public/js/src/main-webform-view.js' ],
-                    'public/js/enketo-offline-fallback-bundle.js': [ 'public/js/src/main-offline-fallback.js' ]
+                    'public/js/build/enketo-webform-bundle.js': [ 'public/js/src/main-webform.js' ],
+                    'public/js/build/enketo-webform-edit-bundle.js': [ 'public/js/src/main-webform-edit.js' ],
+                    'public/js/build/enketo-webform-view-bundle.js': [ 'public/js/src/main-webform-view.js' ],
+                    'public/js/build/enketo-offline-fallback-bundle.js': [ 'public/js/src/main-offline-fallback.js' ]
                 },
             },
             options: {
@@ -181,10 +184,10 @@ module.exports = grunt => {
         uglify: {
             all: {
                 files: {
-                    'public/js/enketo-webform-bundle.min.js': [ 'public/js/enketo-webform-bundle.js' ],
-                    'public/js/enketo-webform-edit-bundle.min.js': [ 'public/js/enketo-webform-edit-bundle.js' ],
-                    'public/js/enketo-webform-view-bundle.min.js': [ 'public/js/enketo-webform-view-bundle.js' ],
-                    'public/js/enketo-offline-fallback-bundle.min.js': [ 'public/js/enketo-offline-fallback-bundle.js' ],
+                    'public/js/build/enketo-webform-bundle.min.js': [ 'public/js/build/enketo-webform-bundle.js' ],
+                    'public/js/build/enketo-webform-edit-bundle.min.js': [ 'public/js/build/enketo-webform-edit-bundle.js' ],
+                    'public/js/build/enketo-webform-view-bundle.min.js': [ 'public/js/build/enketo-webform-view-bundle.js' ],
+                    'public/js/build/enketo-offline-fallback-bundle.min.js': [ 'public/js/build/enketo-offline-fallback-bundle.js' ],
                 },
             },
         },
@@ -214,7 +217,7 @@ module.exports = grunt => {
     } );
 
     grunt.registerTask( 'client-config-file', 'Temporary client-config file', task => {
-        const CLIENT_CONFIG_PATH = 'public/temp-client-config.json';
+        const CLIENT_CONFIG_PATH = 'public/js/build/temp-client-config.json';
         if ( task === 'create' ) {
             const config = require( './app/models/config-model' );
             grunt.file.write( CLIENT_CONFIG_PATH, JSON.stringify( config.client ) );
@@ -233,7 +236,7 @@ module.exports = grunt => {
     } );
 
     grunt.registerTask( 'widgets', 'generate widget reference files', () => {
-        const WIDGETS_JS_LOC = 'public/js/';
+        const WIDGETS_JS_LOC = 'public/js/build/';
         const WIDGETS_JS = `${WIDGETS_JS_LOC}widgets.js`;
         const WIDGETS_SASS_LOC = 'app/views/styles/component/';
         const WIDGETS_SASS = `${WIDGETS_SASS_LOC}_widgets.scss`;
@@ -246,7 +249,7 @@ module.exports = grunt => {
         grunt.log.writeln( `File ${WIDGETS_JS} created` );
         content = `${PRE +
     paths.map( p => {
-        p = path.join( '../../', p );
+        p = path.join( '../', p );
         return grunt.file.exists( WIDGETS_SASS_LOC, `${p}.scss` ) ? `@import "${p}"` : `//${p} not found`;
     } ).join( ';\n' )};`;
         grunt.file.write( WIDGETS_SASS, content );
@@ -255,7 +258,7 @@ module.exports = grunt => {
 
     grunt.registerTask( 'default', [ 'shell:ie11polyfill', 'locales', 'widgets', 'css', 'js', 'uglify' ] );
     grunt.registerTask( 'locales', [ 'shell:clean-locales', 'i18next' ] );
-    grunt.registerTask( 'js', [ 'client-config-file:create', 'widgets', 'browserify:production' ] );
+    grunt.registerTask( 'js', [ 'shell:clean-js', 'client-config-file:create', 'widgets', 'browserify:production' ] );
     grunt.registerTask( 'js-dev', [ 'client-config-file:create', 'widgets', 'browserify:development' ] );
     grunt.registerTask( 'css', [ 'shell:clean-css', 'system-sass-variables:create', 'sass' ] );
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'eslint' ] );
