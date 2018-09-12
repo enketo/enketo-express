@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Made export feature consistent across browsers.
 
+##### Fixed
+- Cascading selections with radiobuttons/checkboxes do not show image labels.
+
 [1.71.0] - 2018-09-11
 ----------------------
 ##### Changed
