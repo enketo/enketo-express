@@ -260,7 +260,7 @@ function _loadMedia( survey, $target ) {
         store.survey.resource.get( survey.enketoId, src )
             .then( function( resource ) {
                 if ( !resource || !resource.item ) {
-                    console.error( 'resource not found or not complete', resource );
+                    console.error( 'resource not found or not complete', src );
                     return;
                 }
                 // create a resourceURL
