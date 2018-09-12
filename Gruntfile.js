@@ -93,7 +93,7 @@ module.exports = grunt => {
                 ].join( '&&' )
             },
             ie11polyfill: {
-                command: 'mkdir -p public/js/build && curl "https://cdn.polyfill.io/v2/polyfill.min.js?ua=ie%2F11.0.0&features=es2015%2Ces2016%2Ces2017%2Ces2018%2Cdefault-3.6" -o "public/js/build/ie11-polyfill.min.js"',
+                command: 'mkdir -p public/js/build && curl "https://cdn.polyfill.io/v2/polyfill.min.js?ua=ie%2F11.0.0&features=es2015%2Ces2016%2Ces2017%2Ces2018%2Cdefault-3.6%2Cfetch" -o "public/js/build/ie11-polyfill.min.js"',
             },
             'clean-css': {
                 command: 'rm -f public/css/*'
