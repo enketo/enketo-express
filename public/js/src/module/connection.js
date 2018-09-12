@@ -349,9 +349,8 @@ function _getExternalData( survey ) {
         } ).get();
 
         survey.externalData.forEach( function( instance, index ) {
-            tasks.push( _getDataFile( instance.src ).then( function( data ) {
-                    // if CSV file, transform to XML Document
-                    instance.xml = ( typeof data === 'string' ) ? utils.csvToXml( data, survey.languageMap ) : data;
+            tasks.push( _getDataFile( instance.src, survey.languageMap ).then( function( xmlData ) {
+                    instance.xml = xmlData;
                     return instance;
                 } )
                 .catch( function( e ) {
@@ -410,22 +409,39 @@ function getMediaFile( url ) {
  *
  * @return {Promise} [description]
  */
-function _getDataFile( url ) {
-    var error;
+function _getDataFile( url, languageMap ) {
+    var contentType;
+    return fetch( url )
+        .then( function( response ) {
+            contentType = response.headers.get( 'Content-Type' );
+            return response.text();
+        } )
+        .then( function( responseText ) {
+            var result;
+            switch ( contentType ) {
+                case 'text/csv':
+                    result = utils.csvToXml( responseText, languageMap );
+                    break;
+                case 'text/xml':
+                    result = ( new DOMParser() ).parseFromString( responseText, contentType );
+                    break;
+                default:
+                    console.error( 'External data not served with expected Content-Type.', contentType );
+                    result = ( new DOMParser() ).parseFromString( responseText, 'text/xml' );
+            }
+            if ( result && result.querySelector( 'parsererror' ) && contentType !== 'text/csv' ) {
+                console.log( 'Failed to parse external data as XML, am going to try as CSV' );
+                result = utils.csvToXml( responseText, languageMap );
+            }
 
-    return new Promise( function( resolve, reject ) {
-        $.get( url )
-            .done( function( data ) {
-                resolve( data );
-            } )
-            .fail( function( jqXHR, textStatus, errorMsg ) {
-                errorMsg = errorMsg || t( 'error.dataloadfailed', {
-                    url: url
-                } );
-                error = jqXHR.responseJSON || new Error( errorMsg );
-                reject( error );
+            return result;
+        } )
+        .catch( function( error ) {
+            var errorMsg = error.msg || t( 'error.dataloadfailed', {
+                url: url
             } );
-    } );
+            throw new Error( errorMsg );
+        } );
 }
 
 /**
