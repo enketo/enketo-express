@@ -3,7 +3,6 @@
 var JSZip = require( 'jszip' );
 var store = require( './store' );
 var utils = require( './utils' );
-var fileSaver = require( 'file-saver' );
 
 function recordsToZip( enketoId, formTitle ) {
     var folder;
@@ -72,12 +71,9 @@ function recordsToZip( enketoId, formTitle ) {
             } );
         } )
         .then( function( blob ) {
-            blob.name = name + '_' + _formatDate( new Date() ) + '.zip';
-            fileSaver.saveAs( blob );
-            return blob;
-        } )
-        .then( function( blob ) {
             var error;
+
+            blob.name = name + '_' + _formatDate( new Date() ) + '.zip';
             if ( failures.length > 0 ) {
                 error = new Error( '<ul class="error-list"><li>' + failures.join( '</li><li>' ) + '</li></ul>' );
                 error.exportFile = blob;

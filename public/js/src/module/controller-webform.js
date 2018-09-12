@@ -8,6 +8,7 @@ var gui = require( './gui' );
 var connection = require( './connection' );
 var settings = require( './settings' );
 var Form = require( 'enketo-core' );
+var coreUtils = require( 'enketo-core/src/js/utils' );
 require( 'enketo-core/src/js/workarounds-ie11' );
 var fileManager = require( './file-manager' );
 var t = require( './translator' ).t;
@@ -541,30 +542,27 @@ function _setEventHandlers() {
     } );
 
     $( '.record-list__button-bar__button.export' ).on( 'click', function() {
-        var createDownloadLink = '<a class="vex-dialog-link" id="download-export-create" href="#">' +
-            t( 'alert.export.alternativequestion' ) + '</a>';
+        var downloadLink = '<a class="vex-dialog-link" id="download-export" href="#">download</a>';
 
         records.exportToZip( form.surveyName )
             .then( function( zipFile ) {
-                // Hack for stupid Safari and iOS browsers
-                $( document ).off( 'click.export' ).one( 'click.export', '#download-export-create', function( event ) {
-                    _handleAlternativeDownloadRequest.call( this, event, zipFile );
-                } );
-
-                gui.alert( t( 'alert.export.success.msg' ) + createDownloadLink, t( 'alert.export.success.heading' ), 'normal' );
+                gui.alert( t( 'alert.export.success.msg' ) + downloadLink, t( 'alert.export.success.heading' ), 'normal' );
+                updateDownloadLinkAndClick( document.querySelector( '#download-export' ), zipFile );
             } )
             .catch( function( error ) {
                 var message = t( 'alert.export.error.msg', {
-                    errors: error.message
+                    errors: error.message,
+                    interpolation: {
+                        escapeValue: false
+                    }
                 } );
                 if ( error.exportFile ) {
-                    // Hack for stupid Safari and iOS browsers
-                    $( document ).off( 'click.export' ).one( 'click.export', '#download-export-create', function( event ) {
-                        _handleAlternativeDownloadRequest.call( this, event, error.exportFile );
-                    } );
-                    message += '<p>' + t( 'alert.export.error.filecreatedmsg' ) + '</p>' + createDownloadLink;
+                    message += '<p>' + t( 'alert.export.error.filecreatedmsg' ) + '</p>' + downloadLink;
                 }
                 gui.alert( message, t( 'alert.export.error.heading' ) );
+                if ( error.exportFile ) {
+                    updateDownloadLinkAndClick( document.querySelector( '#download-export' ), error.exportFile );
+                }
             } );
     } );
 
@@ -608,30 +606,12 @@ function _setEventHandlers() {
     }
 }
 
-function _handleAlternativeDownloadRequest( event, zipFile ) {
-    var $loader;
-    var $link;
+function updateDownloadLinkAndClick( anchor, file ) {
+    var objectUrl = URL.createObjectURL( file );
 
-    event.preventDefault();
-
-    $loader = $( '<div class="loader-animation-small" style="margin: 20px auto 0 auto;"/>' );
-    $( event.target ).replaceWith( $loader );
-
-    connection.getDownloadUrl( zipFile )
-        .then( function( downloadUrl ) {
-            $link = $( '<a class="vex-dialog-link" href="' + downloadUrl +
-                '" download target="_blank">' + zipFile.name + '</a>' );
-            $loader.replaceWith( $link );
-            $link.one( 'click', function() {
-                this.remove();
-                return true;
-            } );
-        } )
-        .catch( function() {
-            gui.alert( t( 'alert.export.error.linknotcreated' ) );
-        } );
-
-    return false;
+    anchor.textContent = file.name;
+    coreUtils.updateDownloadLink( anchor, objectUrl, file.name );
+    anchor.click();
 }
 
 function setLogoutLinkVisibility() {

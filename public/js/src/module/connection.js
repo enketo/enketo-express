@@ -12,7 +12,6 @@ var CONNECTION_URL = settings.basePath + '/connection';
 var TRANSFORM_URL = settings.basePath + '/transform/xform' +
     ( settings.enketoId ? '/' + settings.enketoIdPrefix + settings.enketoId : '' );
 var TRANSFORM_HASH_URL = settings.basePath + '/transform/xform/hash/' + settings.enketoIdPrefix + settings.enketoId;
-var EXPORT_URL = settings.basePath + '/export/get-url';
 var INSTANCE_URL = ( settings.enketoId ) ? settings.basePath + '/submission/' + settings.enketoIdPrefix + settings.enketoId : null;
 var MAX_SIZE_URL = ( settings.enketoId ) ? settings.basePath + '/submission/max-size/' + settings.enketoIdPrefix + settings.enketoId :
     settings.basePath + '/submission/max-size/?xformUrl=' + encodeURIComponent( settings.xformUrl );
@@ -75,28 +74,6 @@ function uploadRecord( record ) {
             console.log( 'results of all batches submitted', results );
             return results[ 0 ];
         } );
-}
-
-function getDownloadUrl( zipFile ) {
-    return new Promise( function( resolve, reject ) {
-        var formData = new FormData();
-        formData.append( 'export', zipFile, zipFile.name );
-
-        $.ajax( EXPORT_URL, {
-                type: 'POST',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false
-            } )
-            .done( function( data ) {
-                resolve( data.downloadUrl );
-            } )
-            .fail( function( jqXHR, textStatus ) {
-                console.error( jqXHR, textStatus );
-                reject( new Error( textStatus || 'Failed to connect with Enketo server.' ) );
-            } );
-    } );
 }
 
 /**
@@ -535,5 +512,4 @@ module.exports = {
     getMediaFile: getMediaFile,
     getExistingInstance: getExistingInstance,
     getManifestVersion: getManifestVersion,
-    getDownloadUrl: getDownloadUrl
 };

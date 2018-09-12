@@ -27,11 +27,9 @@
             "heading": "Alert"
         },
         "export": {
-            "alternativequestion": "alternative download - online",
             "error": {
                 "filecreatedmsg": "Nevertheless, an incomplete export file was still created.",
                 "heading": "Export Error",
-                "linknotcreated": "Failed to create an export link for unsubmitted records. Are you online?",
                 "msg": "Errors occurred during creating of the record export file for unsubmitted records. Errors: __errors__"
             },
             "success": {
