@@ -1,5 +1,5 @@
 module.exports = grunt => {
-    const JS_INCLUDE = [ '**/*.js', '!node_modules/**', '!test/**/*.spec.js', '!public/js/build/*-bundle.js', '!public/js/build/*.min.js' ];
+    const JS_INCLUDE = [ '**/*.js', '!node_modules/**', '!test/**/*.spec.js', '!public/js/build/*' ];
     const pkg = grunt.file.readJSON( 'package.json' );
     const path = require( 'path' );
     const nodeSass = require( 'node-sass' );
@@ -155,7 +155,8 @@ module.exports = grunt => {
                     'public/js/build/enketo-webform-dev-bundle.js': [ 'public/js/src/main-webform.js' ],
                     'public/js/build/enketo-webform-edit-dev-bundle.js': [ 'public/js/src/main-webform-edit.js' ],
                     'public/js/build/enketo-webform-view-dev-bundle.js': [ 'public/js/src/main-webform-view.js' ],
-                    'public/js/build/enketo-offline-fallback-dev-bundle.js': [ 'public/js/src/main-offline-fallback.js' ]
+                    'public/js/build/enketo-offline-fallback-dev-bundle.js': [ 'public/js/src/main-offline-fallback.js' ],
+                    'public/js/build/obscure-ie11-polyfills.js': [ 'node_modules/enketo-core/src/js/obscure-ie11-polyfills.js' ],
                 },
                 options: {
                     browserifyOptions: {
@@ -168,7 +169,8 @@ module.exports = grunt => {
                     'public/js/build/enketo-webform-bundle.js': [ 'public/js/src/main-webform.js' ],
                     'public/js/build/enketo-webform-edit-bundle.js': [ 'public/js/src/main-webform-edit.js' ],
                     'public/js/build/enketo-webform-view-bundle.js': [ 'public/js/src/main-webform-view.js' ],
-                    'public/js/build/enketo-offline-fallback-bundle.js': [ 'public/js/src/main-offline-fallback.js' ]
+                    'public/js/build/enketo-offline-fallback-bundle.js': [ 'public/js/src/main-offline-fallback.js' ],
+                    'public/js/build/obscure-ie11-polyfills.js': [ 'node_modules/enketo-core/src/js/obscure-ie11-polyfills.js' ],
                 },
             },
             options: {
