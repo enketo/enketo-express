@@ -605,13 +605,11 @@ recordStore = {
      * @return {Promise}        [description]
      */
     remove: function( instanceId ) {
-        var files;
-        var tasks = [];
-
         return server.records.get( instanceId )
             .then( _firstItemOnly )
             .then( function( record ) {
-                files = record.files || [];
+                var tasks = [];
+                var files = record && record.files ? record.files : [];
                 files.forEach( function( fileKey ) {
                     tasks.push( recordStore.file.remove( instanceId, fileKey ) );
                 } );
@@ -674,7 +672,7 @@ recordStore = {
  */
 function _firstItemOnly( results ) {
 
-    if ( Object.prototype.toString.call( results ) === '[object Array]' ) {
+    if ( Array.isArray( results ) ) {
         // if an array
         return Promise.resolve( results[ 0 ] );
     } else {

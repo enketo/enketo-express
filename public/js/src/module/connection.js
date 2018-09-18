@@ -8,6 +8,7 @@ var settings = require( './settings' );
 var t = require( './translator' ).t;
 var utils = require( './utils' );
 var $ = require( 'jquery' );
+var parser = new DOMParser();
 var CONNECTION_URL = settings.basePath + '/connection';
 var TRANSFORM_URL = settings.basePath + '/transform/xform' +
     ( settings.enketoId ? '/' + settings.enketoIdPrefix + settings.enketoId : '' );
@@ -138,9 +139,12 @@ function _uploadBatch( recordBatch ) {
  * @param { { name: string, data: string } } record[ description ]
  */
 function _prepareFormDataArray( record ) {
-    var recordDoc = $.parseXML( record.xml );
-    var $fileNodes = $( recordDoc ).find( '[type="file"]' ).removeAttr( 'type' );
-    var xmlData = new XMLSerializer().serializeToString( recordDoc.documentElement, 'text/xml' );
+    var recordDoc = parser.parseFromString( record.xml, 'text/xml' );
+    var fileElements = Array.prototype.slice.call( recordDoc.querySelectorAll( '[type="file"]' ) ).map( function( el ) {
+        el.removeAttribute( 'type' );
+        return el;
+    } );
+    var xmlData = new XMLSerializer().serializeToString( recordDoc.documentElement );
     var xmlSubmissionBlob = new Blob( [ xmlData ], {
         type: 'text/xml'
     } );
@@ -154,11 +158,10 @@ function _prepareFormDataArray( record ) {
     var batchesPrepped = [];
     var maxSize = settings.maxSize;
 
-    $fileNodes.each( function() {
-        var file,
-            $node = $( this ),
-            nodeName = $node.prop( 'nodeName' ),
-            fileName = $node.text();
+    fileElements.forEach( function( el ) {
+        var file;
+        var nodeName = el.nodeName;
+        var fileName = el.textContent;
 
         // check if file is actually available
         availableFiles.some( function( f ) {

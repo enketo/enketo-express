@@ -27,7 +27,7 @@ function recordsToZip( enketoId, formTitle ) {
                             // create folder
                             folder = zip.folder( folderName );
                             // add XML file to folder
-                            folder.file( folderName + '.xml', '<?xml version="1.0" ?>\n' + record.xml, {
+                            folder.file( 'submission.xml', '<?xml version="1.0" ?>\n' + record.xml, {
                                 date: new Date( record.updated )
                             } );
                             folderMeta = {
