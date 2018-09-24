@@ -2,13 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.71.1] - 2018-09-24
 ----------------------
 ##### Changed
 - Made export feature consistent across browsers.
 
 ##### Fixed
 - Cascading selections with radiobuttons/checkboxes do not show image labels.
+- Loading error when record with repeat calculation was loaded and validateContinously was set to `true`.
 
 [1.71.0] - 2018-09-11
 ----------------------
