@@ -1303,4 +1303,57 @@ describe( 'api', () => {
         } ).forEach( testResponse );
 
     } );
+
+    /*
+    describe( 're-activating forms', () => {
+
+        function test( version ) {
+
+            it( 'works if the quota allows it but returns 403 if quota is insufficient', () => {
+                const app = require( '../../config/express' );
+                const endpoint = `/api/v${version}/survey`;
+                const server = 'https://example.org/enketo';
+                const linkedServer = app.get( 'linked form and data server' );
+                linkedServer[ 'server url' ] = 'example.org/enketo';
+                app.set( 'linked form and data server', linkedServer );
+
+                return request( app )
+                    .post( endpoint )
+                    .set( validAuth )
+                    .send( {
+                        server_url: server,
+                        form_id: validFormId
+                    } )
+                    .expect( 201 )
+                    .then( () => {
+                        return request( app )
+                            .delete( endpoint )
+                            .set( validAuth )
+                            .send( {
+                                server_url: server,
+                                form_id: validFormId
+                            } )
+                            .expect( 204 );
+                    } )
+                    .then( () => {
+                        const linkedServer = app.get( 'linked form and data server' );
+                        linkedServer.quota = 0;
+                        app.set( 'linked form and data server', linkedServer );
+
+                        return request( app )
+                            .post( endpoint )
+                            .set( validAuth )
+                            .send( {
+                                server_url: server,
+                                form_id: validFormId
+                            } )
+                            .expect( 403 );
+                    } );
+            } );
+        }
+
+        test( '1' );
+        test( '2' );
+    } );
+    */
 } );

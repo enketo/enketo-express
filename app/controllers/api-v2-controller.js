@@ -193,10 +193,20 @@ function getNewOrExistingSurvey( req, res, next ) {
     return surveyModel
         .getId( survey ) // will return id only for existing && active surveys
         .then( id => {
-            if ( !id && req.account.quota <= req.account.quotaUsed ) {
+            // will return existing && active surveys
+            return id ? surveyModel.get( id ) : {};
+        } )
+        .catch( error => {
+            if ( error.status === 404 ) {
+                return null;
+            }
+            throw error;
+        } )
+        .then( storedSurvey => {
+            if ( !storedSurvey && req.account.quota <= req.account.quotaUsed ) {
                 return _render( 403, quotaErrorMessage, res );
             }
-            const status = ( id ) ? 200 : 201;
+            const status = storedSurvey ? 200 : 201;
             // even if id was found still call .set() method to update any properties
             return surveyModel.set( survey )
                 .then( id => {
@@ -302,15 +312,25 @@ function cacheInstance( req, res, next ) {
     return surveyModel
         .getId( survey )
         .then( id => {
-            if ( !id && req.account.quota <= req.account.quotaUsed ) {
-                return _render( 403, quotaErrorMessage, res );
+            // will return existing && active surveys
+            return id ? surveyModel.get( id ) : null;
+        } )
+        .catch( error => {
+            if ( error.status === 404 ) {
+                return null;
             }
-            // Create a new enketo ID.
-            if ( !id ) {
+            throw error;
+        } )
+        .then( storedSurvey => {
+            if ( !storedSurvey ) {
+                if ( req.account.quota <= req.account.quotaUsed ) {
+                    return _render( 403, quotaErrorMessage, res );
+                }
+                // Create a new enketo ID.
                 return surveyModel.set( survey );
             }
             // Do not update properties if ID was found to avoid overwriting theme.
-            return id;
+            return storedSurvey.enketoId;
         } )
         .then( id => {
             enketoId = id;
