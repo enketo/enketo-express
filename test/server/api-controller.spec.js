@@ -1304,7 +1304,7 @@ describe( 'api', () => {
 
     } );
 
-    /*
+
     describe( 're-activating forms', () => {
 
         function test( version ) {
@@ -1315,6 +1315,8 @@ describe( 'api', () => {
                 const server = 'https://example.org/enketo';
                 const linkedServer = app.get( 'linked form and data server' );
                 linkedServer[ 'server url' ] = 'example.org/enketo';
+                linkedServer[ 'api key' ] = 'abc';
+                linkedServer.quota = 1;
                 app.set( 'linked form and data server', linkedServer );
 
                 return request( app )
@@ -1336,16 +1338,32 @@ describe( 'api', () => {
                             .expect( 204 );
                     } )
                     .then( () => {
-                        const linkedServer = app.get( 'linked form and data server' );
-                        linkedServer.quota = 0;
-                        app.set( 'linked form and data server', linkedServer );
-
+                        return request( app )
+                            .post( endpoint )
+                            .set( validAuth )
+                            .send( {
+                                server_url: server,
+                                form_id: validFormId + 'a'
+                            } )
+                            .expect( 201 );
+                    } )
+                    .then( () => {
                         return request( app )
                             .post( endpoint )
                             .set( validAuth )
                             .send( {
                                 server_url: server,
                                 form_id: validFormId
+                            } )
+                            .expect( 403 );
+                    } )
+                    .then( () => {
+                        return request( app )
+                            .post( endpoint )
+                            .set( validAuth )
+                            .send( {
+                                server_url: server,
+                                form_id: validFormId + 'b'
                             } )
                             .expect( 403 );
                     } );
@@ -1355,5 +1373,5 @@ describe( 'api', () => {
         test( '1' );
         test( '2' );
     } );
-    */
+
 } );
