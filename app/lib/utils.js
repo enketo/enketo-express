@@ -48,7 +48,7 @@ function cleanUrl( url ) {
     if ( matches && matches.length > 2 ) {
         return matches[ 2 ].toLowerCase();
     }
-    return cleanUrl;
+    return url;
 }
 
 /**

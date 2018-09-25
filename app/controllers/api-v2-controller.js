@@ -194,7 +194,7 @@ function getNewOrExistingSurvey( req, res, next ) {
         .getId( survey ) // will return id only for existing && active surveys
         .then( id => {
             // will return existing && active surveys
-            return id ? surveyModel.get( id ) : {};
+            return id ? surveyModel.get( id ) : null;
         } )
         .catch( error => {
             if ( error.status === 404 ) {
