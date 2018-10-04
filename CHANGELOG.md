@@ -2,10 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Fixed
+- IE11 broken (polyfills not found - 404)
+
 [1.72.0] - 2018-10-04
 ----------------------
 ##### Added
-- Support for local encryption: https://blog.enketo.org/local-encryption
+- Support for local encryption: https://blog.enketo.org/local-encryption/
 
 [1.71.1] - 2018-09-24
 ----------------------

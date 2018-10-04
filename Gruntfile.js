@@ -258,9 +258,9 @@ module.exports = grunt => {
         grunt.log.writeln( `File ${WIDGETS_SASS} created` );
     } );
 
-    grunt.registerTask( 'default', [ 'shell:ie11polyfill', 'locales', 'widgets', 'css', 'js', 'uglify' ] );
+    grunt.registerTask( 'default', [ 'locales', 'widgets', 'css', 'js', 'uglify' ] );
     grunt.registerTask( 'locales', [ 'shell:clean-locales', 'i18next' ] );
-    grunt.registerTask( 'js', [ 'shell:clean-js', 'client-config-file:create', 'widgets', 'browserify:production' ] );
+    grunt.registerTask( 'js', [ 'shell:clean-js', 'shell:ie11polyfill', 'client-config-file:create', 'widgets', 'browserify:production' ] );
     grunt.registerTask( 'js-dev', [ 'client-config-file:create', 'widgets', 'browserify:development' ] );
     grunt.registerTask( 'css', [ 'shell:clean-css', 'system-sass-variables:create', 'sass' ] );
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'eslint' ] );
