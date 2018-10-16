@@ -2,10 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.72.1] - 2018-10-16
 ----------------------
 ##### Fixed
 - IE11 broken (polyfills not found - 404)
+- Loading records not working in IE11. All node values are emptied when a record is supplied.
+- In FF when a radiobutton or checkbox is clicked directly in a pulldown select, the URL fragment identifier is updated (and page scrolls to the top).
+- Timepicker localized AM/PM strings not detected properly in Firefox and Safari.
+- Timepicker meridian field not wide enough for Chinese AM/PM.
+- Timepicker meridian detection not working in IE11.
+- IE11 polyfill for .after not working on comment nodes.
 
 [1.72.0] - 2018-10-04
 ----------------------
@@ -19,7 +25,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Cascading selections with radiobuttons/checkboxes do not show image labels.
-- Loading error when record with repeat calculation was loaded and validateContinously was set to `true`.
+- Loading error when record with repeat calculation was loaded and validateContinuously was set to `true`.
 
 [1.71.0] - 2018-09-11
 ----------------------
