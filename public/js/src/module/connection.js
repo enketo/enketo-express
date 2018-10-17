@@ -416,7 +416,7 @@ function _getDataFile( url, languageMap ) {
     var contentType;
     return fetch( url )
         .then( function( response ) {
-            contentType = response.headers.get( 'Content-Type' );
+            contentType = response.headers.get( 'Content-Type' ).split( ';' )[ 0 ];
             return response.text();
         } )
         .then( function( responseText ) {
