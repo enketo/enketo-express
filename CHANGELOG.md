@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.72.2] - 2018-10-19
+----------------------
+##### Fixed
+- If grid form starts with a disabled question, the first question has no top border.
+- If first page in form is irrelevant upon load, it is still shown (in grayscale).
+- Minimal select picker (pulldown) not updating model (regression in 4.60.3).
+
 [1.72.1] - 2018-10-16
 ----------------------
 ##### Fixed
