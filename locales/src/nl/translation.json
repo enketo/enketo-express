@@ -27,11 +27,9 @@
             "heading": "Let op"
         },
         "export": {
-            "alternativequestion": "alternatief downloaden - online",
             "error": {
                 "filecreatedmsg": "Toch werd een onvolledig exportbestand gemaakt.",
                 "heading": "Export Fout",
-                "linknotcreated": "Niet gelukt een export link voor niet-verzonden records te creeren. Bent u online?",
                 "msg": "Fouten opgetreden tijdens het maken van het exportbestand voor unsubmitted records. Fouten: __errors__"
             },
             "success": {
@@ -201,7 +199,7 @@
         "code": "Fout Code: __code__",
         "dataloadfailed": "Kon data niet laden van __url__",
         "econnrefused": "Kon niet verbinden met de Server",
-        "encryptionnotsupported": "De informatie verzameld met deze enquete dient versleuteld te worden. Helaas is dit nog niet ondersteund. We bevelen aan om ODK Collect te gebruiken voor deze enquete.",
+        "encryptionnotsupported": "Voor dit formulier is lokale codering van records vereist. Helaas wordt dit niet ondersteund door uw browser. We raden aan over te schakelen naar een moderne browser.",
         "instancenotfound": "Record niet gevonden. Het kan verlopen zijn.",
         "invalidediturl": "Niet een geldig edit URL",
         "loadfailed": "Kon __resource__ niet laden",

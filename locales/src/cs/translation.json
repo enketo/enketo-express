@@ -27,11 +27,9 @@
             "heading": "Výstraha"
         },
         "export": {
-            "alternativequestion": "k dispozici ke stažení - online",
             "error": {
                 "filecreatedmsg": "Nicméně, neúplný export byl přesto vytvořen.",
                 "heading": "Chyba při exportu",
-                "linknotcreated": "Nepodařilo se vytvořit odkaz na export pro neodeslané záznamy. Jste stále online?",
                 "msg": "Nastaly chyby při tvorbě exportu pro neodeslané záznamy. Chyby: __error__"
             },
             "success": {
@@ -189,6 +187,11 @@
         "admin": "Obraťte se prosím na správce průzkumu.",
         "support": "Kontaktujte __supportEmail__ prosím."
     },
+    "drawwidget": {
+        "annotation": "soubor a nákres",
+        "drawing": "nákres",
+        "signature": "podpis"
+    },
     "enketo": {
         "power": "Běžící na"
     },
@@ -196,11 +199,14 @@
         "code": "Chybový Kód: __code__",
         "dataloadfailed": "Nepodařilo se načíst data z __url__",
         "econnrefused": "Nelze se připojit k Serveru",
-        "encryptionnotsupported": "Tento formulář vyžaduje lokální šifrování záznamů. Bohužel tato funkce zatím není podporována. Doporučujeme používat ODK Collect pro sběr dat pomocí tohoto formuláře.",
+        "encryptionnotsupported": "This form requires local encryption of records. Unfortunately this is not supported by your browser. We recommend switching to a modern browser.",
         "instancenotfound": "Záznam není k dispozici. To může být způsobené tím, že vypršel.",
         "invalidediturl": "Neplatná URL pro úpravu",
         "loadfailed": "Nepodařilo se načíst __resource__",
-        "notfoundinformlist": "Formulář s ID __formId__ nebyl nalezen v / formList",
+        "notfoundinformlist": [
+            "Oops, this form doesn't exist (anymore). Most likely the owner of the form has deleted it, archived it, or disabled it. Please contact the form's owner to confirm.",
+            "Detailed error: Form with ID __formId__ not found in /formList."
+        ],
         "pagenotfound": "Stránka nebyla Nenalezena",
         "surveyidnotactive": "Průzkum s tímto ID již není aktivní",
         "surveyidnotfound": "Průzkum s tímto ID nebyl nalezen",
@@ -208,6 +214,14 @@
     },
     "feedback": {
         "header": "Informace"
+    },
+    "filepicker": {
+        "file": "soubor",
+        "notFound": "File __existing__ could not be found (leave unchanged if already submitted and you want to preserve it).",
+        "placeholder": "Click here to upload file. (< __maxSize__)",
+        "resetWarning": "This will remove the __item__. Are you sure you want to do this?",
+        "toolargeerror": "File too large (> __maxSize__)",
+        "waitingForPermissions": "Waiting for user permissions."
     },
     "form": {
         "chooseLanguage": "Vybrat Jazyk",
@@ -244,11 +258,15 @@
         "latitude": "zeměpisná šířka (x.y °)",
         "longitude": "zeměpisná délka (x.y °)",
         "points": "body",
+        "removePoint": "This will completely remove the current geopoint from the list of geopoints and cannot be undone. Are you sure you want to do this?",
         "searchPlaceholder": "hledání místa nebo adresy"
     },
     "here": "tady",
     "home": {
         "msg": "__appTitle__ běží! Prosím přistupujte k Enketo formulářům z instalace vašeho __serverName__."
+    },
+    "imagemap": {
+        "svgNotFound": "SVG image could not be found"
     },
     "langs": {
         "ar": "Arabština",
@@ -267,7 +285,10 @@
         "lo": "Laoština",
         "nl": "Holandština",
         "no": "Norština",
+        "pl": "Polština",
+        "pt": "Portugalština",
         "ro": "Rumunština",
+        "ru": "Ruština",
         "sk": "Slovenština",
         "supported": "Podporované jazyky:",
         "sv": "Švédština",
@@ -302,6 +323,10 @@
             "submit": "Odeslat",
             "username": "Uživatelské jméno"
         }
+    },
+    "rankwidget": {
+        "clickstart": "Click to start",
+        "tapstart": "Tap to start"
     },
     "record-list": {
         "export": "Exportovat",
