@@ -24,12 +24,12 @@ Note that the regular `npm update production` will not update these manually ins
 
 ### 3. Add the widget to the Enketo Express installation
 
-In your config.json `"widgets"` [configuration](https://github.com/kobotoolbox/enketo-express/tree/master/config#widgets) add your widget using the relative (to the public/js folder) path, e.g.
+In your config.json `"widgets"` [configuration](https://github.com/kobotoolbox/enketo-express/tree/master/config#widgets) add your widget using the relative (to the public/js/build folder) path, e.g.
 
 ```json
 {
     
-    "widgets": [ "note", "../../node_modules/enketo-image-customization-widget/image-customization"]
+    "widgets": [ "note", "../../../node_modules/enketo-image-customization-widget/image-customization"]
 }
 ```
 
