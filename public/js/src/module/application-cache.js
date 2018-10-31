@@ -2,13 +2,11 @@
  * Deals with storing the app in the applicationCache.
  */
 
-'use strict';
-
-var $ = require( 'jquery' );
+import $ from 'jquery';
 
 function init() {
     if ( window.applicationCache ) {
-        var status = window.applicationCache.status;
+        const status = window.applicationCache.status;
 
         if ( status === window.applicationCache.IDLE ) {
             _reportOfflineLaunchCapable();
@@ -48,6 +46,6 @@ function _reportOfflineLaunchIncapable( event ) {
     $( document ).trigger( 'offlinelaunchincapable' );
 }
 
-module.exports = {
-    init: init
+export default {
+    init
 };

@@ -1,8 +1,6 @@
-'use strict';
-
-var Papa = require( 'papaparse' );
-var dataUriCache = {};
-var coreUtils = require( 'enketo-core/src/js/utils' );
+import Papa from 'papaparse';
+const dataUriCache = {};
+import { dataUriToBlobSync } from 'enketo-core/src/js/utils';
 
 //var hasArrayBufferView = new Blob( [ new Uint8Array( 100 ) ] ).size == 100;
 
@@ -13,11 +11,11 @@ var coreUtils = require( 'enketo-core/src/js/utils' );
  * @return {Promise}
  */
 function blobToDataUri( blob, filename ) {
-    var reader;
-    var cacheKey = ( filename ) ? filename : ( blob && blob.name ? blob.name : null );
-    var cacheResult = ( cacheKey ) ? dataUriCache[ cacheKey ] : null;
+    let reader;
+    const cacheKey = ( filename ) ? filename : ( blob && blob.name ? blob.name : null );
+    const cacheResult = ( cacheKey ) ? dataUriCache[ cacheKey ] : null;
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( cacheResult ) {
             // Using a cache resolves two issues:
             // 1. A mysterious and occasional iOS fileReader NOT_FOUND exception when a File is converted a second time.
@@ -29,14 +27,14 @@ function blobToDataUri( blob, filename ) {
             reject( new Error( 'TypeError: Require Blob' ) );
         } else {
             reader = new FileReader();
-            reader.onloadend = function() {
-                var base64data = reader.result;
+            reader.onloadend = () => {
+                const base64data = reader.result;
                 if ( cacheKey ) {
                     dataUriCache[ cacheKey ] = base64data;
                 }
                 resolve( base64data );
             };
-            reader.onerror = function( e ) {
+            reader.onerror = e => {
                 reject( e );
             };
             reader.readAsDataURL( blob );
@@ -51,13 +49,13 @@ function blobToDataUri( blob, filename ) {
  * @return {Promise}
  */
 function blobToArrayBuffer( blob ) {
-    var reader = new FileReader();
+    const reader = new FileReader();
 
-    return new Promise( function( resolve, reject ) {
-        reader.onloadend = function() {
+    return new Promise( ( resolve, reject ) => {
+        reader.onloadend = () => {
             resolve( reader.result );
         };
-        reader.onerror = function( e ) {
+        reader.onerror = e => {
             reject( e );
         };
 
@@ -78,11 +76,11 @@ function blobToArrayBuffer( blob ) {
  * @return {Promise}
  */
 function dataUriToBlob( dataURI ) {
-    var blob;
+    let blob;
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         try {
-            blob = coreUtils.dataUriToBlobSync( dataURI );
+            blob = dataUriToBlobSync( dataURI );
 
             resolve( blob );
         } catch ( e ) {
@@ -93,7 +91,7 @@ function dataUriToBlob( dataURI ) {
 
 
 function getThemeFromFormStr( formStr ) {
-    var matches = formStr.match( /<\s?form .*theme-([A-z-]+)/ );
+    const matches = formStr.match( /<\s?form .*theme-([A-z-]+)/ );
     return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
 }
 
@@ -101,15 +99,15 @@ function getTitleFromFormStr( formStr ) {
     if ( typeof formStr !== 'string' ) {
         return console.error( 'Cannot extract form title. Not a string.' );
     }
-    var matches = formStr.match( /<\s?h3 [^>]*id="form-title">([^<]+)</ );
+    const matches = formStr.match( /<\s?h3 [^>]*id="form-title">([^<]+)</ );
     return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
 }
 
 function csvToArray( csv ) {
-    var options = {
+    const options = {
         skipEmptyLines: true
     };
-    var result = Papa.parse( csv.trim(), options );
+    const result = Papa.parse( csv.trim(), options );
     if ( result.errors.length ) {
         throw result.errors[ 0 ];
     }
@@ -118,21 +116,19 @@ function csvToArray( csv ) {
 
 function arrayToXml( rows, langMap ) {
     //var xmlStr;
-    var headers = rows.shift();
+    let headers = rows.shift();
     //var langAttrs = [];
-    var langs = [];
+    const langs = [];
 
     langMap = ( typeof langMap !== 'object' ) ? {} : langMap;
 
     // Trim the headings
-    headers = headers.map( function( header ) {
-        return header.trim();
-    } );
+    headers = headers.map( header => header.trim() );
 
     // Extract and strip languages from headers
-    headers = headers.map( function( header, index ) {
-        var parts = header.split( '::' );
-        var lang;
+    headers = headers.map( ( header, index ) => {
+        const parts = header.split( '::' );
+        let lang;
         if ( parts && parts.length === 2 ) {
             lang = langMap[ parts[ 1 ] ] || parts[ 1 ];
             //langAttrs[ index ] = ' lang="' + lang + '"';
@@ -148,13 +144,13 @@ function arrayToXml( rows, langMap ) {
     headers.every( _throwInvalidXmlNodeName );
 
     // create an XML Document
-    var parser = new DOMParser();
-    var xmlDoc = parser.parseFromString( '<root></root>', 'text/xml' );
-    rows.forEach( function( row ) {
-        var item = xmlDoc.createElement( 'item' );
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString( '<root></root>', 'text/xml' );
+    rows.forEach( row => {
+        const item = xmlDoc.createElement( 'item' );
         xmlDoc.firstChild.appendChild( item );
-        row.forEach( function( value, index ) {
-            var node = xmlDoc.createElement( headers[ index ] );
+        row.forEach( ( value, index ) => {
+            const node = xmlDoc.createElement( headers[ index ] );
             if ( langs[ index ] ) {
                 node.setAttribute( 'lang', langs[ index ] );
             }
@@ -167,7 +163,7 @@ function arrayToXml( rows, langMap ) {
 }
 
 function csvToXml( csv, langMap ) {
-    var result = csvToArray( csv );
+    const result = csvToArray( csv );
     return arrayToXml( result, langMap );
 }
 
@@ -178,8 +174,8 @@ function csvToXml( csv, langMap ) {
  * @return {[type]}     [description]
  */
 function getQueryString( obj ) {
-    var arr;
-    var serialized;
+    let arr;
+    let serialized;
 
     if ( !Array.isArray( obj ) ) {
         arr = [ obj ];
@@ -187,8 +183,8 @@ function getQueryString( obj ) {
         arr = obj;
     }
 
-    serialized = arr.reduce( function( previousValue, item ) {
-        var addition = '';
+    serialized = arr.reduce( ( previousValue, item ) => {
+        let addition = '';
         if ( item && typeof item.name !== 'undefined' && typeof item.value !== 'undefined' && item.value !== '' && item.value !== null ) {
             addition = ( previousValue ) ? '&' : '';
             addition += _serializeQueryComponent( item.name, item.value );
@@ -196,12 +192,12 @@ function getQueryString( obj ) {
         return previousValue + addition;
     }, '' );
 
-    return ( serialized.length > 0 ) ? '?' + serialized : '';
+    return ( serialized.length > 0 ) ? `?${serialized}` : '';
 }
 
 function _serializeQueryComponent( name, value ) {
-    var n;
-    var serialized = '';
+    let n;
+    let serialized = '';
 
     // for both arrays of single-level objects and regular single-level objects
     if ( typeof value === 'object' ) {
@@ -210,13 +206,12 @@ function _serializeQueryComponent( name, value ) {
                 if ( serialized ) {
                     serialized += '&';
                 }
-                serialized += encodeURIComponent( name ) + '[' + encodeURIComponent( n ) + ']' +
-                    '=' + encodeURIComponent( value[ n ] );
+                serialized += `${encodeURIComponent( name )}[${encodeURIComponent( n )}]=${encodeURIComponent( value[ n ] )}`;
             }
         }
         return serialized;
     }
-    return encodeURIComponent( name ) + '=' + encodeURIComponent( value );
+    return `${encodeURIComponent( name )}=${encodeURIComponent( value )}`;
 }
 
 function _throwInvalidXmlNodeName( name ) {
@@ -225,19 +220,19 @@ function _throwInvalidXmlNodeName( name ) {
     if ( /^(?!xml)[A-Za-z._][A-Za-z0-9._]*$/.test( name ) ) {
         return true;
     } else {
-        throw new Error( 'CSV column heading "' + name + '" cannot be turned into a valid XML element' );
+        throw new Error( `CSV column heading "${name}" cannot be turned into a valid XML element` );
     }
 }
 
-module.exports = {
-    blobToDataUri: blobToDataUri,
-    blobToArrayBuffer: blobToArrayBuffer,
-    dataUriToBlob: dataUriToBlob,
-    dataUriToBlobSync: coreUtils.dataUriToBlobSync,
-    getThemeFromFormStr: getThemeFromFormStr,
-    getTitleFromFormStr: getTitleFromFormStr,
-    csvToXml: csvToXml,
-    arrayToXml: arrayToXml,
-    csvToArray: csvToArray,
-    getQueryString: getQueryString
+export default {
+    blobToDataUri,
+    blobToArrayBuffer,
+    dataUriToBlob,
+    dataUriToBlobSync, // why export this?
+    getThemeFromFormStr,
+    getTitleFromFormStr,
+    csvToXml,
+    arrayToXml,
+    csvToArray,
+    getQueryString
 };

@@ -2,39 +2,38 @@
  * Deals with the main GUI elements (but not the survey form)
  */
 
-'use strict';
+import support from 'enketo-core/src/js/support';
 
-var support = require( 'enketo-core/src/js/support' );
-var settings = require( './settings' );
-var printHelper = require( 'enketo-core/src/js/print' );
-var translator = require( './translator' );
-var t = translator.t;
-var sniffer = require( './sniffer' );
-var vex = require( 'vex-js' );
-var $ = require( 'jquery' );
-require( './plugin' );
+import settings from './settings';
+import * as printHelper from 'enketo-core/src/js/print';
+import { init as initTranslator, t } from './translator';
+import sniffer from './sniffer';
+import vex from 'vex-js';
+import $ from 'jquery';
+import './plugin';
+import vexEnketoDialog from 'vex-dialog-enketo';
 
-var pages;
-var homeScreenGuidance;
-var updateStatus;
-var feedbackBar;
-var formTheme;
+let pages;
+let homeScreenGuidance;
+let updateStatus;
+let feedbackBar;
+let formTheme;
 
 // Customize vex
-vex.registerPlugin( require( 'vex-dialog-enketo' ) );
+vex.registerPlugin( vexEnketoDialog );
 vex.defaultOptions.className = 'vex-theme-plain';
 
 /**
  * Initializes the GUI module
  */
 function init() {
-    translator.init()
+    initTranslator()
         .then( setEventHandlers );
 
     // avoid Windows console errors
     if ( typeof window.console === 'undefined' ) {
         window.console = {
-            log: function() {}
+            log() {}
         };
     }
     if ( typeof window.console.debug === 'undefined' ) {
@@ -55,32 +54,32 @@ function init() {
  * Sets the default (common) UI eventhandlers (extended in each class for custom handlers)
  */
 function setEventHandlers() {
-    var $doc = $( document );
+    const $doc = $( document );
 
-    $doc.on( 'click', '#feedback-bar .close, .touch #feedback-bar', function() {
+    $doc.on( 'click', '#feedback-bar .close, .touch #feedback-bar', () => {
         feedbackBar.hide();
         return false;
     } );
 
-    $doc.on( 'click', '.side-slider .close, .slider-overlay', function() {
+    $doc.on( 'click', '.side-slider .close, .slider-overlay', () => {
         $( 'body' ).removeClass( 'show-side-slider' );
     } );
 
     $( '.form-header__button--print' ).on( 'click', printForm );
 
-    $( '.side-slider__toggle, .offline-enabled__queue-length' ).on( 'click', function() {
-        var $body = $( 'body' );
+    $( '.side-slider__toggle, .offline-enabled__queue-length' ).on( 'click', () => {
+        const $body = $( 'body' );
         window.scrollTo( 0, 0 );
         $body.toggleClass( 'show-side-slider' );
     } );
 
-    $( '.offline-enabled__icon' ).on( 'click', function() {
-        var msg = t( 'alert.offlinesupported.msg' );
+    $( '.offline-enabled__icon' ).on( 'click', () => {
+        const msg = t( 'alert.offlinesupported.msg' );
         alert( msg, t( 'alert.offlinesupported.heading' ), 'normal' );
     } );
 
     $( 'a.branding' ).on( 'click', function() {
-        var href = this.getAttribute( 'href' );
+        const href = this.getAttribute( 'href' );
         return ( !href || href === '#' ) ? false : true;
     } );
 
@@ -88,41 +87,39 @@ function setEventHandlers() {
         $( '.form-header__button--homescreen' ).removeClass( 'hide' ).on( 'click', alertHomeScreenGuidance );
     }
 
-    $doc.on( 'xpatherror', function( ev, error ) {
-        var email = settings[ 'supportEmail' ];
-        var link = '<a href="mailto:' + email + '?subject=xpath errors for: ' + encodeURIComponent( location.href ) + '&body=' + encodeURIComponent( error ) + '" target="_blank" >' + email + '</a>';
+    $doc.on( 'xpatherror', ( ev, error ) => {
+        const email = settings[ 'supportEmail' ];
+        const link = `<a href="mailto:${email}?subject=xpath errors for: ${encodeURIComponent( location.href )}&body=${encodeURIComponent( error )}" target="_blank" >${email}</a>`;
 
-        alert( t( 'alert.xpatherror.msg', {
-            emailLink: link,
-            // switch off escaping just for this known safe value
-            interpolation: {
-                escapeValue: false
-            }
-        } ) + '<ul class="error-list"><li>' + error + '</li></ul>', t( 'alert.xpatherror.heading' ) );
+        alert( `${t( 'alert.xpatherror.msg', {
+    emailLink: link,
+    // switch off escaping just for this known safe value
+    interpolation: {
+        escapeValue: false
+    }
+} )}<ul class="error-list"><li>${error}</li></ul>`, t( 'alert.xpatherror.heading' ) );
     } );
 
-    $( '.side-slider__app-version' ).on( 'click', function() {
+    $( '.side-slider__app-version' ).on( 'click', () => {
         $( '.side-slider__advanced' ).toggleClass( 'hide' );
     } );
 }
 
 function swapTheme( formParts ) {
-    var requestedTheme = formParts.theme;
-    var $styleSheets = $( 'link[rel=stylesheet][href*=theme-]' );
-    var matches = /\/theme-([A-z]+)(\.print)?\.css/.exec( $styleSheets.eq( 0 ).attr( 'href' ) );
+    const requestedTheme = formParts.theme;
+    const $styleSheets = $( 'link[rel=stylesheet][href*=theme-]' );
+    const matches = /\/theme-([A-z]+)(\.print)?\.css/.exec( $styleSheets.eq( 0 ).attr( 'href' ) );
 
     formTheme = matches !== null ? matches[ 1 ] : null;
 
-    return new Promise( function( resolve ) {
-        if ( requestedTheme && requestedTheme !== formTheme && settings.themesSupported.some( function( supportedTheme ) {
-                return requestedTheme === supportedTheme;
-            } ) ) {
-            var $replacementSheets = [];
+    return new Promise( resolve => {
+        if ( requestedTheme && requestedTheme !== formTheme && settings.themesSupported.some( supportedTheme => requestedTheme === supportedTheme ) ) {
+            const $replacementSheets = [];
             $styleSheets.each( function() {
-                $replacementSheets.push( $( this.outerHTML.replace( /(href=.*\/theme-)[A-z]+((\.print)?\.css)/, '$1' + requestedTheme + '$2' ) ) );
+                $replacementSheets.push( $( this.outerHTML.replace( /(href=.*\/theme-)[A-z]+((\.print)?\.css)/, `$1${requestedTheme}$2` ) ) );
             } );
             console.log( 'Swapping theme to', requestedTheme );
-            $replacementSheets[ 0 ].on( 'load', function() {
+            $replacementSheets[ 0 ].on( 'load', () => {
                 formTheme = requestedTheme;
                 resolve( formParts );
             } );
@@ -146,9 +143,9 @@ feedbackBar = {
      * @param {string} message
      * @param {number=} duration duration in seconds for the message to show
      */
-    show: function( message, duration ) {
-        var $msg;
-        var $fbBar = $( '#feedback-bar' );
+    show( message, duration ) {
+        let $msg;
+        const $fbBar = $( '#feedback-bar' );
 
         duration = ( duration ) ? duration * 1000 : 10 * 1000;
 
@@ -163,8 +160,8 @@ feedbackBar = {
         }
 
         // automatically remove feedback after a period
-        setTimeout( function() {
-            var siblings;
+        setTimeout( () => {
+            let siblings;
             if ( typeof $msg !== 'undefined' ) {
                 siblings = $msg.siblings( 'p' ).length;
                 $msg.remove();
@@ -174,7 +171,7 @@ feedbackBar = {
             }
         }, duration );
     },
-    hide: function() {
+    hide() {
         $( '#feedback-bar' ).removeClass( 'feedback-bar--show' )
             .find( 'p' ).remove();
     }
@@ -209,7 +206,7 @@ function alert( message, heading, level, duration ) {
     vex.dialog.alert( {
         unsafeMessage: message,
         title: heading || t( 'alert.default.heading' ),
-        messageClassName: ( level === 'normal' ) ? '' : 'alert-box ' + level,
+        messageClassName: ( level === 'normal' ) ? '' : `alert-box ${level}`,
         buttons: [ {
             text: t( 'alert.validationsuccess.heading' ),
             type: 'submit',
@@ -229,14 +226,14 @@ function alert( message, heading, level, duration ) {
  * @param {Object=} choices - [type/description]
  */
 function confirm( content, choices ) {
-    var errorMsg = '';
-    var message = ( typeof content === 'string' ) ? content : content.msg;
+    let errorMsg = '';
+    const message = ( typeof content === 'string' ) ? content : content.msg;
 
     if ( content.errorMsg ) {
-        errorMsg = '<p class="alert-box error">' + content.errorMsg + '</p>';
+        errorMsg = `<p class="alert-box error">${content.errorMsg}</p>`;
     }
 
-    return new Promise( function( resolve ) {
+    return new Promise( resolve => {
         choices = choices || {};
         choices.allowAlternativeClose = ( typeof choices.allowAlternativeClose !== 'undefined' ) ? choices.allowAlternativeClose : true;
 
@@ -264,14 +261,14 @@ function confirm( content, choices ) {
 }
 
 function prompt( content, choices, inputs ) {
-    var errorMsg = '';
-    var message = ( typeof content === 'string' ) ? content : content.msg;
+    let errorMsg = '';
+    const message = ( typeof content === 'string' ) ? content : content.msg;
 
     if ( content.errorMsg ) {
-        errorMsg = '<p class="alert-box error">' + content.errorMsg + '</p>';
+        errorMsg = `<p class="alert-box error">${content.errorMsg}</p>`;
     }
 
-    return new Promise( function( resolve ) {
+    return new Promise( resolve => {
         choices = choices || {};
 
         vex.closeAll();
@@ -305,20 +302,20 @@ function confirmLogin( msg /*, serverURL*/ ) {
     msg = msg || t( 'confirm.login.msg' );
 
     confirm( {
-            msg: msg,
+            msg,
             heading: t( 'confirm.login.heading' )
         }, {
             posButton: t( 'confirm.login.posButton' ),
             negButton: t( 'confirm.login.negButton' )
         } )
-        .then( function( confirmed ) {
+        .then( confirmed => {
             if ( !confirmed ) {
                 return;
             }
-            var search = '?return_url=' + encodeURIComponent( location.href );
-            search += ( settings.touch ) ? '&touch=' + settings.touch : '';
-            search += ( settings.debug ) ? '&debug=' + settings.debug : '';
-            location.href = location.protocol + '//' + location.host + settings.loginUrl + search;
+            let search = `?return_url=${encodeURIComponent( location.href )}`;
+            search += ( settings.touch ) ? `&touch=${settings.touch}` : '';
+            search += ( settings.debug ) ? `&debug=${settings.debug}` : '';
+            location.href = `${location.protocol}//${location.host}${settings.loginUrl}${search}`;
         } );
 
 }
@@ -329,11 +326,11 @@ function confirmLogin( msg /*, serverURL*/ ) {
  * @param  {string=}        advice  a string with advice
  */
 function alertLoadErrors( loadErrors, advice ) {
-    var errorStringHTML = '<ul class="error-list"><li>' + loadErrors.join( '</li><li>' ) + '</li></ul>';
-    var errorStringEmail = '* ' + loadErrors.join( '\n* ' );
-    var email = settings[ 'supportEmail' ];
-    var link = '<a href="mailto:' + email + '?subject=loading errors for: ' + encodeURIComponent( location.href ) + '&body=' + encodeURIComponent( errorStringEmail ) + '" target="_blank" >' + email + '</a>';
-    var params = {
+    const errorStringHTML = `<ul class="error-list"><li>${loadErrors.join( '</li><li>' )}</li></ul>`;
+    const errorStringEmail = `* ${loadErrors.join( '\n* ' )}`;
+    const email = settings[ 'supportEmail' ];
+    const link = `<a href="mailto:${email}?subject=loading errors for: ${encodeURIComponent( location.href )}&body=${encodeURIComponent( errorStringEmail )}" target="_blank" >${email}</a>`;
+    const params = {
         emailLink: link,
         count: loadErrors.length,
         // switch off escaping just for this known safe value
@@ -345,10 +342,7 @@ function alertLoadErrors( loadErrors, advice ) {
     advice = advice || '';
 
     alert(
-        '<p>' +
-        t( 'alert.loaderror.msg1', params ) + ' ' + advice + '</p><p>' +
-        t( 'alert.loaderror.msg2', params ) +
-        '</p>' + errorStringHTML, t( 'alert.loaderror.heading', params )
+        `<p>${t( 'alert.loaderror.msg1', params )} ${advice}</p><p>${t( 'alert.loaderror.msg2', params )}</p>${errorStringHTML}`, t( 'alert.loaderror.heading', params )
     );
 }
 
@@ -357,9 +351,9 @@ function alertHomeScreenGuidance() {
 }
 
 function _getHomeScreenGuidance() {
-    var imageClass1;
-    var browser = sniffer.browser;
-    var os = sniffer.os;
+    let imageClass1;
+    const browser = sniffer.browser;
+    const os = sniffer.os;
 
     if ( homeScreenGuidance ) {
         // keep calm
@@ -378,8 +372,8 @@ function _getHomeScreenGuidance() {
 
 function _getHomeScreenGuidanceObj( imageClass1, imageClass2 ) {
     return {
-        image1: ( imageClass1 ) ? '<span class="' + imageClass1 + '"/>' : '',
-        image2: ( imageClass2 ) ? '<span class="' + imageClass2 + '"/>' : '',
+        image1: ( imageClass1 ) ? `<span class="${imageClass1}"/>` : '',
+        image2: ( imageClass2 ) ? `<span class="${imageClass2}"/>` : '',
         // switch off escaping just for these known safe values
         interpolation: {
             escapeValue: false
@@ -391,20 +385,20 @@ function _getHomeScreenGuidanceObj( imageClass1, imageClass2 ) {
  * Prompts for print settings (for Grid Theme) and prints from the regular view of the form.
  */
 function printForm() {
-    var components = getPrintDialogComponents();
-    var texts = {
+    const components = getPrintDialogComponents();
+    const texts = {
         heading: components.heading,
         msg: components.msg
     };
-    var options = {
+    const options = {
         posButton: components.posButton,
         negButton: components.negButton,
     };
-    var inputs = components.gridInputs + components.gridWarning;
+    const inputs = components.gridInputs + components.gridWarning;
 
     if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
         return prompt( texts, options, inputs )
-            .then( function( values ) {
+            .then( values => {
                 if ( values ) {
                     printGrid( values );
                 }
@@ -426,27 +420,20 @@ function getPrintDialogComponents() {
         msg: t( 'confirm.print.msg' ),
         posButton: t( 'confirm.print.posButton' ),
         negButton: t( 'alert.default.button' ),
-        gridInputs: '<fieldset><legend>' + t( 'confirm.print.psize' ) + '</legend>' +
-            '<label><input name="format" type="radio" value="A4" required checked/><span>' + t( 'confirm.print.a4' ) + '</span></label>' +
-            '<label><input name="format" type="radio" value="Letter" required/><span>' + t( 'confirm.print.letter' ) + '</span></label>' +
-            '</fieldset>' +
-            '<fieldset><legend>' + t( 'confirm.print.orientation' ) + '</legend>' +
-            '<label><input name="orientation" type="radio" value="portrait" required checked/><span>' + t( 'confirm.print.portrait' ) + '</span></label>' +
-            '<label><input name="orientation" type="radio" value="landscape" required/><span>' + t( 'confirm.print.landscape' ) + '</span></label>' +
-            '</fieldset>',
-        gridWarning: '<p class="alert-box info" >' + t( 'confirm.print.reminder' ) + '</p>',
+        gridInputs: `<fieldset><legend>${t( 'confirm.print.psize' )}</legend><label><input name="format" type="radio" value="A4" required checked/><span>${t( 'confirm.print.a4' )}</span></label><label><input name="format" type="radio" value="Letter" required/><span>${t( 'confirm.print.letter' )}</span></label></fieldset><fieldset><legend>${t( 'confirm.print.orientation' )}</legend><label><input name="orientation" type="radio" value="portrait" required checked/><span>${t( 'confirm.print.portrait' )}</span></label><label><input name="orientation" type="radio" value="landscape" required/><span>${t( 'confirm.print.landscape' )}</span></label></fieldset>`,
+        gridWarning: `<p class="alert-box info" >${t( 'confirm.print.reminder' )}</p>`,
     };
 }
 
 function printGrid( format ) {
-    var swapped = printHelper.styleToAll();
+    const swapped = printHelper.styleToAll();
     return printHelper.fixGrid( format )
         .then( window.print )
         .catch( console.error )
-        .then( function() {
+        .then( () => {
             if ( swapped ) {
-                return new Promise( function( resolve ) {
-                    setTimeout( function() {
+                return new Promise( resolve => {
+                    setTimeout( () => {
                         printHelper.styleReset();
                         resolve();
                     }, 500 );
@@ -460,31 +447,27 @@ function printGrid( format ) {
  */
 function applyPrintStyle() {
     imagesLoaded()
-        .then( function() {
+        .then( () => {
             if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
-                var paper = { format: settings.format, landscape: settings.landscape, scale: settings.scale, margin: settings.margin };
+                const paper = { format: settings.format, landscape: settings.landscape, scale: settings.scale, margin: settings.margin };
                 return printHelper.fixGrid( paper );
             }
         } )
-        .then( function() {
-            // allow some time for repainting
-            return new Promise( function( resolve ) {
+        .then( () => // allow some time for repainting
+            new Promise( resolve => {
                 setTimeout( resolve, 300 );
-            } );
-        } )
-        .then( function() {
+            } ) )
+        .then( () => {
             window.printReady = true;
         } )
         .catch( console.error );
 }
 
 function imagesLoaded() {
-    return new Promise( function( resolve ) {
-        var images = Array.prototype.slice.call( document.images );
-        var interval = setInterval( function() {
-            images = images.filter( function( image ) {
-                return !image.complete;
-            } );
+    return new Promise( resolve => {
+        let images = Array.prototype.slice.call( document.images );
+        const interval = setInterval( () => {
+            images = images.filter( image => !image.complete );
             if ( images.length === 0 ) {
                 clearInterval( interval );
                 resolve();
@@ -494,8 +477,8 @@ function imagesLoaded() {
 }
 
 function alertCacheUnsupported() {
-    var message = t( 'alert.offlineunsupported.msg' );
-    var choices = {
+    const message = t( 'alert.offlineunsupported.msg' );
+    const choices = {
         posButton: t( 'alert.offlineunsupported.posButton' ),
         negButton: t( 'alert.offlineunsupported.negButton' )
     };
@@ -503,7 +486,7 @@ function alertCacheUnsupported() {
             msg: message,
             heading: t( 'alert.offlineunsupported.heading' )
         }, choices )
-        .then( function( confirmed ) {
+        .then( confirmed => {
             if ( confirmed ) {
                 window.location = settings[ 'modernBrowsersURL' ];
             }
@@ -516,36 +499,36 @@ function alertCacheUnsupported() {
  * @type {Object}
  */
 updateStatus = {
-    offlineCapable: function( offlineCapable ) {
+    offlineCapable( offlineCapable ) {
         if ( offlineCapable ) {
             $( '.offline-enabled__icon.not-enabled' ).removeClass( 'not-enabled' );
         } else {
             $( '.offline-enabled__icon' ).addClass( 'not-enabled' );
         }
     },
-    applicationVersion: function( version ) {
+    applicationVersion( version ) {
         $( '.side-slider__app-version__value' ).text( version );
     }
 };
 
 function getErrorResponseMsg( statusCode ) {
-    var msg;
-    var supportEmailObj = {
+    let msg;
+    const supportEmailObj = {
         supportEmail: settings.supportEmail
     };
-    var contactSupport = t( 'contact.support', supportEmailObj );
-    var contactAdmin = t( 'contact.admin' );
-    var statusMap = {
+    const contactSupport = t( 'contact.support', supportEmailObj );
+    const contactAdmin = t( 'contact.admin' );
+    const statusMap = {
         '0': t( 'submission.http0' ),
-        '200': t( 'submission.http2xx' ) + '<br/>' + contactSupport,
-        '2xx': t( 'submission.http2xx' ) + '<br/>' + contactSupport,
-        '400': t( 'submission.http400' ) + '<br/>' + contactAdmin,
+        '200': `${t( 'submission.http2xx' )}<br/>${contactSupport}`,
+        '2xx': `${t( 'submission.http2xx' )}<br/>${contactSupport}`,
+        '400': `${t( 'submission.http400' )}<br/>${contactAdmin}`,
         '401': t( 'submission.http401' ),
-        '403': t( 'submission.http403' ) + '<br/>' + contactAdmin,
+        '403': `${t( 'submission.http403' )}<br/>${contactAdmin}`,
         '404': t( 'submission.http404' ),
         '408': t( 'submission.http408' ),
         '4xx': t( 'submission.http4xx' ),
-        '413': t( 'submission.http413' ) + '<br/>' + contactSupport,
+        '413': `${t( 'submission.http413' )}<br/>${contactSupport}`,
         '500': t( 'submission.http500', supportEmailObj ),
         '503': t( 'submission.http500', supportEmailObj ),
         '504': t( 'submission.http504', supportEmailObj ),
@@ -555,33 +538,33 @@ function getErrorResponseMsg( statusCode ) {
     statusCode = ( typeof statusCode !== 'undefined' ) ? statusCode.toString() : 'undefined';
 
     if ( statusMap[ statusCode ] ) {
-        msg = statusMap[ statusCode ] + ' (' + statusCode + ')';
+        msg = `${statusMap[ statusCode ]} (${statusCode})`;
     } else if ( statusMap[ statusCode.replace( statusCode.substring( 1 ), 'xx' ) ] ) {
-        msg = statusMap[ statusCode.replace( statusCode.substring( 1 ), 'xx' ) ] + ' (' + statusCode + ')';
+        msg = `${statusMap[ statusCode.replace( statusCode.substring( 1 ), 'xx' ) ]} (${statusCode})`;
     } else {
-        msg = t( 'error.unknown' ) + ' (' + statusCode + ')';
+        msg = `${t( 'error.unknown' )} (${statusCode})`;
     }
 
     return msg;
 }
 
-$( document ).ready( function() {
+$( document ).ready( () => {
     init();
 } );
 
-module.exports = {
-    alert: alert,
-    confirm: confirm,
-    prompt: prompt,
-    feedback: feedback,
-    updateStatus: updateStatus,
-    pages: pages,
-    swapTheme: swapTheme,
-    confirmLogin: confirmLogin,
-    alertLoadErrors: alertLoadErrors,
-    alertCacheUnsupported: alertCacheUnsupported,
-    getErrorResponseMsg: getErrorResponseMsg,
-    applyPrintStyle: applyPrintStyle,
-    getPrintDialogComponents: getPrintDialogComponents,
-    printForm: printForm,
+export default {
+    alert,
+    confirm,
+    prompt,
+    feedback,
+    updateStatus,
+    pages,
+    swapTheme,
+    confirmLogin,
+    alertLoadErrors,
+    alertCacheUnsupported,
+    getErrorResponseMsg,
+    applyPrintStyle,
+    getPrintDialogComponents,
+    printForm,
 };

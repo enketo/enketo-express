@@ -4,13 +4,12 @@
  * may be impossible to retrieve encrypted data (also the user likely cannot share the private 
  * key).
  **********************************************************************************************/
-'use strict';
+import forge from 'node-forge';
 
-var forge = require( 'node-forge' );
-var utils = require( './utils' );
-var SYMMETRIC_ALGORITHM = 'AES-CFB'; // JAVA: "AES/CFB/PKCS5Padding"
-var ASYMMETRIC_ALGORITHM = 'RSA-OAEP'; // JAVA: "RSA/NONE/OAEPWithSHA256AndMGF1Padding"
-var ASYMMETRIC_OPTIONS = {
+import utils from './utils';
+const SYMMETRIC_ALGORITHM = 'AES-CFB'; // JAVA: "AES/CFB/PKCS5Padding"
+const ASYMMETRIC_ALGORITHM = 'RSA-OAEP'; // JAVA: "RSA/NONE/OAEPWithSHA256AndMGF1Padding"
+const ASYMMETRIC_OPTIONS = {
     md: forge.md.sha256.create(),
     mgf: forge.mgf.mgf1.create( forge.md.sha1.create() )
 };
@@ -28,16 +27,16 @@ function isSupported() {
  * @param {{instanceId: string, xml: string, files?: [blob]}} record 
  */
 function encryptRecord( form, record ) {
-    var symmetricKey = _generateSymmetricKey();
-    var publicKeyPem = '-----BEGIN PUBLIC KEY-----' + form.encryptionKey + '-----END PUBLIC KEY-----';
-    var forgePublicKey = forge.pki.publicKeyFromPem( publicKeyPem );
-    var base64EncryptedSymmetricKey = _rsaEncrypt( symmetricKey, forgePublicKey );
-    var seed = new Seed( record.instanceId, symmetricKey ); //_getIvSeedArray( record.instanceId, symmetricKey );
-    var manifest = new Manifest( form.id, form.version );
+    const symmetricKey = _generateSymmetricKey();
+    const publicKeyPem = `-----BEGIN PUBLIC KEY-----${form.encryptionKey}-----END PUBLIC KEY-----`;
+    const forgePublicKey = forge.pki.publicKeyFromPem( publicKeyPem );
+    const base64EncryptedSymmetricKey = _rsaEncrypt( symmetricKey, forgePublicKey );
+    const seed = new Seed( record.instanceId, symmetricKey ); //_getIvSeedArray( record.instanceId, symmetricKey );
+    const manifest = new Manifest( form.id, form.version );
     manifest.addElement( 'base64EncryptedKey', base64EncryptedSymmetricKey );
     manifest.addMetaElement( 'instanceID', record.instanceId );
 
-    var elements = [ form.id ];
+    let elements = [ form.id ];
     if ( form.version ) {
         elements.push( form.version );
     }
@@ -45,16 +44,14 @@ function encryptRecord( form, record ) {
 
     return _encryptMediaFiles( record.files, symmetricKey, seed )
         .then( manifest.addMediaFiles )
-        .then( function( blobs ) {
-            var submissionXmlEnc = _encryptSubmissionXml( record.xml, symmetricKey, seed );
+        .then( blobs => {
+            const submissionXmlEnc = _encryptSubmissionXml( record.xml, symmetricKey, seed );
             manifest.addXmlSubmissionFile( submissionXmlEnc );
             blobs.push( submissionXmlEnc );
             return blobs;
         } )
-        .then( function( blobs ) {
-            var fileMd5s = blobs.map( function( blob ) {
-                return blob.name.substring( 0, blob.name.length - 4 ) + '::' + blob.md5;
-            } );
+        .then( blobs => {
+            const fileMd5s = blobs.map( blob => `${blob.name.substring( 0, blob.name.length - 4 )}::${blob.md5}` );
             elements = elements.concat( fileMd5s );
             manifest.addElement( 'base64EncryptedElementSignature', _getBase64EncryptedElementSignature( elements, forgePublicKey ) );
 
@@ -72,59 +69,52 @@ function _generateSymmetricKey() {
 
 // Equivalent to "RSA/NONE/OAEPWithSHA256AndMGF1Padding"
 function _rsaEncrypt( byteString, publicKey ) {
-    var encrypted = publicKey.encrypt( byteString, ASYMMETRIC_ALGORITHM, ASYMMETRIC_OPTIONS );
+    const encrypted = publicKey.encrypt( byteString, ASYMMETRIC_ALGORITHM, ASYMMETRIC_OPTIONS );
     return forge.util.encode64( encrypted );
 }
 
 function _md5Digest( byteString ) {
-    var md = forge.md.md5.create();
+    const md = forge.md.md5.create();
     md.update( byteString );
     return md.digest();
 }
 
 function _getBase64EncryptedElementSignature( elements, publicKey ) {
     // ODK Collect code also adds a newline character **at the end**!
-    var elementsStr = elements.join( '\n' ) + '\n';
-    var messageDigest = _md5Digest( elementsStr ).getBytes();
+    const elementsStr = `${elements.join( '\n' )}\n`;
+    const messageDigest = _md5Digest( elementsStr ).getBytes();
     return _rsaEncrypt( messageDigest, publicKey );
 }
 
 function _encryptMediaFiles( files, symmetricKey, seed ) {
     files = files || [];
 
-    var funcs = files.map( function( file ) {
-        return function() {
-            /*
-             * Note using new fileReader().readAsBinaryString() is about 30% faster than using readAsDataURL
-             * However, readAsDataURL() works in IE11, and readAsBinaryString() is a bit frowned upon.
-             * Interestingly, readAsArrayBuffer() is significantly slower than both. That difference is 
-             * caused by forge.util.createBuffer() (which accepts both types as parameter)
-             */
-            return utils.blobToDataUri( file )
-                .then( function( dataUri ) {
-                    var byteString = forge.util.decode64( dataUri.split( ',' )[ 1 ] );
-                    var buffer = forge.util.createBuffer( byteString, 'raw' );
-                    var mediaFileEnc = _encryptContent( buffer, symmetricKey, seed );
-                    mediaFileEnc.name = file.name + '.enc';
-                    mediaFileEnc.md5 = _md5Digest( byteString ).toHex();
-                    return mediaFileEnc;
-                } );
-        };
-    } );
+    const funcs = files.map( file => () =>
+        /*
+         * Note using new fileReader().readAsBinaryString() is about 30% faster than using readAsDataURL
+         * However, readAsDataURL() works in IE11, and readAsBinaryString() is a bit frowned upon.
+         * Interestingly, readAsArrayBuffer() is significantly slower than both. That difference is 
+         * caused by forge.util.createBuffer() (which accepts both types as parameter)
+         */
+        utils.blobToDataUri( file )
+        .then( dataUri => {
+            const byteString = forge.util.decode64( dataUri.split( ',' )[ 1 ] );
+            const buffer = forge.util.createBuffer( byteString, 'raw' );
+            const mediaFileEnc = _encryptContent( buffer, symmetricKey, seed );
+            mediaFileEnc.name = `${file.name}.enc`;
+            mediaFileEnc.md5 = _md5Digest( byteString ).toHex();
+            return mediaFileEnc;
+        } ) );
     // This needs to be sequential for seed array incrementation!
-    return funcs.reduce( function( prevPromise, func ) {
-        return prevPromise.then( function( result ) {
-            return func()
-                .then( function( blob ) {
-                    result.push( blob );
-                    return result;
-                } );
-        } );
-    }, Promise.resolve( [] ) );
+    return funcs.reduce( ( prevPromise, func ) => prevPromise.then( result => func()
+        .then( blob => {
+            result.push( blob );
+            return result;
+        } ) ), Promise.resolve( [] ) );
 }
 
 function _encryptSubmissionXml( xmlStr, symmetricKey, seed ) {
-    var submissionXmlEnc = _encryptContent( forge.util.createBuffer( xmlStr, 'utf8' ), symmetricKey, seed );
+    const submissionXmlEnc = _encryptContent( forge.util.createBuffer( xmlStr, 'utf8' ), symmetricKey, seed );
     submissionXmlEnc.name = 'submission.xml.enc';
     submissionXmlEnc.md5 = _md5Digest( xmlStr ).toHex();
     return submissionXmlEnc;
@@ -137,27 +127,27 @@ function _encryptSubmissionXml( xmlStr, symmetricKey, seed ) {
  * @param {Seed} seed 
  */
 function _encryptContent( content, symmetricKey, seed ) {
-    var cipher = forge.cipher.createCipher( SYMMETRIC_ALGORITHM, symmetricKey );
-    var iv = seed.getIncrementedSeedByteString();
+    const cipher = forge.cipher.createCipher( SYMMETRIC_ALGORITHM, symmetricKey );
+    const iv = seed.getIncrementedSeedByteString();
 
     cipher.mode.pad = forge.cipher.modes.cbc.prototype.pad.bind( cipher.mode );
     cipher.start( {
-        iv: iv
+        iv
     } );
 
     cipher.update( content );
-    var pass = cipher.finish();
-    var byteString = cipher.output.getBytes();
+    const pass = cipher.finish();
+    const byteString = cipher.output.getBytes();
 
     if ( !pass ) {
         throw new Error( 'Encryption failed.' );
     }
 
     // Write the bytes of the string to an ArrayBuffer
-    var buffer = new ArrayBuffer( byteString.length );
-    var array = new Uint8Array( buffer );
+    const buffer = new ArrayBuffer( byteString.length );
+    const array = new Uint8Array( buffer );
 
-    for ( var i = 0; i < byteString.length; i++ ) {
+    for ( let i = 0; i < byteString.length; i++ ) {
         array[ i ] = byteString.charCodeAt( i );
     }
 
@@ -167,21 +157,21 @@ function _encryptContent( content, symmetricKey, seed ) {
 
 function Seed( instanceId, symmetricKey ) {
     // iv is the 16-byte md5 hash of the instanceID and the symmetric key
-    var messageDigest = _md5Digest( instanceId + symmetricKey ).getBytes();
-    var ivSeedArray = messageDigest.split( '' ).map( function( item ) { return item.charCodeAt( 0 ); } );
-    var ivCounter = 0;
+    const messageDigest = _md5Digest( instanceId + symmetricKey ).getBytes();
+    const ivSeedArray = messageDigest.split( '' ).map( item => item.charCodeAt( 0 ) );
+    let ivCounter = 0;
 
-    this.getIncrementedSeedByteString = function() {
+    this.getIncrementedSeedByteString = () => {
         ++ivSeedArray[ ivCounter % ivSeedArray.length ];
         ++ivCounter;
-        return ivSeedArray.map( function( code ) { return String.fromCharCode( code ); } ).join( '' );
+        return ivSeedArray.map( code => String.fromCharCode( code ) ).join( '' );
     };
 }
 
 function Manifest( formId, formVersion ) {
-    var ODK_SUBMISSION_NS = 'http://opendatakit.org/submissions';
-    var OPENROSA_XFORMS_NS = 'http://openrosa.org/xforms';
-    var manifestEl = document.createElementNS( ODK_SUBMISSION_NS, 'data' );
+    const ODK_SUBMISSION_NS = 'http://opendatakit.org/submissions';
+    const OPENROSA_XFORMS_NS = 'http://openrosa.org/xforms';
+    const manifestEl = document.createElementNS( ODK_SUBMISSION_NS, 'data' );
     // move to constructor after ES6 class conversion
     manifestEl.setAttribute( 'encrypted', 'yes' );
     manifestEl.setAttribute( 'id', formId );
@@ -189,30 +179,26 @@ function Manifest( formId, formVersion ) {
         manifestEl.setAttribute( 'version', formVersion );
     }
 
-    this.getXmlStr = function() {
-        return new XMLSerializer().serializeToString( manifestEl );
-    };
-    this.addElement = function( nodeName, content ) {
-        var el = document.createElementNS( ODK_SUBMISSION_NS, nodeName );
+    this.getXmlStr = () => new XMLSerializer().serializeToString( manifestEl );
+    this.addElement = ( nodeName, content ) => {
+        const el = document.createElementNS( ODK_SUBMISSION_NS, nodeName );
         el.textContent = content;
         manifestEl.appendChild( el );
     };
-    this.addMetaElement = function( nodeName, content ) {
-        var metaPresent = manifestEl.querySelector( 'meta' );
-        var metaEl = metaPresent || document.createElementNS( OPENROSA_XFORMS_NS, 'meta' );
-        var childEl = document.createElementNS( OPENROSA_XFORMS_NS, nodeName );
+    this.addMetaElement = ( nodeName, content ) => {
+        const metaPresent = manifestEl.querySelector( 'meta' );
+        const metaEl = metaPresent || document.createElementNS( OPENROSA_XFORMS_NS, 'meta' );
+        const childEl = document.createElementNS( OPENROSA_XFORMS_NS, nodeName );
         childEl.textContent = content;
         metaEl.appendChild( childEl );
         if ( !metaPresent ) {
             manifestEl.appendChild( metaEl );
         }
     };
-    this.addMediaFiles = function( blobs ) {
-        return blobs.map( _addMediaFile );
-    };
+    this.addMediaFiles = blobs => blobs.map( _addMediaFile );
 
-    this.addXmlSubmissionFile = function( blob ) {
-        var xmlFileEl = document.createElementNS( ODK_SUBMISSION_NS, 'encryptedXmlFile' );
+    this.addXmlSubmissionFile = blob => {
+        const xmlFileEl = document.createElementNS( ODK_SUBMISSION_NS, 'encryptedXmlFile' );
         xmlFileEl.setAttribute( 'type', 'file' ); // temporary, used in HTTP submission logic
         xmlFileEl.textContent = blob.name;
         manifestEl.appendChild( xmlFileEl );
@@ -223,8 +209,8 @@ function Manifest( formId, formVersion ) {
         // https://github.com/opendatakit/aggregate/issues/319
         // Once, we no longer need compatibility with old Aggregate servers, we can change that
         // by putting all <file> elements under 1 <media> element
-        var mediaEl = document.createElementNS( ODK_SUBMISSION_NS, 'media' );
-        var fileEl = document.createElementNS( ODK_SUBMISSION_NS, 'file' );
+        const mediaEl = document.createElementNS( ODK_SUBMISSION_NS, 'media' );
+        const fileEl = document.createElementNS( ODK_SUBMISSION_NS, 'file' );
         fileEl.setAttribute( 'type', 'file' ); // temporary, used in HTTP submission logic
         fileEl.textContent = blob.name;
         mediaEl.appendChild( fileEl );
@@ -233,8 +219,8 @@ function Manifest( formId, formVersion ) {
     }
 }
 
-module.exports = {
-    isSupported: isSupported,
-    encryptRecord: encryptRecord,
-    Seed: Seed
+export default {
+    isSupported,
+    encryptRecord,
+    Seed
 };

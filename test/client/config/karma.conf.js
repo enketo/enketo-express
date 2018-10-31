@@ -1,8 +1,12 @@
 // Karma configuration
 // Generated on Wed Nov 26 2014 15:52:30 GMT-0700 (MST)
-'use strict';
+const resolve = require( 'rollup-plugin-node-resolve' );
+const commonjs = require( 'rollup-plugin-commonjs' );
+const json = require( 'rollup-plugin-json' );
+const builtins = require( 'rollup-plugin-node-builtins' );
+const globals = require( 'rollup-plugin-node-globals' );
 
-module.exports = function( config ) {
+module.exports = config => {
     config.set( {
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -11,7 +15,7 @@ module.exports = function( config ) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: [ 'browserify', 'mocha', 'sinon-chai' ],
+        frameworks: [ 'mocha', 'sinon-chai' ],
 
 
         // list of files / patterns to load in the browser
@@ -32,9 +36,27 @@ module.exports = function( config ) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'test/client/**/*.spec.js': [ 'browserify' ],
+            'test/client/**/*.spec.js': [ 'rollup' ],
         },
-
+        rollupPreprocessor: {
+            output: {
+                format: 'iife'
+            },
+            plugins: [
+                resolve( {
+                    module: true, // Default: true
+                    main: true, // Default: true
+                    browser: true, // Default: false
+                } ),
+                commonjs( {
+                    include: 'node_modules/**', // Default: undefined
+                    sourceMap: false, // Default: true
+                } ),
+                json(), // used to import package.json in tests
+                builtins(),
+                globals(),
+            ]
+        },
 
         browserify: {
             debug: true,

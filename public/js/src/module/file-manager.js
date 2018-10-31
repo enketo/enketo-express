@@ -7,16 +7,15 @@
  * types.
  */
 
-'use strict';
+import store from './store';
 
-var store = require( './store' );
-var settings = require( './settings' );
-var connection = require( './connection' );
-var $ = require( 'jquery' );
-var utils = require( './utils' );
-var coreUtils = require( 'enketo-core/src/js/utils' );
-var t = require( './translator' ).t;
-var instanceAttachments;
+import settings from './settings';
+import connection from './connection';
+import $ from 'jquery';
+import utils from './utils';
+import { getFilename } from 'enketo-core/src/js/utils';
+import { t } from './translator';
+let instanceAttachments;
 
 /**
  * Initialize the file manager .
@@ -49,7 +48,7 @@ function setInstanceAttachments( attachments ) {
  * @return {[type]}         promise url string or rejection with Error
  */
 function getFileUrl( subject ) {
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( !subject ) {
             resolve( null );
         } else if ( typeof subject === 'string' ) {
@@ -61,7 +60,7 @@ function getFileUrl( subject ) {
             } else {
                 // obtain file from storage
                 store.record.file.get( _getInstanceId(), subject )
-                    .then( function( file ) {
+                    .then( file => {
                         if ( file.item ) {
                             if ( isTooLarge( file.item ) ) {
                                 reject( _getMaxSizeError() );
@@ -96,11 +95,9 @@ function getFileUrl( subject ) {
  */
 function getObjectUrl( subject ) {
     return getFileUrl( subject )
-        .then( function( url ) {
+        .then( url => {
             if ( /https?:\/\//.test( url ) ) {
-                return connection.getMediaFile( url ).then( function( obj ) {
-                    return URL.createObjectURL( obj.item );
-                } );
+                return connection.getMediaFile( url ).then( obj => URL.createObjectURL( obj.item ) );
             }
             return url;
         } );
@@ -112,14 +109,14 @@ function getObjectUrl( subject ) {
  * @return {Promise} array of files
  */
 function getCurrentFiles() {
-    var files = [];
-    var $fileInputs = $( 'form.or input[type="file"], form.or input[type="text"][data-drawing="true"]' );
+    const files = [];
+    const $fileInputs = $( 'form.or input[type="file"], form.or input[type="text"][data-drawing="true"]' );
 
     // first get any files inside file input elements
     $fileInputs.each( function() {
-        var newFilename;
-        var file = null;
-        var canvas = null;
+        let newFilename;
+        let file = null;
+        let canvas = null;
         if ( this.type === 'file' ) {
             file = this.files[ 0 ]; // Why doesn't this fail for empty file inputs?
         } else if ( this.value ) {
@@ -135,7 +132,7 @@ function getCurrentFiles() {
             // First create a clone, because the name property is immutable
             // TODO: in the future, when browser support increase we can invoke
             // the File constructor to do this.
-            newFilename = coreUtils.getFilename( file, this.dataset.filenamePostfix );
+            newFilename = getFilename( file, this.dataset.filenamePostfix );
             file = new Blob( [ file ], {
                 type: file.type
             } );
@@ -158,9 +155,9 @@ function getCurrentFiles() {
  * @return {Promise} array of files
  */
 function getCurrentFile( filename ) {
-    var f;
+    let f;
     // relies on all file names to be unique (which they are)
-    getCurrentFiles().some( function( file ) {
+    getCurrentFiles().some( file => {
         if ( file.name === filename ) {
             f = file;
             return true;
@@ -203,17 +200,17 @@ function _getMaxSize() {
 }
 
 function getMaxSizeReadable() {
-    return Math.round( _getMaxSize() * 100 / ( 1024 * 1024 ) / 100 ) + 'MB';
+    return `${Math.round( _getMaxSize() * 100 / ( 1024 * 1024 ) / 100 )}MB`;
 }
 
-module.exports = {
-    isWaitingForPermissions: isWaitingForPermissions,
-    init: init,
-    setInstanceAttachments: setInstanceAttachments,
-    getFileUrl: getFileUrl,
-    getObjectUrl: getObjectUrl,
-    getCurrentFiles: getCurrentFiles,
-    getCurrentFile: getCurrentFile,
-    isTooLarge: isTooLarge,
-    getMaxSizeReadable: getMaxSizeReadable
+export default {
+    isWaitingForPermissions,
+    init,
+    setInstanceAttachments,
+    getFileUrl,
+    getObjectUrl,
+    getCurrentFiles,
+    getCurrentFile,
+    isTooLarge,
+    getMaxSizeReadable
 };

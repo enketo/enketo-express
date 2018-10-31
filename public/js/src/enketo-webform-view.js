@@ -1,41 +1,39 @@
-'use strict';
+import $ from 'jquery';
+import gui from './module/gui';
+import controller from './module/controller-webform';
+import settings from './module/settings';
+import connection from './module/connection';
+import { init as initTranslator, t, localize } from './module/translator';
 
-var $ = require( 'jquery' );
-var gui = require( './module/gui' );
-var controller = require( './module/controller-webform' );
-var settings = require( './module/settings' );
-var connection = require( './module/connection' );
-var translator = require( './module/translator' );
-var t = translator.t;
-var $loader = $( 'body > .main-loader' );
-var $formheader = $( '.main > .paper > .form-header' );
-var survey = {
+const $loader = $( 'body > .main-loader' );
+const $formheader = $( '.main > .paper > .form-header' );
+const survey = {
     enketoId: settings.enketoId,
     instanceId: settings.instanceId
 };
 
 // Completely disable calculations in Enketo Core
-require( 'enketo-core/src/js/calculate' ).update = function() {
+import calcModule from 'enketo-core/src/js/calculate';
+calcModule.update = () => {
     console.log( 'Calculations disabled.' );
 };
 // Completely disable instanceID and deprecatedID population in Enketo Core
-require( 'enketo-core/src/js/Form-model' ).prototype.setInstanceIdAndDeprecatedId = function() {
+import { FormModel } from 'enketo-core/src/js/Form-model';
+FormModel.prototype.setInstanceIdAndDeprecatedId = () => {
     console.log( 'InstanceID and deprecatedID population disabled.' );
 };
 // Completely disable preload items
-require( 'enketo-core/src/js/preload' ).init = function() {
+import preloadModule from 'enketo-core/src/js/preload';
+preloadModule.init = () => {
     console.log( 'Preloaders disabled.' );
 };
 
-
-translator.init( survey )
-    .then( function( survey ) {
-        return connection.getFormParts( survey );
-    } )
-    .then( function( formParts ) {
+initTranslator( survey )
+    .then( survey => connection.getFormParts( survey ) )
+    .then( formParts => {
         if ( survey.instanceId ) {
             return connection.getExistingInstance( survey )
-                .then( function( response ) {
+                .then( response => {
                     formParts.instance = response.instance;
                     formParts.instanceAttachments = response.instanceAttachments;
                     return formParts;
@@ -43,7 +41,7 @@ translator.init( survey )
         }
         return formParts;
     } )
-    .then( function( formParts ) {
+    .then( formParts => {
         if ( formParts.form && formParts.model ) {
             return gui.swapTheme( formParts );
         } else {
@@ -57,7 +55,7 @@ translator.init( survey )
 function _showErrorOrAuthenticate( error ) {
     $loader.addClass( 'fail' );
     if ( error.status === 401 ) {
-        window.location.href = settings.loginUrl + '?return_url=' + encodeURIComponent( window.location.href );
+        window.location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( window.location.href )}`;
     } else {
         gui.alert( error.message, t( 'alert.loaderror.heading' ) );
     }
@@ -80,14 +78,14 @@ function _convertToReadonly( formParts ) {
 
 function _init( formParts ) {
     $formheader.after( formParts.form );
-    translator.localize( document.querySelector( 'form.or' ) );
-    $( document ).ready( function() {
+    localize( document.querySelector( 'form.or' ) );
+    $( document ).ready( () => {
         controller.init( 'form.or:eq(0)', {
             modelStr: formParts.model,
             instanceStr: formParts.instance,
             external: formParts.externalData,
             instanceAttachments: formParts.instanceAttachments,
-        } ).then( function() {
+        } ).then( () => {
             $( 'head>title' ).text( $( '#form-title' ).text() );
             if ( settings.print ) {
                 gui.applyPrintStyle();

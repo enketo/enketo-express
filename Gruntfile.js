@@ -1,8 +1,8 @@
 module.exports = grunt => {
     const JS_INCLUDE = [ '**/*.js', '!node_modules/**', '!test/**/*.spec.js', '!public/js/build/*' ];
-    const pkg = grunt.file.readJSON( 'package.json' );
     const path = require( 'path' );
     const nodeSass = require( 'node-sass' );
+    const bundles = require( './buildFiles' ).bundles;
 
     require( 'time-grunt' )( grunt );
     require( 'load-grunt-tasks' )( grunt );
@@ -93,7 +93,10 @@ module.exports = grunt => {
                 ].join( '&&' )
             },
             ie11polyfill: {
-                command: 'mkdir -p public/js/build && curl "https://cdn.polyfill.io/v2/polyfill.min.js?ua=ie%2F11.0.0&features=es2015%2Ces2016%2Ces2017%2Ces2018%2Cdefault-3.6%2Cfetch" -o "public/js/build/ie11-polyfill.min.js"',
+                command: [
+                    'mkdir -p public/js/build && curl "https://cdn.polyfill.io/v2/polyfill.js?ua=ie%2F11.0.0&features=es2015%2Ces2016%2Ces2017%2Ces2018%2Cdefault-3.6%2Cfetch" -o "public/js/build/ie11-polyfill.min.js"',
+                    'cp -f node_modules/enketo-core/src/js/obscure-ie11-polyfills.js public/js/build/obscure-ie11-polyfills.js'
+                ].join( '&&' )
             },
             'clean-css': {
                 command: 'rm -f public/css/*'
@@ -103,6 +106,20 @@ module.exports = grunt => {
             },
             'clean-js': {
                 command: 'rm -f public/js/build/* && rm -f public/js/*.js && rm -f public/temp-client-config.json'
+            },
+            rollup: {
+                command: 'npx rollup --config'
+            },
+            babel: {
+                command: bundles
+                    .map( bundle => `npx babel ${bundle} --out-file ${bundle.replace('-bundle.', '-ie11-temp-bundle.')}` )
+                    .join( '&&' )
+            },
+            browserify: {
+                command: bundles
+                    .map( bundle => `npx browserify node_modules/enketo-core/src/js/workarounds-ie11.js ${bundle.replace('-bundle.', '-ie11-temp-bundle.')} -o ${bundle.replace('-bundle.', '-ie11-bundle.')}` )
+                    .concat( [ 'rm -f public/js/build/*ie11-temp-bundle.js' ] )
+                    .join( '&&' )
             }
         },
         jsbeautifier: {
@@ -149,48 +166,15 @@ module.exports = grunt => {
                 browsers: [ 'Chrome', 'ChromeCanary', 'Firefox', 'Opera' /*,'Safari'*/ ],
             }
         },
-        browserify: {
-            development: {
-                files: {
-                    'public/js/build/enketo-webform-dev-bundle.js': [ 'public/js/src/main-webform.js' ],
-                    'public/js/build/enketo-webform-edit-dev-bundle.js': [ 'public/js/src/main-webform-edit.js' ],
-                    'public/js/build/enketo-webform-view-dev-bundle.js': [ 'public/js/src/main-webform-view.js' ],
-                    'public/js/build/enketo-offline-fallback-dev-bundle.js': [ 'public/js/src/main-offline-fallback.js' ],
-                    'public/js/build/obscure-ie11-polyfills.js': [ 'node_modules/enketo-core/src/js/obscure-ie11-polyfills.js' ],
-                },
-                options: {
-                    browserifyOptions: {
-                        debug: true
-                    }
-                },
-            },
-            production: {
-                files: {
-                    'public/js/build/enketo-webform-bundle.js': [ 'public/js/src/main-webform.js' ],
-                    'public/js/build/enketo-webform-edit-bundle.js': [ 'public/js/src/main-webform-edit.js' ],
-                    'public/js/build/enketo-webform-view-bundle.js': [ 'public/js/src/main-webform-view.js' ],
-                    'public/js/build/enketo-offline-fallback-bundle.js': [ 'public/js/src/main-offline-fallback.js' ],
-                    'public/js/build/obscure-ie11-polyfills.js': [ 'node_modules/enketo-core/src/js/obscure-ie11-polyfills.js' ],
-                },
-            },
-            options: {
-                // ensure that several placeholder modules in **enketo-core** are overridden 
-                transform: [
-                    [ 'aliasify', {
-                        aliases: pkg.aliasify.aliases,
-                        global: true
-                    } ]
-                ]
-            },
-        },
         uglify: {
             all: {
-                files: {
-                    'public/js/build/enketo-webform-bundle.min.js': [ 'public/js/build/enketo-webform-bundle.js' ],
-                    'public/js/build/enketo-webform-edit-bundle.min.js': [ 'public/js/build/enketo-webform-edit-bundle.js' ],
-                    'public/js/build/enketo-webform-view-bundle.min.js': [ 'public/js/build/enketo-webform-view-bundle.js' ],
-                    'public/js/build/enketo-offline-fallback-bundle.min.js': [ 'public/js/build/enketo-offline-fallback-bundle.js' ],
-                },
+                files: bundles
+                    .concat( bundles.map( bundle => bundle.replace( '-bundle.', '-ie11-bundle.' ) ) )
+                    .map( bundle => [ bundle.replace( '.js', '.min.js' ), [ bundle ] ] )
+                    .reduce( ( o, [ key, value ] ) => {
+                        o[ key ] = value;
+                        return o;
+                    }, {} )
             },
         },
         env: {
@@ -219,10 +203,10 @@ module.exports = grunt => {
     } );
 
     grunt.registerTask( 'client-config-file', 'Temporary client-config file', task => {
-        const CLIENT_CONFIG_PATH = 'public/js/build/temp-client-config.json';
+        const CLIENT_CONFIG_PATH = 'public/js/build/client-config.js';
         if ( task === 'create' ) {
             const config = require( './app/models/config-model' );
-            grunt.file.write( CLIENT_CONFIG_PATH, JSON.stringify( config.client ) );
+            grunt.file.write( CLIENT_CONFIG_PATH, `export default ${JSON.stringify( config.client )};` );
             grunt.log.writeln( `File ${CLIENT_CONFIG_PATH} created` );
         } else if ( task === 'remove' ) {
             grunt.file.delete( CLIENT_CONFIG_PATH );
@@ -242,11 +226,19 @@ module.exports = grunt => {
         const WIDGETS_JS = `${WIDGETS_JS_LOC}widgets.js`;
         const WIDGETS_SASS_LOC = 'app/views/styles/component/';
         const WIDGETS_SASS = `${WIDGETS_SASS_LOC}_widgets.scss`;
-        const PRE = '// This file is automatically generated with `grunt widgets`\n';
+        const PRE = '// This file is automatically generated with `grunt widgets`\n\n';
         const widgets = require( './app/models/config-model' ).server.widgets;
         const coreWidgets = require( './public/js/src/module/core-widgets' );
         const paths = Object.keys( widgets ).map( key => coreWidgets[ widgets[ key ] ] || widgets[ key ] );
-        let content = `${PRE}'use strict';\n\nmodule.exports = [\n    ${paths.map( p => grunt.file.exists( WIDGETS_JS_LOC, `${p}.js` ) ? `require( '${p}' )` : `//${p} not found` ).join( ',\n    ' )}\n];\n`;
+        let num = 0;
+        let content = PRE + paths.map( p => {
+            if ( grunt.file.exists( WIDGETS_JS_LOC, `${p}.js` ) ) {
+                num++;
+                return `import w${num} from '${p}';`;
+            } else {
+                return `//${p} not found`;
+            }
+        } ).join( '\n' ) + `\n\nexport default [${[...Array(num).keys()].map(n => 'w'+(n+1)).join(', ')}];`;
         grunt.file.write( WIDGETS_JS, content );
         grunt.log.writeln( `File ${WIDGETS_JS} created` );
         content = `${PRE +
@@ -258,13 +250,15 @@ module.exports = grunt => {
         grunt.log.writeln( `File ${WIDGETS_SASS} created` );
     } );
 
-    grunt.registerTask( 'default', [ 'locales', 'widgets', 'css', 'js', 'uglify' ] );
+    grunt.registerTask( 'default', [ 'locales', 'widgets', 'css', 'js-ie11', 'uglify' ] );
     grunt.registerTask( 'locales', [ 'shell:clean-locales', 'i18next' ] );
-    grunt.registerTask( 'js', [ 'shell:clean-js', 'shell:ie11polyfill', 'client-config-file:create', 'widgets', 'browserify:production' ] );
-    grunt.registerTask( 'js-dev', [ 'client-config-file:create', 'widgets', 'browserify:development' ] );
+    grunt.registerTask( 'js', [ 'shell:clean-js', 'client-config-file:create', 'widgets', 'shell:rollup' ] );
+    grunt.registerTask( 'js-dev', [ 'js' ] );
+    grunt.registerTask( 'js-ie11', [ 'js', 'shell:ie11polyfill', 'shell:babel', 'shell:browserify' ] );
     grunt.registerTask( 'css', [ 'shell:clean-css', 'system-sass-variables:create', 'sass' ] );
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'eslint' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
-    grunt.registerTask( 'develop', [ 'env:develop', 'shell:ie11polyfill', 'i18next', 'js-dev', 'css', 'concurrent:develop' ] );
+    grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js-dev', 'css', 'concurrent:develop' ] );
+    grunt.registerTask( 'develop-ie11', [ 'env:develop', 'i18next', 'js-ie11', 'css', 'concurrent:develop' ] );
     grunt.registerTask( 'test-and-build', [ 'env:test', 'mochaTest:all', 'karma:headless', 'env:production', 'default' ] );
 };

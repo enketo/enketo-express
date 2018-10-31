@@ -50,6 +50,9 @@ function getManifest( html1, html2, lang ) {
                 resources = resources.concat( _getSrcAttributes( doc1 ) );
                 resources = resources.concat( _getSrcAttributes( doc2 ) );
 
+                // explicitly add the IE11 bundle, until we can drop IE11 support completely
+                resources = resources.concat( `/js/build/enketo-webform-ie11-bundle${process.env.NODE_ENV === 'production' || !process.env.NODE_ENV ? '.min' : ''}.js` );
+
                 // remove non-existing files, empties, duplicates and non-http urls
                 resources = resources
                     .filter( _removeEmpties )

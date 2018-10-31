@@ -2,127 +2,118 @@
  * Deals with browser storage
  */
 
-'use strict';
+import db from 'db.js';
+import utils from './utils';
+import sniffer from './sniffer';
+import { t } from './translator';
+const parser = new DOMParser();
 
-var db = require( 'db.js' );
-var utils = require( './utils' );
-var sniffer = require( './sniffer' );
-var t = require( './translator' ).t;
-var parser = new DOMParser();
-
-var server;
-var blobEncoding;
-var propertyStore;
-var recordStore;
-var surveyStore;
-var dataStore;
-var dump;
-var available = false;
-var databaseName = 'enketo';
+let server;
+let blobEncoding;
+let available = false;
+const databaseName = 'enketo';
 
 function init() {
     return _checkSupport()
-        .then( function() {
-            return db.open( {
-                server: databaseName,
-                version: 2,
-                schema: {
-                    // the surveys
-                    surveys: {
-                        key: {
-                            keyPath: 'enketoId',
-                            autoIncrement: false
-                        },
-                        indexes: {
-                            enketoId: {
-                                unique: true
-                            }
-                        }
+        .then( () => db.open( {
+            server: databaseName,
+            version: 2,
+            schema: {
+                // the surveys
+                surveys: {
+                    key: {
+                        keyPath: 'enketoId',
+                        autoIncrement: false
                     },
-                    // the resources that belong to a survey
-                    resources: {
-                        key: {
-                            autoIncrement: false
-                        },
-                        indexes: {
-                            key: {
-                                unique: true
-                            }
+                    indexes: {
+                        enketoId: {
+                            unique: true
                         }
+                    }
+                },
+                // the resources that belong to a survey
+                resources: {
+                    key: {
+                        autoIncrement: false
                     },
-                    // Records in separate table because it makes more sense for getting, updating and removing records
-                    // if they are not stored in one (giant) array or object value.
-                    // Need to watch out for bad iOS bug: http://www.raymondcamden.com/2014/9/25/IndexedDB-on-iOS-8--Broken-Bad
-                    // but with the current keys there is no risk of using the same key in multiple tables.
-                    // InstanceId is the key because instanceName may change when editing a draft.
-                    records: {
+                    indexes: {
                         key: {
-                            keyPath: 'instanceId',
-                        },
-                        indexes: {
-                            // useful to check if name exists
-                            name: {
-                                unique: true
-                            },
-                            // the actual key
-                            instanceId: {
-                                unique: true
-                            },
-                            // to get all records belonging to a form
-                            enketoId: {
-                                unique: false
-                            }
+                            unique: true
                         }
+                    }
+                },
+                // Records in separate table because it makes more sense for getting, updating and removing records
+                // if they are not stored in one (giant) array or object value.
+                // Need to watch out for bad iOS bug: http://www.raymondcamden.com/2014/9/25/IndexedDB-on-iOS-8--Broken-Bad
+                // but with the current keys there is no risk of using the same key in multiple tables.
+                // InstanceId is the key because instanceName may change when editing a draft.
+                records: {
+                    key: {
+                        keyPath: 'instanceId',
                     },
-                    // the files that belong to a record
-                    files: {
-                        key: {
-                            autoIncrement: false
+                    indexes: {
+                        // useful to check if name exists
+                        name: {
+                            unique: true
                         },
-                        indexes: {
-                            key: {
-                                unique: true
-                            }
+                        // the actual key
+                        instanceId: {
+                            unique: true
+                        },
+                        // to get all records belonging to a form
+                        enketoId: {
+                            unique: false
                         }
+                    }
+                },
+                // the files that belong to a record
+                files: {
+                    key: {
+                        autoIncrement: false
                     },
-                    // settings or other global app properties
-                    properties: {
+                    indexes: {
                         key: {
-                            keyPath: 'name',
-                            autoIncrement: false
-                        },
-                        indexes: {
-                            key: {
-                                unique: true
-                            }
+                            unique: true
                         }
+                    }
+                },
+                // settings or other global app properties
+                properties: {
+                    key: {
+                        keyPath: 'name',
+                        autoIncrement: false
                     },
-                    // Dynamic data, passed by via querystring is stored in a separate table, 
-                    // because its update mechanism is separate from the survey + resources. 
-                    // Otherwise the all-or-nothing form+resources update would remove this data.
-                    data: {
+                    indexes: {
                         key: {
-                            keyPath: 'enketoId',
-                            autoIncrement: false
-                        },
-                        indexes: {
-                            enketoId: {
-                                unique: true
-                            }
+                            unique: true
+                        }
+                    }
+                },
+                // Dynamic data, passed by via querystring is stored in a separate table, 
+                // because its update mechanism is separate from the survey + resources. 
+                // Otherwise the all-or-nothing form+resources update would remove this data.
+                data: {
+                    key: {
+                        keyPath: 'enketoId',
+                        autoIncrement: false
+                    },
+                    indexes: {
+                        enketoId: {
+                            unique: true
                         }
                     }
                 }
-            } );
-        } )
-        .then( function( s ) {
+            }
+        } ) )
+        .then( s => {
             server = s;
         } )
         .then( _isWriteable )
         .then( _setBlobStorageEncoding )
-        .then( function() {
+        .then( () => {
             available = true;
         } )
-        .catch( function( error ) {
+        .catch( error => {
             console.error( 'store initialization error', error );
             // make error more useful and throw it further down the line
             if ( typeof error === 'string' ) {
@@ -138,9 +129,9 @@ function init() {
 }
 
 function _checkSupport() {
-    var error;
+    let error;
     // best to perform this specific check ourselves and not rely on specific error message in db.js.
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( typeof indexedDB === 'object' ) {
             resolve();
         } else {
@@ -164,7 +155,7 @@ function _isWriteable() {
 
 // detect older indexedDb implementations that do not support storing blobs properly (e.g. Safari 7 and 8)
 function _canStoreBlobs() {
-    var aBlob = new Blob( [ '<a id="a"><b id="b">hey!</b></a>' ], {
+    const aBlob = new Blob( [ '<a id="a"><b id="b">hey!</b></a>' ], {
         type: 'text/xml'
     } );
 
@@ -177,37 +168,37 @@ function _canStoreBlobs() {
 function _setBlobStorageEncoding() {
 
     return _canStoreBlobs()
-        .then( function() {
+        .then( () => {
             console.log( 'This browser is able to store blobs directly' );
             blobEncoding = false;
         } )
-        .catch( function() {
+        .catch( () => {
             console.log( 'This browser is not able to store blobs directly, so blobs will be Base64 encoded' );
             blobEncoding = true;
         } );
 }
 
-propertyStore = {
-    get: function( name ) {
+const propertyStore = {
+    get( name ) {
         return server.properties.get( name )
             .then( _firstItemOnly );
     },
-    update: function( property ) {
+    update( property ) {
         return server.properties.update( property )
             .then( _firstItemOnly );
     },
-    removeAll: function() {
+    removeAll() {
         return _flushTable( 'properties' );
     },
-    getSurveyStats: function( id ) {
-        return server.properties.get( id + ':stats' );
+    getSurveyStats( id ) {
+        return server.properties.get( `${id}:stats` );
     },
-    incrementRecordCount: function( record ) {
+    incrementRecordCount( record ) {
         return propertyStore.getSurveyStats( record.enketoId )
-            .then( function( stats ) {
+            .then( stats => {
                 if ( !stats ) {
                     stats = {
-                        name: record.enketoId + ':stats'
+                        name: `${record.enketoId}:stats`
                     };
                 }
                 if ( !stats.recordCount ) {
@@ -217,12 +208,12 @@ propertyStore = {
                 return propertyStore.update( stats );
             } );
     },
-    addSubmittedInstanceId: function( record ) {
+    addSubmittedInstanceId( record ) {
         return propertyStore.getSurveyStats( record.enketoId )
-            .then( function( stats ) {
+            .then( stats => {
                 if ( !stats ) {
                     stats = {
-                        name: record.enketoId + ':stats'
+                        name: `${record.enketoId}:stats`
                     };
                 }
                 if ( !stats.submitted ) {
@@ -234,13 +225,13 @@ propertyStore = {
     }
 };
 
-surveyStore = {
+const surveyStore = {
     /** 
      * Obtains a single survey's form HTML and XML model, theme, external instances from storage
      * @param  {[type]} id [description]
      * @return {[type]}    [description]
      */
-    get: function( id ) {
+    get( id ) {
         return server.surveys.get( id )
             .then( _firstItemOnly )
             .then( _transformExternalDataToXmlDoc );
@@ -251,7 +242,7 @@ surveyStore = {
      * @param {[type]} survey [description]
      * @return {Promise}        [description]
      */
-    set: function( survey ) {
+    set( survey ) {
         if ( !survey.form || !survey.model || !survey.enketoId || !survey.hash ) {
             throw new Error( 'Survey not complete' );
         }
@@ -265,10 +256,10 @@ surveyStore = {
      * @param  {[type]} s [description]
      * @return {Promise}        [description]
      */
-    update: function( survey ) {
-        var resourceKeys;
-        var tasks = [];
-        var obsoleteResources = [];
+    update( survey ) {
+        let resourceKeys;
+        const tasks = [];
+        let obsoleteResources = [];
 
         if ( !survey.form || !survey.model || !survey.enketoId ) {
             throw new Error( 'Survey not complete' );
@@ -278,18 +269,14 @@ surveyStore = {
         // as it means there are no resources to store (and load)
         if ( survey.resources ) {
             // build array of resource keys
-            resourceKeys = survey.resources.map( function( resource ) {
-                return resource.url;
-            } );
+            resourceKeys = survey.resources.map( resource => resource.url );
         }
 
         return server.surveys.get( survey.enketoId )
-            .then( function( result ) {
+            .then( result => {
                 // determine obsolete resources to be removed
                 if ( result.resources ) {
-                    obsoleteResources = result.resources.filter( function( existing ) {
-                        return !resourceKeys || resourceKeys.indexOf( existing ) < 0;
-                    } );
+                    obsoleteResources = result.resources.filter( existing => !resourceKeys || resourceKeys.indexOf( existing ) < 0 );
                 }
                 _transformExternalDataToXmlStr( survey );
                 // update the existing survey
@@ -305,23 +292,21 @@ surveyStore = {
                     branding: survey.branding
                 } );
             } )
-            .then( function() {
+            .then( () => {
                 if ( survey.resources ) {
                     // add new or update existing resources
-                    survey.resources.forEach( function( file ) {
+                    survey.resources.forEach( file => {
                         tasks.push( surveyStore.resource.update( survey.enketoId, file ) );
                     } );
                 }
                 // remove obsolete resources
-                obsoleteResources.forEach( function( key ) {
+                obsoleteResources.forEach( key => {
                     tasks.push( surveyStore.resource.remove( survey.enketoId, key ) );
                 } );
                 // execution
                 return Promise.all( tasks )
-                    .then( function() {
-                        // resolving with original survey (not the array returned by server.surveys.update)
-                        return survey;
-                    } )
+                    .then( () => // resolving with original survey (not the array returned by server.surveys.update)
+                        survey )
                     .then( _transformExternalDataToXmlDoc );
             } );
     },
@@ -331,14 +316,14 @@ surveyStore = {
      * @param  {[type]} id [description]
      * @return {Promise}    [description]
      */
-    remove: function( id ) {
-        var resources;
-        var tasks = [];
+    remove( id ) {
+        let resources;
+        const tasks = [];
 
         return surveyStore.get( id )
-            .then( function( survey ) {
+            .then( survey => {
                 resources = survey.resources || [];
-                resources.forEach( function( resource ) {
+                resources.forEach( resource => {
                     tasks.push( surveyStore.resource.remove( id, resource ) );
                 } );
                 tasks.push( server.surveys.remove( id ) );
@@ -349,11 +334,9 @@ surveyStore = {
      * removes all surveys and survey resources
      * @return {Promise} [description]
      */
-    removeAll: function() {
+    removeAll() {
         return _flushTable( 'surveys' )
-            .then( function() {
-                return _flushTable( 'resources' );
-            } );
+            .then( () => _flushTable( 'resources' ) );
     },
     resource: {
         /**
@@ -362,7 +345,7 @@ surveyStore = {
          * @param  {string} url URL of resource
          * @return {Promise}
          */
-        get: function( id, url ) {
+        get( id, url ) {
             return _getFile( 'resources', id, url );
         },
         /**
@@ -371,7 +354,7 @@ surveyStore = {
          * @param  {{item:Blob, url:string}} resource
          * @return {[type]}          [description]
          */
-        update: function( id, resource ) {
+        update( id, resource ) {
             return _updateFile( 'resources', id, resource );
         },
         /**
@@ -381,20 +364,20 @@ surveyStore = {
          * @param  {string} url URL of resource
          * @return {Promise}
          */
-        remove: function( id, url ) {
-            return server.resources.remove( id + ':' + url );
+        remove( id, url ) {
+            return server.resources.remove( `${id}:${url}` );
         }
     }
 };
 
-dataStore = {
+const dataStore = {
     /** 
      * Obtains the stored dynamic data belonging to a form.
      * 
      * @param  {string} id [description]
      * @return {Promise}    promise that resolves with data object
      */
-    get: function( id ) {
+    get( id ) {
         return server.data.get( id )
             .then( _firstItemOnly );
     },
@@ -404,7 +387,7 @@ dataStore = {
      * @param  {{enketoId: string, submissionParameter: {name: string, value: string}}} data object with dynamic data
      * @return {Promise}        promise that resolves with data object
      */
-    update: function( data ) {
+    update( data ) {
         if ( !data.enketoId ) {
             throw new Error( 'Dynamic data object not complete' );
         }
@@ -418,39 +401,37 @@ dataStore = {
      * @param  {string} id [description]
      * @return {Promise}    [description]
      */
-    remove: function( id ) {
+    remove( id ) {
         return dataStore.remove( id );
     }
 };
 
 
-recordStore = {
+const recordStore = {
     /** 
      * Obtains a single record (XML + files)
      *
      * @param  {[type]} record [description]
      * @return {Promise}        [description]
      */
-    get: function( instanceId ) {
-        var tasks = [];
+    get( instanceId ) {
+        const tasks = [];
 
         return server.records.get( instanceId )
             .then( _firstItemOnly )
-            .then( function( record ) {
+            .then( record => {
                 if ( !record ) {
                     return record;
                 }
 
-                record.files.forEach( function( fileKey ) {
+                record.files.forEach( fileKey => {
                     tasks.push( recordStore.file.get( record.instanceId, fileKey ) );
                 } );
 
                 return Promise.all( tasks )
-                    .then( function( files ) {
+                    .then( files => {
                         // filter out the failed files (= undefined)
-                        files = files.filter( function( file ) {
-                            return file;
-                        } );
+                        files = files.filter( file => file );
                         record.files = files || [];
                         return record;
                     } );
@@ -463,7 +444,7 @@ recordStore = {
      * @param { boolean} finalonly  Only included records that are 'final' (i.e. not 'draft')
      * @return {Promise}
      */
-    getAll: function( enketoId, finalOnly ) {
+    getAll( enketoId, finalOnly ) {
 
         if ( !enketoId ) {
             return Promise.reject( new Error( 'No Enketo ID provided' ) );
@@ -472,17 +453,13 @@ recordStore = {
         return server.records.query( 'enketoId' )
             .only( enketoId )
             .execute()
-            .then( function( records ) {
+            .then( records => {
                 // exclude drafts if required
                 if ( finalOnly ) {
-                    records = records.filter( function( record ) {
-                        return !record.draft;
-                    } );
+                    records = records.filter( record => !record.draft );
                 }
                 // order by updated property, ascending
-                return records.sort( function( a, b ) {
-                    return a.updated - b.updated;
-                } );
+                return records.sort( ( a, b ) => a.updated - b.updated );
             } );
     },
     /**
@@ -491,8 +468,8 @@ recordStore = {
      * @param {[type]} record [description]
      * @return {Promise}        [description]
      */
-    set: function( record ) {
-        var fileKeys;
+    set( record ) {
+        let fileKeys;
 
         if ( !record.instanceId || !record.enketoId || !record.name || !record.xml ) {
             return Promise.reject( new Error( 'Record not complete' ) );
@@ -501,9 +478,7 @@ recordStore = {
         record.files = record.files || [];
 
         // build array of file keys
-        fileKeys = record.files.map( function( file ) {
-            return file.name;
-        } );
+        fileKeys = record.files.map( file => file.name );
 
         return server.records.add( {
                 instanceId: record.instanceId,
@@ -517,21 +492,15 @@ recordStore = {
             } )
             .then( _firstItemOnly )
             .then( propertyStore.incrementRecordCount )
-            .then( function() {
-                // execution, sequentially
-                return record.files.reduce( function( prevPromise, file ) {
-                    return prevPromise.then( function() {
-                        if ( file && file.item && file.item instanceof Blob ) {
-                            // file can be a string if it was loaded from storage and remained unchanged
-                            return recordStore.file.update( record.instanceId, file );
-                        }
-                        return Promise.resolve();
-                    } );
-                }, Promise.resolve() );
-            } )
-            .then( function() {
-                return record;
-            } );
+            .then( () => // execution, sequentially
+                record.files.reduce( ( prevPromise, file ) => prevPromise.then( () => {
+                    if ( file && file.item && file.item instanceof Blob ) {
+                        // file can be a string if it was loaded from storage and remained unchanged
+                        return recordStore.file.update( record.instanceId, file );
+                    }
+                    return Promise.resolve();
+                } ), Promise.resolve() ) )
+            .then( () => record );
     },
     /**
      * Updates (or creates) a single record (XML + files)
@@ -539,9 +508,9 @@ recordStore = {
      * @param {[type]} record [description]
      * @return {Promise}        [description]
      */
-    update: function( record ) {
-        var fileKeys;
-        var obsoleteFiles = [];
+    update( record ) {
+        let fileKeys;
+        let obsoleteFiles = [];
 
         if ( !record.instanceId || !record.enketoId || !record.name || !record.xml ) {
             throw new Error( 'Record not complete' );
@@ -550,17 +519,13 @@ recordStore = {
         record.files = record.files || [];
 
         // build array of file keys
-        fileKeys = record.files.map( function( file ) {
-            return file.name;
-        } );
+        fileKeys = record.files.map( file => file.name );
 
         return server.records.get( record.instanceId )
-            .then( function( result ) {
+            .then( result => {
                 // determine obsolete files to be removed
                 if ( result && result.files ) {
-                    obsoleteFiles = result.files.filter( function( existing ) {
-                        return fileKeys.indexOf( existing ) < 0;
-                    } );
+                    obsoleteFiles = result.files.filter( existing => fileKeys.indexOf( existing ) < 0 );
                 }
                 // update the existing record
                 return server.records.update( {
@@ -574,29 +539,19 @@ recordStore = {
                     draft: record.draft
                 } );
             } )
-            .then( function() {
-                // execution, sequentially 
-                return record.files.reduce( function( prevPromise, file ) {
-                        return prevPromise.then( function() {
-                            // file can be a string if it was loaded from storage and remained unchanged
-                            if ( file && file.item && file.item instanceof Blob ) {
-                                return recordStore.file.update( record.instanceId, file );
-                            }
-                            return Promise.resolve();
-                        } );
-                    }, Promise.resolve() )
-                    .then( function() {
-                        return obsoleteFiles.reduce( function( prevPromise, key ) {
-                            return prevPromise.then( function() {
-                                return recordStore.file.remove( record.instanceId, key );
-                            } );
-                        }, Promise.resolve() );
-                    } )
-                    .then( function() {
-                        // resolving with original record (not the array returned by server.records.update)
-                        return record;
-                    } );
-            } );
+            .then( () => // execution, sequentially 
+                record.files.reduce( ( prevPromise, file ) => prevPromise.then( () => {
+                    // file can be a string if it was loaded from storage and remained unchanged
+                    if ( file && file.item && file.item instanceof Blob ) {
+                        return recordStore.file.update( record.instanceId, file );
+                    }
+                    return Promise.resolve();
+                } ), Promise.resolve() )
+                .then( () => obsoleteFiles.reduce( ( prevPromise, key ) => prevPromise.then( () => recordStore.file.remove( record.instanceId, key ) ), Promise.resolve() ) )
+                .then(
+                    () => // resolving with original record (not the array returned by server.records.update)
+                    record
+                ) );
     },
     /** 
      * Removes a single record (XML + files)
@@ -604,13 +559,13 @@ recordStore = {
      * @param {[type]} record [description]
      * @return {Promise}        [description]
      */
-    remove: function( instanceId ) {
+    remove( instanceId ) {
         return server.records.get( instanceId )
             .then( _firstItemOnly )
-            .then( function( record ) {
-                var tasks = [];
-                var files = record && record.files ? record.files : [];
-                files.forEach( function( fileKey ) {
+            .then( record => {
+                const tasks = [];
+                const files = record && record.files ? record.files : [];
+                files.forEach( fileKey => {
                     tasks.push( recordStore.file.remove( instanceId, fileKey ) );
                 } );
                 tasks.push( server.records.remove( instanceId ) );
@@ -621,11 +576,9 @@ recordStore = {
      * removes all records and record files
      * @return {Promise} [description]
      */
-    removeAll: function() {
+    removeAll() {
         return _flushTable( 'records' )
-            .then( function() {
-                return _flushTable( 'files' );
-            } );
+            .then( () => _flushTable( 'files' ) );
     },
     file: {
         /**
@@ -635,7 +588,7 @@ recordStore = {
          * @param  {string} fileKey     unique key that identifies the file in the record (meant to be fileName)
          * @return {Promise}          [description]
          */
-        get: function( instanceId, fileKey ) {
+        get( instanceId, fileKey ) {
             return _getFile( 'files', instanceId, fileKey );
         },
         /**
@@ -646,7 +599,7 @@ recordStore = {
          * @param  {{item:Blob, name:string }}   file        file object
          * @return {Promise}
          */
-        update: function( instanceId, file ) {
+        update( instanceId, file ) {
             return _updateFile( 'files', instanceId, file );
         },
         /**
@@ -656,8 +609,8 @@ recordStore = {
          * @param  {string} fileKey     unique key that identifies the file in the record (meant to be fileName)
          * @return {Promise}
          */
-        remove: function( instanceId, fileKey ) {
-            return server.files.remove( instanceId + ':' + fileKey );
+        remove( instanceId, fileKey ) {
+            return server.files.remove( `${instanceId}:${fileKey}` );
         }
     }
 };
@@ -683,7 +636,7 @@ function _firstItemOnly( results ) {
 
 function _transformExternalDataToXmlStr( survey ) {
     if ( survey && survey.externalData ) {
-        survey.externalData = survey.externalData.map( function( instance ) {
+        survey.externalData = survey.externalData.map( instance => {
             if ( instance.xml instanceof XMLDocument ) {
                 instance.xml = new XMLSerializer().serializeToString( instance.xml.documentElement, 'text/xml' );
             }
@@ -695,7 +648,7 @@ function _transformExternalDataToXmlStr( survey ) {
 
 function _transformExternalDataToXmlDoc( survey ) {
     if ( survey && survey.externalData ) {
-        survey.externalData = survey.externalData.map( function( instance ) {
+        survey.externalData = survey.externalData.map( instance => {
             if ( typeof instance.xml === 'string' ) {
                 instance.xml = parser.parseFromString( instance.xml, 'text/xml' );
             }
@@ -714,21 +667,21 @@ function _transformExternalDataToXmlDoc( survey ) {
  * @return {Promise}
  */
 function _getFile( table, id, key ) {
-    var prop;
-    var file = {};
+    let prop;
+    const file = {};
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( table === 'resources' || table === 'files' ) {
             prop = ( table === 'resources' ) ? 'url' : 'name';
-            return server[ table ].get( id + ':' + key )
-                .then( function( item ) {
+            return server[ table ].get( `${id}:${key}` )
+                .then( item => {
                     file[ prop ] = key;
                     if ( item instanceof Blob ) {
                         file.item = item;
                         resolve( file );
                     } else if ( typeof item === 'string' ) {
                         utils.dataUriToBlob( item )
-                            .then( function( item ) {
+                            .then( item => {
                                 file.item = item;
                                 resolve( file );
                             } );
@@ -753,15 +706,15 @@ function _getFile( table, id, key ) {
  * @return {Promise]}       [description]
  */
 function _updateFile( table, id, file ) {
-    var error;
-    var prop;
-    var propValue;
+    let error;
+    let prop;
+    let propValue;
 
     if ( table === 'resources' || table === 'files' ) {
         prop = ( table === 'resources' ) ? 'url' : 'name';
         if ( id && file && file.item instanceof Blob && file[ prop ] ) {
             propValue = file[ prop ];
-            file.key = id + ':' + file[ prop ];
+            file.key = `${id}:${file[ prop ]}`;
             delete file[ prop ];
             /*
              * IE doesn't like complex objects with Blob properties so we store
@@ -772,10 +725,10 @@ function _updateFile( table, id, file ) {
              */
             if ( blobEncoding ) {
                 return utils.blobToDataUri( file.item )
-                    .then( function( convertedBlob ) {
+                    .then( convertedBlob => {
                         file.item = convertedBlob;
                         return server[ table ].update( file )
-                            .then( function() {
+                            .then( () => {
                                 file[ prop ] = propValue;
                                 delete file.key;
                                 return file;
@@ -783,7 +736,7 @@ function _updateFile( table, id, file ) {
                     } );
             } else {
                 return server[ table ].update( file )
-                    .then( function() {
+                    .then( () => {
                         file[ prop ] = propValue;
                         delete file.key;
                         return file;
@@ -804,9 +757,9 @@ function _updateFile( table, id, file ) {
  * @return {[type]} [description]
  */
 function flush() {
-    var request;
+    let request;
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         try {
             server.close( databaseName );
         } catch ( e ) {
@@ -816,14 +769,14 @@ function flush() {
 
         request = indexedDB.deleteDatabase( databaseName );
 
-        request.onsuccess = function() {
+        request.onsuccess = () => {
             console.log( 'Deleted database successfully' );
             resolve();
         };
-        request.onerror = function( error ) {
+        request.onerror = error => {
             reject( error );
         };
-        request.onblocked = function( error ) {
+        request.onblocked = error => {
             reject( error );
         };
     } );
@@ -840,15 +793,15 @@ function _flushTable( table ) {
 }
 
 // debugging utilities: TODO: should move elsewhere or be turned into useful functions that return promises
-dump = {
-    resources: function() {
+const dump = {
+    resources() {
         server.resources
             .query()
             .all()
             .execute()
-            .done( function( results ) {
-                console.log( results.length + ' resources found' );
-                results.forEach( function( item ) {
+            .done( results => {
+                console.log( `${results.length} resources found` );
+                results.forEach( item => {
                     if ( item instanceof Blob ) {
                         console.log( item.type, item.size, URL.createObjectURL( item ) );
                     } else {
@@ -857,38 +810,38 @@ dump = {
                 } );
             } );
     },
-    surveys: function() {
+    surveys() {
         server.surveys
             .query()
             .all()
             .execute()
-            .done( function( results ) {
-                console.log( results.length + ' surveys found' );
-                results.forEach( function( item ) {
+            .done( results => {
+                console.log( `${results.length} surveys found` );
+                results.forEach( item => {
                     console.log( 'survey', item );
                 } );
             } );
     },
-    records: function() {
+    records() {
         server.records
             .query()
             .all()
             .execute()
-            .done( function( results ) {
-                console.log( results.length + ' records found' );
-                results.forEach( function( item ) {
+            .done( results => {
+                console.log( `${results.length} records found` );
+                results.forEach( item => {
                     console.log( 'survey', item );
                 } );
             } );
     },
-    files: function() {
+    files() {
         server.files
             .query()
             .all()
             .execute()
-            .done( function( results ) {
-                console.log( results.length + ' resources found' );
-                results.forEach( function( item ) {
+            .done( results => {
+                console.log( `${results.length} resources found` );
+                results.forEach( item => {
                     if ( item instanceof Blob ) {
                         console.log( item.type, item.size, URL.createObjectURL( item ) );
                     } else {
@@ -899,8 +852,8 @@ dump = {
     },
 };
 
-module.exports = {
-    init: init,
+export default {
+    init,
     get available() {
         return available;
     },
@@ -908,6 +861,6 @@ module.exports = {
     survey: surveyStore,
     dynamicData: dataStore,
     record: recordStore,
-    flush: flush,
-    dump: dump
+    flush,
+    dump
 };

@@ -17,10 +17,18 @@ block style
 block script
   - var suffix = (type && type !== 'preview' && type !== 'single') ? '-' + type : ''
   if environment == 'production'
-    script(src=`${basePath}/js/build/enketo-webform${suffix}-bundle.min.js`)
+    script#main-script(defer, module, src=`${basePath}/js/build/enketo-webform${suffix}-bundle.min.js`)
   else
-    script(src=`${basePath}/js/build/enketo-webform${suffix}-dev-bundle.js`)
- 
+    script#main-script(defer, module, src=`${basePath}/js/build/enketo-webform${suffix}-bundle.js`)
+  script(nomodule).
+    var mainScript = document.querySelector( '#main-script' );
+    var mainScriptSrc = mainScript.src;
+    mainScript.remove();
+    var script = document.createElement( 'script' );
+    script.type = 'text/javascript';
+    script.src = mainScriptSrc.replace('-bundle.', '-ie11-bundle.');
+    document.body.appendChild( script );
+
 block content
   include component/_notification
   .main-loader

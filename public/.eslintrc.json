@@ -1,20 +1,10 @@
 {
     "env": {
-        "es6": false,
+        "es6": true,
         "browser": true,
-        "node": false,
-        "commonjs": true
-    },
-    "globals": {
-        "Promise": true,
-        "ArrayBuffer": true,
-        "Uint8Array": true
+        "node": false
     },
     "extends": "eslint:recommended",
-    "parserOptions": {
-        "sourceType": "module",
-        "ecmaVersion": 5
-    },
     "rules": {
         "indent": [ "warn", 4, {
             "SwitchCase": 1

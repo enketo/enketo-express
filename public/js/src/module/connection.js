@@ -2,43 +2,41 @@
  * Deals with communication to the server (in process of being transformed to using Promises)
  */
 
-'use strict';
+import settings from './settings';
 
-var settings = require( './settings' );
-var t = require( './translator' ).t;
-var utils = require( './utils' );
-var $ = require( 'jquery' );
-var parser = new DOMParser();
-var CONNECTION_URL = settings.basePath + '/connection';
-var TRANSFORM_URL = settings.basePath + '/transform/xform' +
-    ( settings.enketoId ? '/' + settings.enketoIdPrefix + settings.enketoId : '' );
-var TRANSFORM_HASH_URL = settings.basePath + '/transform/xform/hash/' + settings.enketoIdPrefix + settings.enketoId;
-var INSTANCE_URL = ( settings.enketoId ) ? settings.basePath + '/submission/' + settings.enketoIdPrefix + settings.enketoId : null;
-var MAX_SIZE_URL = ( settings.enketoId ) ? settings.basePath + '/submission/max-size/' + settings.enketoIdPrefix + settings.enketoId :
-    settings.basePath + '/submission/max-size/?xformUrl=' + encodeURIComponent( settings.xformUrl );
-var ABSOLUTE_MAX_SIZE = 100 * 1024 * 1024;
+import { t } from './translator';
+import utils from './utils';
+import $ from 'jquery';
+const parser = new DOMParser();
+const CONNECTION_URL = `${settings.basePath}/connection`;
+const TRANSFORM_URL = `${settings.basePath}/transform/xform${settings.enketoId ? `/${settings.enketoIdPrefix}${settings.enketoId}` : ''}`;
+const TRANSFORM_HASH_URL = `${settings.basePath}/transform/xform/hash/${settings.enketoIdPrefix}${settings.enketoId}`;
+const INSTANCE_URL = ( settings.enketoId ) ? `${settings.basePath}/submission/${settings.enketoIdPrefix}${settings.enketoId}` : null;
+const MAX_SIZE_URL = ( settings.enketoId ) ? `${settings.basePath}/submission/max-size/${settings.enketoIdPrefix}${settings.enketoId}` :
+    `${settings.basePath}/submission/max-size/?xformUrl=${encodeURIComponent( settings.xformUrl )}`;
+const ABSOLUTE_MAX_SIZE = 100 * 1024 * 1024;
 
 /**
 /**
  * Checks online status
  */
 function getOnlineStatus() {
-    var online;
+    let online;
 
-    return new Promise( function( resolve ) {
+    return new Promise( resolve => {
         $.ajax( CONNECTION_URL, {
                 type: 'GET',
                 cache: false,
                 dataType: 'text',
                 timeout: 3000
             } )
-            .done( function( response ) {
+            .done( response => {
                 // It is important to check for the content of the no-cache response as it will
                 // start receiving the fallback page specified in the manifest!
                 online = typeof response === 'string' && /connected/.test( response );
                 resolve( online );
             } )
-            .fail( function( jqXHR, textStatus ) {
+            .fail( ( jqXHR, textStatus ) => {
                 console.error( 'Failed to establish connection', textStatus );
             } );
     } );
@@ -51,7 +49,7 @@ function getOnlineStatus() {
  * @return {Promise}
  */
 function uploadRecord( record ) {
-    var batches;
+    let batches;
 
     try {
         batches = _prepareFormDataArray( record );
@@ -59,19 +57,15 @@ function uploadRecord( record ) {
         return Promise.reject( e );
     }
 
-    batches.forEach( function( batch ) {
+    batches.forEach( batch => {
         batch.instanceId = record.instanceId;
         batch.deprecatedId = record.deprecatedId;
     } );
 
     // Perform batch uploads sequentially for to avoid issues when connections are very poor and 
     // a serious issue with ODK Aggregate (https://github.com/kobotoolbox/enketo-express/issues/400)
-    return batches.reduce( function( prevPromise, batch ) {
-            return prevPromise.then( function() {
-                return _uploadBatch( batch );
-            } );
-        }, Promise.resolve() )
-        .then( function( results ) {
+    return batches.reduce( ( prevPromise, batch ) => prevPromise.then( () => _uploadBatch( batch ) ), Promise.resolve() )
+        .then( results => {
             console.log( 'results of all batches submitted', results );
             return results[ 0 ];
         } );
@@ -84,11 +78,10 @@ function uploadRecord( record ) {
  * @return {Promise}      [description]
  */
 function _uploadBatch( recordBatch ) {
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         // Submission URL is dynamic, because settings.submissionParameter only gets populated after loading form from
         // cache in offline mode.
-        var submissionUrl = ( settings.enketoId ) ? settings.basePath + '/submission/' + settings.enketoIdPrefix + settings.enketoId +
-            _getQuery() : null;
+        const submissionUrl = ( settings.enketoId ) ? `${settings.basePath}/submission/${settings.enketoIdPrefix}${settings.enketoId}${_getQuery()}` : null;
 
         $.ajax( submissionUrl, {
                 type: 'POST',
@@ -103,8 +96,8 @@ function _uploadBatch( recordBatch ) {
                 },
                 timeout: settings.timeout
             } )
-            .done( function( data, textStatus, jqXHR ) {
-                var result = {
+            .done( ( data, textStatus, jqXHR ) => {
+                const result = {
                     status: jqXHR.status,
                     failedFiles: ( recordBatch.failedFiles ) ? recordBatch.failedFiles : undefined
                 };
@@ -114,9 +107,9 @@ function _uploadBatch( recordBatch ) {
                     reject( result );
                 }
             } )
-            .fail( function( jqXHR ) {
-                var messageEl = null;
-                var message = null;
+            .fail( jqXHR => {
+                let messageEl = null;
+                let message = null;
                 // 400 is a generic error. Any message returned by the server is probably more useful.
                 // Other more specific statusCodes will get harcoded and translated messages.
                 if ( jqXHR.status === 400 && jqXHR.responseXML ) {
@@ -127,7 +120,7 @@ function _uploadBatch( recordBatch ) {
                 }
                 reject( {
                     status: jqXHR.status,
-                    message: message
+                    message
                 } );
             } );
     } );
@@ -139,32 +132,32 @@ function _uploadBatch( recordBatch ) {
  * @param { { name: string, data: string } } record[ description ]
  */
 function _prepareFormDataArray( record ) {
-    var recordDoc = parser.parseFromString( record.xml, 'text/xml' );
-    var fileElements = Array.prototype.slice.call( recordDoc.querySelectorAll( '[type="file"]' ) ).map( function( el ) {
+    const recordDoc = parser.parseFromString( record.xml, 'text/xml' );
+    const fileElements = Array.prototype.slice.call( recordDoc.querySelectorAll( '[type="file"]' ) ).map( el => {
         el.removeAttribute( 'type' );
         return el;
     } );
-    var xmlData = new XMLSerializer().serializeToString( recordDoc.documentElement );
-    var xmlSubmissionBlob = new Blob( [ xmlData ], {
+    const xmlData = new XMLSerializer().serializeToString( recordDoc.documentElement );
+    const xmlSubmissionBlob = new Blob( [ xmlData ], {
         type: 'text/xml'
     } );
-    var availableFiles = record.files || [];
-    var sizes = [];
-    var failedFiles = [];
-    var submissionFiles = [];
-    var batches = [
+    const availableFiles = record.files || [];
+    const sizes = [];
+    const failedFiles = [];
+    const submissionFiles = [];
+    let batches = [
         []
     ];
-    var batchesPrepped = [];
-    var maxSize = settings.maxSize;
+    const batchesPrepped = [];
+    const maxSize = settings.maxSize;
 
-    fileElements.forEach( function( el ) {
-        var file;
-        var nodeName = el.nodeName;
-        var fileName = el.textContent;
+    fileElements.forEach( el => {
+        let file;
+        const nodeName = el.nodeName;
+        const fileName = el.textContent;
 
         // check if file is actually available
-        availableFiles.some( function( f ) {
+        availableFiles.some( f => {
             if ( f.name === fileName ) {
                 file = f;
                 return true;
@@ -175,13 +168,13 @@ function _prepareFormDataArray( record ) {
         // add the file if it is available
         if ( file ) {
             submissionFiles.push( {
-                nodeName: nodeName,
-                file: file
+                nodeName,
+                file
             } );
             sizes.push( file.size );
         } else {
             failedFiles.push( fileName );
-            console.error( 'Error occured when trying to retrieve ' + fileName );
+            console.error( `Error occured when trying to retrieve ${fileName}` );
         }
     } );
 
@@ -189,22 +182,22 @@ function _prepareFormDataArray( record ) {
         batches = _divideIntoBatches( sizes, maxSize );
     }
 
-    console.log( 'splitting record into ' + batches.length + ' batches to reduce submission size ', batches );
+    console.log( `splitting record into ${batches.length} batches to reduce submission size `, batches );
 
-    batches.forEach( function( batch ) {
-        var batchPrepped;
-        var fd = new FormData();
+    batches.forEach( batch => {
+        let batchPrepped;
+        const fd = new FormData();
 
         fd.append( 'xml_submission_file', xmlSubmissionBlob, 'xml_submission_file' );
 
         // batch with XML data
         batchPrepped = {
             formData: fd,
-            failedFiles: failedFiles
+            failedFiles
         };
 
         // add any media files to the batch
-        batch.forEach( function( fileIndex ) {
+        batch.forEach( fileIndex => {
             // Not clear what name is appropriate. Since file.name is unique and works, this is used.
             batchPrepped.formData.append( submissionFiles[ fileIndex ].file.name, submissionFiles[ fileIndex ].file, submissionFiles[ fileIndex ].file.name );
         } );
@@ -226,12 +219,12 @@ function _prepareFormDataArray( record ) {
  */
 
 function _divideIntoBatches( fileSizes, limit ) {
-    var i;
-    var j;
-    var batch;
-    var batchSize;
-    var sizes = [];
-    var batches = [];
+    let i;
+    let j;
+    let batch;
+    let batchSize;
+    const sizes = [];
+    const batches = [];
 
     //limit = limit || 5 * 1024 * 1024;
     for ( i = 0; i < fileSizes.length; i++ ) {
@@ -272,9 +265,9 @@ function _divideIntoBatches( fileSizes, limit ) {
  * @return {Promise} [description]
  */
 function getMaximumSubmissionSize() {
-    var maxSubmissionSize;
+    let maxSubmissionSize;
 
-    return new Promise( function( resolve ) {
+    return new Promise( resolve => {
 
         if ( MAX_SIZE_URL ) {
             $.ajax( MAX_SIZE_URL, {
@@ -282,7 +275,7 @@ function getMaximumSubmissionSize() {
                     timeout: 5 * 1000,
                     dataType: 'json'
                 } )
-                .done( function( response ) {
+                .done( response => {
                     if ( response && response.maxSize && !isNaN( response.maxSize ) ) {
                         maxSubmissionSize = ( Number( response.maxSize ) > ABSOLUTE_MAX_SIZE ) ? ABSOLUTE_MAX_SIZE : Number( response.maxSize );
                         resolve( maxSubmissionSize );
@@ -292,7 +285,7 @@ function getMaximumSubmissionSize() {
                         resolve( null );
                     }
                 } )
-                .fail( function() {
+                .fail( () => {
                     resolve( null );
                 } );
         } else {
@@ -308,9 +301,9 @@ function getMaximumSubmissionSize() {
  * @return { Promise }
  */
 function getFormParts( props ) {
-    var error;
+    let error;
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         $.ajax( TRANSFORM_URL + _getQuery(), {
                 type: 'POST',
                 data: {
@@ -319,14 +312,14 @@ function getFormParts( props ) {
                     xformUrl: props.xformUrl
                 }
             } )
-            .done( function( data ) {
+            .done( data => {
                 data.enketoId = props.enketoId;
                 data.theme = data.theme || utils.getThemeFromFormStr( data.form ) || settings.defaultTheme;
                 _getExternalData( data )
                     .then( resolve )
                     .catch( reject );
             } )
-            .fail( function( jqXHR, textStatus, errorMsg ) {
+            .fail( ( jqXHR, textStatus, errorMsg ) => {
                 if ( jqXHR.responseJSON && jqXHR.responseJSON.message && /ENOTFOUND/.test( jqXHR.responseJSON.message ) ) {
                     jqXHR.responseJSON.message = 'Form could not be retrieved from server.';
                 }
@@ -338,25 +331,23 @@ function getFormParts( props ) {
 }
 
 function _getExternalData( survey ) {
-    var doc;
-    var tasks = [];
+    let doc;
+    const tasks = [];
 
     try {
         doc = $.parseXML( survey.model );
 
-        survey.externalData = $( doc ).find( 'instance[id][src]' ).map( function( index, el ) {
-            return {
-                id: $( el ).attr( 'id' ),
-                src: $( el ).attr( 'src' )
-            };
-        } ).get();
+        survey.externalData = $( doc ).find( 'instance[id][src]' ).map( ( index, el ) => ( {
+            id: $( el ).attr( 'id' ),
+            src: $( el ).attr( 'src' )
+        } ) ).get();
 
-        survey.externalData.forEach( function( instance, index ) {
-            tasks.push( _getDataFile( instance.src, survey.languageMap ).then( function( xmlData ) {
+        survey.externalData.forEach( ( instance, index ) => {
+            tasks.push( _getDataFile( instance.src, survey.languageMap ).then( xmlData => {
                     instance.xml = xmlData;
                     return instance;
                 } )
-                .catch( function( e ) {
+                .catch( e => {
                     survey.externalData.splice( index, 1 );
                     // let external data files fail quietly. Rely on Enketo Core to show error.
                     console.error( e );
@@ -367,9 +358,7 @@ function _getExternalData( survey ) {
     }
 
     return Promise.all( tasks )
-        .then( function() {
-            return survey;
-        } );
+        .then( () => survey );
 }
 
 
@@ -380,15 +369,15 @@ function _getExternalData( survey ) {
  * @return {Promise} [description]
  */
 function getMediaFile( url ) {
-    var error;
-    var xhr = new XMLHttpRequest();
+    let error;
+    const xhr = new XMLHttpRequest();
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         xhr.onreadystatechange = function() {
             if ( this.readyState === 4 ) {
                 if ( this.status >= 200 && this.status < 300 ) {
                     resolve( {
-                        url: url,
+                        url,
                         item: this.response
                     } );
                 } else {
@@ -413,14 +402,14 @@ function getMediaFile( url ) {
  * @return {Promise} [description]
  */
 function _getDataFile( url, languageMap ) {
-    var contentType;
+    let contentType;
     return fetch( url )
-        .then( function( response ) {
+        .then( response => {
             contentType = response.headers.get( 'Content-Type' ).split( ';' )[ 0 ];
             return response.text();
         } )
-        .then( function( responseText ) {
-            var result;
+        .then( responseText => {
+            let result;
             switch ( contentType ) {
                 case 'text/csv':
                     result = utils.csvToXml( responseText, languageMap );
@@ -439,9 +428,9 @@ function _getDataFile( url, languageMap ) {
 
             return result;
         } )
-        .catch( function( error ) {
-            var errorMsg = error.msg || t( 'error.dataloadfailed', {
-                url: url
+        .catch( error => {
+            const errorMsg = error.msg || t( 'error.dataloadfailed', {
+                url
             } );
             throw new Error( errorMsg );
         } );
@@ -454,10 +443,10 @@ function _getDataFile( url, languageMap ) {
  * @return {Promise} [description]
  */
 function getManifestVersion( manifestUrl ) {
-    var matches;
-    var xhr = new XMLHttpRequest();
+    let matches;
+    const xhr = new XMLHttpRequest();
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         xhr.onreadystatechange = function() {
             if ( this.readyState === 4 && this.status === 200 ) {
                 if ( ( matches = this.response.match( /version:\s?([^\n]+)\n/ ) ) ) {
@@ -476,16 +465,16 @@ function getManifestVersion( manifestUrl ) {
 }
 
 function getFormPartsHash() {
-    var error;
+    let error;
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         $.ajax( TRANSFORM_HASH_URL + _getQuery(), {
                 type: 'POST'
             } )
-            .done( function( data ) {
+            .done( data => {
                 resolve( data.hash );
             } )
-            .fail( function( jqXHR, textStatus, errorMsg ) {
+            .fail( ( jqXHR, textStatus, errorMsg ) => {
                 error = new Error( errorMsg );
                 error.status = jqXHR.status;
                 reject( error );
@@ -500,17 +489,17 @@ function getFormPartsHash() {
  * @return { Promise }
  */
 function getExistingInstance( props ) {
-    var error;
+    let error;
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         $.ajax( INSTANCE_URL, {
                 type: 'GET',
                 data: props
             } )
-            .done( function( data ) {
+            .done( data => {
                 resolve( data );
             } )
-            .fail( function( jqXHR, textStatus, errorMsg ) {
+            .fail( ( jqXHR, textStatus, errorMsg ) => {
                 error = jqXHR.responseJSON || new Error( errorMsg );
                 reject( error );
             } );
@@ -522,13 +511,13 @@ function _getQuery() {
     return utils.getQueryString( [ settings.languageOverrideParameter, settings.submissionParameter ] );
 }
 
-module.exports = {
-    uploadRecord: uploadRecord,
-    getMaximumSubmissionSize: getMaximumSubmissionSize,
-    getOnlineStatus: getOnlineStatus,
-    getFormParts: getFormParts,
-    getFormPartsHash: getFormPartsHash,
-    getMediaFile: getMediaFile,
-    getExistingInstance: getExistingInstance,
-    getManifestVersion: getManifestVersion,
+export default {
+    uploadRecord,
+    getMaximumSubmissionSize,
+    getOnlineStatus,
+    getFormParts,
+    getFormPartsHash,
+    getMediaFile,
+    getExistingInstance,
+    getManifestVersion,
 };

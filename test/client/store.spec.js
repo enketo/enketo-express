@@ -1,11 +1,16 @@
 // TODO: when chai-as-promised adapter is working, convert these tests using .eventually.
 
-var store = require( '../../public/js/src/module/store' );
+import store from '../../public/js/src/module/store';
 
-describe( 'Client Storage', function() {
-    var resourceA, resourceB, fileA, fileB, recordA, recordB, surveyA;
+describe( 'Client Storage', () => {
+    let resourceA, resourceB, fileA, fileB, recordA, recordB, surveyA;
 
-    beforeEach( function() {
+    before( done => {
+        store.init()
+            .then( () => done() );
+    } );
+
+    beforeEach( () => {
         resourceA = {
             url: '/path/to/resource1',
             item: new Blob( [ '<html>something1</html' ], {
@@ -50,57 +55,43 @@ describe( 'Client Storage', function() {
         };
     } );
 
-    it( 'library is loaded', function() {
+    it( 'library is loaded', () => {
         expect( typeof store ).to.equal( 'object' );
     } );
 
-    it( 'IndexedDb is supported and writeable', function( done ) {
+    describe( 'storing settings and properties', () => {
 
-        // manually "fix" browsers in console if database schema has changed
-        // window.store = store; 
-
-        // In Safari the DB appears to be blocked. Occassionally all these tests pass.
-
-        store.flush()
-            .then( store.init )
-            .then( done, done );
-    } );
-
-    describe( 'storing settings and properties', function() {
-
-        beforeEach( function( done ) {
+        beforeEach( done => {
             store.property.removeAll()
                 .then( done, done );
         } );
 
-        it( 'fails if the setting object has no "name" property', function( done ) {
+        it( 'fails if the setting object has no "name" property', done => {
             store.property.update( {
                     something: 'something'
                 } )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.name ).to.equal( 'DataError' );
                     done();
                 } );
         } );
 
-        it( 'succeeds if the setting object has a "name" property', function( done ) {
-            var toSet = {
+        it( 'succeeds if the setting object has a "name" property', done => {
+            const toSet = {
                 name: 'something',
                 value: new Date().getTime()
             };
             store.property.update( toSet )
-                .then( function() {
-                    return store.property.get( 'something' );
-                } )
-                .then( function( setting ) {
+                .then( () => store.property.get( 'something' ) )
+                .then( setting => {
                     expect( setting ).to.deep.equal( toSet );
                     done();
                 } )
                 .catch( done );
         } );
 
-        it( 'is able to store simple objects as a setting', function( done ) {
-            var toSet = {
+        it( 'is able to store simple objects as a setting', done => {
+            const toSet = {
                 name: 'something',
                 value: {
                     complex: true,
@@ -110,32 +101,28 @@ describe( 'Client Storage', function() {
                 }
             };
             store.property.update( toSet )
-                .then( function() {
-                    return store.property.get( 'something' );
-                } )
-                .then( function( setting ) {
+                .then( () => store.property.get( 'something' ) )
+                .then( setting => {
                     expect( setting ).to.deep.equal( toSet );
                     done();
                 } )
                 .catch( done );
         } );
 
-        it( 'will update the setting if it already exists', function( done ) {
-            var toSet = {
+        it( 'will update the setting if it already exists', done => {
+            const toSet = {
                     name: 'something',
                     value: new Date().getTime()
                 },
                 newValue = 'something else';
 
             store.property.update( toSet )
-                .then( function( setting ) {
+                .then( setting => {
                     setting.value = newValue;
                     return store.property.update( setting );
                 } )
-                .then( function() {
-                    return store.property.get( 'something' );
-                } )
-                .then( function( setting ) {
+                .then( () => store.property.get( 'something' ) )
+                .then( setting => {
                     expect( setting.value ).to.equal( newValue );
                     done();
                 } )
@@ -144,54 +131,52 @@ describe( 'Client Storage', function() {
 
     } );
 
-    describe( 'storing (form) resources', function() {
+    describe( 'storing (form) resources', () => {
 
-        beforeEach( function( done ) {
+        beforeEach( done => {
             store.survey.removeAll()
                 .then( done, done );
         } );
 
-        it( 'fails if the resource has no "url" property', function( done ) {
+        it( 'fails if the resource has no "url" property', done => {
             store.survey.resource.update( 'abcd', {
                     something: 'something'
                 } )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.name ).to.equal( 'DataError' );
                     done();
                 } );
         } );
 
-        it( 'fails if the setting object has no "item" property', function( done ) {
+        it( 'fails if the setting object has no "item" property', done => {
             store.survey.resource.update( 'abcd', {
                     url: 'something'
                 } )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.name ).to.equal( 'DataError' );
                     done();
                 } );
         } );
 
-        it( 'fails if the "item" is not a Blob', function( done ) {
+        it( 'fails if the "item" is not a Blob', done => {
             store.survey.resource.update( 'abcd', {
                     key: 'something'
                 } )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.name ).to.equal( 'DataError' );
                     done();
                 } );
         } );
 
-        it( 'succeeds if key and item are present and item is a Blob', function( done ) {
-            var id = 'TESt',
+        it( 'succeeds if key and item are present and item is a Blob', done => {
+            const id = 'TESt',
                 type = resourceA.item.type,
                 size = resourceA.item.size,
                 url = resourceA.url;
 
             store.survey.resource.update( id, resourceA )
-                .then( function() {
-                    return store.survey.resource.get( id, url );
-                } )
-                .then( function( result ) {
+                .then( () => store.survey.resource.get( id, url ) )
+                .then( result => {
                     expect( result.item.type ).to.equal( type );
                     expect( result.item.size ).to.equal( size );
                     expect( result.item ).to.be.an.instanceof( Blob );
@@ -203,65 +188,63 @@ describe( 'Client Storage', function() {
     } );
 
 
-    describe( 'storing surveys', function() {
+    describe( 'storing surveys', () => {
 
-        beforeEach( function( done ) {
+        beforeEach( done => {
             store.survey.removeAll()
                 .then( done, done );
         } );
 
-        it( 'fails if the survey has no "form" property', function() {
+        it( 'fails if the survey has no "form" property', () => {
             delete surveyA.form;
             // note: the throw assert works here because the error is thrown before in sync part of function
-            expect( function() {
+            expect( () => {
                 store.survey.set( surveyA );
             } ).to.throw( /not complete/ );
         } );
 
-        it( 'fails if the survey has no "model" property', function() {
+        it( 'fails if the survey has no "model" property', () => {
             delete surveyA.model;
             // note: the throw assert works here because the error is thrown before in sync part of function
-            expect( function() {
+            expect( () => {
                 store.survey.set( surveyA );
             } ).to.throw( /not complete/ );
         } );
 
-        it( 'fails if the survey has no "id" property', function() {
+        it( 'fails if the survey has no "id" property', () => {
             delete surveyA.enketoId;
             // note: the throw assert works here because the error is thrown before in sync part of function
-            expect( function() {
+            expect( () => {
                 store.survey.set( surveyA );
             } ).to.throw( /not complete/ );
         } );
 
-        it( 'fails if the survey has no "hash" property', function() {
+        it( 'fails if the survey has no "hash" property', () => {
             delete surveyA.hash;
             // note: the throw assert works here because the error is thrown before in sync part of function
-            expect( function() {
+            expect( () => {
                 store.survey.set( surveyA );
             } ).to.throw( /not complete/ );
         } );
 
-        it( 'succeeds if the survey has the required properties and doesn\'t exist already', function( done ) {
+        it( 'succeeds if the survey has the required properties and doesn\'t exist already', done => {
             store.survey.set( surveyA )
-                .then( function( result ) {
+                .then( result => {
                     // check response of setSurvey
                     expect( result ).to.deep.equal( surveyA );
                     return store.survey.get( surveyA.enketoId );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check response of getSurvey
                     expect( result ).to.deep.equal( surveyA );
                 } )
                 .then( done, done );
         } );
 
-        it( 'fails if a survey with that id already exists in the db', function( done ) {
+        it( 'fails if a survey with that id already exists in the db', done => {
             store.survey.set( surveyA )
-                .then( function() {
-                    return store.survey.set( surveyA );
-                } )
-                .catch( function() {
+                .then( () => store.survey.set( surveyA ) )
+                .catch( () => {
                     expect( true ).to.equal( true );
                     done();
                 } );
@@ -269,11 +252,11 @@ describe( 'Client Storage', function() {
 
     } );
 
-    describe( 'getting surveys', function() {
+    describe( 'getting surveys', () => {
 
-        it( 'returns undefined if a survey does not exist', function( done ) {
+        it( 'returns undefined if a survey does not exist', done => {
             store.survey.get( 'nonexisting' )
-                .then( function( result ) {
+                .then( result => {
                     expect( result ).to.equal( undefined );
                 } )
                 .then( done, done );
@@ -281,26 +264,26 @@ describe( 'Client Storage', function() {
 
     } );
 
-    describe( 'updating surveys', function() {
+    describe( 'updating surveys', () => {
 
-        beforeEach( function( done ) {
+        beforeEach( done => {
             store.survey.removeAll()
                 .then( done, done );
         } );
 
-        it( 'succeeds if the survey has the required properties and contains no file resources', function( done ) {
+        it( 'succeeds if the survey has the required properties and contains no file resources', done => {
             store.survey.set( surveyA )
-                .then( function() {
+                .then( () => {
                     surveyA.model = '<model><new>value</new></model>';
                     surveyA.hash = '6789';
                     return store.survey.update( surveyA );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check response of updateSurvey
                     expect( result ).to.deep.equal( surveyA );
                     return store.survey.get( surveyA.enketoId );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check response of getSurvey
                     expect( result.model ).to.equal( surveyA.model );
                     expect( result.hash ).to.equal( surveyA.hash );
@@ -308,22 +291,22 @@ describe( 'Client Storage', function() {
                 .then( done, done );
         } );
 
-        it( 'succeeds if the survey has the required properties and contains file resources', function( done ) {
-            var urlA = resourceA.url;
-            var type = resourceA.item.type;
-            var size = resourceA.item.size;
+        it( 'succeeds if the survey has the required properties and contains file resources', done => {
+            const urlA = resourceA.url;
+            const type = resourceA.item.type;
+            const size = resourceA.item.size;
 
             store.survey.set( surveyA )
-                .then( function() {
+                .then( () => {
                     surveyA.resources = [ resourceA, resourceB ];
                     return store.survey.update( surveyA );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check response of updateSurvey
                     expect( result ).to.deep.equal( surveyA );
                     return store.survey.resource.get( result.enketoId, urlA );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check response of getResource
                     expect( result.item.type ).to.equal( type );
                     expect( result.item.size ).to.equal( size );
@@ -332,20 +315,20 @@ describe( 'Client Storage', function() {
                 .then( done, done );
         } );
 
-        it( 'removes any form resources that have become obsolete', function( done ) {
-            var urlA = resourceA.url,
+        it( 'removes any form resources that have become obsolete', done => {
+            const urlA = resourceA.url,
                 urlB = resourceB.url,
                 itemA = new Blob( [ resourceA.item ], {
                     type: resourceA.type
                 } );
 
             store.survey.set( surveyA )
-                .then( function() {
+                .then( () => {
                     // store 2 resources
                     surveyA.resources = [ resourceA, resourceB ];
                     return store.survey.update( surveyA );
                 } )
-                .then( function() {
+                .then( () => {
                     // update survey to contain only 1 resource
                     surveyA.resources = [ {
                         url: urlA,
@@ -353,12 +336,12 @@ describe( 'Client Storage', function() {
                     } ];
                     return store.survey.update( surveyA );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check response of updateSurvey
                     expect( result ).to.deep.equal( surveyA );
                     return store.survey.resource.get( result.enketoId, urlB );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check response of getResource
                     expect( result ).to.equal( undefined );
                 } )
@@ -366,44 +349,36 @@ describe( 'Client Storage', function() {
         } );
     } );
 
-    describe( 'removing surveys', function() {
+    describe( 'removing surveys', () => {
 
-        beforeEach( function( done ) {
+        beforeEach( done => {
             store.survey.removeAll()
                 .then( done, done );
         } );
 
-        it( 'succeeds if the survey contains no files', function( done ) {
+        it( 'succeeds if the survey contains no files', done => {
             store.survey.set( surveyA )
-                .then( function() {
-                    return store.survey.remove( surveyA.enketoId );
-                } )
-                .then( function() {
-                    return store.survey.get( surveyA.enketoId );
-                } )
-                .then( function( result ) {
+                .then( () => store.survey.remove( surveyA.enketoId ) )
+                .then( () => store.survey.get( surveyA.enketoId ) )
+                .then( result => {
                     expect( result ).to.equal( undefined );
                 } )
                 .then( done, done );
         } );
 
-        it( 'succeeds if the survey contains files', function( done ) {
-            var url = resourceA.url;
+        it( 'succeeds if the survey contains files', done => {
+            const url = resourceA.url;
 
             surveyA.enketoId = surveyA.enketoId + Math.random();
 
             store.survey.set( surveyA )
-                .then( function() {
+                .then( () => {
                     surveyA.resources = [ resourceA, resourceB ];
                     return store.survey.update( surveyA );
                 } )
-                .then( function() {
-                    return store.survey.remove( surveyA.enketoId );
-                } )
-                .then( function() {
-                    return store.survey.resource.get( surveyA.enketoId, url );
-                } )
-                .then( function( result ) {
+                .then( () => store.survey.remove( surveyA.enketoId ) )
+                .then( () => store.survey.resource.get( surveyA.enketoId, url ) )
+                .then( result => {
                     expect( result ).to.equal( undefined );
                     done();
                 } )
@@ -412,55 +387,53 @@ describe( 'Client Storage', function() {
 
     } );
 
-    describe( 'storing (record) files', function() {
+    describe( 'storing (record) files', () => {
 
-        beforeEach( function( done ) {
+        beforeEach( done => {
             store.record.removeAll()
                 .then( done, done );
         } );
 
-        it( 'fails if the resource has no "name" property', function( done ) {
+        it( 'fails if the resource has no "name" property', done => {
             store.record.file.update( 'abcd', {
                     item: fileA
                 } )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.name ).to.equal( 'DataError' );
                     done();
                 } );
         } );
 
-        it( 'fails if the setting object has no "item" property', function( done ) {
+        it( 'fails if the setting object has no "item" property', done => {
             store.record.file.update( 'abcd', {
                     name: 'something.jpg'
                 } )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.name ).to.equal( 'DataError' );
                     done();
                 } );
         } );
 
-        it( 'fails if the "item" is not a Blob', function( done ) {
+        it( 'fails if the "item" is not a Blob', done => {
             store.record.file.update( 'abcd', {
                     name: 'something',
                     item: 'a string'
                 } )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.name ).to.equal( 'DataError' );
                     done();
                 } );
         } );
 
-        it( 'succeeds if key and item are present and item is a Blob', function( done ) {
-            var id = 'TESt';
-            var type = fileA.item.type;
-            var size = fileA.item.size;
-            var name = fileA.name;
+        it( 'succeeds if key and item are present and item is a Blob', done => {
+            const id = 'TESt';
+            const type = fileA.item.type;
+            const size = fileA.item.size;
+            const name = fileA.name;
 
             store.record.file.update( id, fileA )
-                .then( function(  ) {
-                    return store.record.file.get( id, name );
-                } )
-                .then( function( result ) {
+                .then( () => store.record.file.get( id, name ) )
+                .then( result => {
                     expect( result.item.type ).to.equal( type );
                     expect( result.item.size ).to.equal( size );
                     expect( result.item ).to.be.an.instanceof( Blob );
@@ -472,56 +445,56 @@ describe( 'Client Storage', function() {
 
     } );
 
-    describe( 'storing records', function() {
+    describe( 'storing records', () => {
 
-        beforeEach( function( done ) {
+        beforeEach( done => {
             store.record.removeAll()
                 .then( done, done );
         } );
 
-        it( 'fails if the record has no "instanceId" property', function( done ) {
+        it( 'fails if the record has no "instanceId" property', done => {
             delete recordA.instanceId;
             store.record.set( recordA )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.message ).to.contain( 'not complete' );
                 } )
                 .then( done, done );
         } );
 
-        it( 'fails if the record has no "enketoId" property', function( done ) {
+        it( 'fails if the record has no "enketoId" property', done => {
             delete recordA.enketoId;
             store.record.set( recordA )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.message ).to.contain( 'not complete' );
                 } )
                 .then( done, done );
         } );
 
-        it( 'fails if the record has no "name" property', function( done ) {
+        it( 'fails if the record has no "name" property', done => {
             delete recordA.name;
             store.record.set( recordA )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.message ).to.contain( 'not complete' );
                 } )
                 .then( done, done );
         } );
 
-        it( 'fails if the record has no "xml" property', function( done ) {
+        it( 'fails if the record has no "xml" property', done => {
             delete recordA.xml;
             store.record.set( recordA )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.message ).to.contain( 'not complete' );
                 } )
                 .then( done, done );
         } );
 
-        it( 'succeeds if the record has the required properties and doesn\'t exist already', function( done ) {
+        it( 'succeeds if the record has the required properties and doesn\'t exist already', done => {
             store.record.set( recordA )
-                .then( function( result ) {
+                .then( result => {
                     expect( result ).to.deep.equal( recordA );
                     return store.record.get( recordA.instanceId );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     expect( result.instanceId ).to.equal( recordA.instanceId );
                     expect( result.xml ).to.equal( recordA.xml );
                     expect( result.created ).to.be.at.least( new Date().getTime() - 100 );
@@ -531,17 +504,17 @@ describe( 'Client Storage', function() {
                 .catch( done );
         } );
 
-        it( 'succeeds if the record has the required properties, contains files, and doesn\'t exist already', function( done ) {
-            var name1 = fileA.name,
+        it( 'succeeds if the record has the required properties, contains files, and doesn\'t exist already', done => {
+            const name1 = fileA.name,
                 name2 = fileB.name;
 
             recordA.files = [ fileA, fileB ];
             store.record.set( recordA )
-                .then( function( result ) {
+                .then( result => {
                     expect( result ).to.deep.equal( recordA );
                     return store.record.get( recordA.instanceId );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     expect( result.instanceId ).to.equal( recordA.instanceId );
                     expect( result.xml ).to.equal( recordA.xml );
                     expect( result.updated ).to.be.at.least( new Date().getTime() - 100 );
@@ -554,47 +527,39 @@ describe( 'Client Storage', function() {
                 .catch( done );
         } );
 
-        it( 'fails if a record with that instanceId already exists in the db', function( done ) {
+        it( 'fails if a record with that instanceId already exists in the db', done => {
             recordA.name = 'another name';
             store.record.set( recordA )
-                .then( function() {
-                    return store.record.set( recordA );
-                } )
-                .catch( function() {
+                .then( () => store.record.set( recordA ) )
+                .catch( () => {
                     // Firefox failure? => https://github.com/aaronpowell/db.js/issues/98
                     expect( true ).to.equal( true );
                 } )
                 .then( done, done );
         } );
 
-        it( 'fails if a record with that instanceName already exists in the db', function( done ) {
+        it( 'fails if a record with that instanceName already exists in the db', done => {
             recordA.instanceId = 'anotherid';
             store.record.set( recordA )
-                .then( function() {
-                    return store.record.set( recordA );
-                } )
-                .catch( function() {
+                .then( () => store.record.set( recordA ) )
+                .catch( () => {
                     // Firefox failure? => https://github.com/aaronpowell/db.js/issues/98
                     expect( true ).to.equal( true );
                 } )
                 .then( done, done );
         } );
 
-        it( 'increments the record-counter value when it succeeds', function( done ) {
-            var initialCount;
+        it( 'increments the record-counter value when it succeeds', done => {
+            let initialCount;
             store.record.set( recordA )
-                .then( function() {
-                    return store.property.getSurveyStats( recordA.enketoId );
-                } )
-                .then( function( stats ) {
+                .then( () => store.property.getSurveyStats( recordA.enketoId ) )
+                .then( stats => {
                     initialCount = stats.recordCount;
                     expect( initialCount ).to.be.a( 'number' );
                     return store.record.set( recordB );
                 } )
-                .then( function() {
-                    return store.property.getSurveyStats( recordA.enketoId );
-                } )
-                .then( function( stats ) {
+                .then( () => store.property.getSurveyStats( recordA.enketoId ) )
+                .then( stats => {
                     expect( stats.recordCount ).to.equal( initialCount + 1 );
                 } )
                 .then( done, done );
@@ -602,11 +567,11 @@ describe( 'Client Storage', function() {
 
     } );
 
-    describe( 'obtaining records', function() {
+    describe( 'obtaining records', () => {
 
-        it( 'returns undefined if the record does not exist', function( done ) {
+        it( 'returns undefined if the record does not exist', done => {
             store.record.get( 'notexisting' )
-                .then( function( record ) {
+                .then( record => {
                     expect( record ).to.equal( undefined );
                 } )
                 .then( done, done );
@@ -614,87 +579,87 @@ describe( 'Client Storage', function() {
 
     } );
 
-    describe( 'updating records', function() {
+    describe( 'updating records', () => {
 
-        beforeEach( function( done ) {
+        beforeEach( done => {
             store.record.removeAll()
                 .then( done, done );
         } );
 
-        it( 'fails if the updated record has no "instanceId" property', function( done ) {
+        it( 'fails if the updated record has no "instanceId" property', done => {
             store.record.set( recordA )
-                .then( function() {
+                .then( () => {
                     delete recordA.instanceId;
                     recordA.xml = '<model><change>a</change></model>';
                     return store.record.update( recordA );
                 } )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.message ).to.contain( 'not complete' );
                     done();
                 } );
         } );
 
-        it( 'fails if the updated record has no "name" property', function( done ) {
+        it( 'fails if the updated record has no "name" property', done => {
             store.record.set( recordA )
-                .then( function() {
+                .then( () => {
                     delete recordA.name;
                     recordA.xml = '<model><change>a</change></model>';
                     return store.record.update( recordA );
                 } )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.message ).to.contain( 'not complete' );
                     done();
                 } );
         } );
 
-        it( 'fails if the updated record has no "xml" property', function( done ) {
+        it( 'fails if the updated record has no "xml" property', done => {
             store.record.set( recordA )
-                .then( function() {
+                .then( () => {
                     delete recordA.xml;
                     return store.record.update( recordA );
                 } )
-                .catch( function( e ) {
+                .catch( e => {
                     expect( e.message ).to.contain( 'not complete' );
                     done();
                 } );
         } );
 
-        it( 'succeeds if the updated record has the required properties', function( done ) {
-            var updatedXml = '<model><change>a</change></model>';
+        it( 'succeeds if the updated record has the required properties', done => {
+            const updatedXml = '<model><change>a</change></model>';
 
             store.record.set( recordA )
-                .then( function() {
+                .then( () => {
                     recordA.xml = updatedXml;
                     return store.record.update( recordA );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     expect( result ).to.deep.equal( recordA );
                     expect( result.xml ).to.equal( updatedXml );
                     return store.record.get( recordA.instanceId );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     expect( result.xml ).to.equal( updatedXml );
                 } )
                 .then( done, done );
         } );
 
-        it( 'succeeds if the updated record has the required properties and includes files', function( done ) {
-            var name1 = fileA.name,
+        it( 'succeeds if the updated record has the required properties and includes files', done => {
+            const name1 = fileA.name,
                 name2 = fileB.name;
 
             store.record.set( recordA )
-                .then( function(  ) {
+                .then( () => {
                     recordA.files = [ fileA, fileB ];
                     return store.record.update( recordA );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check update response
                     expect( result.files.length ).to.equal( 2 );
                     expect( result.files[ 0 ].name ).to.equal( name1 );
                     expect( result.files[ 1 ].name ).to.equal( name2 );
                     return store.record.get( recordA.instanceId );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check get response
                     expect( result.files.length ).to.equal( 2 );
                     expect( result.files[ 0 ].name ).to.equal( name1 );
@@ -703,45 +668,45 @@ describe( 'Client Storage', function() {
                 .then( done, done );
         } );
 
-        it( 'removes any record files that have become obsolete', function( done ) {
-            var name1 = fileA.name,
+        it( 'removes any record files that have become obsolete', done => {
+            const name1 = fileA.name,
                 name2 = fileB.name;
 
             recordA.files = [ fileA ];
             store.record.set( recordA )
-                .then( function( result ) {
+                .then( result => {
                     expect( result.files[ 0 ].name ).to.equal( name1 );
                     // update files
                     recordA.files = [ fileB ];
                     return store.record.update( recordA );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check update response
                     expect( result.files.length ).to.equal( 1 );
                     expect( result.files[ 0 ].name ).to.equal( name2 );
                     return store.record.get( recordA.instanceId );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check get response
                     expect( result.files.length ).to.equal( 1 );
                     expect( result.files[ 0 ].name ).to.equal( name2 );
                     return store.record.file.get( recordA.instanceId, name1 );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check whether obsolete file has been removed
                     expect( result ).to.equal( undefined );
                 } )
                 .then( done, done );
         } );
 
-        it( 'does not remove record files that were loaded into a draft record and were left unchanged', function( done ) {
-            var name1 = fileA.name,
+        it( 'does not remove record files that were loaded into a draft record and were left unchanged', done => {
+            const name1 = fileA.name,
                 name2 = fileB.name,
                 size1 = fileA.item.size;
 
             recordA.files = [ fileA ];
             store.record.set( recordA )
-                .then( function( result ) {
+                .then( result => {
                     expect( result.files[ 0 ].name ).to.equal( name1 );
                     // update files, fileA remains but is included as a {name: name1} without item (blob)
                     recordA.files = [ {
@@ -749,21 +714,21 @@ describe( 'Client Storage', function() {
                     }, fileB ];
                     return store.record.update( recordA );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check update response
                     expect( result.files.length ).to.equal( 2 );
                     expect( result.files[ 0 ].name ).to.equal( name1 );
                     expect( result.files[ 1 ].name ).to.equal( name2 );
                     return store.record.get( recordA.instanceId );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check get response
                     expect( result.files.length ).to.equal( 2 );
                     expect( result.files[ 0 ].name ).to.equal( name1 );
                     expect( result.files[ 1 ].name ).to.equal( name2 );
                     return store.record.file.get( recordA.instanceId, name1 );
                 } )
-                .then( function( result ) {
+                .then( result => {
                     // check whether obsolete file has been removed
                     expect( result.item.size ).to.equal( size1 );
                     expect( result.name ).to.equal( name1 );
@@ -774,52 +739,42 @@ describe( 'Client Storage', function() {
     } );
 
 
-    describe( 'removing records', function() {
+    describe( 'removing records', () => {
 
-        beforeEach( function( done ) {
+        beforeEach( done => {
             store.record.removeAll()
                 .then( done, done );
         } );
 
-        it( 'succeeds if the record contains no files', function( done ) {
+        it( 'succeeds if the record contains no files', done => {
 
             store.record.set( recordA )
-                .then( function() {
-                    return store.record.remove( recordA.instanceId );
-                } )
-                .then( function() {
-                    return store.record.get( recordA.instanceId );
-                } )
-                .then( function( result ) {
+                .then( () => store.record.remove( recordA.instanceId ) )
+                .then( () => store.record.get( recordA.instanceId ) )
+                .then( result => {
                     expect( result ).to.equal( undefined );
                 } )
                 .then( done, done );
         } );
 
-        it( 'succeeds if the record contains files', function( done ) {
-            var name = fileA.name;
+        it( 'succeeds if the record contains files', done => {
+            const name = fileA.name;
 
             recordA.instanceId = recordA.instanceId + Math.random();
 
             store.record.set( recordA )
-                .then( function(  ) {
+                .then( () => {
                     recordA.files = [ fileA, fileB ];
                     return store.record.update( recordA );
                 } )
-                .then( function( ) {
-                    return store.record.file.get( recordA.instanceId, name );
-                } )
-                .then( function( result ) {
+                .then( () => store.record.file.get( recordA.instanceId, name ) )
+                .then( result => {
                     expect( result ).to.have.property( 'item' );
                     expect( result.item ).to.be.an.instanceof( Blob );
                 } )
-                .then( function(  ) {
-                    return store.record.remove( recordA.instanceId );
-                } )
-                .then( function(  ) {
-                    return store.record.file.get( recordA.instanceId, name );
-                } )
-                .then( function( result ) {
+                .then( () => store.record.remove( recordA.instanceId ) )
+                .then( () => store.record.file.get( recordA.instanceId, name ) )
+                .then( result => {
                     expect( result ).to.equal( undefined );
                     done();
                 } )
@@ -827,31 +782,27 @@ describe( 'Client Storage', function() {
         } );
     } );
 
-    describe( 'obtaining a list of records', function() {
+    describe( 'obtaining a list of records', () => {
 
-        beforeEach( function( done ) {
+        beforeEach( done => {
             store.record.removeAll()
                 .then( done, done );
         } );
 
-        it( 'returns an empty array if there are no records', function( done ) {
+        it( 'returns an empty array if there are no records', done => {
             store.record.getAll( 'surveyA' )
-                .then( function( records ) {
+                .then( records => {
                     expect( records ).to.deep.equal( [] );
                 } )
                 .then( done, done );
         } );
 
-        it( 'returns an array of all records', function( done ) {
+        it( 'returns an array of all records', done => {
             // recordA and recordB have the same enketoId
             store.record.set( recordA )
-                .then( function() {
-                    return store.record.set( recordB );
-                } )
-                .then( function() {
-                    return store.record.getAll( recordA.enketoId );
-                } )
-                .then( function( records ) {
+                .then( () => store.record.set( recordB ) )
+                .then( () => store.record.getAll( recordA.enketoId ) )
+                .then( records => {
                     expect( records.length ).to.equal( 2 );
                     expect( records[ 0 ].instanceId ).to.equal( recordA.instanceId );
                     expect( records[ 0 ].enketoId ).to.equal( recordA.enketoId );
@@ -863,17 +814,15 @@ describe( 'Client Storage', function() {
                 .then( done, done );
         } );
 
-        it( 'only returns records with the requested enketoId', function( done ) {
+        it( 'only returns records with the requested enketoId', done => {
             store.record.set( recordA )
-                .then( function() {
+                .then( () => {
                     // make sure enketoId is different
                     recordB.enketoId = 'different';
                     return store.record.set( recordB );
                 } )
-                .then( function() {
-                    return store.record.getAll( recordA.enketoId );
-                } )
-                .then( function( records ) {
+                .then( () => store.record.getAll( recordA.enketoId ) )
+                .then( records => {
                     expect( records.length ).to.equal( 1 );
                     expect( records[ 0 ].instanceId ).to.equal( recordA.instanceId );
                     expect( records[ 0 ].enketoId ).to.equal( recordA.enketoId );
@@ -882,18 +831,16 @@ describe( 'Client Storage', function() {
                 .then( done, done );
         } );
 
-        it( 'exludes drafts if requested', function( done ) {
+        it( 'exludes drafts if requested', done => {
             // recordA and recordB have the same enketoId
             store.record.set( recordA )
-                .then( function() {
+                .then( () => {
                     // set draft status to true of new record
                     recordB.draft = true;
                     return store.record.set( recordB );
                 } )
-                .then( function() {
-                    return store.record.getAll( recordA.enketoId, true );
-                } )
-                .then( function( records ) {
+                .then( () => store.record.getAll( recordA.enketoId, true ) )
+                .then( records => {
                     expect( records.length ).to.equal( 1 );
                     expect( records[ 0 ].instanceId ).to.equal( recordA.instanceId );
                     expect( records[ 0 ].enketoId ).to.equal( recordA.enketoId );

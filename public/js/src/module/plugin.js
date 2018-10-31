@@ -1,13 +1,11 @@
-'use strict';
-
-var $ = require( 'jquery' );
+import $ from 'jquery';
 
 // plugin to select the first word(s) of a string and capitalize it
 $.fn.capitalizeStart = function( numWords ) {
     if ( !numWords ) {
         numWords = 1;
     }
-    var node = this.contents().filter( function() {
+    const node = this.contents().filter( function() {
             return this.nodeType === 3;
         } ).first(),
         text = node.text(),
@@ -18,13 +16,13 @@ $.fn.capitalizeStart = function( numWords ) {
     }
 
     node[ 0 ].nodeValue = text.slice( first.length );
-    node.before( '<span class="capitalize">' + first + '</span>' );
+    node.before( `<span class="capitalize">${first}</span>` );
 };
 
 $.fn.btnBusyState = function( busy ) {
     return this.each( function() {
-        var $button = $( this );
-        var btnContent = $button.find( '.temp' ).html();
+        const $button = $( this );
+        let btnContent = $button.find( '.temp' ).html();
 
         if ( busy && !btnContent ) {
             btnContent = $button.html();

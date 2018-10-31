@@ -1,8 +1,6 @@
-'use strict';
-
-var sniffer = require( './sniffer' );
-var trident = sniffer.browser.ie;
+import sniffer from './sniffer';
+const trident = sniffer.browser.ie;
 
 if ( trident ) {
-    global.location.href = '/modern-browsers';
+    window.location.href = '/modern-browsers';
 }

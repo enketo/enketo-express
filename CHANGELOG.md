@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Changed
+- Modernized client-side Javascript code [Major].
+
 [1.72.3] - 2018-10-31
 ----------------------
 ##### Changed

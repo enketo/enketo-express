@@ -1,4 +1,4 @@
-var encryptor = require( '../../public/js/src/module/encryptor' );
+import encryptor from '../../public/js/src/module/encryptor';
 
 describe( 'Encryptor', () => {
     describe( 'Seed generation', () => {
@@ -54,7 +54,7 @@ describe( 'Encryptor', () => {
             const record = { xml: '<root>this is a record</root>', instanceId: '1a2b' };
 
             encryptor.encryptRecord( form, record )
-                .then( function( encryptedRecord ) {
+                .then( encryptedRecord => {
                     const doc = new DOMParser().parseFromString( encryptedRecord.xml, 'text/xml' );
                     expect( doc.querySelectorAll( 'data' ).length ).to.equal( 1 );
                     expect( doc.querySelector( 'data' ).namespaceURI ).to.equal( SUBMISSION_NS );
@@ -90,7 +90,7 @@ describe( 'Encryptor', () => {
             const record = { xml: '<root>this is a record</root>', instanceId: '1a2b', files: [ fakeImageA, fakeImageB ] };
 
             encryptor.encryptRecord( form, record )
-                .then( function( encryptedRecord ) {
+                .then( encryptedRecord => {
                     const doc = new DOMParser().parseFromString( encryptedRecord.xml, 'text/xml' );
                     expect( doc.querySelectorAll( 'data > media' ).length ).to.equal( 2 );
                     // Note, in the future, we'll put all <file> elements under 1 <media>

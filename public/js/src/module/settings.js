@@ -1,12 +1,10 @@
-'use strict';
-
-var config = require( 'enketo/config' );
-var queryParams = _getAllQueryParams();
-var settings = {};
-var DEFAULT_MAX_SIZE = 5 * 1024 * 1024;
-var DEFAULT_LOGIN_URL = '/login';
-var DEFAULT_THANKS_URL = '/thanks';
-var settingsMap = [
+import config from 'enketo/config';
+const queryParams = _getAllQueryParams();
+const settings = {};
+const DEFAULT_MAX_SIZE = 5 * 1024 * 1024;
+const DEFAULT_LOGIN_URL = '/login';
+const DEFAULT_THANKS_URL = '/thanks';
+const settingsMap = [
     { q: 'return', s: 'returnUrl' }, { q: 'returnURL', s: 'returnUrl' }, 'returnUrl',
     { q: 'server', s: 'serverUrl' }, { q: 'serverURL', s: 'serverUrl' }, 'serverUrl',
     { q: 'form', s: 'xformUrl' }, { q: 'id', s: 'xformId' },
@@ -15,7 +13,7 @@ var settingsMap = [
 ];
 
 // rename query string parameters to settings, but only if they do not exist already
-settingsMap.forEach( function( obj ) {
+settingsMap.forEach( obj => {
     if ( typeof obj === 'string' && typeof queryParams[ obj ] !== 'undefined' && typeof settings[ obj ] === 'undefined' ) {
         settings[ obj ] = queryParams[ obj ];
     } else if ( typeof queryParams[ obj.q ] !== 'undefined' && typeof settings[ obj.s ] === 'undefined' ) {
@@ -31,10 +29,10 @@ settings.defaultReturnUrl = config[ 'basePath' ] + DEFAULT_THANKS_URL;
 
 // add defaults object
 settings.defaults = {};
-for ( var p in queryParams ) {
+for ( const p in queryParams ) {
     if ( queryParams.hasOwnProperty( p ) ) {
         // URLs with encoded brackets as well us not-encode brackets will work.
-        var matches = decodeURIComponent( p ).match( /d\[(.*)\]/ );
+        const matches = decodeURIComponent( p ).match( /d\[(.*)\]/ );
         if ( matches && matches[ 1 ] ) {
             settings.defaults[ matches[ 1 ] ] = decodeURIComponent( queryParams[ p ] );
         }
@@ -42,7 +40,7 @@ for ( var p in queryParams ) {
 }
 
 // add common app configuration constants
-for ( var prop in config ) {
+for ( const prop in config ) {
     if ( config.hasOwnProperty( prop ) ) {
         settings[ prop ] = config[ prop ];
     }
@@ -83,7 +81,7 @@ settings.enketoIdPrefix = '::';
 settings.offline = !!document.querySelector( 'html' ).getAttribute( 'manifest' );
 
 // Extract Enketo ID
-settings.enketoId = ( settings.offline ) ? _getEnketoId( '#', window.location.hash ) : _getEnketoId( '/' + settings.enketoIdPrefix, window.location.pathname );
+settings.enketoId = ( settings.offline ) ? _getEnketoId( '#', window.location.hash ) : _getEnketoId( `/${settings.enketoIdPrefix}`, window.location.pathname );
 
 // Set multipleAllowed for single webform views
 if ( settings.type === 'single' && settings.enketoId.length !== 32 && settings.enketoId.length !== 64 ) {
@@ -97,19 +95,19 @@ settings.goTo = settings.type === 'edit' || settings.type === 'preview' || setti
 settings.printRelevantOnly = !!settings.instanceId;
 
 function _getEnketoId( prefix, haystack ) {
-    var id = new RegExp( prefix ).test( haystack ) ? haystack.substring( haystack.lastIndexOf( prefix ) + prefix.length ) : null;
+    const id = new RegExp( prefix ).test( haystack ) ? haystack.substring( haystack.lastIndexOf( prefix ) + prefix.length ) : null;
     return id;
 }
 
 function _getAllQueryParams() {
-    var val;
-    var processedVal;
-    var query = window.location.search.substring( 1 );
-    var vars = query.split( '&' );
-    var params = {};
+    let val;
+    let processedVal;
+    const query = window.location.search.substring( 1 );
+    const vars = query.split( '&' );
+    const params = {};
 
-    for ( var i = 0; i < vars.length; i++ ) {
-        var pair = vars[ i ].split( '=' );
+    for ( let i = 0; i < vars.length; i++ ) {
+        const pair = vars[ i ].split( '=' );
         if ( pair[ 0 ].length > 0 ) {
             val = decodeURIComponent( pair[ 1 ] );
             processedVal = ( val === 'true' ) ? true : ( val === 'false' ) ? false : val;
@@ -120,4 +118,4 @@ function _getAllQueryParams() {
     return params;
 }
 
-module.exports = settings;
+export default settings;

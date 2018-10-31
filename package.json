@@ -26,7 +26,12 @@
     "private": true,
     "license": "Apache-2.0",
     "dependencies": {
+        "@babel/cli": "^7.1.2",
+        "@babel/core": "^7.1.2",
+        "@babel/polyfill": "^7.0.0",
+        "@babel/preset-env": "^7.1.0",
         "aliasify": "2.1.x",
+        "babelify": "^10.0.0",
         "basic-auth": "2.0.x",
         "body-parser": "1.x.x",
         "bristol": "0.4.x",
@@ -36,11 +41,10 @@
         "csurf": "1.9.x",
         "db.js": "0.15.0",
         "debug": "3.2.x",
-        "enketo-core": "4.60.6",
+        "enketo-core": "5.0.0-alpha.0",
         "enketo-transformer": "1.30.0",
         "express": "4.x.x",
         "grunt": "^1.0.3",
-        "grunt-browserify": "5.3.x",
         "grunt-contrib-uglify-es": "^3.3.0",
         "grunt-env": "0.4.x",
         "grunt-i18next": "0.2.x",
@@ -65,6 +69,12 @@
         "puppeteer": "^1.2.0",
         "redis": "2.8.0",
         "request": "2.88.x",
+        "rollup": "^0.66.6",
+        "rollup-plugin-commonjs": "^9.2.0",
+        "rollup-plugin-json": "^3.1.0",
+        "rollup-plugin-node-builtins": "^2.1.2",
+        "rollup-plugin-node-globals": "^1.4.0",
+        "rollup-plugin-node-resolve": "^3.4.0",
         "serve-favicon": "2.x.x",
         "time-grunt": "1.x.x",
         "valid-url": "^1.0.9",
@@ -85,11 +95,11 @@
         "gulp": "3.9.x",
         "i18next-parser": "0.13.0",
         "karma": "3.1.x",
-        "karma-browserify": "^5.3.0",
         "karma-chrome-launcher": "2.2.x",
         "karma-firefox-launcher": "1.1.x",
         "karma-mocha": "1.3.x",
         "karma-opera-launcher": "1.0.x",
+        "karma-rollup-preprocessor": "^6.1.0",
         "karma-safari-launcher": "1.0.x",
         "karma-sinon-chai": "2.0.x",
         "mocha": "5.2.x",
@@ -97,13 +107,11 @@
         "sinon-chai": "3.2.x",
         "supertest": "3.3.x"
     },
-    "aliasify": {
-        "aliases": {
-            "enketo/config": "./public/js/build/temp-client-config.json",
-            "enketo/widgets": "./public/js/build/widgets",
-            "enketo/translator": "./public/js/src/module/translator",
-            "enketo/dialog": "./public/js/src/module/gui",
-            "enketo/file-manager": "./public/js/src/module/file-manager"
-        }
+    "browser": {
+        "enketo/config": "./public/js/build/client-config",
+        "enketo/widgets": "./public/js/build/widgets",
+        "enketo/translator": "./public/js/src/module/translator",
+        "enketo/dialog": "./public/js/src/module/gui",
+        "enketo/file-manager": "./public/js/src/module/file-manager"
     }
 }

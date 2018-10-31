@@ -1,21 +1,18 @@
-'use strict';
+import $ from 'jquery';
+import gui from './module/gui';
+import controller from './module/controller-webform';
+import settings from './module/settings';
+import connection from './module/connection';
+import { FormModel } from 'enketo-core/src/js/Form-model';
+import { init as initTranslator, t, localize } from './module/translator';
+import store from './module/store';
+import utils from './module/utils';
+import formCache from './module/form-cache';
+import appCache from './module/application-cache';
 
-var $ = require( 'jquery' );
-var gui = require( './module/gui' );
-var controller = require( './module/controller-webform' );
-var settings = require( './module/settings' );
-var connection = require( './module/connection' );
-var FormModel = require( 'enketo-core/src/js/Form-model' );
-var translator = require( './module/translator' );
-var t = translator.t;
-var store = require( './module/store' );
-var utils = require( './module/utils' );
-var formCache = require( './module/form-cache' );
-var appCache = require( './module/application-cache' );
-
-var $loader = $( 'body > .main-loader' );
-var $formheader = $( '.main > .paper > .form-header' );
-var survey = {
+const $loader = $( 'body > .main-loader' );
+const $formheader = $( '.main > .paper > .form-header' );
+const survey = {
     enketoId: settings.enketoId,
     serverUrl: settings.serverUrl,
     xformId: settings.xformId,
@@ -30,14 +27,14 @@ if ( settings.offline ) {
     delete survey.serverUrl;
     delete survey.xformId;
     delete survey.xformUrl;
-    translator.init( survey )
+    initTranslator( survey )
         .then( formCache.init )
         .then( _addBranding )
         .then( _swapTheme )
         .then( _init )
         .then( formCache.updateMaxSubmissionSize )
         .then( formCache.updateMedia )
-        .then( function( s ) {
+        .then( s => {
             _updateMaxSizeSetting( s.maxSize );
             _setFormCacheEventHandlers();
             _setAppCacheEventHandlers();
@@ -46,7 +43,7 @@ if ( settings.offline ) {
         .catch( _showErrorOrAuthenticate );
 } else {
     console.log( 'App in online-only mode.' );
-    translator.init( survey )
+    initTranslator( survey )
         .then( connection.getFormParts )
         .then( _swapTheme )
         .then( _addBranding )
@@ -69,7 +66,7 @@ function _showErrorOrAuthenticate( error ) {
     console.error( error, error.stack );
     $loader.addClass( 'fail' );
     if ( error.status === 401 ) {
-        window.location.href = settings.loginUrl + '?return_url=' + encodeURIComponent( window.location.href );
+        window.location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( window.location.href )}`;
     } else {
         gui.alert( error.message, t( 'alert.loaderror.heading' ) );
     }
@@ -77,23 +74,23 @@ function _showErrorOrAuthenticate( error ) {
 
 function _setAppCacheEventHandlers() {
     $( document )
-        .on( 'offlinelaunchcapable', function() {
+        .on( 'offlinelaunchcapable', () => {
             console.log( 'This form is fully offline-capable!' );
             gui.updateStatus.offlineCapable( true );
             connection.getManifestVersion( $( 'html' ).attr( 'manifest' ) )
                 .then( gui.updateStatus.applicationVersion );
         } )
-        .on( 'offlinelaunchincapable', function() {
+        .on( 'offlinelaunchincapable', () => {
             console.error( 'This form cannot (or can no longer) launch offline.' );
             gui.updateStatus.offlineCapable( false );
         } )
-        .on( 'applicationupdated', function() {
+        .on( 'applicationupdated', () => {
             gui.feedback( t( 'alert.appupdated.msg' ), 20, t( 'alert.appupdated.heading' ) );
         } );
 }
 
 function _setFormCacheEventHandlers() {
-    $( document ).on( 'formupdated', function() {
+    $( document ).on( 'formupdated', () => {
         gui.feedback( t( 'alert.formupdated.msg' ), 20, t( 'alert.formupdated.heading' ) );
     } );
 }
@@ -102,23 +99,23 @@ function _setFormCacheEventHandlers() {
  * Advanced/emergency handlers that should always be activated even if form loading fails.
  */
 function _setEmergencyHandlers() {
-    $( '.side-slider__advanced__button.flush-db' ).on( 'click', function() {
+    $( '.side-slider__advanced__button.flush-db' ).on( 'click', () => {
         gui.confirm( {
                 msg: t( 'confirm.deleteall.msg' ),
                 heading: t( 'confirm.deleteall.heading' )
             }, {
                 posButton: t( 'confirm.deleteall.posButton' ),
             } )
-            .then( function( confirmed ) {
+            .then( confirmed => {
                 if ( !confirmed ) {
                     throw new Error( 'Cancelled by user' );
                 }
                 return store.flush();
             } )
-            .then( function() {
+            .then( () => {
                 location.reload();
             } )
-            .catch( function() {} );
+            .catch( () => {} );
     } );
 }
 
@@ -128,8 +125,8 @@ function _setEmergencyHandlers() {
  * @param {[type]} survey [description]
  */
 function _addBranding( survey ) {
-    var $brandImg = $( '.form-header__branding img' );
-    var attribute = ( settings.offline ) ? 'data-offline-src' : 'src';
+    const $brandImg = $( '.form-header__branding img' );
+    const attribute = ( settings.offline ) ? 'data-offline-src' : 'src';
 
     if ( survey.branding && survey.branding.source && $brandImg.attr( 'src' ) !== survey.branding.source ) {
         $brandImg.attr( 'src', '' );
@@ -155,11 +152,11 @@ function _swapTheme( survey ) {
 }
 
 function _prepareInstance( modelStr, defaults ) {
-    var model;
-    var init;
-    var existingInstance = null;
+    let model;
+    let init;
+    let existingInstance = null;
 
-    for ( var path in defaults ) {
+    for ( const path in defaults ) {
         if ( defaults.hasOwnProperty( path ) ) {
             model = model || new FormModel( modelStr, {
                 full: false
@@ -179,20 +176,20 @@ function _prepareInstance( modelStr, defaults ) {
 }
 
 function _init( formParts ) {
-    var error;
+    let error;
 
-    return new Promise( function( resolve, reject ) {
+    return new Promise( ( resolve, reject ) => {
         if ( formParts && formParts.form && formParts.model ) {
             $formheader.after( formParts.form );
-            translator.localize( document.querySelector( 'form.or' ) );
-            $( document ).ready( function() {
+            localize( document.querySelector( 'form.or' ) );
+            $( document ).ready( () => {
                 // TODO pass $form as first parameter?
                 // controller.init is asynchronous
                 controller.init( 'form.or:eq(0)', {
                     modelStr: formParts.model,
                     instanceStr: _prepareInstance( formParts.model, settings.defaults ),
                     external: formParts.externalData,
-                } ).then( function( form ) {
+                } ).then( form => {
                     $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
                     formParts.$form = form.view.$;
                     if ( settings.print ) {

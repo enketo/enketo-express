@@ -1,23 +1,21 @@
-'use strict';
-
-var settings = require( './settings' );
-var i18next = require( 'i18next' );
-var XHR = require( 'i18next-xhr-backend' );
-var LanguageDetector = require( 'i18next-browser-languagedetector' );
-var init;
-var t;
-var localize;
-var htmlParagraphsPostProcessor;
-var initialize;
+import settings from './settings';
+import i18next from 'i18next';
+import XHR from 'i18next-xhr-backend';
+import LanguageDetector from 'i18next-browser-languagedetector';
+let init;
+let t;
+let localize;
+let htmlParagraphsPostProcessor;
+let initialize;
 
 
 // The postProcessor assumes that array values with line breaks should be divided into HTML paragraphs.
 htmlParagraphsPostProcessor = {
     type: 'postProcessor',
     name: 'htmlParagraphsPostProcessor',
-    process: function( value ) {
-        var paragraphs = value.split( '\n' );
-        return ( paragraphs.length > 1 ) ? '<p>' + paragraphs.join( '</p><p>' ) + '</p>' : value;
+    process( value ) {
+        const paragraphs = value.split( '\n' );
+        return ( paragraphs.length > 1 ) ? `<p>${paragraphs.join( '</p><p>' )}</p>` : value;
     }
 };
 
@@ -27,14 +25,10 @@ htmlParagraphsPostProcessor = {
  * @param  {=*?} something can be anything
  * @return {Promise}       promise resolving the original something argument
  */
-init = function( something ) {
-    return initialize
-        .then( function() {
-            return something;
-        } );
-};
+init = something => initialize
+    .then( () => something );
 
-initialize = new Promise( function( resolve, reject ) {
+initialize = new Promise( ( resolve, reject ) => {
     i18next
         .use( XHR )
         .use( LanguageDetector )
@@ -44,7 +38,7 @@ initialize = new Promise( function( resolve, reject ) {
             fallbackLng: 'en',
             joinArrays: '\n',
             backend: {
-                loadPath: settings.basePath + '/locales/build/__lng__/translation-combined.json',
+                loadPath: `${settings.basePath}/locales/build/__lng__/translation-combined.json`,
             },
             load: 'languageOnly',
             lowerCaseLng: true,
@@ -58,7 +52,7 @@ initialize = new Promise( function( resolve, reject ) {
                 suffix: '__'
             },
             postProcess: [ 'htmlParagraphsPostProcessor' ]
-        }, function( error ) {
+        }, error => {
             if ( error ) {
                 reject( error );
             } else {
@@ -67,9 +61,7 @@ initialize = new Promise( function( resolve, reject ) {
         } );
 } );
 
-t = function( key, options ) {
-    return i18next.t( key, options );
-};
+t = ( key, options ) => i18next.t( key, options );
 
 /**
  * Localizes the descendents of an element based on the data-i18n attribute.
@@ -77,14 +69,14 @@ t = function( key, options ) {
  * 
  * @param  {Element} Element [description]
  */
-localize = function( element ) {
-    var i;
-    var cache = {};
-    var list = element.querySelectorAll( '[data-i18n]' );
+localize = element => {
+    let i;
+    const cache = {};
+    const list = element.querySelectorAll( '[data-i18n]' );
 
     for ( i = 0; i < list.length; i++ ) {
-        var el = list[ i ];
-        var key = el.dataset.i18n;
+        const el = list[ i ];
+        const key = el.dataset.i18n;
         if ( key ) {
             if ( !cache[ key ] ) {
                 cache[ key ] = t( key );
@@ -94,11 +86,7 @@ localize = function( element ) {
     }
 };
 
-module.exports = {
-    init: init,
-    t: t,
-    localize: localize
-};
+export { init, t, localize };
 
 /**
  * add keys from XSL stylesheets manually

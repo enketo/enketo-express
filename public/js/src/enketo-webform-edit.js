@@ -1,29 +1,24 @@
-'use strict';
-
-var $ = require( 'jquery' );
-var gui = require( './module/gui' );
-var controller = require( './module/controller-webform' );
-var settings = require( './module/settings' );
-var connection = require( './module/connection' );
-var translator = require( './module/translator' );
-var t = translator.t;
-var utils = require( './module/utils' );
-var $loader = $( 'body > .main-loader' );
-var $formheader = $( '.main > .paper > .form-header' );
-var survey = {
+import $ from 'jquery';
+import gui from './module/gui';
+import controller from './module/controller-webform';
+import settings from './module/settings';
+import connection from './module/connection';
+import { init as initTranslator, t, localize } from './module/translator';
+import utils from './module/utils';
+const $loader = $( 'body > .main-loader' );
+const $formheader = $( '.main > .paper > .form-header' );
+const survey = {
     enketoId: settings.enketoId,
     instanceId: settings.instanceId,
 };
 
-translator.init( survey )
-    .then( function( survey ) {
-        return Promise.all( [
-            connection.getFormParts( survey ),
-            connection.getExistingInstance( survey )
-        ] );
-    } )
-    .then( function( responses ) {
-        var formParts = responses[ 0 ];
+initTranslator( survey )
+    .then( survey => Promise.all( [
+        connection.getFormParts( survey ),
+        connection.getExistingInstance( survey )
+    ] ) )
+    .then( responses => {
+        const formParts = responses[ 0 ];
         formParts.instance = responses[ 1 ].instance;
         formParts.instanceAttachments = responses[ 1 ].instanceAttachments;
 
@@ -49,7 +44,7 @@ function _updateMaxSizeSetting( maxSize ) {
 function _showErrorOrAuthenticate( error ) {
     $loader.addClass( 'fail' );
     if ( error.status === 401 ) {
-        window.location.href = settings.loginUrl + '?return_url=' + encodeURIComponent( window.location.href );
+        window.location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( window.location.href )}`;
     } else {
         gui.alert( error.message, t( 'alert.loaderror.heading' ) );
     }
@@ -57,14 +52,14 @@ function _showErrorOrAuthenticate( error ) {
 
 function _init( formParts ) {
     $formheader.after( formParts.form );
-    translator.localize( document.querySelector( 'form.or' ) );
-    $( document ).ready( function() {
+    localize( document.querySelector( 'form.or' ) );
+    $( document ).ready( () => {
         controller.init( 'form.or:eq(0)', {
             modelStr: formParts.model,
             instanceStr: formParts.instance,
             external: formParts.externalData,
             instanceAttachments: formParts.instanceAttachments,
-        } ).then( function() {
+        } ).then( () => {
             $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
         } );
     } );
