@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Modernized client-side Javascript code [Major].
 
+##### Fixed
+- Default values not loaded in non-first repeat instances.
+
 [1.72.3] - 2018-10-31
 ----------------------
 ##### Changed
