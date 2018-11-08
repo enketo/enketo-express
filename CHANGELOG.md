@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Changed
 - Modernized client-side Javascript code [Major].
+- Updated Swedish translation.
 
 ##### Fixed
 - Default values not loaded in non-first repeat instances.

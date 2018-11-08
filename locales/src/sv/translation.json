@@ -27,11 +27,9 @@
             "heading": "Varning"
         },
         "export": {
-            "alternativequestion": "alternativ nedladdning - online",
             "error": {
                 "filecreatedmsg": "En ofullständig exportfil skapades ändå.",
                 "heading": "Fel vid export",
-                "linknotcreated": "Det gick inte att skapa en exportlänk för ej inskickade poster. Är du online?",
                 "msg": "Fel inträffade vid skapande av postexportfilen för ej inskickade poster. Fel: __errors__"
             },
             "success": {
@@ -189,6 +187,11 @@
         "admin": "Kontakta enkätens administratör.",
         "support": "Vänligen kontakta__supportEmail__"
     },
+    "drawwidget": {
+        "annotation": "fil och teckning",
+        "drawing": "teckning",
+        "signature": "underskrift"
+    },
     "enketo": {
         "power": "Drivs med"
     },
@@ -196,11 +199,14 @@
         "code": "Felkod:__code__",
         "dataloadfailed": "Misslyckades med att ladda in data från__url__",
         "econnrefused": "Det gick inte att ansluta till servern",
-        "encryptionnotsupported": "Detta formulär kräver lokal kryptering av poster. Tyvärr stöds detta inte ännu. Vi rekommenderar att du använder ODK Collect för datainsamling med detta formulär.",
+        "encryptionnotsupported": "Denna blankett kräver lokal kryptering av poster. Tyvärr stöds detta inte av din webbläsare. Vi rekommenderar att du byter till en modern webbläsare.",
         "instancenotfound": "Post finns inte. Den kan ha blivit ogiltig.",
         "invalidediturl": "Inte en giltig URL för redigering",
         "loadfailed": "Det gick inte att läsa in __resource__",
-        "notfoundinformlist": "Formulär med ID __formId__ hittades inte i /formList",
+        "notfoundinformlist": [
+            "Oj, det här formuläret finns inte (längre). Mest sannolikt har ägaren av formuläret raderat det, arkiverat det eller inaktiverat det. Vänligen kontakta formulärens ägare för att bekräfta.",
+            "Detaljerat fel: Form med ID __formId__ inte hittat i / formList."
+        ],
         "pagenotfound": "Sidan hittades inte",
         "surveyidnotactive": "Undersökning med detta ID är inte längre aktiv",
         "surveyidnotfound": "Undersökning med detta ID hittades inte",
@@ -208,6 +214,14 @@
     },
     "feedback": {
         "header": "Information"
+    },
+    "filepicker": {
+        "file": "fil",
+        "notFound": "Filen __existing__ kunde inte hittas (lämna oförändrad om den redan skickats in och du vill behålla den).",
+        "placeholder": "Klicka här för att ladda upp filen. (<__maxSize__)",
+        "resetWarning": "Detta kommer att ta bort __item__. Är du säker på att du vill göra det här?",
+        "toolargeerror": "Filen är för stor (> __maxSize__)",
+        "waitingForPermissions": "Väntar på användarbehörigheter."
     },
     "form": {
         "chooseLanguage": "Välj språk",
@@ -244,11 +258,15 @@
         "latitude": "latitud (x.y °)",
         "longitude": "longitud (x.y °)",
         "points": "punkter",
+        "removePoint": "Detta kommer helt att ta bort den aktuella geopointen från listan över geopoints och kan inte ångras. Är du säker på att du vill göra det här?",
         "searchPlaceholder": "sök efter plats eller adress"
     },
     "here": "här",
     "home": {
         "msg": "__appTitle__ är igång! Vänligen få åtkomst till Enketo-formulär från __serverName__ installationen."
+    },
+    "imagemap": {
+        "svgNotFound": "SVG-bild kunde inte hittas"
     },
     "langs": {
         "ar": "Arabiska",
@@ -267,7 +285,10 @@
         "lo": "Laotiska",
         "nl": "Nederländska",
         "no": "Norska",
+        "pl": "Polsk",
+        "pt": "Portugisisk",
         "ro": "Rumänska",
+        "ru": "Rysk",
         "sk": "Slovakiska",
         "supported": "Språk som stöds:",
         "sv": "Svenska",
@@ -302,6 +323,10 @@
             "submit": "Skicka",
             "username": "Användarnamn"
         }
+    },
+    "rankwidget": {
+        "clickstart": "Klicka för att starta",
+        "tapstart": "Tryck för att starta"
     },
     "record-list": {
         "export": "Exportera",
