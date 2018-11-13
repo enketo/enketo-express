@@ -2,14 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.73.0] - 11-13-2018
 ----------------------
 ##### Changed
-- Modernized client-side Javascript code [Major].
+- Modernized client-side Javascript code [Major]. **WARNING: custom widgets need to be converted to ES6 modules!**
 - Updated Swedish translation.
 
 ##### Fixed
-- Default values not loaded in non-first repeat instances.
+- Default values not loaded in non-first repeat instances. Also causes other repeat problems.
 - Table widget option hover background is not centered around radiobutton/checkbox.
 
 [1.72.3] - 2018-10-31

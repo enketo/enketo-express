@@ -2,9 +2,18 @@ const resolve = require( 'rollup-plugin-node-resolve' );
 const commonjs = require( 'rollup-plugin-commonjs' );
 const builtins = require( 'rollup-plugin-node-builtins' );
 const globals = require( 'rollup-plugin-node-globals' );
+const alias = require( 'rollup-plugin-alias' );
 const buildFiles = require( './buildFiles' );
+const path = require( 'path' );
+const pkg = require( './package' );
+
+const aliases = Object.entries( pkg.browser ).reduce( ( obj, cur ) => {
+    obj[ cur[ 0 ] ] = path.join( __dirname, cur[ 1 ] );
+    return obj;
+}, {} );
 
 const plugins = [
+    alias( aliases ),
     resolve( {
         module: true, // Default: true
         main: true, // Default: true
