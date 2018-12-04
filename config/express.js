@@ -61,8 +61,11 @@ i18next
 
 // middleware
 app.use( compression() );
-app.use( bodyParser.json() );
+app.use( bodyParser.json( {
+    limit: config[ 'payload limit' ]
+} ) );
 app.use( bodyParser.urlencoded( {
+    limit: config[ 'payload limit' ],
     extended: true
 } ) );
 app.use( cookieParser( app.get( 'encryption key' ) ) );

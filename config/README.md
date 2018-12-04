@@ -149,4 +149,6 @@ Determines whether the Next button should trigger validation and block the user 
 #### swipe page
 This setting with default `true` value determines whether to enable support for _swiping_ to the next and previous page for forms that are divided into pages.
 
-
+#### payload limit
+This setting sets the maximum weight of payload sent to the API. Unit can be `b`, `kb` or `mb`.  
+The default value is `100kb`.

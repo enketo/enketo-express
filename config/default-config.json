@@ -68,5 +68,6 @@
     "disable save as draft": false,
     "repeat ordinals": false,
     "validate continuously": false,
-    "validate page": true
+    "validate page": true,
+    "payload limit": "100kb"
 }
