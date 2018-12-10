@@ -32,10 +32,14 @@ $offline-color: #d15200;
                 opacity: 0.8;
             }
         }
-    } // Only if .form-header__branding is an <a>nchor
+    }
+
+    // Only if .form-header__branding is an <a>nchor
     a.form-header__branding:hover {
         opacity: 0.8;
-    } // This filler element makes it easier to keep the same look with RTL UI languages
+    }
+
+    // This filler element makes it easier to keep the same look with RTL UI languages
     &__filler {
         order: 20;
         flex: 1;
@@ -228,9 +232,7 @@ $offline-color: #d15200;
         }
 
         &__button--homescreen {
-            top: -2px; // TODO: ensure button takes up on vertical space if there is no branding
-            // https://github.com/kobotoolbox/enketo-express/issues/634
-            // ensure that reason-for-change is pushed to the side
+            top: -2px;
             position: static;
             align-self: flex-start;
             margin-top: -1px;
