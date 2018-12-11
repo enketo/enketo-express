@@ -3,7 +3,7 @@ import gui from './module/gui';
 import controller from './module/controller-webform';
 import settings from './module/settings';
 import connection from './module/connection';
-import { FormModel } from 'enketo-core/src/js/Form-model';
+import { FormModel } from 'enketo-core/src/js/form-model';
 import { init as initTranslator, t, localize } from './module/translator';
 import store from './module/store';
 import utils from './module/utils';

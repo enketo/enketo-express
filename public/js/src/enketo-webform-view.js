@@ -18,7 +18,7 @@ calcModule.update = () => {
     console.log( 'Calculations disabled.' );
 };
 // Completely disable instanceID and deprecatedID population in Enketo Core
-import { FormModel } from 'enketo-core/src/js/Form-model';
+import { FormModel } from 'enketo-core/src/js/form-model';
 FormModel.prototype.setInstanceIdAndDeprecatedId = () => {
     console.log( 'InstanceID and deprecatedID population disabled.' );
 };

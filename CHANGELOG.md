@@ -4,8 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased] 
 ----------------------
+
 ##### Changed
 - Updated Spanish translation
+- Updated to new widget format. **WARNING: custom widgets need to be converted to new format!**
 
 ##### Fixed
 - API has 100kb body content limit causing issues when editing large instances.
