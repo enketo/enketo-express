@@ -2,15 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased] 
+[1.74.0] - 12-17-2018 
 ----------------------
-
 ##### Changed
 - Updated Spanish translation
 - Updated to new widget format. **WARNING: custom widgets need to be converted to new format!**
+- Do not include time component for today().
 
 ##### Fixed
 - API has 100kb body content limit causing issues when editing large instances.
+- Date calculations (e.g. today()) for number type questions do not return a number.
+- RTL detection not working for Sorani (ckb) and Kurdish (ku) and other languages.
 
 [1.73.0] - 11-13-2018
 ----------------------
