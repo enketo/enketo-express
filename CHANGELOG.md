@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+-----------------------
+##### Fixed
+- Likert item option labels with unequal number of lines not lined up correctly in Grid Theme.
+
 [1.74.0] - 12-17-2018 
 ----------------------
 ##### Changed
