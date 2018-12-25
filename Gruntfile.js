@@ -166,7 +166,11 @@ module.exports = grunt => {
                 browsers: [ 'Chrome', 'ChromeCanary', 'Firefox', 'Opera' /*,'Safari'*/ ],
             }
         },
-        uglify: {
+        terser: {
+            options: {
+                // https://github.com/enketo/enketo-express/issues/72
+                keep_classnames: true,
+            },
             all: {
                 files: bundles
                     .concat( bundles.map( bundle => bundle.replace( '-bundle.', '-ie11-bundle.' ) ) )
@@ -250,7 +254,7 @@ module.exports = grunt => {
         grunt.log.writeln( `File ${WIDGETS_SASS} created` );
     } );
 
-    grunt.registerTask( 'default', [ 'locales', 'widgets', 'css', 'js-ie11', 'uglify' ] );
+    grunt.registerTask( 'default', [ 'locales', 'widgets', 'css', 'js-ie11', 'terser' ] );
     grunt.registerTask( 'locales', [ 'shell:clean-locales', 'i18next' ] );
     grunt.registerTask( 'js', [ 'shell:clean-js', 'client-config-file:create', 'widgets', 'shell:rollup' ] );
     grunt.registerTask( 'js-dev', [ 'js' ] );

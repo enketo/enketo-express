@@ -2,10 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.74.1] - 12-25-2018
 -----------------------
 ##### Fixed
 - Likert item option labels with unequal number of lines not lined up correctly in Grid Theme.
+- Minification breaks most widgets on Safari and iOS browsers.
 
 [1.74.0] - 12-17-2018 
 ----------------------
