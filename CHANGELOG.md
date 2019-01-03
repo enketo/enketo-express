@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 --------------------
 ##### Fixed
 - Loading error in Pages mode when a page has no label.
+- Itemsets not populating if inside an irrelevant group upon load.
 
 [1.74.1] - 12-25-2018
 -----------------------
