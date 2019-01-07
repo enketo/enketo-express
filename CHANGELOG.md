@@ -2,19 +2,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.74.2] - 2019-01-07
 --------------------
+##### Changed
+- Fewer model updates during drawing using draw/signature/annotate widgets (performance).
+  
 ##### Fixed
 - Loading error in Pages mode when a page has no label.
 - Itemsets not populating if inside an irrelevant group upon load.
+- Download link not working for Draw/Signature/Annotate widgets.
+- Broken autocomplete widget in Safari and all iOS browsers.
+- Slider in vertical range widget not aligned properly in Grid Theme.
 
-[1.74.1] - 12-25-2018
+[1.74.1] - 2018-12-25
 -----------------------
 ##### Fixed
 - Likert item option labels with unequal number of lines not lined up correctly in Grid Theme.
 - Minification breaks most widgets on Safari and iOS browsers.
 
-[1.74.0] - 12-17-2018 
+[1.74.0] - 2018-12-17 
 ----------------------
 ##### Changed
 - Updated Spanish translation
@@ -26,7 +32,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Date calculations (e.g. today()) for number type questions do not return a number.
 - RTL detection not working for Sorani (ckb) and Kurdish (ku) and other languages.
 
-[1.73.0] - 11-13-2018
+[1.73.0] - 2018-11-13
 ----------------------
 ##### Changed
 - Modernized client-side Javascript code [Major]. **WARNING: custom widgets need to be converted to ES6 modules!**
