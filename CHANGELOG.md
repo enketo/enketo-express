@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Loading a form with a readonly file input throws an exception.
+
 [1.74.2] - 2019-01-07
 --------------------
 ##### Changed
