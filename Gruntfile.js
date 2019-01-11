@@ -94,7 +94,7 @@ module.exports = grunt => {
             },
             ie11polyfill: {
                 command: [
-                    'mkdir -p public/js/build && curl "https://cdn.polyfill.io/v2/polyfill.js?ua=ie%2F11.0.0&features=es2015%2Ces2016%2Ces2017%2Ces2018%2Cdefault-3.6%2Cfetch" -o "public/js/build/ie11-polyfill.min.js"',
+                    'mkdir -p public/js/build && curl "https://polyfill.io/v3/polyfill.min.js?ua=ie%2F11.0.0&features=es2015%2Ces2016%2Ces2017%2Ces2018%2Cdefault-3.6%2Cfetch%2CNodeList.prototype.forEach" -o "public/js/build/ie11-polyfill.min.js"',
                     'cp -f node_modules/enketo-core/src/js/obscure-ie11-polyfills.js public/js/build/obscure-ie11-polyfills.js'
                 ].join( '&&' )
             },
