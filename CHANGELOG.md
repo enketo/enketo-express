@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Fixed
 - IE11 fails to load.
+- New repeats are always shown in default language.
 
 [1.74.3] - 2019-01-10
 ---------------------
