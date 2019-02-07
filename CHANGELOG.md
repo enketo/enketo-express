@@ -2,11 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.74.4] - 2019-02-07
 ---------------------
 ##### Fixed
 - IE11 fails to load.
 - New repeats are always shown in default language.
+- Relative repeat-counts not working.
 
 [1.74.3] - 2019-01-10
 ---------------------
