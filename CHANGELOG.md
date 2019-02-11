@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Changed
+- Updated German translation.
+
 [1.74.4] - 2019-02-07
 ---------------------
 ##### Fixed
