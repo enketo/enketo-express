@@ -177,6 +177,10 @@
             "posButton": "Save & Close",
             "renamemsg": "Are you sure you want to rename __currentName__ to __newName__?",
             "unkownerror": "An unknown error occurred when trying to save data."
+        },
+        "repeatremove": {
+            "heading": "Delete this group of responses?",
+            "msg": "This action is irreversible. Are you sure you want to proceed?"
         }
     },
     "constraint": {
