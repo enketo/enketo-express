@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.75.0] - 2019-02-18
 ---------------------
 ##### Changed
 - Updated German translation.
@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Loading image from record may show error even if it was loaded successfully.
+- Generic file upload not working (cannot set property 'src' of null).
 
 [1.74.4] - 2019-02-07
 ---------------------
