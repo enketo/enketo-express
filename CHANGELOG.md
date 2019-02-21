@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Fixed
 - Calculations using advanced count(/path/to/repeat/node1[text()="something"]) aren't recalculated when a node1 changes.
+- Exception occurs when appearance 'horizontal' is added to group (which has no support for this appearance).
 
 [1.75.0] - 2019-02-18
 ---------------------
