@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Various issues when serving forms in a iframe on iOS devices.
+
 [1.75.1] - 2019-02-21
 ---------------------
 ##### Fixed

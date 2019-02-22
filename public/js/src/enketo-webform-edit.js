@@ -5,7 +5,7 @@ import settings from './module/settings';
 import connection from './module/connection';
 import { init as initTranslator, t, localize } from './module/translator';
 import utils from './module/utils';
-const $loader = $( 'body > .main-loader' );
+const $loader = $( '.main-loader' );
 const $formheader = $( '.main > .paper > .form-header' );
 const survey = {
     enketoId: settings.enketoId,

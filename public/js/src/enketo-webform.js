@@ -10,7 +10,7 @@ import utils from './module/utils';
 import formCache from './module/form-cache';
 import appCache from './module/application-cache';
 
-const $loader = $( 'body > .main-loader' );
+const $loader = $( '.main-loader' );
 const $formheader = $( '.main > .paper > .form-header' );
 const survey = {
     enketoId: settings.enketoId,

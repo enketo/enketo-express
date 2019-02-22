@@ -20,7 +20,11 @@ html(manifest=manifest, lang=language, dir=dir(language))
 
   - var cl = (iframe) ? 'iframe' : ''
   body(class=cl)
-    block content
+    if iframe
+      .ios-iframe-bug-wrap
+        block content
+    else 
+      block content
 
     block script
 
