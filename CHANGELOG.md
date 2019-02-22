@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Fixed
 - Various issues when serving forms in a iframe on iOS devices.
+- On touchscreen devices, the draw widget download functionality does not work, and clicking the Draw button empties the canvas.
 
 [1.75.1] - 2019-02-21
 ---------------------
