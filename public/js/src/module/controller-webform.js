@@ -8,6 +8,7 @@ import connection from './connection';
 import settings from './settings';
 import { Form } from 'enketo-core';
 import { updateDownloadLink } from 'enketo-core/src/js/utils';
+import events from 'enketo-core/src/js/event';
 import fileManager from './file-manager';
 import { t } from './translator';
 import records from './records-queue';
@@ -17,7 +18,7 @@ import encryptor from './encryptor';
 let form;
 let formSelector;
 let formData;
-let $formprogress;
+let formprogress;
 const formOptions = {
     clearIrrelevantImmediately: false,
     printRelevantOnly: settings.printRelevantOnly
@@ -59,7 +60,7 @@ function init( selector, data ) {
                 loadErrors.unshift( t( 'error.encryptionnotsupported' ) );
             }
 
-            $formprogress = $( '.form-progress' );
+            formprogress = document.querySelector( '.form-progress' );
 
             _setEventHandlers();
             setLogoutLinkVisibility();
@@ -586,9 +587,9 @@ function _setEventHandlers() {
         $( this ).next( '.record-list__records__msg' ).toggle( 100 );
     } );
 
-    $doc.on( 'progressupdate.enketo', 'form.or', ( event, status ) => {
-        if ( $formprogress.length > 0 ) {
-            $formprogress.css( 'width', `${status}%` );
+    document.addEventListener( events.ProgressUpdate().type, event => {
+        if ( event.target.classList.contains( 'or' ) && formprogress && event.detail ) {
+            formprogress.style.width = `${event.detail}%`;
         }
     } );
 

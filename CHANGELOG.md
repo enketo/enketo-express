@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Changed
+- Partial rewrite of events.
+- Improved accuracy of progress tracker.
+  
 ##### Fixed
 - Various issues when serving forms in a iframe on iOS devices.
 - On touchscreen devices, the draw widget download functionality does not work, and clicking the Draw button empties the canvas.
