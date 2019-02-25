@@ -3,7 +3,7 @@
  */
 
 import store from './store';
-
+import events from 'enketo-core/src/js/event';
 import settings from './settings';
 import connection from './connection';
 import $ from 'jquery';
@@ -144,7 +144,7 @@ function _setResetListener( survey ) {
  */
 function _setRepeatListener( survey ) {
     //Instantiate only once, after loadMedia has been completed (once)
-    survey.$form.on( 'addrepeat.enketo', event => {
+    survey.$form[ 0 ].addEventListener( events.AddRepeat().type, event => {
         _loadMedia( survey, $( event.target ) );
     } );
     return Promise.resolve( survey );
