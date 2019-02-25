@@ -615,7 +615,7 @@ function _setEventHandlers() {
     }
 
     if ( settings.offline ) {
-        $doc.on( 'valuechange.enketo', _autoSaveRecord );
+        $doc.on( 'valuechange', _autoSaveRecord );
     }
 }
 
