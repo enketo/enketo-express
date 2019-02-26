@@ -6,6 +6,7 @@ import store from './store';
 
 import connection from './connection';
 import gui from './gui';
+import events from './event';
 import settings from './settings';
 import exporter from './exporter';
 import { t } from './translator';
@@ -215,7 +216,7 @@ function uploadQueue() {
                             gui.confirmLogin();
                         } else if ( successes.length > 0 ) {
                             // let gui send a feedback message
-                            $( document ).trigger( 'queuesubmissionsuccess', successes );
+                            document.dispatchEvent( events.QueueSubmissionSuccess( successes ) );
                         }
                         // update the list by properly removing obsolete records, reactivating button(s)
                         _updateRecordList();

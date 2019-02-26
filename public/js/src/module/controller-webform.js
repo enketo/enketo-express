@@ -8,7 +8,7 @@ import connection from './connection';
 import settings from './settings';
 import { Form } from 'enketo-core';
 import { updateDownloadLink } from 'enketo-core/src/js/utils';
-import events from 'enketo-core/src/js/event';
+import events from './event';
 import fileManager from './file-manager';
 import { t } from './translator';
 import records from './records-queue';
@@ -275,7 +275,7 @@ function _submitRecord() {
             }
 
             // this event is used in communicating back to iframe parent window
-            $( document ).trigger( 'submissionsuccess' );
+            document.dispatchEvent( events.SubmissionSucces() );
 
             if ( redirect ) {
                 if ( !settings.multipleAllowed ) {
@@ -542,7 +542,7 @@ function _setEventHandlers() {
 
     $( 'button#close-form:not(.disabled)' ).click( () => {
         const msg = t( 'alert.submissionsuccess.redirectmsg' );
-        $doc.trigger( 'close' );
+        document.dispatchEvent( events.Close() );
         gui.alert( msg, t( 'alert.closing.heading' ), 'warning' );
         setTimeout( () => {
             location.href = decodeURIComponent( settings.returnUrl || settings.defaultReturnUrl );
@@ -594,11 +594,13 @@ function _setEventHandlers() {
     } );
 
     if ( inIframe() && settings.parentWindowOrigin ) {
-        $doc.on( 'submissionsuccess edited.enketo close', postEventAsMessageToParentWindow );
+        document.addEventListener( events.SubmissionSuccess().type, postEventAsMessageToParentWindow );
+        document.addEventListener( events.Edited().type, postEventAsMessageToParentWindow );
+        document.addEventListener( events.Close().type, postEventAsMessageToParentWindow );
     }
 
-    $doc.on( 'queuesubmissionsuccess', function( ...args ) {
-        const successes = Array.prototype.slice.call( args ).slice( 1 );
+    document.addEventListener( events.QueueSubmissionSuccess().type, event => {
+        const successes = event.detail;
         gui.feedback( t( 'alert.queuesubmissionsuccess.msg', {
             count: successes.length,
             recordNames: successes.join( ', ' )
