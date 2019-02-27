@@ -275,7 +275,7 @@ function _submitRecord() {
             }
 
             // this event is used in communicating back to iframe parent window
-            document.dispatchEvent( events.SubmissionSucces() );
+            document.dispatchEvent( events.SubmissionSuccess() );
 
             if ( redirect ) {
                 if ( !settings.multipleAllowed ) {
