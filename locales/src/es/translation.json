@@ -177,6 +177,10 @@
             "posButton": "Guardar y cerrar",
             "renamemsg": "Seguro que desea renombrar __currentName__ a __newName__?",
             "unkownerror": "Se ha producido un error desconocido a la hora de guardar los datos."
+        },
+        "repeatremove": {
+            "heading": "Eliminar este grupo de respuestas?",
+            "msg": "Esta acción es irreversible. Esta seguro de proceder?"
         }
     },
     "constraint": {

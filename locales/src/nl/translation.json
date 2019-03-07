@@ -177,6 +177,10 @@
             "posButton": "Sla Op & Sluit",
             "renamemsg": "Weet je zeker dat je __currentName__ naar __newName__ wilt veranderen?",
             "unkownerror": "Een onbekende fout trad op tijdens het opslaan."
+        },
+        "repeatremove": {
+            "heading": "Deze group met antwoorden verwijderen?",
+            "msg": "Deze actie is onomkeerbaar. Weet je zeker dat je verder wilt gaan?"
         }
     },
     "constraint": {

@@ -177,6 +177,10 @@
             "posButton": "Spara & stäng",
             "renamemsg": "Är du säker på att du vill byta namn __currentName__ till __newName__?",
             "unkownerror": "Ett okänt fel uppstod vid sparande av data."
+        },
+        "repeatremove": {
+            "heading": "Ta bort den här gruppen med svar?",
+            "msg": "Denna åtgärd går inte att ångra. Är du säker på att du vill fortsätta?"
         }
     },
     "constraint": {
@@ -188,8 +192,8 @@
         "support": "Vänligen kontakta__supportEmail__"
     },
     "drawwidget": {
-        "annotation": "fil och teckning",
-        "drawing": "teckning",
+        "annotation": "fil och skiss",
+        "drawing": "skiss",
         "signature": "underskrift"
     },
     "enketo": {
@@ -285,10 +289,10 @@
         "lo": "Laotiska",
         "nl": "Nederländska",
         "no": "Norska",
-        "pl": "Polsk",
-        "pt": "Portugisisk",
+        "pl": "Polska",
+        "pt": "Portugisiska",
         "ro": "Rumänska",
-        "ru": "Rysk",
+        "ru": "Ryska",
         "sk": "Slovakiska",
         "supported": "Språk som stöds:",
         "sv": "Svenska",
