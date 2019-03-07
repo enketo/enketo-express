@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Changed
 - Updated Swedish, Spanish, and Dutch translations
+  
+##### Fixed
+- The output in an itemset option label is not populated upon load.
 
 [1.75.3] - 2019-02-27
 ---------------------
