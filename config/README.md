@@ -152,3 +152,6 @@ This setting with default `true` value determines whether to enable support for 
 #### payload limit
 This setting sets the maximum weight of payload sent to the API. Unit can be `b`, `kb` or `mb`.  
 The default value is `100kb`.
+
+#### text field character limit
+Sets the maximum allowable text field characters with a default of 2000. This settings is meant to match any back-end database limits to avoid records that cannot be submitted because the server does no accept them.

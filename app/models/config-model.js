@@ -304,7 +304,8 @@ module.exports = {
         repeatOrdinals: config[ 'repeat ordinals' ],
         validateContinuously: config[ 'validate continuously' ],
         validatePage: config[ 'validate page' ],
-        swipePage: config[ 'swipe page' ]
+        swipePage: config[ 'swipe page' ],
+        textMaxChars: config[ 'text field character limit' ]
     },
     getThemesSupported
 };

@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.76.0] - 2019-03-19
 ---------------------
+##### Added
+- A configurable option to provide a maximum character length of a text field (default: 2000 characters). **Warning: if overriding widgets in config.json, this widget needs to be explicitly enabled.**
+
 ##### Changed
 - Updated Russian, Swedish, Spanish, and Dutch translations
   

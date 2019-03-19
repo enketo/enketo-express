@@ -27,7 +27,8 @@
     "widgets": [
         "note", "select-desktop", "select-mobile", "autocomplete", "geo", "textarea", "url",
         "table", "radio", "date", "time", "datetime", "compact", "file", "draw", "rank",
-        "likert", "range", "horizontal", "image-view", "comment", "image-map", "date-native", "date-mobile"
+        "likert", "range", "horizontal", "image-view", "comment", "image-map", "date-native",
+        "date-mobile", "text-max"
     ],
     "analytics": "google",
     "google": {
@@ -69,5 +70,6 @@
     "repeat ordinals": false,
     "validate continuously": false,
     "validate page": true,
-    "payload limit": "100kb"
+    "payload limit": "100kb",
+    "text field character limit": 2000
 }
