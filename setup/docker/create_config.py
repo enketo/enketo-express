@@ -3,18 +3,19 @@ import json
 import os
 
 
-CURRENT_DIR_PATH= os.path.abspath(os.path.dirname(__file__))
-PROJECT_ROOT_PATH= os.path.abspath(os.path.join(CURRENT_DIR_PATH, '../..'))
+CURRENT_DIR_PATH = os.path.abspath(os.path.dirname(__file__))
+PROJECT_ROOT_PATH = os.path.abspath(os.path.join(CURRENT_DIR_PATH, '../..'))
+
 
 def get_or_create_encryption_key():
     '''Automate the inconvenient task of generating and maintaining a consistent 
        encryption key.'''
     # Attempt to get the key from an environment variable.
-    encryption_key= os.environ.get('ENKETO_ENCRYPTION_KEY')
+    encryption_key = os.environ.get('ENKETO_ENCRYPTION_KEY')
 
     # If the key wasn't in the environment, attempt to get it from disk.
-    secrets_dir_path= os.path.join(CURRENT_DIR_PATH, 'secrets/')
-    encryption_key_file_path= os.path.join(secrets_dir_path, 'enketo_encryption_key.txt')
+    secrets_dir_path = os.path.join(CURRENT_DIR_PATH, 'secrets/')
+    encryption_key_file_path = os.path.join(secrets_dir_path, 'enketo_encryption_key.txt')
     if not encryption_key and os.path.isfile(encryption_key_file_path):
         with open(encryption_key_file_path, 'r') as encryption_key_file:
             encryption_key= encryption_key_file.read().strip()
@@ -31,13 +32,13 @@ def get_or_create_encryption_key():
 
 def create_config():
 
-    CONFIG_FILE_PATH= os.path.join(PROJECT_ROOT_PATH, 'config/config.json')
+    CONFIG_FILE_PATH = os.path.join(PROJECT_ROOT_PATH, 'config/config.json')
     if not os.path.isfile(CONFIG_FILE_PATH):
         raise EnvironmentError('No Enketo Express configuration found at `{}`.'.format(CONFIG_FILE_PATH))
     else:
         try:
             with open(CONFIG_FILE_PATH, 'r') as config_file:
-                config= json.loads(config_file.read())
+                config = json.loads(config_file.read())
         except:
             raise ValueError('Could not parse JSON content from `{}`.').format(CONFIG_FILE_PATH)
 
@@ -57,6 +58,7 @@ def create_config():
     # Write the potentially-updated config file to disk.
     with open(CONFIG_FILE_PATH, 'w') as config_file:
         config_file.write(json.dumps(config, indent=4))
+
 
 if __name__ == '__main__':
     create_config()
