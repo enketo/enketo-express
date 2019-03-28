@@ -6,9 +6,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Changed
 - The restriction on crossing paths in the geoshape widget was removed.
-
+- Hide reset button when question is readonly.
+ 
 ##### Fixed
 - Radiobutton unselect functionality can cause infinite loops with certain custom extensions that update values programmatically.
+- Readonly Draw/Signature widget updates with empty file when canvas looses focus. 
 
 [1.76.0] - 2019-03-19
 ---------------------

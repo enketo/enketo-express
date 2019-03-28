@@ -98,6 +98,7 @@ $button-disabled-cursor: $cursor-default-value !default;
         @if $padding==$button-med {
             font-size: $button-font-med;
         }
+
         @else if $padding==$button-sml {
             font-size: $button-font-sml;
         }
@@ -108,6 +109,7 @@ $button-disabled-cursor: $cursor-default-value !default;
             padding-top: $padding;
             padding-bottom: $padding + $padding;
         }
+
         @else if $padding==false {
             padding-top: 0;
             padding-bottom: 0;
@@ -126,7 +128,9 @@ $button-disabled-cursor: $cursor-default-value !default;
 
     @if $border-color==null {
         $border-color: if($bg==$button-bg-color, $button-border-color, scale-color($bg, $lightness: $button-function-factor));
-    } // This find the lightness percentage of the background color.
+    }
+
+    // This find the lightness percentage of the background color.
     $bg-lightness: lightness($bg);
     $bg-hover-lightness: lightness($bg-hover);
 
@@ -136,7 +140,9 @@ $button-disabled-cursor: $cursor-default-value !default;
     &:hover,
     &:focus {
         background-color: $bg-hover;
-    } // We control the text color for you based on the background color.
+    }
+
+    // We control the text color for you based on the background color.
     color: if($bg-lightness > 70%, $button-font-color-alt, $button-font-color);
 
     &:hover,
@@ -149,7 +155,9 @@ $button-disabled-cursor: $cursor-default-value !default;
     &:active,
     &:visited {
         text-decoration: none;
-    } // We can set $disabled:true to create a disabled transparent button.
+    }
+
+    // We can set $disabled:true to create a disabled transparent button.
     @if $disabled {
         cursor: $button-disabled-cursor;
         opacity: $button-disabled-opacity;
@@ -159,10 +167,13 @@ $button-disabled-cursor: $cursor-default-value !default;
         &:focus {
             background-color: $bg;
         }
-    } // We can control how much button radius is used.
+    }
+
+    // We can control how much button radius is used.
     @if $radius==true {
         @include radius($button-radius);
     }
+
     @else if $radius {
         @include radius($radius);
     }
@@ -211,6 +222,7 @@ button::-moz-focus-inner {
 }
 
 @media #{$medium-up} {
+
     button,
     .button {
         @include button-base($style: false, $display: inline-block);
@@ -263,6 +275,12 @@ button::-moz-focus-inner {
 
     &:hover {
         opacity: 0.5;
+    }
+}
+
+.btn-reset {
+    &[disabled] {
+        display: none;
     }
 }
 
