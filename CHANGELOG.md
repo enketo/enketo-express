@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.76.1] - 2019-04-01
 ---------------------
 ##### Changed
 - The restriction on crossing paths in the geoshape widget was removed.
@@ -11,6 +11,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Radiobutton unselect functionality can cause infinite loops with certain custom extensions that update values programmatically.
 - Readonly Draw/Signature widget updates with empty file when canvas looses focus. 
+- Readonly Select Minimal widget is not readonly.
+- Readonly File widget becomes writeable if it becomes relevant.
 
 [1.76.0] - 2019-03-19
 ---------------------
