@@ -24,6 +24,7 @@ enketo_express:
     - ./envfile.txt
   volumes:
     - ../../config/:/srv/src/enketo_express/config
+    - ./.vols/checksum/:/srv/src/enketo_express/checksum
     - ./secrets/:/srv/src/enketo_express/setup/docker/secrets/
   restart: on-failure
 
