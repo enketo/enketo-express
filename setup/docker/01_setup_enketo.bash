@@ -17,17 +17,14 @@ SHA1SUM_CONFIG_FILE_PATH="${CHECKSUM_DIR_PATH}/${CONFIG_FILE}.sha1"
 LAST_BUILD_COMMIT_FILE="last_build_commit.txt"
 LAST_BUILD_COMMIT_FILE_PATH="${CHECKSUM_DIR_PATH}/${LAST_BUILD_COMMIT_FILE}"
 
+RUN_GRUNT=0
 # Compare config version
-set +e  # Do not exit on `sha1sum` or `cat` error
-sha1sum -c "${SHA1SUM_CONFIG_FILE_PATH}"
-RUN_GRUNT=$([[ $? -eq 0 ]] && echo 0 || echo 1)
+sha1sum -c "${SHA1SUM_CONFIG_FILE_PATH}" || RUN_GRUNT=1
 
 # Compare commit version
 CURRENT_COMMIT=$(git rev-parse HEAD) # Get current commit
-LAST_BUILD_COMMIT=$(cat ${LAST_BUILD_COMMIT_FILE_PATH})
+LAST_BUILD_COMMIT=$(cat ${LAST_BUILD_COMMIT_FILE_PATH}) || echo "-"
 RUN_GRUNT=$([[ "$RUN_GRUNT" == 0 && "$CURRENT_COMMIT" == "$LAST_BUILD_COMMIT" ]] && echo 0 || echo 1)
-
-set -e  # Restore exit mode
 
 if [ "$RUN_GRUNT" == 1 ]; then
     # Build.
