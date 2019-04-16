@@ -23,7 +23,7 @@ sha1sum -c "${SHA1SUM_CONFIG_FILE_PATH}" || RUN_GRUNT=1
 
 # Compare commit version
 CURRENT_COMMIT=$(git rev-parse HEAD) # Get current commit
-LAST_BUILD_COMMIT=$(cat ${LAST_BUILD_COMMIT_FILE_PATH}) || echo "-"
+LAST_BUILD_COMMIT=$(cat ${LAST_BUILD_COMMIT_FILE_PATH} || echo "-")
 RUN_GRUNT=$([[ "$RUN_GRUNT" == 0 && "$CURRENT_COMMIT" == "$LAST_BUILD_COMMIT" ]] && echo 0 || echo 1)
 
 # Ensure build files exist.
@@ -32,7 +32,12 @@ NOT_EMPTY_JS_PATH="public/js/build/.not-empty"
 NOT_EMPTY_CSS_PATH="public/css/.not-empty"
 NOT_EMPTY_LOCALES_PATH="locales/build/.not-empty"
 
-RUN_GRUNT=$([[ "$RUN_GRUNT" == 0 && -f "$NOT_EMPTY_JS_PATH" && -f "$NOT_EMPTY_CSS_PATH" && -f "$NOT_EMPTY_LOCALES_PATH" ]] && echo 0 || echo 1)
+RUN_GRUNT=$([[
+    "$RUN_GRUNT" == 0 &&
+    -f "$NOT_EMPTY_JS_PATH" &&
+    -f "$NOT_EMPTY_CSS_PATH" &&
+    -f "$NOT_EMPTY_LOCALES_PATH"
+]] && echo 0 || echo 1)
 
 if [ "$RUN_GRUNT" == 1 ]; then
     # Build.
