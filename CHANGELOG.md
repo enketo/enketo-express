@@ -2,13 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.76.2] - 2019-04-24
 --------------------
 ##### Fixed
 - Failing to clone repeats that only contain calculations.
 - Select one calculations not updating correctly.
 - Irrelevant calculations inside non-first repeat instances run upon load.
-- Date strings without timezone component are not always converted correctly in time zones that have DST
+- Date strings without timezone component are not always converted correctly in time zones that have DST.
+- Hand-typed/pasted dates with spaces or invalid characters are kept shown to user, but are not stored in model.
 
 [1.76.1] - 2019-04-01
 ---------------------
