@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Failing to clone repeats that only contain calculations.
 - Select one calculations not updating correctly.
 - Irrelevant calculations inside non-first repeat instances run upon load.
+- Date strings without timezone component are not always converted correctly in time zones that have DST
 
 [1.76.1] - 2019-04-01
 ---------------------
