@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 --------------------
 ##### Fixed
 - Some forms with repeats fail to load in Safari.
+- Iframe-friendly views only print first page.
 
 [1.76.2] - 2019-04-24
 --------------------

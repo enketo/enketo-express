@@ -1,6 +1,11 @@
 @media print {
+
     .vex,
     .vex-overlay {
         display: none;
+    }
+
+    .ios-iframe-bug-wrap {
+        position: static;
     }
 }
