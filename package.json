@@ -106,7 +106,7 @@
         "mocha": "6.1.x",
         "sinon": "7.3.x",
         "sinon-chai": "3.3.x",
-        "supertest": "4.0.xs"
+        "supertest": "4.0.x"
     },
     "browser": {
         "enketo/config": "./public/js/build/client-config",
