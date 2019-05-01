@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Some forms with repeats fail to load in Safari.
 - Iframe-friendly views only print first page.
+- Draw widgets loose drawing (or last stroke(s) in drawing) on mobile devices if clicking hide-full-screen button or switching device orientation within 1.5 sec after last change.
 
 [1.76.2] - 2019-04-24
 --------------------
