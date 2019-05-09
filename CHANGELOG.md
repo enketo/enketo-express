@@ -2,13 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased] 
+[1.76.3] - 2019-05-09
 --------------------
 ##### Fixed
 - Some forms with repeats fail to load in Safari.
 - Iframe-friendly views only print first page.
 - Draw widgets loose drawing (or last stroke(s) in drawing) on mobile devices if clicking hide-full-screen button or switching device orientation within 1.5 sec after last change.
 - Datepickers in Grid Theme in Firefox show the reset button outside the cell.
+- Range, Analog Scale, Datetime, and Time widgets fire an unnecessary change event when a new value is set that is equal to the existing value.
+- Range widget fires an unnecessary change event when the value is empty, before the value is set, when the user clicks the widget.
 
 [1.76.2] - 2019-04-24
 --------------------
