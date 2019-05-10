@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Analog scale widget without current value box, still firing excessive change events.
+- Distress widget mercury is not reset properly.
+
 [1.76.3] - 2019-05-09
 --------------------
 ##### Fixed
