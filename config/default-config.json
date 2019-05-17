@@ -26,8 +26,8 @@
     },
     "widgets": [
         "note", "select-desktop", "select-mobile", "autocomplete", "geo", "textarea", "url",
-        "table", "radio", "date", "time", "datetime", "compact", "file", "draw", "rank",
-        "likert", "range", "horizontal", "image-view", "comment", "image-map", "date-native",
+        "table", "radio", "date", "time", "datetime", "select-media", "file", "draw", "rank",
+        "likert", "range", "columns", "image-view", "comment", "image-map", "date-native",
         "date-mobile", "text-max"
     ],
     "analytics": "google",

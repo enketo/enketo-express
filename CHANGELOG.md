@@ -3,7 +3,13 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
----------------------
+--------------------
+##### Removed
+- Support for appearances "quick" and "quickcompact".
+
+##### Added
+- Support for appearances "columns", "columns-flex", "columns-n" all with an optional "no-buttons" modifier, **WARNING: you may need to change widgets in config.json `"compact" -> "select-media"` and `"horizontal-choices" -> "columns"`)**.
+- 
 ##### Fixed
 - Analog scale widget without current value box, still firing excessive change events.
 - Distress widget mercury is not reset properly.
