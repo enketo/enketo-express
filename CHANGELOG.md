@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+--------------------
+##### Fixed
+- Disabled analog-scale widget is still visible.
+  
 [1.77.0] - 2019-05-21
 --------------------
 ##### Removed
