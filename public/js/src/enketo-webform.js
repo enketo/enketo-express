@@ -181,7 +181,6 @@ function _init( formParts ) {
     return new Promise( ( resolve, reject ) => {
         if ( formParts && formParts.form && formParts.model ) {
             $formheader.after( formParts.form );
-            localize( document.querySelector( 'form.or' ) );
             $( document ).ready( () => {
                 // TODO pass $form as first parameter?
                 // controller.init is asynchronous
@@ -195,6 +194,8 @@ function _init( formParts ) {
                     if ( settings.print ) {
                         gui.applyPrintStyle();
                     }
+                    // after widgets have been initialized, localize all data-i18n elements
+                    localize( document.querySelector( 'form.or' ) );
                     resolve( formParts );
                 } );
             } );

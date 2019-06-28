@@ -169,6 +169,10 @@
             "psize": "Paper Size",
             "reminder": "Remember to set these same print settings in the browser's print menu afterwards!"
         },
+        "repeatremove": {
+            "heading": "Delete this group of responses?",
+            "msg": "This action is irreversible. Are you sure you want to proceed?"
+        },
         "save": {
             "existingerror": "This record name or ID already exists.",
             "hint": "This name allows you to easily find your draft record to finish it later.",
@@ -177,10 +181,6 @@
             "posButton": "Save & Close",
             "renamemsg": "Are you sure you want to rename __currentName__ to __newName__?",
             "unkownerror": "An unknown error occurred when trying to save data."
-        },
-        "repeatremove": {
-            "heading": "Delete this group of responses?",
-            "msg": "This action is irreversible. Are you sure you want to proceed?"
         }
     },
     "constraint": {
@@ -300,6 +300,10 @@
         "th": "Thai",
         "vi": "Vietnamese",
         "zh": "Chinese"
+    },
+    "literacywidget": {
+        "finish": "Finish",
+        "start": "Start"
     },
     "page": {
         "modernbrowsers": {

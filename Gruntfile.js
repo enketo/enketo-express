@@ -81,9 +81,9 @@ module.exports = grunt => {
             translation: {
                 command: [
                     'cd locales',
-                    'gulp',
+                    'npx gulp',
                     'cd ..'
-                ].join( '&&' )
+                ].join( ' && ' )
             },
             ie11polyfill: {
                 command: [
