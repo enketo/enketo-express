@@ -4,8 +4,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 --------------------
+##### Changed
+- Improvements to print style (group header size, opacity of disabled questions, line-height in Grid Theme)
+
 ##### Fixed
 - Disabled analog-scale widget is still visible.
+- Long words break out of cell in Grid Theme.
   
 [1.77.0] - 2019-05-21
 --------------------

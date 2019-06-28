@@ -1,10 +1,5 @@
-/**
- * Simple file manager with cross-browser support. That uses the FileReader
- * to create previews. Can be replaced with a more advanced version that
- * obtains files from storage.
- *
- * The replacement should support the same public methods and return the same
- * types.
+/*
+ * Replaces file-manager in enketo-core.
  */
 
 import store from './store';
