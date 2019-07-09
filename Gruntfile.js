@@ -202,6 +202,9 @@ module.exports = grunt => {
     grunt.registerTask( 'client-config-file', 'Temporary client-config file', task => {
         const CLIENT_CONFIG_PATH = 'public/js/build/client-config.js';
         if ( task === 'create' ) {
+            // https://github.com/enketo/enketo-express/issues/102
+            // The require cache may contain stale configuration from another task. Purge it.
+            delete require.cache[ require.resolve( './app/models/config-model' ) ];
             const config = require( './app/models/config-model' );
             grunt.file.write( CLIENT_CONFIG_PATH, `export default ${JSON.stringify( config.client )};` );
             grunt.log.writeln( `File ${CLIENT_CONFIG_PATH} created` );
