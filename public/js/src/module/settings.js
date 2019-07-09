@@ -30,7 +30,7 @@ settings.defaultReturnUrl = config[ 'basePath' ] + DEFAULT_THANKS_URL;
 // add defaults object
 settings.defaults = {};
 for ( const p in queryParams ) {
-    if ( queryParams.hasOwnProperty( p ) ) {
+    if ( Object.prototype.hasOwnProperty.call( queryParams, p ) ) {
         // URLs with encoded brackets as well us not-encode brackets will work.
         const matches = decodeURIComponent( p ).match( /d\[(.*)\]/ );
         if ( matches && matches[ 1 ] ) {
@@ -41,7 +41,7 @@ for ( const p in queryParams ) {
 
 // add common app configuration constants
 for ( const prop in config ) {
-    if ( config.hasOwnProperty( prop ) ) {
+    if ( Object.prototype.hasOwnProperty.call( config, prop ) ) {
         settings[ prop ] = config[ prop ];
     }
 }

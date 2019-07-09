@@ -202,7 +202,7 @@ function _serializeQueryComponent( name, value ) {
     // for both arrays of single-level objects and regular single-level objects
     if ( typeof value === 'object' ) {
         for ( n in value ) {
-            if ( value.hasOwnProperty( n ) ) {
+            if ( Object.prototype.hasOwnProperty.call( value, n ) ) {
                 if ( serialized ) {
                     serialized += '&';
                 }

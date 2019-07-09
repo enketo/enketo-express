@@ -47,7 +47,7 @@ function getFileUrl( subject ) {
         if ( !subject ) {
             resolve( null );
         } else if ( typeof subject === 'string' ) {
-            if ( instanceAttachments && ( instanceAttachments.hasOwnProperty( subject ) ) ) {
+            if ( instanceAttachments && ( Object.prototype.hasOwnProperty.call( instanceAttachments, subject ) ) ) {
                 resolve( instanceAttachments[ subject ] );
             } else if ( !store.available ) {
                 // e.g. in an online-only edit view

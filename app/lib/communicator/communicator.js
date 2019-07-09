@@ -311,7 +311,7 @@ function _findFormAddInfo( formListXml, survey ) {
  */
 function _simplifyFormObj( formObj ) {
     for ( const prop in formObj ) {
-        if ( formObj.hasOwnProperty( prop ) && Object.prototype.toString.call( formObj[ prop ] ) === '[object Array]' ) {
+        if ( Object.prototype.hasOwnProperty.call( formObj, prop ) && Object.prototype.toString.call( formObj[ prop ] ) === '[object Array]' ) {
             formObj[ prop ] = formObj[ prop ][ 0 ].toString();
         }
     }

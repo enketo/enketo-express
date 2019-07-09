@@ -35,7 +35,7 @@ function _updateConfigFromEnv() {
     const envVarNames = [];
 
     for ( const envVarName in process.env ) {
-        if ( process.env.hasOwnProperty( envVarName ) && envVarName.indexOf( 'ENKETO_' ) === 0 ) {
+        if ( Object.prototype.hasOwnProperty.call( process.env, envVarName ) && envVarName.indexOf( 'ENKETO_' ) === 0 ) {
             envVarNames.push( envVarName );
         }
     }
@@ -113,7 +113,7 @@ function _convertType( str ) {
  */
 function _findSetting( obj, envName, prefix = '' ) {
     for ( const prop in obj ) {
-        if ( obj.hasOwnProperty( prop ) ) {
+        if ( Object.prototype.hasOwnProperty.call( obj, prop ) ) {
             const propEnvStyle = prefix + prop.replace( / /g, '_' ).toUpperCase();
             if ( propEnvStyle === envName ) {
                 return [ obj, prop ];

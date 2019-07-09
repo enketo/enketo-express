@@ -127,7 +127,7 @@ function areOwnPropertiesEqual( a, b ) {
     }
 
     for ( prop in a ) {
-        if ( a.hasOwnProperty( prop ) ) {
+        if ( Object.prototype.hasOwnProperty.call( a, prop ) ) {
             if ( a[ prop ] !== b[ prop ] ) {
                 return false;
             }
@@ -135,7 +135,7 @@ function areOwnPropertiesEqual( a, b ) {
         }
     }
     for ( prop in b ) {
-        if ( !results[ prop ] && b.hasOwnProperty( prop ) ) {
+        if ( !results[ prop ] && Object.prototype.hasOwnProperty.call( b, prop ) ) {
             if ( b[ prop ] !== a[ prop ] ) {
                 return false;
             }

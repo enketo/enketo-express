@@ -157,12 +157,12 @@ function _prepareInstance( modelStr, defaults ) {
     let existingInstance = null;
 
     for ( const path in defaults ) {
-        if ( defaults.hasOwnProperty( path ) ) {
+        if ( Object.prototype.hasOwnProperty.call( defaults, path ) ) {
             model = model || new FormModel( modelStr, {
                 full: false
             } );
             init = init || model.init();
-            if ( defaults.hasOwnProperty( path ) ) {
+            if ( Object.prototype.hasOwnProperty.call( defaults, path ) ) {
                 // if this fails, the FormModel will output a console error and ignore the instruction
                 model.node( path ).setVal( defaults[ path ] );
             }

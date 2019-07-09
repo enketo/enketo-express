@@ -81,7 +81,7 @@ function getSurveyHash( req, res, next ) {
         .then( survey => cacheModel.getHashes( survey ) )
         .then( _updateCache )
         .then( survey => {
-            if ( survey.hasOwnProperty( 'credentials' ) ) {
+            if ( Object.prototype.hasOwnProperty.call( survey, 'credentials' ) ) {
                 delete survey.credentials;
             }
             res.status( 200 );

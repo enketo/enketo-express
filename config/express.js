@@ -19,7 +19,7 @@ var debug = require( 'debug' )( 'express' );
 
 // general 
 for ( var item in config ) {
-    if ( config.hasOwnProperty( item ) ) {
+    if ( Object.prototype.hasOwnProperty.call( config, item ) ) {
         app.set( item, app.get( item ) || config[ item ] );
     }
 }
