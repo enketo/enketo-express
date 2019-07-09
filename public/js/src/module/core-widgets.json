@@ -23,6 +23,7 @@
     "comment": "../../../node_modules/enketo-core/src/widget/comment/commentwidget",
     "image-map": "../../../node_modules/enketo-core/src/widget/image-map/image-map",
     "date-native": "../../../node_modules/enketo-core/src/widget/date-native/datepicker-native",
+    "date-native-ios": "../../../node_modules/enketo-core/src/widget/date-native-ios/datepicker-native-ios",
     "date-mobile": "../../../node_modules/enketo-core/src/widget/date-mobile/datepicker-mobile",
     "url": "../../../node_modules/enketo-core/src/widget/url/url-widget",
     "text-max": "../../../node_modules/enketo-core/src/widget/text-max/text-max"
