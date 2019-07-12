@@ -2,7 +2,7 @@
     "name": "enketo-express",
     "description": "Webforms evolved.",
     "homepage": "https://enketo.org",
-    "version": "1.77.0",
+    "version": "1.77.1",
     "main": "./app.js",
     "engines": {
         "node": "4.4.x",
@@ -41,7 +41,7 @@
         "csurf": "1.10.x",
         "db.js": "0.15.0",
         "debug": "4.1.x",
-        "enketo-core": "github:enketo/enketo-core#a19d5212",
+        "enketo-core": "5.5.1",
         "enketo-transformer": "1.32.0",
         "express": "4.x.x",
         "grunt": "^1.0.3",
