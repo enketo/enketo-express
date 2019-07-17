@@ -67,6 +67,9 @@ This allows a deeper integration for a custom server. It configures a (required)
 #### timeout
 Connection timeout in milliseconds used throughout Enketo. This is particularly relevant for submissions from Enketo to the OpenRosa server. 
 
+#### timeout for record cache
+Specific timeout for the amount time in milliseconds a record is cached when it is offered to Enketo for editing through one of Enketo's **/instance/\*** API endpoints. Once the timeout expires the record is removed.
+
 #### encryption key 
 Enketo will use this to encrypt sensitive information whenever necessary (e.g. for the form server credentials that are stored in a cookie in the user's browser). Never share this key and never change it after the initial configuration (unless it was compromised). No specific key length requirements (I think).
 

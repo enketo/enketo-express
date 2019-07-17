@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Added
+- Make record cache expiry time configurable.
+
+
 [1.77.1] - 2019-07-12
 --------------------
 ##### Changed
