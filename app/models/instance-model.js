@@ -42,7 +42,7 @@ function _cacheInstance( survey ) {
                             reject( error );
                         } else {
                             // expire, no need to wait for result
-                            client.expire( instanceKey, config[ 'timeout for record cache' ] / 1000 );
+                            client.expire( instanceKey, config[ 'expiry for record cache' ] / 1000 );
                             resolve( survey );
                         }
                     } );
