@@ -10,6 +10,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Updated Dutch and German translations.
 
+##### Fixed
+- Likert widget label in Grid Theme overlaps widget in print view.
+
 [1.77.1] - 2019-07-12
 --------------------
 ##### Changed
