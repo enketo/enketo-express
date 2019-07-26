@@ -169,6 +169,10 @@
             "psize": "Papierformat",
             "reminder": "Denken Sie daran danach die gleichen Druckeinstellungen im Druckmenü des Browsers zu setzen!"
         },
+        "repeatremove": {
+            "heading": "Diese Gruppe Antworten löschen?",
+            "msg": "Diese Aktion ist irreversibel. Sind Sie sicher, dass Sie fortfahren möchten?"
+        },
         "save": {
             "existingerror": "Dieser Datensatz oder die ID sind bereits vorhanden.",
             "hint": "Dieser Name hilft Ihnen um später Ihren Entwurf dieses Datensatzes zu finden und fertigzustellen.",
@@ -296,6 +300,10 @@
         "th": "Thailändisch",
         "vi": "Vietnamesisch",
         "zh": "Chinesisch"
+    },
+    "literacywidget": {
+        "finish": "Ende",
+        "start": "Start"
     },
     "page": {
         "modernbrowsers": {
