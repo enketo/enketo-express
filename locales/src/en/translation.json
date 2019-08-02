@@ -115,6 +115,9 @@
             "heading": "OK",
             "msg": "Form is valid!"
         },
+        "valuehasspaces": {
+            "multiple": "Select multiple question has an illegal value \"__value__\" that contains a space."
+        },
         "xpatherror": {
             "heading": "Formula Error",
             "msg": "A formula evaluation error occurred. Please contact __emailLink__ with this error:"
@@ -266,6 +269,11 @@
         "searchPlaceholder": "search for place or address"
     },
     "here": "here",
+    "hint": {
+        "guidance": {
+            "details": "more details"
+        }
+    },
     "home": {
         "msg": "__appTitle__ is running! Please access Enketo forms from your __serverName__ installation."
     },

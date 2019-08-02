@@ -9,6 +9,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Changed
 - Updated Dutch and German translations.
+- Show warning if select_multiple option contains spaces in value.
+- Guidance hints are now displayed on screen as collapsible element.
 
 ##### Fixed
 - Likert widget label in Grid Theme overlaps widget in print view.

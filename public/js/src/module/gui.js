@@ -397,14 +397,18 @@ function printForm() {
     const inputs = components.gridInputs + components.gridWarning;
 
     if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
+        printHelper.openAllDetails();
         return prompt( texts, options, inputs )
             .then( values => {
                 if ( values ) {
                     printGrid( values );
                 }
-            } );
+            } )
+            .then( printHelper.closeAllDetails );
     } else {
+        printHelper.openAllDetails();
         window.print();
+        printHelper.closeAllDetails();
         return Promise.resolve();
     }
 }
