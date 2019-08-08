@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make record cache expiry time configurable.
 
 ##### Changed
-- Updated Dutch and German translations.
+- Updated Swedish, Dutch and German translations.
 - Show warning if select_multiple option contains spaces in value.
 - Guidance hints are now displayed on screen as collapsible element.
 

@@ -5,7 +5,7 @@
     "alert": {
         "addtohomescreen": {
             "androidchrome": {
-                "msg": "För att lägga till detta formulär på din startsidan, klicka på webbläsarens inställningsikon  __image1__ och välj: 'Lägg till på startskärmen'."
+                "msg": "För att lägga till detta formulär på din startsida, klicka på webbläsarens inställningsikon  __image1__ och välj: 'Lägg till på startskärmen'."
             },
             "androidfirefox": {
                 "msg": "För att lägga till detta formulär på startskärmen, långklicka i adressfältet och välj 'Lägg till på hemskärmen'."
@@ -33,7 +33,7 @@
                 "msg": "Fel inträffade vid skapande av postexportfilen för ej inskickade poster. Fel: __errors__"
             },
             "success": {
-                "heading": "Fel vid export",
+                "heading": "Export skapad",
                 "msg": "Exportfil skapades för ej inskickade poster som hör till detta formulär."
             }
         },
@@ -115,6 +115,9 @@
             "heading": "OK",
             "msg": "Formuläret är giltigt!"
         },
+        "valuehasspaces": {
+            "multiple": "Flervalsfrågan har ett otillåtet värde \"__value__\" som innehåller ett mellanslag."
+        },
         "xpatherror": {
             "heading": "Formulärfel",
             "msg": "Ett fel inträffade vid utvärdering av formel. Vänligen kontakta __emailLink__ med det här felet:"
@@ -122,7 +125,7 @@
     },
     "confirm": {
         "autosaveload": {
-            "heading": "Osparade uppgifter finns",
+            "heading": "Det finns osparade uppgifter",
             "msg": "Enketo har hittat en osparad post. Vill du läsa in denna post eller ta bort den?",
             "negButton": "Släng",
             "posButton": "Ladda in post"
@@ -169,6 +172,10 @@
             "psize": "Pappersstorlek",
             "reminder": "Kom ihåg att ställa in dessa utskriftsinställningar i webbläsarens utskriftsmenyn efteråt!"
         },
+        "repeatremove": {
+            "heading": "Ta bort den här gruppen med svar?",
+            "msg": "Denna åtgärd går inte att ångra. Är du säker på att du vill fortsätta?"
+        },
         "save": {
             "existingerror": "Detta postnamn eller ID finns redan.",
             "hint": "Med detta namn kan du enkelt hitta ditt postutkast för att avsluta det senare.",
@@ -177,10 +184,6 @@
             "posButton": "Spara & stäng",
             "renamemsg": "Är du säker på att du vill byta namn __currentName__ till __newName__?",
             "unkownerror": "Ett okänt fel uppstod vid sparande av data."
-        },
-        "repeatremove": {
-            "heading": "Ta bort den här gruppen med svar?",
-            "msg": "Denna åtgärd går inte att ångra. Är du säker på att du vill fortsätta?"
         }
     },
     "constraint": {
@@ -189,7 +192,7 @@
     },
     "contact": {
         "admin": "Kontakta enkätens administratör.",
-        "support": "Vänligen kontakta__supportEmail__"
+        "support": "Vänligen kontakta __supportEmail__"
     },
     "drawwidget": {
         "annotation": "fil och skiss",
@@ -200,7 +203,7 @@
         "power": "Drivs med"
     },
     "error": {
-        "code": "Felkod:__code__",
+        "code": "Felkod: __code__",
         "dataloadfailed": "Misslyckades med att ladda in data från__url__",
         "econnrefused": "Det gick inte att ansluta till servern",
         "encryptionnotsupported": "Denna blankett kräver lokal kryptering av poster. Tyvärr stöds detta inte av din webbläsare. Vi rekommenderar att du byter till en modern webbläsare.",
@@ -266,6 +269,11 @@
         "searchPlaceholder": "sök efter plats eller adress"
     },
     "here": "här",
+    "hint": {
+        "guidance": {
+            "details": "fler detaljer"
+        }
+    },
     "home": {
         "msg": "__appTitle__ är igång! Vänligen få åtkomst till Enketo-formulär från __serverName__ installationen."
     },
@@ -300,6 +308,10 @@
         "th": "Thailändska",
         "vi": "Vietnamesiska",
         "zh": "Kinesiska"
+    },
+    "literacywidget": {
+        "finish": "Avsluta",
+        "start": "Starta"
     },
     "page": {
         "modernbrowsers": {

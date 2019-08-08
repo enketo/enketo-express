@@ -115,6 +115,9 @@
             "heading": "OK",
             "msg": "Formulario correcto!"
         },
+        "valuehasspaces": {
+            "multiple": "Pregunta de Selección múltiple contiene un valor ilegal \"__valor__\" que contiene un espacio."
+        },
         "xpatherror": {
             "heading": "Error en la fórmula",
             "msg": "Error al validar una fórmula. Por favor contacte __emailLink__ indicando el error:"
@@ -169,6 +172,10 @@
             "psize": "Tamaño del papel",
             "reminder": "Recuerde establecer las mismas opciones de impresión en el menú de impresión del navegador!"
         },
+        "repeatremove": {
+            "heading": "Eliminar este grupo de respuestas?",
+            "msg": "Esta acción es irreversible. Esta seguro de proceder?"
+        },
         "save": {
             "existingerror": "Este nombre de registro o ID existe ya.",
             "hint": "Este nombre le permitirá encontrar facilmente su borrador para poderlo finalizar luego.",
@@ -177,10 +184,6 @@
             "posButton": "Guardar y cerrar",
             "renamemsg": "Seguro que desea renombrar __currentName__ a __newName__?",
             "unkownerror": "Se ha producido un error desconocido a la hora de guardar los datos."
-        },
-        "repeatremove": {
-            "heading": "Eliminar este grupo de respuestas?",
-            "msg": "Esta acción es irreversible. Esta seguro de proceder?"
         }
     },
     "constraint": {
@@ -266,6 +269,11 @@
         "searchPlaceholder": "buscar lugar o dirección"
     },
     "here": "aquí",
+    "hint": {
+        "guidance": {
+            "details": "más detalles"
+        }
+    },
     "home": {
         "msg": "__appTitle__ en ejecución! Por favor acceda a Enketo forms desde su instalación en  __serverName__."
     },
@@ -300,6 +308,10 @@
         "th": "Tailandés",
         "vi": "Vietnamita",
         "zh": "Chino"
+    },
+    "literacywidget": {
+        "finish": "Fin",
+        "start": "Inicio"
     },
     "page": {
         "modernbrowsers": {

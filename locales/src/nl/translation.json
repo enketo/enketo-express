@@ -115,6 +115,9 @@
             "heading": "OK",
             "msg": "The enquete is geldig!"
         },
+        "valuehasspaces": {
+            "multiple": "Een \"select multiple\" question heeft een illegale waarde &#39;__waarde&#39; die een spatie bevat."
+        },
         "xpatherror": {
             "heading": "Formula fout",
             "msg": "Er is een formule evaluatie fout opgetreden. Contacteer __emailLink__ met deze fout beschrijving:"
@@ -266,6 +269,11 @@
         "searchPlaceholder": "zoek naar plaats of adres"
     },
     "here": "hier",
+    "hint": {
+        "guidance": {
+            "details": "meer details"
+        }
+    },
     "home": {
         "msg": "__appTitle__ werkt! De Enketo enquetes zijn vanaf de __serverName__ installatie toegankelijk."
     },
