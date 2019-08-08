@@ -11,9 +11,8 @@ _The modern [Enketo Smart Paper](https://enketo.org) web application._
 2. Install [Redis](http://redis.io/topics/quickstart)
 3. Install build-essential, curl and git with `(sudo) apt-get install build-essential git curl`
 4. Clone this repository
-5. Install dependencies with `npm install` from the project root
-6. Create config/config.json to override values in the [default config](./config/default-config.json). Start with `cp config/default-config.json config/config.json`
-7. Build with `grunt` from the project root
+5. Create config/config.json to override values in the [default config](./config/default-config.json). Start with `cp config/default-config.json config/config.json`
+6. Install dependencies and build with `npm install` from the project root
 
 #### Using vagrant:
 
