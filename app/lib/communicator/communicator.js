@@ -1,3 +1,7 @@
+/**
+ * @module communicator
+ */
+
 const request = require( 'request' );
 const Auth = require( 'request/lib/auth' ).Auth;
 const TError = require( '../custom-error' ).TranslatedError;
@@ -95,6 +99,9 @@ function getMaxSize( survey ) {
         .then( response => response.headers[ 'x-openrosa-accept-content-length' ] );
 }
 
+/**
+ * @param {object} survey
+ */
 function authenticate( survey ) {
     const options = {
         url: getFormListUrl( survey.openRosaServer, survey.openRosaId, survey.customParam ),
@@ -156,6 +163,14 @@ function getAuthHeader( url, credentials ) {
     } );
 }
 
+/**
+ * getFormListUrl
+ *
+ * @param {string} server
+ * @param {string} id
+ * @param {*} customParam
+ * @return {string} url
+ */
 function getFormListUrl( server, id, customParam ) {
     let query = id ? `?formID=${id}` : '';
     const path = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? 'formList' : '/formList';
@@ -168,10 +183,19 @@ function getFormListUrl( server, id, customParam ) {
     return server + path + query;
 }
 
+/**
+ * @param {string} server
+ * @return {string} url
+ */
 function getSubmissionUrl( server ) {
     return ( server.lastIndexOf( '/' ) === server.length - 1 ) ? `${server}submission` : `${server}/submission`;
 }
 
+/**
+ * Updates request options.
+ *
+ * @param {object} options
+ */
 function getUpdatedRequestOptions( options ) {
     options.method = options.method || 'get';
 

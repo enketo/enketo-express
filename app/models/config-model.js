@@ -1,3 +1,7 @@
+/**
+ * @module confif-model
+ */
+
 const config = require( '../../config/default-config' );
 const pkg = require( '../../package' );
 const mergeWith = require( 'lodash/mergeWith' );

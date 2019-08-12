@@ -1,3 +1,7 @@
+/**
+ * @module pdf
+ */
+
 const puppeteer = require( 'puppeteer' );
 const { URL } = require( 'url' );
 const FORMAT = 'A4';
@@ -5,7 +9,12 @@ const MARGIN = '0.5in';
 const LANDSCAPE = false;
 const SCALE = 1;
 
-/*async*/
+/**
+ * Asynchronously gets pdf from url using Puppeteer.
+ *
+ * @param {string} url
+ * @param {object} options
+ */
 function get( url, options = {} ) {
     if ( !url ) {
         throw new Error( 'No url provided' );

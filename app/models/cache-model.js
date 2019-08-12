@@ -1,3 +1,7 @@
+/**
+ * @module cache-model
+ */
+
 const utils = require( '../lib/utils' );
 const transformer = require( 'enketo-transformer' );
 const prefix = 'ca:';

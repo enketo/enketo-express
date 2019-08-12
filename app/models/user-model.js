@@ -1,7 +1,17 @@
+/**
+ * @module user-model
+ */
+
 const jwt = require( 'jwt-simple' );
 const url = require( 'url' );
 // var debug = require( 'debug' )( 'user-model' );
 
+/**
+ * Returns credentials
+ *
+ * @param {object} req
+ * @return {object|null} credentials.
+ */
 function getCredentials( req ) {
     const auth = req.app.get( 'linked form and data server' ).authentication;
     const authType = auth.type.toLowerCase();

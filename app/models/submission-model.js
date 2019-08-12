@@ -1,3 +1,7 @@
+/**
+ * @module submission-model
+ */
+
 const config = require( './config-model' ).server;
 const client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
     auth_pass: config.redis.main.password

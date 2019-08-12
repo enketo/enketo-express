@@ -1,3 +1,7 @@
+/**
+ * @module transformation-controller
+ */
+
 const transformer = require( 'enketo-transformer' );
 const communicator = require( '../lib/communicator' );
 const surveyModel = require( '../models/survey-model' );

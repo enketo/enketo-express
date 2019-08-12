@@ -1,3 +1,7 @@
+/**
+ * @module survey-controller
+ */
+
 const utils = require( '../lib/utils' );
 const TError = require( '../lib/custom-error' ).TranslatedError;
 const communicator = require( '../lib/communicator' );

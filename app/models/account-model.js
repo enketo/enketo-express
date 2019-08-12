@@ -1,3 +1,7 @@
+/**
+ * @module account-model
+ */
+
 const utils = require( '../lib/utils' );
 const config = require( './config-model' ).server;
 const customGetAccount = config[ 'account lib' ] ? require( config[ 'account lib' ] ).getAccount : undefined;

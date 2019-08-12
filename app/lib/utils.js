@@ -1,3 +1,7 @@
+/**
+ * @module utils
+ */
+
 const crypto = require( 'crypto' );
 const config = require( '../models/config-model' ).server;
 const validUrl = require( 'valid-url' );
@@ -19,6 +23,13 @@ function getOpenRosaKey( survey, prefix ) {
     return `${prefix + cleanUrl( survey.openRosaServer )},${survey.openRosaId.trim()}`;
 }
 
+/**
+ * Returns a XForm manifest hash.
+ *
+ * @param {*} manifest
+ * @param {*} type
+ * @return {string} hash
+ */
 function getXformsManifestHash( manifest, type ) {
     const hash = '';
 
@@ -66,6 +77,12 @@ function isValidUrl( url ) {
     return !!validUrl.isWebUri( url ) && !( /\?/.test( url ) ) && !( /#/.test( url ) );
 }
 
+/**
+ * md5
+ *
+ * @param {string} message
+ * @return {*}
+ */
 function md5( message ) {
     const hash = crypto.createHash( 'md5' );
     hash.update( message );
@@ -91,6 +108,13 @@ function insecureAes192Encrypt( text, pw ) {
     return encrypted;
 }
 
+/**
+ * Decrypts encrypted text.
+ *
+ * @param {*} encrypted - The text to be decrypted.
+ * @param {*} pw - The password to use for decryption.
+ * @return {string} the decrypted result.
+ */
 function insecureAes192Decrypt( encrypted, pw ) {
     let decrypted;
     const decipher = crypto.createDecipher( 'aes192', pw );
@@ -100,6 +124,13 @@ function insecureAes192Decrypt( encrypted, pw ) {
     return decrypted;
 }
 
+/**
+ * Returns random howMany-lengthed string from provided characters.
+ *
+ * @param {number} howMany - Desired length of string.
+ * @param {string} chars - Characters to use.
+ * @return {string} random string.
+ */
 function randomString( howMany = 8, chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' ) {
     const rnd = crypto.randomBytes( howMany );
 
@@ -109,6 +140,12 @@ function randomString( howMany = 8, chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHI
         .join( '' );
 }
 
+/**
+ * Returns random item from array.
+ *
+ * @param {Array} array
+ * @return {*|null} array item.
+ */
 function pickRandomItemFromArray( array ) {
     if ( !Array.isArray( array ) || array.length === 0 ) {
         return null;
@@ -120,7 +157,13 @@ function pickRandomItemFromArray( array ) {
     return array[ random ];
 }
 
-// not recursive, only goes one property level deep
+/**
+ * Compares two objects by shallow properties.
+ *
+ * @param {object} a
+ * @param {object} b
+ * @return {null|boolean} comparison result.
+ */
 function areOwnPropertiesEqual( a, b ) {
     let prop;
     const results = [];

@@ -1,3 +1,7 @@
+/**
+ * @module submissions-controller
+ */
+
 const communicator = require( '../lib/communicator' );
 const surveyModel = require( '../models/survey-model' );
 const userModel = require( '../models/user-model' );
@@ -99,6 +103,13 @@ function submit( req, res, next ) {
         .catch( next );
 }
 
+/**
+ * Get max submission size.
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {Function} next - callback for handling errors.
+ */
 function maxSize( req, res, next ) {
     if ( req.query.xformUrl ) {
         // Non-standard way of attempting to obtain max submission size from XForm url directly
