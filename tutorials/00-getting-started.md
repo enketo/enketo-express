@@ -34,7 +34,7 @@ The app should now be running on [localhost](http://localhost).
 
 ### How to install a production server
 
-See [this tutorial](http://blog.enketo.org/install-enketo-production-ubuntu/) for detailed instructions. Another option, for some people, is to deploy with [Heroku](https://github.com/enketo/enketo-express/blob/master/doc/heroku.md).
+See [this tutorial](http://blog.enketo.org/install-enketo-production-ubuntu/) for detailed instructions. Another option, for some people, is to deploy with [Heroku](https://github.com/enketo/enketo-express/blob/master/tutorials/13-heroku.md).
 
 ### How to configure
 
@@ -44,9 +44,9 @@ As an alternative, there is an option to use environment variables instead of a 
 
 The default production configuration includes 2 redis instances. You can **greatly simplify installation by using 1 redis instance** instead (for non-production usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you might find the vagrant setup steps in [bootstrap.sh](https://github.com/enketo/enketo-express/blob/master/setup/bootstrap.sh) useful.
 
-For detailed guidance on each configuration item, see [this document](https://github.com/enketo/enketo-express/blob/master/config/README.md).
+For detailed guidance on each configuration item, see [this document](https://github.com/enketo/enketo-express/blob/master/tutorials/10-configuration.md).
 
-To configure your own custom external authentication also see [this section](#authentication).
+To configure your own custom external authentication also see [this document](https://github.com/enketo/enketo-express/blob/master/tutorials/30-authentication-and-security.md).
 
 ### How to run
 
