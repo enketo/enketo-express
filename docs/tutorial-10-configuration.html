@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Tutorial: Configuration - Enketo Express</title>
+    
+    <meta name="description" content="The full-fledged Enketo web application for the ODK ecosystem" />
+    
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="wrap">
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/enketo/enketo-express" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h2><a href="https://github.com/enketo/enketo-express/blob/master/CHANGELOG.md" target="_blank" class="menu-item" id="change-log" >Change log</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-00-getting-started.html">Getting started</a></li><li><a href="tutorial-10-configuration.html">Configuration</a></li><li><a href="tutorial-11-api.html">API</a></li><li><a href="tutorial-12-updating.html">Updating</a></li><li><a href="tutorial-13-heroku.html">Heroku deployment</a></li><li><a href="tutorial-20-development.html">Development</a></li><li><a href="tutorial-21-translating-for-devs.html">Translation workflow (for developers)</a></li><li><a href="tutorial-22-custom-widgets.html">Adding custom widgets</a></li><li><a href="tutorial-23-comments.html">Comment feature</a></li><li><a href="tutorial-24-iframe-postmessage.html">Iframe postMessage communication</a></li><li><a href="tutorial-25-ordinals.html">Repeats & Ordinals</a></li><li><a href="tutorial-30-authentication-and-security.html">Authentication & security</a></li><li><a href="tutorial-40-browser-support.html">Browser support</a></li><li><a href="tutorial-50-theming.html">Theming</a></li><li><a href="tutorial-60-duplicates.html">Fixing duplicates</a></li></ul><h3>Modules</h3><ul><li><a href="module-account-model.html">account-model</a><ul class='methods'><li data-type='method'><a href="module-account-model.html#~_getAccount">_getAccount</a></li><li data-type='method'><a href="module-account-model.html#~_getHardcodedAccount">_getHardcodedAccount</a></li><li data-type='method'><a href="module-account-model.html#~_getServer">_getServer</a></li><li data-type='method'><a href="module-account-model.html#~_isAllowed">_isAllowed</a></li><li data-type='method'><a href="module-account-model.html#~_stripProtocol">_stripProtocol</a></li><li data-type='method'><a href="module-account-model.html#~check">check</a></li><li data-type='method'><a href="module-account-model.html#~get">get</a></li></ul></li><li><a href="module-authentication-controller.html">authentication-controller</a><ul class='methods'><li data-type='method'><a href="module-authentication-controller.html#~login">login</a></li><li data-type='method'><a href="module-authentication-controller.html#~logout">logout</a></li><li data-type='method'><a href="module-authentication-controller.html#~setToken">setToken</a></li></ul></li><li><a href="module-cache-model.html">cache-model</a><ul class='methods'><li data-type='method'><a href="module-cache-model.html#~_addHashes">_addHashes</a></li><li data-type='method'><a href="module-cache-model.html#~_getKey">_getKey</a></li><li data-type='method'><a href="module-cache-model.html#~flushAll">flushAll</a></li><li data-type='method'><a href="module-cache-model.html#~flushSurvey">flushSurvey</a></li><li data-type='method'><a href="module-cache-model.html#~getSurvey">getSurvey</a></li><li data-type='method'><a href="module-cache-model.html#~getSurveyHashes">getSurveyHashes</a></li><li data-type='method'><a href="module-cache-model.html#~isCacheUpToDate">isCacheUpToDate</a></li><li data-type='method'><a href="module-cache-model.html#~setSurvey">setSurvey</a></li></ul></li><li><a href="module-communicator.html">communicator</a><ul class='methods'><li data-type='method'><a href="module-communicator.html#~_findFormAddInfo">_findFormAddInfo</a></li><li data-type='method'><a href="module-communicator.html#~_request">_request</a></li><li data-type='method'><a href="module-communicator.html#~_simplifyFormObj">_simplifyFormObj</a></li><li data-type='method'><a href="module-communicator.html#~_xmlToJson">_xmlToJson</a></li><li data-type='method'><a href="module-communicator.html#~authenticate">authenticate</a></li><li data-type='method'><a href="module-communicator.html#~getAuthHeader">getAuthHeader</a></li><li data-type='method'><a href="module-communicator.html#~getFormListUrl">getFormListUrl</a></li><li data-type='method'><a href="module-communicator.html#~getManifest">getManifest</a></li><li data-type='method'><a href="module-communicator.html#~getMaxSize">getMaxSize</a></li><li data-type='method'><a href="module-communicator.html#~getSubmissionUrl">getSubmissionUrl</a></li><li data-type='method'><a href="module-communicator.html#~getUpdatedRequestOptions">getUpdatedRequestOptions</a></li><li data-type='method'><a href="module-communicator.html#~getXForm">getXForm</a></li><li data-type='method'><a href="module-communicator.html#~getXFormInfo">getXFormInfo</a></li></ul></li><li><a href="module-confif-model.html">confif-model</a><ul class='methods'><li data-type='method'><a href="module-confif-model.html#~_convertNumbers">_convertNumbers</a></li><li data-type='method'><a href="module-confif-model.html#~_convertType">_convertType</a></li><li data-type='method'><a href="module-confif-model.html#~_emptyObjectProperties">_emptyObjectProperties</a></li><li data-type='method'><a href="module-confif-model.html#~_extractRedisConfigFromUrl">_extractRedisConfigFromUrl</a></li><li data-type='method'><a href="module-confif-model.html#~_findNumberIndex">_findNumberIndex</a></li><li data-type='method'><a href="module-confif-model.html#~_findSetting">_findSetting</a></li><li data-type='method'><a href="module-confif-model.html#~_getEmptyClone">_getEmptyClone</a></li><li data-type='method'><a href="module-confif-model.html#~_setRedisConfigFromEnv">_setRedisConfigFromEnv</a></li><li data-type='method'><a href="module-confif-model.html#~_updateConfigFromEnv">_updateConfigFromEnv</a></li><li data-type='method'><a href="module-confif-model.html#~_updateConfigItemFromEnv">_updateConfigItemFromEnv</a></li><li data-type='method'><a href="module-confif-model.html#~getThemesSupported">getThemesSupported</a></li></ul></li><li><a href="module-custom-error.html">custom-error</a><ul class='methods'><li data-type='method'><a href="module-custom-error.html#~TranslatedError">TranslatedError</a></li></ul></li><li><a href="module-duplicates.html">duplicates</a><ul class='methods'><li data-type='method'><a href="module-duplicates.html#~checkDuplicateEnketoIds">checkDuplicateEnketoIds</a></li><li data-type='method'><a href="module-duplicates.html#~getAllKeys">getAllKeys</a></li><li data-type='method'><a href="module-duplicates.html#~getDuplicates">getDuplicates</a></li><li data-type='method'><a href="module-duplicates.html#~getId">getId</a></li><li data-type='method'><a href="module-duplicates.html#~getSurveyOpenRosaId">getSurveyOpenRosaId</a></li><li data-type='method'><a href="module-duplicates.html#~remove">remove</a></li><li data-type='method'><a href="module-duplicates.html#~removeCache">removeCache</a></li><li data-type='method'><a href="module-duplicates.html#~removeDuplicateEnketoIds">removeDuplicateEnketoIds</a></li></ul></li><li><a href="module-instance-model.html">instance-model</a></li><li><a href="module-manifest-model.html">manifest-model</a></li><li><a href="module-pdf.html">pdf</a><ul class='methods'><li data-type='method'><a href="module-pdf.html#~get">get</a></li></ul></li><li><a href="module-router-utils.html">router-utils</a><ul class='methods'><li data-type='method'><a href="module-router-utils.html#~enketoIdParam">enketoIdParam</a></li></ul></li><li><a href="module-submission-model.html">submission-model</a><ul class='methods'><li data-type='method'><a href="module-submission-model.html#~isNew">isNew</a></li></ul></li><li><a href="module-submissions-controller.html">submissions-controller</a><ul class='methods'><li data-type='method'><a href="module-submissions-controller.html#~getInstance">getInstance</a></li><li data-type='method'><a href="module-submissions-controller.html#~maxSize">maxSize</a></li><li data-type='method'><a href="module-submissions-controller.html#~submit">submit</a></li></ul></li><li><a href="module-survey-controller.html">survey-controller</a><ul class='methods'><li data-type='method'><a href="module-survey-controller.html#~xform">xform</a></li></ul></li><li><a href="module-survey-model.html">survey-model</a><ul class='methods'><li data-type='method'><a href="module-survey-model.html#~_createNewEnketoId">_createNewEnketoId</a></li><li data-type='method'><a href="module-survey-model.html#~getSurvey">getSurvey</a></li></ul></li><li><a href="module-transformation-controller.html">transformation-controller</a><ul class='methods'><li data-type='method'><a href="module-transformation-controller.html#~_getMediaMap">_getMediaMap</a></li><li data-type='method'><a href="module-transformation-controller.html#~_updateCache">_updateCache</a></li><li data-type='method'><a href="module-transformation-controller.html#~getSurveyHash">getSurveyHash</a></li><li data-type='method'><a href="module-transformation-controller.html#~getSurveyParts">getSurveyParts</a></li></ul></li><li><a href="module-user-model.html">user-model</a><ul class='methods'><li data-type='method'><a href="module-user-model.html#~getCredentials">getCredentials</a></li></ul></li><li><a href="module-utils.html">utils</a><ul class='methods'><li data-type='method'><a href="module-utils.html#~areOwnPropertiesEqual">areOwnPropertiesEqual</a></li><li data-type='method'><a href="module-utils.html#~cleanUrl">cleanUrl</a></li><li data-type='method'><a href="module-utils.html#~getOpenRosaKey">getOpenRosaKey</a></li><li data-type='method'><a href="module-utils.html#~getXformsManifestHash">getXformsManifestHash</a></li><li data-type='method'><a href="module-utils.html#~insecureAes192Decrypt">insecureAes192Decrypt</a></li><li data-type='method'><a href="module-utils.html#~insecureAes192Encrypt">insecureAes192Encrypt</a></li><li data-type='method'><a href="module-utils.html#~isValidUrl">isValidUrl</a></li><li data-type='method'><a href="module-utils.html#~md5">md5</a></li><li data-type='method'><a href="module-utils.html#~pickRandomItemFromArray">pickRandomItemFromArray</a></li><li data-type='method'><a href="module-utils.html#~randomString">randomString</a></li><li data-type='method'><a href="module-utils.html#~toLocalMediaUrl">toLocalMediaUrl</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Tutorial: Configuration</h1>
+    
+
+    <section>
+
+<header>
+    
+
+    <h2>Configuration</h2>
+</header>
+
+<article>
+    <h1 id="configuration">Configuration</h1>
+<p>All configuration is done in config/config.json or with equivalent environment variables (see <a href="https://github.com/enketo/enketo-express/blob/master/config/sample.env">sample.env</a>). <strong>Leave config/default-config.json unchanged.</strong> Whichever of these 2 methods you choose, will override the defaults set in config/default-config.json.</p>
+<p>Below is a complete list of all configuration items. The <strong>bold items are important to set</strong>. Others are less important.</p>
+<h4 id="app-name">app name</h4>
+<p>Just use <code>&quot;Enketo for [your service name]&quot;</code>. It is not used much in the app.</p>
+<h4 id="port">port</h4>
+<p>The port on which your app is run, e.g. <code>&quot;8005&quot;</code>. Any unique assignable port will do. Generally you can leave this alone as you'll use a reverse proxy to map the public port.</p>
+<h4 id="offline-enabled">offline enabled</h4>
+<p>Enable or disable offline functionality. Is either <code>false</code> or <code>true</code>.</p>
+<h4 id="linked-form-and-data-server">linked form and data server</h4>
+<ul>
+<li>name: The (short) name of your form server. This name will be used in various places in the app to provide feedback to the user. E.g. &quot;ODK Aggregate&quot;, &quot;KoboToolbox&quot;, &quot;MyCoolService&quot;</li>
+<li><strong>server url: Initially this can be an empty string (<code>&quot;&quot;</code>). This will allow any server that knows the secret api key to use your Enketo installation. If you'd like to lock the usage down to a particular form server for optimimum security, fill in your domain without the protocol. E.g. &quot;kobotoolbox.org&quot;. Depending on your form server, you can even specify that the server can only be used for a particular account e.g. &quot;myformhub.org/janedoe&quot;. You can also use a regular expression string e.g. <code>&quot;opendatakit\\.appspot\\.com&quot;</code> (it will be used to create a regular expression with RegExp()).</strong></li>
+<li><strong>api key: The api key that will be used to authenticate any API usage, e.g. to launch a form when the 'webform' button is clicked. This is the key (sometimes called <em>token</em>) you need to copy in your form server. You can use any hard-to-guess alphanumeric string you want. We're not aware of limitations in length or characters.</strong></li>
+<li>legacy formhub: Formhub is a dead project and therefore has bugs that won't be fixed. Setting this setting to <code>true</code> temporarily works around some of these bugs to give you time to switch to a better alternative that is alive.</li>
+<li>authentication: an object that configures the type of authentication to use. See examples and details below:</li>
+</ul>
+<p>Examples of authentication configuration objects:</p>
+<h5 id="basic-authentication-(default-odk)">Basic authentication (default ODK)</h5>
+<p>This is the default authentication that lets Enketo collect credentials from the user and passes those to the server according to the <a href="https://bitbucket.org/javarosa/javarosa/wiki/AuthenticationAPI">ODK request specification</a> using either Basic or Digest Authorization headers.</p>
+<ul>
+<li>allow insecure transport: For development use, to test default form authentication on a server without an SSL certificate. Should be <code>false</code> on a production server to avoid sharing sensitive user credentials.</li>
+</ul>
+<pre class="prettyprint source lang-json"><code>&quot;authentication&quot; : {
+        &quot;type&quot;: &quot;basic&quot;,
+        &quot;allow insecure transport&quot;: &quot;false&quot;
+    }
+</code></pre>
+<h5 id="external-cookie-authentication">External cookie authentication</h5>
+<p>This allows a deeper integration for a custom server. It configures a (required) <code>url</code> on your form/data server where Enketo should redirect a user to when the server returns a 401 response. That url should set a cookie that Enketo will pass to the server whenever it needs to retrieve a form resource or submit data. The url should contain a {RETURNURL} portion which Enketo will populate to send the user back to the webform once authentication has completed.</p>
+<p>This mechanism requires any enketo-express webform to have access to these browser cookies so the form/data server and Enketo Express would have to be on the same domain (a different subdomain is possible when setting cross-domain cookies).</p>
+<pre class="prettyprint source lang-json"><code>&quot;authentication&quot; : {
+        &quot;type&quot;: &quot;cookie&quot;,
+        &quot;url&quot;: &quot;http://example.com/login?return={RETURNURL}&quot;
+    }
+
+</code></pre>
+<h5 id="external-token-authentication">External token authentication</h5>
+<p>This allows a deeper integration for a custom server. It configures a (required) <code>url</code> on your form/data server where Enketo should redirect a user to when the server returns a 401 response. It also configures a (required) <code>query parameter</code> name that is used to share the token. The token value will be passed <em>unchanged</em> via <code>Authorization: Bearer</code> Header to any requests to the server.</p>
+<p><strong>At the moment this only works for online-only forms.</strong></p>
+<pre class="prettyprint source lang-json"><code>&quot;authentication&quot; : {
+        &quot;type&quot;: &quot;token&quot;,
+        &quot;query parameter&quot;: &quot;my_token&quot;,
+        &quot;url&quot;: &quot;http://example.com/login?return={RETURNURL}&quot;
+    }
+</code></pre>
+<h4 id="timeout">timeout</h4>
+<p>Connection timeout in milliseconds used throughout Enketo. This is particularly relevant for submissions from Enketo to the OpenRosa server.</p>
+<h4 id="expiry-for-record-cache">expiry for record cache</h4>
+<p>Expiry in milliseconds for a cached record from the moment it is offered to Enketo for editing through one of Enketo's <strong>/instance/*</strong> API endpoints. Once the expiry time is reached, the record is removed.</p>
+<h4 id="encryption-key">encryption key</h4>
+<p>Enketo will use this to encrypt sensitive information whenever necessary (e.g. for the form server credentials that are stored in a cookie in the user's browser). Never share this key and never change it after the initial configuration (unless it was compromised). No specific key length requirements (I think).</p>
+<h4 id="less-secure-encryption-key">less secure encryption key</h4>
+<p>Enketo will use this to symmetrically encrypt enketo IDs for the special single-submission webform views. This encryption should be considered crackable and is not used for sensitive data. For security reasons it therefore requires a separate key. Do not change this key after initial configuration as it will break some webform URLs.</p>
+<h4 id="default-theme">default theme</h4>
+<p>The theme to use if the survey has no user-or-api-defined theme. Values could be <code>&quot;kobo&quot;</code>, <code>&quot;formhub&quot;</code>, <code>&quot;grid&quot;</code>, or <code>&quot;[yourowncustomtheme]&quot;</code>.</p>
+<h4 id="base-path">base path</h4>
+<p>The basepath Enketo should use for everything. The default is <code>&quot;&quot;</code>, which gives a baseUrl like https://yourdomain.com. If you set the value to e.g. <code>&quot;enketo&quot;</code>, the baseUrl for the app becomes https://yourdomain.com/enketo. Warning: If the base path is changed, you need to discard your redis <strong>cache</strong> database to ensure form media URLs are re-generated.</p>
+<h4 id="log">log</h4>
+<ul>
+<li>submissions: Whether successfully submitted <em>record instanceIDs</em> should be logged into log files. This could help troubleshoot any issues with the Form/Data Server or with Enketo. Only 201 responses to /submission on the Form/Data server will be logged. If a record is divided into multiple batches, it should only be recorded once. Logging instancedIDs could be considered a privacy issue, as together with web server logs it will potentially allow one to determine which IP address a specific record (instanceID) was submitted from and when.</li>
+</ul>
+<h4 id="themes-supported">themes supported</h4>
+<p>An array of theme names to enable. This can be used to disable certain themes. If this configuration item is absent or an empty array, all installed themes will be enabled.</p>
+<h4 id="support">support</h4>
+<ul>
+<li><strong>email: The email address your users can contact when they experience problems with the service.</strong></li>
+</ul>
+<h4 id="widgets">widgets</h4>
+<p>An Array of widgets to enable. Enketo Core widgets are simple strings (&quot;note&quot;, &quot;select-desktop&quot;, &quot;select-mobile&quot;, &quot;autocomplete&quot;, &quot;geo&quot;, &quot;geo-esri&quot;, &quot;textarea&quot;, &quot;table&quot;, &quot;radio&quot;, &quot;date&quot;, &quot;time&quot;, &quot;datetime&quot;, &quot;compact&quot;, &quot;file&quot;, &quot;draw&quot;, &quot;likert&quot;, &quot;range&quot;, &quot;rank&quot;, &quot;url&quot;, &quot;horizontal&quot;, &quot;image-view&quot;, &quot;comment&quot;, &quot;image-map&quot;, &quot;date-mobile&quot;). See <a href="https://github.com/enketo/enketo-express/blob/master/public/js/src/module/core-widgets.json">this file</a> for an update list. You can also add custom widgets by adding a local path. See more info <a href="../doc/custom-widgets.md">here</a>. Note that any value for <code>&quot;widgets&quot;</code> will completely override the default array in default-config.json, so it's best to start copying the default array value and amend it as desired or leave it out of config.json if you don't need to modify widgets. If this configuration item is present in config.json, you will need to manually add any new widgets that are added to default-config.json in the future.</p>
+<h4 id="analytics">analytics</h4>
+<p>Which analytics service you'd like to use, either <code>&quot;google&quot;</code> or <code>&quot;piwik&quot;</code> or if none is required either <code>&quot;&quot;</code> or <code>false</code>.</p>
+<h4 id="google">google</h4>
+<ul>
+<li>analytics -&gt; ua: The UA (user agent) that Google has assigned to your domain if you choose to collect statistics on Enketo Express' usage using the Google Analytics service. Required if google service is selected under <a href="#analytics">analytics</a>.</li>
+<li>analytics -&gt; domain: If you are running Enketo Express on a subdomain, you may need to add the subdomain there (without protocol), e.g. &quot;odk.enke.to&quot; for Google Analytics to pick up the data. When left empty (<code>&quot;&quot;</code>) the value will be set to &quot;auto&quot; in the GA script.</li>
+<li>api key: The Google API key that is used for geolocation (in the geo widgets' search box). Can be obtained <a href="https://console.developers.google.com/project">here</a>. Make sure to enable the <em>GeoCoding API</em> service. If you are using Google Maps layers, the same API key is used. Make sure to enable the <em>Google Maps JavaScript API v3</em> service as well in that case (see next item).</li>
+</ul>
+<h4 id="piwik">piwik</h4>
+<ul>
+<li>analytics -&gt; tracker url -&gt; URL on which your piwik service is hosted. The protocol can be omitted, e.g. <code>&quot;//enketo.piwikpro.com/&quot;</code>. Required if piwik service is selected under <a href="#analytics">analytics</a>.</li>
+<li>analytics -&gt; site id -&gt; The site ID of this server on your piwik service, e.g. <code>&quot;1&quot;</code> (number or string). Required if piwik service is selected under <a href="#analytics">analytics</a>.</li>
+</ul>
+<h4 id="maps">maps</h4>
+<p>The <code>maps</code> configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a <code>name</code>,  <code>tiles</code> (array) and an <code>attribution</code> property, and optionally <code>maxzoom</code> and <code>minzoom</code>). You can also mix and match Google Maps layers. Below is an example of a mix of two map layers provided by OSM (in TileJSON format) and Google maps.</p>
+<pre class="prettyprint source"><code>[ {
+        &quot;name&quot;: &quot;street&quot;,
+        &quot;tiles&quot;: [ &quot;http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png&quot; ],
+        &quot;attribution&quot;: &quot;Map data © &lt;a href=\&quot;http://openstreetmap.org\&quot;>OpenStreetMap&lt;/a> contributors&quot;
+    }, {
+        &quot;name&quot;: &quot;satellite&quot;,
+        &quot;tiles&quot;: &quot;GOOGLE_SATELLITE&quot;
+} ]
+</code></pre>
+<p>For GMaps layers you have the four options as tiles values: <code>&quot;GOOGLE_SATELLITE&quot;</code>, <code>&quot;GOOGLE_ROADMAP&quot;</code>, <code>&quot;GOOGLE_HYBRID&quot;</code>, <code>&quot;GOOGLE_TERRAIN&quot;</code>. You can also add other TileJSON properties, such as minZoom, maxZoom, id to all layers.</p>
+<h4 id="query-parameter-to-pass-to-submission">query parameter to pass to submission</h4>
+<p>For most form servers this item does nothing. If you would like to pass a particular ID to any online-only webform url as a query parameter and track submissions with this ID, you can provide the parameter name here. The parameter and its value will be copied to the submission URL.</p>
+<h4 id="redis">redis</h4>
+<ul>
+<li>main -&gt; host: The IP address of the main redis database instance. If installed on the same server as Enketo Express, the value is <code>&quot;127.0.0.1&quot;</code></li>
+<li><strong>main -&gt; port: The port of the main redis database instance. This is the important persistent database that contains the unique IDs for each forms. The default value is <code>&quot;6379&quot;</code></strong></li>
+<li>main -&gt; password: Password of the main redis database instance. Usually <code>null</code>.</li>
+<li>cache -&gt; host: The IP address of the cache redis database instance. If installed on the same server as Enketo Express, the value is <code>&quot;127.0.0.1&quot;</code></li>
+<li><strong>cache -&gt; port: The port of the cache redis database instance. This is the non-persistent database that is just used for caching to greatly improve performance. When testing or developing you could use one redis instance for both 'main' and 'cache' (e.g. both <code>&quot;6379&quot;</code>&quot;) but do not do this in production.</strong></li>
+<li>cache -&gt; password: Password of the cache redis database instance. Usually <code>null</code>.</li>
+</ul>
+<h4 id="logo">logo</h4>
+<ul>
+<li>source: The logo at the top of each form. Can be a Data URI or just a path to a image file you place in public/images, e.g. <code>&quot;/images/mylogo.png&quot;</code>.</li>
+<li>href: The optional link to redirect to if the logo is clicked by the user.</li>
+</ul>
+<h4 id="disable-save-as-draft">disable save as draft</h4>
+<p>Completely disable save-as-draft functionality in offline-capable webforms by settings this to true.</p>
+<h4 id="repeat-ordinals">repeat ordinals</h4>
+<p>Whether to add custom http://enketo.org/xforms namespaced <code>ordinal</code> and <code>last-used-ordinal</code> attributes to repeat nodes in the model. The default is <code>false</code>. Most user will not need to set this configuration item.</p>
+<h4 id="validate-continuously">validate continuously</h4>
+<p>Determines whether Enketo should validate questions immediately if a related question value changes. E.g. if question A has a constraint that depends on question B, this mode would re-validate question A if the value for question B changes. This mode will slow down form traversal. When set to <code>false</code> that type of validation is only done at the end when the Submit button is clicked or in Pages mode when the user clicks Next. The default value is <code>false</code>.</p>
+<h4 id="validate-page">validate page</h4>
+<p>Determines whether the Next button should trigger validation and block the user from proceeding to next page if validation fails. The default value is <code>true</code>.</p>
+<h4 id="swipe-page">swipe page</h4>
+<p>This setting with default <code>true</code> value determines whether to enable support for <em>swiping</em> to the next and previous page for forms that are divided into pages.</p>
+<h4 id="payload-limit">payload limit</h4>
+<p>This setting sets the maximum weight of payload sent to the API. Unit can be <code>b</code>, <code>kb</code> or <code>mb</code>.
+The default value is <code>100kb</code>.</p>
+<h4 id="text-field-character-limit">text field character limit</h4>
+<p>Sets the maximum allowable text field characters with a default of 2000. This settings is meant to match any back-end database limits to avoid records that cannot be submitted because the server does no accept them.</p>
+</article>
+
+</section>
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+
+</body>
+</html>
