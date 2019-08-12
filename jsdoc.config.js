@@ -1,6 +1,6 @@
 'use strict';
 
- module.exports = {
+module.exports = {
     opts: {
         encoding: 'utf8',
         destination: './docs/',
