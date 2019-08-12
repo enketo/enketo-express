@@ -141,10 +141,10 @@ function _renderWebform( req, res, next, options ) {
 
 /**
  * Debugging view that shows underlying XForm
- * @param  {[type]}   req  [description]
- * @param  {[type]}   res  [description]
- * @param  {Function} next [description]
- * @return {[type]}        [description]
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {Function} next - callback for handling errors.
  */
 function xform( req, res, next ) {
     return surveyModel.get( req.enketoId )

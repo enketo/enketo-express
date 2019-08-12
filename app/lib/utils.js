@@ -3,10 +3,12 @@ const config = require( '../models/config-model' ).server;
 const validUrl = require( 'valid-url' );
 // var debug = require( 'debug' )( 'utils' );
 
-/** 
+/**
  * Returns a unique, predictable openRosaKey from a survey oject
- * @param  {[type]} survey [description]
- * @return {[type]}        [description]
+ *
+ * @param {object} survey - Survey object.
+ * @param {string} prefix
+ * @return {string|null} openRosaKey
  */
 function getOpenRosaKey( survey, prefix ) {
     if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
@@ -36,8 +38,9 @@ function getXformsManifestHash( manifest, type ) {
 /**
  * Cleans a Server URL so it becomes useful as a db key
  * It strips the protocol, removes a trailing slash, removes www, and converts to lowercase
- * @param  {string} url [description]
- * @return {string=}     [description]
+ *
+ * @param {string} url - Url to be cleaned up.
+ * @return {string} cleaned up url.
  */
 function cleanUrl( url ) {
     url = url.trim();
@@ -55,9 +58,9 @@ function cleanUrl( url ) {
  * The name of this function is deceiving. It checks for a valid server URL and therefore doesn't approve of:
  * - fragment identifiers
  * - query strings
- * 
- * @param  {[type]}  url [description]
- * @return {Boolean}     [description]
+ *
+ * @param {string} url - Url to be validated.
+ * @return {boolean} whether the url is valid.
  */
 function isValidUrl( url ) {
     return !!validUrl.isWebUri( url ) && !( /\?/.test( url ) ) && !( /#/.test( url ) );
@@ -70,14 +73,14 @@ function md5( message ) {
 }
 
 /**
- * This is not secure encryption as it doesn't use a random cipher. Therefore the result is 
- * always the same for each text & pw (which is desirable in this case). 
+ * This is not secure encryption as it doesn't use a random cipher. Therefore the result is
+ * always the same for each text & pw (which is desirable in this case).
  * This means the password is vulnerable to be cracked,
  * and we should use a dedicated low-importance password for this.
- * 
- * @param  {string} text The text to be encrypted
- * @param  {string} pw   The password to use for encryption
- * @return {string}      The encrypted result.
+ *
+ * @param {string} text - The text to be encrypted.
+ * @param {string} pw - The password to use for encryption.
+ * @return {string} the encrypted result.
  */
 function insecureAes192Encrypt( text, pw ) {
     let encrypted;
@@ -147,8 +150,8 @@ function areOwnPropertiesEqual( a, b ) {
 /**
  * Converts a url to a local (proxied) url.
  *
- * @param  {string} url The url to convert.
- * @return {string}     The converted url.
+ * @param {string} url - The url to convert.
+ * @return {string} the converted url.
  */
 function toLocalMediaUrl( url ) {
     const localUrl = `${config[ 'base path' ]}/media/get/${url.replace( /(https?):\/\//, '$1/' )}`;

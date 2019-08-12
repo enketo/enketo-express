@@ -35,10 +35,10 @@ router
 
 /**
  * Obtains HTML Form, XML model, and existing XML instance
- * @param  {[type]}   req  [description]
- * @param  {[type]}   res  [description]
- * @param  {Function} next [description]
- * @return {[type]}        [description]
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {Function} next - callback for handling errors.
  */
 function getSurveyParts( req, res, next ) {
     _getSurveyParams( req )
@@ -71,10 +71,10 @@ function getSurveyParts( req, res, next ) {
 
 /**
  * Obtains the hash of the cached Survey Parts
- * @param  {[type]}   req  [description]
- * @param  {[type]}   res  [description]
- * @param  {Function} next [description]
- * @return {[type]}        [description]
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {Function} next - callback for handling errors.
  */
 function getSurveyHash( req, res, next ) {
     _getSurveyParams( req )
@@ -107,7 +107,8 @@ function _getFormFromCache( survey ) {
 
 /**
  * Update the Cache if necessary.
- * @param  {[type]} survey [description]
+ *
+ * @param {*} survey
  */
 function _updateCache( survey ) {
     return communicator.getXFormInfo( survey )
@@ -151,8 +152,8 @@ function _addMediaHash( survey ) {
 
 /**
  * Adds a media map, see enketo/enketo-transformer
- * 
- * @param {[type]} survey [description]
+ *
+ * @param {*} mainfest
  */
 function _getMediaMap( manifest ) {
     let mediaMap = null;

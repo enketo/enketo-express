@@ -28,8 +28,6 @@ catch ( err ) {
 
 /**
  * Updates all configuration items for which an environment variable was set.
- * 
- * @param  {*} config configuration object
  */
 function _updateConfigFromEnv() {
     const envVarNames = [];
@@ -45,8 +43,8 @@ function _updateConfigFromEnv() {
 
 /**
  * Updates a configuration item that corresponds to the provided environment variable name.
- * 
- * @param  {string} envVarName [description]
+ *
+ * @param {string} envVarName
  */
 function _updateConfigItemFromEnv( envVarName ) {
     const parts = envVarName.split( '_' ).slice( 1 ).map( _convertNumbers );
@@ -86,9 +84,9 @@ function _updateConfigItemFromEnv( envVarName ) {
 
 /**
  * Converts some string values to booleans or null.
- * 
- * @param  {string} str [description]
- * @return {?(string|boolean)}     [description]
+ *
+ * @param {string} str - A thing to be converted.
+ * @return {*|boolean|null} an un-stringified value or input value itself.
  */
 function _convertType( str ) {
     switch ( str ) {
@@ -104,12 +102,13 @@ function _convertType( str ) {
 }
 
 /**
- * Searches the configuration object to find a match for an environment variable, or the first part of such a variable.
- * 
- * @param  {*}          obj      configuration object
- * @param  {string}     envName  environment variable name or the first part of one
- * @param  {string}     prefix   prefix to use (for nested objects)
- * @return {[*,string]?}         2-item array of object and property name
+ * Searches the configuration object to find a match for an environment variable,
+ * or the first part of such a variable.
+ *
+ * @param {*} obj - Configuration object.
+ * @param {string} envName - Environment variable name or the first part of one.
+ * @param {string} prefix - Prefix to use (for nested objects).
+ * @return {{0: object, 1: string}} 2-item array of object and property name.
  */
 function _findSetting( obj, envName, prefix = '' ) {
     for ( const prop in obj ) {
@@ -129,9 +128,9 @@ function _findSetting( obj, envName, prefix = '' ) {
 
 /**
  * Convert a non-empty string number to a number.
- * 
- * @param  {str} str a string.
- * @return {(Number|String)}     [description]
+ *
+ * @param {string} str - A stringified number.
+ * @return {string|number} an input value or unstrigified number.
  */
 function _convertNumbers( str ) {
     if ( !str ) {
@@ -143,10 +142,10 @@ function _convertNumbers( str ) {
 
 /**
  * Finds the index of the first array item that is a number.
- * 
- * @param  {<(String|Number)>} arr   array of strings and numbers
- * @param  {Number?} start start index
- * @return {boolean?}      the index or undefined
+ *
+ * @param {Array<string|number>} arr - Array of strings and numbers.
+ * @param {number=} start - Start index.
+ * @return {number|undefined} the index or undefined.
  */
 function _findNumberIndex( arr, start = 0 ) {
     let i;
@@ -161,9 +160,9 @@ function _findNumberIndex( arr, start = 0 ) {
 
 /**
  * returns an empty clone of the provided simple object
- * 
- * @param  {*} obj simple object
- * @return {*}     empty clone of argument
+ *
+ * @param {*} obj - A simple object.
+ * @return {*} emptied clone of input object.
  */
 function _getEmptyClone( obj ) {
     const clone = JSON.parse( JSON.stringify( obj ) );
@@ -174,9 +173,8 @@ function _getEmptyClone( obj ) {
 
 /**
  * Replaces all non-null and non-object property values with empty string.
- * 
- * @param  {*} obj simple object
- * @return {*}     emptied version of argument
+ *
+ * @param {*} obj - A simple object.
  */
 function _emptyObjectProperties( obj ) {
     for ( const prop in obj ) {
@@ -208,9 +206,9 @@ function _setRedisConfigFromEnv() {
 
 /**
  * Parses a redis URL and returns an object with host, port and password properties.
- * 
- * @param  {string} redisUrl a compliant redis url
- * @return {{host: String, port: String, password:?String}}
+ *
+ * @param {string} redisUrl - A compliant redis url.
+ * @return {{host: string, port: string, password: string|null}} config object.
  */
 function _extractRedisConfigFromUrl( redisUrl ) {
     const parsedUrl = url.parse( redisUrl );
@@ -226,9 +224,9 @@ function _extractRedisConfigFromUrl( redisUrl ) {
 /**
  * Returns a list of supported themes,
  * in case a list is provided only the ones that exists are returned.
- * 
+ *
  * @param {Array} themeList - a list of themes e.g ['formhub', 'grid']
- * @return {Array}
+ * @return {Array} an array of theme names.
  */
 function getThemesSupported( themeList ) {
     const themes = [];

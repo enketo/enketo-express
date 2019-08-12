@@ -13,9 +13,10 @@ if ( process.env.NODE_ENV === 'test' ) {
 }
 
 /**
- * returns the information stored in the database for an enketo id
- * @param  {string} id [description]
- * @return {[type]}    [description]
+ * Returns the information stored in the database for an enketo id.
+ *
+ * @param {string} id - Survey id.
+ * @return {Promise<Error|object>} promise with survey object.
  */
 function getSurvey( id ) {
     return new Promise( ( resolve, reject ) => {
@@ -41,7 +42,7 @@ function getSurvey( id ) {
                 } else {
                     // debug( 'object retrieved from database for id "' + id + '"', obj );
                     obj.enketoId = id;
-                    // no need to wait for result of updating lastAccessed 
+                    // no need to wait for result of updating lastAccessed
                     client.hset( `id:${id}`, 'lastAccessed', new Date().toISOString() );
                     resolve( obj );
                 }
@@ -288,9 +289,10 @@ function _getActiveSurveys( openRosaIds ) {
 /**
  * Generates a new random Enketo ID that has not been used yet, or checks whether a provided id has not been used.
  * 8 characters keeps the chance of collisions below about 10% until about 10,000,000 IDs have been generated
- * 
- * @param {string=} id This is optional, and only really included to write tests for collissions or a future "vanity ID" feature
- * @param {number=} triesRemaining Avoid infinite loops when collissions become the norm.
+ *
+ * @param {string=} id - This is optional, and only really included to write tests for collissions or a future "vanity ID" feature
+ * @param {number=} triesRemaining - Avoid infinite loops when collissions become the norm.
+ * @return {Promise}
  */
 function _createNewEnketoId( id = utils.randomString( 8 ), triesRemaining = 10 ) {
     return new Promise( ( resolve, reject ) => {
