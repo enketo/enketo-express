@@ -1,0 +1,47 @@
+{
+    "00-getting-started": {
+        "title": "Getting started"
+    },
+    "10-configuration": {
+        "title": "Configuration"
+    },
+    "11-api": {
+        "title": "API"
+    },
+    "12-updating": {
+        "title": "Updating"
+    },
+    "13-heroku": {
+        "title": "Heroku deployment"
+    },
+    "20-development": {
+        "title": "Development"
+    },
+    "21-translating-for-devs": {
+        "title": "Translation workflow (for developers)"
+    },
+    "22-custom-widgets": {
+        "title": "Adding custom widgets"
+    },
+    "23-comments": {
+        "title": "Comment feature"
+    },
+    "24-iframe-postmessage": {
+        "title": "Iframe postMessage communication"
+    },
+    "25-ordinals": {
+        "title": "Repeats & Ordinals"
+    },
+    "30-authentication-and-security": {
+        "title": "Authentication & security"
+    },
+    "40-browser-support": {
+        "title": "Browser support"
+    },
+    "50-theming": {
+        "title": "Theming"
+    },
+    "60-duplicates": {
+        "title": "Fixing duplicates"
+    }
+}

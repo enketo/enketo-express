@@ -21,7 +21,12 @@
     "scripts": {
         "start": "node .",
         "test": "grunt test",
-        "postinstall": "grunt"
+        "postinstall": "grunt",
+        "beautify": "grunt jsbeautifier:fix",
+        "build-docs": "./node_modules/.bin/jsdoc -c jsdoc.config.js",
+        "publish-please-pre-script": "npm run test && npm run beautify && npm run build-docs",
+        "publish-please": "publish-please",
+        "prepublishOnly": "publish-please guard"
     },
     "private": true,
     "license": "Apache-2.0",
@@ -86,6 +91,8 @@
     "devDependencies": {
         "chai": "4.2.x",
         "chai-as-promised": "*",
+        "docdash": "^1.1.1",
+        "eslint-plugin-jsdoc": "^15.8.0",
         "grunt-concurrent": "3.x.x",
         "grunt-contrib-watch": "1.1.x",
         "grunt-eslint": "22.x.x",
@@ -95,6 +102,7 @@
         "grunt-nodemon": "0.4.x",
         "gulp": "4.0.x",
         "i18next-parser": "0.13.0",
+        "jsdoc": "^3.6.3",
         "karma": "4.1.x",
         "karma-chrome-launcher": "2.2.x",
         "karma-firefox-launcher": "1.1.x",
@@ -104,6 +112,7 @@
         "karma-safari-launcher": "1.0.x",
         "karma-sinon-chai": "2.0.x",
         "mocha": "6.1.x",
+        "publish-please": "^5.5.1",
         "sinon": "7.3.x",
         "sinon-chai": "3.3.x",
         "supertest": "4.0.x"
