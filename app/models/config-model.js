@@ -1,5 +1,5 @@
 /**
- * @module confif-model
+ * @module config-model
  */
 
 const config = require( '../../config/default-config' );
