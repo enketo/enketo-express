@@ -122,7 +122,7 @@ function _setEmergencyHandlers() {
 /**
  * Adds/replaces branding if necessary, and unhides branding.
  * 
- * @param {[type]} survey [description]
+ * @param {*} survey [description]
  */
 function _addBranding( survey ) {
     const $brandImg = $( '.form-header__branding img' );
@@ -140,8 +140,8 @@ function _addBranding( survey ) {
 /**
  * Swaps the theme if necessary.
  * 
- * @param  {[type]} survey [description]
- * @return {[type]}        [description]
+ * @param  {*} survey [description]
+ * @return {*}        [description]
  */
 function _swapTheme( survey ) {
     if ( survey.form && survey.model ) {

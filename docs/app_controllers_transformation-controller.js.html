@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>app/controllers/transformation-controller.js - Enketo Express</title>
+    
+    <meta name="description" content="The full-fledged Enketo web application for the ODK ecosystem" />
+    
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="wrap">
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/enketo/enketo-express" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h2><a href="https://github.com/enketo/enketo-express/blob/master/CHANGELOG.md" target="_blank" class="menu-item" id="change-log" >Change log</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-00-getting-started.html">Getting started</a></li><li><a href="tutorial-10-configuration.html">Configuration</a></li><li><a href="tutorial-11-api.html">API</a></li><li><a href="tutorial-12-updating.html">Updating</a></li><li><a href="tutorial-13-heroku.html">Heroku deployment</a></li><li><a href="tutorial-20-development.html">Development</a></li><li><a href="tutorial-21-translating-for-devs.html">Translation workflow (for developers)</a></li><li><a href="tutorial-22-custom-widgets.html">Adding custom widgets</a></li><li><a href="tutorial-23-comments.html">Comment feature</a></li><li><a href="tutorial-24-iframe-postmessage.html">Iframe postMessage communication</a></li><li><a href="tutorial-25-ordinals.html">Repeats & Ordinals</a></li><li><a href="tutorial-30-authentication-and-security.html">Authentication & security</a></li><li><a href="tutorial-40-browser-support.html">Browser support</a></li><li><a href="tutorial-50-theming.html">Theming</a></li><li><a href="tutorial-60-duplicates.html">Fixing duplicates</a></li></ul><h3>Modules</h3><ul><li><a href="module-account-model.html">account-model</a><ul class='methods'><li data-type='method'><a href="module-account-model.html#~_getAccount">_getAccount</a></li><li data-type='method'><a href="module-account-model.html#~_getHardcodedAccount">_getHardcodedAccount</a></li><li data-type='method'><a href="module-account-model.html#~_getServer">_getServer</a></li><li data-type='method'><a href="module-account-model.html#~_isAllowed">_isAllowed</a></li><li data-type='method'><a href="module-account-model.html#~_stripProtocol">_stripProtocol</a></li><li data-type='method'><a href="module-account-model.html#~check">check</a></li><li data-type='method'><a href="module-account-model.html#~get">get</a></li></ul></li><li><a href="module-authentication-controller.html">authentication-controller</a><ul class='methods'><li data-type='method'><a href="module-authentication-controller.html#~login">login</a></li><li data-type='method'><a href="module-authentication-controller.html#~logout">logout</a></li><li data-type='method'><a href="module-authentication-controller.html#~setToken">setToken</a></li></ul></li><li><a href="module-cache-model.html">cache-model</a><ul class='methods'><li data-type='method'><a href="module-cache-model.html#~_addHashes">_addHashes</a></li><li data-type='method'><a href="module-cache-model.html#~_getKey">_getKey</a></li><li data-type='method'><a href="module-cache-model.html#~flushAll">flushAll</a></li><li data-type='method'><a href="module-cache-model.html#~flushSurvey">flushSurvey</a></li><li data-type='method'><a href="module-cache-model.html#~getSurvey">getSurvey</a></li><li data-type='method'><a href="module-cache-model.html#~getSurveyHashes">getSurveyHashes</a></li><li data-type='method'><a href="module-cache-model.html#~isCacheUpToDate">isCacheUpToDate</a></li><li data-type='method'><a href="module-cache-model.html#~setSurvey">setSurvey</a></li></ul></li><li><a href="module-communicator.html">communicator</a><ul class='methods'><li data-type='method'><a href="module-communicator.html#~_findFormAddInfo">_findFormAddInfo</a></li><li data-type='method'><a href="module-communicator.html#~_request">_request</a></li><li data-type='method'><a href="module-communicator.html#~_simplifyFormObj">_simplifyFormObj</a></li><li data-type='method'><a href="module-communicator.html#~_xmlToJson">_xmlToJson</a></li><li data-type='method'><a href="module-communicator.html#~authenticate">authenticate</a></li><li data-type='method'><a href="module-communicator.html#~getAuthHeader">getAuthHeader</a></li><li data-type='method'><a href="module-communicator.html#~getFormListUrl">getFormListUrl</a></li><li data-type='method'><a href="module-communicator.html#~getManifest">getManifest</a></li><li data-type='method'><a href="module-communicator.html#~getMaxSize">getMaxSize</a></li><li data-type='method'><a href="module-communicator.html#~getSubmissionUrl">getSubmissionUrl</a></li><li data-type='method'><a href="module-communicator.html#~getUpdatedRequestOptions">getUpdatedRequestOptions</a></li><li data-type='method'><a href="module-communicator.html#~getXForm">getXForm</a></li><li data-type='method'><a href="module-communicator.html#~getXFormInfo">getXFormInfo</a></li></ul></li><li><a href="module-config-model.html">config-model</a><ul class='methods'><li data-type='method'><a href="module-config-model.html#~_convertNumbers">_convertNumbers</a></li><li data-type='method'><a href="module-config-model.html#~_convertType">_convertType</a></li><li data-type='method'><a href="module-config-model.html#~_emptyObjectProperties">_emptyObjectProperties</a></li><li data-type='method'><a href="module-config-model.html#~_extractRedisConfigFromUrl">_extractRedisConfigFromUrl</a></li><li data-type='method'><a href="module-config-model.html#~_findNumberIndex">_findNumberIndex</a></li><li data-type='method'><a href="module-config-model.html#~_findSetting">_findSetting</a></li><li data-type='method'><a href="module-config-model.html#~_getEmptyClone">_getEmptyClone</a></li><li data-type='method'><a href="module-config-model.html#~_setRedisConfigFromEnv">_setRedisConfigFromEnv</a></li><li data-type='method'><a href="module-config-model.html#~_updateConfigFromEnv">_updateConfigFromEnv</a></li><li data-type='method'><a href="module-config-model.html#~_updateConfigItemFromEnv">_updateConfigItemFromEnv</a></li><li data-type='method'><a href="module-config-model.html#~getThemesSupported">getThemesSupported</a></li></ul></li><li><a href="module-custom-error.html">custom-error</a><ul class='methods'><li data-type='method'><a href="module-custom-error.html#~TranslatedError">TranslatedError</a></li></ul></li><li><a href="module-duplicates.html">duplicates</a><ul class='methods'><li data-type='method'><a href="module-duplicates.html#~checkDuplicateEnketoIds">checkDuplicateEnketoIds</a></li><li data-type='method'><a href="module-duplicates.html#~getAllKeys">getAllKeys</a></li><li data-type='method'><a href="module-duplicates.html#~getDuplicates">getDuplicates</a></li><li data-type='method'><a href="module-duplicates.html#~getId">getId</a></li><li data-type='method'><a href="module-duplicates.html#~getSurveyOpenRosaId">getSurveyOpenRosaId</a></li><li data-type='method'><a href="module-duplicates.html#~remove">remove</a></li><li data-type='method'><a href="module-duplicates.html#~removeCache">removeCache</a></li><li data-type='method'><a href="module-duplicates.html#~removeDuplicateEnketoIds">removeDuplicateEnketoIds</a></li></ul></li><li><a href="module-instance-model.html">instance-model</a></li><li><a href="module-manifest-model.html">manifest-model</a></li><li><a href="module-pdf.html">pdf</a><ul class='methods'><li data-type='method'><a href="module-pdf.html#~get">get</a></li></ul></li><li><a href="module-router-utils.html">router-utils</a><ul class='methods'><li data-type='method'><a href="module-router-utils.html#~enketoIdParam">enketoIdParam</a></li></ul></li><li><a href="module-submission-model.html">submission-model</a><ul class='methods'><li data-type='method'><a href="module-submission-model.html#~isNew">isNew</a></li></ul></li><li><a href="module-submissions-controller.html">submissions-controller</a><ul class='methods'><li data-type='method'><a href="module-submissions-controller.html#~getInstance">getInstance</a></li><li data-type='method'><a href="module-submissions-controller.html#~maxSize">maxSize</a></li><li data-type='method'><a href="module-submissions-controller.html#~submit">submit</a></li></ul></li><li><a href="module-survey-controller.html">survey-controller</a><ul class='methods'><li data-type='method'><a href="module-survey-controller.html#~xform">xform</a></li></ul></li><li><a href="module-survey-model.html">survey-model</a><ul class='methods'><li data-type='method'><a href="module-survey-model.html#~_createNewEnketoId">_createNewEnketoId</a></li><li data-type='method'><a href="module-survey-model.html#~getSurvey">getSurvey</a></li></ul></li><li><a href="module-transformation-controller.html">transformation-controller</a><ul class='methods'><li data-type='method'><a href="module-transformation-controller.html#~_getMediaMap">_getMediaMap</a></li><li data-type='method'><a href="module-transformation-controller.html#~_updateCache">_updateCache</a></li><li data-type='method'><a href="module-transformation-controller.html#~getSurveyHash">getSurveyHash</a></li><li data-type='method'><a href="module-transformation-controller.html#~getSurveyParts">getSurveyParts</a></li></ul></li><li><a href="module-user-model.html">user-model</a><ul class='methods'><li data-type='method'><a href="module-user-model.html#~getCredentials">getCredentials</a></li></ul></li><li><a href="module-utils.html">utils</a><ul class='methods'><li data-type='method'><a href="module-utils.html#~areOwnPropertiesEqual">areOwnPropertiesEqual</a></li><li data-type='method'><a href="module-utils.html#~cleanUrl">cleanUrl</a></li><li data-type='method'><a href="module-utils.html#~getOpenRosaKey">getOpenRosaKey</a></li><li data-type='method'><a href="module-utils.html#~getXformsManifestHash">getXformsManifestHash</a></li><li data-type='method'><a href="module-utils.html#~insecureAes192Decrypt">insecureAes192Decrypt</a></li><li data-type='method'><a href="module-utils.html#~insecureAes192Encrypt">insecureAes192Encrypt</a></li><li data-type='method'><a href="module-utils.html#~isValidUrl">isValidUrl</a></li><li data-type='method'><a href="module-utils.html#~md5">md5</a></li><li data-type='method'><a href="module-utils.html#~pickRandomItemFromArray">pickRandomItemFromArray</a></li><li data-type='method'><a href="module-utils.html#~randomString">randomString</a></li><li data-type='method'><a href="module-utils.html#~toLocalMediaUrl">toLocalMediaUrl</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">app/controllers/transformation-controller.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module transformation-controller
+ */
+
+const transformer = require( 'enketo-transformer' );
+const communicator = require( '../lib/communicator' );
+const surveyModel = require( '../models/survey-model' );
+const cacheModel = require( '../models/cache-model' );
+const account = require( '../models/account-model' );
+const user = require( '../models/user-model' );
+const utils = require( '../lib/utils' );
+const routerUtils = require( '../lib/router-utils' );
+const isArray = require( 'lodash/isArray' );
+const express = require( 'express' );
+const url = require( 'url' );
+const router = express.Router();
+
+// var debug = require( 'debug' )( 'transformation-controller' );
+
+module.exports = app => {
+    app.use( `${app.get( 'base path' )}/transform`, router );
+};
+
+router.param( 'enketo_id', routerUtils.enketoId );
+router.param( 'encrypted_enketo_id_single', routerUtils.encryptedEnketoIdSingle );
+router.param( 'encrypted_enketo_id_view', routerUtils.encryptedEnketoIdView );
+
+router
+    .post( '*', ( req, res, next ) => {
+        // set content-type to json to provide appropriate json Error responses
+        res.set( 'Content-Type', 'application/json' );
+        next();
+    } )
+    .post( '/xform/:enketo_id', getSurveyParts )
+    .post( '/xform/:encrypted_enketo_id_single', getSurveyParts )
+    .post( '/xform/:encrypted_enketo_id_view', getSurveyParts )
+    .post( '/xform', getSurveyParts )
+    .post( '/xform/hash/:enketo_id', getSurveyHash );
+
+/**
+ * Obtains HTML Form, XML model, and existing XML instance
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {Function} next - callback for handling errors.
+ */
+function getSurveyParts( req, res, next ) {
+    _getSurveyParams( req )
+        .then( survey => {
+            if ( survey.info ) {
+                // A request with "xformUrl" body parameter was used (unlaunched form)
+                _getFormDirectly( survey )
+                    .then( survey => {
+                        _respond( res, survey );
+                    } )
+                    .catch( next );
+            } else {
+                _authenticate( survey )
+                    .then( _getFormFromCache )
+                    .then( result => {
+                        if ( result ) {
+                            return _updateCache( result );
+                        } else {
+                            return _updateCache( survey );
+                        }
+                    } )
+                    .then( result => {
+                        _respond( res, result );
+                    } )
+                    .catch( next );
+            }
+        } )
+        .catch( next );
+}
+
+/**
+ * Obtains the hash of the cached Survey Parts
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {Function} next - callback for handling errors.
+ */
+function getSurveyHash( req, res, next ) {
+    _getSurveyParams( req )
+        .then( survey => cacheModel.getHashes( survey ) )
+        .then( _updateCache )
+        .then( survey => {
+            if ( Object.prototype.hasOwnProperty.call( survey, 'credentials' ) ) {
+                delete survey.credentials;
+            }
+            res.status( 200 );
+            res.send( {
+                hash: _getCombinedHash( survey )
+            } );
+        } )
+        .catch( next );
+}
+
+function _getFormDirectly( survey ) {
+    return communicator.getXForm( survey )
+        .then( transformer.transform );
+}
+
+function _authenticate( survey ) {
+    return communicator.authenticate( survey );
+}
+
+function _getFormFromCache( survey ) {
+    return cacheModel.get( survey );
+}
+
+/**
+ * Update the Cache if necessary.
+ *
+ * @param {*} survey
+ */
+function _updateCache( survey ) {
+    return communicator.getXFormInfo( survey )
+        .then( communicator.getManifest )
+        .then( cacheModel.check )
+        .then( upToDate => {
+            if ( !upToDate ) {
+                delete survey.xform;
+                delete survey.form;
+                delete survey.model;
+                delete survey.xslHash;
+                delete survey.mediaHash;
+                delete survey.mediaUrlHash;
+                delete survey.formHash;
+                return _getFormDirectly( survey )
+                    .then( cacheModel.set );
+            }
+            return survey;
+        } )
+        .then( _addMediaHash )
+        .catch( error => {
+            if ( error.status === 401 || error.status === 404 ) {
+                cacheModel.flush( survey )
+                    .catch( e => {
+                        if ( e.status !== 404 ) {
+                            console.error( e );
+                        }
+                    } );
+            } else {
+                console.error( 'Unknown Error occurred during attempt to update cache', error );
+            }
+
+            throw error;
+        } );
+}
+
+function _addMediaHash( survey ) {
+    survey.mediaHash = utils.getXformsManifestHash( survey.manifest, 'all' );
+    return Promise.resolve( survey );
+}
+
+/**
+ * Adds a media map, see enketo/enketo-transformer
+ *
+ * @param {*} mainfest
+ */
+function _getMediaMap( manifest ) {
+    let mediaMap = null;
+
+    if ( isArray( manifest ) ) {
+        manifest.forEach( file => {
+            mediaMap = mediaMap ? mediaMap : {};
+            if ( file.downloadUrl ) {
+                mediaMap[ file.filename ] = utils.toLocalMediaUrl( file.downloadUrl );
+            }
+        } );
+    }
+
+    return mediaMap;
+}
+
+function _replaceMediaSources( survey ) {
+    const media = _getMediaMap( survey.manifest );
+
+    if ( media ) {
+        const JR_URL = /"jr:\/\/[\w-]+\/([^"]+)"/g;
+        const replacer = ( match, filename ) => {
+            if ( media[ filename ] ) {
+                return `"${media[ filename ].replace('&amp;', '&amp;amp;')}"`;
+            }
+            return match;
+        };
+
+        survey.form = survey.form.replace( JR_URL, replacer );
+        survey.model = survey.model.replace( JR_URL, replacer );
+
+        if ( media[ 'form_logo.png' ] ) {
+            survey.form = survey.form.replace( /(class="form-logo"\s*>)/, `$1&lt;img src="${media['form_logo.png']}" alt="form logo">` );
+        }
+    }
+
+    return survey;
+}
+
+function _checkQuota( survey ) {
+    return surveyModel
+        .getNumber( survey.account.linkedServer )
+        .then( quotaUsed => {
+            if ( quotaUsed &lt;= survey.account.quota ) {
+                return Promise.resolve( survey );
+            }
+            const error = new Error( 'Forbidden. Quota exceeded.' );
+            error.status = 403;
+            throw error;
+        } );
+}
+
+function _respond( res, survey ) {
+    delete survey.credentials;
+
+    _replaceMediaSources( survey );
+
+    res.status( 200 );
+    res.send( {
+        form: survey.form,
+        // previously this was JSON.stringified, not sure why
+        model: survey.model,
+        theme: survey.theme,
+        branding: survey.account.branding,
+        // The hash components are converted to deal with a node_redis limitation with storing and retrieving null.
+        // If a form contains no media this hash is null, which would be an empty string upon first load.
+        // Subsequent cache checks will however get the string value 'null' causing the form cache to be unnecessarily refreshed
+        // on the client.
+        hash: _getCombinedHash( survey ),
+        languageMap: survey.languageMap
+    } );
+}
+
+function _getCombinedHash( survey ) {
+    const FORCE_UPDATE = 1;
+    const brandingHash = ( survey.account.branding &amp;&amp; survey.account.branding.source ) ? utils.md5( survey.account.branding.source ) : '';
+    return [ String( survey.formHash ), String( survey.mediaHash ), String( survey.xslHash ), String( survey.theme ), String( brandingHash ), String( FORCE_UPDATE ) ].join( '-' );
+}
+
+function _setCookieAndCredentials( survey, req ) {
+    // for external authentication, pass the cookie(s)
+    survey.cookie = req.headers.cookie;
+    // for OpenRosa authentication, add the credentials
+    survey.credentials = user.getCredentials( req );
+    return Promise.resolve( survey );
+}
+
+function _getSurveyParams( req ) {
+    const params = req.body;
+    const customParamName = req.app.get( 'query parameter to pass to submission' );
+    const customParam = customParamName ? req.query[ customParamName ] : null;
+
+    if ( req.enketoId ) {
+        return surveyModel.get( req.enketoId )
+            .then( account.check )
+            .then( _checkQuota )
+            .then( survey => {
+                survey.customParam = customParam;
+                return _setCookieAndCredentials( survey, req );
+            } );
+    } else if ( params.serverUrl &amp;&amp; params.xformId ) {
+        return account.check( {
+                openRosaServer: params.serverUrl,
+                openRosaId: params.xformId
+            } )
+            .then( _checkQuota )
+            .then( survey => {
+                survey.customParam = customParam;
+                return _setCookieAndCredentials( survey, req );
+            } );
+    } else if ( params.xformUrl ) {
+        const urlObj = url.parse( params.xformUrl );
+        if ( !urlObj || !urlObj.protocol || !urlObj.host ) {
+            const error = new Error( 'Bad Request. Form URL is invalid.' );
+            error.status = 400;
+            throw error;
+        }
+        const xUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+        return account.check( {
+                openRosaServer: xUrl
+            } )
+            .then( survey => // no need to check quota
+                Promise.resolve( {
+                    info: {
+                        downloadUrl: params.xformUrl
+                    },
+                    account: survey.account
+                } ) )
+            .then( survey => _setCookieAndCredentials( survey, req ) );
+    } else {
+        const error = new Error( 'Bad Request. Survey information not complete.' );
+        error.status = 400;
+        throw error;
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+
+</body>
+</html>

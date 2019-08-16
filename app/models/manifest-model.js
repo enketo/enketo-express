@@ -1,3 +1,7 @@
+/**
+ * @module manifest-model
+ */
+
 const libxml = require( 'libxslt' ).libxmljs;
 const url = require( 'url' );
 const path = require( 'path' );

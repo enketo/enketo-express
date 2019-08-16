@@ -1,8 +1,12 @@
 /* global: console, process, require, Promise */
 /**
- * See https://github.com/kobotoolbox/enketo-express/blob/master/doc/duplicates.md for more information about this tool.
- * 
- * MAKE A BACKUP BEFORE RUNNING THIS SCRIPT TO REMOVE DUPLICATES! 
+ * @module duplicates
+ */
+
+/**
+ * See https://github.com/kobotoolbox/enketo-express/blob/master/tutorials/60-duplicates.md for more information about this tool.
+ *
+ * MAKE A BACKUP BEFORE RUNNING THIS SCRIPT TO REMOVE DUPLICATES!
  */
 const config = require( '../app/models/config-model' ).server;
 const mainClient = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
@@ -42,6 +46,11 @@ if ( mode === 'analyze' ) {
         } );
 }
 
+/**
+ * Generates a raport about duplicate Enketo ids.
+ *
+ * @return {Promise}
+ */
 function checkDuplicateEnketoIds() {
     return getDuplicates()
         .then( duplicates => {
@@ -52,6 +61,11 @@ function checkDuplicateEnketoIds() {
         } );
 }
 
+/**
+ * Removes duplicate Enketo ids.
+ *
+ * @return {Promise}
+ */
 function removeDuplicateEnketoIds() {
     return getDuplicates()
         .then( duplicates => {
@@ -94,6 +108,11 @@ function removeDuplicateEnketoIds() {
         } );
 }
 
+/**
+ * Returns a list of duplicate Enketo ids.
+ *
+ * @return {Promise}
+ */
 function getDuplicates() {
     return getAllKeys()
         .then( keys => {
@@ -131,6 +150,11 @@ function getDuplicates() {
         } );
 }
 
+/**
+ * Returns all keys.
+ *
+ * @return {Promise<Error|Array>} a list of keys.
+ */
 function getAllKeys() {
     return new Promise( ( resolve, reject ) => {
         mainClient.keys( 'or:*', ( error, keys ) => {
@@ -143,6 +167,12 @@ function getAllKeys() {
     } );
 }
 
+/**
+ * Gets id from key.
+ *
+ * @param {string} key
+ * @return {Promise<Error|{key: string, id: string}>} a promise that resolves with key and id object.
+ */
 function getId( key ) {
     return new Promise( ( resolve, reject ) => {
         mainClient.get( key, ( error, id ) => {
@@ -158,6 +188,12 @@ function getId( key ) {
     } );
 }
 
+/**
+ * getSurveyOpenRosaId
+ *
+ * @param {object} duplicate
+ * @return {Promise<Error|object>}
+ */
 function getSurveyOpenRosaId( duplicate ) {
     return new Promise( ( resolve, reject ) => {
         mainClient.hgetall( `id:${duplicate.id}`, ( error, survey ) => {
@@ -171,6 +207,13 @@ function getSurveyOpenRosaId( duplicate ) {
     } );
 }
 
+/**
+ * remove
+ *
+ * @param {string} key
+ * @param {string} id
+ * @return {Promise<Error|string>}
+ */
 function remove( key, id ) {
     let msg;
     return new Promise( ( resolve, reject ) => {
@@ -189,6 +232,11 @@ function remove( key, id ) {
     } );
 }
 
+/**
+ * removeCache
+ *
+ * @param {string} key
+ */
 function removeCache( key ) {
     const cacheKey = key.replace( 'or:', 'ca:' );
     console.log( 'Removing cache for ', cacheKey );

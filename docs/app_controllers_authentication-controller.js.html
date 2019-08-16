@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>app/controllers/authentication-controller.js - Enketo Express</title>
+    
+    <meta name="description" content="The full-fledged Enketo web application for the ODK ecosystem" />
+    
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="wrap">
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/enketo/enketo-express" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h2><a href="https://github.com/enketo/enketo-express/blob/master/CHANGELOG.md" target="_blank" class="menu-item" id="change-log" >Change log</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-00-getting-started.html">Getting started</a></li><li><a href="tutorial-10-configuration.html">Configuration</a></li><li><a href="tutorial-11-api.html">API</a></li><li><a href="tutorial-12-updating.html">Updating</a></li><li><a href="tutorial-13-heroku.html">Heroku deployment</a></li><li><a href="tutorial-20-development.html">Development</a></li><li><a href="tutorial-21-translating-for-devs.html">Translation workflow (for developers)</a></li><li><a href="tutorial-22-custom-widgets.html">Adding custom widgets</a></li><li><a href="tutorial-23-comments.html">Comment feature</a></li><li><a href="tutorial-24-iframe-postmessage.html">Iframe postMessage communication</a></li><li><a href="tutorial-25-ordinals.html">Repeats & Ordinals</a></li><li><a href="tutorial-30-authentication-and-security.html">Authentication & security</a></li><li><a href="tutorial-40-browser-support.html">Browser support</a></li><li><a href="tutorial-50-theming.html">Theming</a></li><li><a href="tutorial-60-duplicates.html">Fixing duplicates</a></li></ul><h3>Modules</h3><ul><li><a href="module-account-model.html">account-model</a><ul class='methods'><li data-type='method'><a href="module-account-model.html#~_getAccount">_getAccount</a></li><li data-type='method'><a href="module-account-model.html#~_getHardcodedAccount">_getHardcodedAccount</a></li><li data-type='method'><a href="module-account-model.html#~_getServer">_getServer</a></li><li data-type='method'><a href="module-account-model.html#~_isAllowed">_isAllowed</a></li><li data-type='method'><a href="module-account-model.html#~_stripProtocol">_stripProtocol</a></li><li data-type='method'><a href="module-account-model.html#~check">check</a></li><li data-type='method'><a href="module-account-model.html#~get">get</a></li></ul></li><li><a href="module-authentication-controller.html">authentication-controller</a><ul class='methods'><li data-type='method'><a href="module-authentication-controller.html#~login">login</a></li><li data-type='method'><a href="module-authentication-controller.html#~logout">logout</a></li><li data-type='method'><a href="module-authentication-controller.html#~setToken">setToken</a></li></ul></li><li><a href="module-cache-model.html">cache-model</a><ul class='methods'><li data-type='method'><a href="module-cache-model.html#~_addHashes">_addHashes</a></li><li data-type='method'><a href="module-cache-model.html#~_getKey">_getKey</a></li><li data-type='method'><a href="module-cache-model.html#~flushAll">flushAll</a></li><li data-type='method'><a href="module-cache-model.html#~flushSurvey">flushSurvey</a></li><li data-type='method'><a href="module-cache-model.html#~getSurvey">getSurvey</a></li><li data-type='method'><a href="module-cache-model.html#~getSurveyHashes">getSurveyHashes</a></li><li data-type='method'><a href="module-cache-model.html#~isCacheUpToDate">isCacheUpToDate</a></li><li data-type='method'><a href="module-cache-model.html#~setSurvey">setSurvey</a></li></ul></li><li><a href="module-communicator.html">communicator</a><ul class='methods'><li data-type='method'><a href="module-communicator.html#~_findFormAddInfo">_findFormAddInfo</a></li><li data-type='method'><a href="module-communicator.html#~_request">_request</a></li><li data-type='method'><a href="module-communicator.html#~_simplifyFormObj">_simplifyFormObj</a></li><li data-type='method'><a href="module-communicator.html#~_xmlToJson">_xmlToJson</a></li><li data-type='method'><a href="module-communicator.html#~authenticate">authenticate</a></li><li data-type='method'><a href="module-communicator.html#~getAuthHeader">getAuthHeader</a></li><li data-type='method'><a href="module-communicator.html#~getFormListUrl">getFormListUrl</a></li><li data-type='method'><a href="module-communicator.html#~getManifest">getManifest</a></li><li data-type='method'><a href="module-communicator.html#~getMaxSize">getMaxSize</a></li><li data-type='method'><a href="module-communicator.html#~getSubmissionUrl">getSubmissionUrl</a></li><li data-type='method'><a href="module-communicator.html#~getUpdatedRequestOptions">getUpdatedRequestOptions</a></li><li data-type='method'><a href="module-communicator.html#~getXForm">getXForm</a></li><li data-type='method'><a href="module-communicator.html#~getXFormInfo">getXFormInfo</a></li></ul></li><li><a href="module-config-model.html">config-model</a><ul class='methods'><li data-type='method'><a href="module-config-model.html#~_convertNumbers">_convertNumbers</a></li><li data-type='method'><a href="module-config-model.html#~_convertType">_convertType</a></li><li data-type='method'><a href="module-config-model.html#~_emptyObjectProperties">_emptyObjectProperties</a></li><li data-type='method'><a href="module-config-model.html#~_extractRedisConfigFromUrl">_extractRedisConfigFromUrl</a></li><li data-type='method'><a href="module-config-model.html#~_findNumberIndex">_findNumberIndex</a></li><li data-type='method'><a href="module-config-model.html#~_findSetting">_findSetting</a></li><li data-type='method'><a href="module-config-model.html#~_getEmptyClone">_getEmptyClone</a></li><li data-type='method'><a href="module-config-model.html#~_setRedisConfigFromEnv">_setRedisConfigFromEnv</a></li><li data-type='method'><a href="module-config-model.html#~_updateConfigFromEnv">_updateConfigFromEnv</a></li><li data-type='method'><a href="module-config-model.html#~_updateConfigItemFromEnv">_updateConfigItemFromEnv</a></li><li data-type='method'><a href="module-config-model.html#~getThemesSupported">getThemesSupported</a></li></ul></li><li><a href="module-custom-error.html">custom-error</a><ul class='methods'><li data-type='method'><a href="module-custom-error.html#~TranslatedError">TranslatedError</a></li></ul></li><li><a href="module-duplicates.html">duplicates</a><ul class='methods'><li data-type='method'><a href="module-duplicates.html#~checkDuplicateEnketoIds">checkDuplicateEnketoIds</a></li><li data-type='method'><a href="module-duplicates.html#~getAllKeys">getAllKeys</a></li><li data-type='method'><a href="module-duplicates.html#~getDuplicates">getDuplicates</a></li><li data-type='method'><a href="module-duplicates.html#~getId">getId</a></li><li data-type='method'><a href="module-duplicates.html#~getSurveyOpenRosaId">getSurveyOpenRosaId</a></li><li data-type='method'><a href="module-duplicates.html#~remove">remove</a></li><li data-type='method'><a href="module-duplicates.html#~removeCache">removeCache</a></li><li data-type='method'><a href="module-duplicates.html#~removeDuplicateEnketoIds">removeDuplicateEnketoIds</a></li></ul></li><li><a href="module-instance-model.html">instance-model</a></li><li><a href="module-manifest-model.html">manifest-model</a></li><li><a href="module-pdf.html">pdf</a><ul class='methods'><li data-type='method'><a href="module-pdf.html#~get">get</a></li></ul></li><li><a href="module-router-utils.html">router-utils</a><ul class='methods'><li data-type='method'><a href="module-router-utils.html#~enketoIdParam">enketoIdParam</a></li></ul></li><li><a href="module-submission-model.html">submission-model</a><ul class='methods'><li data-type='method'><a href="module-submission-model.html#~isNew">isNew</a></li></ul></li><li><a href="module-submissions-controller.html">submissions-controller</a><ul class='methods'><li data-type='method'><a href="module-submissions-controller.html#~getInstance">getInstance</a></li><li data-type='method'><a href="module-submissions-controller.html#~maxSize">maxSize</a></li><li data-type='method'><a href="module-submissions-controller.html#~submit">submit</a></li></ul></li><li><a href="module-survey-controller.html">survey-controller</a><ul class='methods'><li data-type='method'><a href="module-survey-controller.html#~xform">xform</a></li></ul></li><li><a href="module-survey-model.html">survey-model</a><ul class='methods'><li data-type='method'><a href="module-survey-model.html#~_createNewEnketoId">_createNewEnketoId</a></li><li data-type='method'><a href="module-survey-model.html#~getSurvey">getSurvey</a></li></ul></li><li><a href="module-transformation-controller.html">transformation-controller</a><ul class='methods'><li data-type='method'><a href="module-transformation-controller.html#~_getMediaMap">_getMediaMap</a></li><li data-type='method'><a href="module-transformation-controller.html#~_updateCache">_updateCache</a></li><li data-type='method'><a href="module-transformation-controller.html#~getSurveyHash">getSurveyHash</a></li><li data-type='method'><a href="module-transformation-controller.html#~getSurveyParts">getSurveyParts</a></li></ul></li><li><a href="module-user-model.html">user-model</a><ul class='methods'><li data-type='method'><a href="module-user-model.html#~getCredentials">getCredentials</a></li></ul></li><li><a href="module-utils.html">utils</a><ul class='methods'><li data-type='method'><a href="module-utils.html#~areOwnPropertiesEqual">areOwnPropertiesEqual</a></li><li data-type='method'><a href="module-utils.html#~cleanUrl">cleanUrl</a></li><li data-type='method'><a href="module-utils.html#~getOpenRosaKey">getOpenRosaKey</a></li><li data-type='method'><a href="module-utils.html#~getXformsManifestHash">getXformsManifestHash</a></li><li data-type='method'><a href="module-utils.html#~insecureAes192Decrypt">insecureAes192Decrypt</a></li><li data-type='method'><a href="module-utils.html#~insecureAes192Encrypt">insecureAes192Encrypt</a></li><li data-type='method'><a href="module-utils.html#~isValidUrl">isValidUrl</a></li><li data-type='method'><a href="module-utils.html#~md5">md5</a></li><li data-type='method'><a href="module-utils.html#~pickRandomItemFromArray">pickRandomItemFromArray</a></li><li data-type='method'><a href="module-utils.html#~randomString">randomString</a></li><li data-type='method'><a href="module-utils.html#~toLocalMediaUrl">toLocalMediaUrl</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">app/controllers/authentication-controller.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module authentication-controller
+ */
+
+const csrfProtection = require( 'csurf' )( {
+    cookie: true
+} );
+const jwt = require( 'jwt-simple' );
+const express = require( 'express' );
+const router = express.Router();
+// var debug = require( 'debug' )( 'authentication-controller' );
+
+module.exports = app => {
+    app.use( `${app.get( 'base path' )}/`, router );
+};
+
+router
+    .get( '/login', csrfProtection, login )
+    .get( '/logout', logout )
+    .post( '/login', csrfProtection, setToken );
+
+/**
+ * login
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {Function} next - callback for handling errors.
+ */
+function login( req, res, next ) {
+    let error;
+    const authSettings = req.app.get( 'linked form and data server' ).authentication;
+    const returnUrl = req.query.return_url || '';
+
+    if ( authSettings.type.toLowerCase() !== 'basic' ) {
+        if ( authSettings.url ) {
+            // the url is expected to:
+            // - authenticate the user,
+            // - set a session cookie (cross-domain if necessary) or add a token as query parameter to the return URL,
+            // - and return the user back to Enketo
+            // - enketo will then pass the cookie or token along when requesting resources, or submitting data
+            // Though returnUrl was encoded with encodeURIComponent, for some reason it appears to have been automatically decoded here.
+            res.redirect( authSettings.url.replace( '{RETURNURL}', encodeURIComponent( returnUrl ) ) );
+        } else {
+            error = new Error( 'Enketo configuration error. External authentication URL is missing.' );
+            error.status = 500;
+            next( error );
+        }
+    } else if ( req.app.get( 'env' ) !== 'production' || req.protocol === 'https' || req.headers[ 'x-forwarded-proto' ] === 'https' || req.app.get( 'linked form and data server' ).authentication[ 'allow insecure transport' ] ) {
+        res.render( 'surveys/login', {
+            csrfToken: req.csrfToken(),
+            server: req.app.get( 'linked form and data server' ).name
+        } );
+    } else {
+        error = new Error( 'Forbidden. Enketo needs to use https in production mode to enable authentication.' );
+        error.status = 405;
+        next( error );
+    }
+}
+
+/**
+ * logout
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+function logout( req, res ) {
+    res
+        .clearCookie( req.app.get( 'authentication cookie name' ) )
+        .clearCookie( '__enketo_meta_username' )
+        .clearCookie( '__enketo_logout' )
+        .render( 'surveys/logout' );
+}
+
+/**
+ * setToken
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+function setToken( req, res ) {
+    const username = req.body.username.trim();
+    const maxAge = 30 * 24 * 60 * 60 * 1000;
+    const returnUrl = req.query.return_url || '';
+
+    const token = jwt.encode( {
+        user: username,
+        pass: req.body.password
+    }, req.app.get( 'encryption key' ) );
+
+    // Do not allow authentication cookies to be saved if enketo runs on http, unless 'allow insecure transport' is set to true
+    // This is double because the check in login() already ensures the login screen isn't even shown.
+    const secure = ( req.protocol === 'production' &amp;&amp; !req.app.get( 'linked form and data server' ).authentication[ 'allow insecure transport' ] );
+
+    const authOptions = {
+        secure,
+        signed: true,
+        httpOnly: true,
+        path: '/'
+    };
+
+    const uidOptions = {
+        signed: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        path: '/'
+    };
+
+    if ( req.body.remember ) {
+        authOptions.maxAge = maxAge;
+        uidOptions.maxAge = maxAge;
+    }
+
+    // store the token in a cookie on the client
+    res
+        .cookie( req.app.get( 'authentication cookie name' ), token, authOptions )
+        .cookie( '__enketo_logout', true )
+        .cookie( '__enketo_meta_username', username, uidOptions );
+
+    if ( returnUrl ) {
+        res.redirect( returnUrl );
+    } else {
+        res.send( 'Username and password are stored. You can close this page now.' );
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+
+</body>
+</html>

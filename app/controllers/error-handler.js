@@ -2,7 +2,7 @@
 
 function getErrorMessage( req, error ) {
     if ( error.message ) {
-        // convert certain set of messages into a more readable 
+        // convert certain set of messages into a more readable
         // and translated message
         if ( /ECONNREFUSED/.test( error.message ) ) {
             return req.i18n.t( 'error.econnrefused' );

@@ -1,3 +1,7 @@
+/**
+ * @module instance-model
+ */
+
 const config = require( './config-model' ).server;
 const TError = require( '../lib/custom-error' ).TranslatedError;
 const utils = require( '../lib/utils' );

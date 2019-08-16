@@ -14,7 +14,7 @@ let instanceAttachments;
 
 /**
  * Initialize the file manager .
- * @return {[type]} promise boolean or rejection with Error
+ * @return {*} promise boolean or rejection with Error
  */
 function init() {
     return Promise.resolve( true );
@@ -40,7 +40,7 @@ function setInstanceAttachments( attachments ) {
  * as a src attribute.
  *
  * @param  {?string|Object} subject File or filename
- * @return {[type]}         promise url string or rejection with Error
+ * @return {*}         promise url string or rejection with Error
  */
 function getFileUrl( subject ) {
     return new Promise( ( resolve, reject ) => {
@@ -86,7 +86,7 @@ function getFileUrl( subject ) {
  * It is meant for loading images into a canvas.
  * 
  * @param  {?string|Object} subject File or filename in local storage
- * @return {[type]}         promise url string or rejection with Error
+ * @return {*}         promise url string or rejection with Error
  */
 function getObjectUrl( subject ) {
     return getFileUrl( subject )
@@ -173,7 +173,7 @@ function _getInstanceId() {
 
 /**
  * Whether the file is too large too handle and should be rejected
- * @param  {[type]}  file the File
+ * @param  {*}  file the File
  * @return {Boolean}
  */
 function isTooLarge( file ) {

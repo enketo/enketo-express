@@ -228,8 +228,8 @@ const propertyStore = {
 const surveyStore = {
     /** 
      * Obtains a single survey's form HTML and XML model, theme, external instances from storage
-     * @param  {[type]} id [description]
-     * @return {[type]}    [description]
+     * @param  {*} id [description]
+     * @return {*}    [description]
      */
     get( id ) {
         return server.surveys.get( id )
@@ -239,7 +239,7 @@ const surveyStore = {
     /**
      * Stores a single survey's form HTML and XML model, theme, external instances
      *
-     * @param {[type]} survey [description]
+     * @param {*} survey [description]
      * @return {Promise}        [description]
      */
     set( survey ) {
@@ -253,7 +253,7 @@ const surveyStore = {
     /**
      * Updates a single survey's form HTML and XML model as well any external resources belonging to the form
      *
-     * @param  {[type]} s [description]
+     * @param  {*} s [description]
      * @return {Promise}        [description]
      */
     update( survey ) {
@@ -313,7 +313,7 @@ const surveyStore = {
     /**
      * Removes survey form and all its resources
      *
-     * @param  {[type]} id [description]
+     * @param  {*} id [description]
      * @return {Promise}    [description]
      */
     remove( id ) {
@@ -352,7 +352,7 @@ const surveyStore = {
          * Updates a form resource in storage or creates it if it does not yet exist.
          *
          * @param  {{item:Blob, url:string}} resource
-         * @return {[type]}          [description]
+         * @return {*}          [description]
          */
         update( id, resource ) {
             return _updateFile( 'resources', id, resource );
@@ -411,7 +411,7 @@ const recordStore = {
     /** 
      * Obtains a single record (XML + files)
      *
-     * @param  {[type]} record [description]
+     * @param  {*} record [description]
      * @return {Promise}        [description]
      */
     get( instanceId ) {
@@ -465,7 +465,7 @@ const recordStore = {
     /**
      * Sets a new single record (XML + files)
      *
-     * @param {[type]} record [description]
+     * @param {*} record [description]
      * @return {Promise}        [description]
      */
     set( record ) {
@@ -505,7 +505,7 @@ const recordStore = {
     /**
      * Updates (or creates) a single record (XML + files)
      *
-     * @param {[type]} record [description]
+     * @param {*} record [description]
      * @return {Promise}        [description]
      */
     update( record ) {
@@ -556,7 +556,7 @@ const recordStore = {
     /** 
      * Removes a single record (XML + files)
      *
-     * @param {[type]} record [description]
+     * @param {*} record [description]
      * @return {Promise}        [description]
      */
     remove( instanceId ) {
@@ -754,7 +754,7 @@ function _updateFile( table, id, file ) {
 
 /**
  * Completely remove the database (no db.js function for this yet)
- * @return {[type]} [description]
+ * @return {*} [description]
  */
 function flush() {
     let request;

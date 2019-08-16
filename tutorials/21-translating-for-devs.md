@@ -5,7 +5,7 @@ Translation workflow (for developers)
 
 Install [gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md#getting-started)
 
-### 1. Update translation keys from code 
+### 1. Update translation keys from code
 
 The translation keys in [locales/src/en/translation.json](en/translation.json) will be continuously updated with `grunt develop`. You can also do this manually by running `gulp` from locales/.
 
@@ -13,7 +13,7 @@ The translation keys in [locales/src/en/translation.json](en/translation.json) w
 
 The easiest is to manually edit the English strings in [locales/src/en/translation.json](en/translation.json). A piece of text can be divided into paragraphs by splitting it up into an array. A plural form can be added by adding the same key with `_plural` appended to it (there are more advanced plural options too, see [i18next doc](http://i18next.com/pages/doc_features.html))
 
-### 3. Update Transifex resource 
+### 3. Update Transifex resource
 
 This can be done manually if the translations should be finished before the new keys are merged in master. It is also done automatically by Transifex as soon as the new /locales/src/en/translation.json is merged in master.
 

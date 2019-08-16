@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Tutorial: Comment feature - Enketo Express</title>
+    
+    <meta name="description" content="The full-fledged Enketo web application for the ODK ecosystem" />
+    
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="wrap">
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/enketo/enketo-express" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h2><a href="https://github.com/enketo/enketo-express/blob/master/CHANGELOG.md" target="_blank" class="menu-item" id="change-log" >Change log</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-00-getting-started.html">Getting started</a></li><li><a href="tutorial-10-configuration.html">Configuration</a></li><li><a href="tutorial-11-api.html">API</a></li><li><a href="tutorial-12-updating.html">Updating</a></li><li><a href="tutorial-13-heroku.html">Heroku deployment</a></li><li><a href="tutorial-20-development.html">Development</a></li><li><a href="tutorial-21-translating-for-devs.html">Translation workflow (for developers)</a></li><li><a href="tutorial-22-custom-widgets.html">Adding custom widgets</a></li><li><a href="tutorial-23-comments.html">Comment feature</a></li><li><a href="tutorial-24-iframe-postmessage.html">Iframe postMessage communication</a></li><li><a href="tutorial-25-ordinals.html">Repeats & Ordinals</a></li><li><a href="tutorial-30-authentication-and-security.html">Authentication & security</a></li><li><a href="tutorial-40-browser-support.html">Browser support</a></li><li><a href="tutorial-50-theming.html">Theming</a></li><li><a href="tutorial-60-duplicates.html">Fixing duplicates</a></li></ul><h3>Modules</h3><ul><li><a href="module-account-model.html">account-model</a><ul class='methods'><li data-type='method'><a href="module-account-model.html#~_getAccount">_getAccount</a></li><li data-type='method'><a href="module-account-model.html#~_getHardcodedAccount">_getHardcodedAccount</a></li><li data-type='method'><a href="module-account-model.html#~_getServer">_getServer</a></li><li data-type='method'><a href="module-account-model.html#~_isAllowed">_isAllowed</a></li><li data-type='method'><a href="module-account-model.html#~_stripProtocol">_stripProtocol</a></li><li data-type='method'><a href="module-account-model.html#~check">check</a></li><li data-type='method'><a href="module-account-model.html#~get">get</a></li></ul></li><li><a href="module-authentication-controller.html">authentication-controller</a><ul class='methods'><li data-type='method'><a href="module-authentication-controller.html#~login">login</a></li><li data-type='method'><a href="module-authentication-controller.html#~logout">logout</a></li><li data-type='method'><a href="module-authentication-controller.html#~setToken">setToken</a></li></ul></li><li><a href="module-cache-model.html">cache-model</a><ul class='methods'><li data-type='method'><a href="module-cache-model.html#~_addHashes">_addHashes</a></li><li data-type='method'><a href="module-cache-model.html#~_getKey">_getKey</a></li><li data-type='method'><a href="module-cache-model.html#~flushAll">flushAll</a></li><li data-type='method'><a href="module-cache-model.html#~flushSurvey">flushSurvey</a></li><li data-type='method'><a href="module-cache-model.html#~getSurvey">getSurvey</a></li><li data-type='method'><a href="module-cache-model.html#~getSurveyHashes">getSurveyHashes</a></li><li data-type='method'><a href="module-cache-model.html#~isCacheUpToDate">isCacheUpToDate</a></li><li data-type='method'><a href="module-cache-model.html#~setSurvey">setSurvey</a></li></ul></li><li><a href="module-communicator.html">communicator</a><ul class='methods'><li data-type='method'><a href="module-communicator.html#~_findFormAddInfo">_findFormAddInfo</a></li><li data-type='method'><a href="module-communicator.html#~_request">_request</a></li><li data-type='method'><a href="module-communicator.html#~_simplifyFormObj">_simplifyFormObj</a></li><li data-type='method'><a href="module-communicator.html#~_xmlToJson">_xmlToJson</a></li><li data-type='method'><a href="module-communicator.html#~authenticate">authenticate</a></li><li data-type='method'><a href="module-communicator.html#~getAuthHeader">getAuthHeader</a></li><li data-type='method'><a href="module-communicator.html#~getFormListUrl">getFormListUrl</a></li><li data-type='method'><a href="module-communicator.html#~getManifest">getManifest</a></li><li data-type='method'><a href="module-communicator.html#~getMaxSize">getMaxSize</a></li><li data-type='method'><a href="module-communicator.html#~getSubmissionUrl">getSubmissionUrl</a></li><li data-type='method'><a href="module-communicator.html#~getUpdatedRequestOptions">getUpdatedRequestOptions</a></li><li data-type='method'><a href="module-communicator.html#~getXForm">getXForm</a></li><li data-type='method'><a href="module-communicator.html#~getXFormInfo">getXFormInfo</a></li></ul></li><li><a href="module-config-model.html">config-model</a><ul class='methods'><li data-type='method'><a href="module-config-model.html#~_convertNumbers">_convertNumbers</a></li><li data-type='method'><a href="module-config-model.html#~_convertType">_convertType</a></li><li data-type='method'><a href="module-config-model.html#~_emptyObjectProperties">_emptyObjectProperties</a></li><li data-type='method'><a href="module-config-model.html#~_extractRedisConfigFromUrl">_extractRedisConfigFromUrl</a></li><li data-type='method'><a href="module-config-model.html#~_findNumberIndex">_findNumberIndex</a></li><li data-type='method'><a href="module-config-model.html#~_findSetting">_findSetting</a></li><li data-type='method'><a href="module-config-model.html#~_getEmptyClone">_getEmptyClone</a></li><li data-type='method'><a href="module-config-model.html#~_setRedisConfigFromEnv">_setRedisConfigFromEnv</a></li><li data-type='method'><a href="module-config-model.html#~_updateConfigFromEnv">_updateConfigFromEnv</a></li><li data-type='method'><a href="module-config-model.html#~_updateConfigItemFromEnv">_updateConfigItemFromEnv</a></li><li data-type='method'><a href="module-config-model.html#~getThemesSupported">getThemesSupported</a></li></ul></li><li><a href="module-custom-error.html">custom-error</a><ul class='methods'><li data-type='method'><a href="module-custom-error.html#~TranslatedError">TranslatedError</a></li></ul></li><li><a href="module-duplicates.html">duplicates</a><ul class='methods'><li data-type='method'><a href="module-duplicates.html#~checkDuplicateEnketoIds">checkDuplicateEnketoIds</a></li><li data-type='method'><a href="module-duplicates.html#~getAllKeys">getAllKeys</a></li><li data-type='method'><a href="module-duplicates.html#~getDuplicates">getDuplicates</a></li><li data-type='method'><a href="module-duplicates.html#~getId">getId</a></li><li data-type='method'><a href="module-duplicates.html#~getSurveyOpenRosaId">getSurveyOpenRosaId</a></li><li data-type='method'><a href="module-duplicates.html#~remove">remove</a></li><li data-type='method'><a href="module-duplicates.html#~removeCache">removeCache</a></li><li data-type='method'><a href="module-duplicates.html#~removeDuplicateEnketoIds">removeDuplicateEnketoIds</a></li></ul></li><li><a href="module-instance-model.html">instance-model</a></li><li><a href="module-manifest-model.html">manifest-model</a></li><li><a href="module-pdf.html">pdf</a><ul class='methods'><li data-type='method'><a href="module-pdf.html#~get">get</a></li></ul></li><li><a href="module-router-utils.html">router-utils</a><ul class='methods'><li data-type='method'><a href="module-router-utils.html#~enketoIdParam">enketoIdParam</a></li></ul></li><li><a href="module-submission-model.html">submission-model</a><ul class='methods'><li data-type='method'><a href="module-submission-model.html#~isNew">isNew</a></li></ul></li><li><a href="module-submissions-controller.html">submissions-controller</a><ul class='methods'><li data-type='method'><a href="module-submissions-controller.html#~getInstance">getInstance</a></li><li data-type='method'><a href="module-submissions-controller.html#~maxSize">maxSize</a></li><li data-type='method'><a href="module-submissions-controller.html#~submit">submit</a></li></ul></li><li><a href="module-survey-controller.html">survey-controller</a><ul class='methods'><li data-type='method'><a href="module-survey-controller.html#~xform">xform</a></li></ul></li><li><a href="module-survey-model.html">survey-model</a><ul class='methods'><li data-type='method'><a href="module-survey-model.html#~_createNewEnketoId">_createNewEnketoId</a></li><li data-type='method'><a href="module-survey-model.html#~getSurvey">getSurvey</a></li></ul></li><li><a href="module-transformation-controller.html">transformation-controller</a><ul class='methods'><li data-type='method'><a href="module-transformation-controller.html#~_getMediaMap">_getMediaMap</a></li><li data-type='method'><a href="module-transformation-controller.html#~_updateCache">_updateCache</a></li><li data-type='method'><a href="module-transformation-controller.html#~getSurveyHash">getSurveyHash</a></li><li data-type='method'><a href="module-transformation-controller.html#~getSurveyParts">getSurveyParts</a></li></ul></li><li><a href="module-user-model.html">user-model</a><ul class='methods'><li data-type='method'><a href="module-user-model.html#~getCredentials">getCredentials</a></li></ul></li><li><a href="module-utils.html">utils</a><ul class='methods'><li data-type='method'><a href="module-utils.html#~areOwnPropertiesEqual">areOwnPropertiesEqual</a></li><li data-type='method'><a href="module-utils.html#~cleanUrl">cleanUrl</a></li><li data-type='method'><a href="module-utils.html#~getOpenRosaKey">getOpenRosaKey</a></li><li data-type='method'><a href="module-utils.html#~getXformsManifestHash">getXformsManifestHash</a></li><li data-type='method'><a href="module-utils.html#~insecureAes192Decrypt">insecureAes192Decrypt</a></li><li data-type='method'><a href="module-utils.html#~insecureAes192Encrypt">insecureAes192Encrypt</a></li><li data-type='method'><a href="module-utils.html#~isValidUrl">isValidUrl</a></li><li data-type='method'><a href="module-utils.html#~md5">md5</a></li><li data-type='method'><a href="module-utils.html#~pickRandomItemFromArray">pickRandomItemFromArray</a></li><li data-type='method'><a href="module-utils.html#~randomString">randomString</a></li><li data-type='method'><a href="module-utils.html#~toLocalMediaUrl">toLocalMediaUrl</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Tutorial: Comment feature</h1>
+    
+
+    <section>
+
+<header>
+    
+
+    <h2>Comment feature</h2>
+</header>
+
+<article>
+    <h1 id="comment-feature">Comment Feature</h1>
+<p>The comment feature is an Enketo extension to the OpenRosa XForm spec that allows form designers to add a comment widget to individual questions. If funding allows this could quite easily be extended further by adding a comment to a group or the form as a whole.</p>
+<p>This feature has the following characteristics:</p>
+<ul>
+<li>A comment is coded in XForms like a separate question. It has it's own XML data node. This means that XPath can be used to add form logic that references this question, e.g. a dynamic &quot;required&quot; expression that specifies that a particular question is required unless it has a comment.</li>
+<li>The <code>for</code> attribute, in the <em>http://enketo.org/xforms</em> namespace, is used on the <code>&lt;bind&gt;</code> element to point a comment node to a question node.</li>
+<li>An appearance is used to instantiate the widget. Without this appearance the comment input would show up as a regular question.</li>
+<li>Optionally a custom-namespaced attribute could be added to the data node in the model in the XForm definition. Enketo will not use that information but it could be helpful to link user-entered data with a comment in the analysis.</li>
+</ul>
+<p>This feature is not meant to be hand-coded into an XLSForm or XForm, as it quite tedious (but it can be done). It is meant to be added to advanced XLSForm or XForm form builders.</p>
+<h3 id="how-to-use">How to use</h3>
+<p>To add a comment widget to a question, the following needs to be defined in the XLSForm:</p>
+<h4 id="namespace">Namespace</h4>
+<p>In XLSForm on the settings sheet, add a column <code>namespaces</code> and populate this with <code>enk=http://enketo.org/xforms</code>.</p>
+<table>
+<thead>
+<tr>
+<th>form_title</th>
+<th>namespaces</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>My Form</td>
+<td>enk=&quot;http://enketo.org/xforms&quot;</td>
+</tr>
+</tbody>
+</table>
+<h4 id="question">Question</h4>
+<p>Add a question of type <code>text</code>, optionally with appearance <code>multiline</code>, preferably immediately after the question node it refers to (for future printability of records).</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>name</th>
+<th>label</th>
+<th>appearance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>text</td>
+<td>a</td>
+<td>Enter text</td>
+<td></td>
+</tr>
+<tr>
+<td>text</td>
+<td>a_comment</td>
+<td>Enter a comment</td>
+<td>multiline</td>
+</tr>
+</tbody>
+</table>
+<h4 id="appearance">Appearance</h4>
+<p>Give this question the appearance <code>comment</code> to ensure the question will be displayed as a comment widget.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>name</th>
+<th>label</th>
+<th>appearance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>text</td>
+<td>a</td>
+<td>Enter text</td>
+<td></td>
+</tr>
+<tr>
+<td>text</td>
+<td>a_comment</td>
+<td>Enter a comment</td>
+<td>multiline comment</td>
+</tr>
+</tbody>
+</table>
+<h4 id="add-a-bind%3A%3Aenk%3Afor-column">Add a bind::enk:for column</h4>
+<p>For each discrepancy note question, add a reference to the question node it refers to in the <code>bind::enk:for</code> column, e.g. <code>${a}</code>. The prefix <code>enk</code> corresponds with the namespace prefix added on the settings sheet.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>name</th>
+<th>label</th>
+<th>appearance</th>
+<th>bind::enk:for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>text</td>
+<td>a</td>
+<td>Enter text</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>text</td>
+<td>a_comment</td>
+<td>Enter a comment</td>
+<td>multiline comment</td>
+<td>${a}</td>
+</tr>
+</tbody>
+</table>
+<h4 id="dynamic-required">Dynamic required</h4>
+<p>Optionally, if you'd like to make question &quot;a&quot; required only if there is no comment, you could use the regular XLSForm/XPath syntax. Nothing new here. You could do the same for relevant and constraint logic too.</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>name</th>
+<th>label</th>
+<th>appearance</th>
+<th>bind::enk:for</th>
+<th>required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>text</td>
+<td>a</td>
+<td>Enter text</td>
+<td></td>
+<td></td>
+<td>$a_comment = ''</td>
+</tr>
+<tr>
+<td>text</td>
+<td>a_comment</td>
+<td>Enter a comment</td>
+<td>multiline comment</td>
+<td>${a}</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="xform-sample">XForm sample</h4>
+<pre class="prettyprint source lang-xml"><code>&lt;?xml version=&quot;1.0&quot;?>
+&lt;h:html xmlns=&quot;http://www.w3.org/2002/xforms&quot; xmlns:enk=&quot;http://enketo.org/xforms&quot; xmlns:ev=&quot;http://www.w3.org/2001/xml-events&quot; xmlns:h=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:jr=&quot;http://openrosa.org/javarosa&quot; xmlns:orx=&quot;http://openrosa.org/xforms&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;>
+  &lt;h:head>
+    &lt;h:title>My Form&lt;/h:title>
+    &lt;model>
+      &lt;instance>
+        &lt;myform id=&quot;myform&quot;>
+          &lt;a/>
+          &lt;a_comment/>
+          &lt;meta>
+            &lt;instanceID/>
+          &lt;/meta>
+        &lt;/myform>
+      &lt;/instance>
+      &lt;bind nodeset=&quot;/myform/a&quot; required=&quot;/myform/a_comment = ''&quot; type=&quot;string&quot;/>
+      &lt;bind nodeset=&quot;/myform/a_comment&quot; enk:for=&quot;/myform/a&quot;  type=&quot;string&quot;/>
+      &lt;bind nodeset=&quot;/myform/meta/instanceID&quot; jr:preload=&quot;uid&quot; type=&quot;string&quot;/>
+    &lt;/model>
+  &lt;/h:head>
+  &lt;h:body>
+    &lt;input appearance=&quot;minimal&quot; ref=&quot;/myform/a&quot;>
+      &lt;label>Enter text&lt;/label>
+      &lt;hint>required unless comment provided&lt;/hint>
+    &lt;/input>
+    &lt;input appearance=&quot;comment multiline&quot; ref=&quot;/myform/a_comment&quot;>
+      &lt;label>Enter a comment&lt;/label>
+    &lt;/input>
+  &lt;/h:body>
+&lt;/h:html>
+
+</code></pre>
+</article>
+
+</section>
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+
+</body>
+</html>

@@ -1,3 +1,7 @@
+/**
+ * @module router-utils
+ */
+
 const utils = require( './utils' );
 const config = require( '../models/config-model' ).server;
 const keys = {
@@ -5,6 +9,14 @@ const keys = {
     view: `${config[ 'less secure encryption key' ]}view`,
 };
 
+/**
+ * enketoIdParam
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {Function} next
+ * @param {string} id
+ */
 function enketoIdParam( req, res, next, id ) {
     if ( /^::[A-z0-9]{4,8}$/.test( id ) ) {
         req.enketoId = id.substring( 2 );
