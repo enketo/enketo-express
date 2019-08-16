@@ -23,7 +23,7 @@
         "test": "grunt test",
         "postinstall": "grunt",
         "beautify": "grunt jsbeautifier:fix",
-        "build-docs": "./node_modules/.bin/jsdoc -c jsdoc.config.js"
+        "build-docs": "rimraf docs && ./node_modules/.bin/jsdoc -c jsdoc.config.js"
     },
     "private": true,
     "license": "Apache-2.0",
@@ -109,6 +109,7 @@
         "karma-safari-launcher": "1.0.x",
         "karma-sinon-chai": "2.0.x",
         "mocha": "6.1.x",
+        "rimraf": "^3.0.0",
         "sinon": "7.3.x",
         "sinon-chai": "3.3.x",
         "supertest": "4.0.x"
