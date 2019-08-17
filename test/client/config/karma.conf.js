@@ -5,6 +5,12 @@ const commonjs = require( 'rollup-plugin-commonjs' );
 const json = require( 'rollup-plugin-json' );
 const builtins = require( 'rollup-plugin-node-builtins' );
 const globals = require( 'rollup-plugin-node-globals' );
+const path = require( 'path' );
+const rollupIstanbul = require( 'rollup-plugin-istanbul' );
+const istanbul = require('istanbul');
+const shieldBadgeReporter = require('istanbul-reporter-shield-badge');
+
+istanbul.Report.register(shieldBadgeReporter);
 
 module.exports = config => {
     config.set( {
@@ -53,6 +59,12 @@ module.exports = config => {
                 json(), // used to import package.json in tests
                 builtins(),
                 globals(),
+                rollupIstanbul( {
+                    include: [
+                        'app/**/*.js'
+                    ],
+                    exclude: []
+                } )
             ]
         },
 
@@ -65,7 +77,33 @@ module.exports = config => {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: [ 'dots' ],
+        reporters: [ 'dots', 'coverage' ],
+        
+        
+        coverageReporter: {
+            dir: 'test-coverage',
+            reporters: [
+                // for in-depth analysis in your browser
+                {
+                    type: 'html',
+                    includeAllSources: true
+                },
+                // for generating coverage badge in README.md
+                {
+                    type: 'shield-badge',
+                    range: [60, 80],
+                    subject: 'coverage',
+                    readmeFilename: 'README.md',
+                    readmeDir: path.resolve(__dirname, '../../../..'),
+                    includeAllSources: true
+                },
+                // for displaying percentages summary in command line
+                {
+                    type: 'text-summary',
+                    includeAllSources: true
+                }
+            ]
+        },
 
 
         // web server port

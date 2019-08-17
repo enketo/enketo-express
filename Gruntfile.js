@@ -149,7 +149,6 @@ module.exports = grunt => {
         karma: {
             options: {
                 singleRun: true,
-                reporters: [ 'dots' ],
                 configFile: 'test/client/config/karma.conf.js'
             },
             headless: {
