@@ -2,11 +2,13 @@
 .scratchpad
 .nodemon-*
 .DS_Store
+Thumbs.db
 .env
 *.sublime-project
 *.sublime-workspace
 *.diff
 node_modules
+npm-debug.log
 public/css/*.css
 **/build/*
 translation_old.json

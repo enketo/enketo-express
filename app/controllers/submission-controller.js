@@ -1,3 +1,7 @@
+/**
+ * @module submissions-controller
+ */
+
 const communicator = require( '../lib/communicator' );
 const surveyModel = require( '../models/survey-model' );
 const userModel = require( '../models/user-model' );
@@ -35,14 +39,13 @@ router
         next( error );
     } );
 
-/** 
+/**
  * Simply pipes well-formed request to the OpenRosa server and
  * copies the response received.
  *
- * @param  {[type]}   req  [description]
- * @param  {[type]}   res  [description]
- * @param  {Function} next [description]
- * @return {[type]}        [description]
+ * @param {*} req
+ * @param {*} res
+ * @param {Function} next - callback for handling errors.
  */
 function submit( req, res, next ) {
     let submissionUrl;
@@ -73,7 +76,7 @@ function submit( req, res, next ) {
             // The Date header is actually forbidden to set programmatically, but we do it anyway to comply with OpenRosa
             options.headers[ 'Date' ] = new Date().toUTCString();
 
-            // pipe the request 
+            // pipe the request
             req.pipe( request( options ) )
                 .on( 'response', orResponse => {
                     if ( orResponse.statusCode === 201 ) {
@@ -100,6 +103,13 @@ function submit( req, res, next ) {
         .catch( next );
 }
 
+/**
+ * Get max submission size.
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {Function} next - callback for handling errors.
+ */
 function maxSize( req, res, next ) {
     if ( req.query.xformUrl ) {
         // Non-standard way of attempting to obtain max submission size from XForm url directly
@@ -129,10 +139,9 @@ function maxSize( req, res, next ) {
 /**
  * Obtains cached instance (for editing)
  *
- * @param  {[type]}   req  [description]
- * @param  {[type]}   res  [description]
- * @param  {Function} next [description]
- * @return {[type]}        [description]
+ * @param {*} req
+ * @param {*} res
+ * @param {Function} next - callback for handling errors.
  */
 function getInstance( req, res, next ) {
     surveyModel.get( req.enketoId )

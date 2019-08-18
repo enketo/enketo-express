@@ -21,7 +21,9 @@
     "scripts": {
         "start": "node .",
         "test": "grunt test",
-        "postinstall": "grunt"
+        "postinstall": "grunt",
+        "beautify": "grunt jsbeautifier:fix",
+        "build-docs": "rimraf docs && ./node_modules/.bin/jsdoc -c jsdoc.config.js"
     },
     "private": true,
     "license": "Apache-2.0",
@@ -87,6 +89,8 @@
     "devDependencies": {
         "chai": "4.2.x",
         "chai-as-promised": "*",
+        "docdash": "^1.1.1",
+        "eslint-plugin-jsdoc": "^15.8.0",
         "grunt-concurrent": "3.x.x",
         "grunt-contrib-watch": "1.1.x",
         "grunt-eslint": "22.x.x",
@@ -98,6 +102,8 @@
         "i18next-parser": "0.13.0",
         "istanbul": "^0.4.5",
         "istanbul-reporter-shield-badge": "^1.2.0",
+=======
+        "jsdoc": "^3.6.3",
         "karma": "4.1.x",
         "karma-chrome-launcher": "2.2.x",
         "karma-coverage": "^1.1.2",
@@ -108,6 +114,7 @@
         "karma-safari-launcher": "1.0.x",
         "karma-sinon-chai": "2.0.x",
         "mocha": "6.1.x",
+        "rimraf": "^3.0.0",
         "sinon": "7.3.x",
         "sinon-chai": "3.3.x",
         "supertest": "4.0.x"

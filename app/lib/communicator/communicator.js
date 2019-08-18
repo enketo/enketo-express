@@ -1,3 +1,7 @@
+/**
+ * @module communicator
+ */
+
 const request = require( 'request' );
 const Auth = require( 'request/lib/auth' ).Auth;
 const TError = require( '../custom-error' ).TranslatedError;
@@ -9,8 +13,8 @@ const TIMEOUT = config.timeout;
 /**
  * Gets form info
  *
- * @param  {*}     survey  survey object
- * @return {[type]}               promise
+ * @param {*} survey - survey object
+ * @return {*} promise
  */
 function getXFormInfo( survey ) {
     if ( !survey || !survey.openRosaServer ) {
@@ -29,8 +33,8 @@ function getXFormInfo( survey ) {
 /**
  * Gets XForm from url
  *
- * @param  {*}    survey  survey object
- * @return {[type]}         promise
+ * @param  {*} survey - survey object
+ * @return {*} promise
  */
 function getXForm( survey ) {
     return _request( {
@@ -49,8 +53,8 @@ function getXForm( survey ) {
 /**
  * Obtains the XForm manifest
  *
- * @param  {[type]} survey survey object
- * @return {[type]}        promise
+ * @param {*} survey - survey object
+ * @return {*} promise
  */
 function getManifest( survey ) {
     if ( !survey.info.manifestUrl ) {
@@ -74,8 +78,9 @@ function getManifest( survey ) {
 
 /**
  * Checks the maximum acceptable submission size the server accepts
- * @param  {[type]} survey survey object
- * @return {[type]}        promise
+ *
+ * @param {*} survey - survey object
+ * @return {*} promise
  */
 function getMaxSize( survey ) {
     // Using survey.xformUrl is non-standard but the only way for previews served from `?form=URL`.
@@ -94,6 +99,9 @@ function getMaxSize( survey ) {
         .then( response => response.headers[ 'x-openrosa-accept-content-length' ] );
 }
 
+/**
+ * @param {object} survey
+ */
 function authenticate( survey ) {
     const options = {
         url: getFormListUrl( survey.openRosaServer, survey.openRosaId, survey.customParam ),
@@ -114,10 +122,10 @@ function authenticate( survey ) {
 
 /**
  * Generates an Auhorization header that can be used to inject into piped requests (e.g. submissions).
- * 
- * @param  {string} url         [description]
- * @param  {?{user: string, pass: string}=} credentials [description]
- * @return {string}             [description]
+ *
+ * @param {string} url
+ * @param {?{user: string, pass: string}=} credentials
+ * @return {Promise} a promise that resolves with an auth header
  */
 function getAuthHeader( url, credentials ) {
     const options = {
@@ -155,6 +163,14 @@ function getAuthHeader( url, credentials ) {
     } );
 }
 
+/**
+ * getFormListUrl
+ *
+ * @param {string} server
+ * @param {string} id
+ * @param {*} customParam
+ * @return {string} url
+ */
 function getFormListUrl( server, id, customParam ) {
     let query = id ? `?formID=${id}` : '';
     const path = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? 'formList' : '/formList';
@@ -167,10 +183,19 @@ function getFormListUrl( server, id, customParam ) {
     return server + path + query;
 }
 
+/**
+ * @param {string} server
+ * @return {string} url
+ */
 function getSubmissionUrl( server ) {
     return ( server.lastIndexOf( '/' ) === server.length - 1 ) ? `${server}submission` : `${server}/submission`;
 }
 
+/**
+ * Updates request options.
+ *
+ * @param {object} options
+ */
 function getUpdatedRequestOptions( options ) {
     options.method = options.method || 'get';
 
@@ -199,8 +224,8 @@ function getUpdatedRequestOptions( options ) {
 /**
  * Sends a request to an OpenRosa server
  *
- * @param  { * } url  request options object
- * @return {?string=}    promise
+ * @param {*} options - request options object
+ * @return {Promise} promise
  */
 function _request( options ) {
     let error;
@@ -245,8 +270,8 @@ function _request( options ) {
 /**
  * transform XML to JSON for easier processing
  *
- * @param  {string} xml XML string
- * @return {[type]}     promise
+ * @param {string} xml - XML string
+ * @return {*} promise
  */
 function _xmlToJson( xml ) {
     return new Promise( ( resolve, reject ) => {
@@ -264,9 +289,9 @@ function _xmlToJson( xml ) {
 /**
  * Finds the relevant form in an OpenRosa XML formList
  *
- * @param  {string} formListXml OpenRosa XML formList
- * @param  {string} formId      Form ID to look for
- * @return {[type]}             promise
+ * @param {string} formListXml - OpenRosa XML formList
+ * @param {string} survey
+ * @return {Promise} promise
  */
 function _findFormAddInfo( formListXml, survey ) {
     let found;
@@ -306,8 +331,8 @@ function _findFormAddInfo( formListXml, survey ) {
  * Convert arrays property values to strings, knowing that each xml node only
  * occurs once in each xform node in /formList
  *
- * @param  {[type]} formObj [description]
- * @return {[type]}         [description]
+ * @param {*} formObj
+ * @return {object} a simplified form object
  */
 function _simplifyFormObj( formObj ) {
     for ( const prop in formObj ) {

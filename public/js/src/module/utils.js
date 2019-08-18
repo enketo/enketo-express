@@ -171,7 +171,7 @@ function csvToXml( csv, langMap ) {
  * Generates a querystring from an object or an array of objects with `name` and `value` properties.
  * 
  * @param  {{name: string, value: *}|<{name: string, value: *}>} obj [description]
- * @return {[type]}     [description]
+ * @return {*}     [description]
  */
 function getQueryString( obj ) {
     let arr;

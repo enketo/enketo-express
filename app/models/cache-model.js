@@ -1,3 +1,7 @@
+/**
+ * @module cache-model
+ */
+
 const utils = require( '../lib/utils' );
 const transformer = require( 'enketo-transformer' );
 const prefix = 'ca:';
@@ -13,11 +17,11 @@ if ( process.env.NODE_ENV === 'test' ) {
     client.select( 15 );
 }
 
-/** 
+/**
  * Gets an item from the cache.
  *
- * @param  {{openRosaServer: string, openRosaId: string }} survey [description]
- * @return {[type]}        [description]
+ * @param {{openRosaServer: string, openRosaId: string }} survey
+ * @return {Promise}
  */
 function getSurvey( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -49,11 +53,11 @@ function getSurvey( survey ) {
     } );
 }
 
-/** 
+/**
  * Gets the hashes of an item from the cache.
  *
- * @param  {{openRosaServer: string, openRosaId: string, theme: string}} survey [description]
- * @return {[type]}        [description]
+ * @param {{openRosaServer: string, openRosaId: string, theme: string}} survey
+ * @return {Promise}
  */
 function getSurveyHashes( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -83,8 +87,8 @@ function getSurveyHashes( survey ) {
 /**
  * Checks if cache is present and up to date
  *
- * @param  {{openRosaServer: string, openRosaId: string, info: {hash: string }}} survey [description]
- * @return {Boolean}        [description]
+ * @param {{openRosaServer: string, openRosaId: string, info: {hash: string }}} survey
+ * @return {Promise<Error|null|boolean>}
  */
 function isCacheUpToDate( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -112,8 +116,8 @@ function isCacheUpToDate( survey ) {
                     debug( 'cache is missing' );
                     resolve( null );
                 } else {
-                    // Adding the hashes to the referenced survey object can be efficient, since this object 
-                    // is passed around. The hashes may therefore already have been calculated 
+                    // Adding the hashes to the referenced survey object can be efficient, since this object
+                    // is passed around. The hashes may therefore already have been calculated
                     // when setting the cache later on.
                     // Note that this server cache only cares about media URLs, not media content.
                     // This allows the same cache to be used for a form for the OpenRosa server serves different media content,
@@ -135,7 +139,8 @@ function isCacheUpToDate( survey ) {
 /**
  * Adds an item to the cache
  *
- * @param {[type]} survey [description]
+ * @param {*} survey
+ * @return {Promise}
  */
 function setSurvey( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -175,7 +180,8 @@ function setSurvey( survey ) {
 /**
  * Flushes the cache of a single survey
  *
- * @param {[type]} survey [description]
+ * @param {*} survey
+ * @return {Promise}
  */
 function flushSurvey( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -216,8 +222,8 @@ function flushSurvey( survey ) {
 
 /**
  * Completely empties the cache
- * 
- * @return {[type]} [description]
+ *
+ * @return {Promise<Error|boolean>}
  */
 function flushAll() {
     return new Promise( ( resolve, reject ) => {
@@ -240,9 +246,9 @@ function flushAll() {
 
 /**
  * Gets the key used for the cache item
- * 
- * @param  {{openRosaServer: string, openRosaId: string}} survey [description]
- * @return {string}        [description]
+ *
+ * @param {{openRosaServer: string, openRosaId: string}} survey
+ * @return {string|null} openRosaKey or null
  */
 function _getKey( survey ) {
     const openRosaKey = utils.getOpenRosaKey( survey, prefix );
@@ -251,8 +257,8 @@ function _getKey( survey ) {
 
 /**
  * Adds the 3 relevant hashes to the survey object if they haven't been added already.
- * 
- * @param {[type]} survey [description]
+ *
+ * @param {*} survey
  */
 function _addHashes( survey ) {
     survey.formHash = survey.formHash || survey.info.hash;

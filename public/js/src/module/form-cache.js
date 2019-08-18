@@ -123,7 +123,7 @@ function _setUpdateIntervals( survey ) {
  * Form resets require reloading the form media.
  * This makes form resets slower, but it makes initial form loads faster.
  *
- * @param {[type]} survey [description]
+ * @param {*} survey [description]
  */
 function _setResetListener( survey ) {
 
@@ -140,7 +140,7 @@ function _setResetListener( survey ) {
 /**
  * Handles loading form media for newly added repeats.
  *
- * @param {[type]} survey [description]
+ * @param {*} survey [description]
  */
 function _setRepeatListener( survey ) {
     //Instantiate only once, after loadMedia has been completed (once)
@@ -162,8 +162,8 @@ function _swapMediaSrc( survey ) {
  * If the form/data server updates their max size setting, this value
  * will be updated the next time the cache is refreshed.
  *
- * @param  {[type]} survey [description]
- * @return {[type]}        [description]
+ * @param  {*} survey [description]
+ * @return {*}        [description]
  */
 function updateMaxSubmissionSize( survey ) {
 
@@ -186,7 +186,7 @@ function updateMaxSubmissionSize( survey ) {
 /**
  * Loads survey resources either from the store or via HTTP (and stores them).
  *
- * @param  {[type]} survey [description]
+ * @param  {*} survey [description]
  * @return {Promise}        [description]
  */
 function updateMedia( survey ) {

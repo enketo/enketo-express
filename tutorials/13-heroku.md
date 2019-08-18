@@ -13,9 +13,9 @@ Heroku deployment
 8. Push code to Heroku with `git push heroku master`.
 9. Check the logs while it's running. You may have to upgrade the redis addons (error: too many connections) or memory (error: memory quota exceeded)!
 
-### Heroku configuration 
+### Heroku configuration
 
-On Heroku, the regular config.json configuration should not be used (and not be created). Instead Enketo is configured with environment variables using `heroku config:set`. See [README](../README.md#how-to-configure)
+On Heroku, the regular config.json configuration should not be used (and not be created). Instead Enketo is configured with environment variables using `heroku config:set`. See [this document](https://github.com/enketo/enketo-express/blob/master/tutorials/00-getting-started.md#how-to-configure)
 
 Enketo's JS and CSS **build process** uses configuration variables. This means that every time an environment variable (that is used in browser scripts) is changed, **Enketo needs to rebuild**. In Heroku rebuilds are always triggered with a git push. If there is nothing to push you'll therefore have to trick Heroku into rebuilding by pushing an empty commit like this: `git commit --allow-empty -m "empty commit"`.
 

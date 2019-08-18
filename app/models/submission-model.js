@@ -1,3 +1,7 @@
+/**
+ * @module submission-model
+ */
+
 const config = require( './config-model' ).server;
 const client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
     auth_pass: config.redis.main.password
@@ -9,12 +13,12 @@ let logger;
 /**
  * Use a cron job and logrotate service, e.g.:
  * /usr/sbin/logrotate /home/enketo/logrotate.conf -s /home/enketo/enketo-express/logs/logrotate
- * 
+ *
  * Example analyses of log files for form with enketo ID "YYYd":
  *
- * zgrep --no-filename "      YYYd    " submissions*.* | sort > YYYd-submissions.log 
- * (you may need to enter CTRL-V to enter the literal TAB character), 
- * 
+ * zgrep --no-filename "      YYYd    " submissions*.* | sort > YYYd-submissions.log
+ * (you may need to enter CTRL-V to enter the literal TAB character),
+ *
  * or (might be slower):
  * zgrep --no-filename -P "\tYYYd\t" submissions*.* > YYYp-submissions.log
  */
@@ -51,9 +55,9 @@ if ( process.env.NODE_ENV === 'test' ) {
  *
  * Note that edited records are submitted multiple times with different instanceIDs.
  *
- * @param  {[type]}  id         [description]
- * @param  {[type]}  instanceId [description]
- * @return {Boolean}            [description]
+ * @param {string} id
+ * @param {string} instanceId
+ * @return {Promise}
  */
 function isNew( id, instanceId ) {
     if ( !id || !instanceId ) {
