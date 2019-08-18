@@ -102,7 +102,6 @@
         "i18next-parser": "0.13.0",
         "istanbul": "^0.4.5",
         "istanbul-reporter-shield-badge": "^1.2.0",
-=======
         "jsdoc": "^3.6.3",
         "karma": "4.1.x",
         "karma-chrome-launcher": "2.2.x",
