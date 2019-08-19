@@ -4,7 +4,6 @@
     "select-mobile": "../../../node_modules/enketo-core/src/widget/select-mobile/selectpicker",
     "autocomplete": "../../../node_modules/enketo-core/src/widget/select-autocomplete/autocomplete",
     "geo": "../../../node_modules/enketo-core/src/widget/geo/geopicker",
-    "geo-esri": "../../../node_modules/enketo-core/src/widget/geo-esri/geopicker",
     "textarea": "../../../node_modules/enketo-core/src/widget/textarea/textarea",
     "table": "../../../node_modules/enketo-core/src/widget/table/tablewidget",
     "radio": "../../../node_modules/enketo-core/src/widget/radio/radiopicker",

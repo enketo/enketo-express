@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+##### Removed
+- ArcGIS Geo widget.
+
 ##### Added
 - Make record cache expiry time configurable.
 
