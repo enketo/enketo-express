@@ -5,12 +5,8 @@ const commonjs = require( 'rollup-plugin-commonjs' );
 const json = require( 'rollup-plugin-json' );
 const builtins = require( 'rollup-plugin-node-builtins' );
 const globals = require( 'rollup-plugin-node-globals' );
-const path = require( 'path' );
 const rollupIstanbul = require( 'rollup-plugin-istanbul' );
 const istanbul = require('istanbul');
-const shieldBadgeReporter = require('istanbul-reporter-shield-badge');
-
-istanbul.Report.register(shieldBadgeReporter);
 
 module.exports = config => {
     config.set( {
