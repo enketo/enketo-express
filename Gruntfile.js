@@ -1,5 +1,5 @@
 module.exports = grunt => {
-    const JS_INCLUDE = [ '**/*.js', '!**/node_modules/**', '!test/**/*.spec.js', '!public/js/build/*', '!test/client/config/karma.conf.js', '!docs/**' ];
+    const JS_INCLUDE = [ '**/*.js', '!**/node_modules/**', '!test/**/*.spec.js', '!public/js/build/*', '!test/client/config/karma.conf.js', '!docs/**', '!test-coverage/**' ];
     const path = require( 'path' );
     const nodeSass = require( 'node-sass' );
     const bundles = require( './buildFiles' ).bundles;
@@ -78,6 +78,9 @@ module.exports = grunt => {
             }
         },
         shell: {
+            buildReadmeBadge: {
+                command: 'node ./update-readme-with-shield-badge.js'
+            },
             translation: {
                 command: [
                     'cd locales',
@@ -149,7 +152,6 @@ module.exports = grunt => {
         karma: {
             options: {
                 singleRun: true,
-                reporters: [ 'dots' ],
                 configFile: 'test/client/config/karma.conf.js'
             },
             headless: {
@@ -157,6 +159,20 @@ module.exports = grunt => {
             },
             browsers: {
                 browsers: [ 'Chrome', 'ChromeCanary', 'Firefox', 'Opera' /*,'Safari'*/ ],
+            }
+        },
+        nyc: {
+            cover: {
+                options: {
+                    reporter: [
+                        'html',
+                        'text-summary',
+                        'json'
+                    ],
+                    reportDir: './test-coverage/server'
+                },
+                cmd: false,
+                args: [ 'grunt', 'mochaTest:all' ]
             }
         },
         terser: {
@@ -256,7 +272,7 @@ module.exports = grunt => {
     grunt.registerTask( 'js-dev', [ 'js' ] );
     grunt.registerTask( 'js-ie11', [ 'js', 'shell:ie11polyfill', 'shell:babel', 'shell:browserify' ] );
     grunt.registerTask( 'css', [ 'shell:clean-css', 'system-sass-variables:create', 'sass' ] );
-    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'eslint' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'nyc:cover', 'karma:headless', 'shell:buildReadmeBadge', 'jsbeautifier:test', 'eslint' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
     grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js-dev', 'css', 'concurrent:develop' ] );
     grunt.registerTask( 'develop-ie11', [ 'env:develop', 'i18next', 'js-ie11', 'css', 'concurrent:develop' ] );

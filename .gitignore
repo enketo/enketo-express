@@ -20,3 +20,6 @@ setup/docker/secrets/*
 setup/docker/redis_main_data/*
 logs/submissions*
 logs/logrotate
+.nyc_output
+test-coverage
+coverage.shield.badge.md
