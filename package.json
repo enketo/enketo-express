@@ -98,6 +98,7 @@
         "grunt-karma": "3.0.x",
         "grunt-mocha-test": "0.13.x",
         "grunt-nodemon": "0.4.x",
+        "grunt-simple-nyc": "^3.0.0",
         "gulp": "4.0.x",
         "i18next-parser": "0.13.0",
         "istanbul": "^0.4.5",

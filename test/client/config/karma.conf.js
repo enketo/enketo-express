@@ -81,7 +81,7 @@ module.exports = config => {
 
 
         coverageReporter: {
-            dir: 'test-coverage',
+            dir: 'test-coverage/client',
             reporters: [
                 // for in-depth analysis in your browser
                 {

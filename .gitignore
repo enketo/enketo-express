@@ -20,4 +20,5 @@ setup/docker/secrets/*
 setup/docker/redis_main_data/*
 logs/submissions*
 logs/logrotate
-test-coverage/
+.nyc_output
+test-coverage

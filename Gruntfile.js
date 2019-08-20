@@ -158,6 +158,20 @@ module.exports = grunt => {
                 browsers: [ 'Chrome', 'ChromeCanary', 'Firefox', 'Opera' /*,'Safari'*/ ],
             }
         },
+        nyc: {
+            cover: {
+                options: {
+                    reporter: [
+                        'html',
+                        'text-summary',
+                        'json'
+                    ],
+                    reportDir: './test-coverage/server'
+                },
+                cmd: false,
+                args: ['grunt', 'mochaTest:all']
+            }
+        },
         terser: {
             options: {
                 // https://github.com/enketo/enketo-express/issues/72
@@ -255,6 +269,7 @@ module.exports = grunt => {
     grunt.registerTask( 'js-dev', [ 'js' ] );
     grunt.registerTask( 'js-ie11', [ 'js', 'shell:ie11polyfill', 'shell:babel', 'shell:browserify' ] );
     grunt.registerTask( 'css', [ 'shell:clean-css', 'system-sass-variables:create', 'sass' ] );
+    grunt.registerTask( 'test-coverage', [ 'env:test', 'js', 'nyc:cover', 'karma:headless' ] );
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'eslint' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
     grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js-dev', 'css', 'concurrent:develop' ] );
