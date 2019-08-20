@@ -6,7 +6,7 @@ const json = require( 'rollup-plugin-json' );
 const builtins = require( 'rollup-plugin-node-builtins' );
 const globals = require( 'rollup-plugin-node-globals' );
 const rollupIstanbul = require( 'rollup-plugin-istanbul' );
-const istanbul = require('istanbul');
+const istanbul = require( 'istanbul' );
 
 module.exports = config => {
     config.set( {
@@ -44,8 +44,6 @@ module.exports = config => {
             },
             plugins: [
                 resolve( {
-                    module: true, // Default: true
-                    main: true, // Default: true
                     browser: true, // Default: false
                 } ),
                 commonjs( {

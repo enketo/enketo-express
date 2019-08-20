@@ -489,6 +489,8 @@ describe( 'Client Storage', () => {
         } );
 
         it( 'succeeds if the record has the required properties and doesn\'t exist already', done => {
+            const startTimestamp = new Date().getTime();
+
             store.record.set( recordA )
                 .then( result => {
                     expect( result ).to.deep.equal( recordA );
@@ -497,16 +499,17 @@ describe( 'Client Storage', () => {
                 .then( result => {
                     expect( result.instanceId ).to.equal( recordA.instanceId );
                     expect( result.xml ).to.equal( recordA.xml );
-                    expect( result.created ).to.be.at.least( new Date().getTime() - 100 );
-                    expect( result.updated ).to.be.at.least( new Date().getTime() - 100 );
+                    expect( result.created ).to.be.at.least( startTimestamp );
+                    expect( result.updated ).to.be.at.least( startTimestamp );
                     done();
                 } )
                 .catch( done );
         } );
 
         it( 'succeeds if the record has the required properties, contains files, and doesn\'t exist already', done => {
-            const name1 = fileA.name,
-                name2 = fileB.name;
+            const name1 = fileA.name;
+            const name2 = fileB.name;
+            const startTimestamp = new Date().getTime();
 
             recordA.files = [ fileA, fileB ];
             store.record.set( recordA )
@@ -517,7 +520,7 @@ describe( 'Client Storage', () => {
                 .then( result => {
                     expect( result.instanceId ).to.equal( recordA.instanceId );
                     expect( result.xml ).to.equal( recordA.xml );
-                    expect( result.updated ).to.be.at.least( new Date().getTime() - 100 );
+                    expect( result.updated ).to.be.at.least( startTimestamp );
                     expect( result.files[ 0 ].name ).to.equal( name1 );
                     expect( result.files[ 1 ].name ).to.equal( name2 );
                     expect( result.files[ 0 ].item ).to.to.be.an.instanceof( Blob );

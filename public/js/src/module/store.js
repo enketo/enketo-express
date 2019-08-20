@@ -169,7 +169,6 @@ function _setBlobStorageEncoding() {
 
     return _canStoreBlobs()
         .then( () => {
-            console.log( 'This browser is able to store blobs directly' );
             blobEncoding = false;
         } )
         .catch( () => {
