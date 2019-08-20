@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Added
 - Make record cache expiry time configurable.
+- Support for max-pixel attribute for image uploads.
 
 ##### Changed
 - Updated Swedish, Dutch and German translations.
