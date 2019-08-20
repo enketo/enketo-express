@@ -15,8 +15,6 @@ const aliases = Object.entries( pkg.browser ).reduce( ( obj, cur ) => {
 const plugins = [
     alias( aliases ),
     resolve( {
-        module: true, // Default: true
-        main: true, // Default: true
         browser: true, // Default: false
         preferBuiltins: true // Explicit due to bug https://github.com/rollup/rollup-plugin-node-resolve/issues/196
     } ),

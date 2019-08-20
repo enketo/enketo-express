@@ -7,6 +7,7 @@ const presets = [
                 ie: '11'
             },
             useBuiltIns: 'usage',
+            corejs: { version: 3, proposals: true }
         },
     ],
 ];
