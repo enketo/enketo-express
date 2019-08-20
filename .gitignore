@@ -22,3 +22,4 @@ logs/submissions*
 logs/logrotate
 .nyc_output
 test-coverage
+coverage.shield.badge.md

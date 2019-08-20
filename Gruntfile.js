@@ -78,6 +78,9 @@ module.exports = grunt => {
             }
         },
         shell: {
+            buildReadmeBadge: {
+                command: 'node ./update-readme-with-shield-badge.js'
+            },
             translation: {
                 command: [
                     'cd locales',
@@ -169,7 +172,7 @@ module.exports = grunt => {
                     reportDir: './test-coverage/server'
                 },
                 cmd: false,
-                args: ['grunt', 'mochaTest:all']
+                args: [ 'grunt', 'mochaTest:all' ]
             }
         },
         terser: {
@@ -269,8 +272,7 @@ module.exports = grunt => {
     grunt.registerTask( 'js-dev', [ 'js' ] );
     grunt.registerTask( 'js-ie11', [ 'js', 'shell:ie11polyfill', 'shell:babel', 'shell:browserify' ] );
     grunt.registerTask( 'css', [ 'shell:clean-css', 'system-sass-variables:create', 'sass' ] );
-    grunt.registerTask( 'test-coverage', [ 'env:test', 'js', 'nyc:cover', 'karma:headless' ] );
-    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'eslint' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'shell:buildReadmeBadge', 'jsbeautifier:test', 'eslint' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
     grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js-dev', 'css', 'concurrent:develop' ] );
     grunt.registerTask( 'develop-ie11', [ 'env:develop', 'i18next', 'js-ie11', 'css', 'concurrent:develop' ] );

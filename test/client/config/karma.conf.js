@@ -61,7 +61,7 @@ module.exports = config => {
                 globals(),
                 rollupIstanbul( {
                     include: [
-                        'app/**/*.js'
+                        'public/js/src/**/*.js'
                     ],
                     exclude: []
                 } )
@@ -90,11 +90,7 @@ module.exports = config => {
                 },
                 // for generating coverage badge in README.md
                 {
-                    type: 'shield-badge',
-                    range: [60, 80],
-                    subject: 'coverage',
-                    readmeFilename: 'README.md',
-                    readmeDir: path.resolve(__dirname, '../../../..'),
+                    type: 'json',
                     includeAllSources: true
                 },
                 // for displaying percentages summary in command line
