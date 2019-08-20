@@ -128,6 +128,10 @@ function getCurrentFiles() {
             // TODO: in the future, when browser support increase we can invoke
             // the File constructor to do this.
             newFilename = getFilename( file, this.dataset.filenamePostfix );
+            // If file is resized, get Blob representation of data URI
+            if ( this.dataset.resized && this.dataset.resizedDataURI ) {
+                file = utils.dataUriToBlobSync( this.dataset.resizedDataURI );
+            }
             file = new Blob( [ file ], {
                 type: file.type
             } );
