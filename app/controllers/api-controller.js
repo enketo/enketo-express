@@ -1,7 +1,19 @@
 /**
  * @module api-controller
  *
- * @description Handles redirecting to API documentation.
+ * @description Handles only redirecting to API documentation.
+ */
+
+/**
+ * @typedef ExpressRequest
+ * @type object
+ * @see {@link http://expressjs.com/en/4x/api.html#req|Express Request object documentation}
+ */
+
+/**
+ * @typedef ExpressResponse
+ * @type object
+ * @see {@link http://expressjs.com/en/4x/api.html#res|Express Response object documentation}
  */
 
 const express = require( 'express' );

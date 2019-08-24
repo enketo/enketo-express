@@ -1,3 +1,7 @@
+/**
+ * @module manifest-controller
+ */
+
 const manifest = require( '../models/manifest-model' );
 const express = require( 'express' );
 const router = express.Router();
@@ -27,14 +31,14 @@ router
     } );
 
 /**
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  */
 function getManifest( req, res ) {
     return Promise.all( [
-            _getWebformHtml( req, res ),
-            _getOfflineFallbackHtml( req, res )
-        ] )
+        _getWebformHtml( req, res ),
+        _getOfflineFallbackHtml( req, res )
+    ] )
         .then( result => {
             // TODO: if we ever start supporting dialects, we need to change this
             const lang = req.i18n.language.split( '-' )[ 0 ];
@@ -43,8 +47,8 @@ function getManifest( req, res ) {
 }
 
 /**
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  */
 function _getWebformHtml( req, res ) {
     return new Promise( ( resolve, reject ) => {
@@ -61,8 +65,8 @@ function _getWebformHtml( req, res ) {
 }
 
 /**
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  */
 function _getOfflineFallbackHtml( req, res ) {
     return new Promise( ( resolve, reject ) => {

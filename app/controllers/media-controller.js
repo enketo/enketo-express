@@ -1,3 +1,7 @@
+/**
+ * @module media-controller
+ */
+
 const user = require( '../models/user-model' );
 const communicator = require( '../lib/communicator' );
 const request = require( 'request' );
@@ -12,6 +16,10 @@ module.exports = app => {
 router
     .get( '/get/*', getMedia );
 
+/**
+ * @param {string} [path]
+ * @return {string|undefined}
+ */
 function _extractMediaUrl( path ) {
     if ( !path ) {
         return undefined;
@@ -20,8 +28,8 @@ function _extractMediaUrl( path ) {
 }
 
 /**
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function getMedia( req, res, next ) {

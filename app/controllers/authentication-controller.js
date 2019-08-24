@@ -20,10 +20,8 @@ router
     .post( '/login', csrfProtection, setToken );
 
 /**
- * login
- *
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function login( req, res, next ) {
@@ -58,10 +56,8 @@ function login( req, res, next ) {
 }
 
 /**
- * logout
- *
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  */
 function logout( req, res ) {
     res
@@ -72,10 +68,8 @@ function logout( req, res ) {
 }
 
 /**
- * setToken
- *
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  */
 function setToken( req, res ) {
     const username = req.body.username.trim();

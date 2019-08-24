@@ -1,3 +1,7 @@
+/**
+ * @module config-controller
+ */
+
 const config = require( '../models/config-model' );
 const express = require( 'express' );
 const router = express.Router();

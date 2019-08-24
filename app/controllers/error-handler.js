@@ -5,7 +5,7 @@
 // var debug = require( 'debug' )( 'error-handler' );
 
 /**
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {module:api-controller~ExpressRequest} req
  * @param {Error} error - Error object.
  */
 function getErrorMessage( req, error ) {
@@ -29,8 +29,8 @@ function getErrorMessage( req, error ) {
 module.exports = {
     /**
      * @param {Error} err - Error object
-     * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
-     * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+     * @param {module:api-controller~ExpressRequest} req
+     * @param {module:api-controller~ExpressResponse} res
      * @param {Function} next - Express callback
      */
     production( err, req, res, next ) {
@@ -48,8 +48,8 @@ module.exports = {
     },
     /**
      * @param {Error} err - Error object
-     * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
-     * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+     * @param {module:api-controller~ExpressRequest} req
+     * @param {module:api-controller~ExpressResponse} res
      * @param {Function} next - Express callback
      */
     development( err, req, res, next ) {
@@ -67,8 +67,8 @@ module.exports = {
         }
     },
     /**
-     * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
-     * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+     * @param {module:api-controller~ExpressRequest} req
+     * @param {module:api-controller~ExpressResponse} res
      * @param {Function} next - Express callback
      */
     '404': function( req, res, next ) {

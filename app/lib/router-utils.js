@@ -12,8 +12,8 @@ const keys = {
 /**
  * enketoIdParam
  *
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next
  * @param {string} id
  */

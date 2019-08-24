@@ -43,8 +43,8 @@ router
  * Simply pipes well-formed request to the OpenRosa server and
  * copies the response received.
  *
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function submit( req, res, next ) {
@@ -106,18 +106,18 @@ function submit( req, res, next ) {
 /**
  * Get max submission size.
  *
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function maxSize( req, res, next ) {
     if ( req.query.xformUrl ) {
         // Non-standard way of attempting to obtain max submission size from XForm url directly
         communicator.getMaxSize( {
-                info: {
-                    downloadUrl: req.query.xformUrl
-                }
-            } )
+            info: {
+                downloadUrl: req.query.xformUrl
+            }
+        } )
             .then( maxSize => {
                 res.json( { maxSize } );
             } )
@@ -139,8 +139,8 @@ function maxSize( req, res, next ) {
 /**
  * Obtains cached instance (for editing)
  *
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function getInstance( req, res, next ) {
@@ -168,6 +168,11 @@ function getInstance( req, res, next ) {
         .catch( next );
 }
 
+/**
+ * @param {string} id
+ * @param {string} instanceId
+ * @param {string} deprecatedId
+ */
 function _logSubmission( id, instanceId, deprecatedId ) {
     submissionModel.isNew( id, instanceId )
         .then( notRecorded => {

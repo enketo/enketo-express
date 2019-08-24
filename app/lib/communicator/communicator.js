@@ -101,6 +101,7 @@ function getMaxSize( survey ) {
 
 /**
  * @param {object} survey
+ * @return {Promise}
  */
 function authenticate( survey ) {
     const options = {

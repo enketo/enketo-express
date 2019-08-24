@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>submissions-controller - Enketo Express</title>
+    <title>manifest-controller - Enketo Express</title>
     
     <meta name="description" content="The full-fledged Enketo web application for the ODK ecosystem" />
     
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">submissions-controller</h1>
+    <h1 class="page-title">manifest-controller</h1>
     
 
     
@@ -86,7 +86,7 @@
 
     
 
-    <h4 class="name" id="~_logSubmission"><span class="type-signature">(inner) </span>_logSubmission<span class="signature">(id, instanceId, deprecatedId)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~_getOfflineFallbackHtml"><span class="type-signature">(inner) </span>_getOfflineFallbackHtml<span class="signature">(req, res)</span><span class="type-signature"></span></h4>
 
     
 
@@ -98,7 +98,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app_controllers_submission-controller.js.html">app/controllers/submission-controller.js</a>, <a href="app_controllers_submission-controller.js.html#line176">line 176</a>
+        <a href="app_controllers_manifest-controller.js.html">app/controllers/manifest-controller.js</a>, <a href="app_controllers_manifest-controller.js.html#line71">line 71</a>
     </li></ul></dd>
     
 
@@ -136,188 +136,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>instanceId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>deprecatedId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="~getInstance"><span class="type-signature">(inner) </span>getInstance<span class="signature">(req, res, next)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app_controllers_submission-controller.js.html">app/controllers/submission-controller.js</a>, <a href="app_controllers_submission-controller.js.html#line146">line 146</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description">
-    <p>Obtains cached instance (for editing)</p>
-</div>
 
 
 
@@ -397,29 +215,6 @@
         </tr>
 
     
-
-        <tr>
-            
-                <td class="name"><code>next</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Express callback</p></td>
-        </tr>
-
-    
     </tbody>
 </table>
 
@@ -446,7 +241,7 @@
 
     
 
-    <h4 class="name" id="~maxSize"><span class="type-signature">(inner) </span>maxSize<span class="signature">(req, res, next)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~_getWebformHtml"><span class="type-signature">(inner) </span>_getWebformHtml<span class="signature">(req, res)</span><span class="type-signature"></span></h4>
 
     
 
@@ -458,7 +253,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app_controllers_submission-controller.js.html">app/controllers/submission-controller.js</a>, <a href="app_controllers_submission-controller.js.html#line113">line 113</a>
+        <a href="app_controllers_manifest-controller.js.html">app/controllers/manifest-controller.js</a>, <a href="app_controllers_manifest-controller.js.html#line53">line 53</a>
     </li></ul></dd>
     
 
@@ -496,10 +291,6 @@
 
 
 
-
-<div class="description">
-    <p>Get max submission size.</p>
-</div>
 
 
 
@@ -579,29 +370,6 @@
         </tr>
 
     
-
-        <tr>
-            
-                <td class="name"><code>next</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Express callback</p></td>
-        </tr>
-
-    
     </tbody>
 </table>
 
@@ -628,7 +396,7 @@
 
     
 
-    <h4 class="name" id="~submit"><span class="type-signature">(inner) </span>submit<span class="signature">(req, res, next)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~getManifest"><span class="type-signature">(inner) </span>getManifest<span class="signature">(req, res)</span><span class="type-signature"></span></h4>
 
     
 
@@ -640,7 +408,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app_controllers_submission-controller.js.html">app/controllers/submission-controller.js</a>, <a href="app_controllers_submission-controller.js.html#line50">line 50</a>
+        <a href="app_controllers_manifest-controller.js.html">app/controllers/manifest-controller.js</a>, <a href="app_controllers_manifest-controller.js.html#line37">line 37</a>
     </li></ul></dd>
     
 
@@ -678,11 +446,6 @@
 
 
 
-
-<div class="description">
-    <p>Simply pipes well-formed request to the OpenRosa server and
-copies the response received.</p>
-</div>
 
 
 
@@ -759,29 +522,6 @@ copies the response received.</p>
             
 
             <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>next</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Express callback</p></td>
         </tr>
 
     

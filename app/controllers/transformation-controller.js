@@ -40,8 +40,8 @@ router
 /**
  * Obtains HTML Form, XML model, and existing XML instance
  *
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function getSurveyParts( req, res, next ) {
@@ -76,8 +76,8 @@ function getSurveyParts( req, res, next ) {
 /**
  * Obtains the hash of the cached Survey Parts
  *
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function getSurveyHash( req, res, next ) {
@@ -96,15 +96,27 @@ function getSurveyHash( req, res, next ) {
         .catch( next );
 }
 
+/**
+ * @param {*} survey
+ * @return {Promise}
+ */
 function _getFormDirectly( survey ) {
     return communicator.getXForm( survey )
         .then( transformer.transform );
 }
 
+/**
+ * @param {*} survey
+ * @return {Promise}
+ */
 function _authenticate( survey ) {
     return communicator.authenticate( survey );
 }
 
+/**
+ * @param {*} survey
+ * @return {Promise}
+ */
 function _getFormFromCache( survey ) {
     return cacheModel.get( survey );
 }
@@ -113,6 +125,7 @@ function _getFormFromCache( survey ) {
  * Update the Cache if necessary.
  *
  * @param {*} survey
+ * @param {Promise}
  */
 function _updateCache( survey ) {
     return communicator.getXFormInfo( survey )
@@ -149,6 +162,10 @@ function _updateCache( survey ) {
         } );
 }
 
+/**
+ * @param {*} survey
+ * @return {Promise} always resolved promise
+ */
 function _addMediaHash( survey ) {
     survey.mediaHash = utils.getXformsManifestHash( survey.manifest, 'all' );
     return Promise.resolve( survey );
@@ -157,7 +174,8 @@ function _addMediaHash( survey ) {
 /**
  * Adds a media map, see enketo/enketo-transformer
  *
- * @param {*} mainfest
+ * @param {Array|*} manifest
+ * @return {object|null} media map object
  */
 function _getMediaMap( manifest ) {
     let mediaMap = null;
@@ -174,6 +192,10 @@ function _getMediaMap( manifest ) {
     return mediaMap;
 }
 
+/**
+ * @param {*} survey
+ * @return {*} updated survey
+ */
 function _replaceMediaSources( survey ) {
     const media = _getMediaMap( survey.manifest );
 
@@ -197,6 +219,10 @@ function _replaceMediaSources( survey ) {
     return survey;
 }
 
+/**
+ * @param {*} survey
+ * @return {Promise}
+ */
 function _checkQuota( survey ) {
     return surveyModel
         .getNumber( survey.account.linkedServer )
@@ -210,6 +236,10 @@ function _checkQuota( survey ) {
         } );
 }
 
+/**
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {*} survey
+ */
 function _respond( res, survey ) {
     delete survey.credentials;
 
@@ -231,12 +261,20 @@ function _respond( res, survey ) {
     } );
 }
 
+/**
+ * @param {*} survey
+ */
 function _getCombinedHash( survey ) {
     const FORCE_UPDATE = 1;
     const brandingHash = ( survey.account.branding && survey.account.branding.source ) ? utils.md5( survey.account.branding.source ) : '';
     return [ String( survey.formHash ), String( survey.mediaHash ), String( survey.xslHash ), String( survey.theme ), String( brandingHash ), String( FORCE_UPDATE ) ].join( '-' );
 }
 
+/**
+ * @param {*} survey
+ * @param {module:api-controller~ExpressRequest} req
+ * @return {Promise}
+ */
 function _setCookieAndCredentials( survey, req ) {
     // for external authentication, pass the cookie(s)
     survey.cookie = req.headers.cookie;
@@ -245,6 +283,10 @@ function _setCookieAndCredentials( survey, req ) {
     return Promise.resolve( survey );
 }
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @return {Promise}
+ */
 function _getSurveyParams( req ) {
     const params = req.body;
     const customParamName = req.app.get( 'query parameter to pass to submission' );
@@ -260,9 +302,9 @@ function _getSurveyParams( req ) {
             } );
     } else if ( params.serverUrl && params.xformId ) {
         return account.check( {
-                openRosaServer: params.serverUrl,
-                openRosaId: params.xformId
-            } )
+            openRosaServer: params.serverUrl,
+            openRosaId: params.xformId
+        } )
             .then( _checkQuota )
             .then( survey => {
                 survey.customParam = customParam;
@@ -277,8 +319,8 @@ function _getSurveyParams( req ) {
         }
         const xUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
         return account.check( {
-                openRosaServer: xUrl
-            } )
+            openRosaServer: xUrl
+        } )
             .then( survey => // no need to check quota
                 Promise.resolve( {
                     info: {

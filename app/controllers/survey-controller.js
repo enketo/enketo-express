@@ -64,8 +64,8 @@ router
 //}
 
 /**
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function offlineWebform( req, res, next ) {
@@ -80,8 +80,8 @@ function offlineWebform( req, res, next ) {
 }
 
 /**
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function webform( req, res, next ) {
@@ -95,8 +95,8 @@ function webform( req, res, next ) {
 }
 
 /**
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function single( req, res, next ) {
@@ -112,8 +112,8 @@ function single( req, res, next ) {
 }
 
 /**
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function view( req, res, next ) {
@@ -127,8 +127,8 @@ function view( req, res, next ) {
 }
 
 /**
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function preview( req, res, next ) {
@@ -142,8 +142,8 @@ function preview( req, res, next ) {
 }
 
 /**
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function edit( req, res, next ) {
@@ -162,10 +162,10 @@ function edit( req, res, next ) {
 }
 
 /**
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
- * @param {object} options
+ * @param {object} options - Options passed to render
  */
 function _renderWebform( req, res, next, options ) {
     const deviceId = req.signedCookies[ '__enketo_meta_deviceid' ] || `${req.hostname}:${utils.randomString( 16 )}`,
@@ -182,8 +182,8 @@ function _renderWebform( req, res, next, options ) {
 /**
  * Debugging view that shows underlying XForm
  *
- * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
- * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
 function xform( req, res, next ) {
