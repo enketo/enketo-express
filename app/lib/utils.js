@@ -10,8 +10,9 @@ const validUrl = require( 'valid-url' );
 /**
  * Returns a unique, predictable openRosaKey from a survey oject
  *
- * @param {module:survey-model~SurveyObject} survey.
- * @param {string} prefix
+ * @static
+ * @param {module:survey-model~SurveyObject} survey
+ * @param {string} [prefix]
  * @return {string|null} openRosaKey
  */
 function getOpenRosaKey( survey, prefix ) {
@@ -26,9 +27,10 @@ function getOpenRosaKey( survey, prefix ) {
 /**
  * Returns a XForm manifest hash.
  *
- * @param {*} manifest
- * @param {*} type
- * @return {string} hash
+ * @static
+ * @param {object} manifest
+ * @param {string} type - Webform type
+ * @return {string} Hash
  */
 function getXformsManifestHash( manifest, type ) {
     const hash = '';
@@ -50,8 +52,9 @@ function getXformsManifestHash( manifest, type ) {
  * Cleans a Server URL so it becomes useful as a db key
  * It strips the protocol, removes a trailing slash, removes www, and converts to lowercase
  *
- * @param {string} url - Url to be cleaned up.
- * @return {string} cleaned up url.
+ * @static
+ * @param {string} url - Url to be cleaned up
+ * @return {string} Cleaned up url
  */
 function cleanUrl( url ) {
     url = url.trim();
@@ -70,18 +73,20 @@ function cleanUrl( url ) {
  * - fragment identifiers
  * - query strings
  *
- * @param {string} url - Url to be validated.
- * @return {boolean} whether the url is valid.
+ * @static
+ * @param {string} url - Url to be validated
+ * @return {boolean} Whether the url is valid
  */
 function isValidUrl( url ) {
     return !!validUrl.isWebUri( url ) && !( /\?/.test( url ) ) && !( /#/.test( url ) );
 }
 
 /**
- * md5
+ * Returns md5 hash of given message
  *
- * @param {string} message
- * @return {*}
+ * @static
+ * @param {string} message - Message to be hashed
+ * @return {string} Hash string
  */
 function md5( message ) {
     const hash = crypto.createHash( 'md5' );
@@ -95,9 +100,10 @@ function md5( message ) {
  * This means the password is vulnerable to be cracked,
  * and we should use a dedicated low-importance password for this.
  *
- * @param {string} text - The text to be encrypted.
- * @param {string} pw - The password to use for encryption.
- * @return {string} the encrypted result.
+ * @static
+ * @param {string} text - The text to be encrypted
+ * @param {string} pw - The password to use for encryption
+ * @return {string} The encrypted result
  */
 function insecureAes192Encrypt( text, pw ) {
     let encrypted;
@@ -111,9 +117,10 @@ function insecureAes192Encrypt( text, pw ) {
 /**
  * Decrypts encrypted text.
  *
- * @param {*} encrypted - The text to be decrypted.
- * @param {*} pw - The password to use for decryption.
- * @return {string} the decrypted result.
+ * @static
+ * @param {*} encrypted - The text to be decrypted
+ * @param {*} pw - The password to use for decryption
+ * @return {string} The decrypted result
  */
 function insecureAes192Decrypt( encrypted, pw ) {
     let decrypted;
@@ -127,9 +134,10 @@ function insecureAes192Decrypt( encrypted, pw ) {
 /**
  * Returns random howMany-lengthed string from provided characters.
  *
- * @param {number} howMany - Desired length of string.
- * @param {string} chars - Characters to use.
- * @return {string} random string.
+ * @static
+ * @param {number} [howMany] - Desired length of string
+ * @param {string} [chars] - Characters to use
+ * @return {string} Random string
  */
 function randomString( howMany = 8, chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' ) {
     const rnd = crypto.randomBytes( howMany );
@@ -143,8 +151,9 @@ function randomString( howMany = 8, chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHI
 /**
  * Returns random item from array.
  *
- * @param {Array} array
- * @return {*|null} array item.
+ * @static
+ * @param {Array} array - Target array
+ * @return {*|null} Random array item
  */
 function pickRandomItemFromArray( array ) {
     if ( !Array.isArray( array ) || array.length === 0 ) {
@@ -160,9 +169,10 @@ function pickRandomItemFromArray( array ) {
 /**
  * Compares two objects by shallow properties.
  *
- * @param {object} a
- * @param {object} b
- * @return {null|boolean} comparison result.
+ * @static
+ * @param {object} a - First object to be compared
+ * @param {object} b - Second object to be compared
+ * @return {null|boolean} Whether objects are equal (`null` for invalid arguments)
  */
 function areOwnPropertiesEqual( a, b ) {
     let prop;
@@ -193,8 +203,9 @@ function areOwnPropertiesEqual( a, b ) {
 /**
  * Converts a url to a local (proxied) url.
  *
- * @param {string} url - The url to convert.
- * @return {string} the converted url.
+ * @static
+ * @param {string} url - The url to convert
+ * @return {string} The converted url
  */
 function toLocalMediaUrl( url ) {
     const localUrl = `${config[ 'base path' ]}/media/get/${url.replace( /(https?):\/\//, '$1/' )}`;
