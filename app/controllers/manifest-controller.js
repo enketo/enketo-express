@@ -36,9 +36,9 @@ router
  */
 function getManifest( req, res ) {
     return Promise.all( [
-        _getWebformHtml( req, res ),
-        _getOfflineFallbackHtml( req, res )
-    ] )
+            _getWebformHtml( req, res ),
+            _getOfflineFallbackHtml( req, res )
+        ] )
         .then( result => {
             // TODO: if we ever start supporting dialects, we need to change this
             const lang = req.i18n.language.split( '-' )[ 0 ];

@@ -12,8 +12,10 @@ const SCALE = 1;
 /**
  * Asynchronously gets pdf from url using Puppeteer.
  *
+ * @static
  * @param {string} url
- * @param {object} options
+ * @param {object} [options]
+ * @return {Promise}
  */
 function get( url, options = {} ) {
     if ( !url ) {

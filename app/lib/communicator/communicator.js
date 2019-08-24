@@ -13,6 +13,7 @@ const TIMEOUT = config.timeout;
 /**
  * Gets form info
  *
+ * @static
  * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
@@ -33,6 +34,7 @@ function getXFormInfo( survey ) {
 /**
  * Gets XForm from url
  *
+ * @static
  * @param  {*} survey - survey object
  * @return {Promise}
  */
@@ -53,6 +55,7 @@ function getXForm( survey ) {
 /**
  * Obtains the XForm manifest
  *
+ * @static
  * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
@@ -62,12 +65,12 @@ function getManifest( survey ) {
         return Promise.resolve( survey );
     } else {
         return _request( {
-            url: survey.info.manifestUrl,
-            auth: survey.credentials,
-            headers: {
-                cookie: survey.cookie
-            }
-        } )
+                url: survey.info.manifestUrl,
+                auth: survey.credentials,
+                headers: {
+                    cookie: survey.cookie
+                }
+            } )
             .then( _xmlToJson )
             .then( obj => {
                 survey.manifest = ( obj.manifest && obj.manifest.mediaFile ) ? obj.manifest.mediaFile.map( file => _simplifyFormObj( file ) ) : [];
@@ -79,6 +82,7 @@ function getManifest( survey ) {
 /**
  * Checks the maximum acceptable submission size the server accepts
  *
+ * @static
  * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
@@ -100,6 +104,7 @@ function getMaxSize( survey ) {
 }
 
 /**
+ * @static
  * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
@@ -124,6 +129,7 @@ function authenticate( survey ) {
 /**
  * Generates an Auhorization header that can be used to inject into piped requests (e.g. submissions).
  *
+ * @static
  * @param {string} url
  * @param {{user: string, pass: string, bearer: string}} [credentials]
  * @return {Promise} a promise that resolves with an auth header
@@ -167,6 +173,7 @@ function getAuthHeader( url, credentials ) {
 /**
  * getFormListUrl
  *
+ * @static
  * @param {string} server
  * @param {string} id - Form id.
  * @param {string} customParam - custom query parameter
@@ -185,6 +192,7 @@ function getFormListUrl( server, id, customParam ) {
 }
 
 /**
+ * @static
  * @param {string} server
  * @return {string} url
  */
@@ -195,6 +203,7 @@ function getSubmissionUrl( server ) {
 /**
  * Updates request options.
  *
+ * @static
  * @param {object} options
  */
 function getUpdatedRequestOptions( options ) {

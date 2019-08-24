@@ -229,6 +229,7 @@ function _extractRedisConfigFromUrl( redisUrl ) {
  * Returns a list of supported themes,
  * in case a list is provided only the ones that exists are returned.
  *
+ * @static
  * @param {Array} themeList - a list of themes e.g ['formhub', 'grid']
  * @return {Array} an array of theme names.
  */
@@ -289,7 +290,13 @@ delete authentication[ 'external login url that sets cookie' ];
 delete authentication[ 'managed by enketo' ];
 
 module.exports = {
+    /**
+     * @type object
+     */
     server: config,
+    /**
+     * @type object
+     */
     client: {
         googleApiKey: config.google[ 'api key' ],
         maps: config.maps,

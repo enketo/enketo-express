@@ -101,6 +101,10 @@ function setSurvey( survey ) {
     } );
 }
 
+/**
+ * @param {module:survey-model~SurveyObject} survey
+ * @return {Promise}
+ */
 function updateSurvey( survey ) {
     return new Promise( ( resolve, reject ) => {
         const openRosaKey = utils.getOpenRosaKey( survey );

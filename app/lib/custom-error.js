@@ -5,6 +5,7 @@
 /**
  * Error to be translated
  *
+ * @static
  * @param {string} translationKey
  * @param {object} translationObject
  */
@@ -18,6 +19,9 @@ TranslatedError.prototype = Object.create( Error.prototype );
 TranslatedError.prototype.name = 'TranslatedError';
 
 module.exports = {
+    /**
+     * @type Error
+     */
     Error,
     TranslatedError
 };

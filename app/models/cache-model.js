@@ -20,6 +20,7 @@ if ( process.env.NODE_ENV === 'test' ) {
 /**
  * Gets an item from the cache.
  *
+ * @static
  * @param {{openRosaServer: string, openRosaId: string }} survey
  * @return {Promise}
  */
@@ -56,6 +57,7 @@ function getSurvey( survey ) {
 /**
  * Gets the hashes of an item from the cache.
  *
+ * @static
  * @param {{openRosaServer: string, openRosaId: string, theme: string}} survey
  * @return {Promise}
  */
@@ -87,6 +89,7 @@ function getSurveyHashes( survey ) {
 /**
  * Checks if cache is present and up to date
  *
+ * @static
  * @param {module:survey-model~SurveyObject} survey
  * @return {Promise<Error|null|boolean>}
  */
@@ -139,6 +142,7 @@ function isCacheUpToDate( survey ) {
 /**
  * Adds an item to the cache
  *
+ * @static
  * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
@@ -180,6 +184,7 @@ function setSurvey( survey ) {
 /**
  * Flushes the cache of a single survey
  *
+ * @static
  * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
@@ -223,6 +228,7 @@ function flushSurvey( survey ) {
 /**
  * Completely empties the cache
  *
+ * @static
  * @return {Promise<Error|boolean>}
  */
 function flushAll() {

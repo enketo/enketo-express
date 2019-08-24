@@ -302,9 +302,9 @@ function _getSurveyParams( req ) {
             } );
     } else if ( params.serverUrl && params.xformId ) {
         return account.check( {
-            openRosaServer: params.serverUrl,
-            openRosaId: params.xformId
-        } )
+                openRosaServer: params.serverUrl,
+                openRosaId: params.xformId
+            } )
             .then( _checkQuota )
             .then( survey => {
                 survey.customParam = customParam;
@@ -319,8 +319,8 @@ function _getSurveyParams( req ) {
         }
         const xUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
         return account.check( {
-            openRosaServer: xUrl
-        } )
+                openRosaServer: xUrl
+            } )
             .then( survey => // no need to check quota
                 Promise.resolve( {
                     info: {
