@@ -10,7 +10,7 @@ const customGetAccount = config[ 'account lib' ] ? require( config[ 'account lib
 /**
  * Obtains account.
  *
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
 function get( survey ) {
@@ -56,7 +56,7 @@ function get( survey ) {
  * Check if account for passed survey is active, and not exceeding quota.
  * This passes back the original survey object and therefore differs from the get function!
  *
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
 function check( survey ) {

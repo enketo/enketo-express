@@ -136,7 +136,7 @@ function getSurveyHashes( survey ) {
 /**
  * Checks if cache is present and up to date
  *
- * @param {{openRosaServer: string, openRosaId: string, info: {hash: string }}} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @return {Promise&lt;Error|null|boolean>}
  */
 function isCacheUpToDate( survey ) {
@@ -188,7 +188,7 @@ function isCacheUpToDate( survey ) {
 /**
  * Adds an item to the cache
  *
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
 function setSurvey( survey ) {
@@ -229,7 +229,7 @@ function setSurvey( survey ) {
 /**
  * Flushes the cache of a single survey
  *
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
 function flushSurvey( survey ) {
@@ -307,7 +307,7 @@ function _getKey( survey ) {
 /**
  * Adds the 3 relevant hashes to the survey object if they haven't been added already.
  *
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  */
 function _addHashes( survey ) {
     survey.formHash = survey.formHash || survey.info.hash;

@@ -97,7 +97,7 @@ function getSurveyHash( req, res, next ) {
 }
 
 /**
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
 function _getFormDirectly( survey ) {
@@ -106,7 +106,7 @@ function _getFormDirectly( survey ) {
 }
 
 /**
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
 function _authenticate( survey ) {
@@ -114,7 +114,7 @@ function _authenticate( survey ) {
 }
 
 /**
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
 function _getFormFromCache( survey ) {
@@ -124,7 +124,7 @@ function _getFormFromCache( survey ) {
 /**
  * Update the Cache if necessary.
  *
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @param {Promise}
  */
 function _updateCache( survey ) {
@@ -163,7 +163,7 @@ function _updateCache( survey ) {
 }
 
 /**
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @return {Promise} always resolved promise
  */
 function _addMediaHash( survey ) {
@@ -193,7 +193,7 @@ function _getMediaMap( manifest ) {
 }
 
 /**
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @return {*} updated survey
  */
 function _replaceMediaSources( survey ) {
@@ -220,7 +220,7 @@ function _replaceMediaSources( survey ) {
 }
 
 /**
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @return {Promise}
  */
 function _checkQuota( survey ) {
@@ -238,7 +238,7 @@ function _checkQuota( survey ) {
 
 /**
  * @param {module:api-controller~ExpressResponse} res
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  */
 function _respond( res, survey ) {
     delete survey.credentials;
@@ -262,7 +262,7 @@ function _respond( res, survey ) {
 }
 
 /**
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  */
 function _getCombinedHash( survey ) {
     const FORCE_UPDATE = 1;
@@ -271,7 +271,7 @@ function _getCombinedHash( survey ) {
 }
 
 /**
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @param {module:api-controller~ExpressRequest} req
  * @return {Promise}
  */

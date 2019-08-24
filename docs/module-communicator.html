@@ -205,7 +205,7 @@
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="module-survey-model.html#~SurveyObject">module:survey-model~SurveyObject</a></span>
 
 
             
@@ -363,7 +363,7 @@
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type">Object</span>
 
 
             
@@ -584,7 +584,7 @@ occurs once in each xform node in /formList</p>
 
     
 
-    <h4 class="name" id="~_xmlToJson"><span class="type-signature">(inner) </span>_xmlToJson<span class="signature">(xml)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id="~_xmlToJson"><span class="type-signature">(inner) </span>_xmlToJson<span class="signature">(xml)</span><span class="type-signature"> &rarr; {Promise.&lt;(string|Error)>}</span></h4>
 
     
 
@@ -716,7 +716,7 @@ occurs once in each xform node in /formList</p>
 
         
 <div class="param-desc">
-    <p>promise</p>
+    <p>a promise that resolves with JSON</p>
 </div>
 
 
@@ -727,7 +727,7 @@ occurs once in each xform node in /formList</p>
     </dt>
     <dd>
         
-<span class="param-type">*</span>
+<span class="param-type">Promise.&lt;(string|Error)></span>
 
 
     </dd>
@@ -834,7 +834,7 @@ occurs once in each xform node in /formList</p>
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><a href="module-survey-model.html#~SurveyObject">module:survey-model~SurveyObject</a></span>
 
 
             
@@ -892,7 +892,7 @@ occurs once in each xform node in /formList</p>
 
     
 
-    <h4 class="name" id="~getAuthHeader"><span class="type-signature">(inner) </span>getAuthHeader<span class="signature">(url, credentials<span class="signature-attributes">opt, nullable</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="~getAuthHeader"><span class="type-signature">(inner) </span>getAuthHeader<span class="signature">(url, credentials<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
@@ -1033,8 +1033,6 @@ occurs once in each xform node in /formList</p>
                     &lt;optional><br>
                 
 
-                
-                    &lt;nullable><br>
                 
 
                 
@@ -1224,7 +1222,7 @@ occurs once in each xform node in /formList</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Form id.</p></td>
         </tr>
 
     
@@ -1237,7 +1235,7 @@ occurs once in each xform node in /formList</p>
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type">string</span>
 
 
             
@@ -1247,7 +1245,7 @@ occurs once in each xform node in /formList</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>custom query parameter</p></td>
         </tr>
 
     
@@ -1299,7 +1297,7 @@ occurs once in each xform node in /formList</p>
 
     
 
-    <h4 class="name" id="~getManifest"><span class="type-signature">(inner) </span>getManifest<span class="signature">(survey)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id="~getManifest"><span class="type-signature">(inner) </span>getManifest<span class="signature">(survey)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
@@ -1395,7 +1393,7 @@ occurs once in each xform node in /formList</p>
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type"><a href="module-survey-model.html#~SurveyObject">module:survey-model~SurveyObject</a></span>
 
 
             
@@ -1405,7 +1403,7 @@ occurs once in each xform node in /formList</p>
 
             
 
-            <td class="description last"><p>survey object</p></td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -1430,10 +1428,6 @@ occurs once in each xform node in /formList</p>
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <p>promise</p>
-</div>
-
 
 
 <dl class="param-type">
@@ -1442,7 +1436,7 @@ occurs once in each xform node in /formList</p>
     </dt>
     <dd>
         
-<span class="param-type">*</span>
+<span class="param-type">Promise</span>
 
 
     </dd>
@@ -1457,7 +1451,7 @@ occurs once in each xform node in /formList</p>
 
     
 
-    <h4 class="name" id="~getMaxSize"><span class="type-signature">(inner) </span>getMaxSize<span class="signature">(survey)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id="~getMaxSize"><span class="type-signature">(inner) </span>getMaxSize<span class="signature">(survey)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
@@ -1553,7 +1547,7 @@ occurs once in each xform node in /formList</p>
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type"><a href="module-survey-model.html#~SurveyObject">module:survey-model~SurveyObject</a></span>
 
 
             
@@ -1563,7 +1557,7 @@ occurs once in each xform node in /formList</p>
 
             
 
-            <td class="description last"><p>survey object</p></td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -1588,10 +1582,6 @@ occurs once in each xform node in /formList</p>
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <p>promise</p>
-</div>
-
 
 
 <dl class="param-type">
@@ -1600,7 +1590,7 @@ occurs once in each xform node in /formList</p>
     </dt>
     <dd>
         
-<span class="param-type">*</span>
+<span class="param-type">Promise</span>
 
 
     </dd>
@@ -1905,7 +1895,7 @@ occurs once in each xform node in /formList</p>
 
     
 
-    <h4 class="name" id="~getXForm"><span class="type-signature">(inner) </span>getXForm<span class="signature">(survey)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id="~getXForm"><span class="type-signature">(inner) </span>getXForm<span class="signature">(survey)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
@@ -2036,10 +2026,6 @@ occurs once in each xform node in /formList</p>
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <p>promise</p>
-</div>
-
 
 
 <dl class="param-type">
@@ -2048,7 +2034,7 @@ occurs once in each xform node in /formList</p>
     </dt>
     <dd>
         
-<span class="param-type">*</span>
+<span class="param-type">Promise</span>
 
 
     </dd>
@@ -2063,7 +2049,7 @@ occurs once in each xform node in /formList</p>
 
     
 
-    <h4 class="name" id="~getXFormInfo"><span class="type-signature">(inner) </span>getXFormInfo<span class="signature">(survey)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id="~getXFormInfo"><span class="type-signature">(inner) </span>getXFormInfo<span class="signature">(survey)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
@@ -2159,7 +2145,7 @@ occurs once in each xform node in /formList</p>
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type"><a href="module-survey-model.html#~SurveyObject">module:survey-model~SurveyObject</a></span>
 
 
             
@@ -2169,7 +2155,7 @@ occurs once in each xform node in /formList</p>
 
             
 
-            <td class="description last"><p>survey object</p></td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -2194,10 +2180,6 @@ occurs once in each xform node in /formList</p>
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <p>promise</p>
-</div>
-
 
 
 <dl class="param-type">
@@ -2206,7 +2188,7 @@ occurs once in each xform node in /formList</p>
     </dt>
     <dd>
         
-<span class="param-type">*</span>
+<span class="param-type">Promise</span>
 
 
     </dd>

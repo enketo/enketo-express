@@ -66,6 +66,15 @@ if ( process.env.NODE_ENV === 'test' ) {
 }
 
 /**
+ * @typedef SurveyObject
+ * @property {string} openRosaServer
+ * @property {string} openRosaId
+ * @property {string} theme
+ * @property {object} info
+ * @property {string} info.hash
+ */
+
+/**
  * Returns the information stored in the database for an enketo id.
  *
  * @param {string} id - Survey id.
