@@ -1,3 +1,9 @@
+/**
+ * @module api-controller
+ *
+ * @description Handles redirecting to API documentation.
+ */
+
 const express = require( 'express' );
 const router = express.Router();
 

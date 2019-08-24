@@ -63,6 +63,11 @@ router
 //    next();
 //}
 
+/**
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {Function} next - Express callback
+ */
 function offlineWebform( req, res, next ) {
     if ( !req.app.get( 'offline enabled' ) ) {
         const error = new Error( 'Offline functionality has not been enabled for this application.' );
@@ -74,6 +79,11 @@ function offlineWebform( req, res, next ) {
     }
 }
 
+/**
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {Function} next - Express callback
+ */
 function webform( req, res, next ) {
     const options = {
         manifest: req.manifest,
@@ -84,6 +94,11 @@ function webform( req, res, next ) {
     _renderWebform( req, res, next, options );
 }
 
+/**
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {Function} next - Express callback
+ */
 function single( req, res, next ) {
     const options = {
         type: 'single',
@@ -96,6 +111,11 @@ function single( req, res, next ) {
     }
 }
 
+/**
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {Function} next - Express callback
+ */
 function view( req, res, next ) {
     const options = {
         type: 'view',
@@ -106,6 +126,11 @@ function view( req, res, next ) {
     _renderWebform( req, res, next, options );
 }
 
+/**
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {Function} next - Express callback
+ */
 function preview( req, res, next ) {
     const options = {
         type: 'preview',
@@ -116,6 +141,11 @@ function preview( req, res, next ) {
     _renderWebform( req, res, next, options );
 }
 
+/**
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {Function} next - Express callback
+ */
 function edit( req, res, next ) {
     const options = {
         type: 'edit',
@@ -131,6 +161,12 @@ function edit( req, res, next ) {
     }
 }
 
+/**
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {Function} next - Express callback
+ * @param {object} options
+ */
 function _renderWebform( req, res, next, options ) {
     const deviceId = req.signedCookies[ '__enketo_meta_deviceid' ] || `${req.hostname}:${utils.randomString( 16 )}`,
         cookieOptions = {
@@ -146,9 +182,9 @@ function _renderWebform( req, res, next, options ) {
 /**
  * Debugging view that shows underlying XForm
  *
- * @param {*} req
- * @param {*} res
- * @param {Function} next - callback for handling errors.
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {Function} next - Express callback
  */
 function xform( req, res, next ) {
     return surveyModel.get( req.enketoId )

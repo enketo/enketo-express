@@ -1,5 +1,13 @@
+/**
+ * @module error-handler
+ */
+
 // var debug = require( 'debug' )( 'error-handler' );
 
+/**
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {Error} error - Error object.
+ */
 function getErrorMessage( req, error ) {
     if ( error.message ) {
         // convert certain set of messages into a more readable
@@ -19,6 +27,12 @@ function getErrorMessage( req, error ) {
 }
 
 module.exports = {
+    /**
+     * @param {Error} err - Error object
+     * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+     * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+     * @param {Function} next - Express callback
+     */
     production( err, req, res, next ) {
         const body = {
             code: err.status || 500,
@@ -32,6 +46,12 @@ module.exports = {
             res.render( 'error', body );
         }
     },
+    /**
+     * @param {Error} err - Error object
+     * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+     * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+     * @param {Function} next - Express callback
+     */
     development( err, req, res, next ) {
         const body = {
             code: err.status || 500,
@@ -46,6 +66,11 @@ module.exports = {
             res.render( 'error', body );
         }
     },
+    /**
+     * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+     * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+     * @param {Function} next - Express callback
+     */
     '404': function( req, res, next ) {
         const error = new Error( req.i18n.t( 'error.pagenotfound' ) );
         error.status = 404;

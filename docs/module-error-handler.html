@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>duplicates - Enketo Express</title>
+    <title>error-handler - Enketo Express</title>
     
     <meta name="description" content="The full-fledged Enketo web application for the ODK ecosystem" />
     
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">duplicates</h1>
+    <h1 class="page-title">error-handler</h1>
     
 
     
@@ -77,74 +77,6 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id="~config"><span class="type-signature">(inner, constant) </span>config<span class="type-signature"></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="tools_duplicates.js.html">tools/duplicates.js</a>, <a href="tools_duplicates.js.html#line11">line 11</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description">
-    <p>See https://github.com/kobotoolbox/enketo-express/blob/master/tutorials/60-duplicates.md for more information about this tool.</p>
-<p>MAKE A BACKUP BEFORE RUNNING THIS SCRIPT TO REMOVE DUPLICATES!</p>
-</div>
-
-
-
-
-
-
-
-
-        
-    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -154,7 +86,7 @@
 
     
 
-    <h4 class="name" id="~checkDuplicateEnketoIds"><span class="type-signature">(inner) </span>checkDuplicateEnketoIds<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id=".404"><span class="type-signature">(static) </span>404<span class="signature">(req, res, next)</span><span class="type-signature"></span></h4>
 
     
 
@@ -166,7 +98,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="tools_duplicates.js.html">tools/duplicates.js</a>, <a href="tools_duplicates.js.html#line54">line 54</a>
+        <a href="app_controllers_error-handler.js.html">app/controllers/error-handler.js</a>, <a href="app_controllers_error-handler.js.html#line74">line 74</a>
     </li></ul></dd>
     
 
@@ -204,329 +136,6 @@
 
 
 
-
-<div class="description">
-    <p>Generates a raport about duplicate Enketo ids.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="~getAllKeys"><span class="type-signature">(inner) </span>getAllKeys<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;(Error|Array)>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="tools_duplicates.js.html">tools/duplicates.js</a>, <a href="tools_duplicates.js.html#line158">line 158</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description">
-    <p>Returns all keys.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>a list of keys.</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise.&lt;(Error|Array)></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="~getDuplicates"><span class="type-signature">(inner) </span>getDuplicates<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="tools_duplicates.js.html">tools/duplicates.js</a>, <a href="tools_duplicates.js.html#line116">line 116</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description">
-    <p>Returns a list of duplicate Enketo ids.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="~getId"><span class="type-signature">(inner) </span>getId<span class="signature">(key)</span><span class="type-signature"> &rarr; {Promise.&lt;(Error|{key: string, id: string})>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="tools_duplicates.js.html">tools/duplicates.js</a>, <a href="tools_duplicates.js.html#line176">line 176</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description">
-    <p>Gets id from key.</p>
-</div>
 
 
 
@@ -563,165 +172,7 @@
 
         <tr>
             
-                <td class="name"><code>key</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>a promise that resolves with key and id object.</p>
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise.&lt;(Error|{key: string, id: string})></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="~getSurveyOpenRosaId"><span class="type-signature">(inner) </span>getSurveyOpenRosaId<span class="signature">(duplicate)</span><span class="type-signature"> &rarr; {Promise.&lt;(Error|object)>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="tools_duplicates.js.html">tools/duplicates.js</a>, <a href="tools_duplicates.js.html#line197">line 197</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description">
-    <p>getSurveyOpenRosaId</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>duplicate</code></td>
+                <td class="name"><code>req</code></td>
             
 
             <td class="type">
@@ -737,7 +188,53 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p><a href="http://expressjs.com/en/4x/api.html#req">Express Request object</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p><a href="http://expressjs.com/en/4x/api.html#res">Express Response object</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Express callback</p></td>
         </tr>
 
     
@@ -759,24 +256,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise.&lt;(Error|object)></span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -785,7 +264,7 @@
 
     
 
-    <h4 class="name" id="~remove"><span class="type-signature">(inner) </span>remove<span class="signature">(key, id)</span><span class="type-signature"> &rarr; {Promise.&lt;(Error|string)>}</span></h4>
+    <h4 class="name" id=".development"><span class="type-signature">(static) </span>development<span class="signature">(err, req, res, next)</span><span class="type-signature"></span></h4>
 
     
 
@@ -797,7 +276,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="tools_duplicates.js.html">tools/duplicates.js</a>, <a href="tools_duplicates.js.html#line217">line 217</a>
+        <a href="app_controllers_error-handler.js.html">app/controllers/error-handler.js</a>, <a href="app_controllers_error-handler.js.html#line55">line 55</a>
     </li></ul></dd>
     
 
@@ -835,10 +314,6 @@
 
 
 
-
-<div class="description">
-    <p>remove</p>
-</div>
 
 
 
@@ -875,13 +350,13 @@
 
         <tr>
             
-                <td class="name"><code>key</code></td>
+                <td class="name"><code>err</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Error</span>
 
 
             
@@ -891,20 +366,20 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Error object.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>req</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">object</span>
 
 
             
@@ -914,7 +389,53 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p><a href="http://expressjs.com/en/4x/api.html#req">Express Request object</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p><a href="http://expressjs.com/en/4x/api.html#res">Express Response object</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Express callback</p></td>
         </tr>
 
     
@@ -936,24 +457,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise.&lt;(Error|string)></span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -962,7 +465,7 @@
 
     
 
-    <h4 class="name" id="~removeCache"><span class="type-signature">(inner) </span>removeCache<span class="signature">(key)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".production"><span class="type-signature">(static) </span>production<span class="signature">(err, req, res, next)</span><span class="type-signature"></span></h4>
 
     
 
@@ -974,7 +477,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="tools_duplicates.js.html">tools/duplicates.js</a>, <a href="tools_duplicates.js.html#line240">line 240</a>
+        <a href="app_controllers_error-handler.js.html">app/controllers/error-handler.js</a>, <a href="app_controllers_error-handler.js.html#line36">line 36</a>
     </li></ul></dd>
     
 
@@ -1012,10 +515,6 @@
 
 
 
-
-<div class="description">
-    <p>removeCache</p>
-</div>
 
 
 
@@ -1052,13 +551,13 @@
 
         <tr>
             
-                <td class="name"><code>key</code></td>
+                <td class="name"><code>err</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Error</span>
 
 
             
@@ -1068,7 +567,76 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Error object.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p><a href="http://expressjs.com/en/4x/api.html#req">Express Request object</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p><a href="http://expressjs.com/en/4x/api.html#res">Express Response object</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>next</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Express callback</p></td>
         </tr>
 
     
@@ -1098,7 +666,7 @@
 
     
 
-    <h4 class="name" id="~removeDuplicateEnketoIds"><span class="type-signature">(inner) </span>removeDuplicateEnketoIds<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="~getErrorMessage"><span class="type-signature">(inner) </span>getErrorMessage<span class="signature">(req, error)</span><span class="type-signature"></span></h4>
 
     
 
@@ -1110,7 +678,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="tools_duplicates.js.html">tools/duplicates.js</a>, <a href="tools_duplicates.js.html#line69">line 69</a>
+        <a href="app_controllers_error-handler.js.html">app/controllers/error-handler.js</a>, <a href="app_controllers_error-handler.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -1149,9 +717,6 @@
 
 
 
-<div class="description">
-    <p>Removes duplicate Enketo ids.</p>
-</div>
 
 
 
@@ -1162,39 +727,92 @@
 
 
 
+    <h5>Parameters:</h5>
+    
 
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
+        <th>Type</th>
 
         
 
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
         
-<span class="param-type">Promise</span>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
 
 
-    </dd>
-</dl>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p><a href="http://expressjs.com/en/4x/api.html#req">Express Request object</a></p></td>
+        </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Error</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Error object.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

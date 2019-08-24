@@ -40,9 +40,9 @@ router
 /**
  * Obtains HTML Form, XML model, and existing XML instance
  *
- * @param {*} req
- * @param {*} res
- * @param {Function} next - callback for handling errors.
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {Function} next - Express callback
  */
 function getSurveyParts( req, res, next ) {
     _getSurveyParams( req )
@@ -76,9 +76,9 @@ function getSurveyParts( req, res, next ) {
 /**
  * Obtains the hash of the cached Survey Parts
  *
- * @param {*} req
- * @param {*} res
- * @param {Function} next - callback for handling errors.
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {Function} next - Express callback
  */
 function getSurveyHash( req, res, next ) {
     _getSurveyParams( req )

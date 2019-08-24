@@ -26,6 +26,10 @@ router
         }
     } );
 
+/**
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ */
 function getManifest( req, res ) {
     return Promise.all( [
             _getWebformHtml( req, res ),
@@ -38,6 +42,10 @@ function getManifest( req, res ) {
         } );
 }
 
+/**
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ */
 function _getWebformHtml( req, res ) {
     return new Promise( ( resolve, reject ) => {
         res.render( 'surveys/webform', {
@@ -52,6 +60,10 @@ function _getWebformHtml( req, res ) {
     } );
 }
 
+/**
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ */
 function _getOfflineFallbackHtml( req, res ) {
     return new Promise( ( resolve, reject ) => {
         res.render( 'pages/offline', {}, ( err, html ) => {

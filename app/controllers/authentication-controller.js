@@ -22,9 +22,9 @@ router
 /**
  * login
  *
- * @param {*} req
- * @param {*} res
- * @param {Function} next - callback for handling errors.
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {Function} next - Express callback
  */
 function login( req, res, next ) {
     let error;
@@ -60,8 +60,8 @@ function login( req, res, next ) {
 /**
  * logout
  *
- * @param {*} req
- * @param {*} res
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
  */
 function logout( req, res ) {
     res
@@ -74,8 +74,8 @@ function logout( req, res ) {
 /**
  * setToken
  *
- * @param {*} req
- * @param {*} res
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
  */
 function setToken( req, res ) {
     const username = req.body.username.trim();

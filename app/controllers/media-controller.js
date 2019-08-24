@@ -19,6 +19,11 @@ function _extractMediaUrl( path ) {
     return path.replace( /\//, '://' );
 }
 
+/**
+ * @param {object} req - {@link http://expressjs.com/en/4x/api.html#req|Express Request object}
+ * @param {object} res - {@link http://expressjs.com/en/4x/api.html#res|Express Response object}
+ * @param {Function} next - Express callback
+ */
 function getMedia( req, res, next ) {
     const options = communicator.getUpdatedRequestOptions( {
         url: _extractMediaUrl( req.url.substring( '/get/'.length ) ),
