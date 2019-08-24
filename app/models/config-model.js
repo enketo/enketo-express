@@ -87,10 +87,10 @@ function _updateConfigItemFromEnv( envVarName ) {
 }
 
 /**
- * Converts some string values to booleans or null.
+ * Converts stringified booleans and `null` to original types
  *
  * @param {string} str - A thing to be converted.
- * @return {*|boolean|null} an un-stringified value or input value itself.
+ * @return {string|boolean|null} an un-stringified value or input value itself
  */
 function _convertType( str ) {
     switch ( str ) {
@@ -109,10 +109,10 @@ function _convertType( str ) {
  * Searches the configuration object to find a match for an environment variable,
  * or the first part of such a variable.
  *
- * @param {*} obj - Configuration object.
- * @param {string} envName - Environment variable name or the first part of one.
- * @param {string} prefix - Prefix to use (for nested objects).
- * @return {{0: object, 1: string}} 2-item array of object and property name.
+ * @param {object} obj - Configuration object
+ * @param {string} envName - Environment variable name or the first part of one
+ * @param {string} prefix - Prefix to use (for nested objects)
+ * @return {{0: object, 1: string}} 2-item array of object and property name
  */
 function _findSetting( obj, envName, prefix = '' ) {
     for ( const prop in obj ) {
@@ -133,8 +133,8 @@ function _findSetting( obj, envName, prefix = '' ) {
 /**
  * Convert a non-empty string number to a number.
  *
- * @param {string} str - A stringified number.
- * @return {string|number} an input value or unstrigified number.
+ * @param {string} str - A stringified number
+ * @return {string|number} an input value or unstrigified number
  */
 function _convertNumbers( str ) {
     if ( !str ) {
@@ -147,9 +147,9 @@ function _convertNumbers( str ) {
 /**
  * Finds the index of the first array item that is a number.
  *
- * @param {Array<string|number>} arr - Array of strings and numbers.
- * @param {number=} start - Start index.
- * @return {number|undefined} the index or undefined.
+ * @param {Array<string|number>} arr - Array of strings and numbers
+ * @param {number} [start] - Start index
+ * @return {number|undefined} The found index
  */
 function _findNumberIndex( arr, start = 0 ) {
     let i;
@@ -163,10 +163,10 @@ function _findNumberIndex( arr, start = 0 ) {
 }
 
 /**
- * returns an empty clone of the provided simple object
+ * Returns an empty clone of the provided simple object
  *
- * @param {*} obj - A simple object.
- * @return {*} emptied clone of input object.
+ * @param {object} obj - A simple object
+ * @return {object} Clone of input object with emptied properties
  */
 function _getEmptyClone( obj ) {
     const clone = JSON.parse( JSON.stringify( obj ) );
@@ -178,7 +178,7 @@ function _getEmptyClone( obj ) {
 /**
  * Replaces all non-null and non-object property values with empty string.
  *
- * @param {*} obj - A simple object.
+ * @param {object} obj - A simple object
  */
 function _emptyObjectProperties( obj ) {
     for ( const prop in obj ) {
@@ -209,10 +209,10 @@ function _setRedisConfigFromEnv() {
 }
 
 /**
- * Parses a redis URL and returns an object with host, port and password properties.
+ * Parses a redis URL and returns an object with `host`, `port` and `password` properties.
  *
- * @param {string} redisUrl - A compliant redis url.
- * @return {{host: string, port: string, password: string|null}} config object.
+ * @param {string} redisUrl - A compliant redis url
+ * @return {{host: string, port: string, password: string|null}} config object
  */
 function _extractRedisConfigFromUrl( redisUrl ) {
     const parsedUrl = url.parse( redisUrl );
@@ -230,8 +230,8 @@ function _extractRedisConfigFromUrl( redisUrl ) {
  * in case a list is provided only the ones that exists are returned.
  *
  * @static
- * @param {Array} themeList - a list of themes e.g ['formhub', 'grid']
- * @return {Array} an array of theme names.
+ * @param {Array<string>} themeList - A list of themes e.g `['formhub', 'grid']`
+ * @return {Array<string>} An list of supported theme names
  */
 function getThemesSupported( themeList ) {
     const themes = [];

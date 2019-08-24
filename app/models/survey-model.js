@@ -20,6 +20,7 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @typedef SurveyObject
  * @property {string} openRosaServer
  * @property {string} openRosaId
+ * @property {string} enketoId
  * @property {string} theme
  * @property {object} info
  * @property {string} info.hash
@@ -28,8 +29,11 @@ if ( process.env.NODE_ENV === 'test' ) {
 /**
  * Returns the information stored in the database for an enketo id.
  *
- * @param {string} id - Survey id.
- * @return {Promise<Error|object>} promise with survey object.
+ * @static
+ * @name get
+ * @function
+ * @param {string} id - Survey ID
+ * @return {Promise<Error|SurveyObject>} Promise that resolves with survey object
  */
 function getSurvey( id ) {
     return new Promise( ( resolve, reject ) => {
@@ -64,6 +68,15 @@ function getSurvey( id ) {
     } );
 }
 
+/**
+ * Function for updating or creating a survey
+ *
+ * @static
+ * @name set
+ * @function
+ * @param {SurveyObject} survey
+ * @return {Promise<Error|string>} Promise that eventually resolves with Survey ID
+ */
 function setSurvey( survey ) {
     return new Promise( ( resolve, reject ) => {
         // Set in db:
@@ -102,8 +115,11 @@ function setSurvey( survey ) {
 }
 
 /**
+ * @static
+ * @name update
+ * @function
  * @param {module:survey-model~SurveyObject} survey
- * @return {Promise}
+ * @return {Promise<Error|string>} Promise that resolves with survey ID
  */
 function updateSurvey( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -131,6 +147,11 @@ function updateSurvey( survey ) {
     } );
 }
 
+/**
+ * @param {string} id - Survey ID
+ * @param {module:survey-model~SurveyObject} survey - New survey
+ * @return {Promise<Error|string>} Promise that resolves with survey ID
+ */
 function _updateProperties( id, survey ) {
     return new Promise( ( resolve, reject ) => {
         const update = {};
@@ -155,6 +176,11 @@ function _updateProperties( id, survey ) {
     } );
 }
 
+/**
+ * @param {string} openRosaKey
+ * @param {module:survey-model~SurveyObject} survey
+ * @return {Promise<Error|string>} Promise that eventually resolves with survey ID
+ */
 function _addSurvey( openRosaKey, survey ) {
     // survey:counter no longer serves any purpose, after https://github.com/kobotoolbox/enketo-express/issues/481
     return _createNewEnketoId()
@@ -185,6 +211,13 @@ function _addSurvey( openRosaKey, survey ) {
         } );
 }
 
+/**
+ * @static
+ * @name incrementSubmissions
+ * @function
+ * @param {string} id - Survey ID
+ * @return {Promise<Error|string>} Promise that eventually resolves with survey ID
+ */
 function incrSubmissions( id ) {
     return new Promise( ( resolve, reject ) => {
         client.multi()
@@ -200,6 +233,13 @@ function incrSubmissions( id ) {
     } );
 }
 
+/**
+ * @static
+ * @name getNumber
+ * @function
+ * @param {string} server - Server URL
+ * @return {Promise<Error|string|number>} Promise that resolves with number of surveys
+ */
 function getNumberOfSurveys( server ) {
     return new Promise( ( resolve, reject ) => {
         let error;
@@ -227,6 +267,13 @@ function getNumberOfSurveys( server ) {
     } );
 }
 
+/**
+ * @static
+ * @name getList
+ * @function
+ * @param {string} server - Server URL
+ * @return {Promise<Error|Array<SurveyObject>>} Promise that resolves with a list of SurveyObjects
+ */
 function getListOfSurveys( server ) {
     return new Promise( ( resolve, reject ) => {
         let error;
@@ -261,6 +308,10 @@ function getListOfSurveys( server ) {
     } );
 }
 
+/**
+ * @param {string} openRosaKey
+ * @return {Promise<Error|null|string>} Promise that resolves with survey ID
+ */
 function _getEnketoId( openRosaKey ) {
     return new Promise( ( resolve, reject ) => {
         if ( !openRosaKey ) {
@@ -287,12 +338,23 @@ function _getEnketoId( openRosaKey ) {
     } );
 }
 
+/**
+ * @static
+ * @name getId
+ * @function
+ * @param {module:survey-model~SurveyObject} survey
+ * @return {Promise<Error|null|string>} Promise that resolves with survey ID
+ */
 function getEnketoIdFromSurveyObject( survey ) {
     const openRosaKey = utils.getOpenRosaKey( survey );
 
     return _getEnketoId( openRosaKey );
 }
 
+/**
+ * @param {Array<string>} openRosaIds - A list of `openRosaId`s
+ * @return {Promise}
+ */
 function _getActiveSurveys( openRosaIds ) {
     const tasks = openRosaIds.map( openRosaId => _getEnketoId( openRosaId ) );
 
@@ -307,9 +369,12 @@ function _getActiveSurveys( openRosaIds ) {
  * Generates a new random Enketo ID that has not been used yet, or checks whether a provided id has not been used.
  * 8 characters keeps the chance of collisions below about 10% until about 10,000,000 IDs have been generated
  *
- * @param {string=} id - This is optional, and only really included to write tests for collissions or a future "vanity ID" feature
- * @param {number=} triesRemaining - Avoid infinite loops when collissions become the norm.
- * @return {Promise}
+ * @static
+ * @name createNewEnketoId
+ * @function
+ * @param {string} [id] - This is only really included to write tests for collissions or a future "vanity ID" feature
+ * @param {number} [triesRemaining] - Avoid infinite loops when collissions become the norm.
+ * @return {Promise<Error|string|Promise>}
  */
 function _createNewEnketoId( id = utils.randomString( 8 ), triesRemaining = 10 ) {
     return new Promise( ( resolve, reject ) => {
@@ -331,14 +396,29 @@ function _createNewEnketoId( id = utils.randomString( 8 ), triesRemaining = 10 )
     } );
 }
 
+/**
+ * Function for launch date comparison
+ *
+ * @param {module:survey-model~SurveyObject} a
+ * @param {module:survey-model~SurveyObject} b
+ * @return {number}
+ */
 function _ascendingLaunchDate( a, b ) {
     return new Date( a.launchDate ) - new Date( b.launchDate );
 }
 
+/**
+ * @param {module:survey-model~SurveyObject} survey
+ * @return {boolean} Whether survey has openRosaId
+ */
 function _nonEmpty( survey ) {
     return !!survey.openRosaId;
 }
 
+/**
+ * @param {Error} error
+ * @return {object} Empty object for `404` errors; throws normally for other
+ */
 function _404Empty( error ) {
     if ( error && error.status && error.status === 404 ) {
         return {};

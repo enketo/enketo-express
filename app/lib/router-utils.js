@@ -6,6 +6,8 @@ const utils = require( './utils' );
 const config = require( '../models/config-model' ).server;
 /**
  * @static
+ * @name idEncryptionKeys
+ * @constant
  * @property {string} singleOnce
  * @property {string} view
  */
@@ -16,6 +18,8 @@ const keys = {
 
 /**
  * @static
+ * @name enketoId
+ * @function
  * @param {module:api-controller~ExpressRequest} req
  * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
@@ -34,6 +38,8 @@ function enketoIdParam( req, res, next, id ) {
  * Wrapper function for {@link module:router-utils~_encryptedEnketoIdParam|_encryptedEnketoIdParam}
  *
  * @static
+ * @name encryptedEnketoIdSingle
+ * @function
  * @param {module:api-controller~ExpressRequest} req
  * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
@@ -47,6 +53,8 @@ function encryptedEnketoIdParamSingle( req, res, next, id ) {
  * Wrapper function for {@link module:router-utils~_encryptedEnketoIdParam|_encryptedEnketoIdParam}
  *
  * @static
+ * @name encryptedEnketoIdView
+ * @function
  * @param {module:api-controller~ExpressRequest} req
  * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback

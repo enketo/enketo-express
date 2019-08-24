@@ -7,10 +7,12 @@ const url = require( 'url' );
 // var debug = require( 'debug' )( 'user-model' );
 
 /**
- * Returns credentials
+ * Returns credentials from request object.
+ * Handles `'basic'` and `'token'` authentication types.
  *
- * @param {object} req
- * @return {object|null} credentials.
+ * @static
+ * @param {module:api-controller~ExpressRequest} req
+ * @return {object|null} Credentials
  */
 function getCredentials( req ) {
     const auth = req.app.get( 'linked form and data server' ).authentication;
