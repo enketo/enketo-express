@@ -18,6 +18,15 @@ if ( process.env.NODE_ENV === 'test' ) {
     client.select( 15 );
 }
 
+/**
+ * @static
+ * @name get
+ * @function
+ * @param {string} html1
+ * @param {string} html2
+ * @param {string} lang
+ * @return {Promise} Promise that resolves with manifest
+ */
 function getManifest( html1, html2, lang ) {
     const manifestKey = `ma:${lang}_manifest`;
     const versionKey = `ma:${lang}_version`;
@@ -95,10 +104,19 @@ function getManifest( html1, html2, lang ) {
 
 }
 
+/**
+ * @param {string} version
+ * @param {Array} resources
+ * @return {string} Manifest string
+ */
 function _getManifestString( version, resources ) {
     return `CACHE MANIFEST\n# version: ${version}\n\nCACHE:\n${resources.join( '\n' )}\n\nFALLBACK:\n/x ${config[ 'base path' ]}/offline\n/_ ${config[ 'base path' ]}/offline\n\nNETWORK:\n*\n`;
 }
 
+/**
+ * @param {string} versionKey
+ * @return {Promise<Error|object>}
+ */
 function _getVersionObj( versionKey ) {
     return new Promise( ( resolve, reject ) => {
         client.hgetall( versionKey, ( error, obj ) => {
@@ -114,6 +132,11 @@ function _getVersionObj( versionKey ) {
     } );
 }
 
+/**
+ * @param {string} versionKey
+ * @param {string} hash
+ * @param {object} version - Version object.
+ */
 function _updateVersionObj( versionKey, hash, version ) {
     client.hmset( versionKey, {
         hash,
@@ -121,14 +144,27 @@ function _updateVersionObj( versionKey, hash, version ) {
     } );
 }
 
+/**
+ * @param {object} doc
+ * @return {Array<string>} A list of `href`s
+ */
 function _getLinkHrefs( doc ) {
     return doc.find( '//link[@href]' ).map( element => element.attr( 'href' ).value() );
 }
 
+/**
+ * @param {object} doc
+ * @return {Array<string>} A list of `src`s
+ */
 function _getSrcAttributes( doc ) {
     return doc.find( '//*[@src]' ).map( element => element.attr( 'src' ).value() );
 }
 
+/**
+ * @param {Array<string>} resources
+ * @param {Array<string>} themes
+ * @return {Array<string>} A list of theme urls
+ */
 function _getAdditionalThemes( resources, themes ) {
     const urls = [];
 
@@ -146,6 +182,10 @@ function _getAdditionalThemes( resources, themes ) {
     return urls;
 }
 
+/**
+ * @param {string} lang
+ * @return {Array<string>} List of translations paths
+ */
 function _getTranslations( lang ) {
     const langs = [];
 
@@ -159,6 +199,10 @@ function _getTranslations( lang ) {
     return langs;
 }
 
+/**
+ * @param {Array<string>} resources
+ * @return {Array<string>} A list of urls
+ */
 function _getResourcesFromCss( resources ) {
     const urlReg = /url\(['|"]?([^)'"]+)['|"]?\)/g;
     const cssReg = /^.+\.css$/;
@@ -177,6 +221,10 @@ function _getResourcesFromCss( resources ) {
     return urls;
 }
 
+/**
+ * @param {string} resource
+ * @return {string} Resource file content
+ */
 function _getResourceContent( resource ) {
     // in try catch in case css file is missing
     try {
@@ -187,6 +235,10 @@ function _getResourceContent( resource ) {
     }
 }
 
+/**
+ * @param {string} resource
+ * @return {boolean} Whether a resource exists
+ */
 function _removeNonExisting( resource ) {
     const localResourcePath = _getLocalPath( resource );
     // TODO: in later versions of node.js, this should be replaced by: fs.accessSync(resourcePath, fs.R_OK)
@@ -198,6 +250,10 @@ function _removeNonExisting( resource ) {
     return exists;
 }
 
+/**
+ * @param {string} resource
+ * @return {string} Local resource path
+ */
 function _getLocalPath( resource ) {
     const rel = ( resource.indexOf( `${config[ 'base path' ]}/locales/` ) === 0 ) ? '../../' : '../../public';
     const resourceWithoutBase = resource.substring( config[ 'base path' ].length );
@@ -205,19 +261,39 @@ function _getLocalPath( resource ) {
     return localResourcePath;
 }
 
+/**
+ * @param {string} resource
+ * @return {boolean} Whether a resource isn't empty
+ */
 function _removeEmpties( resource ) {
     return !!resource;
 }
 
+/**
+ * @param {string} resource
+ * @param {number} position
+ * @param {Array} array
+ * @return {boolean} Whether resource is under given position (index) in given array
+ */
 function _removeDuplicates( resource, position, array ) {
     return array.indexOf( resource ) === position;
 }
 
+/**
+ * @param {string} resourceUrl
+ * @return {boolean} Whether resource URL protocol isn't `'data:'`
+ */
 function _removeNonHttpResources( resourceUrl ) {
     const parsedUrl = url.parse( resourceUrl );
     return parsedUrl.path && parsedUrl.protocol !== 'data:';
 }
 
+/**
+ * @param {string} html1
+ * @param {string} html2
+ * @param {Array<string>} resources
+ * @return {string} A calculated hash of all input values
+ */
 function _calculateHash( html1, html2, resources ) {
     let hash = utils.md5( html1 ) + utils.md5( html2 );
 

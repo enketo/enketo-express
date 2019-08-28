@@ -1,3 +1,7 @@
+/**
+ * @module pages-controller
+ */
+
 const express = require( 'express' );
 const router = express.Router();
 // var debug = require( 'debug' )( 'pages-controller' );

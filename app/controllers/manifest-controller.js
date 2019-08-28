@@ -1,3 +1,7 @@
+/**
+ * @module manifest-controller
+ */
+
 const manifest = require( '../models/manifest-model' );
 const express = require( 'express' );
 const router = express.Router();
@@ -26,6 +30,10 @@ router
         }
     } );
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ */
 function getManifest( req, res ) {
     return Promise.all( [
             _getWebformHtml( req, res ),
@@ -38,6 +46,10 @@ function getManifest( req, res ) {
         } );
 }
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ */
 function _getWebformHtml( req, res ) {
     return new Promise( ( resolve, reject ) => {
         res.render( 'surveys/webform', {
@@ -52,6 +64,10 @@ function _getWebformHtml( req, res ) {
     } );
 }
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ */
 function _getOfflineFallbackHtml( req, res ) {
     return new Promise( ( resolve, reject ) => {
         res.render( 'pages/offline', {}, ( err, html ) => {

@@ -43,9 +43,9 @@ router
  * Simply pipes well-formed request to the OpenRosa server and
  * copies the response received.
  *
- * @param {*} req
- * @param {*} res
- * @param {Function} next - callback for handling errors.
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
  */
 function submit( req, res, next ) {
     let submissionUrl;
@@ -106,9 +106,9 @@ function submit( req, res, next ) {
 /**
  * Get max submission size.
  *
- * @param {*} req
- * @param {*} res
- * @param {Function} next - callback for handling errors.
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
  */
 function maxSize( req, res, next ) {
     if ( req.query.xformUrl ) {
@@ -139,9 +139,9 @@ function maxSize( req, res, next ) {
 /**
  * Obtains cached instance (for editing)
  *
- * @param {*} req
- * @param {*} res
- * @param {Function} next - callback for handling errors.
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
  */
 function getInstance( req, res, next ) {
     surveyModel.get( req.enketoId )
@@ -168,6 +168,11 @@ function getInstance( req, res, next ) {
         .catch( next );
 }
 
+/**
+ * @param {string} id
+ * @param {string} instanceId
+ * @param {string} deprecatedId
+ */
 function _logSubmission( id, instanceId, deprecatedId ) {
     submissionModel.isNew( id, instanceId )
         .then( notRecorded => {

@@ -4,17 +4,25 @@
 
 const utils = require( './utils' );
 const config = require( '../models/config-model' ).server;
+/**
+ * @static
+ * @name idEncryptionKeys
+ * @constant
+ * @property {string} singleOnce
+ * @property {string} view
+ */
 const keys = {
     singleOnce: config[ 'less secure encryption key' ],
     view: `${config[ 'less secure encryption key' ]}view`,
 };
 
 /**
- * enketoIdParam
- *
- * @param {*} req
- * @param {*} res
- * @param {Function} next
+ * @static
+ * @name enketoId
+ * @function
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
  * @param {string} id
  */
 function enketoIdParam( req, res, next, id ) {
@@ -26,14 +34,45 @@ function enketoIdParam( req, res, next, id ) {
     }
 }
 
+/**
+ * Wrapper function for {@link module:router-utils~_encryptedEnketoIdParam|_encryptedEnketoIdParam}
+ *
+ * @static
+ * @name encryptedEnketoIdSingle
+ * @function
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ * @param {string} id
+ */
 function encryptedEnketoIdParamSingle( req, res, next, id ) {
     _encryptedEnketoIdParam( req, res, next, id, keys.singleOnce );
 }
 
+/**
+ * Wrapper function for {@link module:router-utils~_encryptedEnketoIdParam|_encryptedEnketoIdParam}
+ *
+ * @static
+ * @name encryptedEnketoIdView
+ * @function
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ * @param {string} id
+ */
 function encryptedEnketoIdParamView( req, res, next, id ) {
     _encryptedEnketoIdParam( req, res, next, id, keys.view );
 }
 
+/**
+ * Returns decrypted Enketo ID
+ *
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ * @param {string} id
+ * @param {string} key - Encryption key
+ */
 function _encryptedEnketoIdParam( req, res, next, id, key ) {
     // either 32 or 64 hexadecimal characters
     if ( /^::([0-9a-fA-F]{32}$|[0-9a-fA-F]{64})$/.test( id ) ) {
@@ -50,7 +89,7 @@ function _encryptedEnketoIdParam( req, res, next, id, key ) {
                 req.enketoId = decrypted;
                 next();
             } else {
-                console.error( `decryption with${key}worked but result is not alphanumeric, ignoring result:`, decrypted );
+                console.error( `decryption with ${key} worked but result is not alphanumeric, ignoring result:`, decrypted );
                 next( 'route' );
             }
         } catch ( e ) {

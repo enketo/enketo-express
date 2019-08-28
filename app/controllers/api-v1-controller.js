@@ -1,3 +1,7 @@
+/**
+ * @module api-v1-controller
+ */
+
 const surveyModel = require( '../models/survey-model' );
 const instanceModel = require( '../models/instance-model' );
 const account = require( '../models/account-model' );
@@ -57,6 +61,11 @@ router
         next( error );
     } );
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ */
 function authCheck( req, res, next ) {
     // check authentication and account
     let error;
@@ -84,6 +93,11 @@ function authCheck( req, res, next ) {
         .catch( next );
 }
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ */
 function getExistingSurvey( req, res, next ) {
 
     if ( req.account.quota < req.account.quotaUsed ) {
@@ -105,6 +119,11 @@ function getExistingSurvey( req, res, next ) {
         .catch( next );
 }
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ */
 function getNewOrExistingSurvey( req, res, next ) {
     const survey = {
         openRosaServer: req.body.server_url || req.query.server_url,
@@ -144,6 +163,11 @@ function getNewOrExistingSurvey( req, res, next ) {
         .catch( next );
 }
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ */
 function deactivateSurvey( req, res, next ) {
 
     return surveyModel
@@ -162,6 +186,11 @@ function deactivateSurvey( req, res, next ) {
         .catch( next );
 }
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ */
 function getNumber( req, res, next ) {
 
     return surveyModel
@@ -180,6 +209,11 @@ function getNumber( req, res, next ) {
         .catch( next );
 }
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ */
 function getList( req, res, next ) {
     let obj;
 
@@ -200,6 +234,11 @@ function getList( req, res, next ) {
         .catch( next );
 }
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ */
 function cacheInstance( req, res, next ) {
     let survey;
     let enketoId;
@@ -250,6 +289,11 @@ function cacheInstance( req, res, next ) {
         .catch( next );
 }
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ */
 function removeInstance( req, res, next ) {
 
     return instanceModel
@@ -268,6 +312,11 @@ function removeInstance( req, res, next ) {
         .catch( next );
 }
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ */
 function _setQuotaUsed( req, res, next ) {
     surveyModel
         .getNumber( req.account.linkedServer )
@@ -277,11 +326,21 @@ function _setQuotaUsed( req, res, next ) {
         } );
 }
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ */
 function _setIframe( req, res, next ) {
     req.iframe = true;
     next();
 }
 
+/**
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ */
 function _setReturnQueryParam( req, res, next ) {
     const returnUrl = req.body.return_url || req.query.return_url;
     if ( returnUrl && ( req.webformType === 'edit' || req.webformType === 'single' ) ) {
@@ -290,12 +349,19 @@ function _setReturnQueryParam( req, res, next ) {
     next();
 }
 
+/**
+ * @param {Array<string>} [params] - List of parameters.
+ */
 function _generateQueryString( params = [] ) {
     const paramsJoined = params.filter( part => part && part.length > 0 ).join( '&' );
 
     return paramsJoined ? `?${paramsJoined}` : '';
 }
 
+/**
+ * @param {string} id - Form id.
+ * @param {module:api-controller~ExpressRequest} req
+ */
 function _generateWebformUrls( id, req ) {
     let queryString;
     const obj = {};
@@ -339,6 +405,11 @@ function _generateWebformUrls( id, req ) {
     return obj;
 }
 
+/**
+ * @param {number} status
+ * @param {object|string} [body]
+ * @param {module:api-controller~ExpressResponse} res
+ */
 function _render( status, body = {}, res ) {
     if ( status === 204 ) {
         // send 204 response without a body

@@ -20,11 +20,9 @@ router
     .post( '/login', csrfProtection, setToken );
 
 /**
- * login
- *
- * @param {*} req
- * @param {*} res
- * @param {Function} next - callback for handling errors.
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
  */
 function login( req, res, next ) {
     let error;
@@ -58,10 +56,8 @@ function login( req, res, next ) {
 }
 
 /**
- * logout
- *
- * @param {*} req
- * @param {*} res
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  */
 function logout( req, res ) {
     res
@@ -72,10 +68,8 @@ function logout( req, res ) {
 }
 
 /**
- * setToken
- *
- * @param {*} req
- * @param {*} res
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
  */
 function setToken( req, res ) {
     const username = req.body.username.trim();

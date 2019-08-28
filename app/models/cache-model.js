@@ -20,8 +20,11 @@ if ( process.env.NODE_ENV === 'test' ) {
 /**
  * Gets an item from the cache.
  *
- * @param {{openRosaServer: string, openRosaId: string }} survey
- * @return {Promise}
+ * @static
+ * @name get
+ * @function
+ * @param {module:survey-model~SurveyObject} survey
+ * @return {Promise<Error|null|SurveyObject>} Promise that resolves with cached {@link module:survey-model~SurveyObject|SurveyObject} or `null`
  */
 function getSurvey( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -56,8 +59,11 @@ function getSurvey( survey ) {
 /**
  * Gets the hashes of an item from the cache.
  *
- * @param {{openRosaServer: string, openRosaId: string, theme: string}} survey
- * @return {Promise}
+ * @static
+ * @name getHashes
+ * @function
+ * @param {module:survey-model~SurveyObject} survey
+ * @return {Promise<Error|SurveyObject>} Promise that resolves with {@link module:survey-model~SurveyObject|SurveyObject} (updated with hash array if such exist)
  */
 function getSurveyHashes( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -87,7 +93,10 @@ function getSurveyHashes( survey ) {
 /**
  * Checks if cache is present and up to date
  *
- * @param {{openRosaServer: string, openRosaId: string, info: {hash: string }}} survey
+ * @static
+ * @name check
+ * @function
+ * @param {module:survey-model~SurveyObject} survey
  * @return {Promise<Error|null|boolean>}
  */
 function isCacheUpToDate( survey ) {
@@ -139,8 +148,11 @@ function isCacheUpToDate( survey ) {
 /**
  * Adds an item to the cache
  *
- * @param {*} survey
- * @return {Promise}
+ * @static
+ * @name set
+ * @function
+ * @param {module:survey-model~SurveyObject} survey
+ * @return {Promise<Error|SurveyObject>}
  */
 function setSurvey( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -180,8 +192,11 @@ function setSurvey( survey ) {
 /**
  * Flushes the cache of a single survey
  *
- * @param {*} survey
- * @return {Promise}
+ * @static
+ * @name flush
+ * @function
+ * @param {module:survey-model~SurveyObject} survey
+ * @return {Promise<Error|SurveyObject>} Flushed {@link module:survey-model~SurveyObject|SurveyObject}
  */
 function flushSurvey( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -223,7 +238,8 @@ function flushSurvey( survey ) {
 /**
  * Completely empties the cache
  *
- * @return {Promise<Error|boolean>}
+ * @static
+ * @return {Promise<Error|boolean>} Promise that resolves `true` after all cache is flushed
  */
 function flushAll() {
     return new Promise( ( resolve, reject ) => {
@@ -247,8 +263,8 @@ function flushAll() {
 /**
  * Gets the key used for the cache item
  *
- * @param {{openRosaServer: string, openRosaId: string}} survey
- * @return {string|null} openRosaKey or null
+ * @param {module:survey-model~SurveyObject} survey
+ * @return {string|null} openRosaKey or `null`
  */
 function _getKey( survey ) {
     const openRosaKey = utils.getOpenRosaKey( survey, prefix );
@@ -258,7 +274,7 @@ function _getKey( survey ) {
 /**
  * Adds the 3 relevant hashes to the survey object if they haven't been added already.
  *
- * @param {*} survey
+ * @param {module:survey-model~SurveyObject} survey
  */
 function _addHashes( survey ) {
     survey.formHash = survey.formHash || survey.info.hash;

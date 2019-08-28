@@ -13,8 +13,9 @@ const TIMEOUT = config.timeout;
 /**
  * Gets form info
  *
- * @param {*} survey - survey object
- * @return {*} promise
+ * @static
+ * @param {module:survey-model~SurveyObject} survey
+ * @return {Promise}
  */
 function getXFormInfo( survey ) {
     if ( !survey || !survey.openRosaServer ) {
@@ -33,8 +34,9 @@ function getXFormInfo( survey ) {
 /**
  * Gets XForm from url
  *
+ * @static
  * @param  {*} survey - survey object
- * @return {*} promise
+ * @return {Promise}
  */
 function getXForm( survey ) {
     return _request( {
@@ -53,8 +55,9 @@ function getXForm( survey ) {
 /**
  * Obtains the XForm manifest
  *
- * @param {*} survey - survey object
- * @return {*} promise
+ * @static
+ * @param {module:survey-model~SurveyObject} survey
+ * @return {Promise}
  */
 function getManifest( survey ) {
     if ( !survey.info.manifestUrl ) {
@@ -79,8 +82,9 @@ function getManifest( survey ) {
 /**
  * Checks the maximum acceptable submission size the server accepts
  *
- * @param {*} survey - survey object
- * @return {*} promise
+ * @static
+ * @param {module:survey-model~SurveyObject} survey
+ * @return {Promise}
  */
 function getMaxSize( survey ) {
     // Using survey.xformUrl is non-standard but the only way for previews served from `?form=URL`.
@@ -100,7 +104,9 @@ function getMaxSize( survey ) {
 }
 
 /**
- * @param {object} survey
+ * @static
+ * @param {module:survey-model~SurveyObject} survey
+ * @return {Promise}
  */
 function authenticate( survey ) {
     const options = {
@@ -123,8 +129,9 @@ function authenticate( survey ) {
 /**
  * Generates an Auhorization header that can be used to inject into piped requests (e.g. submissions).
  *
+ * @static
  * @param {string} url
- * @param {?{user: string, pass: string}=} credentials
+ * @param {{user: string, pass: string, bearer: string}} [credentials]
  * @return {Promise} a promise that resolves with an auth header
  */
 function getAuthHeader( url, credentials ) {
@@ -166,9 +173,10 @@ function getAuthHeader( url, credentials ) {
 /**
  * getFormListUrl
  *
+ * @static
  * @param {string} server
- * @param {string} id
- * @param {*} customParam
+ * @param {string} id - Form id.
+ * @param {string} customParam - custom query parameter
  * @return {string} url
  */
 function getFormListUrl( server, id, customParam ) {
@@ -184,6 +192,7 @@ function getFormListUrl( server, id, customParam ) {
 }
 
 /**
+ * @static
  * @param {string} server
  * @return {string} url
  */
@@ -194,6 +203,7 @@ function getSubmissionUrl( server ) {
 /**
  * Updates request options.
  *
+ * @static
  * @param {object} options
  */
 function getUpdatedRequestOptions( options ) {
@@ -224,7 +234,7 @@ function getUpdatedRequestOptions( options ) {
 /**
  * Sends a request to an OpenRosa server
  *
- * @param {*} options - request options object
+ * @param {{url: string}} options - request options object
  * @return {Promise} promise
  */
 function _request( options ) {
@@ -271,7 +281,7 @@ function _request( options ) {
  * transform XML to JSON for easier processing
  *
  * @param {string} xml - XML string
- * @return {*} promise
+ * @return {Promise<string|Error>} a promise that resolves with JSON
  */
 function _xmlToJson( xml ) {
     return new Promise( ( resolve, reject ) => {
@@ -290,7 +300,7 @@ function _xmlToJson( xml ) {
  * Finds the relevant form in an OpenRosa XML formList
  *
  * @param {string} formListXml - OpenRosa XML formList
- * @param {string} survey
+ * @param {module:survey-model~SurveyObject} survey
  * @return {Promise} promise
  */
 function _findFormAddInfo( formListXml, survey ) {

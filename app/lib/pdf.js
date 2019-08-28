@@ -4,26 +4,44 @@
 
 const puppeteer = require( 'puppeteer' );
 const { URL } = require( 'url' );
-const FORMAT = 'A4';
-const MARGIN = '0.5in';
-const LANDSCAPE = false;
-const SCALE = 1;
+
+/**
+ * @typedef PdfGetOptions
+ * @property {string} [format]
+ * @property {string} [margin]
+ * @property {string} [landscape]
+ * @property {string} [scale]
+ */
+
+/**
+ * default values for {@link module:pdf~PdfGetOptions|PdfGetOptions}
+ *
+ * @default
+ */
+const DEFAULTS = {
+    FORMAT: 'A4',
+    MARGIN: '0.5in',
+    LANDSCAPE: false,
+    SCALE: 1
+};
 
 /**
  * Asynchronously gets pdf from url using Puppeteer.
  *
+ * @static
  * @param {string} url
- * @param {object} options
+ * @param {PdfGetOptions} [options]
+ * @return {Promise}
  */
 function get( url, options = {} ) {
     if ( !url ) {
         throw new Error( 'No url provided' );
     }
 
-    options.format = options.format || FORMAT;
-    options.margin = options.margin || MARGIN;
-    options.landscape = options.landscape || LANDSCAPE;
-    options.scale = options.scale || SCALE;
+    options.format = options.format || DEFAULTS.FORMAT;
+    options.margin = options.margin || DEFAULTS.MARGIN;
+    options.landscape = options.landscape || DEFAULTS.LANDSCAPE;
+    options.scale = options.scale || DEFAULTS.SCALE;
 
     const urlObj = new URL( url );
     urlObj.searchParams.append( 'format', options.format );

@@ -55,9 +55,10 @@ if ( process.env.NODE_ENV === 'test' ) {
  *
  * Note that edited records are submitted multiple times with different instanceIDs.
  *
+ * @static
  * @param {string} id
  * @param {string} instanceId
- * @return {Promise}
+ * @return {Promise<Error|boolean>}
  */
 function isNew( id, instanceId ) {
     if ( !id || !instanceId ) {
@@ -90,6 +91,12 @@ function isNew( id, instanceId ) {
         } );
 }
 
+/**
+ * @static
+ * @param {string} id
+ * @param {string} instanceId
+ * @param {string} deprecatedId
+ */
 function add( id, instanceId, deprecatedId ) {
     if ( logger ) {
         logger.info( instanceId, {
@@ -100,10 +107,19 @@ function add( id, instanceId, deprecatedId ) {
     }
 }
 
+/**
+ * @param {string} instanceId
+ * @param {Array<string>} [list] List of IDs
+ * @return {boolean} Whather instanceID already exists in the list
+ */
 function _alreadyRecorded( instanceId, list = [] ) {
     return list.indexOf( instanceId ) !== -1;
 }
 
+/**
+ * @param {string} key
+ * @return {Promise}
+ */
 function _getLatestSubmissionIds( key ) {
     return new Promise( ( resolve, reject ) => {
         client.lrange( key, 0, -1, ( error, res ) => {
@@ -116,6 +132,14 @@ function _getLatestSubmissionIds( key ) {
     } );
 }
 
+/**
+ * Formatter function for logger
+ *
+ * @param {*} options
+ * @param {*} severity
+ * @param {*} date
+ * @param {Array<object>} elems
+ */
 function _formatter( options, severity, date, elems ) {
     let instanceId = '-';
     let enketoId = '-';

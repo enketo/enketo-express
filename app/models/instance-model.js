@@ -15,6 +15,12 @@ if ( process.env.NODE_ENV === 'test' ) {
     client.select( 15 );
 }
 
+/**
+ * @static
+ * @name set
+ * @function
+ * @param {module:survey-model~SurveyObject} survey
+ */
 function _cacheInstance( survey ) {
     return new Promise( ( resolve, reject ) => {
         let error;
@@ -56,6 +62,12 @@ function _cacheInstance( survey ) {
     } );
 }
 
+/**
+ * @static
+ * @name get
+ * @function
+ * @param {module:survey-model~SurveyObject} survey
+ */
 function _getInstance( survey ) {
     return new Promise( ( resolve, reject ) => {
         let error;
@@ -83,6 +95,12 @@ function _getInstance( survey ) {
     } );
 }
 
+/**
+ * @static
+ * @name remove
+ * @function
+ * @param {module:survey-model~SurveyObject} survey
+ */
 function _removeInstance( survey ) {
     return new Promise( ( resolve, reject ) => {
         if ( !survey || !survey.instanceId ) {
