@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Datepicker widget cause infinite loops with certain custom extensions that update values programmatically.
+- Analog scale widget layout messed up in Grid Theme on IE11.
 
 [1.78.0] - 2019-08-20
 ---------------------
