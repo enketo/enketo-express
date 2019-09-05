@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Added
+- Support for "picker" appearance on range question
+
+##### Fixed
+- Datepicker widget cause infinite loops with certain custom extensions that update values programmatically.
+
 [1.78.0] - 2019-08-20
 ---------------------
 ##### Removed
