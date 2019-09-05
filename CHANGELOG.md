@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Support for "picker" appearance on range question
 
+##### Changed
+- Updated Russian translation.
+
 ##### Fixed
 - Datepicker widget cause infinite loops with certain custom extensions that update values programmatically.
 - Analog scale widget layout messed up in Grid Theme on IE11.
