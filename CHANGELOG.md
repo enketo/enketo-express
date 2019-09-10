@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Changed
 - Updated Russian translation.
+- XPath functions `decimal-time()` and `decimal-date-time()` now use maximum precision instead of rounding to 3 decimals.
 
 ##### Fixed
 - Datepicker widget cause infinite loops with certain custom extensions that update values programmatically.
