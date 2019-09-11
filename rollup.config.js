@@ -7,10 +7,13 @@ const buildFiles = require( './buildFiles' );
 const path = require( 'path' );
 const pkg = require( './package' );
 
-const aliases = Object.entries( pkg.browser ).reduce( ( obj, cur ) => {
-    obj[ cur[ 0 ] ] = path.join( __dirname, cur[ 1 ] );
-    return obj;
-}, {} );
+const aliases = Object.entries( pkg.browser ).reduce( ( arr, cur ) => {
+    arr.push( {
+        find: cur[ 0 ],
+        replace: path.join( __dirname, cur[ 1 ] )
+    } );
+    return arr;
+}, [] );
 
 const plugins = [
     alias( aliases ),
@@ -42,7 +45,6 @@ const configs = buildFiles.entries.map( ( entryFile, i ) => {
         output: {
             file: buildFiles.bundles[ i ],
             format: 'iife',
-            strict: false, // due leaflet.draw issue https://github.com/Leaflet/Leaflet.draw/issues/898
         },
         plugins,
         onwarn,
