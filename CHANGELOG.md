@@ -2,10 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.79.0] - 2019-09-12
 ----------------------
 ##### Added
 - Support for "picker" appearance on range question
+- Albanian language translation.
 
 ##### Changed
 - Updated Russian translation.
