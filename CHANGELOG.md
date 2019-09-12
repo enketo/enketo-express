@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [1.79.0] - 2019-09-12
 ----------------------
 ##### Added
-- Support for "picker" appearance on range question
+- Support for "picker" appearance on range question.
 - Albanian language translation.
 
 ##### Changed
@@ -13,7 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - XPath functions `decimal-time()` and `decimal-date-time()` now use maximum precision instead of rounding to 3 decimals.
 
 ##### Fixed
-- Datepicker widget cause infinite loops with certain custom extensions that update values programmatically.
+- Datepicker widget causes infinite loops with certain custom extensions that update values programmatically.
 - Analog scale widget layout messed up in Grid Theme on IE11.
 
 [1.78.0] - 2019-08-20

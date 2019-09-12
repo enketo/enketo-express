@@ -15,6 +15,7 @@ router
         res.render( 'index', {
             openrosa: req.app.get( 'linked form and data server' ).name || '?',
             languages: req.app.get( 'languages supported' ),
+            themes: req.app.get( 'themes supported' ),
             version: req.app.get( 'version' )
         } );
     } )
