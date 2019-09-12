@@ -9,9 +9,7 @@ before_script:
   - ./setup/travis/travis-redis.sh
   - grunt css
 addons: 
-  apt:
-    packages:
-      - google-chrome-stable
+  chrome: stable
 services:
   - redis-server
 notifications:
