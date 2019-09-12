@@ -13,8 +13,10 @@ RUN echo 'deb https://deb.nodesource.com/node_8.x xenial main' > /etc/apt/source
 
 COPY ./setup/docker/apt_requirements.txt ${ENKETO_SRC_DIR}/setup/docker/
 WORKDIR ${ENKETO_SRC_DIR}/
+# From `man dpkg`, "confdef: If a conffile has been modified and the version in
+# the package did change, always choose the default action without prompting."
 RUN apt-get update && \
-    apt-get upgrade -y && \
+    apt-get upgrade -y -o Dpkg::Options::="--force-confdef" && \
     apt-get install -y nodejs $(cat setup/docker/apt_requirements.txt) && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
