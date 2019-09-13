@@ -1,6 +1,3 @@
-Repeats & Ordinals
-=======================
-
 When setting the following in config.json, Enketo will add 2 new attributes to repeat groups in the submission:
 
 ```json

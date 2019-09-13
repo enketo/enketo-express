@@ -1,5 +1,3 @@
-### Themes
-
 The default theme can be set in config/config.json. The default theme can be overridden in [the form definition](http://xlsform.org/#grid).
 
 The recommended way to customize themes is to either:

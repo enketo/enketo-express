@@ -1,6 +1,3 @@
-Comment Feature
-============
-
 The comment feature is an Enketo extension to the OpenRosa XForm spec that allows form designers to add a comment widget to individual questions. If funding allows this could quite easily be extended further by adding a comment to a group or the form as a whole.
 
 This feature has the following characteristics:
@@ -21,7 +18,7 @@ To add a comment widget to a question, the following needs to be defined in the 
 In XLSForm on the settings sheet, add a column `namespaces` and populate this with `enk=http://enketo.org/xforms`.
 
 | form_title | namespaces                     |
-|------------|--------------------------------|
+| ---------- | ------------------------------ |
 | My Form    | enk="http://enketo.org/xforms" |
 
 
@@ -30,7 +27,7 @@ In XLSForm on the settings sheet, add a column `namespaces` and populate this wi
 Add a question of type `text`, optionally with appearance `multiline`, preferably immediately after the question node it refers to (for future printability of records).
 
 | type | name      | label           | appearance |
-|------|-----------|-----------------|------------|
+| ---- | --------- | --------------- | ---------- |
 | text | a         | Enter text      |            |
 | text | a_comment | Enter a comment | multiline  |
 
@@ -39,7 +36,7 @@ Add a question of type `text`, optionally with appearance `multiline`, preferabl
 Give this question the appearance `comment` to ensure the question will be displayed as a comment widget. 
 
 | type | name      | label           | appearance        |
-|------|-----------|-----------------|-------------------|
+| ---- | --------- | --------------- | ----------------- |
 | text | a         | Enter text      |                   |
 | text | a_comment | Enter a comment | multiline comment |
 
@@ -48,19 +45,19 @@ Give this question the appearance `comment` to ensure the question will be displ
 
 For each discrepancy note question, add a reference to the question node it refers to in the `bind::enk:for` column, e.g. `${a}`. The prefix `enk` corresponds with the namespace prefix added on the settings sheet.
 
-| type | name      | label           | appearance   | bind::enk:for |
-|------|-----------|-----------------|--------------|---------------|
-| text | a         | Enter text      |              |               |
-| text | a_comment | Enter a comment | multiline comment | ${a}			|
+| type | name      | label           | appearance        | bind::enk:for |
+| ---- | --------- | --------------- | ----------------- | ------------- |
+| text | a         | Enter text      |                   |               |
+| text | a_comment | Enter a comment | multiline comment | ${a}          |
 
 #### Dynamic required
 
 Optionally, if you'd like to make question "a" required only if there is no comment, you could use the regular XLSForm/XPath syntax. Nothing new here. You could do the same for relevant and constraint logic too.
 
-| type | name      | label           | appearance   | bind::enk:for | required        |
-|------|-----------|-----------------|--------------|---------------|-----------------|
-| text | a         | Enter text      |              |               | $a_comment = '' |
-| text | a_comment | Enter a comment | multiline comment | ${a}			|                 |
+| type | name      | label           | appearance        | bind::enk:for | required        |
+| ---- | --------- | --------------- | ----------------- | ------------- | --------------- |
+| text | a         | Enter text      |                   |               | $a_comment = '' |
+| text | a_comment | Enter a comment | multiline comment | ${a}          |                 |
 
 
 #### XForm sample
