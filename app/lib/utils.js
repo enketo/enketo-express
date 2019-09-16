@@ -28,7 +28,7 @@ function getOpenRosaKey( survey, prefix ) {
  * Returns a XForm manifest hash.
  *
  * @static
- * @param {object} manifest
+ * @param {Array} manifest
  * @param {string} type - Webform type
  * @return {string} Hash
  */
