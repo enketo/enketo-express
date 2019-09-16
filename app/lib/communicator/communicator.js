@@ -175,8 +175,8 @@ function getAuthHeader( url, credentials ) {
  *
  * @static
  * @param {string} server
- * @param {string} id - Form id.
- * @param {string} customParam - custom query parameter
+ * @param {string} [id] - Form id.
+ * @param {string} [customParam] - custom query parameter
  * @return {string} url
  */
 function getFormListUrl( server, id, customParam ) {
