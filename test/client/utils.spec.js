@@ -266,4 +266,16 @@ describe( 'Client Utilities', () => {
         } );
     } );
 
+    describe( 'Theme extractor', () => {
+        [
+            [ '<html><head><title></title></head><form class="theme-grid"></form></body></html>', 'grid' ],
+            [ '<html><head><title></title></head><form class="theme-grid-custom"></form></html>', 'grid-custom' ],
+            [ '<html><head><title></title></head><form><h3 class="class" id="form-title">title</h3></form></html>', null ],
+        ].forEach( test => {
+            it( 'extracts the theme correctly form the form HTML string', () => {
+                expect( utils.getThemeFromFormStr( test[ 0 ] ) ).to.equal( test[ 1 ] );
+            } );
+        } );
+    } );
+
 } );
