@@ -1,6 +1,3 @@
-Duplicates
-============
-
 Prior to version 1.29.2, Enketo Express contained a bug that allowed a duplicate Enketo ID to be issued to a different form. (All the affected formIDs contain a _"U"_ character.) The bug resulted in 2 possible errors:
 
 1. When loading a webform, a completely different form is loaded instead. That form may not even belong to the same account.

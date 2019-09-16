@@ -8,64 +8,77 @@ block content
 
   p= t("version") + ' ' + version
 
-  p= t("langs.supported")
-  ul
-    each lang in languages
-      case lang
-        when "en"
-          li= t("langs.en")
-        when "ar"
-          li= t("langs.ar")
-        when "fr"
-          li= t("langs.fr")
-        when "es" 
-          li= t("langs.es")
-        when "sw"
-          li= t("langs.sw")
-        when "it"
-          li= t("langs.it")
-        when "he" 
-          li= t("langs.he")
-        when "de"
-          li= t("langs.de")
-        when "hi"
-          li= t("langs.hi")
-        when "ro"
-          li= t("langs.ro")
-        when "ru"
-          li= t("langs.ru")
-        when "el"
-          li= t("langs.el")
-        when "km"
-          li= t("langs.km")
-        when "th"
-          li= t("langs.th")
-        when "vi"
-          li= t("langs.vi")
-        when "fa"
-          li= t("langs.fa")
-        when "no"
-          li= t("langs.no")
-        when "fi"
-          li= t("langs.fi")
-        when "sv"
-          li= t("langs.sv")
-        when "lo"
-          li= t("langs.lo")
-        when "sk"
-          li= t("langs.sk")
-        when "pt"
-          li= t("langs.pt")
-        when "zh"
-          li= t("langs.zh")
-        when "cs"
-          li= t("langs.cs")
-        when "pl"
-          li= t("langs.pl")
-        when "nl"
-          li= t("langs.nl")
-        when "cimode"
-          // cimode is added by i18next whitelist
-          |  
-        default
-          li= "unknown (" + lang + ")"
+  details
+    summary= t("langs.supported")
+    ul
+      each lang in languages
+        case lang
+          when "en"
+            li= t("langs.en")
+          when "ar"
+            li= t("langs.ar")
+          when "sq"
+            li= t("langs.sq")
+          when "fr"
+            li= t("langs.fr")
+          when "es" 
+            li= t("langs.es")
+          when "sw"
+            li= t("langs.sw")
+          when "it"
+            li= t("langs.it")
+          when "he" 
+            li= t("langs.he")
+          when "de"
+            li= t("langs.de")
+          when "hi"
+            li= t("langs.hi")
+          when "ro"
+            li= t("langs.ro")
+          when "ru"
+            li= t("langs.ru")
+          when "el"
+            li= t("langs.el")
+          when "km"
+            li= t("langs.km")
+          when "th"
+            li= t("langs.th")
+          when "vi"
+            li= t("langs.vi")
+          when "fa"
+            li= t("langs.fa")
+          when "no"
+            li= t("langs.no")
+          when "fi"
+            li= t("langs.fi")
+          when "sv"
+            li= t("langs.sv")
+          when "lo"
+            li= t("langs.lo")
+          when "sk"
+            li= t("langs.sk")
+          when "pt"
+            li= t("langs.pt")
+          when "zh"
+            li= t("langs.zh")
+          when "cs"
+            li= t("langs.cs")
+          when "pl"
+            li= t("langs.pl")
+          when "nl"
+            li= t("langs.nl")
+          when "cimode"
+            // cimode is added by i18next whitelist
+            |  
+          default
+            li= "unknown (" + lang + ")"
+
+  details
+    summary= t('themes.supported')
+    ul
+      each theme in themes
+        li= theme
+
+  details
+    summary= t('changelog')
+    include:markdown-it ../../CHANGELOG.md

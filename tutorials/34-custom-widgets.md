@@ -1,6 +1,3 @@
-Custom Widgets
-================
-
 Since version 1.53.0 it is possible to add your own widgets without forking Enketo Express by following the steps below.
 
 ### 1. Create your widget in its own repo

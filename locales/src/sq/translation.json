@@ -1,0 +1,387 @@
+{
+    "advanced": {
+        "flushdb": "Pastro Deponë"
+    },
+    "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "Të shtoni këtë formular në pamjen fillestare, kliko në ikonën e parametrave të shpaluesit __image1__ dhe zgjedhni: 'Shtoje te Ekrani Shtëpia'"
+            },
+            "androidfirefox": {
+                "msg": "Të shtoni këtë formular në pamjen fillestare, kliko gjat në rreshtin e adresës dhe zgjedhni: 'Shtoje te Ekrani Shtëpia'"
+            },
+            "heading": "Shtoje te Ekrani Shtëpia",
+            "iossafari": {
+                "msg": "Të shtosh këtë formular në pamjen fillestare, kliko në ikonën  shpërndaj  __image1__ në këndin a sipërm të djathët të shfletuesit tuaj, dhe zgjedhni: 'Shtoje te Ekrani Shtëpia'"
+            }
+        },
+        "appupdated": {
+            "heading": "Aplikacioni është përditësuar!",
+            "msg": "Versioni i ri i aplikacionit është shakrkuar. Rifresko këtë faqe që të hapni verzionin e ri."
+        },
+        "closing": {
+            "heading": "Duke mbyllur..."
+        },
+        "default": {
+            "button": "Mbyll",
+            "heading": "Alarm"
+        },
+        "export": {
+            "error": {
+                "filecreatedmsg": "Sidoqoftë, një dosje e eksportit e pakompletuar është krijuar.",
+                "heading": "Gabim në Eksport",
+                "msg": "Ka gabime gjatë krijimit të dosjes së eksportimit të regjistrit për regjistrat e dorëzuar. Gabimi: __errors__"
+            },
+            "success": {
+                "heading": "Eksporti është krijuar",
+                "msg": "Dosjet për të gjitha regjistrat e dorëzuar që i takojn këtij formulari jan eksportuar."
+            }
+        },
+        "formupdated": {
+            "heading": "Formulari është përditësuar!",
+            "msg": "Verzioni i ri i këtij formulari është shkarkuar. Freskoje këtë faqe për të ngarkuar verzionin e përditësuar."
+        },
+        "gotonotfound": {
+            "msg": "Nuk e gjej pyetjen \"__path__\" në këtë formular. A është e saktë referenca për këtë pyetje?"
+        },
+        "loaderror": {
+            "editadvice": "Rekomandohet të mos korrigjoni këtë dosje përderisa të zgjidhet",
+            "entryadvice": "Rekomandohet që mos e përdorni këtë formular për futjen e të dhënave derisa të zgjidhet kjo.",
+            "heading": "Gabim në Hapje",
+            "msg1": "Ka ndodhur gabim gjatë ngarkimit të këtij formulari.",
+            "msg2": "Ju lutem kontaktoni __emailLink__ me vegzën e kësaj faqeje dhe porosinë e gabimit më poshtë:",
+            "heading_plural": "Duke hapur Gabimet",
+            "msg1_plural": "Kan ndodhur gabime gjatë ngarkimit të këtij formulari.",
+            "msg2_plural": "Ju lutem kontaktoni __emailLink__ me vegzën e kësaj faqeje dhe porosinë e gabimit më poshtë:"
+        },
+        "logout": {
+            "heading": "Shkyçu",
+            "msg": "Ju jeni shkyçur."
+        },
+        "offlinesupported": {
+            "heading": "Formulari punon jashtë linjes!",
+            "msg": [
+                "Ky formular tani mund të ngarkohet dhe përdoret pa një lidhje interneti në këtë pajisje. Shënojeni për qasje më të lehtë kur nuk keni internet.",
+                "Regjistrat automatikisht renditen dhe ruhen në shfeltuesin tuaj derisa lidhja me internet të vihet në dispozicione.",
+                "Vetëm pasi të jetë dorëzuar me sukses regjistri, do të hiqet nga radha. Ju mund ta mbyllni pajisjen dhe shfletuesin me artikuj në radhë. Ato do të vazhdojnë të jen aty kur të hapni formularin herën tjetër."
+            ]
+        },
+        "offlineunsupported": {
+            "heading": "Aplikacioni nuk mund të lansohet pa u lidhur",
+            "msg": "Nisja e aplikacionit pa lidhje interneti nuk mbështetet nga shfletuesi juaj. Ju mund të përdorni sondazhin pa këtë veçori ose shihni opsionet për të zgjidhur këtë problem.",
+            "negButton": "Shfrytëzo",
+            "posButton": "Shfaq opcionet"
+        },
+        "queuesubmissionsuccess": {
+            "msg": "__recordNames__ u dërguan me sukses",
+            "msg_plural": "__recordNames__ u dërguan me sukses"
+        },
+        "recordloadsuccess": {
+            "msg": "__recordName__ është ngarkuar"
+        },
+        "recordnotfound": {
+            "msg": "Regjistri nuk mund të nxirret, ose nuk ka shënime."
+        },
+        "recordsavesuccess": {
+            "draftmsg": "Regjistri u ruajt si draft",
+            "finalmsg": "Regjistri u rendit për dorëzim."
+        },
+        "submission": {
+            "msg": "Duke dërguar...",
+            "redirectmsg": "Ju do të ridrejtoheni automatikisht pas dorëzimit."
+        },
+        "submissionerror": {
+            "authrequiredmsg": "Identifikimi është i detyrueshëm. Ju lutem identifikohuni __here__ në një faqe tjetër të shfletuesit dhe provoni përsëri.",
+            "fnfmsg": [
+                "Dosja mediale nuk mund te mirret: __failedFiles__. Dorëzimi vazhdoi pa këto dosje me sukses.",
+                "Ju lutem kontaktoni _supportEmail__ të raportoni problemet, dhe nëse mundeni, spjegoni se si të riprodhohet problemi."
+            ],
+            "heading": "Dorëzimi Dështoi"
+        },
+        "submissionsuccess": {
+            "heading": "Dorëzimi i Suksesëshëm",
+            "msg": "Shënimet tuaja u dërguan!",
+            "redirectmsg": "Tani ju do të riorientoheni."
+        },
+        "thanks": {
+            "heading": "Faleminderit për pjesëmarrje!",
+            "msg": "Tani mund ta mbyllni këtë dritare.",
+            "msgTaken": "Tashmë keni përfunduar këtë sondazh."
+        },
+        "validationerror": {
+            "msg": "Formulari ka gabime. Ju lutem shikoni fushat e theksuara  me të kuqe"
+        },
+        "validationsuccess": {
+            "heading": "OK",
+            "msg": "Formulari është valid!"
+        },
+        "valuehasspaces": {
+            "multiple": "Pyetja e shumëfishtë që keni zgjedhur ka vlera ilegale \"__value__\" që përmbajnë hapsira."
+        },
+        "xpatherror": {
+            "heading": "Gabim në formulë",
+            "msg": "Gabim me vlerësimin e formulës. Ju lutem kontaktoni __emailLink__ me këtë gabim:"
+        }
+    },
+    "confirm": {
+        "autosaveload": {
+            "heading": "Keni regjistër të paruajtur",
+            "msg": "Enketo ka gjetur regjistër të paruajtur. A doni ta hapni apo hedhni?",
+            "negButton": "Hudhe",
+            "posButton": "Hape Regjistrin"
+        },
+        "default": {
+            "heading": "A jeni të sigurtë?",
+            "msg": "Ju lutem konfirmoni këtë veprim",
+            "negButton": "Anulo",
+            "posButton": "Konfirmo"
+        },
+        "deleteall": {
+            "heading": "PANIK!",
+            "msg": [
+                "Kjo do ti hudh të gjitha shënimet e renditura dhe formularët tuaj nga depoja e shfletuesit. Shënimet do të humben përgjithëmone. Përdoreni atë vetëm si mjetin e fundit nëse depoja e shfletuesit duket e dëmtuar.",
+                "Së pari, mbylli të gjitha skedat tjera të Enketo",
+                "Kjo faqe do të rihapet. Nëse shihni gabime, ju duhet ta përsëritni këtë veprim.",
+                "A jeni të sigurtë që doni ta bëni këtë?"
+            ],
+            "posButton": "Fshij të gjitha"
+        },
+        "discardcurrent": {
+            "heading": "Nryshime të paruajtura",
+            "msg": "Formulari i tanishëm ka ndryshime të paruajtura. A dëshironi ta ngarkoni një regjistër pa ruajtur ndryshimet ne formularin që ishit duke punuar?",
+            "posButton": "Vazhdo pa ruajtur"
+        },
+        "login": {
+            "heading": "Lidhja është a detyrueshme",
+            "msg": [
+                "Për të dorëzuar shënimet e renditura, ju duhet të kyçni. Nëse dëshironi ta bëni këtë tani, ju do të ridrejtoheni dhe do të humbni informatat e paruajtura.",
+                "A doni të lidheni tani apo më vonë?"
+            ],
+            "negButton": "Më vonë",
+            "posButton": "Lidhu tani"
+        },
+        "print": {
+            "a4": "A4",
+            "heading": "Zgjedhni Parametrat e Shtypjes",
+            "landscape": "Peisazh",
+            "letter": "Letër",
+            "msg": "Për të përgatitur shtypje të optimizuar, ju lutem zgjedhni më poshtë parametrat e shtypjes",
+            "orientation": "Orientimi i letrës",
+            "portrait": "Portret",
+            "posButton": "Përgatit",
+            "psize": "Madhësia e letrës",
+            "reminder": "Mos harro pastaj të vendosni të njejtat parametra të shtypjes edhe në menunë e shtypjes së shfletuesit"
+        },
+        "repeatremove": {
+            "heading": "Fshij këtë grup të përgjigjeve",
+            "msg": "Ky veprim është i parevokueshem. A jeni të sigurtë se dëshironi të vazhdoni?"
+        },
+        "save": {
+            "existingerror": "Regjistri me këtë emër ose ID tashmë ekziston.",
+            "hint": "Ky emër ju mundëson të gjeni leht draftin e dosjes për ta përfunduar më vonë.",
+            "msg": "Ka ndryshime të pa ruajtura, a dëshironit të vazhdoni pa i ruajtur ato?",
+            "name": "Emri i Regjistrit",
+            "posButton": "Ruaj dhe Mbyll",
+            "renamemsg": "A jeni të sigurtë se dëshironi ta riemëroni __currentName__ në __newName__ ?",
+            "unkownerror": "Ka ndodhur gabim i panjohur gjatë përpjekjes për të ruajtur të shënimet."
+        }
+    },
+    "constraint": {
+        "invalid": "Vlerë a palejuar",
+        "required": "Kjo fushë është e detyrueshme."
+    },
+    "contact": {
+        "admin": "Ju lutem kontaktoni administratorin a sondazhit.",
+        "support": "Ju lutem kontaktoni __supportEmail__"
+    },
+    "drawwidget": {
+        "annotation": "dosje dhe vizatime",
+        "drawing": "vizatim",
+        "signature": "nënshkrimi"
+    },
+    "enketo": {
+        "power": "Mundësuar nga"
+    },
+    "error": {
+        "code": "Gabim me Kod: __code__",
+        "dataloadfailed": "Shënimet nuk mund të ngarkohen nga __url__",
+        "econnrefused": "Nuk mund të lidhet me Server",
+        "encryptionnotsupported": "Kjo formë kërkon kriptimin e regjistrave lokale. Fatkeqësisht, kjo nuk mbështetet nga shfletuesi juaj. Ju rekomandojmë të kaloni në një shfletues modern.",
+        "instancenotfound": "Regjistri nuk ekziston. Ndoshta ka skaduar.",
+        "invalidediturl": "URL për redaktim e pavlefshme ",
+        "loadfailed": "Nuk mund të ngarkoj __resource__",
+        "notfoundinformlist": [
+            "Ky formular (më) nuk ekziston. Ka gjasa që pronari i formularit e ka fshirë, arkivuar ose çaktivizuar atë. Ju lutemi kontaktoni pronarin e formularit për të konfirmuar.",
+            "Detalet e gabimit: Formulari me ID __formId__ nuk gjendet në /formList."
+        ],
+        "pagenotfound": "Faqja nuk gjet",
+        "surveyidnotactive": "Sondazhi me këtë ID nuk është më aktiv",
+        "surveyidnotfound": "Sondazhi me këtë ID nuk u gjet",
+        "unknown": "Ka ndodhur gabim i panjohur"
+    },
+    "feedback": {
+        "header": "Informacion"
+    },
+    "filepicker": {
+        "file": "dosje",
+        "notFound": "Dosja __existing__ nuk mund të gjendet (leni të pandryshuar nëse keni bërë dorëzim dhe dëshironi ta ruani).",
+        "placeholder": "Kliko këtu për të ngarkuar dosjen. (< __maxSize__)",
+        "resetWarning": "Ky veprim do të hudhë __item__. A jeni të sigurtë se dëshironi të vazhdoni?",
+        "toolargeerror": "Dosja shumë e madhe (> __maxSize__)",
+        "waitingForPermissions": "Duke pritur lejen e përdoruesit"
+    },
+    "form": {
+        "chooseLanguage": "Zgjedhni gjuhën",
+        "logout": "shkyçu",
+        "pages": {
+            "back": "Mbrapa",
+            "end": "Shko në Fund",
+            "next": "Tjetra",
+            "return": "Kthehu në Fillim"
+        },
+        "required": "i detyrueshëm"
+    },
+    "formfooter": {
+        "complete": {
+            "btn": "Kompletuar"
+        },
+        "savedraft": {
+            "btn": "Ruaj Draftin",
+            "label": "Ruaj Draft"
+        },
+        "submit": {
+            "btn": "Dërgo"
+        },
+        "validate": {
+            "btn": "Vlerëso"
+        }
+    },
+    "geopicker": {
+        "accuracy": "saktësia (m)",
+        "altitude": "Lartësia (m)",
+        "closepolygon": "mbyll poligonin",
+        "kmlcoords": "koordinatat KML",
+        "kmlpaste": "Ngjisni koordinatat KML këtu",
+        "latitude": "gjerësi (x.y °)",
+        "longitude": "gjërësi (x.y °)",
+        "points": "pikat",
+        "removePoint": "Ky veprim do ta largoj gjeopikën nga gjeopikat në mënyrë të parevokueshme. A jeni të sigurt që dëshironi ta bëni atë?",
+        "searchPlaceholder": "kërko për vend ose adresë"
+    },
+    "here": "këtu",
+    "hint": {
+        "guidance": {
+            "details": "më shumë detale"
+        }
+    },
+    "home": {
+        "msg": "__appTitle__ tani punon! Ju lutem qasuni në formularin Enketo nga  __serverName__ i instaluar."
+    },
+    "imagemap": {
+        "svgNotFound": "Imazhi SVG nuk u gjet"
+    },
+    "langs": {
+        "ar": "Arabisht",
+        "cs": "Çekisht",
+        "de": "Gjermanisht",
+        "el": "Greqisht",
+        "en": "Anglisht",
+        "es": "Spanjisht",
+        "fa": "Persisht",
+        "fi": "Finlandisht",
+        "fr": "Frëngjisht",
+        "he": "Hebraik",
+        "hi": "Hindu",
+        "it": "Italisht",
+        "km": "Kmere",
+        "lo": "Lao",
+        "nl": "Holandisht",
+        "no": "Norvegjisht",
+        "pl": "Polonisht",
+        "pt": "Portugeze",
+        "ro": "Rumanisht",
+        "ru": "Rusisht",
+        "sk": "Sllovakisht",
+        "supported": "Gjuhët e përkrahura:",
+        "sv": "Suedisht",
+        "sw": "Suahili",
+        "th": "Tai",
+        "vi": "Vietnameze",
+        "zh": "Kinezisht"
+    },
+    "literacywidget": {
+        "finish": "Fund",
+        "start": "Fillo"
+    },
+    "page": {
+        "modernbrowsers": {
+            "heading": "Shfletues Modern",
+            "ie": {
+                "heading": "Pse nuk jepni pak dashuri për ato verzionet djallëzore të vjetruara të Internet Explorer?",
+                "msg": "Ne e kuptojmë se disa njerëz, veçanërisht ata që punojnë për burokraci të mëdha, nuk kanë qasje në shfletuesit më të fundit dhe më të mirë. Meqenëse e dimë se sa i mirë mund të jetë interneti me mjetet e duhura, ne kemi një ndjeshmëri të madhe për përdoruesit në këtë situatë fatkeqe. Normalisht, ne përpiqemi të sigurojmë rrugëdalje për të mbështetur disa shfletues të vjetëruar. Sidoqoftë, arsyeja pse Enketo ekziston është disponueshmëria e disa teknologjive më shumë të avancuara. Fatkeqësisht, përdoruesit e shfletuesve më të vjetër nuk kanë fat."
+            },
+            "msg1": "Ouch! Na vjen keq, me siguri ju jeni dërguar këtu sepse shfletuesi juaj është i vjetëruar ose mbase ka karakteristikat e tij kryesore të fikura duke përdorur mënyrën e shfletimit privat.",
+            "msg2": "Nëse jeni duke përdorur një shfletues të vjetëruar, ju rekomandojmë të rifreskoni në një version të fundit të një prej shfletuesve moderne të mëposhtëm:"
+        },
+        "offline": {
+            "heading": "Nuk mund të qasemi në faqen e kërkuar",
+            "msg1": "Kjo faqe është e arritshme vetëm kur shfletuesi ka një lidhje në internet dhe serveri është i arritshëm (përveç nëse faqja nuk ekziston)."
+        }
+    },
+    "prompt": {
+        "default": {
+            "heading": "Fut vlerat"
+        },
+        "login": {
+            "heading": "Vendosni kredencialet për serverin tuaj",
+            "password": "Fjalëkalimi",
+            "remember": "Memorizoje ne këtë kompjutër",
+            "submit": "Dërgo",
+            "username": "Emërkalimi"
+        }
+    },
+    "rankwidget": {
+        "clickstart": "Kliko të filloni",
+        "tapstart": "Shtyp për të filluar"
+    },
+    "record-list": {
+        "export": "Eksporto",
+        "msg1": "Regjistrat janë ruajtur në shfletuesin tuaj derisa ato të ngarkohen (edhe nëse ju e mbyllni kompjuter ose shkuçeni nga rrjeti).",
+        "msg2": "Regjistrimet në radhë, përveç atyre të shënuara si draft __icon__, ngrakohen automatikisht, në prapavijë, çdo 5 minuta përderisa faqja e internetit është e hapur dhe keni qasje në internet.",
+        "msg2-nodraft": "Regjistrimet në radhë ngrakohen automatikisht, në prapavijë, çdo 5 minuta përderisa faqja e internetit është e hapur dhe keni qasje në internet.",
+        "msg3": "Të detyroni ngarkim mes përpjekjeve automiatike, kliko Ngarko.",
+        "norecords": "nuk ka regjistër në radhitur",
+        "title": "Rresht",
+        "upload": "Ngarko"
+    },
+    "selectpicker": {
+        "noneselected": "asnjë e zgjedhur",
+        "numberselected": "keni zgjedhur  __number__"
+    },
+    "store": {
+        "error": {
+            "iosusesafari": "Shfletuesi juaj i iOS nuk është në gjendje të hap këtë formular. Në iOS, rekomandohet të shfrytëzoni Safari.",
+            "notavailable": "Depoja e shfletuesit është e nevojshme por nuk është në dispozicion, është e korruptuar, ose nuk shkruhet. Nëse jeni në modalitetin \"shfletim privat\", kaloni në modalitetin e rregullt, përndryshe kaloni në një shfletues tjetër. (error: __error__)",
+            "notsupported": "Shfletuesi juaj nuk është në gjendje të hap këtë formular. Rekomandohet të shfrytëzoni shfletues modern."
+        }
+    },
+    "submission": {
+        "http0": "Dështim (jashtë lidhjes?).",
+        "http2xx": "Përgjigje e papritur gjat ngarkimit të shënimeve.",
+        "http400": "Serveri i shënimeve nuk i pranoi shënimet.",
+        "http401": "Problem me identifikim me serverin e shënimeve.",
+        "http403": "Nuk lejohet të ngarkoni shënime në këtë server.",
+        "http404": "Shërbimi i ngarkimit në sererin a shënimeve nuk është gjetur.",
+        "http408": "Vonesë në serverin e shënimeve.",
+        "http413": "Shënimet janë shumë të mëdha.",
+        "http4xx": "Problem i panjohur ngarkimi me serverin e shënimeve.",
+        "http500": "Serveri i shënimeve për Enketo formularin tënd nuk punon. Ju lutem provoni prap më vonë ose kontaktoni __supportEmail__.",
+        "http504": "Nuk mund të vendoset lidhja me serverin e shënimeve."
+    },
+    "version": "verzioni:",
+    "widget": {
+        "comment": {
+            "update": "Përditësim"
+        }
+    }
+}

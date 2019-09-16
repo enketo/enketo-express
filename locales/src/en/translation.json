@@ -123,6 +123,7 @@
             "msg": "A formula evaluation error occurred. Please contact __emailLink__ with this error:"
         }
     },
+    "changelog": "Change Log",
     "confirm": {
         "autosaveload": {
             "heading": "Unsaved Record Found",
@@ -302,6 +303,7 @@
         "ro": "Romanian",
         "ru": "Russian",
         "sk": "Slovak",
+        "sq": "Albanian",
         "supported": "Languages supported: ",
         "sv": "Swedish",
         "sw": "Swahili",
@@ -377,6 +379,9 @@
         "http4xx": "Unknown submission problem on data server.",
         "http500": "The data server for your form or the Enketo server is down. Please try again later or contact __supportEmail__.",
         "http504": "Could not establish connection with data server."
+    },
+    "themes": {
+        "supported": "Themes supported"
     },
     "version": "version:",
     "widget": {

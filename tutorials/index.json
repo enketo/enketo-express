@@ -1,47 +1,53 @@
 {
     "00-getting-started": {
-        "title": "Getting started"
+        "title": "Getting started",
+        "children": {
+            "02-heroku": {
+                "title": "Deployment on Heroku"
+            }
+        }
     },
-    "10-configuration": {
-        "title": "Configuration"
+    "10-configure": {
+        "title": "Configure",
+        "children": {
+            "12-ordinals": {
+                "title": "Repeats & Ordinals"
+            }
+        }
     },
-    "11-api": {
-        "title": "API"
+    "20-update": {
+        "title": "Update"
     },
-    "12-updating": {
-        "title": "Updating"
+    "30-develop": {
+        "title": "Develop",
+        "children": {
+            "32-api": {
+                "title": "API"
+            },
+            "34-custom-widgets": {
+                "title": "Custom widgets"
+            },
+            "36-theming": {
+                "title": "Custom themes"
+            },
+            "38-iframe-postmessage": {
+                "title": "Messages from iframed forms"
+            },
+            "40-translate": {
+                "title": "Translation workflow (for devs)"
+            }
+        }
     },
-    "13-heroku": {
-        "title": "Heroku deployment"
+    "60-authentication-and-security": {
+        "title": "Authentication and Security"
     },
-    "20-development": {
-        "title": "Development"
-    },
-    "21-translating-for-devs": {
-        "title": "Translation workflow (for developers)"
-    },
-    "22-custom-widgets": {
-        "title": "Adding custom widgets"
-    },
-    "23-comments": {
-        "title": "Comment feature"
-    },
-    "24-iframe-postmessage": {
-        "title": "Iframe postMessage communication"
-    },
-    "25-ordinals": {
-        "title": "Repeats & Ordinals"
-    },
-    "30-authentication-and-security": {
-        "title": "Authentication & security"
-    },
-    "40-browser-support": {
+    "70-browser-support": {
         "title": "Browser support"
     },
-    "50-theming": {
-        "title": "Theming"
+    "80-comments": {
+        "title": "Comment Feature"
     },
-    "60-duplicates": {
-        "title": "Fixing duplicates"
+    "90-duplicates": {
+        "title": "Duplicate Bug"
     }
 }
