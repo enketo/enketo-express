@@ -1,4 +1,3 @@
-/* global describe, require, it */
 const utils = require( '../../app/lib/utils' );
 const chai = require( 'chai' );
 const expect = chai.expect;
