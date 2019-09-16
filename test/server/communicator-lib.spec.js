@@ -34,6 +34,7 @@ describe( 'Communicator Library', () => {
             [ 'ona.io/enketo', '123', 'bar', 'ona.io/enketo/formList?formID=123&foo=bar' ],
             [ 'ona.io/enketo', undefined, 'bar', 'ona.io/enketo/formList?foo=bar' ],
             [ 'ona.io/enketo', undefined, undefined, 'ona.io/enketo/formList' ],
+            [ 'ona.io/enketo/', undefined, undefined, 'ona.io/enketo/formList' ],
         ].forEach( test => {
             it( 'should return proper formList url', () => {
                 expect( communicator.getFormListUrl( test[ 0 ], test[ 1 ], test[ 2 ] ) ).to.equal( test[ 3 ] );
@@ -44,6 +45,7 @@ describe( 'Communicator Library', () => {
     describe( 'getSubmissionUrl function', () => {
         [
             [ 'ona.io/enketo', 'ona.io/enketo/submission'],
+            [ 'ona.io/enketo/', 'ona.io/enketo/submission'],
             [ 'enketo.surveycto.com', 'enketo.surveycto.com/submission'],
             [ 'enketo.surveycto.com/path', 'enketo.surveycto.com/path/submission'],
             [ '255.255.255.255/aggregate', '255.255.255.255/aggregate/submission'],
