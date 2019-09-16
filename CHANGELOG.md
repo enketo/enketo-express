@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Changed
+- Updated Spanish and Dutch translations.
+
 [1.79.0] - 2019-09-12
 ----------------------
 ##### Added

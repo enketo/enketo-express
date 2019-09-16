@@ -123,6 +123,7 @@
             "msg": "Error al validar una fórmula. Por favor contacte __emailLink__ indicando el error:"
         }
     },
+    "changelog": "Registro de Cambios",
     "confirm": {
         "autosaveload": {
             "heading": "Un registro sin grabar encontrado",
@@ -302,6 +303,7 @@
         "ro": "Rumano",
         "ru": "Ruso",
         "sk": "Eslovaco",
+        "sq": "Albanés",
         "supported": "Idiomas soportados:",
         "sv": "Sueco",
         "sw": "Swahili",
@@ -377,6 +379,9 @@
         "http4xx": "Error sin especificar al enviar datos al servidor.",
         "http500": "El servidor de datos para su formulario o el servidor de Enketo están apagados o no son accesibles. Por favor pruebe de nuevo o contáctese con __supportEmail__ .",
         "http504": "No puede establecer conexión con el servidor de datos."
+    },
+    "themes": {
+        "supported": "Temas disponibles"
     },
     "version": "versión:",
     "widget": {

@@ -123,6 +123,7 @@
             "msg": "Er is een formule evaluatie fout opgetreden. Contacteer __emailLink__ met deze fout beschrijving:"
         }
     },
+    "changelog": "Wijzigingen logboek",
     "confirm": {
         "autosaveload": {
             "heading": "Niet Opgeslagen Record Gevonden",
@@ -302,6 +303,7 @@
         "ro": "Roemeens",
         "ru": "Russisch",
         "sk": "Slowaaks",
+        "sq": "Albanees",
         "supported": "Talen ondersteund:",
         "sv": "Zweeds",
         "sw": "Swahili",
@@ -377,6 +379,9 @@
         "http4xx": "Onbekend ontvangst probleem op de data server.",
         "http500": "De data server voor deze enquete is niet bereikbaar. Probeer het later nog een keer of contacteer __supportEmail__.",
         "http504": "Kon geen verbinding met data server opzetten."
+    },
+    "themes": {
+        "supported": "Ondersteunde themes"
     },
     "version": "versie:",
     "widget": {
