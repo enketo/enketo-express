@@ -260,6 +260,10 @@ describe( 'Client Utilities', () => {
                 expect( utils.getTitleFromFormStr( test[ 0 ] ) ).to.equal( test[ 1 ] );
             } );
         } );
+
+        it( 'should return undefined when not getting a string input', () => {
+            expect( utils.getTitleFromFormStr( 123 ) ).to.equal( undefined );
+        } );
     } );
 
 } );
