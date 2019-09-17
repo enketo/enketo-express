@@ -6,8 +6,8 @@ chai.use(sinonChai);
 const expect = chai.expect;
 const chaiAsPromised = require( 'chai-as-promised' );
 
+const utils = require( '../../app/lib/utils' );
 const routerUtils = require( '../../app/lib/router-utils' );
-const config = require( '../../app/models/config-model' ).server;
 
 chai.use( chaiAsPromised );
 
@@ -32,6 +32,63 @@ describe( 'Router utilities', () => {
             routerUtils.enketoId( req, res, next, id );
             expect( req ).should.not.have.property( 'enketoId' );
             expect( next ).to.have.been.calledWith( 'route' );
+        } );
+    } );
+
+    describe( 'encryptedEnketoIdSingle function', () => {
+        it( 'should assign decrypted enketoId to request object', () => {
+            const req = {};
+            const res = {};
+            const next = sinon.fake();
+            const encryptedId = utils.insecureAes192Encrypt(
+                'aA12bB34',
+                routerUtils.idEncryptionKeys.singleOnce
+            );
+            const id = `::${encryptedId}`;
+            routerUtils.encryptedEnketoIdSingle( req, res, next, id );
+            expect( req.enketoId ).to.equal( 'aA12bB34' );
+            expect( next ).to.have.been.calledWith();
+        } );
+
+        it( 'should pass "route" when encrypted id is invalid', () => {
+            const req = {};
+            const res = {};
+            const next = sinon.fake();
+            const encryptedId = 'x';
+            const id = `::${encryptedId}`;
+            routerUtils.encryptedEnketoIdSingle( req, res, next, id );
+            expect( req ).should.not.have.property( 'enketoId' );
+            expect( next ).to.have.been.calledWith( 'route' );
+        } );
+
+        it( 'should pass "route" when decrypted id is invalid', () => {
+            const req = {};
+            const res = {};
+            const next = sinon.fake();
+            const encryptedId = utils.insecureAes192Encrypt(
+                'Ń™€ßį§¶•',
+                routerUtils.idEncryptionKeys.singleOnce
+            );
+            const id = `::${encryptedId}`;
+            routerUtils.encryptedEnketoIdSingle( req, res, next, id );
+            expect( req ).should.not.have.property( 'enketoId' );
+            expect( next ).to.have.been.calledWith( 'route' );
+        } );
+    } );
+
+    describe( 'encryptedEnketoIdView function', () => {
+        it( 'should assign decrypted enketoId to request object', () => {
+            const req = {};
+            const res = {};
+            const next = sinon.fake();
+            const encryptedId = utils.insecureAes192Encrypt(
+                'aA12bB34',
+                routerUtils.idEncryptionKeys.view
+            );
+            const id = `::${encryptedId}`;
+            routerUtils.encryptedEnketoIdView( req, res, next, id );
+            expect( req.enketoId ).to.equal( 'aA12bB34' );
+            expect( next ).to.have.been.calledWith();
         } );
     } );
 
