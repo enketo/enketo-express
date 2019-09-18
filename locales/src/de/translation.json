@@ -115,11 +115,15 @@
             "heading": "OK",
             "msg": "Formular ist gültig!"
         },
+        "valuehasspaces": {
+            "multiple": "Select-multiple-Frage hat einen ungültigen Wert \"__value__\", der ein Leerzeichen enthält."
+        },
         "xpatherror": {
             "heading": "Formel-Fehler",
             "msg": "Ein Formelauswertungsfehler ist aufgetreten. Bitte kontaktieren Sie __emailLink__ mit diesem Fehler:"
         }
     },
+    "changelog": "Änderungshistorie",
     "confirm": {
         "autosaveload": {
             "heading": "Nicht gespeicherter Datensatz gefunden",
@@ -266,6 +270,11 @@
         "searchPlaceholder": "Suche nach dem Ort oder Adresse"
     },
     "here": "hier",
+    "hint": {
+        "guidance": {
+            "details": "mehr Details"
+        }
+    },
     "home": {
         "msg": "__appTitle__ läuft! Bitte besuchen Sie Enketo Formulare von Ihrer __serverName__ Installation."
     },
@@ -294,6 +303,7 @@
         "ro": "Rumänisch",
         "ru": "Russisch",
         "sk": "Slowakisch",
+        "sq": "Albanisch",
         "supported": "Unterstützte Sprachen:",
         "sv": "Schwedisch",
         "sw": "Suaheli",
@@ -369,6 +379,9 @@
         "http4xx": "Unbekanntes Sendeproblem auf Datenserver.",
         "http500": "Der Datenserver für das Formular oder der Enketo Server sind ausgefallen. Bitte versuchen Sie es später noch einmal oder kontaktieren __supportEmail__",
         "http504": "Verbindung zum Datenserver konnte nicht hergestellt werden."
+    },
+    "themes": {
+        "supported": "unterstützte Themes"
     },
     "version": "Version:",
     "widget": {

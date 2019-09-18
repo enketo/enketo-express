@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [Unreleased]
 ----------------------
 ##### Changed
-- Updated Spanish and Dutch translations.
+- Updated German, Spanish and Dutch translations.
 
 [1.79.0] - 2019-09-12
 ----------------------
