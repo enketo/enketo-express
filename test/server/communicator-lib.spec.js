@@ -1,6 +1,7 @@
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
+const nock = require( 'nock' );
 const chai = require( 'chai' );
 const expect = chai.expect;
 const Auth = require( 'request/lib/auth' ).Auth;
@@ -15,6 +16,90 @@ describe( 'Communicator Library', () => {
             const auth = new Auth();
             expect( auth ).to.have.property( 'onResponse' );
             expect( auth.onResponse ).to.be.a( 'function' );
+        } );
+
+        it( 'should resolve with Bearer credentials if provided', (done) => {
+            const url = 'https://my.openrosa.server';
+            const creds = {
+                user: 'johndoe',
+                pass: 'qwerty',
+                bearer: 'AbCdEf123456'
+            };
+            const scope = nock('https://my.openrosa.server')
+                .get('/')
+                .reply(200, undefined, {
+                    statusCode: 401
+                });
+
+            communicator.getAuthHeader( url, creds ).then(( response ) => {
+                expect(response).to.equal(`Bearer ${creds.bearer}`);
+                // server should not have been called
+                expect(scope.isDone()).to.equal(false);
+                nock.cleanAll();
+                done();
+            });
+        } );
+    } );
+
+    describe( 'getManifest function', () => {
+        it( 'should assign manifest to survey object', (done) => {
+            const survey = {
+                openRosaServer: 'https://testserver.com/bob',
+                openRosaId: 'widgets',
+                info: {
+                    manifestUrl: 'https://my.openrosa.server/manifest1'
+                },
+                form: '<form>some form</form>',
+                model: '<data>some model</data>'
+            };
+            const manifestXML = `
+                <manifest xmlns="http://openrosa.org/xforms/xformsManifest">
+                    <mediaFile>
+                        <filename>dyn.xml</filename>
+                        <hash>md5:3c13dacb1b36c210b996ae307030c684</hash>
+                        <downloadUrl>https://example.com/johndoe/formmedia/dyn.xml</downloadUrl>
+                    </mediaFile>
+                </manifest>
+            `;
+            nock('https://my.openrosa.server')
+                .get('/manifest1')
+                .reply(200, manifestXML);
+
+            let updatedSurvey = JSON.parse( JSON.stringify( survey ) );
+            updatedSurvey.manifest = [
+                {
+                    filename: 'dyn.xml',
+                    hash: 'md5:3c13dacb1b36c210b996ae307030c684',
+                    downloadUrl: 'https://example.com/johndoe/formmedia/dyn.xml'
+                }
+            ];
+
+            communicator.getManifest( survey ).then((response) => {
+                expect(response).to.deep.equal(updatedSurvey);
+                done();
+            });
+        } );
+
+        it( 'should resolve with survey if no manifest url', (done) => {
+            const survey = {
+                openRosaServer: 'https://testserver.com/bob',
+                openRosaId: 'widgets',
+                info: {},
+                form: '<form>some form</form>',
+                model: '<data>some model</data>'
+            };
+
+            const scope = nock('https://my.openrosa.server')
+                .get('/manifest1')
+                .reply(200, 'abc');
+
+            communicator.getManifest( survey ).then((response) => {
+                expect(response).to.deep.equal(survey);
+                // server should not have been called
+                expect(scope.isDone()).to.equal(false);
+                nock.cleanAll();
+                done();
+            });
         } );
     } );
 
