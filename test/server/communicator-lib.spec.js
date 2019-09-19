@@ -11,6 +11,74 @@ config[ 'query parameter to pass to submission' ] = 'foo';
 
 describe( 'Communicator Library', () => {
 
+    describe( 'getXFormInfo function', () => {
+        it( 'should throw when getting wrong input', () => {
+            const fail = () => {
+                communicator.getXFormInfo({});
+            };
+            expect( fail ).to.throw();
+        } );
+
+        it( 'should resolve with survey with added info', (done) => {
+            const survey = {
+                openRosaServer: 'https://testserver.com/bob',
+                openRosaId: 'foo',
+                credentials: {bearer: 'qwerty'},
+                cookie: 'abc',
+                form: '<form>some form</form>',
+                model: '<data>some model</data>'
+            };
+            const formListXML = `
+                <xforms xmlns="http://openrosa.org/xforms/xformsList">
+                    <xform>
+                        <formID>foo</formID>
+                        <name>Form with zero or more additional files</name>
+                        <version>1.1</version>
+                        <hash>md5:c28fc778a9291672badee04ac880a05d</hash>
+                        <descriptionText>A possibly very long description of the form</descriptionText>
+                        <downloadUrl>http://myhost.com/app/path/getMe/formIdA</downloadUrl>
+                        <manifestUrl>http://myothehost.com/app/path/getOtherStuff?formId=formIdA</manifestUrl>
+                    </xform>
+                    <xform>
+                        <formID>http://mydomain.org/uniqueFormXmlns</formID>
+                        <name>Form without additional files</name>
+                        <version>v50 alpha</version>
+                        <hash>md5:c28fc778a9291672badee04ac770a05d</hash>
+                        <descriptionUrl>http://mysecondhost.com/a/description/getMe@formId=uniqueKey</descriptionUrl>
+                        <downloadUrl>http://mysecondhost.com/a/different/path/getMe@formId=uniqueKey</downloadUrl>
+                    </xform>
+                    <xforms-group>
+                        <groupID>someId</groupID>
+                        <name>Short name of grouping</name>
+                        <listUrl>http://whateverhost.com/other/path/forDownload?group=fido</listUrl>
+                        <descriptionText>Longer description of what is here</descriptionText>
+                        <descriptionUrl>http://morehost.com/description/link</descriptionUrl>
+                    </xforms-group>
+                </xforms>
+            `;
+            nock('https://testserver.com')
+                .get('/bob/formList')
+                .query({formID: 'foo'})
+                .reply(200, formListXML);
+
+            let updatedSurvey = JSON.parse( JSON.stringify( survey ) );
+            updatedSurvey.info = {
+                formID: 'foo',
+                name: 'Form with zero or more additional files',
+                version: '1.1',
+                hash: 'md5:c28fc778a9291672badee04ac880a05d',
+                descriptionText: 'A possibly very long description of the form',
+                downloadUrl: 'http://myhost.com/app/path/getMe/formIdA',
+                manifestUrl: 'http://myothehost.com/app/path/getOtherStuff?formId=formIdA'
+            };
+
+            communicator.getXFormInfo( survey ).then((response) => {
+                expect(response).to.deep.equal(updatedSurvey);
+                done();
+            });
+        } );
+    } );
+
     describe( 'getAuthHeader function', () => {
         it( 'has not broken due to a request library update', () => {
             const auth = new Auth();
@@ -100,15 +168,6 @@ describe( 'Communicator Library', () => {
                 nock.cleanAll();
                 done();
             });
-        } );
-    } );
-
-    describe( 'getXFormInfo function', () => {
-        it( 'should throw when getting wrong input', () => {
-            const fail = () => {
-                communicator.getXFormInfo({});
-            };
-            expect( fail ).to.throw();
         } );
     } );
 
