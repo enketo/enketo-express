@@ -84,7 +84,7 @@ function getManifest( survey ) {
  *
  * @static
  * @param {module:survey-model~SurveyObject} survey
- * @return {Promise}
+ * @return {Promise<string>} promise resolving with max size stringified number
  */
 function getMaxSize( survey ) {
     // Using survey.xformUrl is non-standard but the only way for previews served from `?form=URL`.

@@ -79,6 +79,90 @@ describe( 'Communicator Library', () => {
         } );
     } );
 
+    describe( 'getXForm function', () => {
+        it( 'should resolve with survey with added xform', (done) => {
+            const survey = {
+                info: {
+                    downloadUrl: 'https://testserver.com/foo'
+                },
+                credentials: {bearer: 'qwerty'},
+                cookie: 'abc'
+            };
+            const formXML = '<xform>foo</xform>';
+            nock('https://testserver.com')
+                .get('/foo')
+                .reply(200, formXML);
+
+            let updatedSurvey = JSON.parse( JSON.stringify( survey ) );
+            updatedSurvey.xform = formXML;
+
+            communicator.getXForm( survey ).then((response) => {
+                expect(response).to.deep.equal(updatedSurvey);
+                done();
+            });
+        } );
+
+        it( 'should reject with error if no downloadUrl', (done) => {
+            const survey = {
+                info: {},
+                credentials: {bearer: 'qwerty'},
+                cookie: 'abc'
+            };
+
+            communicator.getXForm( survey ).then(null, (err) => {
+                expect(err instanceof Error).to.equal(true);
+                done();
+            });
+        } );
+    } );
+
+    describe( 'getMaxSize function', () => {
+        it( 'should resolve with maximum accepted submission size', (done) => {
+            const survey = {
+                info: {
+                    downloadUrl: 'https://testserver.com/foo'
+                },
+                credentials: {bearer: 'qwerty'},
+                cookie: 'abc'
+            };
+            nock('https://testserver.com')
+                .intercept('/foo', 'head')
+                .reply(200, {}, {'x-openrosa-accept-content-length': '1024'});
+
+            communicator.getMaxSize( survey ).then((response) => {
+                expect(response).to.equal('1024');
+                done();
+            });
+        } );
+    } );
+
+    describe( 'authenticate function', () => {
+        before(() => {
+            config[ 'linked form and data server' ][ 'legacy formhub' ] = true;
+        });
+
+        after(() => {
+            config[ 'linked form and data server' ][ 'legacy formhub' ] = false;
+        });
+
+        it( 'should use GET for legacy call and respond with unchanged survey object', (done) => {
+            const survey = {
+                openRosaServer: 'https://testserver.com/foo',
+                openRosaId: 'bar',
+                credentials: {bearer: 'qwerty'},
+                cookie: 'abc'
+            };
+            nock('https://testserver.com')
+                .intercept('/foo/formList?formID=bar', 'get')
+                .reply(200, {});
+
+            communicator.authenticate( survey ).then((response) => {
+                expect(response).to.deep.equal(survey);
+                done();
+            });
+        } );
+    } );
+
     describe( 'getAuthHeader function', () => {
         it( 'has not broken due to a request library update', () => {
             const auth = new Auth();
@@ -95,15 +179,33 @@ describe( 'Communicator Library', () => {
             };
             const scope = nock('https://my.openrosa.server')
                 .get('/')
-                .reply(200, undefined, {
-                    statusCode: 401
-                });
+                .reply(401);
 
             communicator.getAuthHeader( url, creds ).then(( response ) => {
                 expect(response).to.equal(`Bearer ${creds.bearer}`);
                 // server should not have been called
                 expect(scope.isDone()).to.equal(false);
                 nock.cleanAll();
+                done();
+            });
+        } );
+
+        it( 'should resolve with Auth onResponse output', (done) => {
+            const url = 'https://my.openrosa.server';
+            const creds = {
+                user: 'johndoe',
+                pass: 'qwerty'
+            };
+            const scope = nock('https://my.openrosa.server')
+                .intercept('/', 'head')
+                .reply(401, {}, {
+                    'WWW-Authenticate': 'Basic'
+                });
+
+            communicator.getAuthHeader( url, creds ).then(( response ) => {
+                expect(response.startsWith('Basic ')).to.equal(true);
+                expect(response.length).to.equal(26);
+                expect(scope.isDone()).to.equal(true);
                 done();
             });
         } );
