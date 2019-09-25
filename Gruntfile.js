@@ -169,7 +169,8 @@ module.exports = grunt => {
                         'text-summary',
                         'json'
                     ],
-                    reportDir: './test-coverage/server'
+                    reportDir: './test-coverage/server',
+                    include: [ 'app/**/*.js' ],
                 },
                 cmd: false,
                 args: [ 'grunt', 'mochaTest:all' ]

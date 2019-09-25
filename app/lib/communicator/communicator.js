@@ -84,7 +84,7 @@ function getManifest( survey ) {
  *
  * @static
  * @param {module:survey-model~SurveyObject} survey
- * @return {Promise}
+ * @return {Promise<string>} promise resolving with max size stringified number
  */
 function getMaxSize( survey ) {
     // Using survey.xformUrl is non-standard but the only way for previews served from `?form=URL`.
@@ -175,8 +175,8 @@ function getAuthHeader( url, credentials ) {
  *
  * @static
  * @param {string} server
- * @param {string} id - Form id.
- * @param {string} customParam - custom query parameter
+ * @param {string} [id] - Form id.
+ * @param {string} [customParam] - custom query parameter
  * @return {string} url
  */
 function getFormListUrl( server, id, customParam ) {

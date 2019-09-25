@@ -75,7 +75,6 @@ function getSurveyHashes( survey ) {
             const key = _getKey( survey );
 
             client.hmget( key, [ 'formHash', 'xslHash' ], ( error, hashArr ) => {
-                console.log( 'hashArr', key, hashArr );
                 if ( error ) {
                     reject( error );
                 } else if ( !hashArr || !hashArr[ 0 ] || !hashArr[ 1 ] ) {

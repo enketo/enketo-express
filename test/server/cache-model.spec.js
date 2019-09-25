@@ -1,4 +1,3 @@
-/* global describe, require, it, beforeEach, afterEach */
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
@@ -288,7 +287,7 @@ describe( 'Cache Model', () => {
                 expect( getHashes2 ).to.eventually.have.property( 'formHash' ).that.equals( 'def' )
             ] );
         } );
-        /* TODO: rewrite these tests if necessary, to test the new cache mechanism 
+        /* TODO: rewrite these tests if necessary, to test the new cache mechanism
         it( 'returns the same mediaUrl hash when manifest resource md5 has been updated', function() {
             var getHashes1;
             var getHashes2;

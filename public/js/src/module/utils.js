@@ -97,7 +97,8 @@ function getThemeFromFormStr( formStr ) {
 
 function getTitleFromFormStr( formStr ) {
     if ( typeof formStr !== 'string' ) {
-        return console.error( 'Cannot extract form title. Not a string.' );
+        console.error( 'Cannot extract form title. Not a string.' );
+        return;
     }
     const matches = formStr.match( /<\s?h3 [^>]*id="form-title">([^<]+)</ );
     return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
@@ -169,7 +170,7 @@ function csvToXml( csv, langMap ) {
 
 /**
  * Generates a querystring from an object or an array of objects with `name` and `value` properties.
- * 
+ *
  * @param  {{name: string, value: *}|<{name: string, value: *}>} obj [description]
  * @return {*}     [description]
  */

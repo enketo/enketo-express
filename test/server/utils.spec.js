@@ -1,8 +1,8 @@
-/* global describe, require, it */
 const utils = require( '../../app/lib/utils' );
 const chai = require( 'chai' );
 const expect = chai.expect;
 const chaiAsPromised = require( 'chai-as-promised' );
+const config = require( '../../app/models/config-model' ).server;
 
 chai.use( chaiAsPromised );
 
@@ -163,5 +163,77 @@ describe( 'Utilities', () => {
                 expect( utils.isValidUrl( invalidUrl ) ).to.equal( false );
             } );
         } );
+    } );
+
+    describe( 'getXformsManifestHash function', () => {
+        [
+            [ undefined, undefined ],
+            [ [], undefined ],
+            [ [], 'all' ],
+            [ [ { type: 'foo' } ], undefined ],
+        ].forEach( test => {
+            it( 'should return empty string for no manifest or no type', () => {
+                expect( utils.getXformsManifestHash( test[ 0 ], test[ 1 ] ) ).to.equal( '' );
+            } );
+        } );
+
+        [
+            [ [ { type: 'foo' }, { type: 'bar' } ], 'all' ],
+            [ [ { type: 'foo' }, { type: 'bar' } ], 'foo' ],
+        ].forEach( test => {
+            it( 'should return hash string for given manifest and type', () => {
+                const hash = utils.getXformsManifestHash( test[ 0 ], test[ 1 ] );
+                expect( typeof hash === 'string' ).to.equal( true );
+                expect( hash.length ).to.equal( 32 );
+            } );
+        } );
+    } );
+
+    describe( 'insecureAes192Decrypt function', () => {
+        it( 'should be able to decrypt encrypted text', () => {
+            const pass = 'qwerty123';
+            const text = 'Is it secret? Is it safe?';
+            const encrypted = utils.insecureAes192Encrypt(text, pass);
+            expect( utils.insecureAes192Decrypt( encrypted, pass ) ).to.equal( text );
+        } );
+    } );
+
+    describe( 'pickRandomItemFromArray function', () => {
+        it( 'should return one item from given array', () => {
+            const testArr = ['abc', 'def', 'ghi', 'jkl'];
+            const picked = utils.pickRandomItemFromArray(testArr);
+            expect( typeof picked === 'string' ).to.equal( true );
+            expect( picked.length ).to.equal( 3 );
+            expect( testArr.indexOf(picked) ).to.not.equal( -1 );
+        } );
+
+        [
+            [ ],
+            [ undefined, undefined, undefined ],
+            [ null, null, null ],
+            [ false, false, false ],
+            [ 0, 0, 0 ],
+            [ '', '', '' ],
+        ].forEach( test => {
+            it( 'should return null for empty array or falsey value', () => {
+                expect( utils.pickRandomItemFromArray(test) ).to.equal( null );
+            } );
+        } );
+    } );
+
+    describe( 'toLocalMediaUrl function', () => {
+        const basePathDefault = config[ 'base path' ];
+
+        beforeEach(() => {
+            config[ 'base path' ] = 'http://enke.to';
+        });
+
+        it( 'should return proxied url', () => {
+            expect( utils.toLocalMediaUrl('http://foo.bar/fum/baz') ).to.equal( 'http://enke.to/media/get/http/foo.bar/fum/baz' );
+        } );
+
+        afterEach( () => {
+            config[ 'base path' ] = basePathDefault;
+        });
     } );
 } );

@@ -1,8 +1,7 @@
-/* global describe, require, it, beforeEach, afterEach */
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
-/* 
+/*
  * Some of these tests use the special test Api Token and Server URLs defined in the API spec
  * at http://apidocs.enketo.org.
  */
@@ -418,7 +417,7 @@ describe( 'api', () => {
                     status: 201,
                     res: {
                         property: 'edit_url',
-                        // includes proper enketoID and not e.g. ::null 
+                        // includes proper enketoID and not e.g. ::null
                         expected: /::[A-z0-9]{8,10}/
                     }
                 },
@@ -433,7 +432,7 @@ describe( 'api', () => {
                     status: 201,
                     res: {
                         property: 'edit_url',
-                        // includes proper enketoID and not e.g. ::null 
+                        // includes proper enketoID and not e.g. ::null
                         expected: /::[A-z0-9]{8,10}/
                     }
                 },
@@ -507,7 +506,7 @@ describe( 'api', () => {
                     instanceId: true,
                     status: 204
                 },
-                // no account 
+                // no account
                 {
                     method: 'post',
                     auth: true,

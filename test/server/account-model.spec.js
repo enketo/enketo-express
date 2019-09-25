@@ -1,4 +1,3 @@
-/* global describe, require, it */
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 

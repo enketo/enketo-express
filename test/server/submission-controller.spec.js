@@ -1,5 +1,4 @@
-/* global describe, require, it, beforeEach, afterEach */
-/* 
+/*
  * These tests use the special test Api Token and Server URLs defined in the API spec
  * at http://apidocs.enketo.org.
  */
