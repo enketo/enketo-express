@@ -15,6 +15,7 @@
     "draw": "../../../node_modules/enketo-core/src/widget/draw/draw-widget",
     "likert": "../../../node_modules/enketo-core/src/widget/select-likert/likertitem",
     "range": "../../../node_modules/enketo-core/src/widget/range/range-widget",
+    "rating": "../../../node_modules/enketo-core/src/widget/rating/rating",
     "rank": "../../../node_modules/enketo-core/src/widget/rank/rank-widget",
     "columns": "../../../node_modules/enketo-core/src/widget/columns/columns",
     "analog-scale": "../../../node_modules/enketo-core/src/widget/analog-scale/analog-scalepicker",
