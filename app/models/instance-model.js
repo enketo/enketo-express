@@ -20,8 +20,9 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @name set
  * @function
  * @param {module:survey-model~SurveyObject} survey
+ * @param {boolean} [protect] - whether to refuse if record is currently pending (to avoid editing conflicts)
  */
-function _cacheInstance( survey ) {
+function _cacheInstance( survey, protect = true ) {
     return new Promise( ( resolve, reject ) => {
         let error;
         if ( !survey || !survey.openRosaId || !survey.openRosaServer || !survey.instanceId || !survey.instance ) {
@@ -33,11 +34,11 @@ function _cacheInstance( survey ) {
             const openRosaKey = utils.getOpenRosaKey( survey );
             const instanceAttachments = survey.instanceAttachments || {};
 
-            // first check if record exists (i.e. if it is being edited)
+            // first check if record exists (i.e. if it is being edited or viewed)
             client.hgetall( `in:${survey.instanceId}`, ( err, obj ) => {
                 if ( err ) {
                     reject( err );
-                } else if ( obj ) {
+                } else if ( obj && protect ) {
                     error = new Error( 'Not allowed. Record is already being edited' );
                     error.status = 405;
                     reject( error );

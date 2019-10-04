@@ -383,7 +383,11 @@ function cacheInstance( req, res, next ) {
         } )
         .then( id => {
             enketoId = id;
-            return instanceModel.set( survey );
+            // If the API call is for /instance/edit/*, make sure
+            // to not allow caching if it is already cached as some lame
+            // protection against multiple people edit the same record simultaneously
+            const protect = req.webformType === 'edit';
+            return instanceModel.set( survey, protect );
         } )
         .then( () => {
             const status = 201;
@@ -418,6 +422,7 @@ function removeInstance( req, res, next ) {
         } )
         .catch( next );
 }
+
 
 /**
  * @param {module:api-controller~ExpressRequest} req
