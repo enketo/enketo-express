@@ -5,9 +5,10 @@
 1. Install JS prerequisites: [Node.js](https://github.com/nodesource/distributions) (8.x LTS), [Grunt Client](http://gruntjs.com).
 2. Install [Redis](https://redis.io/topics/quickstart)
 3. Probably already installed but otherwise, install build-essential, curl and git with `(sudo) apt-get install build-essential git curl`
-4. Clone this repository
-5. Create config/config.json. See [How To configure](#how-to-configure).
-6. Install dependencies and build with `npm install` from the project root
+4. Install dependencies for [Puppeteer](https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#chrome-headless-doesnt-launch-on-unix) (for PDF creation only)
+5. Clone this repository
+6. Create config/config.json. See [How To configure](#how-to-configure).
+7. Install dependencies and build with `npm install` from the project root
 
 #### Using vagrant:
 
