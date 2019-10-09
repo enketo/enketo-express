@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+Unreleased
+----------------------
+- Improve Docker configuration: use Node.js base image and v3 Compose file.
+
 [1.80.0] - 2019-10-04
 ----------------------
 ##### Added
