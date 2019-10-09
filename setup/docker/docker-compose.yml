@@ -16,6 +16,11 @@ services:
       - ../../config/:/srv/src/enketo_express/config/
     command: bash /tmp/enketo_express_nginx/nginx_command.bash
     restart: unless-stopped
+    depends_on:
+      # This won't guarantee that Enketo is actually ready to service requests
+      # before starting NGINX, but it will ensure that the hostname
+      # `enketo_express` resolves within the NGINX container
+      - enketo_express
 
   enketo_express:
     # image: kobotoolbox/enketo_express
