@@ -37,14 +37,14 @@ services:
     restart: unless-stopped
 
   redis_main:
-    image: redis:2.6
+    image: redis:5
     volumes:
       - ../redis/conf/redis-enketo-main.conf:/etc/redis/redis.conf:ro
       - ./redis_main_data/:/data/
     restart: unless-stopped
 
   redis_cache:
-    image: redis:2.6
+    image: redis:5
     volumes:
       - ../redis/conf/redis-enketo-cache.conf:/etc/redis/redis.conf:ro
       - ./redis_cache_data/:/data/
