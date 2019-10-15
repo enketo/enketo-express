@@ -79,7 +79,7 @@ module.exports = grunt => {
         },
         shell: {
             buildReadmeBadge: {
-                command: 'node ./update-readme-with-shield-badge.js'
+                command: 'node ./tools/update-readme-with-shield-badge.js'
             },
             translation: {
                 command: [

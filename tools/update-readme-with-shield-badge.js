@@ -13,14 +13,14 @@ istanbul.Report.register( shieldBadgeReporter );
 
 var report = Report.create( 'shield-badge', {
     readmeFilename: 'README.md',
-    readmeDir: path.resolve( __dirname, '.' ),
+    readmeDir: path.resolve( __dirname, '..' ),
     subject: 'coverage'
 } );
 
 try {
     console.log( '\n====================== Adding the badge to the ' + report.readmeFilename + ' =======================' );
-    var serverCoverageDir = path.resolve( __dirname, 'test-coverage/server' );
-    var clientCoverageDir = path.resolve( __dirname, 'test-coverage/client' );
+    var serverCoverageDir = path.resolve( __dirname, '../test-coverage/server' );
+    var clientCoverageDir = path.resolve( __dirname, '../test-coverage/client' );
     fs.readdirSync( serverCoverageDir ).forEach( function( file ) {
         if ( file.indexOf( 'coverage-final.json' ) === 0 ) {
             collector.add( JSON.parse( fs.readFileSync( path.resolve( serverCoverageDir, file ), 'utf8' ) ) );
