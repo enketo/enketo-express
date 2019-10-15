@@ -2,7 +2,6 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-<<<<<<< HEAD
 [Unreleased]
 ----------------------
 ##### Changed
@@ -11,11 +10,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Option labels break in middle of word instead of a space.
-=======
-Unreleased
-----------------------
-- Improve Docker configuration: use Node.js base image and v3 Compose file.
->>>>>>> ff22c2ed25efc73e061d1bcb6639d8d1e9d73906
 
 [1.80.0] - 2019-10-04
 ----------------------
