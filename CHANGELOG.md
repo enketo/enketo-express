@@ -8,6 +8,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Improve Docker configuration: use Node.js base image and v3 Compose file.
 - Updated Russian translation.
 
+##### Fixed
+- Option labels break in middle of word instead of a space.
+
 [1.80.0] - 2019-10-04
 ----------------------
 ##### Added
