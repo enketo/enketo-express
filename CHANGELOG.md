@@ -2,14 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.81.0] - 2019-10-23
 ----------------------
 ##### Changed
 - Improve Docker configuration: use Node.js base image and v3 Compose file.
 - Updated Russian translation.
+- Now using native datetime picker on mobile browsers.
 
 ##### Fixed
 - Option labels break in middle of word instead of a space.
+- Readonly native date/time/datetime picker in iOS is fully functional when it should not be (re-introduced bug in iOS13).
+- Exception in geo widget (though may not have had negative consequences).
 
 [1.80.0] - 2019-10-04
 ----------------------
