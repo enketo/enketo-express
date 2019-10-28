@@ -27,11 +27,9 @@
             "heading": "Výstraha"
         },
         "export": {
-            "alternativequestion": "k dispozícii na stiahnutie - online",
             "error": {
                 "filecreatedmsg": "Avšak, neúplný export bol aj napriek tomu vytvorený.",
                 "heading": "Chyba pri Exporte",
-                "linknotcreated": "Nepodarilo sa vytvoriť odkaz na export pre neodoslané záznamy. Ste stále online?",
                 "msg": "Nastali chyby pri tvorbe exportu pre neodoslané záznamy. Chyby: __error__"
             },
             "success": {
@@ -117,11 +115,15 @@
             "heading": "OK",
             "msg": "Formulár je validný!"
         },
+        "valuehasspaces": {
+            "multiple": "Viac-výberová otázka má neplatnú hodnotu  \"__value__\", ktorá obsahuje medzeru."
+        },
         "xpatherror": {
             "heading": "Chyba pri Vyhodnocovaný Vzorca",
             "msg": "Došlo k chybe pri vyhodnocovaní vzorca. Prosím kontaktujte __emailLink__ s touto chybou:"
         }
     },
+    "changelog": "Denník Zmien",
     "confirm": {
         "autosaveload": {
             "heading": "Nájdený Neuložený Záznam",
@@ -171,6 +173,10 @@
             "psize": "Veľkosť Papiera",
             "reminder": "Nezabudnite neskôr nastaviť tie isté nastavenia tlače v ponuke tlače prehliadača!"
         },
+        "repeatremove": {
+            "heading": "Vymazať túto skupinu odpovedí?",
+            "msg": "Táto akcia je nezvratná. Ste si istý že chcete pokračovať?"
+        },
         "save": {
             "existingerror": "Záznam s rovnakým názvom alebo ID už existuje.",
             "hint": "Tento názov vám umožní ľahko nájsť váš koncept záznamu a dokončiť ho neskôr.",
@@ -201,7 +207,7 @@
         "code": "Chybový Kód: __code__",
         "dataloadfailed": "Nepodarilo sa načítať dáta z __url__",
         "econnrefused": "Nepodarilo sa pripojiť na Server",
-        "encryptionnotsupported": "Tento formulár vyžaduje lokálne šifrovanie záznamov. Bohužiaľ táto funkcia zatiaľ nie je podporovaná. Odporúčame používať ODK Collect pre zber dát pomocou tohto formulára.",
+        "encryptionnotsupported": "Tento formulár vyžaduje lokálne šifrovanie záznamov. Váš prehliadač to bohužiaľ nepodporuje. Odporúčame použitie moderného prehliadača.",
         "instancenotfound": "Záznam nie je k dispozícii. Môže to byť spôsobené tým že expiroval.",
         "invalidediturl": "Neplatná URL pre úpravu",
         "loadfailed": "Nepodarilo sa načítať __resource__",
@@ -264,6 +270,11 @@
         "searchPlaceholder": "hľadanie miesta alebo adresy"
     },
     "here": "tu",
+    "hint": {
+        "guidance": {
+            "details": "viac informácií"
+        }
+    },
     "home": {
         "msg": "__appTitle__ beží! Prosím pristupujte k Enketo formulárom z inštalácie vašeho __serverName__ ."
     },
@@ -292,12 +303,17 @@
         "ro": "Rumunčina",
         "ru": "Ruština",
         "sk": "Slovenčina",
+        "sq": "Albánčina",
         "supported": "Podporované jazyky:",
         "sv": "Švédčina",
         "sw": "Svahilčina",
         "th": "Thajčina",
         "vi": "Vietnamčina",
         "zh": "Čínština"
+    },
+    "literacywidget": {
+        "finish": "Dokončiť",
+        "start": "Začať"
     },
     "page": {
         "modernbrowsers": {
@@ -363,6 +379,9 @@
         "http4xx": "Nastal neznámy problém počas odoslania na dátovom serveri.",
         "http500": "Dátový server vášho formulára alebo Enketo server je nedostupný. Skúste to prosím neskôr alebo kontaktujte __supportEmail__.",
         "http504": "Nepodarilo sa nadviazať spojenie s dátovým serverom."
+    },
+    "themes": {
+        "supported": "Podporované motívy"
     },
     "version": "verzia:",
     "widget": {
