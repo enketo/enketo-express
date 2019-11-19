@@ -42,7 +42,7 @@
             "msg": "Nová verze tohoto formuláře byla stažena. Obnovte tuto stránku pro načtení aktualizované verze."
         },
         "gotonotfound": {
-            "msg": "Failed to find question \"__path__\" in form. Is the reference to this question correct?"
+            "msg": "Ve formuláři se nepodařilo najít otázku \"__path__\". Je odkaz na tuto otázku správný?"
         },
         "loaderror": {
             "editadvice": "Doporučuje se neupravovat tenhle záznam dokud to nebude vyřešeno.",
@@ -115,11 +115,15 @@
             "heading": "OK",
             "msg": "Formulář je validní!"
         },
+        "valuehasspaces": {
+            "multiple": "Více-výběrová otázka má neplatnou hodnotu \"__value__\", která obsahuje mezeru."
+        },
         "xpatherror": {
             "heading": "Chyba při vyhodnocování Vzorce",
             "msg": "Došlo k chybě při vyhodnocování vzorce. Prosím kontaktujte __emailLink__ s touto chybou:"
         }
     },
+    "changelog": "Deník změn",
     "confirm": {
         "autosaveload": {
             "heading": "Nalezen Neuložený Záznam",
@@ -169,6 +173,10 @@
             "psize": "Velikost Papíru",
             "reminder": "Nezapomeňte později nastavit stejná nastavení tisku v nabídce tisku prohlížeče!"
         },
+        "repeatremove": {
+            "heading": "Smazat tuto skupinu odpovědí?",
+            "msg": "Tato akce je nevratná. Jste si jisti, že chcete pokračovat?"
+        },
         "save": {
             "existingerror": "Záznam se stejným názvem nebo ID již existuje.",
             "hint": "Tento název vám umožní snadno najít váš koncept záznamu a dokončit jej později.",
@@ -199,13 +207,13 @@
         "code": "Chybový Kód: __code__",
         "dataloadfailed": "Nepodařilo se načíst data z __url__",
         "econnrefused": "Nelze se připojit k Serveru",
-        "encryptionnotsupported": "This form requires local encryption of records. Unfortunately this is not supported by your browser. We recommend switching to a modern browser.",
+        "encryptionnotsupported": "Tento formulář vyžaduje lokální šifrování záznamů. Váš prohlížeč to bohužel nepodporuje. Doporučujeme přechod na moderní prohlížeč.",
         "instancenotfound": "Záznam není k dispozici. To může být způsobené tím, že vypršel.",
         "invalidediturl": "Neplatná URL pro úpravu",
         "loadfailed": "Nepodařilo se načíst __resource__",
         "notfoundinformlist": [
-            "Oops, this form doesn't exist (anymore). Most likely the owner of the form has deleted it, archived it, or disabled it. Please contact the form's owner to confirm.",
-            "Detailed error: Form with ID __formId__ not found in /formList."
+            "Oops, tento formulář již neexistuje. Vlastník formuláře jej pravděpodobně odstranil, archivoval nebo deaktivoval. Kontaktujte majitele ve formuláři pro potvrzení.",
+            "Detail chyby: Formulář s ID __formId__ nebyl nalezen v / formList"
         ],
         "pagenotfound": "Stránka nebyla Nenalezena",
         "surveyidnotactive": "Průzkum s tímto ID již není aktivní",
@@ -217,11 +225,11 @@
     },
     "filepicker": {
         "file": "soubor",
-        "notFound": "File __existing__ could not be found (leave unchanged if already submitted and you want to preserve it).",
-        "placeholder": "Click here to upload file. (< __maxSize__)",
-        "resetWarning": "This will remove the __item__. Are you sure you want to do this?",
-        "toolargeerror": "File too large (> __maxSize__)",
-        "waitingForPermissions": "Waiting for user permissions."
+        "notFound": "Soubor __existing__ nebyl nalezen (ponechejte nezměněné, pokud již byl odeslán a chcete jej zachovat).",
+        "placeholder": "Klikněte pro nahrání s souboru. (< __maxSize__)",
+        "resetWarning": "Tato akce odstraní __item__. Jste si jisti, že to chcete udělat?",
+        "toolargeerror": "Soubor je příliš velký  (> __maxSize__)",
+        "waitingForPermissions": "Čekání na oprávnění uživatele."
     },
     "form": {
         "chooseLanguage": "Vybrat Jazyk",
@@ -258,15 +266,20 @@
         "latitude": "zeměpisná šířka (x.y °)",
         "longitude": "zeměpisná délka (x.y °)",
         "points": "body",
-        "removePoint": "This will completely remove the current geopoint from the list of geopoints and cannot be undone. Are you sure you want to do this?",
+        "removePoint": "Touto akcí zcela a nenávratně odstraníte současný geolokační bod z listu geolokačních bodů. Jste si jisti, že to chcete udělat?",
         "searchPlaceholder": "hledání místa nebo adresy"
     },
     "here": "tady",
+    "hint": {
+        "guidance": {
+            "details": "více informací"
+        }
+    },
     "home": {
         "msg": "__appTitle__ běží! Prosím přistupujte k Enketo formulářům z instalace vašeho __serverName__."
     },
     "imagemap": {
-        "svgNotFound": "SVG image could not be found"
+        "svgNotFound": "SVG obrázek nebyl nalezen"
     },
     "langs": {
         "ar": "Arabština",
@@ -290,12 +303,17 @@
         "ro": "Rumunština",
         "ru": "Ruština",
         "sk": "Slovenština",
+        "sq": "Albánština",
         "supported": "Podporované jazyky:",
         "sv": "Švédština",
         "sw": "Svahilština",
         "th": "Thajština",
         "vi": "Vietnamština",
         "zh": "Čínština"
+    },
+    "literacywidget": {
+        "finish": "Dokončit",
+        "start": "Začít"
     },
     "page": {
         "modernbrowsers": {
@@ -325,8 +343,8 @@
         }
     },
     "rankwidget": {
-        "clickstart": "Click to start",
-        "tapstart": "Tap to start"
+        "clickstart": "Klikněte pro spuštění",
+        "tapstart": "Klepnete pro spuštění"
     },
     "record-list": {
         "export": "Exportovat",
@@ -361,6 +379,9 @@
         "http4xx": "Vyskytla neznáma chyba při odeslání na datovém serveru.",
         "http500": "Datový server vašeho formuláře nebo Engeto server je nedostupný. Zkuste to prosím později nebo kontaktujte __supportEmail__.",
         "http504": "Nepodařilo se navázat spojení s dátovým serverem."
+    },
+    "themes": {
+        "supported": "Podporovaná témata"
     },
     "version": "verze:",
     "widget": {
