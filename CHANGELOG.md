@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Updated Czech translation.
 
+##### Fixed
+- PDF does not show background colours.
+
 [1.81.2] - 2019-11-04
 ---------------------
 ##### Changed

@@ -74,7 +74,8 @@ function get( url, options = {} ) {
                     right: options.margin,
                     bottom: options.margin
                 },
-                scale: options.scale
+                scale: options.scale,
+                printBackground: true
             } );
         } )
         .then( pdf => {
