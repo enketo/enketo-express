@@ -2,13 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.81.3] - 2010-11-22
 ---------------------
 ##### Changed
 - Updated Czech translation.
 
 ##### Fixed
 - PDF does not show background colours.
+- `current()` without a path, and `current()/path/to/node` without a step down do not work.
+- Datetime picker does not load a midnight datetime value.
+- Analog scale layout messed up in printout.
 
 [1.81.2] - 2019-11-04
 ---------------------
