@@ -335,24 +335,30 @@ function _getExternalData( survey ) {
     const tasks = [];
 
     try {
+        // TODO: rewrite this
         doc = $.parseXML( survey.model );
 
-        survey.externalData = $( doc ).find( 'instance[id][src]' ).map( ( index, el ) => ( {
-            id: $( el ).attr( 'id' ),
-            src: $( el ).attr( 'src' )
-        } ) ).get();
+        survey.externalData = $( doc ).find( 'instance[id][src]' )
+            .map( ( index, el ) => ( {
+                id: $( el ).attr( 'id' ),
+                src: $( el ).attr( 'src' )
+            } ) ).get();
+        // end of rewrite TODO
 
-        survey.externalData.forEach( ( instance, index ) => {
-            tasks.push( _getDataFile( instance.src, survey.languageMap ).then( xmlData => {
-                    instance.xml = xmlData;
-                    return instance;
-                } )
-                .catch( e => {
-                    survey.externalData.splice( index, 1 );
-                    // let external data files fail quietly. Rely on Enketo Core to show error.
-                    console.error( e );
-                } ) );
-        } );
+        survey.externalData
+            .forEach( ( instance, index ) => {
+                tasks.push( _getDataFile( instance.src, survey.languageMap )
+                    .then( xmlData => {
+                        instance.xml = xmlData;
+                        return instance;
+                    } )
+                    .catch( e => {
+                        survey.externalData.splice( index, 1 );
+                        // let external data files fail quietly. Rely on Enketo Core to show error.
+                        console.error( e );
+                    } ) );
+            } );
+
     } catch ( e ) {
         return Promise.reject( e );
     }

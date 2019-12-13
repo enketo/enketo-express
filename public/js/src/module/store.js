@@ -247,62 +247,77 @@ const surveyStore = {
         }
         return server.surveys.add( _transformExternalDataToXmlStr( survey ) )
             .then( _firstItemOnly )
+            .then( storedSurvey => {
+                const tasks = [];
+                if ( survey.binaryDefaults ) {
+                    survey.binaryDefaults.forEach( file => {
+                        tasks.push( surveyStore.resource.update( survey.enketoId, file ) );
+                    } );
+                }
+                return Promise.all( tasks )
+                    // return original survey with orginal survey.binaryDefaults
+                    .then( () => storedSurvey );
+            } )
             .then( _transformExternalDataToXmlDoc );
     },
     /**
      * Updates a single survey's form HTML and XML model as well any external resources belonging to the form
      *
-     * @param  {*} s [description]
+     * @param  {*} survey [description]
      * @return {Promise}        [description]
      */
     update( survey ) {
-        let resourceKeys;
-        const tasks = [];
         let obsoleteResources = [];
+        let obsoleteBinaryDefaults = [];
 
         if ( !survey.form || !survey.model || !survey.enketoId ) {
             throw new Error( 'Survey not complete' );
         }
 
-        // note: if survey.resources = undefined/null, do not store empty array
-        // as it means there are no resources to store (and load)
-        if ( survey.resources ) {
-            // build array of resource keys
-            resourceKeys = survey.resources.map( resource => resource.url );
-        }
+        const resourceKeys = [].concat( survey.resources || [] ).map( resource => resource.url );
+        const binaryDefaultKeys = [].concat( survey.binaryDefaults || [] ).map( resource => resource.url );
 
         return server.surveys.get( survey.enketoId )
             .then( result => {
-                // determine obsolete resources to be removed
-                if ( result.resources ) {
-                    obsoleteResources = result.resources.filter( existing => !resourceKeys || resourceKeys.indexOf( existing ) < 0 );
+                // Determine obsolete resources to be removed
+                // But if undefined, do not determine this!
+                if ( survey.resources ) {
+                    obsoleteResources = ( result.resources || [] )
+                        .filter( existing => resourceKeys.indexOf( existing ) < 0 );
                 }
+                if ( survey.binaryDefaults ) {
+                    obsoleteBinaryDefaults = ( result.binaryDefaults || [] )
+                        .filter( existing => binaryDefaultKeys.indexOf( existing ) < 0 );
+                }
+
                 _transformExternalDataToXmlStr( survey );
-                // update the existing survey
+                // Update the existing survey
                 return server.surveys.update( {
                     form: survey.form,
                     model: survey.model,
                     enketoId: survey.enketoId,
                     hash: survey.hash,
                     theme: survey.theme,
-                    resources: resourceKeys,
+                    // Note: if survey.resources = undefined/null, do not store empty array
+                    // as it means there are no resources to store (and load) - they may be added later by form-cache.js
+                    resources: survey.resources ? resourceKeys : undefined,
+                    binaryDefaults: survey.binaryDefaults ? binaryDefaultKeys : undefined,
                     maxSize: survey.maxSize,
                     externalData: survey.externalData,
                     branding: survey.branding
                 } );
             } )
             .then( () => {
-                if ( survey.resources ) {
-                    // add new or update existing resources
-                    survey.resources.forEach( file => {
-                        tasks.push( surveyStore.resource.update( survey.enketoId, file ) );
-                    } );
-                }
-                // remove obsolete resources
-                obsoleteResources.forEach( key => {
+                const tasks = [];
+                // Add new or update existing resources, combining binaryDefaults and form resources
+                ( survey.resources || [] ).concat( survey.binaryDefaults || [] ).forEach( file => {
+                    tasks.push( surveyStore.resource.update( survey.enketoId, file ) );
+                } );
+                // Remove obsolete resources
+                obsoleteResources.concat( obsoleteBinaryDefaults ).forEach( key => {
                     tasks.push( surveyStore.resource.remove( survey.enketoId, key ) );
                 } );
-                // execution
+                // Execution
                 return Promise.all( tasks )
                     .then( () => // resolving with original survey (not the array returned by server.surveys.update)
                         survey )
@@ -617,7 +632,7 @@ const recordStore = {
 
 /**
  * Db.js get and update functions return arrays. This function extracts the first item of the array
- * and passed it along.
+ * and passes it along.
  *
  * @param  {<*>} array Array of retrieve database items.
  * @return {Promise}       [description]
@@ -691,7 +706,7 @@ function _getFile( table, id, key ) {
                 } )
                 .catch( reject );
         } else {
-            reject( new Error( 'Unknown table or issing id or key.' ) );
+            reject( new Error( 'Unknown table or missing id or key.' ) );
         }
     } );
 }

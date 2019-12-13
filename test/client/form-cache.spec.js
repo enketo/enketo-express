@@ -4,7 +4,7 @@ import $ from 'jquery';
 
 const url1 = '/path/to/source.png';
 const form1 = `<form class="or"><img src="${url1}"/></form>`;
-const model1 = '<model></model>';
+const model1 = '<model/>';
 const hash1 = '12345';
 
 describe( 'Client Form Cache', () => {

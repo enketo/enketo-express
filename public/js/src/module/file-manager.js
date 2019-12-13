@@ -10,6 +10,7 @@ import $ from 'jquery';
 import utils from './utils';
 import { getFilename } from 'enketo-core/src/js/utils';
 import { t } from './translator';
+const URL_RE = /[a-zA-Z0-9+-.]+?:\/\//;
 let instanceAttachments;
 
 /**
@@ -47,11 +48,26 @@ function getFileUrl( subject ) {
         if ( !subject ) {
             resolve( null );
         } else if ( typeof subject === 'string' ) {
-            if ( instanceAttachments && ( Object.prototype.hasOwnProperty.call( instanceAttachments, subject ) ) ) {
+            if ( subject.startsWith( '/' ) ) {
+                resolve( subject );
+            } else if ( instanceAttachments && ( Object.prototype.hasOwnProperty.call( instanceAttachments, subject ) ) ) {
                 resolve( instanceAttachments[ subject ] );
             } else if ( !store.available ) {
                 // e.g. in an online-only edit view
                 reject( new Error( 'store not available' ) );
+            } else if ( URL_RE.test( subject ) ) {
+                // Any URL values are default binary values. These should only occur in offline-capable views,
+                // because the form cache module removed the src attributes 
+                // (which are /urls/like/this/http:// and are caught above this statement)
+                store.survey.resource.get( settings.enketoId, subject )
+                    .then( file => {
+                        if ( file.item ) {
+                            resolve( URL.createObjectURL( file.item ) );
+                        } else {
+                            reject( new Error( 'File Retrieval Error' ) );
+                        }
+                    } )
+                    .catch( reject );
             } else {
                 // obtain file from storage
                 store.record.file.get( _getInstanceId(), subject )
@@ -116,7 +132,7 @@ function getCurrentFiles() {
             file = this.files[ 0 ]; // Why doesn't this fail for empty file inputs?
         } else if ( this.value ) {
             canvas = $( this ).closest( '.question' )[ 0 ].querySelector( '.draw-widget canvas' );
-            if ( canvas ) {
+            if ( canvas && !URL_RE.test( this.value ) ) {
                 // TODO: In the future, we could do canvas.toBlob()
                 file = utils.dataUriToBlobSync( canvas.toDataURL() );
                 file.name = this.value;
@@ -140,7 +156,7 @@ function getCurrentFiles() {
         }
     } );
 
-    // then get any file names of files that were loaded as DataURI and have remained unchanged (.i.e. loaded from Storage)
+    // then get any file names of files that were loaded as DataURI and have remained unchanged (i.e. loaded from Storage)
     $fileInputs.filter( '[data-loaded-file-name]' ).each( function() {
         files.push( $( this ).attr( 'data-loaded-file-name' ) );
     } );

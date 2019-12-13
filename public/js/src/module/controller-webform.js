@@ -220,7 +220,7 @@ function _loadRecord( instanceId, confirmed ) {
 
 /**
  * Used to submit a form.
- * This function does not save the record in localStorage
+ * This function does not save the record in the browser storage
  * and is not used in offline-capable views.
  */
 function _submitRecord() {
