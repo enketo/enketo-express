@@ -67,7 +67,7 @@
         "lodash": "^4.17.15",
         "morgan": "1.x.x",
         "node-forge": "^0.7.6",
-        "node-sass": "^4.9.2",
+        "node-sass": "^4.13.0",
         "papaparse": "4.6.x",
         "pug": "2.0.4",
         "puppeteer": "^1.2.0",
