@@ -8,13 +8,7 @@
                 "msg": "Pour ajouter ce formulaire à votre écran d'accueil, cliquer sur l'icône __image1__ dans les paramètres du navigateur, et sélectionner \"Ajouter à votre écran d'accueil\""
             },
             "androidfirefox": {
-                "msg": [
-                    "Pour ajouter ce formulaire à votre écran d'accueil :",
-                    "Pour ajouter cette page à vos marque-pages Firefox, cliquer sur l'icône __image1__ puis sur l'étoile __image2__.",
-                    "2. Ouvrez vos marque-pages en ouvrant une nouvelle page, et cliquez sur l'onglet Marque-pages.",
-                    "3. Faire un appui-long sur le formulaire jusqu'à l'apparition d'un menu pop-up",
-                    "4. Sélectionner \"Ajouter à l'écran d'accueil\""
-                ]
+                "msg": "Pour ajouter ce formulaire à votre écran d'accueil, appuyer longtemps sur la barre d'adresse et sélectionner \"Ajouter à l'écran d'accueil\""
             },
             "heading": "Ajouter à l'écran d'accueil",
             "iossafari": {
@@ -25,16 +19,17 @@
             "heading": "Application mise à jour!",
             "msg": "Une nouvelle version de cette application a été téléchargée. Actualiser cette page pour charger la version mise à jour."
         },
+        "closing": {
+            "heading": "En cours de fermeture..."
+        },
         "default": {
             "button": "Fermer",
             "heading": "Alerte"
         },
         "export": {
-            "alternativequestion": "téléchargement alternatif - online",
             "error": {
                 "filecreatedmsg": "Cependant, un export incomplet a été créé.",
                 "heading": "Erreur d'export",
-                "linknotcreated": "Le lien d'export n'a pu être créé pour les enregistrements non soumis. Êtes-vous connecté ?",
                 "msg": "Des erreurs ont eu lieu durant la création du fichier d'export des enregistrements non soumis. Erreurs : __errors__"
             },
             "success": {
@@ -45,6 +40,9 @@
         "formupdated": {
             "heading": "Formulaire mis à jour!",
             "msg": "Une nouvelle version du formulaire a été téléchargée. Actualiser cette page pour charger la version mise à jour."
+        },
+        "gotonotfound": {
+            "msg": "Impossible de trouver la question  \"__path__\" dans le formulaire. Est-ce que la référence à cette question est correcte ?"
         },
         "loaderror": {
             "editadvice": "Il est conseillé de ne pas modifier cet enregistrement jusqu'à ce que ce soit résolu. ",
@@ -105,6 +103,11 @@
             "msg": "Vos données ont été soumises !",
             "redirectmsg": "Vous allez maintenant être redirigé."
         },
+        "thanks": {
+            "heading": "Merci pour votre participation !",
+            "msg": "Vous pouvez maintenant fermer cette fenêtre.",
+            "msgTaken": "Vous avez déjà complété cette enquête."
+        },
         "validationerror": {
             "msg": "Le formulaire contient des erreurs. Merci de vérifier les champs marqués en rouge."
         },
@@ -112,11 +115,15 @@
             "heading": "OK",
             "msg": "Le formulaire est valide !"
         },
+        "valuehasspaces": {
+            "multiple": "La valeur \"__value__\" est incorrecte pour cette question à choix multiples car elle contient des espaces."
+        },
         "xpatherror": {
             "heading": "Erreur de formule",
             "msg": "Une erreur d'évaluation de formule s'est produite. Merci de contacter __emailLink__ avec cette erreur :"
         }
     },
+    "changelog": "Journal des modifications",
     "confirm": {
         "autosaveload": {
             "heading": "Un enregistrement non sauvegardé a été trouvé",
@@ -166,6 +173,10 @@
             "psize": "Taille du papier",
             "reminder": "N'oubliez pas de configurer les paramètres d'impression de manière similaire dans le menu \"Impression\" du navigateur !"
         },
+        "repeatremove": {
+            "heading": "Supprimer ce groupe de réponses ?",
+            "msg": "Cette action est irréversible. Êtes-vous sûr de vouloir continuer ?"
+        },
         "save": {
             "existingerror": "Ce nom ou ID d'enregistrement existe déjà. ",
             "hint": "Ce nom vous permet de trouver facilement votre brouillon d'enregistrement afin de le finir plus tard.",
@@ -184,6 +195,11 @@
         "admin": "S'il vous plaît contactez l'administrateur de cette enquête ",
         "support": "Contactez __supportEmail__ s'il vous plaît."
     },
+    "drawwidget": {
+        "annotation": "fichier et dessin",
+        "drawing": "dessin",
+        "signature": "signature"
+    },
     "enketo": {
         "power": "Propulsé par"
     },
@@ -191,11 +207,14 @@
         "code": "Code d'erreur : __code__",
         "dataloadfailed": "Les données n'ont pu être chargées depuis __url__",
         "econnrefused": "Connexion avec le serveur impossible",
-        "encryptionnotsupported": "Ce formulaire nécessite le chiffrement local des enregistrements. Malheureusement, cela n'est pas encore supporté. Nous recommandons d'utiliser ODK Collect pour collecter des données avec ce formulaire. ",
+        "encryptionnotsupported": "Ce formulaire nécessite le chiffrement local des enregistrements. Malheureusement, votre navigateur web ne le prend pas en charge. Nous vous recommandons d'utiliser un navigateur web plus récent.",
         "instancenotfound": "L'enregistrement n'a pas été trouvé. Il a peut-être expiré.",
         "invalidediturl": "Ceci n'est pas une URL d'édition valide",
         "loadfailed": "Impossible de charger __resource__",
-        "notfoundinformlist": "Le formulaire avec l'ID __formId__ n'a pas été trouvé dans /formList",
+        "notfoundinformlist": [
+            "Oups, ce formulaire n'existe plus. Le propriétaire du formulaire l'a probablement supprimé, archivé ou désactivé. Veuillez le contacter pour avoir de plus amples informations.",
+            "Erreur détaillée : Le formulaire avec l'ID __formId__ n'a pas été trouvé dans /formList."
+        ],
         "pagenotfound": "Page non trouvée",
         "surveyidnotactive": "L'enquête avec cet ID n'est plus active",
         "surveyidnotfound": "L'enquête avec cet ID n'a pas été trouvée",
@@ -203,6 +222,14 @@
     },
     "feedback": {
         "header": "Information"
+    },
+    "filepicker": {
+        "file": "fichier",
+        "notFound": "Le fichier __existing__ est introuvable (ne le modifier pas s'il a déjà été envoyé et que vous voulez le conserver).",
+        "placeholder": "Cliquez ici pour téléverser un fichier. (< __maxSize__)",
+        "resetWarning": "Cela va supprimer __item__. Êtes-vous sûr de vouloir faire cela ?",
+        "toolargeerror": "Fichier trop volumineux (> __maxSize__)",
+        "waitingForPermissions": "En attente des autorisations de l'utilisateur"
     },
     "form": {
         "chooseLanguage": "Choisissez votre langue",
@@ -216,6 +243,9 @@
         "required": "requis"
     },
     "formfooter": {
+        "complete": {
+            "btn": "Terminé"
+        },
         "savedraft": {
             "btn": "Sauvegarder le brouillon",
             "label": "Enregistrer en tant que Brouillon"
@@ -236,11 +266,20 @@
         "latitude": "latitude (x.y °)",
         "longitude": "longitude (x.y °)",
         "points": "points",
+        "removePoint": "Cela va supprimer définitivement la position géographique actuelle de la liste des géopoints et vous ne pourrez pas revenir en arrière. Êtes-vous sûr de vouloir faire cela ?",
         "searchPlaceholder": "Chercher un lieu ou une adresse"
     },
     "here": "ici",
+    "hint": {
+        "guidance": {
+            "details": "plus de détails"
+        }
+    },
     "home": {
         "msg": "__appTitle__ est lancé ! Merci d'accéder aux formulaires Enketo depuis votre installation __serverName__."
+    },
+    "imagemap": {
+        "svgNotFound": "L'image SVG n'a pas pu être trouvée"
     },
     "langs": {
         "ar": "Arabe",
@@ -250,20 +289,31 @@
         "en": "Anglais",
         "es": "Espagnol",
         "fa": "Persan",
+        "fi": "Fin",
         "fr": "Français",
         "he": "Hébreu",
         "hi": "Hindi",
         "it": "Italien",
         "km": "Khmer",
+        "lo": "Lao",
         "nl": "Néerlandais",
         "no": "Norvégien",
+        "pl": "Polonais",
+        "pt": "Portugais",
         "ro": "Roumain",
+        "ru": "Russe",
         "sk": "Slovaque",
+        "sq": "Albanais",
         "supported": "Langues supportées :",
+        "sv": "Suédois",
         "sw": "Swahili",
         "th": "Thaï",
         "vi": "Vietnamien",
         "zh": "Chinois"
+    },
+    "literacywidget": {
+        "finish": "Fin",
+        "start": "Début"
     },
     "page": {
         "modernbrowsers": {
@@ -291,6 +341,10 @@
             "submit": "Soumettre",
             "username": "Identifiant"
         }
+    },
+    "rankwidget": {
+        "clickstart": "Cliquez ici pour commencer",
+        "tapstart": "Appuyez pour commencer"
     },
     "record-list": {
         "export": "Exporter",
@@ -320,9 +374,19 @@
         "http401": "Problème d'authentification avec le serveur.",
         "http403": "Non autorisé à soumettre des données sur ce serveur.",
         "http404": "Le service de soumission n'a pas été trouvé sur le serveur.",
+        "http408": "Le serveur de données ne répond pas.",
         "http413": "Les données sont trop volumineuses.",
         "http4xx": "Probème inconnu de soumission sur le serveur.",
-        "http500": "Le serveur de données pour votre formulaire, ou le serveur Enketo, n'est pas accessible. Ré-essayez plus tard ou contactez __supportEmail__."
+        "http500": "Le serveur de données pour votre formulaire, ou le serveur Enketo, n'est pas accessible. Ré-essayez plus tard ou contactez __supportEmail__.",
+        "http504": "Impossible d'établir une connexion avec le serveur de données."
     },
-    "version": "version :"
+    "themes": {
+        "supported": "Thèmes supportés"
+    },
+    "version": "version :",
+    "widget": {
+        "comment": {
+            "update": "Mettre à jour"
+        }
+    }
 }
