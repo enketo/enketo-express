@@ -683,6 +683,6 @@ function _renderPdf( status, id, req, res ) {
                 .end( pdfBuffer, 'binary' );
         } )
         .catch( e => {
-            _render( '500', `PDF generation failed: ${e.message}`, res );
+            _render( e.status || 500, `PDF generation failed: ${e.message}`, res );
         } );
 }

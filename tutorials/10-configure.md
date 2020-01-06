@@ -103,6 +103,9 @@ Which analytics service you'd like to use, either `"google"` or `"piwik"` or if 
 * analytics -> tracker url -> URL on which your piwik service is hosted. The protocol can be omitted, e.g. `"//enketo.piwikpro.com/"`. Required if piwik service is selected under [analytics](#analytics).
 * analytics -> site id -> The site ID of this server on your piwik service, e.g. `"1"` (number or string). Required if piwik service is selected under [analytics](#analytics).
 
+#### headless
+* timeout: Connection timeout in milliseconds used in headless views that are run on the server, such as for PDF generation API endpoints.
+
 #### maps
 The `maps` configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a `name`,  `tiles` (array) and an `attribution` property, and optionally `maxzoom` and `minzoom`). You can also mix and match Google Maps layers. Below is an example of a mix of two map layers provided by OSM (in TileJSON format) and Google maps.
 

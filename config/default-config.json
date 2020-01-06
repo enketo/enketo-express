@@ -45,6 +45,9 @@
             "site id": ""
         }
     },
+    "headless": {
+        "timeout": 60000
+    },
     "maps": [ {
         "name": "streets",
         "tiles": [ "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" ],

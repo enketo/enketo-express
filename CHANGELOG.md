@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Changed
+- Made PDF timeout configurable.
+  
+##### Fixed
+- Error code returned by PDF endpoint is always 500 even when a more specific helpful code is available.
+
 [1.83.1] - 2020-01-06
 ----------------------
 ##### Changed

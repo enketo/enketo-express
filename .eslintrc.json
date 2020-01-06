@@ -10,7 +10,7 @@
     ],
     "parserOptions": {
         "sourceType": "module",
-        "ecmaVersion": 6
+        "ecmaVersion": 8
     },
     "settings": {
         "jsdoc": {
@@ -32,7 +32,7 @@
         "jsdoc/check-param-names": 1,
         "jsdoc/check-tag-names": 1,
         "jsdoc/check-types": 1,
-        "jsdoc/newline-after-description": [ "warn", "always"],
+        "jsdoc/newline-after-description": [ "warn", "always" ],
         "jsdoc/no-undefined-types": 1,
         "jsdoc/require-description": 0,
         "jsdoc/require-description-complete-sentence": 0,
