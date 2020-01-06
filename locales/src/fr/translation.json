@@ -105,6 +105,11 @@
             "msg": "Vos données ont été soumises !",
             "redirectmsg": "Vous allez maintenant être redirigé."
         },
+        "thanks": {
+            "heading": "Merci pour votre participation !",
+            "msg": "Vous pouvez maintenant fermer cette fenêtre.",
+            "msgTaken": "Vous avez déjà complété ce questionnaire."
+        },
         "validationerror": {
             "msg": "Le formulaire contient des erreurs. Merci de vérifier les champs marqués en rouge."
         },
@@ -112,11 +117,15 @@
             "heading": "OK",
             "msg": "Le formulaire est valide !"
         },
+        "valuehasspaces": {
+            "multiple": "La valeur \"__value__\" est incorrecte pour cette question à choix multiples car elle contient des espaces."
+        },
         "xpatherror": {
             "heading": "Erreur de formule",
             "msg": "Une erreur d'évaluation de formule s'est produite. Merci de contacter __emailLink__ avec cette erreur :"
         }
     },
+    "changelog": "Journal des modifications",
     "confirm": {
         "autosaveload": {
             "heading": "Un enregistrement non sauvegardé a été trouvé",
@@ -165,6 +174,10 @@
             "posButton": "Préparer",
             "psize": "Taille du papier",
             "reminder": "N'oubliez pas de configurer les paramètres d'impression de manière similaire dans le menu \"Impression\" du navigateur !"
+        },
+        "repeatremove": {
+            "heading": "Supprimer ce groupe de réponses ?",
+            "msg": "Cette action est irréversible. Êtes-vous sûr de vouloir continuer ?"
         },
         "save": {
             "existingerror": "Ce nom ou ID d'enregistrement existe déjà. ",
@@ -239,6 +252,11 @@
         "searchPlaceholder": "Chercher un lieu ou une adresse"
     },
     "here": "ici",
+    "hint": {
+        "guidance": {
+            "details": "plus de détails"
+        }
+    },
     "home": {
         "msg": "__appTitle__ est lancé ! Merci d'accéder aux formulaires Enketo depuis votre installation __serverName__."
     },
@@ -259,11 +277,16 @@
         "no": "Norvégien",
         "ro": "Roumain",
         "sk": "Slovaque",
+        "sq": "Albanais",
         "supported": "Langues supportées :",
         "sw": "Swahili",
         "th": "Thaï",
         "vi": "Vietnamien",
         "zh": "Chinois"
+    },
+    "literacywidget": {
+        "finish": "Fin",
+        "start": "Début"
     },
     "page": {
         "modernbrowsers": {
@@ -323,6 +346,9 @@
         "http413": "Les données sont trop volumineuses.",
         "http4xx": "Probème inconnu de soumission sur le serveur.",
         "http500": "Le serveur de données pour votre formulaire, ou le serveur Enketo, n'est pas accessible. Ré-essayez plus tard ou contactez __supportEmail__."
+    },
+    "themes": {
+        "supported": "Thèmes supportés"
     },
     "version": "version :"
 }
