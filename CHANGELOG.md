@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   
 ##### Fixed
 - Error code returned by PDF endpoint is always 500 even when a more specific helpful code is available.
+- Overflowing content in text form controls is not shown on printout. **WARNING: you may have to enable the new 'text-print' widget in config.json if you are overwriting the default widgets config.**
 
 [1.83.1] - 2020-01-06
 ----------------------
@@ -34,7 +35,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Some PDF viewers do not show radiobuttons with an opacity (e.g. a disabled radio button).
 - MS Edge does not show any checkmarks in printouts of radiobuttons and checkboxes.
-- Overflowing content in text form controls is not shown on printout.
 
 [1.81.3] - 2010-11-22
 ---------------------
