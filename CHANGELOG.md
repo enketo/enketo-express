@@ -10,6 +10,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Error code returned by PDF endpoint is always 500 even when a more specific helpful code is available.
 - Overflowing content in text form controls is not shown on printout. **WARNING: you may have to enable the new 'text-print' widget in config.json if you are overwriting the default widgets config.**
+- Annotation and draw widget on mobile devices slightly decrease image size every time a switch between fullscreen (draw) view and full form view.
+- Annotation widget on mobile devices reveals keyboard when the colorpicker is clicked.
 
 [1.83.1] - 2020-01-06
 ----------------------
