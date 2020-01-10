@@ -135,6 +135,10 @@
 <li>analytics -&gt; tracker url -&gt; URL on which your piwik service is hosted. The protocol can be omitted, e.g. <code>&quot;//enketo.piwikpro.com/&quot;</code>. Required if piwik service is selected under <a href="#analytics">analytics</a>.</li>
 <li>analytics -&gt; site id -&gt; The site ID of this server on your piwik service, e.g. <code>&quot;1&quot;</code> (number or string). Required if piwik service is selected under <a href="#analytics">analytics</a>.</li>
 </ul>
+<h4 id="headless">headless</h4>
+<ul>
+<li>timeout: Connection timeout in milliseconds used in headless views that are run on the server, such as for PDF generation API endpoints.</li>
+</ul>
 <h4 id="maps">maps</h4>
 <p>The <code>maps</code> configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a <code>name</code>,  <code>tiles</code> (array) and an <code>attribution</code> property, and optionally <code>maxzoom</code> and <code>minzoom</code>). You can also mix and match Google Maps layers. Below is an example of a mix of two map layers provided by OSM (in TileJSON format) and Google maps.</p>
 <pre class="prettyprint source"><code>[ {

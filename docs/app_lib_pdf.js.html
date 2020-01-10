@@ -50,7 +50,8 @@
             <pre class="prettyprint source linenums"><code>/**
  * @module pdf
  */
-
+const config = require( '../models/config-model' ).server;
+const timeout = config.headless.timeout;
 const puppeteer = require( 'puppeteer' );
 const { URL } = require( 'url' );
 
@@ -82,7 +83,7 @@ const DEFAULTS = {
  * @param {PdfGetOptions} [options]
  * @return {Promise}
  */
-function get( url, options = {} ) {
+async function get( url, options = {} ) {
     if ( !url ) {
         throw new Error( 'No url provided' );
     }
@@ -98,42 +99,40 @@ function get( url, options = {} ) {
     urlObj.searchParams.append( 'landscape', options.landscape );
     urlObj.searchParams.append( 'scale', options.scale );
 
-    //const browser = await puppeteer.launch( { headless: true } );
-    //const page = await browser.newPage();
-    //await page.goto( urlObj.href, { waitUntil: 'networkidle0' } );
-    //await page.waitForFunction( 'window.printReady === true', { polling: 200 } );
-    let browser;
-    let page;
-    return puppeteer.launch( { headless: true } )
-        .then( brows => {
-            browser = brows;
-            return browser.newPage();
-        } )
-        .then( pg => {
-            page = pg;
-            return page.goto( urlObj.href, { waitUntil: 'networkidle0' } );
-        } )
-        .then( () => {
-            return page.pdf( {
-                landscape: options.landscape,
-                format: options.format,
-                margin: {
-                    top: options.margin,
-                    left: options.margin,
-                    right: options.margin,
-                    bottom: options.margin
-                },
-                scale: options.scale,
-                printBackground: true
+    const browser = await puppeteer.launch( { headless: true } );
+    const page = await browser.newPage();
+
+    let pdf;
+
+    try {
+        await page.goto( urlObj.href, { waitUntil: 'networkidle0', timeout } )
+            .catch( e => {
+                e.status = /timeout/i.test( e.message ) ? 408 : 400;
+                throw e;
             } );
-        } )
-        .then( pdf => {
-            browser.close(); // don't wait?
-            return pdf;
+
+        pdf = await page.pdf( {
+            landscape: options.landscape,
+            format: options.format,
+            margin: {
+                top: options.margin,
+                left: options.margin,
+                right: options.margin,
+                bottom: options.margin
+            },
+            scale: options.scale,
+            printBackground: true
         } );
-    //await pdf;
-    //await browser.close();
-    //return pdf;
+    } catch ( e ) {
+        e.status = e.status || 400;
+        await page.close();
+        throw e;
+    }
+
+    await page.close();
+    await browser.close();
+
+    return pdf;
 }
 
 module.exports = { get };
