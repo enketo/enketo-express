@@ -576,7 +576,12 @@ function _generateWebformUrls( id, req ) {
     switch ( req.webformType ) {
         case 'preview':
             queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
-            obj.preview_url = `${baseUrl}preview/${iframePart}${idPartOnline}${queryString}${hash}`;
+            obj[ `preview${iframePart ? '_iframe' : ''}_url` ] = `${baseUrl}preview/${iframePart}${idPartOnline}${queryString}${hash}`;
+            // Keep in a bug since apps probably started relying on this.
+            
+            if ( iframePart ) {
+                obj.preview_url = obj.preview_iframe_url;
+            }
             break;
         case 'edit':
             // no defaults query parameter in edit view

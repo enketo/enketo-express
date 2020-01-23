@@ -910,7 +910,7 @@ describe( 'api', () => {
                 method: 'post',
                 status: 200,
                 res: {
-                    property: 'preview_url',
+                    property: 'preview_iframe_url',
                     expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
                 }
 
@@ -1001,7 +1001,7 @@ describe( 'api', () => {
                 goTo: '//node',
                 status: 200,
                 res: {
-                    property: 'preview_url',
+                    property: 'preview_iframe_url',
                     expected: /.+#\/\/node$/
                 }
             }, {
