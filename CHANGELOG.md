@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Fixed
 - **/api/v2/survey/preview/iframe** did not return a `preview_iframe_url` property.
+- Exception occurs when first repeat is created that contains a calculation if `validateContinuously` is set to `true`.
 
 [1.83.5] - 201-01-22
 ---------------------
