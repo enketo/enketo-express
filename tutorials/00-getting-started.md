@@ -9,6 +9,7 @@
 5. Clone this repository
 6. Create config/config.json. See [How To configure](#how-to-configure).
 7. Install dependencies and build with `npm install` from the project root
+8. If still required build Internet Explorer 11 scripts with `grunt build-ie11`. IE11 support will be removed entirely in April 2020.
 
 #### Using vagrant:
 

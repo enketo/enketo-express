@@ -4,6 +4,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ----------------------
+##### Removed
+- Building IE11 bundle automatically (now requires manual `grunt build-ie11`).
+
+##### Changed
+- Added warning for IE11 users that support is dropping soon.
+
 ##### Fixed
 - **/api/v2/survey/preview/iframe** did not return a `preview_iframe_url` property.
 - Exception occurs when first repeat is created that contains a calculation if `validateContinuously` is set to `true`.
