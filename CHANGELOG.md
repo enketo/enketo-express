@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.84.0] - 2020-01-28
 ----------------------
 ##### Removed
 - Building IE11 bundle automatically (now requires manual `grunt build-ie11`).
@@ -13,8 +13,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - **/api/v2/survey/preview/iframe** did not return a `preview_iframe_url` property.
 - Exception occurs when first repeat is created that contains a calculation if `validateContinuously` is set to `true`.
+- Rows are not always stretching correctly when printing Grid Theme forms.
 
-[1.83.5] - 201-01-22
+[1.83.5] - 2020-01-22
 ---------------------
 ##### Fixed
 - Text-print widget is also instantiated for comment widgets, causing an issue for a customized Enketo Express application.
