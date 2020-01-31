@@ -2,7 +2,7 @@
     "name": "enketo-express",
     "description": "Webforms evolved.",
     "homepage": "https://enketo.org",
-    "version": "1.84.0",
+    "version": "1.84.1",
     "main": "./app.js",
     "engines": {
         "node": "4.4.x",

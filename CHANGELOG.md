@@ -2,10 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.84.1] - 2020-01-31
 ----------------------
 ##### Changed
 - No longer trigger an inputupdate event when loading an existing itemset value.
+
+##### Fixed
+- The `grunt build-ie11` task does not build minified javascript files, causing everything to fail in production mode.
 
 [1.84.0] - 2020-01-28
 ----------------------
