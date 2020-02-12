@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+-----------------------
+##### Added
+- Support for setvalue action with xforms-value-changed event.
+- Basic support for "thousands-sep" appearance on integer and decimal fields.
+
+##### Changed
+- "valuechange" event was changed to "xforms-value-changed" (TBC!)
+
+##### Fixed
+- Text-print widget causes double URL to be shown in print view for URL widget.
+- Last row of Grid Theme form may have incorrect cell heights.
+- Readonly month-year or year inputs show full underlying value instead of month-year/year.å
+
 [1.84.1] - 2020-01-31
 ----------------------
 ##### Changed
