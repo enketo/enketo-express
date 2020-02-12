@@ -27,5 +27,6 @@
     "date-mobile": "../../../node_modules/enketo-core/src/widget/date-mobile/datepicker-mobile",
     "url": "../../../node_modules/enketo-core/src/widget/url/url-widget",
     "text-max": "../../../node_modules/enketo-core/src/widget/text-max/text-max",
-    "text-print": "../../../node_modules/enketo-core/src/widget/text-print/text-print"
+    "text-print": "../../../node_modules/enketo-core/src/widget/text-print/text-print",
+    "thousands-sep": "../../../node_modules/enketo-core/src/widget/thousands-sep/thousands-sep"
 }
