@@ -622,7 +622,7 @@ function _setEventHandlers() {
     }
 
     if ( settings.offline ) {
-        $doc.on( 'valuechange', _autoSaveRecord );
+        document.addEventListener( events.XFormsValueChanged().type, _autoSaveRecord );
     }
 }
 
