@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+-----------------------
+##### Changed
+- Don't load audio and video files (in labels or record) for pdf views. **Warning: requires server to sent proper Content-Type header upon HEAD request.**
+
 [1.85.0] - 2020-02-14
 -----------------------
 ##### Added
