@@ -78,6 +78,27 @@ function setEventHandlers() {
         alert( msg, t( 'alert.offlinesupported.heading' ), 'normal' );
     } );
 
+    // use delegated handler because btnBusyState removes button content
+    $( '#save-draft' ).on( 'click', '.save-draft-info', () => {
+        //const icon1 = document.querySelector( '.offline-enabled__queue-length' ).cloneNode( true );
+        //icon1.style.border = '1px solid #ccc';
+        const icon = document.querySelector( '.side-slider__toggle' ).cloneNode( true );
+        icon.removeAttribute( 'aria-label' );
+        icon.style.position = 'static';
+        icon.style[ 'margin' ] = '10px auto';
+        icon.style.display = 'block';
+        icon.disabled = true;
+        const msg = t( 'alert.savedraftinfo.msg', {
+            icon: icon.outerHTML,
+            // switch off escaping just for this known safe value
+            interpolation: {
+                escapeValue: false
+            }
+        } );
+        alert( msg, t( 'alert.savedraftinfo.heading' ), 'normal' );
+
+    } );
+
     $( 'a.branding' ).on( 'click', function() {
         const href = this.getAttribute( 'href' );
         return ( !href || href === '#' ) ? false : true;

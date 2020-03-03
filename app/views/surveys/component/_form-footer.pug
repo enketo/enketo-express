@@ -1,11 +1,6 @@
 section.form-footer
   .form-footer__content
-    .form-footer__content__main-controls
-      if draftEnabled
-        fieldset.draft.question.simple-select.hide
-          .option-wrapper: label.select 
-            input.ignore(type='checkbox', name='draft')
-            span.option-label= t('formfooter.savedraft.label')
+    .form-footer__content__main-controls  
       if type === 'fs'
         button#close-form.btn.btn-default #{t('alert.default.button')}
         button#finish-form.btn.btn-primary
@@ -18,6 +13,11 @@ section.form-footer
       else if type === 'view'
         button#close-form.btn.btn-default.hide #{t('alert.default.button')}
       else
+        if draftEnabled && offline
+          button#save-draft.btn.btn-default
+            i.icon.icon-info-circle.save-draft-info= ' '
+            i.icon.icon-pencil= ' '
+            | #{t( 'formfooter.savedraft.btn' )}
         button#submit-form.btn.btn-primary
           i.icon.icon-check= ' '
           | #{t('formfooter.submit.btn')}

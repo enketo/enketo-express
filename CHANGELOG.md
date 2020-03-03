@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Changed
+- The checkbox for 'save as draft' in offline-capable views has been replaced with a button.
+
 [1.85.1] - 2020-02-28
 ----------------------
 ##### Changed

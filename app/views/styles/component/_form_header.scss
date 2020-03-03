@@ -122,7 +122,7 @@ $offline-color: #d15200;
     top: 3px;
     left: 0;
 
-    .offline-enabled__icon {
+    &__icon {
         width: 34px;
         height: 34px;
         background-color: $offline-color;
@@ -144,8 +144,8 @@ $offline-color: #d15200;
         }
     }
 
-    .offline-enabled__queue-length {
-        cursor: pointer;
+    // basic style for icon anywhere in HTML
+    &__queue-length {
         margin-top: 1px;
         width: 34px;
         min-height: 34px;
@@ -156,8 +156,12 @@ $offline-color: #d15200;
         line-height: 15px;
         font-size: 15px;
         opacity: 1;
-
         @include transition-slow(opacity, 3s);
+    }
+
+    // style when it functions as clickable button in .offline-enabled
+    .offline-enabled__queue-length {
+        cursor: pointer;
 
         &.hide {
             opacity: 0;
@@ -198,7 +202,8 @@ $offline-color: #d15200;
             display: block;
         }
 
-        &__queue-length {
+        // target inside .offline-enabled only
+        .offline-enabled__queue-length {
             margin-top: 0;
             float: left;
             display: block;

@@ -86,6 +86,14 @@
             "draftmsg": "Record stored as draft.",
             "finalmsg": "Record queued for submission."
         },
+        "savedraftinfo": {
+            "heading": "Finalize record later",
+            "msg": [
+                "The draft record is stored only within the current browser. You can close this browser without losing the stored record.",
+                "Draft records can be accessed by reopening this page and clicking the button on the left of the screen that looks like this: __icon__",
+                "Warning: If you clear your browser cache, all draft and unsubmitted final records will be permanently deleted."
+            ]
+        },
         "submission": {
             "msg": "Submitting...",
             "redirectmsg": "You will be automatically redirected after submission."

@@ -53,12 +53,17 @@ function init( selector, data ) {
             $( '.main-loader' ).remove();
 
             if ( settings.goTo && location.hash ) {
-                console.log( 'going to ', location.hash.substring( 1 ) );
                 loadErrors = loadErrors.concat( form.goTo( location.hash.substring( 1 ) ) );
             }
 
-            if ( form.encryptionKey && !encryptor.isSupported() ) {
-                loadErrors.unshift( t( 'error.encryptionnotsupported' ) );
+            if ( form.encryptionKey ) {
+                const saveDraftButton = document.querySelector( '.form-footer#save-draft' );
+                if ( saveDraftButton ) {
+                    saveDraftButton.remove();
+                }
+                if ( !encryptor.isSupported() ) {
+                    loadErrors.unshift( t( 'error.encryptionnotsupported' ) );
+                }
             }
 
             formprogress = document.querySelector( '.form-progress' );
@@ -140,7 +145,6 @@ function _resetForm( confirmed ) {
                 }
             } );
     } else {
-        _setDraftStatus( false );
         form.resetView();
         form = new Form( formSelector, {
             modelStr: formData.modelStr,
@@ -200,7 +204,6 @@ function _loadRecord( instanceId, confirmed ) {
                 loadErrors = form.init();
                 // formreset event will update the form media:
                 form.view.$.trigger( 'formreset' );
-                _setDraftStatus( true );
                 form.recordName = record.name;
                 records.setActive( record.instanceId );
 
@@ -234,9 +237,7 @@ function _submitRecord() {
     let authLink;
     let level;
     let msg = '';
-    const include = {
-        irrelevant: false
-    };
+    const include = { irrelevant: false };
 
     form.view.$.trigger( 'beforesave' );
 
@@ -363,13 +364,8 @@ function _confirmRecordName( recordName, errorMsg ) {
 // Save the translations in case ever required in the future, by leaving this comment in:
 // t( 'confirm.save.renamemsg', {} )
 
-function _saveRecord( recordName, confirmed, errorMsg ) {
-    const draft = _getDraftStatus();
-    const include = ( draft ) ? {
-        irrelevant: true
-    } : {
-        irrelevant: false
-    };
+function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
+    const include = { irrelevant: draft };
 
     // triggering "beforesave" event to update possible "timeEnd" meta data in form
     form.view.$.trigger( 'beforesave' );
@@ -377,13 +373,13 @@ function _saveRecord( recordName, confirmed, errorMsg ) {
     // check recordName
     if ( !recordName ) {
         return _getRecordName()
-            .then( name => _saveRecord( name, false, errorMsg ) );
+            .then( name => _saveRecord( draft, name, false, errorMsg ) );
     }
 
     // check whether record name is confirmed if necessary
     if ( draft && !confirmed ) {
         return _confirmRecordName( recordName, errorMsg )
-            .then( name => _saveRecord( name, true ) )
+            .then( name => _saveRecord( draft, name, true ) )
             .catch( () => {} );
     }
 
@@ -484,41 +480,49 @@ function _setEventHandlers() {
 
     $( 'button#submit-form' ).click( function() {
         const $button = $( this );
-        const draft = _getDraftStatus();
         $button.btnBusyState( true );
         setTimeout( () => {
-            if ( settings.offline && draft ) {
-                _saveRecord()
-                    .then( () => {
-                        $button.btnBusyState( false );
-                    } )
-                    .catch( e => {
-                        $button.btnBusyState( false );
-                        throw e;
-                    } );
-            } else {
-                form.validate()
-                    .then( valid => {
-                        if ( valid ) {
-                            if ( settings.offline ) {
-                                return _saveRecord();
-                            } else {
-                                return _submitRecord();
-                            }
+            form.validate()
+                .then( valid => {
+                    if ( valid ) {
+                        if ( settings.offline ) {
+                            return _saveRecord( false );
                         } else {
-                            gui.alert( t( 'alert.validationerror.msg' ) );
+                            return _submitRecord();
                         }
-                    } )
-                    .catch( e => {
-                        gui.alert( e.message );
-                    } )
-                    .then( () => {
-                        $button.btnBusyState( false );
-                    } );
-            }
+                    } else {
+                        gui.alert( t( 'alert.validationerror.msg' ) );
+                    }
+                } )
+                .catch( e => {
+                    gui.alert( e.message );
+                } )
+                .then( () => {
+                    $button.btnBusyState( false );
+                } );
         }, 100 );
         return false;
     } );
+
+    const draftButton = document.querySelector( 'button#save-draft' );
+    if ( draftButton ) {
+        draftButton.addEventListener( 'click', event => {
+            if ( !event.target.matches( '.save-draft-info' ) ) {
+                const $button = $( draftButton );
+                $button.btnBusyState( true );
+                setTimeout( () => {
+                    _saveRecord( true )
+                        .then( () => {
+                            $button.btnBusyState( false );
+                        } )
+                        .catch( e => {
+                            $button.btnBusyState( false );
+                            throw e;
+                        } );
+                }, 100 );
+            }
+        } );
+    }
 
     $( 'button#validate-form:not(.disabled)' ).click( function() {
         if ( typeof form !== 'undefined' ) {
@@ -612,15 +616,6 @@ function _setEventHandlers() {
         } ), 7 );
     } );
 
-    if ( settings.draftEnabled !== false && !form.encryptionKey ) {
-        $( '.form-footer [name="draft"]' ).on( 'change', function() {
-            const text = ( $( this ).prop( 'checked' ) ) ? t( 'formfooter.savedraft.btn' ) : t( 'formfooter.submit.btn' );
-            // Note: using .btnText plugin because button may be in a busy state => https://github.com/kobotoolbox/enketo-express/issues/1043
-            $( '#submit-form' ).btnText( text );
-
-        } ).closest( '.draft' ).toggleClass( 'hide', !settings.offline );
-    }
-
     if ( settings.offline ) {
         document.addEventListener( events.XFormsValueChanged().type, _autoSaveRecord );
     }
@@ -637,15 +632,6 @@ function updateDownloadLinkAndClick( anchor, file ) {
 function setLogoutLinkVisibility() {
     const visible = document.cookie.split( '; ' ).some( rawCookie => rawCookie.indexOf( '__enketo_logout=' ) !== -1 );
     $( '.form-footer .logout' ).toggleClass( 'hide', !visible );
-}
-
-function _setDraftStatus( status ) {
-    status = status || false;
-    $( '.form-footer [name="draft"]' ).prop( 'checked', status ).trigger( 'change' );
-}
-
-function _getDraftStatus() {
-    return $( '.form-footer [name="draft"]' ).prop( 'checked' );
 }
 
 /** 
