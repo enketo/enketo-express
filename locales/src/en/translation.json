@@ -70,7 +70,8 @@
             "heading": "Application cannot launch offline",
             "msg": "Offline application launch is not supported by your browser. You can use the survey without this feature or see options for resolving this.",
             "negButton": "Use it",
-            "posButton": "Show options"
+            "posButton": "Show options",
+            "refresh": "This form can no longer launch offline. Please refresh the page to try to fix this."
         },
         "queuesubmissionsuccess": {
             "msg": "__recordNames__ was successfully submitted",

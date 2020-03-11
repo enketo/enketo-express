@@ -83,6 +83,7 @@ function _setAppCacheEventHandlers() {
         .on( 'offlinelaunchincapable', () => {
             console.error( 'This form cannot (or can no longer) launch offline.' );
             gui.updateStatus.offlineCapable( false );
+            gui.alert( t( 'alert.offlineunsupported.refresh' ) );
         } )
         .on( 'applicationupdated', () => {
             gui.feedback( t( 'alert.appupdated.msg' ), 20, t( 'alert.appupdated.heading' ) );

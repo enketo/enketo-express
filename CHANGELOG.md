@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.86.1] - 2020-03-12
+----------------------
+**WARNING: IT IS HIGHLY RECOMMENDED TO DEPLOY THIS VERSION BEFORE MARCH 31ST, 2020. READ MORE [HERE](https://groups.google.com/forum/#!topic/enketo-users/1AewNMkAIiU).**
+##### Changed
+- Added modal dialog for offline-capable views that will assist users with a future technology transition (to Service Workers) in version 2.0.0.
+
 [1.86.0] - 2020-03-11
 ----------------------
 ##### Changed
