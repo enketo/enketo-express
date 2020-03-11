@@ -1,51 +1,63 @@
 /**
- * Deals with storing the app in the applicationCache.
+ * Deals with storing the app using service workers.
  */
 
-import $ from 'jquery';
+import events from './event';
+import settings from './settings';
 
-function init() {
-    if ( window.applicationCache ) {
-        const status = window.applicationCache.status;
+function init( survey ) {
 
-        if ( status === window.applicationCache.IDLE ) {
-            _reportOfflineLaunchCapable();
-        } else if ( status === window.applicationCache.UPDATEREADY ) {
-            _reportOfflineLaunchCapable();
-            _swapCache();
-        }
+    if ( 'serviceWorker' in navigator ) {
+        window.addEventListener( 'load', function() {
+            navigator.serviceWorker.register( `${settings.basePath}/x/offline-app-worker.js` )
+                .then( function( registration ) {
+                    // Registration was successful
+                    console.log( 'Offline application service worker registration successful with scope: ', registration.scope );
+                    setInterval( () => {
+                        console.log( 'Checking for offlince application cache service worker update' );
+                        registration.update();
+                    }, 60 * 60 * 1000 );
 
-        $( window.applicationCache )
-            .on( 'cached noupdate updateready', _reportOfflineLaunchCapable )
-            .on( 'updateready', _swapCache )
-            .on( 'obsolete', _reportOfflineLaunchIncapable );
+                    if ( registration.active ) {
+                        _reportOfflineLaunchCapable( true );
+                    }
+                    registration.addEventListener( 'updatefound', () => {
+                        const newWorker = registration.installing;
 
+                        newWorker.addEventListener( 'statechange', () => {
+
+                            if ( newWorker.state === 'activated' ) {
+                                console.log( 'New offline application service worker activated!' );
+                                document.dispatchEvent( events.ApplicationUpdated() );
+                            }
+
+                        } );
+                    } );
+
+                }, function( err ) {
+                    // registration failed :(
+                    console.error( 'Offline application service worker registration failed: ', err );
+                    _reportOfflineLaunchCapable( true );
+                } );
+        } );
     } else {
-        console.error( 'applicationCache not supported on this browser, this form cannot launch online' );
+        console.error( 'Service workers not supported on this browser. This form cannot launch online' );
+        _reportOfflineLaunchCapable( false );
     }
+    return Promise.resolve( survey );
+
 }
 
-function _swapCache() {
-    console.log( 'Swapping application cache' );
-    // firefox bug: https://bugzilla.mozilla.org/show_bug.cgi?id=769171
-    try {
-        window.applicationCache.swapCache();
-        $( document ).trigger( 'applicationupdated' );
-    } catch ( e ) {
-        console.error( 'Error swapping cache', e );
-    }
-}
-
-function _reportOfflineLaunchCapable( event ) {
-    console.log( 'Application cache event:', event );
-    $( document ).trigger( 'offlinelaunchcapable' );
-}
-
-function _reportOfflineLaunchIncapable( event ) {
-    console.log( 'Application cache event:', event );
-    $( document ).trigger( 'offlinelaunchincapable' );
+function _reportOfflineLaunchCapable( capable = true ) {
+    document.dispatchEvent( events.OfflineLaunchCapable( { capable } ) );
 }
 
 export default {
-    init
+    init,
+    get serviceWorkerScriptUrl() {
+        if ( 'serviceWorker' in navigator && navigator.serviceWorker.controller ) {
+            return navigator.serviceWorker.controller.scriptURL;
+        }
+        return null;
+    }
 };

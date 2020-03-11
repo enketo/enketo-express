@@ -1,30 +1,36 @@
 /**
- * @module manifest-controller
+ * @module offline-resources-controller
  */
 
-const manifest = require( '../models/manifest-model' );
+const fs = require( 'fs' );
+const path = require( 'path' );
+const crypto = require( 'crypto' );
+const offlineResources = require( '../models/offline-resources-model' );
 const express = require( 'express' );
 const router = express.Router();
 const config = require( '../models/config-model' ).server;
-// var debug = require( 'debug' )( 'manifest-controller' );
+
+const partialOfflineAppWorkerScript = fs.readFileSync( path.join( process.cwd(), 'public/js/src/module/offline-app-worker-partial.js' ), 'utf8' );
+
+// This hash is not actually required but useful to see which offline-app-worker-partial.js is used during troubleshooting.
+const scriptHash = crypto.createHash( 'md5' ).update( partialOfflineAppWorkerScript ).digest( 'hex' );
+// var debug = require( 'debug' )( 'offline-controller' );
 
 module.exports = app => {
-    app.use( `${app.get( 'base path' )}/x/manifest.appcache*`, router );
-    // legacy:
-    app.use( `${app.get( 'base path' )}/_/manifest.appcache*`, router );
+    app.use( `${app.get( 'base path' )}/`, router );
 };
 router
-    .get( '*', ( req, res, next ) => {
+    .get( '/x/offline-app-worker.js', ( req, res, next ) => {
         if ( config[ 'offline enabled' ] === false ) {
             var error = new Error( 'Offline functionality has not been enabled for this application.' );
             error.status = 404;
             next( error );
         } else {
-            getManifest( req, res )
-                .then( manifestContent => {
+            getScriptContent( req, res )
+                .then( scriptContent => {
                     res
-                        .set( 'Content-Type', 'text/cache-manifest' )
-                        .send( manifestContent );
+                        .set( 'Content-Type', 'text/javascript' )
+                        .send( scriptContent );
                 } )
                 .catch( next );
         }
@@ -34,15 +40,25 @@ router
  * @param {module:api-controller~ExpressRequest} req
  * @param {module:api-controller~ExpressResponse} res
  */
-function getManifest( req, res ) {
+function getScriptContent( req, res ) {
     return Promise.all( [
             _getWebformHtml( req, res ),
             _getOfflineFallbackHtml( req, res )
         ] )
         .then( result => {
             // TODO: if we ever start supporting dialects, we need to change this
-            const lang = req.i18n.language.split( '-' )[ 0 ];
-            return manifest.get( result[ 0 ], result[ 1 ], lang );
+            // const lang = req.i18n.language.split( '-' )[ 0 ];
+            return offlineResources.get( result[ 0 ], result[ 1 ] );
+        } )
+        .then( dynamicContent => {
+            return `
+const version = '${dynamicContent.version}_${scriptHash}';
+const resources = [
+    '${dynamicContent.resources.join('\',\n    \'')}'
+];
+const fallback = '${dynamicContent.fallback}';
+
+${partialOfflineAppWorkerScript}`;
         } );
 }
 
@@ -53,7 +69,7 @@ function getManifest( req, res ) {
 function _getWebformHtml( req, res ) {
     return new Promise( ( resolve, reject ) => {
         res.render( 'surveys/webform', {
-            manifest: `${req.app.get( 'base path' )}/x/manifest.appcache`
+            offlinePath: config[ 'offline path' ]
         }, ( err, html ) => {
             if ( err ) {
                 reject( err );
@@ -70,7 +86,9 @@ function _getWebformHtml( req, res ) {
  */
 function _getOfflineFallbackHtml( req, res ) {
     return new Promise( ( resolve, reject ) => {
-        res.render( 'pages/offline', {}, ( err, html ) => {
+        res.render( 'pages/offline', {
+            offlinePath: config[ 'offline path' ]
+        }, ( err, html ) => {
             if ( err ) {
                 reject( err );
             } else {

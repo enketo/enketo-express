@@ -74,7 +74,9 @@ app.use( i18nextMiddleware.handle( i18next, {
 } ) );
 app.use( favicon( path.resolve( __dirname, '../public/images/favicon.ico' ) ) );
 app.use( app.get( 'base path' ), express.static( path.resolve( __dirname, '../public' ) ) );
+app.use( `${app.get( 'base path' )}/x`, express.static( path.resolve( __dirname, '../public' ) ) );
 app.use( app.get( 'base path' ) + '/locales/build', express.static( path.resolve( __dirname, '../locales/build' ) ) );
+app.use( `${app.get( 'base path' )}/x` + '/locales/build', express.static( path.resolve( __dirname, '../locales/build' ) ) );
 
 // set variables that should be accessible in all view templates
 app.use( function( req, res, next ) {

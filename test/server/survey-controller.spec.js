@@ -9,7 +9,7 @@ const app = require( '../../config/express' );
 describe( 'Survey Controller', () => {
 
     describe( 'meta data: ', () => {
-        const endpoints = [ '/_/#abcd', '/x/#abcd', '/::abcd', '/preview', '/preview/::abcd', '/edit/::abcd?instance_id=a' ];
+        const endpoints = [ '/x/#abcd', '/::abcd', '/preview', '/preview/::abcd', '/edit/::abcd?instance_id=a' ];
 
         endpoints.forEach( endpoint => {
             it( `endpoint ${endpoint} adds a __enketo_meta_deviceid cookie when absent`, done => {

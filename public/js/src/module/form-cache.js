@@ -370,12 +370,12 @@ function _updateCache( survey ) {
         } )
         .catch( error => {
             // if the form has been de-activated or removed from the server
-            if ( error.status === 404 ) {
+            if ( error.status === 404 || error.status === 401 ) {
                 // remove it from the store
                 remove( survey )
                     .then( () => {
                         // TODO notify user to refresh or trigger event on form
-                        console.log( `survey ${survey.enketoId} removed from storage` );
+                        console.log( `survey ${survey.enketoId} removed from storage`, error.status );
                     } )
                     .catch( e => {
                         console.error( 'an error occurred when attempting to remove the survey from storage', e );

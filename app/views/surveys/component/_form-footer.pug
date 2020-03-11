@@ -13,7 +13,7 @@ section.form-footer
       else if type === 'view'
         button#close-form.btn.btn-default.hide #{t('alert.default.button')}
       else
-        if draftEnabled && offline
+        if draftEnabled && offlinePath
           button#save-draft.btn.btn-default
             i.icon.icon-info-circle.save-draft-info= ' '
             i.icon.icon-pencil= ' '

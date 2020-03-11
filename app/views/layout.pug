@@ -1,5 +1,5 @@
 doctype html
-html(manifest=manifest, lang=language, dir=dir(language))
+html(lang=language, dir=dir(language))
   head
     title= title
 
@@ -7,12 +7,12 @@ html(manifest=manifest, lang=language, dir=dir(language))
     meta(name="author", content="Martijn van de Rijdt (Enketo LLC)")
     meta(name="viewport",content="width=device-width, initial-scale=1.0")
 
-    link(rel="shortcut icon", href=`${basePath}/images/favicon.ico`)
-    link(rel="icon", type="image/png", sizes="180x180", href=`${basePath}/images/icon_180x180.png`)
-    link(rel="apple-touch-icon", sizes="180x180", href=`${basePath}/images/icon_180x180.png`)
+    link(rel="shortcut icon", href=`${basePath}${offlinePath || ''}/images/favicon.ico`)
+    link(rel="icon", type="image/png", sizes="180x180", href=`${basePath}${offlinePath || ''}/images/icon_180x180.png`)
+    link(rel="apple-touch-icon", sizes="180x180", href=`${basePath}${offlinePath || ''}/images/icon_180x180.png`)
 
-    script(src=`${basePath}/js/build/ie11-polyfill.min.js`, nomodule)
-    script(src=`${basePath}/js/build/obscure-ie11-polyfills.js`, nomodule)
+    script(src=`${basePath}${offlinePath || ''}/js/build/ie11-polyfill.min.js`, nomodule)
+    script(src=`${basePath}${offlinePath || ''}/js/build/obscure-ie11-polyfills.js`, nomodule)
 
     block style
 

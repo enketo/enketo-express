@@ -21,25 +21,14 @@ const ABSOLUTE_MAX_SIZE = 100 * 1024 * 1024;
  * Checks online status
  */
 function getOnlineStatus() {
-    let online;
-
-    return new Promise( resolve => {
-        $.ajax( CONNECTION_URL, {
-                type: 'GET',
-                cache: false,
-                dataType: 'text',
-                timeout: 3000
-            } )
-            .done( response => {
-                // It is important to check for the content of the no-cache response as it will
-                // start receiving the fallback page specified in the manifest!
-                online = typeof response === 'string' && /connected/.test( response );
-                resolve( online );
-            } )
-            .fail( ( jqXHR, textStatus ) => {
-                console.error( 'Failed to establish connection', textStatus );
-            } );
-    } );
+    return fetch( CONNECTION_URL, { cache: 'no-cache', headers: { 'Content-Type': 'text/plain' } } )
+        .then( response => {
+            return response.text();
+        } )
+        // It is important to check for the content of the no-cache response as it will
+        // start receiving the fallback page served by the service worker when offline!
+        .then( text => /connected/.test( text ) )
+        .catch( () => false );
 }
 
 /*
@@ -302,7 +291,7 @@ function getMaximumSubmissionSize() {
  */
 function getFormParts( props ) {
     let error;
-
+    //TODO: use fetch
     return new Promise( ( resolve, reject ) => {
         $.ajax( TRANSFORM_URL + _getQuery(), {
                 type: 'POST',
@@ -377,7 +366,7 @@ function _getExternalData( survey ) {
 function getMediaFile( url ) {
     let error;
     const xhr = new XMLHttpRequest();
-
+    // TODO: use fetch
     return new Promise( ( resolve, reject ) => {
         xhr.onreadystatechange = function() {
             if ( this.readyState === 4 ) {
@@ -443,33 +432,23 @@ function _getDataFile( url, languageMap ) {
 }
 
 /**
- * Extracts version from manifest
- * JQuery ajax doesn't support manifest format reponses, so we're going native here.
+ * Extracts version from service worker script
  *
  * @return {Promise} [description]
  */
-function getManifestVersion( manifestUrl ) {
-    let matches;
-    const xhr = new XMLHttpRequest();
+function getServiceWorkerVersion( serviceWorkerUrl ) {
 
-    return new Promise( ( resolve, reject ) => {
-        xhr.onreadystatechange = function() {
-            if ( this.readyState === 4 && this.status === 200 ) {
-                if ( ( matches = this.response.match( /version:\s?([^\n]+)\n/ ) ) ) {
-                    resolve( matches[ 1 ] );
-                } else {
-                    reject( new Error( 'No version found in manifest' ) );
-                }
-            }
-            // TODO: add fail handler
-        };
-
-        xhr.open( 'GET', manifestUrl );
-        xhr.responseType = 'text';
-        xhr.send();
-    } );
+    return fetch( serviceWorkerUrl )
+        .then( response => {
+            return response.text();
+        } )
+        .then( text => {
+            const matches = text.match( /version\s?=\s?'([^\n]+)'/ );
+            return matches ? matches[ 1 ] : 'unknown';
+        } );
 }
 
+// TODO: use fetch
 function getFormPartsHash() {
     let error;
 
@@ -525,5 +504,5 @@ export default {
     getFormPartsHash,
     getMediaFile,
     getExistingInstance,
-    getManifestVersion,
+    getServiceWorkerVersion,
 };
