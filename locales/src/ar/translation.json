@@ -3,17 +3,46 @@
         "flushdb": "مسح التخزين"
     },
     "alert": {
+        "addtohomescreen": {
+            "androidchrome": {
+                "msg": "To add this form to your Home screen, click the browser settings icon __image1__ and select: 'Add to Home screen'."
+            },
+            "androidfirefox": {
+                "msg": "To add this form to your Homescreen, long-press the address bar and select 'Add to Home Screen'."
+            },
+            "heading": "Add to Home Screen",
+            "iossafari": {
+                "msg": "To add this form to your Home screen, click the share icon __image1__ in the top right of your browser, and select: '+ Add to Home Screen'."
+            }
+        },
         "appupdated": {
             "heading": "تم تحديث التطبيق",
             "msg": "تم تحميل نسخة جديدة من هذا التطبيق. قم بتحديث هذه الصفحة لتحميل الإصدار المحدث."
+        },
+        "closing": {
+            "heading": "Closing..."
         },
         "default": {
             "button": "إغلاق",
             "heading": "تنبيه"
         },
+        "export": {
+            "error": {
+                "filecreatedmsg": "Nevertheless, an incomplete export file was still created.",
+                "heading": "Export Error",
+                "msg": "Errors occurred during creating of the record export file for unsubmitted records. Errors: __errors__"
+            },
+            "success": {
+                "heading": "Export Created",
+                "msg": "Export file created for all unsubmitted records belonging to this form."
+            }
+        },
         "formupdated": {
             "heading": "تم تحديث النموذج!",
             "msg": "تم تحميل نسخة جديدة من هذا النموذج. قم بتحديث هذه الصفحة لتحميل الإصدار المحدث."
+        },
+        "gotonotfound": {
+            "msg": "Failed to find question \"__path__\" in form. Is the reference to this question correct?"
         },
         "loaderror": {
             "editadvice": "من الأفضل عدم تعديل التسجيل حتى يتم حل هذه الإشكالية.",
@@ -57,6 +86,14 @@
             "draftmsg": "تم حفظ التسجيل كمسودة",
             "finalmsg": "تم إضافة التسجيل إلى قائمة الانتظار لغرض الارسال."
         },
+        "savedraftinfo": {
+            "heading": "وضع الصيغة النهائية للسجلات لاحقا",
+            "msg": [
+                "يتم تخزين مسودة السجلات داخل المتصفح الحالي فقط, يمكنك ان تغلق المتصفح دون ان تفقد السجلات المخزنة.",
+                "يمكن الوصول إلى مسودة السجلات من خلال إعادة فتح هذه الصفحة والنقر على الزر الموجود في يسار الشاشة والذي يبدو كالتالي: __icon__",
+                "تحذير: إذا قمت بمسح ذاكرة التخزين المؤقت للمتصفح, سيتم حذف المسودة والسجلات التي لم يتم ارسالها بعد نهائيا."
+            ]
+        },
         "submission": {
             "msg": "يتم الإرسال الآن...",
             "redirectmsg": "سيتم إعادة توجيهك بعد الإرسال تلقائياً."
@@ -74,6 +111,11 @@
             "msg": "تم إرسال البيانات!",
             "redirectmsg": "سيتم إعادة توجهك الآن."
         },
+        "thanks": {
+            "heading": "Thank you for participating!",
+            "msg": "You can close this window now.",
+            "msgTaken": "You have already completed this survey."
+        },
         "validationerror": {
             "msg": "النموذج يحتوي على اخطاء. يرجى رؤية الحقول التي تم تظليلها باللون الاحمر."
         },
@@ -81,12 +123,22 @@
             "heading": "موافق",
             "msg": "النموذج صحيح!"
         },
+        "valuehasspaces": {
+            "multiple": "Select multiple question has an illegal value \"__value__\" that contains a space."
+        },
         "xpatherror": {
             "heading": "خطأ في الصيغة",
             "msg": " حدث خطأ اثناء التقييم. يرجى إلاتصال بـ __emailLink__ حول هذا الخطأ:"
         }
     },
+    "changelog": "Change Log",
     "confirm": {
+        "autosaveload": {
+            "heading": "Unsaved Record Found",
+            "msg": "Enketo has found an unsaved record. Would you like to load this record or discard it?",
+            "negButton": "Discard",
+            "posButton": "Load Record"
+        },
         "default": {
             "heading": "هل أنت متأكد؟",
             "msg": "يرجى تأكيد هذا الإجراء",
@@ -129,6 +181,10 @@
             "psize": "حجم الورق",
             "reminder": "تذكر اختيار نفس إعدادات الطباعة على قائمة الطباعة في متصفح فيما بعد!"
         },
+        "repeatremove": {
+            "heading": "Delete this group of responses?",
+            "msg": "This action is irreversible. Are you sure you want to proceed?"
+        },
         "save": {
             "existingerror": "ان هذا الاسم او المعرف للتسجيل موجود مسبقا. ",
             "hint": "هذا الاسم يسمح لك بالرجوع السهل إلى مسودة التسجيل لإكماله لاحقاً.",
@@ -139,20 +195,34 @@
             "unkownerror": "حدث خطأ غير معروف أثناء محاولة حفظ البيانات."
         }
     },
+    "constraint": {
+        "invalid": "Value not allowed",
+        "required": "This field is required"
+    },
     "contact": {
         "admin": "يرجى الاتصال بمسؤول المسح",
-        "support": "يرجى الاتصال بـ __supportEmail__ "
+        "support": "يرجى الاتصال بـ __supportEmail__"
+    },
+    "drawwidget": {
+        "annotation": "file and drawing",
+        "drawing": "drawing",
+        "signature": "signature"
     },
     "enketo": {
         "power": "مدعومة بـ"
     },
     "error": {
         "code": "رمز الخطأ: __code__",
+        "dataloadfailed": "Failed to load data from __url__",
         "econnrefused": "تعذر الاتصال بالخادم",
-        "encryptionnotsupported": "هذا النموذج يتطلب التشفير المحلي للتسجيلات. لسوء الحظ هذا غير مدعوم. نقترح استخدام ODK Collect لجمع البيانات مع هذا النموذج.",
+        "encryptionnotsupported": "This form requires local encryption of records. Unfortunately this is not supported by your browser. We recommend switching to a modern browser.",
         "instancenotfound": "التسجيل غير موجود. قد يكون منتهي الصلاحية.",
         "invalidediturl": "هذا URL غير صحيح للتعديل",
-        "notfoundinformlist": "ان النموذج المعروف بـ __formId__ غير موجود في قائمة النماذج /formList",
+        "loadfailed": "Failed to load __resource__",
+        "notfoundinformlist": [
+            "Oops, this form doesn't exist (anymore). Most likely the owner of the form has deleted it, archived it, or disabled it. Please contact the form's owner to confirm.",
+            "Detailed error: Form with ID __formId__ not found in /formList."
+        ],
         "pagenotfound": "الصفحة غير موجودة",
         "surveyidnotactive": "النموذج بهذا المعرف لم يعد فعالا",
         "surveyidnotfound": "لا يوجد نموذج بهذا المعرف",
@@ -160,6 +230,14 @@
     },
     "feedback": {
         "header": "معلومات"
+    },
+    "filepicker": {
+        "file": "file",
+        "notFound": "File __existing__ could not be found (leave unchanged if already submitted and you want to preserve it).",
+        "placeholder": "Click here to upload file. (< __maxSize__)",
+        "resetWarning": "This will remove the __item__. Are you sure you want to do this?",
+        "toolargeerror": "File too large (> __maxSize__)",
+        "waitingForPermissions": "Waiting for user permissions."
     },
     "form": {
         "chooseLanguage": "اختيار اللغة",
@@ -169,9 +247,13 @@
             "end": "الانتقال إلى النهاية",
             "next": "التالي",
             "return": "الرجوع إلى البداية"
-        }
+        },
+        "required": "required"
     },
     "formfooter": {
+        "complete": {
+            "btn": "Complete"
+        },
         "savedraft": {
             "btn": "حفظ كمسودة",
             "label": "حفظ كمسودة"
@@ -183,25 +265,63 @@
             "btn": "التحقق من الصحة"
         }
     },
+    "geopicker": {
+        "accuracy": "accuracy (m)",
+        "altitude": "altitude (m)",
+        "closepolygon": "close polygon",
+        "kmlcoords": "KML coordinates",
+        "kmlpaste": "paste KML coordinates here",
+        "latitude": "latitude (x.y °)",
+        "longitude": "longitude (x.y °)",
+        "points": "points",
+        "removePoint": "This will completely remove the current geopoint from the list of geopoints and cannot be undone. Are you sure you want to do this?",
+        "searchPlaceholder": "search for place or address"
+    },
     "here": "هنا",
+    "hint": {
+        "guidance": {
+            "details": "more details"
+        }
+    },
     "home": {
         "msg": "يعمل __appTitle__ بنجاح! يرجى استخدام التثبيت الخاص بك على الخادم __serverName__ لدخول نماذج Enketo."
     },
+    "imagemap": {
+        "svgNotFound": "SVG image could not be found"
+    },
     "langs": {
         "ar": "العربية",
+        "cs": "Czech",
         "de": "اللغة الألمانية",
         "el": "اللغة اليونانية",
         "en": "اللغة الإنجليزية",
         "es": "اللغة الإسبانية",
+        "fa": "Persian",
+        "fi": "Finnish",
+        "fr": "French",
         "he": "اللغة العبرية",
         "hi": "اللغة الهندية",
+        "it": "Italian",
         "km": "اللغة الكمبودية",
+        "lo": "Lao",
         "nl": "اللغة الهولندية",
+        "no": "Norwegian",
+        "pl": "Polish",
+        "pt": "Portuguese",
         "ro": "اللغة الرومانية",
+        "ru": "Russian",
+        "sk": "Slovak",
+        "sq": "Albanian",
         "supported": "اللغات المدعومة:",
+        "sv": "Swedish",
         "sw": "اللغة السواحيلية",
         "th": "اللغة التايلاندية",
-        "vi": "اللغة الفيتنامية"
+        "vi": "اللغة الفيتنامية",
+        "zh": "Chinese"
+    },
+    "literacywidget": {
+        "finish": "Finish",
+        "start": "Start"
     },
     "page": {
         "modernbrowsers": {
@@ -215,7 +335,7 @@
         },
         "offline": {
             "heading": "تعذر الوصول إلى الصفحة المطلوبة",
-            "msg1": "يمكن الوصول إلى هذه الصفحة فقط في حالة اتصال المتصفح بالإنترنت وتوفير الوصول إلى الخادم (ما لم تكون الصفحة المطلوبة غير موجودة)."
+            "msg1": "This page is only accessible when the browser has an Internet connection and the server is accessible (unless the page does not exist)."
         }
     },
     "prompt": {
@@ -230,28 +350,51 @@
             "username": "اسم المستخدم"
         }
     },
+    "rankwidget": {
+        "clickstart": "Click to start",
+        "tapstart": "Tap to start"
+    },
     "record-list": {
         "export": "تصدير",
         "msg1": "يتم حفظ التسجيلات تلقائياً في المتصفح الخاص بك لحين إرسالها (حتى وإن قمت بإغلاق الكمبيوتر أو قفل الاتصال بالإنترنت).",
-        "msg2": "يتم إرسال كل التسجيلات في قائمة الانتظار ما عدا التي تم تعيينها كمسودات __icon__ بشكل تلقائي في الخلفية كل 5 دقائق عدنما تكون الصفحة مفتوحة وعند وجود اتصال بالإنترنت. لغرض الاجبار على التحميل بين هذه المحاولات التلقائية اضغط \"تحميل\".",
+        "msg2": "Queued records, except those marked as draft __icon__, are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
+        "msg2-nodraft": "Queued records are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
+        "msg3": "To force an upload in between automatic attempts, click Upload.",
         "norecords": "لا يوجد تسجيلات في قائمة الانتظار",
         "title": "قائمة الانتظار",
         "upload": "تحميل"
     },
+    "selectpicker": {
+        "noneselected": "none selected",
+        "numberselected": "__number__ selected"
+    },
     "store": {
         "error": {
-            "notavailable": "متصفح التخزين مطلوب ولكنه غير متوفر أو تالف أو غير قابل للكتابة. إذا كنت في وضع \"المتصفح الخاص\" يرجى استخدام الوضع الاعتيادي أو استخدام متصفح آخر. (الخطأ: __error__)"
+            "iosusesafari": "Your iOS browser is not able to run this form. On iOS, we recommend using Safari.",
+            "notavailable": "متصفح التخزين مطلوب ولكنه غير متوفر أو تالف أو غير قابل للكتابة. إذا كنت في وضع \"المتصفح الخاص\" يرجى استخدام الوضع الاعتيادي أو استخدام متصفح آخر. (الخطأ: __error__)",
+            "notsupported": "Your browser is not able to run this form. We recommend using a modern browser."
         }
     },
     "submission": {
         "http0": "فشل (غير متصل بالإنترنت؟)",
         "http2xx": "استجابة غير متوقعة أثناء إرسال البيانات",
         "http400": "خادم البيانات لم يقبل البيانات",
+        "http401": "Authentication problem with data server.",
         "http403": "لا يسمح بإرسال البيانات إلى هذا الخادم.",
         "http404": "خدمة إرسال في خادم البيانات غير موجودة.",
+        "http408": "Data server timed out.",
         "http413": "حجم البيانات أكبر من المسموح به.",
         "http4xx": "حدث خطأ إرسال غير معروف في خادم البيانات.",
-        "http500": "فشل أحد من خادم البيانات الخاص بالنموذج أو الخادم الخاص بتطبيق Enketo. يرجى إعادة المحاولة لاحقاً أو إلاتصال إلى  __supportEmail__."
+        "http500": "فشل أحد من خادم البيانات الخاص بالنموذج أو الخادم الخاص بتطبيق Enketo. يرجى إعادة المحاولة لاحقاً أو إلاتصال إلى  __supportEmail__.",
+        "http504": "Could not establish connection with data server."
     },
-    "version": "الإصدار:"
+    "themes": {
+        "supported": "Themes supported"
+    },
+    "version": "الإصدار:",
+    "widget": {
+        "comment": {
+            "update": "Update"
+        }
+    }
 }

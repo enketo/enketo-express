@@ -86,6 +86,14 @@
             "draftmsg": "Registro guardado como borrador",
             "finalmsg": "Registro en cola para envío"
         },
+        "savedraftinfo": {
+            "heading": "Finalizar registro más tarde",
+            "msg": [
+                "El borrador del registro se guarda solamente en el navegador actual.  Puede cerrar este navegador sin perder el registro guardado.",
+                "Se puede acceder a los registros guardados como borrador al reabrir esta página y haciendo clic en el botón a la izquierda de la pantalla cuya apariencia es así: __icon__",
+                "Atención: Si borra la memoria caché del navegador, todos los borradores y registros finales no enviados serán eliminados permanentemente."
+            ]
+        },
         "submission": {
             "msg": "Enviando datos...",
             "redirectmsg": "Será automáticamente redirigido después del envío"

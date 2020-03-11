@@ -8,7 +8,7 @@
                 "msg": "Pour ajouter ce formulaire à votre écran d'accueil, cliquer sur l'icône __image1__ dans les paramètres du navigateur, et sélectionner \"Ajouter à votre écran d'accueil\""
             },
             "androidfirefox": {
-                "msg": "Pour ajouter ce formulaire à votre écran d'accueil, appuyer longtemps sur la barre d'adresse et sélectionner \"Ajouter à l'écran d'accueil\""
+                "msg": "Pour ajouter ce formulaire à votre écran d'accueil, appuyer longtemps sur la barre d'adresse et sélectionner \"Ajouter en raccourci\""
             },
             "heading": "Ajouter à l'écran d'accueil",
             "iossafari": {
@@ -85,6 +85,14 @@
         "recordsavesuccess": {
             "draftmsg": "Enregistrement sauvegardé en tant que brouillon",
             "finalmsg": "Enregistrement placé en file d'attente afin d'être soumis."
+        },
+        "savedraftinfo": {
+            "heading": "Finaliser l'enregistrement plus tard",
+            "msg": [
+                "Le brouillon enregistré n'est sauvegardé que dans le navigateur actuel. Vous pouvez fermer ce navigateur sans perdre l'enregistrement.",
+                "Les brouillons enregistrés sont accessibles en rouvrant cette page et en cliquant sur le bouton à gauche de l'écran qui ressemble à celui-ci: __icon__",
+                "Attention: Si vous videz le cache de votre navigateur, tous les brouillons et les enregistrements finalisés non soumis seront définitivement supprimés."
+            ]
         },
         "submission": {
             "msg": "Soumission en cours...",

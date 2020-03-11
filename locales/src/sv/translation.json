@@ -1,11 +1,11 @@
 {
     "advanced": {
-        "flushdb": "Rensa lagring"
+        "flushdb": "Töm lagring"
     },
     "alert": {
         "addtohomescreen": {
             "androidchrome": {
-                "msg": "För att lägga till detta formulär på din startsida, klicka på webbläsarens inställningsikon  __image1__ och välj: 'Lägg till på startskärmen'."
+                "msg": "För att lägga till detta formulär på din startskärm, klicka på webbläsarens inställningsikon  __image1__ och välj: 'Lägg till på startskärmen'."
             },
             "androidfirefox": {
                 "msg": "För att lägga till detta formulär på startskärmen, långklicka i adressfältet och välj 'Lägg till på hemskärmen'."
@@ -86,6 +86,14 @@
             "draftmsg": "Posten sparas som utkast.",
             "finalmsg": "Posten köad för inlämning."
         },
+        "savedraftinfo": {
+            "heading": "Avsluta inmatningen senare",
+            "msg": [
+                "Utkastet lagras endast i den lokala enheten. Du kan stänga den här webbläsaren utan att förlora den lagrade posten.",
+                "Utkast till inmatningar kan nås genom att öppna den här sidan igen och klicka på knappen till vänster på skärmen som ser ut så här: __icon__",
+                "Varning: Om du rensar webbläsarens cache raderas alla utkast och alla ej skickade inmatningar permanent."
+            ]
+        },
         "submission": {
             "msg": "Skickar...",
             "redirectmsg": "Du kommer automatiskt att omdirigeras efter inlämningen."
@@ -123,6 +131,7 @@
             "msg": "Ett fel inträffade vid utvärdering av formel. Vänligen kontakta __emailLink__ med det här felet:"
         }
     },
+    "changelog": "Ändringslogg",
     "confirm": {
         "autosaveload": {
             "heading": "Det finns osparade uppgifter",
@@ -302,6 +311,7 @@
         "ro": "Rumänska",
         "ru": "Ryska",
         "sk": "Slovakiska",
+        "sq": "Albanska",
         "supported": "Språk som stöds:",
         "sv": "Svenska",
         "sw": "Swahili",
@@ -377,6 +387,9 @@
         "http4xx": "Okänt problem med att skicka in på dataservern.",
         "http500": "Dataservern för formuläret eller Enketo-servern är ur funktion. Försök igen senare eller kontakta __supportEmail__.",
         "http504": "Det gick inte att etablera en anslutning till dataservern."
+    },
+    "themes": {
+        "supported": "Teman stöds"
     },
     "version": "version:",
     "widget": {

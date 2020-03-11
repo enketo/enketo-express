@@ -86,6 +86,14 @@
             "draftmsg": "Record opgeslagen als draft.",
             "finalmsg": "Record aan lijst toegevoegd."
         },
+        "savedraftinfo": {
+            "heading": "Completeer dit record later",
+            "msg": [
+                "Het draft record wordt opgeslagen in de huidige browser. U kunt deze browser sluiten zonder het opgeslagen record te verliezen.",
+                "U kunt toegang krijgen tot draft records door deze pagina opnieuw te openen en op de knop aan de linkerkant van het scherm te klikken die er als volgt uitziet: __icon__",
+                "Waarschuwing: als u uw browsercache leegmaakt, worden alle draft en de niet-verzonden definitieve records permanent verwijderd."
+            ]
+        },
         "submission": {
             "msg": "Verzending gaande...",
             "redirectmsg": "Je wordt automatisch doorverzonden als de verzending compleet is."

@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Changed
 - The checkbox for 'save as draft' in offline-capable views has been replaced with a button.
+- Updated French, Spanish, Dutch, Swedish and Arabic translations.
 
 [1.85.1] - 2020-02-28
 ----------------------
