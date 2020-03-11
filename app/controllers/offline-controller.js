@@ -5,15 +5,10 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
 const crypto = require( 'crypto' );
-const offlineResources = require( '../models/offline-resources-model' );
 const express = require( 'express' );
 const router = express.Router();
 const config = require( '../models/config-model' ).server;
 
-const partialOfflineAppWorkerScript = fs.readFileSync( path.join( process.cwd(), 'public/js/src/module/offline-app-worker-partial.js' ), 'utf8' );
-
-// This hash is not actually required but useful to see which offline-app-worker-partial.js is used during troubleshooting.
-const scriptHash = crypto.createHash( 'md5' ).update( partialOfflineAppWorkerScript ).digest( 'hex' );
 // var debug = require( 'debug' )( 'offline-controller' );
 
 module.exports = app => {
@@ -26,13 +21,9 @@ router
             error.status = 404;
             next( error );
         } else {
-            getScriptContent( req, res )
-                .then( scriptContent => {
-                    res
-                        .set( 'Content-Type', 'text/javascript' )
-                        .send( scriptContent );
-                } )
-                .catch( next );
+            res
+                .set( 'Content-Type', 'text/javascript' )
+                .send( getScriptContent() );
         }
     } );
 
@@ -40,60 +31,32 @@ router
  * @param {module:api-controller~ExpressRequest} req
  * @param {module:api-controller~ExpressResponse} res
  */
-function getScriptContent( req, res ) {
-    return Promise.all( [
-            _getWebformHtml( req, res ),
-            _getOfflineFallbackHtml( req, res )
-        ] )
-        .then( result => {
-            // TODO: if we ever start supporting dialects, we need to change this
-            // const lang = req.i18n.language.split( '-' )[ 0 ];
-            return offlineResources.get( result[ 0 ], result[ 1 ] );
-        } )
-        .then( dynamicContent => {
-            return `
-const version = '${dynamicContent.version}_${scriptHash}';
+function getScriptContent() {
+    // Determining hash every time, is done to make development less painful (refreshing service worker)
+    // The partialScriptHash is not actually required but useful to see which offline-app-worker-partial.js is used during troubleshooting.
+    // by going to http://localhost:8005/x/offline-app-worker.js and comparing the version with the version shown in the side slider of the webform.
+    const partialOfflineAppWorkerScript = fs.readFileSync( path.join( process.cwd(), 'public/js/src/module/offline-app-worker-partial.js' ), 'utf8' );
+    const partialScriptHash = crypto.createHash( 'md5' ).update( partialOfflineAppWorkerScript ).digest( 'hex' ).substring( 0, 7 );
+    const configurationHash = crypto.createHash( 'md5' ).update( JSON.stringify( config ) ).digest( 'hex' ).substring( 0, 7 );
+    const version = [ config.version, configurationHash, partialScriptHash ].join( '-' );
+    // We add as few explicit resources as possible because the offline-app-worker can do this dynamically and that is preferred 
+    // for easier maintenance of the offline launch feature.
+    const resources = config[ 'themes supported' ]
+        .reduce( ( accumulator, theme ) => {
+            accumulator.push( `${config['base path']}${config['offline path']}/css/theme-${theme}.css` );
+            accumulator.push( `${config['base path']}${config['offline path']}/css/theme-${theme}.print.css` );
+            return accumulator;
+        }, [] )
+        .concat( [
+            `${config['base path']}${config['offline path']}/images/icon_180x180.png`
+        ] );
+
+    return `
+const version = '${version}';
 const resources = [
-    '${dynamicContent.resources.join('\',\n    \'')}'
+    '${resources.join('\',\n    \'')}'
 ];
-const fallback = '${dynamicContent.fallback}';
 
 ${partialOfflineAppWorkerScript}`;
-        } );
-}
 
-/**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
- */
-function _getWebformHtml( req, res ) {
-    return new Promise( ( resolve, reject ) => {
-        res.render( 'surveys/webform', {
-            offlinePath: config[ 'offline path' ]
-        }, ( err, html ) => {
-            if ( err ) {
-                reject( err );
-            } else {
-                resolve( html );
-            }
-        } );
-    } );
-}
-
-/**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
- */
-function _getOfflineFallbackHtml( req, res ) {
-    return new Promise( ( resolve, reject ) => {
-        res.render( 'pages/offline', {
-            offlinePath: config[ 'offline path' ]
-        }, ( err, html ) => {
-            if ( err ) {
-                reject( err );
-            } else {
-                resolve( html );
-            }
-        } );
-    } );
 }
