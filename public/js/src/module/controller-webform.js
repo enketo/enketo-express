@@ -3,7 +3,6 @@
  */
 
 import gui from './gui';
-
 import connection from './connection';
 import settings from './settings';
 import { Form } from 'enketo-core';
