@@ -10,13 +10,10 @@ html(lang=language, dir=dir(language))
     link(rel="shortcut icon", href=`${basePath}${offlinePath || ''}/images/favicon.ico`)
     link(rel="icon", type="image/png", sizes="180x180", href=`${basePath}${offlinePath || ''}/images/icon_180x180.png`)
     link(rel="apple-touch-icon", sizes="180x180", href=`${basePath}${offlinePath || ''}/images/icon_180x180.png`)
-
-    script(src=`${basePath}${offlinePath || ''}/js/build/ie11-polyfill.min.js`, nomodule)
-    script(src=`${basePath}${offlinePath || ''}/js/build/obscure-ie11-polyfills.js`, nomodule)
+    
+    block head-script
 
     block style
-
-    block global
 
   - var cl = (iframe) ? 'iframe' : ''
   body(class=cl)

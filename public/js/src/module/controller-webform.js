@@ -13,7 +13,6 @@ import { t } from './translator';
 import records from './records-queue';
 import $ from 'jquery';
 import encryptor from './encryptor';
-import sniffer from './sniffer';
 
 let form;
 let formSelector;
@@ -74,9 +73,7 @@ function init( selector, data ) {
                 throw loadErrors;
             }
 
-            if ( sniffer.browser.ie ) {
-                gui.feedback( 'Internet Explorer 11 will no longer be supported in the next version (very soon!). Please switch to a modern browser now.' );
-            }
+
             return form;
         } )
         .catch( error => {

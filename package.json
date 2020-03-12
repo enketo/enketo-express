@@ -2,7 +2,7 @@
     "name": "enketo-express",
     "description": "Webforms evolved.",
     "homepage": "https://enketo.org",
-    "version": "1.86.1",
+    "version": "2.0.0-beta.1",
     "main": "./app.js",
     "engines": {
         "node": "4.4.x",
@@ -28,12 +28,7 @@
     "private": true,
     "license": "Apache-2.0",
     "dependencies": {
-        "@babel/cli": "^7.8.4",
-        "@babel/core": "^7.8.7",
-        "@babel/polyfill": "^7.8.7",
-        "@babel/preset-env": "^7.8.7",
         "aliasify": "2.1.x",
-        "babelify": "^10.0.0",
         "basic-auth": "2.0.x",
         "body-parser": "1.x.x",
         "bristol": "0.4.x",

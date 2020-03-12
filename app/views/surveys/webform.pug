@@ -1,5 +1,9 @@
 extends ../layout
 
+block head-script
+  script
+    include component/redirect-IE.js
+
 block style
   // preload for performance
   link(rel='preload', as='font', href=`${basePath}${offlinePath || ''}/fonts/OpenSans-Bold-webfont.woff`, type='font/woff', crossorigin)

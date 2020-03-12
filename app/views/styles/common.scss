@@ -67,16 +67,3 @@ progress {
 .log {
     word-break: break-all;
 }
-
-
-//IE11 fixes:
-@media all and (-ms-high-contrast: none),
-(-ms-high-contrast: active) {
-    // Setting the body to 100vh causes a strange issue where some forms are too narrow
-    // until the users clicks inside the form. 
-    // https://github.com/kobotoolbox/enketo-express/issues/1072
-    // As a pragmatic workaround we're just not trying to center the main-loader in IE11.
-    .main-loader {
-        margin-top: 200px;
-    }
-}
