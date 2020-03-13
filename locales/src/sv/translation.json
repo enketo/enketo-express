@@ -70,7 +70,8 @@
             "heading": "Programmet kan inte starta i offline-läge",
             "msg": "Offline programstart stöds inte av din webbläsare. Du kan använda undersökningen utan denna funktion eller se alternativ för att lösa detta.",
             "negButton": "Använd det",
-            "posButton": "Visa alternativ"
+            "posButton": "Visa alternativ",
+            "refresh": "Det här formuläret kan inte längre startas offline. Ladda om sidan för att försöka fixa detta."
         },
         "queuesubmissionsuccess": {
             "msg": "__recordNames__ har skickats in",

@@ -70,7 +70,8 @@
             "heading": "App kan niet offline opstarten",
             "msg": "Het opstarten van deze app offline is niet ondersteund in deze browser. Je kunt de enquete gebruiken zonder deze functie of opties bekijken om dit op te lossen.",
             "negButton": "Gebruik het",
-            "posButton": "Laat opties zien"
+            "posButton": "Laat opties zien",
+            "refresh": "Dit formulier kan niet langer offline worden gestart. Refresh de pagina om te proberen dit op te lossen."
         },
         "queuesubmissionsuccess": {
             "msg": "__recordNames__ was succesvol verzonden",

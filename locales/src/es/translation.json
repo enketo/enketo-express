@@ -70,7 +70,8 @@
             "heading": "Esta aplicación no se puede ejecutar sin conexión",
             "msg": "Este navegador no permite ejecutar la aplicación sin conexión. Puede usar la encuesta sin esta característica o ver las opciones para resolver esto.",
             "negButton": "Utilícelo",
-            "posButton": "Mostrar opciones"
+            "posButton": "Mostrar opciones",
+            "refresh": "Este formulario ya no se puede iniciar sin conexión. Actualice la página para intentar solucionar esto."
         },
         "queuesubmissionsuccess": {
             "msg": "__recordNames__ enviado correctamente",
