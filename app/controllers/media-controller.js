@@ -9,11 +9,13 @@ const request = require( 'request' );
 const express = require( 'express' );
 const router = express.Router();
 const debug = require( 'debug' )( 'media-controller' );
+const { RequestFilteringHttpAgent } = require( 'request-filtering-agent' );
 
 module.exports = app => {
     app.use( `${app.get( 'base path' )}/media`, router );
 };
 
+//llldfjksahlfkasdlhfasdlasdasdtesftsss
 router
     .get( '/get/*', getMedia );
 
@@ -71,6 +73,8 @@ function getMedia( req, res, next ) {
 }
 
 function _pipeMedia( options, req, res, next ) {
+    options.agent = new RequestFilteringHttpAgent();
+    console.dir(options);
     request.get( options ).pipe( res ).on( 'error', error => {
         debug( `error retrieving media from OpenRosa server: ${JSON.stringify( error )}` );
         if ( !error.status ) {
