@@ -57,7 +57,12 @@ def create_config():
 
     # Write the potentially-updated config file to disk.
     with open(CONFIG_FILE_PATH, 'w') as config_file:
-        config_file.write(json.dumps(config, indent=4, sort_keys=True))
+        config_file.write(
+            # Sort keys so that the file remains consistent between runs.
+            # Indent for readability. Specify separators to avoid trailing
+            # whitespace (https://bugs.python.org/issue16333)
+            json.dumps(config, indent=4, separators=(',', ': '), sort_keys=True)
+        )
 
 
 if __name__ == '__main__':
