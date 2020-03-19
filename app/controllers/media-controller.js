@@ -15,7 +15,6 @@ module.exports = app => {
     app.use( `${app.get( 'base path' )}/media`, router );
 };
 
-//llldfjksahlfkasdlhfasdlasdasdtesftsss
 router
     .get( '/get/*', getMedia );
 
