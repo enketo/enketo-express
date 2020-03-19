@@ -19,7 +19,7 @@ LAST_BUILD_COMMIT_FILE_PATH="${CHECKSUM_DIR_PATH}/${LAST_BUILD_COMMIT_FILE}"
 
 RUN_GRUNT=0
 # Compare config version
-sha1sum -c "${SHA1SUM_CONFIG_FILE_PATH}" || RUN_GRUNT=1
+sha1sum --status -c "${SHA1SUM_CONFIG_FILE_PATH}" || RUN_GRUNT=1
 
 # Compare commit version
 CURRENT_COMMIT=$(git rev-parse HEAD) # Get current commit
@@ -43,6 +43,13 @@ if [ "$RUN_GRUNT" == 1 ]; then
     # Build.
     echo "Grunt needs to be run!"
     grunt
+    if [ -n "$ENKETO_BUILD_IE11" ]; then
+        # TODO: Watch for removal of IE 11 support, and remove this extra
+        # `grunt` in turn. See
+        # https://github.com/enketo/enketo-express/blob/master/CHANGELOG.md#1840---2020-01-28
+        echo "Building IE11 bundle..."
+        grunt build-ie11
+    fi
     echo "Saving current commit..."
     echo $CURRENT_COMMIT > ${LAST_BUILD_COMMIT_FILE_PATH}
     echo "Saving config hash..."
