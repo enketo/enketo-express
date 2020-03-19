@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [1.86.2] - 2020-03-18
 ----------------------
 ##### Changed
-- Updated Swedish, Dutch and Spanish translations of modal dialog introduced in 1.86.2.
+- Updated Swedish, Dutch and Spanish translations of modal dialog introduced in 1.86.1.
 
 [1.86.1] - 2020-03-12
 ----------------------
