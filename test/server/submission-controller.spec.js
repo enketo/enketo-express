@@ -66,7 +66,7 @@ describe( 'Submissions', () => {
             it( `using ${test.method.toUpperCase()} of ${test.data} responds with ${test.status}`,
                 done => {
 
-                    request( app )[ test.method ]( `/submission/::${enketoId}` )
+                    request( app )[ test.method ]( `/submission/${enketoId}` )
                         .field( 'xml_submission_file', new Buffer( [ test.data ] ) )
                         .expect( test.status, done );
 
@@ -91,14 +91,14 @@ describe( 'Submissions', () => {
 
         it( 'using POST of <data></data> to inactive ID responds with 404', done => {
             request( app )
-                .post( `/submission/::${enketoId}` )
+                .post( `/submission/${enketoId}` )
                 .field( 'xml_submission_file', '<data></data>' )
                 .expect( 404, done );
         } );
 
         it( 'using POST of <data></data> to non-existing ID responds with 404', done => {
             request( app )
-                .post( `/submission/::${nonExistingEnketoId}` )
+                .post( `/submission/${nonExistingEnketoId}` )
                 .field( 'xml_submission_file', '<data></data>' )
                 .expect( 404, done );
         } );
@@ -108,17 +108,17 @@ describe( 'Submissions', () => {
     describe( 'using GET (existing submissions) for an existing/active Enketo IDs', () => {
 
         it( 'responds with 400 if no instanceID provided', done => {
-            request( app ).get( `/submission/::${enketoId}` )
+            request( app ).get( `/submission/${enketoId}` )
                 .expect( 400, done );
         } );
 
         it( 'responds with 400 if instanceID is empty', done => {
-            request( app ).get( `/submission/::${enketoId}?instanceId=` )
+            request( app ).get( `/submission/${enketoId}?instanceId=` )
                 .expect( 400, done );
         } );
 
         it( 'responds with 404 if instanceID requested is not found', done => {
-            request( app ).get( `/submission/::${enketoId}?instanceId=a` )
+            request( app ).get( `/submission/${enketoId}?instanceId=a` )
                 .expect( 404, done );
         } );
 
@@ -141,7 +141,7 @@ describe( 'Submissions', () => {
             } );
 
             it( 'responds with 400', done => {
-                request( app ).get( `/submission/::${enketoId}?instanceId=b` )
+                request( app ).get( `/submission/${enketoId}?instanceId=b` )
                     .expect( 400, done );
             } );
 
@@ -163,7 +163,7 @@ describe( 'Submissions', () => {
             } );
 
             it( 'responds with 200', done => {
-                request( app ).get( `/submission/::${enketoId}?instanceId=c` )
+                request( app ).get( `/submission/${enketoId}?instanceId=c` )
                     .expect( 200, done );
             } );
 

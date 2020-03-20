@@ -74,15 +74,12 @@ if ( window.location.pathname.indexOf( '/preview' ) === 0 ) {
     settings.type = 'other';
 }
 
-// Provide easy way to change online-only prefix if we wanted to in the future
-settings.enketoIdPrefix = '::';
-
 // Determine whether view is offline-capable
 settings.offline = window.location.pathname.includes( '/x/' );
 settings.offlinePath = settings.offline ? '/x' : '';
 
 // Extract Enketo ID
-settings.enketoId = ( settings.offline ) ? _getEnketoId( '#', window.location.hash ) : _getEnketoId( `/${settings.enketoIdPrefix}`, window.location.pathname );
+settings.enketoId = _getEnketoId( window.location.pathname );
 
 // Set multipleAllowed for single webform views
 if ( settings.type === 'single' && settings.enketoId.length !== 32 && settings.enketoId.length !== 64 ) {
@@ -95,8 +92,8 @@ settings.goTo = settings.type === 'edit' || settings.type === 'preview' || setti
 // A bit crude and hackable by users, but this way also type=view with a record will be caught.
 settings.printRelevantOnly = !!settings.instanceId;
 
-function _getEnketoId( prefix, haystack ) {
-    const id = new RegExp( prefix ).test( haystack ) ? haystack.substring( haystack.lastIndexOf( prefix ) + prefix.length ) : null;
+function _getEnketoId( haystack ) {
+    const id = haystack.substring( haystack.lastIndexOf( '/' ) + 1 );
     return id;
 }
 

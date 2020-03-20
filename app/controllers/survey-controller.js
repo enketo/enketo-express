@@ -33,7 +33,8 @@ router.param( 'mod', ( req, rex, next, mod ) => {
 
 router
     //.get( '*', loggedInCheck )
-    .get( `${config[ 'offline path' ]}/`, offlineWebform )
+    .get( `${config[ 'offline path' ]}/:enketo_id`, offlineWebform )
+    .get( `${config[ 'offline path' ]}/`, redirect )
     .get( '/:enketo_id', webform )
     .get( '/:mod/:enketo_id', webform )
     .get( '/preview/:enketo_id', preview )
@@ -51,6 +52,7 @@ router
     .get( '/xform/:enketo_id', xform )
     .get( '/xform/:encrypted_enketo_id_single', xform )
     .get( '/xform/:encrypted_enketo_id_view', xform )
+    .get( /.*\/::[A-z0-9]{4,8}/, redirect )
     .get( '/connection', ( req, res ) => {
         res.status = 200;
         res.send( `connected ${Math.random()}` );
@@ -138,6 +140,18 @@ function preview( req, res, next ) {
     };
 
     _renderWebform( req, res, next, options );
+}
+
+/**
+ * This serves a page that redirects old pre-2.0.0 urls into new urls.
+ * The reason this on the client-side is to cache the redirect itself which is important
+ * in case people have bookmarked an offline-capable old-style url and go into the field without Internet.
+ * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressResponse} res
+ * @param {Function} next - Express callback
+ */
+function redirect( req, res, next ) {
+    res.render( 'surveys/webform-redirect' );
 }
 
 /**

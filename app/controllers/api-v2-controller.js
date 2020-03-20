@@ -565,10 +565,8 @@ function _generateWebformUrls( id, req ) {
     const iframePart = ( req.iframe ) ? IFRAMEPATH : '';
     const protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol;
     const baseUrl = `${protocol}://${req.headers.host}${req.app.get( 'base path' )}/`;
-    const idPartOnline = `::${id}`;
-    const idPartOffline = `#${id}`;
-    const idPartOnce = `::${utils.insecureAes192Encrypt( id, keys.singleOnce )}`;
-    const idPartView = `::${utils.insecureAes192Encrypt( id, keys.view )}`;
+    const idPartOnce = `${utils.insecureAes192Encrypt( id, keys.singleOnce )}`;
+    const idPartView = `${utils.insecureAes192Encrypt( id, keys.view )}`;
     let queryParts;
 
     req.webformType = req.webformType || 'default';
@@ -576,7 +574,7 @@ function _generateWebformUrls( id, req ) {
     switch ( req.webformType ) {
         case 'preview':
             queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
-            obj[ `preview${iframePart ? '_iframe' : ''}_url` ] = `${baseUrl}preview/${iframePart}${idPartOnline}${queryString}${hash}`;
+            obj[ `preview${iframePart ? '_iframe' : ''}_url` ] = `${baseUrl}preview/${iframePart}${id}${queryString}${hash}`;
             // Keep in a bug since apps probably started relying on this.
 
             if ( iframePart ) {
@@ -586,7 +584,7 @@ function _generateWebformUrls( id, req ) {
         case 'edit':
             // no defaults query parameter in edit view
             queryString = _generateQueryString( [ `instance_id=${req.body.instance_id}`, req.parentWindowOriginParam, req.returnQueryParam ] );
-            obj.edit_url = `${baseUrl}edit/${iframePart}${idPartOnline}${queryString}${hash}`;
+            obj.edit_url = `${baseUrl}edit/${iframePart}${id}${queryString}${hash}`;
             break;
         case 'single':
             queryParts = [ req.defaultsQueryParam, req.returnQueryParam ];
@@ -594,7 +592,7 @@ function _generateWebformUrls( id, req ) {
                 queryParts.push( req.parentWindowOriginParam );
             }
             queryString = _generateQueryString( queryParts );
-            obj[ `single${req.multipleAllowed === false ? '_once' : ''}${iframePart ? '_iframe' : ''}_url` ] = `${baseUrl}single/${iframePart}${req.multipleAllowed === false ? idPartOnce : idPartOnline}${queryString}`;
+            obj[ `single${req.multipleAllowed === false ? '_once' : ''}${iframePart ? '_iframe' : ''}_url` ] = `${baseUrl}single/${iframePart}${req.multipleAllowed === false ? idPartOnce : id}${queryString}`;
             break;
         case 'view':
         case 'view-instance':
@@ -613,34 +611,34 @@ function _generateWebformUrls( id, req ) {
             queryParts = req.body.instance_id ? [ `instance_id=${req.body.instance_id}` ] : [];
             queryParts.push( 'print=true' );
             queryString = _generateQueryString( queryParts );
-            obj.pdf_url = `${baseUrl}${req.body.instance_id ? 'view/'+idPartView : idPartOnline}${queryString}`;
+            obj.pdf_url = `${baseUrl}${req.body.instance_id ? 'view/'+idPartView : id}${queryString}`;
             break;
         case 'all':
             // non-iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam ] );
-            obj.url = baseUrl + idPartOnline + queryString;
-            obj.single_url = `${baseUrl}single/${idPartOnline}${queryString}`;
+            obj.url = baseUrl + id + queryString;
+            obj.single_url = `${baseUrl}single/${id}${queryString}`;
             obj.single_once_url = `${baseUrl}single/${idPartOnce}${queryString}`;
-            obj.offline_url = baseUrl + OFFLINEPATH + idPartOffline;
-            obj.preview_url = `${baseUrl}preview/${idPartOnline}${queryString}`;
+            obj.offline_url = baseUrl + OFFLINEPATH + id;
+            obj.preview_url = `${baseUrl}preview/${id}${queryString}`;
             // iframe views
             queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
-            obj.iframe_url = baseUrl + IFRAMEPATH + idPartOnline + queryString;
-            obj.single_iframe_url = `${baseUrl}single/${IFRAMEPATH}${idPartOnline}${queryString}`;
+            obj.iframe_url = baseUrl + IFRAMEPATH + id + queryString;
+            obj.single_iframe_url = `${baseUrl}single/${IFRAMEPATH}${id}${queryString}`;
             obj.single_once_iframe_url = `${baseUrl}single/${IFRAMEPATH}${idPartOnce}${queryString}`;
-            obj.preview_iframe_url = `${baseUrl}preview/${IFRAMEPATH}${idPartOnline}${queryString}`;
+            obj.preview_iframe_url = `${baseUrl}preview/${IFRAMEPATH}${id}${queryString}`;
             // rest
             obj.enketo_id = id;
             break;
         case 'offline':
-            obj.offline_url = baseUrl + OFFLINEPATH + idPartOffline;
+            obj.offline_url = baseUrl + OFFLINEPATH + id;
             break;
         default:
             queryString = _generateQueryString( [ req.defaultsQueryParam, req.parentWindowOriginParam ] );
             if ( iframePart ) {
-                obj.iframe_url = baseUrl + iframePart + idPartOnline + queryString;
+                obj.iframe_url = baseUrl + iframePart + id + queryString;
             } else {
-                obj.url = baseUrl + idPartOnline + queryString;
+                obj.url = baseUrl + id + queryString;
             }
 
             break;

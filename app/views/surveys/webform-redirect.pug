@@ -1,0 +1,17 @@
+extends ../layout
+
+block script
+  script.
+    const url = new URL(window.location.href);
+
+    if( url.pathname === '/x/' || url.pathname === '/_/' ){
+      url.pathname = `/x/${url.hash.substring(1)}`;
+      url.hash = '';
+    } else {
+      url.pathname = url.pathname.replace('::', '');
+    }
+    
+    location.href = url.toString();
+
+block content
+  div redirecting...

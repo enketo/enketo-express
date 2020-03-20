@@ -369,35 +369,33 @@ function _generateWebformUrls( id, req ) {
     const iframePart = ( req.iframe ) ? IFRAMEPATH : '';
     const protocol = req.headers[ 'x-forwarded-proto' ] || req.protocol;
     const baseUrl = `${protocol}://${req.headers.host}${req.app.get( 'base path' )}/`;
-    const idPartOnline = `::${id}`;
-    const idPartOffline = `#${id}`;
     const offline = req.app.get( 'offline enabled' );
 
     req.webformType = req.webformType || 'default';
 
     switch ( req.webformType ) {
         case 'preview':
-            obj.preview_url = `${baseUrl}preview/${iframePart}${idPartOnline}`;
+            obj.preview_url = `${baseUrl}preview/${iframePart}${id}`;
             break;
         case 'edit':
             queryString = _generateQueryString( [ `instance_id=${req.body.instance_id}`, req.returnQueryParam ] );
-            obj.edit_url = `${baseUrl}edit/${iframePart}${idPartOnline}${queryString}`;
+            obj.edit_url = `${baseUrl}edit/${iframePart}${id}${queryString}`;
             break;
         case 'all':
             // non-iframe views
-            obj.url = ( offline ) ? `${baseUrl}x/${idPartOffline}` : baseUrl + idPartOnline;
-            obj.preview_url = `${baseUrl}preview/${idPartOnline}`;
+            obj.url = ( offline ) ? `${baseUrl}x/${id}` : baseUrl + id;
+            obj.preview_url = `${baseUrl}preview/${id}`;
             // iframe views
-            obj.iframe_url = baseUrl + IFRAMEPATH + idPartOnline;
-            obj.preview_iframe_url = `${baseUrl}preview/${IFRAMEPATH}${idPartOnline}`;
+            obj.iframe_url = baseUrl + IFRAMEPATH + id;
+            obj.preview_iframe_url = `${baseUrl}preview/${IFRAMEPATH}${id}`;
             // enketo-legacy
             obj.subdomain = '';
             break;
         default:
             if ( iframePart ) {
-                obj.url = ( offline ) ? `${baseUrl}x/${idPartOffline}` : baseUrl + iframePart + idPartOnline;
+                obj.url = ( offline ) ? `${baseUrl}x/${id}` : baseUrl + iframePart + id;
             } else {
-                obj.url = ( offline ) ? `${baseUrl}x/${idPartOffline}` : baseUrl + idPartOnline;
+                obj.url = ( offline ) ? `${baseUrl}x/${id}` : baseUrl + id;
             }
             break;
     }
