@@ -66,9 +66,6 @@ function getMedia( req, res, next ) {
 	allowIPAddressList: [ requestFilteringOptions.allowIPAddressList ],
 	denyIPAdressList: [ requestFilteringOptions.denyIPAdressList ]
     });
-    console.log('-----------');
-    console.dir(options.agent);
-    console.log('-----------');
 
     if ( _isPrintView( req ) ) {
 //    	options.agent = new RequestFilteringHttpAgent();
