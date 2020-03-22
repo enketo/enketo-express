@@ -11,6 +11,9 @@ const router = express.Router();
 const debug = require( 'debug' )( 'media-controller' );
 const { RequestFilteringHttpAgent } = require( 'request-filtering-agent' );
 
+const config = require('../../config/config');
+const requestFilteringOptions = config.IPfiltering;
+
 module.exports = app => {
     app.use( `${app.get( 'base path' )}/media`, router );
 };
@@ -57,7 +60,15 @@ function getMedia( req, res, next ) {
     delete options.method;
 
     //filtering agent to stop private ip access to HEAD and GET
-    options.agent = new RequestFilteringHttpAgent();
+    options.agent = new RequestFilteringHttpAgent({
+    	allowPrivateIPAddress: requestFilteringOptions.allowPrivateIPAddress,
+	allowMetaIPAddress: requestFilteringOptions.allowMetaIPAddress,
+	allowIPAddressList: [ requestFilteringOptions.allowIPAddressList ],
+	denyIPAdressList: [ requestFilteringOptions.denyIPAdressList ]
+    });
+    console.log('-----------');
+    console.dir(options.agent);
+    console.log('-----------');
 
     if ( _isPrintView( req ) ) {
 //    	options.agent = new RequestFilteringHttpAgent();
