@@ -68,7 +68,6 @@ function getMedia( req, res, next ) {
     });
 
     if ( _isPrintView( req ) ) {
-//    	options.agent = new RequestFilteringHttpAgent();
         request.head( options, ( error, response ) => {
             if ( error ) {
                 next( error );
@@ -88,7 +87,6 @@ function getMedia( req, res, next ) {
 }
 
 function _pipeMedia( options, req, res, next ) {
-//    options.agent = new RequestFilteringHttpAgent();
     request.get( options ).pipe( res ).on( 'error', error => {
         debug( `error retrieving media from OpenRosa server: ${JSON.stringify( error )}` );
         if ( !error.status ) {
