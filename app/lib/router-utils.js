@@ -26,8 +26,8 @@ const keys = {
  * @param {string} id
  */
 function enketoIdParam( req, res, next, id ) {
-    if ( /^::[A-z0-9]{4,8}$/.test( id ) ) {
-        req.enketoId = id.substring( 2 );
+    if ( /^[A-z0-9]{4,8}$/.test( id ) ) {
+        req.enketoId = id;
         next();
     } else {
         next( 'route' );
@@ -75,13 +75,13 @@ function encryptedEnketoIdParamView( req, res, next, id ) {
  */
 function _encryptedEnketoIdParam( req, res, next, id, key ) {
     // either 32 or 64 hexadecimal characters
-    if ( /^::([0-9a-fA-F]{32}$|[0-9a-fA-F]{64})$/.test( id ) ) {
+    if ( /^([0-9a-fA-F]{32}$|[0-9a-fA-F]{64})$/.test( id ) ) {
         req.encryptedEnketoId = id.substring( 2 );
         try {
             // Just see if it can be decrypted. Storing the encrypted value might
             // increases chance of leaking underlying enketo_id but for now this is used
             // in the submission controller and transformation controller.
-            const decrypted = utils.insecureAes192Decrypt( id.substring( 2 ), key );
+            const decrypted = utils.insecureAes192Decrypt( id, key );
             // Sometimes decryption by incorrect keys works and results in gobledigook.
             // A really terrible way of working around this is to check if the result is
             // alphanumeric (as Enketo IDs always are).

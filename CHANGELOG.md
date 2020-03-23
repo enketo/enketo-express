@@ -2,15 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[2.0.0-beta.1] - 2020-02-12
+[Unreleased]
 ----------------------
-**WARNING: IT IS HIGHLY RECOMMENDED TO DEPLOY THIS VERSION BEFORE CHROME 82 IS RELEASED SOME TIME IN APRIL 2020 AND PREFERABLY AFTER VERSION 1.86.1 HAS BEEN DEPLOYED. READ MORE [HERE](https://groups.google.com/forum/#!topic/enketo-users/1AewNMkAIiU).**
+**WARNING: IT IS HIGHLY RECOMMENDED TO DEPLOY THIS VERSION BEFORE CHROME 82 IS RELEASED SOME TIME IN APRIL 2020 AND PREFERABLY AFTER VERSION 1.86.x HAS BEEN DEPLOYED. READ MORE [HERE](https://groups.google.com/forum/#!topic/enketo-users/1AewNMkAIiU).**
 ##### Removed
 - Support for Internet Explorer
-- Support for /_/#abcd URLs (use /x/#abcd instead)
+- Support for offline-capable webform URLs using \# and online-only URLs using ::.
   
-##### Change
-- Switch offline application caching technology from ApplicationCache to Service Workers (major).
+##### Changed
+- Automatically redirect old-style URLs that are no longer supported.
+- Switch offline application caching technology from ApplicationCache to Service Workers (**MAJOR**).
 
 [1.86.3] - 2020-03-20
 ----------------------

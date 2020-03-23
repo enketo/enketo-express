@@ -9,10 +9,10 @@ import utils from './utils';
 import $ from 'jquery';
 const parser = new DOMParser();
 const CONNECTION_URL = `${settings.basePath}/connection`;
-const TRANSFORM_URL = `${settings.basePath}/transform/xform${settings.enketoId ? `/${settings.enketoIdPrefix}${settings.enketoId}` : ''}`;
-const TRANSFORM_HASH_URL = `${settings.basePath}/transform/xform/hash/${settings.enketoIdPrefix}${settings.enketoId}`;
-const INSTANCE_URL = ( settings.enketoId ) ? `${settings.basePath}/submission/${settings.enketoIdPrefix}${settings.enketoId}` : null;
-const MAX_SIZE_URL = ( settings.enketoId ) ? `${settings.basePath}/submission/max-size/${settings.enketoIdPrefix}${settings.enketoId}` :
+const TRANSFORM_URL = `${settings.basePath}/transform/xform${settings.enketoId ? `/${settings.enketoId}` : ''}`;
+const TRANSFORM_HASH_URL = `${settings.basePath}/transform/xform/hash/${settings.enketoId}`;
+const INSTANCE_URL = ( settings.enketoId ) ? `${settings.basePath}/submission/${settings.enketoId}` : null;
+const MAX_SIZE_URL = ( settings.enketoId ) ? `${settings.basePath}/submission/max-size/${settings.enketoId}` :
     `${settings.basePath}/submission/max-size/?xformUrl=${encodeURIComponent( settings.xformUrl )}`;
 const ABSOLUTE_MAX_SIZE = 100 * 1024 * 1024;
 
@@ -70,7 +70,7 @@ function _uploadBatch( recordBatch ) {
     return new Promise( ( resolve, reject ) => {
         // Submission URL is dynamic, because settings.submissionParameter only gets populated after loading form from
         // cache in offline mode.
-        const submissionUrl = ( settings.enketoId ) ? `${settings.basePath}/submission/${settings.enketoIdPrefix}${settings.enketoId}${_getQuery()}` : null;
+        const submissionUrl = ( settings.enketoId ) ? `${settings.basePath}/submission/${settings.enketoId}${_getQuery()}` : null;
 
         $.ajax( submissionUrl, {
                 type: 'POST',

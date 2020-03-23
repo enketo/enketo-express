@@ -18,7 +18,7 @@ describe( 'Router utilities', () => {
             const req = {};
             const res = {};
             const next = sinon.fake();
-            const id = '::aA12bB34';
+            const id = 'aA12bB34';
             routerUtils.enketoId( req, res, next, id );
             expect( req.enketoId ).to.equal( 'aA12bB34' );
             expect( next ).to.have.been.calledWith();
@@ -28,7 +28,7 @@ describe( 'Router utilities', () => {
             const req = {};
             const res = {};
             const next = sinon.fake();
-            const id = '::1';
+            const id = '1';
             routerUtils.enketoId( req, res, next, id );
             expect( req ).should.not.have.property( 'enketoId' );
             expect( next ).to.have.been.calledWith( 'route' );
@@ -44,7 +44,7 @@ describe( 'Router utilities', () => {
                 'aA12bB34',
                 routerUtils.idEncryptionKeys.singleOnce
             );
-            const id = `::${encryptedId}`;
+            const id = `${encryptedId}`;
             routerUtils.encryptedEnketoIdSingle( req, res, next, id );
             expect( req.enketoId ).to.equal( 'aA12bB34' );
             expect( next ).to.have.been.calledWith();
@@ -55,7 +55,7 @@ describe( 'Router utilities', () => {
             const res = {};
             const next = sinon.fake();
             const encryptedId = 'x';
-            const id = `::${encryptedId}`;
+            const id = `${encryptedId}`;
             routerUtils.encryptedEnketoIdSingle( req, res, next, id );
             expect( req ).should.not.have.property( 'enketoId' );
             expect( next ).to.have.been.calledWith( 'route' );
@@ -69,7 +69,7 @@ describe( 'Router utilities', () => {
                 'Ń™€ßį§¶•',
                 routerUtils.idEncryptionKeys.singleOnce
             );
-            const id = `::${encryptedId}`;
+            const id = `${encryptedId}`;
             routerUtils.encryptedEnketoIdSingle( req, res, next, id );
             expect( req ).should.not.have.property( 'enketoId' );
             expect( next ).to.have.been.calledWith( 'route' );
@@ -85,7 +85,7 @@ describe( 'Router utilities', () => {
                 'aA12bB34',
                 routerUtils.idEncryptionKeys.view
             );
-            const id = `::${encryptedId}`;
+            const id = `${encryptedId}`;
             routerUtils.encryptedEnketoIdView( req, res, next, id );
             expect( req.enketoId ).to.equal( 'aA12bB34' );
             expect( next ).to.have.been.calledWith();
