@@ -81,13 +81,6 @@ module.exports = grunt => {
             buildReadmeBadge: {
                 command: 'node ./tools/update-readme-with-shield-badge.js'
             },
-            translation: {
-                command: [
-                    'cd locales',
-                    'npx gulp',
-                    'cd ..'
-                ].join( ' && ' )
-            },
             ie11polyfill: {
                 command: [
                     'mkdir -p public/js/build && curl "https://polyfill.io/v3/polyfill.min.js?ua=ie%2F11.0.0&features=es2015%2Ces2016%2Ces2017%2Ces2018%2Cdefault-3.6%2Cfetch%2CNodeList.prototype.forEach" -o "public/js/build/ie11-polyfill.min.js"',
@@ -102,6 +95,11 @@ module.exports = grunt => {
             },
             'clean-js': {
                 command: 'rm -f public/js/build/* && rm -f public/js/*.js && rm -f public/temp-client-config.json'
+            },
+            translation: {
+                command: 'echo "No automatic translation key generation at the moment."'
+                // Does not work correctly yet for TError() calls and probably not for pug files either.
+                // npx i18next -c ./i18next-parser.config.js
             },
             rollup: {
                 command: 'npx rollup --config'
