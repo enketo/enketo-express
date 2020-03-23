@@ -1,5 +1,5 @@
 /**  
- * The version, resources and fallback variables above are dynamically prepended by the offline-controller.
+ * The version, resources variables above are dynamically prepended by the offline-controller.
  */
 const CACHES = [ `enketo-common_${version}` ];
 
@@ -10,7 +10,7 @@ self.addEventListener( 'install', event => {
         caches.open( CACHES[ 0 ] )
         .then( cache => {
             console.log( 'Opened cache' );
-            return cache.addAll( resources.concat( fallback ) );
+            return cache.addAll( resources );
         } )
         .catch( e => {
             console.log( 'Service worker install error', e );
