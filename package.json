@@ -28,12 +28,7 @@
     "private": true,
     "license": "Apache-2.0",
     "dependencies": {
-        "@babel/cli": "^7.8.4",
-        "@babel/core": "^7.8.7",
-        "@babel/polyfill": "^7.8.7",
-        "@babel/preset-env": "^7.8.7",
         "aliasify": "2.1.x",
-        "babelify": "^10.0.0",
         "basic-auth": "2.0.x",
         "body-parser": "1.x.x",
         "bristol": "0.4.x",

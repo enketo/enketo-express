@@ -1,5 +1,9 @@
 extends ../layout
 
+block head-script
+  script
+    include component/redirect-IE.js
+
 block style
   link(rel='stylesheet', media='all', type='text/css' href=`${basePath}/css/theme-${defaultTheme}.css`) 
   link(rel='stylesheet', media='print', type='text/css' href=`${basePath}/css/theme-${defaultTheme}.print.css`) 

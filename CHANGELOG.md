@@ -2,9 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.0.0-beta.1] - 2020-02-12
 ----------------------
 **WARNING: IT IS HIGHLY RECOMMENDED TO DEPLOY THIS VERSION BEFORE CHROME 82 IS RELEASED SOME TIME IN APRIL 2020 AND PREFERABLY AFTER VERSION 1.86.1 HAS BEEN DEPLOYED. READ MORE [HERE](https://groups.google.com/forum/#!topic/enketo-users/1AewNMkAIiU).**
+##### Removed
+- Support for Internet Explorer
+- Support for /_/#abcd URLs (use /x/#abcd instead)
   
 ##### Change
 - Switch offline application caching technology from ApplicationCache to Service Workers (major).
