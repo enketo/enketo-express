@@ -4,6 +4,7 @@
 
 const express = require( 'express' );
 const router = express.Router();
+const config = require( '../models/config-model' ).server;
 // var debug = require( 'debug' )( 'pages-controller' );
 
 module.exports = app => {
@@ -24,9 +25,10 @@ router
             title: 'Modern Browsers'
         } );
     } )
-    .get( '/offline', ( req, res ) => {
+    .get( '/x/offline', ( req, res ) => {
         res.render( 'pages/offline', {
-            title: 'Offline'
+            title: 'Offline',
+            offlinePath: config[ 'offline path' ]
         } );
     } )
     .get( '/thanks', ( req, res ) => {

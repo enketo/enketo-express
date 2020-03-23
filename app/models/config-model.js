@@ -279,6 +279,7 @@ if ( config[ 'base path' ] && config[ 'base path' ].indexOf( '/' ) !== 0 ) {
 if ( config[ 'base path' ] && config[ 'base path' ].lastIndexOf( '/' ) === config[ 'base path' ].length - 1 ) {
     config[ 'base path' ] = config[ 'base path' ].substring( 0, config[ 'base path' ].length - 1 );
 }
+config[ 'offline path' ] = '/x';
 
 // ensure backwards compatibility of old external authentication configurations
 const authentication = config[ 'linked form and data server' ][ 'authentication' ];

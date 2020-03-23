@@ -1,5 +1,5 @@
 /**
- * @module manifest-model
+ * @module offline-resources-model
  */
 
 const libxml = require( 'libxslt' ).libxmljs;
@@ -11,7 +11,7 @@ const client = require( 'redis' ).createClient( config.redis.cache.port, config.
     auth_pass: config.redis.cache.password
 } );
 const utils = require( '../lib/utils' );
-const debug = require( 'debug' )( 'manifest-model' );
+const debug = require( 'debug' )( 'offline-resources-model' );
 
 // in test environment, switch to different db
 if ( process.env.NODE_ENV === 'test' ) {
@@ -24,23 +24,23 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @function
  * @param {string} html1
  * @param {string} html2
- * @param {string} lang
  * @return {Promise} Promise that resolves with manifest
  */
-function getManifest( html1, html2, lang ) {
-    const manifestKey = `ma:${lang}_manifest`;
-    const versionKey = `ma:${lang}_version`;
+
+function get( html1, html2 ) {
+    const resourcesKey = 'off:resources';
+    const versionKey = 'off:version';
 
     return new Promise( ( resolve, reject ) => {
-        // each language gets its own manifest
-        client.get( manifestKey, ( error, manifest ) => {
+        // There is only one list of resources for all forms and all languages
+        client.get( resourcesKey, ( error, obj ) => {
             if ( error ) {
                 reject( error );
-            } else if ( manifest && manifest !== 'null' ) {
-                debug( 'getting manifest from cache' );
-                resolve( manifest );
+            } else if ( obj && obj !== 'null' ) {
+                debug( 'getting offline resource list from cache' );
+                resolve( JSON.parse( obj ) );
             } else {
-                debug( 'building manifest from scratch' );
+                debug( 'building offline resource list from scratch' );
                 const doc1 = libxml.parseHtml( html1 );
                 const doc2 = libxml.parseHtml( html2 );
                 const themesSupported = config[ 'themes supported' ] || [];
@@ -53,8 +53,8 @@ function getManifest( html1, html2, lang ) {
                 // additional themes
                 resources = resources.concat( _getAdditionalThemes( resources, themesSupported ) );
 
-                // translations
-                resources = resources.concat( _getTranslations( lang ) );
+                // default language (TODO: configurable default?)
+                resources = resources.concat( [ `${config[ 'base path' ]}/x/locales/build/en/translation-combined.json` ] );
 
                 // any resources inside css files
                 resources = resources.concat( _getResourcesFromCss( resources ) );
@@ -63,17 +63,21 @@ function getManifest( html1, html2, lang ) {
                 resources = resources.concat( _getSrcAttributes( doc1 ) );
                 resources = resources.concat( _getSrcAttributes( doc2 ) );
 
-                // explicitly add the IE11 bundle, until we can drop IE11 support completely
-                resources = resources.concat( `/js/build/enketo-webform-ie11-bundle${process.env.NODE_ENV === 'production' || !process.env.NODE_ENV ? '.min' : ''}.js` );
-
-                // remove non-existing files, empties, duplicates and non-http urls
+                // remove empties, duplicates and non-http urls
                 resources = resources
                     .filter( _removeEmpties )
-                    .filter( _removeDuplicates )
-                    .filter( _removeNonHttpResources )
+                    .filter( _removeNonHttpResources );
+
+                // convert relative urls to absolute urls
+                resources = resources.map( _toAbsolute )
+                    // remove duplicates after converting URL to local URLs
+                    .filter( _removeDuplicates );
+
+                // remove non-existing files,
+                resources = resources
                     .filter( _removeNonExisting );
 
-                // calculate the hash to serve as the manifest version number
+                // calculate the hash to serve as the version number
                 const hash = _calculateHash( html1, html2, resources );
 
                 // add explicit entries in case user never lands on URL without querystring
@@ -82,35 +86,27 @@ function getManifest( html1, html2, lang ) {
                     `${config[ 'base path' ]}/x/`
                 ] );
 
+                const fallback = `${config[ 'base path' ]}/x/offline/`;
+
                 // determine version
                 _getVersionObj( versionKey )
                     .then( obj => {
                         let version = obj.version;
                         if ( obj.hash !== hash ) {
                             // create a new version
-                            const date = new Date().toISOString().replace( 'T', '|' );
-                            version = `${date.substring( 0, date.length - 8 )}|${lang}`;
+                            const date = new Date().toISOString().replace( 'T', '_' ).replace( ':', '-' );
+                            version = `${date.substring( 0, date.length - 8 )}`;
                             // update stored version, don't wait for result
                             _updateVersionObj( versionKey, hash, version );
                         }
-                        manifest = _getManifestString( version, resources );
-                        // cache manifest for an hour, don't wait for result
-                        client.set( manifestKey, manifest, 'EX', 1 * 60 * 60, () => {} );
-                        resolve( manifest );
+                        // cache for an hour, don't wait for result
+                        client.set( resourcesKey, JSON.stringify( { version, resources, fallback } ), 'EX', 1 * 60 * 60, () => {} );
+                        resolve( { version, resources, fallback } );
                     } );
             }
         } );
     } );
 
-}
-
-/**
- * @param {string} version
- * @param {Array} resources
- * @return {string} Manifest string
- */
-function _getManifestString( version, resources ) {
-    return `CACHE MANIFEST\n# version: ${version}\n\nCACHE:\n${resources.join( '\n' )}\n\nFALLBACK:\n/x ${config[ 'base path' ]}/offline\n/_ ${config[ 'base path' ]}/offline\n\nNETWORK:\n*\n`;
 }
 
 /**
@@ -183,23 +179,6 @@ function _getAdditionalThemes( resources, themes ) {
 }
 
 /**
- * @param {string} lang
- * @return {Array<string>} List of translations paths
- */
-function _getTranslations( lang ) {
-    const langs = [];
-
-    // fallback language
-    langs.push( `${config[ 'base path' ]}/locales/build/en/translation-combined.json` );
-
-    if ( lang && lang !== 'en' ) {
-        langs.push( `${config[ 'base path' ]}/locales/build/${lang}/translation-combined.json` );
-    }
-
-    return langs;
-}
-
-/**
  * @param {Array<string>} resources
  * @return {Array<string>} A list of urls
  */
@@ -213,7 +192,12 @@ function _getResourcesFromCss( resources ) {
             const content = _getResourceContent( resource );
             let matches;
             while ( ( matches = urlReg.exec( content ) ) !== null ) {
-                urls.push( matches[ 1 ] );
+                let url = matches[ 1 ];
+                if ( url.startsWith( '../' ) ) {
+                    // change context one step down from public/css to public/
+                    url = url.substring( 3 );
+                }
+                urls.push( url );
             }
         }
     } );
@@ -255,10 +239,21 @@ function _removeNonExisting( resource ) {
  * @return {string} Local resource path
  */
 function _getLocalPath( resource ) {
-    const rel = ( resource.indexOf( `${config[ 'base path' ]}/locales/` ) === 0 ) ? '../../' : '../../public';
+    const rel = ( resource.indexOf( `${config[ 'base path' ]}${config['offline path']}/locales/` ) === 0 ) ? '../../' : '../../public';
     const resourceWithoutBase = resource.substring( config[ 'base path' ].length );
-    const localResourcePath = path.join( __dirname, rel, url.parse( resourceWithoutBase ).pathname );
+    const op = config[ 'offline path' ];
+    const resourceWithoutOfflinePath = op ? ( resourceWithoutBase.startsWith( op ) ? resourceWithoutBase.substring( op.length ) : resourceWithoutBase ) : resourceWithoutBase;
+    const localResourcePath = path.join( __dirname, rel, url.parse( resourceWithoutOfflinePath ).pathname );
+
     return localResourcePath;
+}
+
+/**
+ * Very crude convertor only from path/to/resource to /x/path/to/resource
+ * @param {*} resource 
+ */
+function _toAbsolute( resource ) {
+    return !resource.startsWith( '/' ) ? `${config['offline path']}/${resource}` : resource;
 }
 
 /**
@@ -310,6 +305,4 @@ function _calculateHash( html1, html2, resources ) {
     return utils.md5( hash );
 }
 
-module.exports = {
-    get: getManifest
-};
+module.exports = { get };

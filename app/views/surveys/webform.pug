@@ -2,24 +2,24 @@ extends ../layout
 
 block style
   // preload for performance
-  link(rel='preload', as='font', href=`${basePath}/fonts/OpenSans-Bold-webfont.woff`, type='font/woff', crossorigin)
-  link(rel='preload', as='font', href=`${basePath}/fonts/OpenSans-Regular-webfont.woff`, type='font/woff', crossorigin)
-  link(rel='preload', as='font', href=`${basePath}/fonts/fontawesome-webfont.woff?v=4.6.2`, type='font/woff', crossorigin)
+  link(rel='preload', as='font', href=`${basePath}${offlinePath || ''}/fonts/OpenSans-Bold-webfont.woff`, type='font/woff', crossorigin)
+  link(rel='preload', as='font', href=`${basePath}${offlinePath || ''}/fonts/OpenSans-Regular-webfont.woff`, type='font/woff', crossorigin)
+  link(rel='preload', as='font', href=`${basePath}${offlinePath || ''}/fonts/fontawesome-webfont.woff?v=4.6.2`, type='font/woff', crossorigin)
 
   // critical styles inline for performance
   style
     include ../../../public/css/common.css
 
   - var media = print ? 'all' : 'print';
-  link(rel='stylesheet', media='all', type='text/css' href=`${basePath}/css/theme-${defaultTheme}.css`) 
-  link(rel='stylesheet', media=`${media}`, type='text/css' href=`${basePath}/css/theme-${defaultTheme}.print.css`) 
+  link(rel='stylesheet', media='all', type='text/css' href=`${basePath}${offlinePath || ''}/css/theme-${defaultTheme}.css`) 
+  link(rel='stylesheet', media=`${media}`, type='text/css' href=`${basePath}${offlinePath || ''}/css/theme-${defaultTheme}.print.css`) 
 
 block script
   - var suffix = (type && type !== 'preview' && type !== 'single') ? '-' + type : ''
   if environment == 'production'
-    script#main-script(defer, module, src=`${basePath}/js/build/enketo-webform${suffix}-bundle.min.js`)
+    script#main-script(defer, module, src=`${basePath}${offlinePath || ''}/js/build/enketo-webform${suffix}-bundle.min.js`)
   else
-    script#main-script(defer, module, src=`${basePath}/js/build/enketo-webform${suffix}-bundle.js`)
+    script#main-script(defer, module, src=`${basePath}${offlinePath || ''}/js/build/enketo-webform${suffix}-bundle.js`)
   script(nomodule).
     var mainScript = document.querySelector( '#main-script' );
     var mainScriptSrc = mainScript.src;
@@ -38,6 +38,6 @@ block content
       include component/_form-header
       | !{form}
       include component/_form-footer
-  if manifest
+  if offlinePath
     include component/_side-slider
   include component/_feedback-bar

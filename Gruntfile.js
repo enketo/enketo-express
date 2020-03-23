@@ -1,5 +1,5 @@
 module.exports = grunt => {
-    const JS_INCLUDE = [ '**/*.js', '!**/node_modules/**', '!test/**/*.spec.js', '!public/js/build/*', '!test/client/config/karma.conf.js', '!docs/**', '!test-coverage/**' ];
+    const JS_INCLUDE = [ '**/*.js', '!**/offline-app-worker-partial.js', '!**/node_modules/**', '!test/**/*.spec.js', '!public/js/build/*', '!test/client/config/karma.conf.js', '!docs/**', '!test-coverage/**' ];
     const path = require( 'path' );
     const nodeSass = require( 'node-sass' );
     const bundles = require( './buildFiles' ).bundles;

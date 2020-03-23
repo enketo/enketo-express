@@ -2,14 +2,14 @@
 
 @font-face {
     font-family: 'OpenSans';
-    src: url($base-path + "/fonts/OpenSans-Regular-webfont.woff") format("woff");
+    src: url("../fonts/OpenSans-Regular-webfont.woff") format("woff");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'OpenSans';
-    src: url($base-path + "/fonts/OpenSans-Bold-webfont.woff") format("woff");
+    src: url("../fonts/OpenSans-Bold-webfont.woff") format("woff");
     font-weight: bold;
     font-style: normal;
 }

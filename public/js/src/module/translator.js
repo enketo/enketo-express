@@ -38,7 +38,7 @@ initialize = new Promise( ( resolve, reject ) => {
             fallbackLng: 'en',
             joinArrays: '\n',
             backend: {
-                loadPath: `${settings.basePath}/locales/build/__lng__/translation-combined.json`,
+                loadPath: `${settings.basePath}${settings.offlinePath}/locales/build/__lng__/translation-combined.json`,
             },
             load: 'languageOnly',
             lowerCaseLng: true,

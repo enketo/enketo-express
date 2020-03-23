@@ -78,7 +78,8 @@ if ( window.location.pathname.indexOf( '/preview' ) === 0 ) {
 settings.enketoIdPrefix = '::';
 
 // Determine whether view is offline-capable
-settings.offline = !!document.querySelector( 'html' ).getAttribute( 'manifest' );
+settings.offline = window.location.pathname.includes( '/x/' );
+settings.offlinePath = settings.offline ? '/x' : '';
 
 // Extract Enketo ID
 settings.enketoId = ( settings.offline ) ? _getEnketoId( '#', window.location.hash ) : _getEnketoId( `/${settings.enketoIdPrefix}`, window.location.pathname );

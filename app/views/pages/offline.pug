@@ -1,13 +1,13 @@
 extends ../layout
 
 block style
-  link(rel='stylesheet', media='all', type='text/css' href=`${basePath}/css/error.css`) 
+  link(rel='stylesheet', media='all', type='text/css' href=`${basePath}${offlinePath || ''}/css/error.css`) 
 
 block script
   if environment == 'production'
-    script(src=`${basePath}/js/build/enketo-offline-fallback-bundle.min.js`)
+    script(src=`${basePath}${offlinePath || ''}/js/build/enketo-offline-fallback-bundle.min.js`)
   else
-    script(src=`${basePath}/js/build/enketo-offline-fallback-dev-bundle.js`)
+    script(src=`${basePath}${offlinePath || ''}/js/build/enketo-offline-fallback-bundle.js`)
 
 block content
   h1.error(style="margin-bottom: 0; border-bottom: none; min-height: auto;")= t("page.offline.heading")
