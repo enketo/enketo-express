@@ -563,7 +563,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'version',
-                    expected: /.{6,20}/
+                    expected: /.{5,20}/
                 }
             },
             {
@@ -573,7 +573,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'version',
-                    expected: /.{6,20}/
+                    expected: /.{5,20}/
                 }
             },
             // TESTING THE OFFLINE/ONLINE VIEWS (not compatible with v1)
