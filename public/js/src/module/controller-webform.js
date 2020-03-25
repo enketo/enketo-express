@@ -242,8 +242,6 @@ function _submitRecord() {
 
     gui.alert( `${beforeMsg}<div class="loader-animation-small" style="margin: 40px auto 0 auto;"/>`, t( 'alert.submission.msg' ), 'bare' );
 
-
-
     return new Promise( resolve => {
             const record = {
                 'xml': form.getDataStr( include ),
@@ -413,7 +411,7 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
 
             // Save the record, determine the save method
             const saveMethod = form.recordName ? 'update' : 'set';
-            console.log( 'saving record with', saveMethod, record );
+
             return records[ saveMethod ]( record );
         } )
         .then( () => {

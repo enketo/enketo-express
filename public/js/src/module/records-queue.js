@@ -3,7 +3,6 @@
  */
 
 import store from './store';
-
 import connection from './connection';
 import gui from './gui';
 import events from './event';
@@ -19,6 +18,7 @@ let $queueNumber;
 let uploadProgress;
 let finalRecordPresent;
 const autoSaveKey = `__autoSave_${settings.enketoId}`;
+const lastSaveKey = `__lastSaved_${settings.enketoId}`;
 let uploadOngoing = false;
 
 function init() {
@@ -109,6 +109,16 @@ function removeAutoSavedRecord() {
     return store.record.remove( autoSaveKey );
     // do not update recordList
 }
+
+function updateLastSavedRecord( record ) {
+    // give an internal name
+    record.name = `__lastSave_${Date.now()}`;
+    // use the pre-defined key
+    record.instanceId = lastSaveKey;
+    console.log( 'saving last saved', record );
+    return store.record.update( record );
+}
+
 
 /**
  * Gets the countervalue of a new record (guaranteed to be unique)
@@ -395,6 +405,7 @@ export default {
     getAutoSavedRecord,
     updateAutoSavedRecord,
     removeAutoSavedRecord,
+    updateLastSavedRecord,
     flush,
     getCounterValue,
     setActive,
