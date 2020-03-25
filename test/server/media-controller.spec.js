@@ -1,6 +1,5 @@
 const chai = require( 'chai' );
 const expect = chai.expect;
-const chaiAsPromised = require( 'chai-as-promised' );
 const request = require( 'request' );
 const config = require( '../../config/config' );
 
@@ -20,68 +19,68 @@ const testHTMLHost = 'http/localhost:1234';
 const requestURL = enketoHost + '/media/get/' + testHTMLHost;
 
 
-describe('Media Controller', () => {
+describe( 'Media Controller', () => {
 
-	console.log('testing on this request: ' + requestURL);
-	
-	describe('No Referer Request', () => {
+    console.log( 'testing on this request: ' + requestURL);
+    
+    describe( 'No Referer Request', () => {
 
-		if (!IPfiltering.allowPrivateIPAddress) {
-			if (IPfiltering.allowIPAddressList === '') {
-				it('allowPrivateIPAddress is false', () => {
-					request( requestURL ,
-						function(error, response, body){
-							expect(body).to.be.equal(undefined);
-						});
-				});	
-			} else if (IPfiltering.allowIPAddressList.includes('localhost') || IPfiltering.allowIPAddressList.includes('127.0.0.1')) {
-				it('allowprivateipaddress is false, but allowipaddresslist contains: localhost or 127.0.0.1', () => {
-					request( requestURL ,
-						function(error, response, body){
-							expect(body).to.be.equal(testHTMLBody);
-					});
-				});
-				
-			} else if (IPfiltering.denyIPAddressList.includes('localhost') || IPfiltering.denyIPAddressList.includes('127.0.0.1')) {
-				it('allowprivateipaddress is false, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
-					request( requestURL ,
-						function(error, response, body){
-							expect(body).to.be.equal(undefined);
-					});
-				});
-				
-			}
+        if (!IPfiltering.allowPrivateIPAddress) {
+            if (IPfiltering.allowIPAddressList === '' ) {
+                it( 'allowPrivateIPAddress is false', () => {
+                    request( requestURL ,
+                        function(error, response, body){
+                            expect(body).to.be.equal(undefined);
+                        });
+                });    
+            } else if (IPfiltering.allowIPAddressList.includes( 'localhost' ) || IPfiltering.allowIPAddressList.includes( '127.0.0.1' )) {
+                it( 'allowprivateipaddress is false, but allowipaddresslist contains: localhost or 127.0.0.1', () => {
+                    request( requestURL ,
+                        function(error, response, body){
+                            expect(body).to.be.equal(testHTMLBody);
+                        });
+                });
+                
+            } else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
+                it( 'allowprivateipaddress is false, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
+                    request( requestURL ,
+                        function(error, response, body){
+                            expect(body).to.be.equal(undefined);
+                        });
+                });
+                
+            }
 
-		}
+        }
 
-		if (IPfiltering.allowPrivateIPAddress) {
-			if (IPfiltering.allowIPAddressList === '' && IPfiltering.denyIPAddressList === '') {
-				it('allowPrivateIPAddress is true', () => {
-					request( requestURL ,
-						function(error, response, body){
-							expect(body).to.be.equal(testHTMLBody);
-						});
-				});	
-			} else if (IPfiltering.allowIPAddressList.includes('localhost') || IPfiltering.allowIPAddressList.includes('127.0.0.1')) {
-				it('allowprivateipaddress is true, but allowipaddresslist contains: localhost or 127.0.0.1', () => {
-					request( requestURL ,
-						function(error, response, body){
-							expect(body).to.be.equal(testHTMLBody);
-					});
-				});
-				
-			} else if (IPfiltering.denyIPAddressList.includes('localhost') || IPfiltering.denyIPAddressList.includes('127.0.0.1')) {
-				it('allowprivateipaddress is true, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
-					request( requestURL ,
-						function(error, response, body){
-							expect(body).to.be.equal(undefined); // TODO: why is this okay?
-					});
-				});
-				
-			}
+        if (IPfiltering.allowPrivateIPAddress) {
+            if (IPfiltering.allowIPAddressList === '' && IPfiltering.denyIPAddressList === '' ) {
+                it( 'allowPrivateIPAddress is true', () => {
+                    request( requestURL ,
+                        function(error, response, body){
+                            expect(body).to.be.equal(testHTMLBody);
+                        });
+                });    
+            } else if (IPfiltering.allowIPAddressList.includes( 'localhost' ) || IPfiltering.allowIPAddressList.includes( '127.0.0.1' )) {
+                it( 'allowprivateipaddress is true, but allowipaddresslist contains: localhost or 127.0.0.1', () => {
+                    request( requestURL ,
+                        function(error, response, body){
+                            expect(body).to.be.equal(testHTMLBody);
+                        });
+                });
+                
+            } else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
+                it( 'allowprivateipaddress is true, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
+                    request( requestURL ,
+                        function(error, response, body){
+                            expect(body).to.be.equal(undefined); // TODO: why is this okay?
+                        });
+                });
+                
+            }
 
-		}
+        }
 
-	});
+    });
 });
 
