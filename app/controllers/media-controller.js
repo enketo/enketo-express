@@ -36,9 +36,9 @@ function _extractMediaUrl( path ) {
 function _isPrintView( req ) {
     if (req.headers.referer != null){ 
         const refererQuery = url.parse( req.headers.referer ).query;
-    	return !!( refererQuery && refererQuery.includes( 'print=true' ) );
+        return !!( refererQuery && refererQuery.includes( 'print=true' ) );
     } else {
-    	return false;
+        return false;
     }
 }
 
@@ -61,10 +61,10 @@ function getMedia( req, res, next ) {
 
     //filtering agent to stop private ip access to HEAD and GET
     options.agent = new RequestFilteringHttpAgent({
-    	allowPrivateIPAddress: requestFilteringOptions.allowPrivateIPAddress,
-	allowMetaIPAddress: requestFilteringOptions.allowMetaIPAddress,
-	allowIPAddressList: [ requestFilteringOptions.allowIPAddressList ],
-	denyIPAdressList: [ requestFilteringOptions.denyIPAdressList ]
+        allowPrivateIPAddress: requestFilteringOptions.allowPrivateIPAddress,
+        allowMetaIPAddress: requestFilteringOptions.allowMetaIPAddress,
+        allowIPAddressList: [ requestFilteringOptions.allowIPAddressList ],
+        denyIPAddressList: [ requestFilteringOptions.denyIPAddressList ]
     });
 
     if ( _isPrintView( req ) ) {
