@@ -1,4 +1,4 @@
-![coverage-shield-badge-1](https://img.shields.io/badge/coverage-69.09%25-yellow.svg)
+![coverage-shield-badge-1](https://img.shields.io/badge/coverage-66.84%25-yellow.svg)
 [![Build Status](https://travis-ci.org/enketo/enketo-express.svg?branch=master)](https://travis-ci.org/enketo/enketo-express) [![Dependency Status](https://david-dm.org/enketo/enketo-express.svg)](https://david-dm.org/enketo/enketo-express) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/609aaf6fa764454f901f1c8a427264ff)](https://www.codacy.com/app/martijnr/enketo-express?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=enketo/enketo-express&amp;utm_campaign=Badge_Grade)
 
 Enketo Express

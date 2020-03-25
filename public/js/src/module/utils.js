@@ -225,6 +225,17 @@ function _throwInvalidXmlNodeName( name ) {
     }
 }
 
+/**
+ * 
+ * @param {string} path location.pathname in a browser
+ */
+function getEnketoId( path ) {
+    path = path.endsWith( '/' ) ? path.substring( 0, path.length - 1 ) : path;
+    const id = path.substring( path.lastIndexOf( '/' ) + 1 );
+    // previews /preview, and /preview/i can be loaded (unofficially) without an ID.
+    return id === 'preview' || id === 'i' ? null : id;
+}
+
 export default {
     blobToDataUri,
     blobToArrayBuffer,
@@ -235,5 +246,6 @@ export default {
     csvToXml,
     arrayToXml,
     csvToArray,
-    getQueryString
+    getQueryString,
+    getEnketoId
 };

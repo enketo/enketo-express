@@ -278,4 +278,43 @@ describe( 'Client Utilities', () => {
         } );
     } );
 
+    describe( 'Enketo ID determinator from location.pathname', () => {
+        [
+            '/abcd',
+            '/abcd/',
+            '/i/abcd',
+            '/i/abcd/',
+            '/preview/abcd',
+            '/preview/abcd/',
+            '/preview/i/abcd',
+            '/preview/i/abcd/',
+            '/single/abcd',
+            '/single/abcd/',
+            '/single/i/abcd',
+            '/single/i/abcd/',
+            '/view/abcd',
+            '/view/abcd/',
+            '/edit/abcd',
+            '/edit/abcd/',
+            '/edit/i/abcd',
+            '/edit/i/abcd/',
+            '/xform/abcd',
+            '/xform/abcd/',
+        ].forEach( test => {
+            it( 'extracts the id "abcd" correctly', () => {
+                expect( utils.getEnketoId( test ) ).to.equal( 'abcd' );
+            } );
+
+            [
+                '/preview',
+                '/preview/'
+            ].forEach( test => {
+                it( 'extracts the id null correctly', () => {
+                    expect( utils.getEnketoId( test ) ).to.equal( null );
+                } );
+            } );
+        } );
+
+    } );
+
 } );

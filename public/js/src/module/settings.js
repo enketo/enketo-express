@@ -1,4 +1,5 @@
 import config from 'enketo/config';
+import utils from './utils';
 const queryParams = _getAllQueryParams();
 const settings = {};
 const DEFAULT_MAX_SIZE = 5 * 1024 * 1024;
@@ -79,7 +80,7 @@ settings.offline = window.location.pathname.includes( '/x/' );
 settings.offlinePath = settings.offline ? '/x' : '';
 
 // Extract Enketo ID
-settings.enketoId = _getEnketoId( window.location.pathname );
+settings.enketoId = utils.getEnketoId( window.location.pathname );
 
 // Set multipleAllowed for single webform views
 if ( settings.type === 'single' && settings.enketoId.length !== 32 && settings.enketoId.length !== 64 ) {
@@ -92,10 +93,6 @@ settings.goTo = settings.type === 'edit' || settings.type === 'preview' || setti
 // A bit crude and hackable by users, but this way also type=view with a record will be caught.
 settings.printRelevantOnly = !!settings.instanceId;
 
-function _getEnketoId( haystack ) {
-    const id = haystack.substring( haystack.lastIndexOf( '/' ) + 1 );
-    return id;
-}
 
 function _getAllQueryParams() {
     let val;
