@@ -30,7 +30,7 @@ function _extractMediaUrl( path ) {
 
 
 function _isPrintView( req ) {
-    const refererQuery = url.parse( req.headers.referer ).query;
+    const refererQuery = req.headers && req.headers.referer ? url.parse( req.headers.referer ).query : null;
     return !!( refererQuery && refererQuery.includes( 'print=true' ) );
 }
 

@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Fixed
+- In Chrome, when loading a record with a file, the download button does not work and shows 'Failed - Server problem'.
+
 [2.0.1] - 2020-03-26
 ----------------------
 **WARNING: IT IS HIGHLY RECOMMENDED TO DEPLOY THIS VERSION BEFORE CHROME 83 IS RELEASED SOME TIME IN APRIL 2020 AND PREFERABLY AFTER VERSION 1.86.x HAS BEEN DEPLOYED. READ MORE [HERE](https://blog.enketo.org/Enketo-Express-mar-2020-update/).**
