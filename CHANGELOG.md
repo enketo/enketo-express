@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ----------------------
+##### Changed
+- Added icon to Next button.
+
 ##### Fixed
 - In Chrome, when loading a record with a file, the download button does not work and shows 'Failed - Server problem'.
 
