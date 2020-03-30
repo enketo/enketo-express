@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [2.0.1] - 2020-03-26
 ----------------------
-**WARNING: IT IS HIGHLY RECOMMENDED TO DEPLOY THIS VERSION BEFORE CHROME 82 IS RELEASED SOME TIME IN APRIL 2020 AND PREFERABLY AFTER VERSION 1.86.x HAS BEEN DEPLOYED. READ MORE [HERE](https://groups.google.com/forum/#!topic/enketo-users/1AewNMkAIiU).**
+**WARNING: IT IS HIGHLY RECOMMENDED TO DEPLOY THIS VERSION BEFORE CHROME 83 IS RELEASED SOME TIME IN APRIL 2020 AND PREFERABLY AFTER VERSION 1.86.x HAS BEEN DEPLOYED. READ MORE [HERE](https://blog.enketo.org/Enketo-Express-mar-2020-update/).**
 ##### Fixed
 - Preview urls using a `form` queryparameter are broken.
 
@@ -12,7 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Removed
 - Support for Internet Explorer
-- Support for offline-capable webform URLs using \# and online-only URLs using ::.
+- Support for offline-capable webform URLs using _"\#"_ and online-only URLs using _"::"_.
 
 ##### Changed
 - Automatically redirect old-style URLs that are no longer supported.
@@ -20,7 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [1.86.3] - 2020-03-20
 ----------------------
-**WARNING: IT IS HIGHLY RECOMMENDED TO DEPLOY ONE OF THE 1.86.x VERSIONS BEFORE MARCH 31ST, 2020. READ MORE [HERE](https://groups.google.com/forum/#!topic/enketo-users/1AewNMkAIiU).**
+**WARNING: IT IS HIGHLY RECOMMENDED TO DEPLOY ONE OF THE 1.86.x VERSIONS BEFORE MARCH 31ST, 2020. READ MORE [HERE](https://blog.enketo.org/Enketo-Express-mar-2020-update/).**
 ##### Fixed
 - If last element of last row of form with Grid theme is hidden, the cells of that last row are not resized properly in the print view.
 - Textareas not resizing in pages mode when loading large text values on non-first pages.
