@@ -3,12 +3,15 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
-----------------------
+---------------------
 ##### Changed
+- Upgraded XLST module. **WARNING: Node.js 12 is now required**
 - Added icon to Next button.
+- Improved performance of autocomplete questions inside repeats that use static option lists.
 
 ##### Fixed
 - In Chrome, when loading a record with a file, the download button does not work and shows 'Failed - Server problem'.
+- Option label images in Likert widget are not centered below text.
 
 [2.0.1] - 2020-03-26
 ----------------------

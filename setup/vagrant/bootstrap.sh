@@ -59,7 +59,7 @@ if [ $ENKETO_EXPRESS_USE_NODE_ENV = "true" ]; then
     nodeenv env
     . env/bin/activate
 else
-    curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
+    curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
     apt-get install -y nodejs
 fi
 
@@ -76,11 +76,11 @@ if [ -d "$ENKETO_EXPRESS_REPO_DIR/node_modules" ]; then
 fi
 
 # Install all the required Node packages
-npm install -g grunt-cli gulp nodemon mocha
+npm install -g grunt-cli nodemon mocha
 npm install
 
-# build js and css
-grunt
+# build js and css (not necessary because it's part of npm install)
+# grunt
 
 # still installing pm2 but not using in script any more. Because it runs invisibly when started as root.
 if [ $(whoami) = "root" ]; then
