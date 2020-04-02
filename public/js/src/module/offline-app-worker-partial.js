@@ -53,7 +53,7 @@ self.addEventListener( 'fetch', event => {
                 .then( response => {
                     const isScopedResource = event.request.url.includes( '/x/' );
                     const isTranslation = event.request.url.includes( '/locales/build/' );
-                    const isServiceWorkerScript = event.request.url === event.target.serviceWorker.scriptURL;
+                    const isServiceWorkerScript = event.request.url === self.location.href;
 
                     // The second clause prevents confusing logging when opening the service worker directly in a separate tab.
                     if ( isScopedResource && !isServiceWorkerScript && !isTranslation ) {
