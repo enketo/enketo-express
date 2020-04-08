@@ -3,7 +3,7 @@ import controller from './module/controller-webform';
 import settings from './module/settings';
 import connection from './module/connection';
 import { FormModel } from 'enketo-core/src/js/form-model';
-import { init as initTranslator, t, localize } from './module/translator';
+import { init as initTranslator, t, localize, loadTranslation } from './module/translator';
 import store from './module/store';
 import utils from './module/utils';
 import events from './module/event';
@@ -35,6 +35,10 @@ if ( settings.offline ) {
         .then( _addBranding )
         .then( _swapTheme )
         .then( _init )
+        .then( formParts => {
+            formParts.languages.forEach( loadTranslation );
+            return formParts;
+        } )
         .then( formCache.updateMaxSubmissionSize )
         .then( formCache.updateMedia )
         .then( s => {
@@ -101,7 +105,7 @@ function _setFormCacheEventHandlers() {
  * Advanced/emergency handlers that should always be activated even if form loading fails.
  */
 function _setEmergencyHandlers() {
-    const flushBtn = document.querySelector( '.side-slider__advanced__button.flush-db' )
+    const flushBtn = document.querySelector( '.side-slider__advanced__button.flush-db' );
 
     if ( flushBtn ) {
         flushBtn.addEventListener( 'click', () => {
@@ -186,7 +190,7 @@ function _init( formParts ) {
 
     return new Promise( ( resolve, reject ) => {
         if ( formParts && formParts.form && formParts.model ) {
-            const formFragment = range.createContextualFragment( formParts.form )
+            const formFragment = range.createContextualFragment( formParts.form );
             formheader.after( formFragment );
             const formEl = document.querySelector( 'form.or' );
 
@@ -195,6 +199,7 @@ function _init( formParts ) {
                 instanceStr: _prepareInstance( formParts.model, settings.defaults ),
                 external: formParts.externalData,
             } ).then( form => {
+                formParts.languages = form.languages;
                 formParts.htmlView = formEl;
                 document.querySelector( 'head>title' ).textContent = utils.getTitleFromFormStr( formParts.form );
                 if ( settings.print ) {

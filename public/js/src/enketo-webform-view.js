@@ -90,6 +90,7 @@ function _init( formParts ) {
         external: formParts.externalData,
         instanceAttachments: formParts.instanceAttachments,
     } ).then( form => {
+        formParts.languages = form.languages;
         document.querySelector( 'head>title' ).textContent = document.querySelector( '#form-title' ).textContent;
         if ( settings.print ) {
             gui.applyPrintStyle();

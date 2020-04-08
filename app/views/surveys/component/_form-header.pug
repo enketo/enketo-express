@@ -15,7 +15,7 @@ header.form-header
           img(src=`${logo.source}`, alt="brand logo")
   .form-header__filler
   button.form-header__button--print.btn-bg-icon-only(onclick="return false;")
-  span.form-language-selector.hide: span= t('form.chooseLanguage')
+  span.form-language-selector.hide: span(data-i18n='form.chooseLanguage')= t('form.chooseLanguage')
   button.form-header__button--homescreen.btn-icon-only.hide(type="button", aria-label="add to homescreen")
     i.icon.icon-bookmark-o 
   nav.pages-toc.hide(role="navigation")

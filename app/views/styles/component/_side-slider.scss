@@ -14,9 +14,11 @@ $slider-width: 240px;
     width: $slider-width;
     min-height: 100%;
     padding: 20px;
+
     h3 {
         color: white;
     }
+
     .close {
         font-size: 22px;
         color: white;
@@ -27,9 +29,11 @@ $slider-width: 240px;
         top: 10px;
         right: 15px;
     }
+
     &__button-bar {
         margin: 20px 0 33px 0;
     }
+
     &__toggle {
         font-family: arial, sans-serif;
         position: fixed;
@@ -43,16 +47,19 @@ $slider-width: 240px;
         border-bottom: 2px solid;
         font-size: 20px;
         line-height: 30px;
+
         &.open {
             border-left: none;
             border-right: 3px solid;
             border-color: #888888;
             left: 8px;
             z-index: 10;
+
             &:hover {
                 border-color: #000000;
             }
         }
+
         &.close {
             @include transition-fast;
             opacity: 1;
@@ -61,23 +68,27 @@ $slider-width: 240px;
             border-left: 3px solid;
             border-color: #999999;
             z-index: 1001;
+
             &:hover {
                 border-color: #ffffff;
             }
         }
     }
-    &__app-version{
+
+    &__app-version {
         margin-top: 40px;
         color: #666;
         font-size: 10px;
         text-align: center;
         border-top: #666 solid 1px;
-        padding: 2px 0;
+        padding: 2px 5px;
+
         &:hover {
             color: white;
             font-weight: bold;
         }
     }
+
     &__advanced {
         &__button {
             width: 100%;
@@ -91,105 +102,128 @@ $slider-width: 240px;
     .side-slider {
         @include translate($slider-width, 0);
         @include transition-fast;
+
         &__toggle.close {
             @include translate($slider-width, 0);
         }
     }
+
     .slider-overlay {
         @extend .vex-overlay;
-       z-index: 999;
-       display: block;
+        z-index: 999;
+        display: block;
     }
 }
 
-.record-list{
-    &__button-bar{
+.record-list {
+    &__button-bar {
         margin-top: 30px;
     }
-    &__button-bar__button{
+
+    &__button-bar__button {
         width: 100%;
-        padding:10px;
+        padding: 10px;
         // setting a fixed height to cut off long translations, not a great thing to do
         //height: 40px;
     }
-    &__button-bar__button.export{ 
+
+    &__button-bar__button.export {
         display: block;
         padding: 2px;
         font-size: 13px;
         background: none;
         color: white;
+
         &:hover {
             background: #626262;
             color: white;
         }
     }
+
     &__upload-progress {
         visibility: hidden;
         width: 100%;
     }
+
     &__records {
         list-style-type: none;
         padding: 0;
         margin-left: 0;
         margin-top: 0;
+
         &__record {
             padding: 2px 5px;
             margin: 5px 0 2px 0;
             border: 1px solid white;
             word-break: break-word;
+
             &.success {
                 opacity: 0.6;
                 border-width: 2px;
                 border-color: green;
             }
+
             &.ongoing {
                 border-width: 2px;
                 border-color: orange;
             }
+
             &.error {
                 cursor: pointer;
                 border-width: 2px;
                 border-color: red;
             }
+
             &[data-draft=true] {
                 @extend .icon-pencil;
                 cursor: pointer;
                 border-color: #999999;
                 border-style: dotted;
                 color: #eeeeee;
-                &:hover, &.active {
+
+                &:hover,
+                &.active {
                     background: #666666;
                     color: white;
                 }
+
                 &::before {
                     @extend .icon;
                     float: right;
                     color: #aaaaaa;
                 }
+
                 &:hover::before {
                     color: white;
                 }
+
                 &.active {
                     @extend .icon-arrow-right;
                 }
+
                 &.active::before {
                     color: white;
                 }
             }
         }
+
         &__msg {
             padding: 0 5px;
             line-height: 15px;
+
             &.success {
                 color: green;
             }
+
             &.ongoing {
                 color: orange;
             }
+
             &.error {
                 color: red;
             }
         }
+
         &--none {
             text-align: center;
             margin-bottom: 35px;
@@ -201,10 +235,10 @@ $slider-width: 240px;
 [dir="rtl"] {
     .record-list {
         &__records {
-            &__record{
+            &__record {
                 &[data-draft=true] {
-                    &::before{
-                        float:left;
+                    &::before {
+                        float: left;
                     }
                 }
             }

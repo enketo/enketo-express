@@ -9,7 +9,7 @@ import { Form } from 'enketo-core';
 import { updateDownloadLink } from 'enketo-core/src/js/utils';
 import events from './event';
 import fileManager from './file-manager';
-import { t } from './translator';
+import { t, localize, getCurrentUiLanguage, getDesiredLanguage } from './translator';
 import records from './records-queue';
 import $ from 'jquery';
 import encryptor from './encryptor';
@@ -20,7 +20,7 @@ let formData;
 let formprogress;
 const formOptions = {
     clearIrrelevantImmediately: false,
-    printRelevantOnly: settings.printRelevantOnly
+    printRelevantOnly: settings.printRelevantOnly,
 };
 
 function init( selector, data ) {
@@ -40,6 +40,10 @@ function init( selector, data ) {
 
             if ( data.instanceAttachments ) {
                 fileManager.setInstanceAttachments( data.instanceAttachments );
+            }
+
+            if ( getCurrentUiLanguage() === getDesiredLanguage() ) {
+                formOptions.language = getCurrentUiLanguage();
             }
 
             form = new Form( formSelector, data, formOptions );
@@ -612,6 +616,19 @@ function _setEventHandlers() {
             recordNames: successes.join( ', ' )
         } ), 7 );
     } );
+
+    // This actually belongs in gui.js but that module doesn't have access to the form object.
+    // Enketo core takes care of language switching of the form itself, i.e. all language strings in the form definition.
+    // This handler does the UI around the form, as well as the UI inside the form that are part of the application.
+    const formLanguages = document.querySelector( '#form-languages' );
+    if ( formLanguages ) {
+        formLanguages.addEventListener( events.Change().type, event => {
+            event.preventDefault();
+            console.log( 'ready to set UI lang', form.langs.currentLang );
+            localize( document.querySelector( 'body' ), form.langs.currentLang )
+                .then( dir => document.querySelector( 'html' ).setAttribute( 'dir', dir ) );
+        } );
+    }
 
     if ( settings.offline ) {
         document.addEventListener( events.XFormsValueChanged().type, _autoSaveRecord );

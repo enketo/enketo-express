@@ -3,10 +3,9 @@
  */
 
 import store from './store';
-import events from 'enketo-core/src/js/event';
+import events from './event';
 import settings from './settings';
 import connection from './connection';
-import $ from 'jquery';
 import assign from 'lodash/assign';
 
 let hash;
@@ -242,10 +241,15 @@ function updateMedia( survey ) {
         return _loadMedia( survey )
             .then( _setRepeatListener );
     }
+    const containers = [ survey.htmlView ];
+    const formHeader = document.querySelector( '.form-header' );
+    if ( formHeader ) {
+        containers.push( formHeader );
+    }
 
     survey.resources = [];
 
-    _getElementsGroupedBySrc( [ survey.htmlView, document.querySelector( '.form-header' ) ] ).forEach( elements => {
+    _getElementsGroupedBySrc( containers ).forEach( elements => {
         const src = elements[ 0 ].dataset.offlineSrc;
         requests.push( connection.getMediaFile( src ) );
     } );
