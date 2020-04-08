@@ -128,9 +128,9 @@ function _setUpdateIntervals( survey ) {
  */
 function _setResetListener( survey ) {
 
-    $( document ).on( 'formreset', function( event ) {
+    document.addEventListener( events.FormReset().type, event => {
         if ( event.target.nodeName.toLowerCase() === 'form' ) {
-            survey.$form = $( this );
+            survey.htmlView = event.target;
             updateMedia( survey );
         }
     } );
@@ -145,8 +145,8 @@ function _setResetListener( survey ) {
  */
 function _setRepeatListener( survey ) {
     //Instantiate only once, after loadMedia has been completed (once)
-    survey.$form[ 0 ].addEventListener( events.AddRepeat().type, event => {
-        _loadMedia( survey, $( event.target ) );
+    survey.htmlView.addEventListener( events.AddRepeat().type, event => {
+        _loadMedia( survey, [ event.target ] );
     } );
     return Promise.resolve( survey );
 }
@@ -245,7 +245,7 @@ function updateMedia( survey ) {
 
     survey.resources = [];
 
-    _getElementsGroupedBySrc( survey.$form.add( $( '.form-header' ) ) ).forEach( elements => {
+    _getElementsGroupedBySrc( [ survey.htmlView, document.querySelector( '.form-header' ) ] ).forEach( elements => {
         const src = elements[ 0 ].dataset.offlineSrc;
         requests.push( connection.getMediaFile( src ) );
     } );
@@ -284,13 +284,13 @@ function _reflect( task ) {
             } );
 }
 
-function _loadMedia( survey, $target ) {
+function _loadMedia( survey, targetContainers ) {
     let resourceUrl;
     const URL = window.URL || window.webkitURL;
 
-    $target = $target || survey.$form.add( $( '.form-header' ) );
+    targetContainers = targetContainers || [ survey.htmlView, document.querySelector( '.form-header' ) ];
 
-    _getElementsGroupedBySrc( $target ).forEach( elements => {
+    _getElementsGroupedBySrc( targetContainers ).forEach( elements => {
         const src = elements[ 0 ].dataset.offlineSrc;
 
         store.survey.resource.get( survey.enketoId, src )
@@ -317,24 +317,26 @@ function _loadMedia( survey, $target ) {
     return Promise.resolve( survey );
 }
 
-function _getElementsGroupedBySrc( $target ) {
+function _getElementsGroupedBySrc( containers ) {
     const groupedElements = [];
     const urls = {};
-    let $els = $target.find( '[data-offline-src]' );
+    let els = [];
 
-    $els.each( function() {
-        if ( !urls[ this.dataset.offlineSrc ] ) {
-            const src = this.dataset.offlineSrc;
-            const $group = $els.filter( function() {
-                if ( this.dataset.offlineSrc === src ) {
+    containers.forEach( container => els = els.concat( [ ...container.querySelectorAll( '[data-offline-src]' ) ] ) );
+
+    els.forEach( el => {
+        if ( !urls[ el.dataset.offlineSrc ] ) {
+            const src = el.dataset.offlineSrc;
+            const group = els.filter( e => {
+                if ( e.dataset.offlineSrc === src ) {
                     // remove from $els to improve performance
-                    $els = $els.not( `[data-offline-src="${src}"]` );
+                    // els = els.filter( es => !es.matches( `[data-offline-src="${src}"]` ) );
                     return true;
                 }
             } );
 
             urls[ src ] = true;
-            groupedElements.push( $.makeArray( $group ) );
+            groupedElements.push( group );
         }
     } );
 
@@ -364,7 +366,7 @@ function _updateCache( survey ) {
                         // set the hash so that subsequent update checks won't redownload the form
                         hash = result.hash;
                         console.log( 'Survey is now updated in the store. Need to refresh.' );
-                        $( document ).trigger( 'formupdated' );
+                        document.dispatchEvent( events.FormUpdated() );
                     } );
             }
         } )

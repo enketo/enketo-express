@@ -1,16 +1,16 @@
-import $ from 'jquery';
 import gui from './module/gui';
 import controller from './module/controller-webform';
 import settings from './module/settings';
 import connection from './module/connection';
 import { init as initTranslator, t, localize } from './module/translator';
 
-const $loader = $( '.main-loader' );
-const $formheader = $( '.main > .paper > .form-header' );
+const loader = document.querySelector( '.main-loader' );
+const formheader = document.querySelector( '.main > .paper > .form-header' );
 const survey = {
     enketoId: settings.enketoId,
     instanceId: settings.instanceId
 };
+const range = document.createRange();
 
 // Completely disable calculations in Enketo Core
 import calcModule from 'enketo-core/src/js/calculate';
@@ -53,7 +53,7 @@ initTranslator( survey )
     .catch( _showErrorOrAuthenticate );
 
 function _showErrorOrAuthenticate( error ) {
-    $loader.addClass( 'fail' );
+    loader.classList.add( 'fail' );
     if ( error.status === 401 ) {
         window.location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( window.location.href )}`;
     } else {
@@ -62,34 +62,38 @@ function _showErrorOrAuthenticate( error ) {
 }
 
 function _convertToReadonly( formParts ) {
-    formParts.form = $( formParts.form );
+    formParts.formFragment = range.createContextualFragment( formParts.form );
     // mark form controls as read only
     // Note: Enketo made a syntax error by adding the readonly attribute on a <select>
     // Hence, we cannot use .prop('readonly', true). We'll continue the syntax error.
-    formParts.form.find( 'input:not([readonly]), textarea:not([readonly]), select:not(#form-languages):not([readonly])' )
-        .attr( 'readonly', 'readonly' )
-        .addClass( 'readonly-forced' );
+    formParts.formFragment.querySelectorAll( 'input:not([readonly]), textarea:not([readonly]), select:not(#form-languages):not([readonly])' )
+        .forEach( el => {
+            el.setAttribute( 'readonly', 'readonly' );
+            el.classList.add( 'readonly-forced' );
+        } );
     // Properly make native selects readonly (for touchscreens)
-    formParts.form.find( 'select:not(#form-languages) option' ).prop( 'disabled', true );
+    formParts.formFragment.querySelectorAll( 'select:not(#form-languages) option' )
+        .forEach( el => el.disabled = true );
     // prevent adding an Add/Remove UI on repeats
-    formParts.form.find( '.or-repeat-info' ).attr( 'data-repeat-fixed', 'fixed' );
+    formParts.formFragment.querySelectorAll( '.or-repeat-info' )
+        .forEach( el => el.setAttribute( 'data-repeat-fixed', 'fixed' ) );
     return formParts;
 }
 
 function _init( formParts ) {
-    $formheader.after( formParts.form );
-    localize( document.querySelector( 'form.or' ) );
-    $( document ).ready( () => {
-        controller.init( 'form.or:eq(0)', {
-            modelStr: formParts.model,
-            instanceStr: formParts.instance,
-            external: formParts.externalData,
-            instanceAttachments: formParts.instanceAttachments,
-        } ).then( () => {
-            $( 'head>title' ).text( $( '#form-title' ).text() );
-            if ( settings.print ) {
-                gui.applyPrintStyle();
-            }
-        } );
+    formheader.after( formParts.formFragment );
+    const formEl = document.querySelector( 'form.or' );
+    localize( formEl );
+    controller.init( formEl, {
+        modelStr: formParts.model,
+        instanceStr: formParts.instance,
+        external: formParts.externalData,
+        instanceAttachments: formParts.instanceAttachments,
+    } ).then( form => {
+        document.querySelector( 'head>title' ).textContent = document.querySelector( '#form-title' ).textContent;
+        if ( settings.print ) {
+            gui.applyPrintStyle();
+        }
     } );
+
 }

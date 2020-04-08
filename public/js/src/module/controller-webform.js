@@ -142,13 +142,14 @@ function _resetForm( confirmed ) {
             } );
     } else {
         form.resetView();
-        form = new Form( formSelector, {
+        const formEl = document.querySelector( 'form.or' );
+        form = new Form( formEl, {
             modelStr: formData.modelStr,
             external: formData.external
         }, formOptions );
         const loadErrors = form.init();
         // formreset event will update the form media:
-        form.view.$.trigger( 'formreset' );
+        form.view.html.dispatchEvent( events.FormReset() );
         if ( records ) {
             records.setActive( null );
         }
@@ -199,7 +200,7 @@ function _loadRecord( instanceId, confirmed ) {
                 }, formOptions );
                 loadErrors = form.init();
                 // formreset event will update the form media:
-                form.view.$.trigger( 'formreset' );
+                form.view.html.dispatchEvent( events.FormReset() );
                 form.recordName = record.name;
                 records.setActive( record.instanceId );
 

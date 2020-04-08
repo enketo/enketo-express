@@ -20,4 +20,12 @@ events.ApplicationUpdated = function() {
     return new CustomEvent( 'applicationupdated', { bubbles: true } );
 };
 
+events.FormUpdated = function() {
+    return new CustomEvent( 'formupdated', { bubbles: true } );
+};
+
+events.FormReset = function() {
+    return new CustomEvent( 'formreset', { bubbles: true } );
+};
+
 export default events;

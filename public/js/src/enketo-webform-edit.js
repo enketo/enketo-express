@@ -1,16 +1,16 @@
-import $ from 'jquery';
 import gui from './module/gui';
 import controller from './module/controller-webform';
 import settings from './module/settings';
 import connection from './module/connection';
 import { init as initTranslator, t, localize } from './module/translator';
 import utils from './module/utils';
-const $loader = $( '.main-loader' );
-const $formheader = $( '.main > .paper > .form-header' );
+const loader = document.querySelector( '.main-loader' );
+const formheader = document.querySelector( '.main > .paper > .form-header' );
 const survey = {
     enketoId: settings.enketoId,
     instanceId: settings.instanceId,
 };
+const range = document.createRange();
 
 initTranslator( survey )
     .then( survey => Promise.all( [
@@ -37,12 +37,11 @@ function _updateMaxSizeSetting( maxSize ) {
     if ( maxSize ) {
         // overwrite default max size
         settings.maxSize = maxSize;
-        $( 'form.or' ).trigger( 'updateMaxSize' );
     }
 }
 
 function _showErrorOrAuthenticate( error ) {
-    $loader.addClass( 'fail' );
+    loader.classList.add( 'fail' );
     if ( error.status === 401 ) {
         window.location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( window.location.href )}`;
     } else {
@@ -51,16 +50,17 @@ function _showErrorOrAuthenticate( error ) {
 }
 
 function _init( formParts ) {
-    $formheader.after( formParts.form );
-    localize( document.querySelector( 'form.or' ) );
-    $( document ).ready( () => {
-        controller.init( 'form.or:eq(0)', {
-            modelStr: formParts.model,
-            instanceStr: formParts.instance,
-            external: formParts.externalData,
-            instanceAttachments: formParts.instanceAttachments,
-        } ).then( () => {
-            $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
-        } );
+    const formFragment = range.createContextualFragment( formParts.form );
+    formheader.after( formFragment );
+    localize( formFragment );
+    const formEl = document.querySelector( 'form.or' );
+    controller.init( formEl, {
+        modelStr: formParts.model,
+        instanceStr: formParts.instance,
+        external: formParts.externalData,
+        instanceAttachments: formParts.instanceAttachments,
+    } ).then( form => {
+        document.querySelector( 'head>title' ).textContent = utils.getTitleFromFormStr( formParts.form );
     } );
+
 }
