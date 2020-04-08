@@ -23,7 +23,7 @@
         "submissions": false
     },
     "support": {
-        "email": "support@kobotoolbox.org"
+        "email": "support@example.org"
     },
     "widgets": [
         "note", "select-desktop", "select-mobile", "autocomplete", "geo", "textarea", "url",

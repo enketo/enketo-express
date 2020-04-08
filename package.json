@@ -10,7 +10,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/kobotoolbox/enketo-express"
+        "url": "https://github.com/enketo/enketo-express"
+    },
+    "bugs": {
+        "url": "https://github.com/enketo/enketo-express/issues"
     },
     "author": {
         "name": "Martijn van de Rijdt",
