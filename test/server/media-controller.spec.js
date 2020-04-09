@@ -35,7 +35,7 @@ describe( 'Media Controller', () => {
                         });
                 });    
             } else if (IPfiltering.allowIPAddressList.includes( 'localhost' ) || IPfiltering.allowIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowprivateipaddress is false, but allowipaddresslist contains: localhost or 127.0.0.1', () => {
+                it( 'allowPrivateIPAddress is false, but allowIPAddresslist contains: localhost or 127.0.0.1', () => {
                     request( requestURL ,
                         function(error, response, body){
                             expect(body).to.be.equal(testHTMLBody);
@@ -43,7 +43,7 @@ describe( 'Media Controller', () => {
                 });
                 
             } else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowprivateipaddress is false, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
+                it( 'allowPrivateIPAddress is false, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
                     request( requestURL ,
                         function(error, response, body){
                             expect(body).to.be.equal(undefined);
@@ -63,7 +63,7 @@ describe( 'Media Controller', () => {
                         });
                 });    
             } else if (IPfiltering.allowIPAddressList.includes( 'localhost' ) || IPfiltering.allowIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowprivateipaddress is true, but allowipaddresslist contains: localhost or 127.0.0.1', () => {
+                it( 'allowPrivateIPAddress is true, but allowIPAddresslist contains: localhost or 127.0.0.1', () => {
                     request( requestURL ,
                         function(error, response, body){
                             expect(body).to.be.equal(testHTMLBody);
@@ -71,7 +71,7 @@ describe( 'Media Controller', () => {
                 });
                 
             } else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowprivateipaddress is true, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
+                it( 'allowPrivateIPAddress is true, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
                     request( requestURL ,
                         function(error, response, body){
                             expect(body).to.be.equal(undefined); 
@@ -97,7 +97,7 @@ describe( 'Media Controller', () => {
                         });
                 });    
             } else if (IPfiltering.allowIPAddressList.includes( 'localhost' ) || IPfiltering.allowIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowprivateipaddress is false, but allowipaddresslist contains: localhost or 127.0.0.1', () => {
+                it( 'allowPrivateIPAddress is false, but allowIPAddresslist contains: localhost or 127.0.0.1', () => {
                     request ( { referer : 'https://google.com?print=true', url : requestURL } ,
                         function(error, response, body){
                             expect(body).to.be.equal(testHTMLBody);
@@ -105,7 +105,7 @@ describe( 'Media Controller', () => {
                 });
                 
             } else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowprivateipaddress is false, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
+                it( 'allowPrivateIPAddress is false, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
                     request ( { referer : 'https://google.com?print=true', url : requestURL } ,
                         function(error, response, body){
                             expect(body).to.be.equal(undefined);
