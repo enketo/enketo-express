@@ -1,4 +1,4 @@
-FROM node:8
+FROM node:12
 
 ENV ENKETO_SRC_DIR=/srv/src/enketo_express
 
