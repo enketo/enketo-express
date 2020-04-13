@@ -6,9 +6,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Added
 - Sync form and UI language. See [scenarios and resolution](https://docs.google.com/spreadsheets/d/1CigMLAQewcXi-OJJHi_JQQ-fJXOam99livM0oYrtbkk/edit?pli=1#gid=0)
+
 ##### Fixed
 - Previews using a `form` queryparameter show a submit button instead of a validate button.
 - Docker builds fail due to an outdated Node.js base image.
+- The dotted lines on Grid theme printouts are not positioned at the bottom of cells.
+- A text question on Grid theme printouts that has only text questions on the same row (or nothing else), has too little space to write on.
+- Date/datetime/time questions take up too much vertical space on Grid theme printouts.
 
 [2.1.1] - 2020-04-02
 ---------------------
