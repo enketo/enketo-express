@@ -19,7 +19,7 @@ LAST_BUILD_COMMIT_FILE_PATH="${CHECKSUM_DIR_PATH}/${LAST_BUILD_COMMIT_FILE}"
 
 RUN_GRUNT=0
 # Compare config version
-sha1sum -c "${SHA1SUM_CONFIG_FILE_PATH}" || RUN_GRUNT=1
+sha1sum --status -c "${SHA1SUM_CONFIG_FILE_PATH}" || RUN_GRUNT=1
 
 # Compare commit version
 CURRENT_COMMIT=$(git rev-parse HEAD) # Get current commit
