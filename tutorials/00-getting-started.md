@@ -48,6 +48,8 @@ The default production configuration includes 2 redis instances. You can **great
 
 For development usages, it is helpful to set "linked form and data server" -> "server url" to `""`, so you can use any OpenRosa server with your local Enketo Express.
 
+To prevent SSRF attacks, a ````````IPFiltering` object is added to the `default-config.json` configuration that prevents private IP addresses from making GET and HEAD requests.
+
 For detailed guidance on each configuration item, see {@tutorial 10-configuration}.
 
 To configure your own custom external authentication also see [this document](https://github.com/enketo/enketo-express/blob/master/tutorials/30-authentication-and-security.md).
