@@ -376,7 +376,7 @@ function _getActiveSurveys( openRosaIds ) {
  * @param {number} [triesRemaining] - Avoid infinite loops when collissions become the norm.
  * @return {Promise<Error|string|Promise>}
  */
-function _createNewEnketoId( id = utils.randomString( 8 ), triesRemaining = 10 ) {
+function _createNewEnketoId( id = utils.randomString( config[ 'id length' ] ), triesRemaining = 10 ) {
     return new Promise( ( resolve, reject ) => {
         client.hgetall( `id:${id}`, ( error, obj ) => {
             if ( error ) {

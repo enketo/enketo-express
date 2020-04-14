@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added
 - Sync form and UI language upon load and when switching within a session. See [load scenarios and resolution](https://docs.google.com/spreadsheets/d/1CigMLAQewcXi-OJJHi_JQQ-fJXOam99livM0oYrtbkk/edit?pli=1#gid=0)
 - Translation into Georgian.
+- Configuration item "id length" to make the Enketo ID length configurable between 4 and 64 characters.
 
 ##### Fixed
 - Previews using a `form` queryparameter show a submit button instead of a validate button.

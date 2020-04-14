@@ -11,6 +11,13 @@ The port on which your app is run, e.g. `"8005"`. Any unique assignable port wil
 #### offline enabled
 Enable or disable offline functionality. Is either `false` or `true`.
 
+#### id length
+The length of the random enketo ID that is generated for a webform and is part of the webform URL. The default length is 8 characters, the maximum length is 64 characters and the minimum length is 4 characters. 
+
+When this value is  changed on an active server that had already generated webform URLs before the change, those old URLs will remain functional. Only new form launches will use the new ID length. 
+
+If you are tempted to make this setting as short as possible, make sure you understand that the chance of collisions in random ID generation will increase and it may eventually become too slow or impossible to generate a new unique ID. 
+
 #### linked form and data server
 * name: The (short) name of your form server. This name will be used in various places in the app to provide feedback to the user. E.g. "ODK Aggregate", "KoboToolbox", "MyCoolService"
 * **server url: Initially this can be an empty string (`""`). This will allow any server that knows the secret api key to use your Enketo installation. If you'd like to lock the usage down to a particular form server for optimimum security, fill in your domain without the protocol. E.g. "kobotoolbox.org". Depending on your form server, you can even specify that the server can only be used for a particular account e.g. "myformhub.org/janedoe". You can also use a regular expression string e.g. `"opendatakit\\.appspot\\.com"` (it will be used to create a regular expression with RegExp()).**

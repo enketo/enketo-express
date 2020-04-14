@@ -70,7 +70,7 @@ describe( 'Survey Model', () => {
         } );
 
         it( 'returns an enketo id if succesful', () =>
-            expect( model.set( survey ) ).to.eventually.match( /^[A-z0-9]{8,10}$/ ) );
+            expect( model.set( survey ) ).to.eventually.match( /^[A-z0-9]{4,64}$/ ) );
 
         it( 'returns a different enketo id if the capitalization of the OpenRosa Form ID changes', () => {
             const surveyDifferent = {
@@ -87,11 +87,11 @@ describe( 'Survey Model', () => {
 
         it( 'returns an enketo id when the survey includes a theme property', () => {
             survey.theme = 'gorgeous';
-            return expect( model.set( survey ) ).to.eventually.match( /^[A-z0-9]{8,10}$/ );
+            return expect( model.set( survey ) ).to.eventually.match( /^[A-z0-9]{4,64}$/ );
         } );
 
         it( 'drops nearly simultaneous set requests to avoid db corruption', () => Promise.all( [
-            expect( model.set( survey ) ).to.eventually.match( /^[A-z0-9]{8,10}$/ ),
+            expect( model.set( survey ) ).to.eventually.match( /^[A-z0-9]{4,64}$/ ),
             expect( model.set( survey ) ).to.eventually.be.rejected,
             expect( model.set( survey ) ).to.eventually.be.rejected
         ] ) );
@@ -151,7 +151,7 @@ describe( 'Survey Model', () => {
                 return model.update( survey );
             } ).then( model.get );
             return Promise.all( [
-                expect( promise1 ).to.eventually.have.length( 8 ),
+                expect( promise1 ).to.eventually.have.length( config[ 'id length' ] ),
                 expect( promise2 ).to.eventually.be.rejected
             ] );
         } );
@@ -254,8 +254,8 @@ describe( 'Survey Model', () => {
             const promise1 = model.set( survey ),
                 promise2 = promise1.then( () => model.getId( survey ) );
             return Promise.all( [
-                expect( promise1 ).to.eventually.match( /^[A-z0-9]{8,10}$/ ),
-                expect( promise2 ).to.eventually.match( /^[A-z0-9]{8,10}$/ )
+                expect( promise1 ).to.eventually.match( /^[A-z0-9]{4,64}$/ ),
+                expect( promise2 ).to.eventually.match( /^[A-z0-9]{4,64}$/ )
             ] );
         } );
 
@@ -266,7 +266,7 @@ describe( 'Survey Model', () => {
                 return model.getId( survey );
             } );
             return Promise.all( [
-                expect( promise1 ).to.eventually.match( /^[A-z0-9]{8,10}$/ ),
+                expect( promise1 ).to.eventually.match( /^[A-z0-9]{4,64}$/ ),
                 expect( promise2 ).to.eventually.be.fulfilled.and.deep.equal( null )
             ] );
         } );
@@ -444,7 +444,7 @@ describe( 'Survey Model', () => {
                         return model.createNewEnketoId( id );
                     } );
             };
-            return expect( test() ).to.eventually.match( /[A-z0-9]{8,10}/ );
+            return expect( test() ).to.eventually.match( /[A-z0-9]{4,64}/ );
         } );
 
         // This tests the loop in createEnketoId when a collission occurs.

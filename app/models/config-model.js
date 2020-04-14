@@ -290,6 +290,12 @@ if ( authentication[ 'managed by enketo' ] === false && authentication[ 'externa
 delete authentication[ 'external login url that sets cookie' ];
 delete authentication[ 'managed by enketo' ];
 
+if ( config[ 'id length' ] < 4 ) {
+    config[ 'id length' ] = 4;
+} else if ( config[ 'id length' ] > 64 ) {
+    config[ 'id length' ] = 64;
+}
+
 module.exports = {
     /**
      * @type object
