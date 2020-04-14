@@ -67,7 +67,7 @@ describe( 'Submissions', () => {
                 done => {
 
                     request( app )[ test.method ]( `/submission/${enketoId}` )
-                        .field( 'xml_submission_file', new Buffer( [ test.data ] ) )
+                        .field( 'xml_submission_file', Buffer.from( [ test.data ] ) )
                         .expect( test.status, done );
 
                 } );

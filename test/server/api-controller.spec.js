@@ -23,11 +23,11 @@ let v1Surveys;
 describe( 'api', () => {
     const validApiKey = 'abc';
     const validAuth = {
-        'Authorization': `Basic ${new Buffer( `${validApiKey}:` ).toString( 'base64' )}`
+        'Authorization': `Basic ${Buffer.from( `${validApiKey}:` ).toString( 'base64' )}`
     };
     const invalidApiKey = 'def';
     const invalidAuth = {
-        'Authorization': `Basic ${new Buffer( `${invalidApiKey}:` ).toString( 'base64' )}`
+        'Authorization': `Basic ${Buffer.from( `${invalidApiKey}:`).toString( 'base64' )}`
     };
     const beingEdited = 'beingEdited';
     const validServer = 'https://testserver.com/bob';

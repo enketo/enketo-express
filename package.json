@@ -44,6 +44,7 @@
         "debug": "4.1.x",
         "enketo-core": "github:enketo/enketo-core#08238fcf",
         "enketo-transformer": "1.39.0",
+        "evp_bytestokey": "^1.0.3",
         "express": "^4.17.1",
         "grunt": "^1.1.0",
         "grunt-env": "1.0.x",
