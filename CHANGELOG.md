@@ -15,6 +15,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - The dotted lines on Grid theme printouts are not positioned at the bottom of cells.
 - A text question on Grid theme printouts that has only text questions on the same row (or nothing else), has too little space to write on.
 - Date/datetime/time questions take up too much vertical space on Grid theme printouts.
+- Empty readonly text fields take up unnecessary space in the print view.
+- Irrelevant questions in Grid theme are not getting the correct width in the print view.
 
 [2.1.1] - 2020-04-02
 ---------------------
