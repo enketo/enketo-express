@@ -1,9 +1,9 @@
 const chai = require( 'chai' );
 const expect = chai.expect;
 const request = require( 'request' );
-const config = require( '../../config/config' );
+const config = require( '../../app/models/config-model' ).server;
 
-const IPfiltering = config.IPfiltering;
+const IPfiltering = config[ 'ip filtering' ];
 
 /**
  * Tests the request-filtering-agent to block SSRF attacks

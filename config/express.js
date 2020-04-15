@@ -102,7 +102,7 @@ app.use( function( req, res, next ) {
 
 // load controllers (including their routers)
 fs.readdirSync( controllersPath ).forEach( function( file ) {
-    if ( file.indexOf( '-controller.js' ) >= 0 && !(file.indexOf( '-controller.js.swp' ) >= 0 )) {
+    if ( file.indexOf( '-controller.js' ) >= 0 ) {
         debug( 'loading', file );
         require( controllersPath + '/' + file )( app );
     }

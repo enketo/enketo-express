@@ -11,8 +11,8 @@ const router = express.Router();
 const debug = require( 'debug' )( 'media-controller' );
 const { RequestFilteringHttpAgent } = require( 'request-filtering-agent' );
 
-const config = require('../../config/config');
-const requestFilteringOptions = config.IPfiltering;
+const config = require( '../models/config-model' ).server;
+const requestFilteringOptions = config[ 'ip filtering' ]; 
 
 module.exports = app => {
     app.use( `${app.get( 'base path' )}/media`, router );
