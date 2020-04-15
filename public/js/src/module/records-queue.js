@@ -336,7 +336,7 @@ function _updateRecordList() {
 
             // add 'no records' message
             if ( records.length === 0 ) {
-                $recordList.empty().append( `<li class="record-list__records--none">${t( 'record-list.norecords' )}</li>` );
+                $recordList.empty().append( `<li class="record-list__records--none" data-i18n="record-list.norecords">${t( 'record-list.norecords' )}</li>` );
             } else {
                 $recordList.find( '.record-list__records--none' ).remove();
                 $exportButton.prop( 'disabled', false );
