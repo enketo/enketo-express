@@ -4,11 +4,6 @@ const request = require( 'request' );
 const config = require( '../../app/models/config-model' ).server;
 
 const IPfiltering = config[ 'ip filtering' ];
-console.log('-----------------------------------------------');
-console.dir(config);
-console.log('-----------------------------------------------');
-console.dir(IPfiltering);
-console.log('-----------------------------------------------');
 
 /**
  * Tests the request-filtering-agent to block SSRF attacks
@@ -105,7 +100,6 @@ describe( 'Media Controller', () => {
                 it( 'allowPrivateIPAddress is false, but allowIPAddresslist contains: localhost or 127.0.0.1', () => {
                     request ( { referer : 'https://google.com?print=true', url : requestURL } ,
                         function(error, response, body){
-                            console.log('@@@@@@@@@@@@@@2' + body);
                             expect(body).to.be.equal(testHTMLBody);
                         });
                 });
