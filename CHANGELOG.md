@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Updated Georgian translation.
 
+##### Fixed
+- Some URLs with encrypted Enketo IDs stopped functioning (regression in 2.2.0).
+
 [2.2.0] - 2020-04-15
 ---------------------
 ##### Added
