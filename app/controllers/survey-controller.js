@@ -89,7 +89,8 @@ function webform( req, res, next ) {
     const options = {
         offlinePath: req.offlinePath,
         iframe: req.iframe,
-        print: req.query.print === 'true'
+        print: req.query.print === 'true',
+        desktop: req.query.desktop === 'true'
     };
 
     _renderWebform( req, res, next, options );
