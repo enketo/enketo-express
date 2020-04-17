@@ -993,7 +993,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'preview_url',
-                    expected: /.+#\/\/node$/
+                    expected: /.+#%2F%2Fnode$/
                 }
             }, {
                 endpoint: '/survey/preview/iframe',
@@ -1002,7 +1002,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'preview_iframe_url',
-                    expected: /.+#\/\/node$/
+                    expected: /.+#%2F%2Fnode$/
                 }
             }, {
                 endpoint: '/instance/iframe',
@@ -1015,7 +1015,7 @@ describe( 'api', () => {
                 status: 201,
                 res: {
                     property: 'edit_url',
-                    expected: /#\/\/node$/
+                    expected: /#%2F%2Fnode$/
                 }
             }, {
                 endpoint: '/survey',
@@ -1125,7 +1125,7 @@ describe( 'api', () => {
                 status: 200,
                 res: {
                     property: 'view_url',
-                    expected: /\/view\/[a-fA-F0-9]{32,160}#\/\/node$/
+                    expected: /\/view\/[a-fA-F0-9]{32,160}#%2F%2Fnode$/
                 },
                 offline: true
             },
@@ -1276,7 +1276,7 @@ describe( 'api', () => {
                 instanceId: 'A',
                 res: {
                     property: 'view_url',
-                    expected: /\/view\/[a-fA-F0-9]{32,160}\?instance_id=A#\/\/node$/
+                    expected: /\/view\/[a-fA-F0-9]{32,160}\?instance_id=A#%2F%2Fnode$/
                 },
                 offline: true
             },

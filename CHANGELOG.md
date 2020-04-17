@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Changed
 - Updated Georgian translation.
+- "Go to" fragment identifiers now URL-encoded.
 
 ##### Fixed
 - Some URLs with encrypted Enketo IDs stopped functioning (regression in 2.2.0).

@@ -55,7 +55,7 @@ function init( selector, data ) {
             $( '.main-loader' ).remove();
 
             if ( settings.goTo && location.hash ) {
-                loadErrors = loadErrors.concat( form.goTo( location.hash.substring( 1 ) ) );
+                loadErrors = loadErrors.concat( form.goTo( decodeURIComponent( location.hash.substring( 1 ) ).split( '#' )[ 0 ] ) );
             }
 
             if ( form.encryptionKey ) {
