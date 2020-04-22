@@ -51,7 +51,7 @@ describe('Testing request-filtering-agent on the following options:', function (
             if (!IPfiltering.allowPrivateIPAddress) {
                 if (IPfiltering.allowIPAddressList.length == 0 && IPfiltering.denyIPAddressList.length == 0) {
                     http.get(options, function(){}).on('error', function(err){
-                        expect(err.code).to.be.equal('ECONNRESET');
+                        expect(err.code).contains('ECONN');
                     });
                     done();
                 }
@@ -69,7 +69,7 @@ describe('Testing request-filtering-agent on the following options:', function (
                 }
                 else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
                     http.get(options, function(){}).on('error', function(err){
-                        expect(err.code).to.be.equal('ECONNRESET');
+                        expect(err.code).contains('ECONN');
                     });
                     done();
                 }
@@ -101,7 +101,7 @@ describe('Testing request-filtering-agent on the following options:', function (
                 }
                 else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
                     http.get(options, function(){}).on('error', function(err){
-                        expect(err.code).to.be.equal('ECONNRESET');
+                        expect(err.code).contains('ECONN');
                     });
                     done();
                 }
@@ -112,7 +112,7 @@ describe('Testing request-filtering-agent on the following options:', function (
             if (!IPfiltering.allowPrivateIPAddress) {
                 if (IPfiltering.allowIPAddressList.length == 0 && IPfiltering.denyIPAddressList.length == 0) {
                     http.get(requestURL, function(){}).on('error', function(err){
-                        expect(err.code).to.be.equal('ECONNRESET');
+                        expect(err.code).contains('ECONN');
                     });
                     done();
                 }
@@ -130,7 +130,7 @@ describe('Testing request-filtering-agent on the following options:', function (
                 }
                 else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
                     http.get(requestURL, function(){}).on('error', function(err){
-                        expect(err.code).to.be.equal('ECONNRESET');
+                        expect(err.code).contains('ECONN');
                     });
                     done();
                 }
@@ -162,7 +162,7 @@ describe('Testing request-filtering-agent on the following options:', function (
                 }
                 else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
                     http.get(requestURL, function(){}).on('error', function(err){
-                        expect(err.code).to.be.equal('ECONNRESET');
+                        expect(err.code).contains('ECONN');
                     });
                     done();
                 }
