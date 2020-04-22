@@ -16,8 +16,8 @@
     "ip filtering" : {
 	    "allowPrivateIPAddress": false,
 	    "allowMetaIPAddress": false,
-	    "allowIPAddressList": "",
-	    "denyIPAddressList": ""
+	    "allowIPAddressList": [],
+	    "denyIPAddressList": []
     },
     "timeout": 300000,
     "expiry for record cache": 30000,

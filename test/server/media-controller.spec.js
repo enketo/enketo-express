@@ -1,6 +1,5 @@
 const chai = require( 'chai' );
 const expect = chai.expect;
-const request = require( 'request' );
 const config = require( '../../app/models/config-model' ).server;
 
 const IPfiltering = config[ 'ip filtering' ];
@@ -8,143 +7,166 @@ const IPfiltering = config[ 'ip filtering' ];
 /**
  * Tests the request-filtering-agent to block SSRF attacks
  * change testHTMLBody to the body of an html file that
- * you are testing on. For the default, it says <i'm in.>
+ * you are testing on. For the default, it says <im in.>
  * and is hosted in testHTMLHost. 
  */
 
-const testHTMLBody = 'i\'m in.\n';
+const testHTMLBody = 'im in.';
 const enketoHost = 'http://localhost:8005';
 const testHTMLHost = 'http/localhost:1234';
 
 const requestURL = enketoHost + '/media/get/' + testHTMLHost;
 
-// TODO: Check if testHTMLHost is running
+var http = require('http');
 
-describe( 'Media Controller', () => {
+var server = http.createServer(function (req, res) {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('im in.');
+});
 
-    console.log( 'Testing request-filtering-agent on this request: ' + requestURL);
+describe('Testing request-filtering-agent on the following options:', function () {
+
+    before(function () {
+        server.listen(1234);
+    });
     
-    describe( 'No Referer Request', () => {
-
-        if (!IPfiltering.allowPrivateIPAddress) {
-            if (IPfiltering.allowIPAddressList === '' ) {
-                it( 'allowPrivateIPAddress is false', () => {
-                    request( requestURL ,
-                        function(error, response, body){
-                            expect(body).to.be.equal(undefined);
-                        });
-                });    
-            } else if (IPfiltering.allowIPAddressList.includes( 'localhost' ) || IPfiltering.allowIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowPrivateIPAddress is false, but allowIPAddresslist contains: localhost or 127.0.0.1', () => {
-                    request( requestURL ,
-                        function(error, response, body){
-                            expect(body).to.be.equal(testHTMLBody);
-                        });
-                });
-                
-            } else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowPrivateIPAddress is false, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
-                    request( requestURL ,
-                        function(error, response, body){
-                            expect(body).to.be.equal(undefined);
-                        });
-                });
-                
-            }
-
-        }
-
-        if (IPfiltering.allowPrivateIPAddress) {
-            if (IPfiltering.allowIPAddressList === '' && IPfiltering.denyIPAddressList === '' ) {
-                it( 'allowPrivateIPAddress is true', () => {
-                    request( requestURL ,
-                        function(error, response, body){
-                            expect(body).to.be.equal(testHTMLBody);
-                        });
-                });    
-            } else if (IPfiltering.allowIPAddressList.includes( 'localhost' ) || IPfiltering.allowIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowPrivateIPAddress is true, but allowIPAddresslist contains: localhost or 127.0.0.1', () => {
-                    request( requestURL ,
-                        function(error, response, body){
-                            expect(body).to.be.equal(testHTMLBody);
-                        });
-                });
-                
-            } else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowPrivateIPAddress is true, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
-                    request( requestURL ,
-                        function(error, response, body){
-                            expect(body).to.be.equal(undefined); 
-                        });
-                });
-                
-            }
-
-        }
-
+    after(function () {
+        server.close();
     });
 
-    
-
-    describe( 'With Referer Request', () => {
-
-        if (!IPfiltering.allowPrivateIPAddress) {
-            if (IPfiltering.allowIPAddressList === '' ) {
-                it( 'allowPrivateIPAddress is false', () => {
-                    request ( { referer : 'https://google.com?print=true', url : requestURL } ,
-                        function(error, response, body){
-                            expect(body).to.be.equal(undefined);
+    describe('\n\tallowPrivateIPAddress = ' + IPfiltering.allowPrivateIPAddress 
+        + '\n\tallowMetaIPAddress = ' + IPfiltering.allowMetaIPAddress 
+        + '\n\tallowIPAddressList = ' + IPfiltering.allowIPAddressList 
+        + '\n\tdenyIPAddressList = ' + IPfiltering.denyIPAddressList + '\n' 
+    , function () {
+        it('WITH a Referer', function (done) {
+            const options = {
+                host: '127.0.0.1',
+                port: 8005,
+                path: '/media/get/' + testHTMLHost,
+                headers: {
+                    'Referer': 'https://google.com?print=true'
+                }
+            };
+            if (!IPfiltering.allowPrivateIPAddress) {
+                if (IPfiltering.allowIPAddressList.length == 0 && IPfiltering.denyIPAddressList.length == 0) {
+                    http.get(options, function(){}).on('error', function(err){
+                        expect(err.code).to.be.equal('ECONNRESET');
+                    });
+                    done();
+                }
+                else if (IPfiltering.allowIPAddressList.includes( 'localhost' ) || IPfiltering.allowIPAddressList.includes( '127.0.0.1' )) {
+                    http.get(options, function(res) {
+                        var data = '';
+                        res.on('data', function(chunk) {
+                            data+=chunk;
                         });
-                });    
-            } else if (IPfiltering.allowIPAddressList.includes( 'localhost' ) || IPfiltering.allowIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowPrivateIPAddress is false, but allowIPAddresslist contains: localhost or 127.0.0.1', () => {
-                    request ( { referer : 'https://google.com?print=true', url : requestURL } ,
-                        function(error, response, body){
-                            expect(body).to.be.equal(testHTMLBody);
+                        res.on('end', function() {
+                            expect(data).to.be.equal(testHTMLBody);
+                            done();
                         });
-                });
-                
-            } else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowPrivateIPAddress is false, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
-                    request ( { referer : 'https://google.com?print=true', url : requestURL } ,
-                        function(error, response, body){
-                            expect(body).to.be.equal(undefined);
-                        });
-                });
-                
+                    });
+                }
+                else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
+                    http.get(options, function(){}).on('error', function(err){
+                        expect(err.code).to.be.equal('ECONNRESET');
+                    });
+                    done();
+                }
             }
-
-        }
-
-        if (IPfiltering.allowPrivateIPAddress) {
-            if (IPfiltering.allowIPAddressList === '' && IPfiltering.denyIPAddressList === '' ) {
-                it( 'allowPrivateIPAddress is true', () => {
-                    request ( { referer : 'https://google.com?print=true', url : requestURL } ,
-                        function(error, response, body){
-                            expect(body).to.be.equal(testHTMLBody);
+            if (IPfiltering.allowPrivateIPAddress) {
+                if (IPfiltering.allowIPAddressList.length == 0 && IPfiltering.denyIPAddressList.length == 0) {
+                    http.get(options, function(res) {
+                        var data = '';
+                        res.on('data', function(chunk) {
+                            data+=chunk;
                         });
-                });    
-            } else if (IPfiltering.allowIPAddressList.includes( 'localhost' ) || IPfiltering.allowIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowprivateipaddress is true, but allowipaddresslist contains: localhost or 127.0.0.1', () => {
-                    request ( { referer : 'https://google.com?print=true', url : requestURL } ,
-                        function(error, response, body){
-                            expect(body).to.be.equal(testHTMLBody);
+                        res.on('end', function() {
+                            expect(data).to.be.equal(testHTMLBody);
+                            done();
                         });
-                });
-                
-            } else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
-                it( 'allowprivateipaddress is true, but denyIPAddressList contains: localhost or 127.0.0.1', () => {
-                    request ( { referer : 'https://google.com?print=true', url : requestURL } ,
-                        function(error, response, body){
-                            expect(body).to.be.equal(undefined); 
+                    });
+                }
+                else if (IPfiltering.allowIPAddressList.includes( 'localhost' ) || IPfiltering.allowIPAddressList.includes( '127.0.0.1' )) {
+                    http.get(options, function(res) {
+                        var data = '';
+                        res.on('data', function(chunk) {
+                            data+=chunk;
                         });
-                });
-                
+                        res.on('end', function() {
+                            expect(data).to.be.equal(testHTMLBody);
+                            done();
+                        });
+                    });
+                }
+                else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
+                    http.get(options, function(){}).on('error', function(err){
+                        expect(err.code).to.be.equal('ECONNRESET');
+                    });
+                    done();
+                }
             }
+        });
 
-        }
-
+        it('WITHOUT a Referer', function (done) {
+            if (!IPfiltering.allowPrivateIPAddress) {
+                if (IPfiltering.allowIPAddressList.length == 0 && IPfiltering.denyIPAddressList.length == 0) {
+                    http.get(requestURL, function(){}).on('error', function(err){
+                        expect(err.code).to.be.equal('ECONNRESET');
+                    });
+                    done();
+                }
+                else if (IPfiltering.allowIPAddressList.includes( 'localhost' ) || IPfiltering.allowIPAddressList.includes( '127.0.0.1' )) {
+                    http.get(requestURL, function(res) {
+                        var data = '';
+                        res.on('data', function(chunk) {
+                            data+=chunk;
+                        });
+                        res.on('end', function() {
+                            expect(data).to.be.equal(testHTMLBody);
+                        });
+                        done();
+                    });
+                }
+                else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
+                    http.get(requestURL, function(){}).on('error', function(err){
+                        expect(err.code).to.be.equal('ECONNRESET');
+                    });
+                    done();
+                }
+            }
+            if (IPfiltering.allowPrivateIPAddress) {
+                if (IPfiltering.allowIPAddressList.length == 0 && IPfiltering.denyIPAddressList.length == 0) {
+                    http.get(requestURL, function(res) {
+                        var data = '';
+                        res.on('data', function(chunk) {
+                            data+=chunk;
+                        });
+                        res.on('end', function() {
+                            expect(data).to.be.equal(testHTMLBody);
+                        });
+                        done();
+                    });
+                }
+                else if (IPfiltering.allowIPAddressList.includes( 'localhost' ) || IPfiltering.allowIPAddressList.includes( '127.0.0.1' )) {
+                    http.get(requestURL, function(res) {
+                        var data = '';
+                        res.on('data', function(chunk) {
+                            data+=chunk;
+                        });
+                        res.on('end', function() {
+                            expect(data).to.be.equal(testHTMLBody);
+                        });
+                        done();
+                    });
+                }
+                else if (IPfiltering.denyIPAddressList.includes( 'localhost' ) || IPfiltering.denyIPAddressList.includes( '127.0.0.1' )) {
+                    http.get(requestURL, function(){}).on('error', function(err){
+                        expect(err.code).to.be.equal('ECONNRESET');
+                    });
+                    done();
+                }
+            }
+        });
     });
-
-
 });

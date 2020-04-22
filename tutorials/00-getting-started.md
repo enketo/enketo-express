@@ -48,7 +48,7 @@ The default production configuration includes 2 redis instances. You can **great
 
 For development usages, it is helpful to set "linked form and data server" -> "server url" to `""`, so you can use any OpenRosa server with your local Enketo Express.
 
-If you'd like to have private IPs make GET and HEAD requests, set "ip filtering" -> "allowPrivateIPAdress" to "true".
+If you'd like to run a form server such as KoBoToolbox or ODK Aggregate or ODK Central on a private IP address during development, you need to add that IP address to "ip filtering" -> "allowIPAddressList".
 
 For detailed guidance on each configuration item, see {@tutorial 10-configuration}.
 
