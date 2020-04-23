@@ -12,7 +12,7 @@ The port on which your app is run, e.g. `"8005"`. Any unique assignable port wil
 Enable or disable offline functionality. Is either `false` or `true`.
 
 #### id length
-The length of the random enketo ID that is generated for a webform and is part of the webform URL. The default length is 8 characters, the maximum length is 64 characters and the minimum length is 4 characters. 
+The length of the random enketo ID that is generated for a webform and is part of the webform URL. The default length is 8 characters, the maximum length is 31 characters and the minimum length is 4 characters. 
 
 When this value is  changed on an active server that had already generated webform URLs before the change, those old URLs will remain functional. Only new form launches will use the new ID length. 
 
