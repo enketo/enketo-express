@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Some URLs with encrypted Enketo IDs stopped functioning (regression in 2.2.0).
 - Max-size call fails with /single/once webform URLs (single-submission webforms with protection against multiple submissions).
 - Protection against multiple submissions for a protected single-submission form is broken (regression in 2.2.0).
+- Final records in offline-capable webform views are not attempted to be submitted.
 
 [2.2.0] - 2020-04-15
 ---------------------
