@@ -27,8 +27,8 @@ router
         res.set( 'Content-Type', 'application/json' );
         next();
     } )
-    .get( '/max-size/:enketo_id?', maxSize )
     .get( '/max-size/:encrypted_enketo_id_single', maxSize )
+    .get( '/max-size/:enketo_id?', maxSize )
     .get( '/:encrypted_enketo_id_view', getInstance )
     .get( '/:enketo_id', getInstance )
     .post( '/:encrypted_enketo_id_single', submit )
