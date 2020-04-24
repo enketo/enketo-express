@@ -240,7 +240,7 @@ function _submitRecord() {
     let msg = '';
     const include = { irrelevant: false };
 
-    form.view.$.trigger( 'beforesave' );
+    form.view.html.dispatchEvent( events.BeforeSave() );
 
     beforeMsg = ( redirect ) ? t( 'alert.submission.redirectmsg' ) : '';
     authLink = `<a href="${settings.loginUrl}" target="_blank">${t( 'here' )}</a>`;
@@ -368,8 +368,8 @@ function _confirmRecordName( recordName, errorMsg ) {
 function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
     const include = { irrelevant: draft };
 
-    // triggering "beforesave" event to update possible "timeEnd" meta data in form
-    form.view.$.trigger( 'beforesave' );
+    // triggering "before-save" event to update possible "timeEnd" meta data in form
+    form.view.html.dispatchEvent( events.BeforeSave() );
 
     // check recordName
     if ( !recordName ) {
