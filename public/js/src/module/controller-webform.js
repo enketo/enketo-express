@@ -427,13 +427,13 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
             _resetForm( true );
 
             if ( draft ) {
-                gui.feedback( t( 'alert.recordsavesuccess.draftmsg' ), 3 );
+                gui.alert( t( 'alert.recordsavesuccess.draftmsg' ), t( 'alert.savedraftinfo.heading' ), 'info', 10 );
             } else {
-                gui.feedback( t( 'alert.recordsavesuccess.finalmsg' ), 3 );
+                gui.alert( `${t('record-list.msg2')}`, t( 'alert.recordsavesuccess.finalmsg' ), 'info', 10 );
                 // The timeout simply avoids showing two messages at the same time:
                 // 1. "added to queue"
                 // 2. "successfully submitted"
-                setTimeout( records.uploadQueue, 5 * 1000 );
+                setTimeout( records.uploadQueue, 10 * 1000 );
             }
         } )
         .catch( error => {

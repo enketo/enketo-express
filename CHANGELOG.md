@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Changed
+- More prominent and differently-worded message when saving final or draft record in offline-capable views.
+
 [2.2.1] - 2020-04-23
 ---------------------
 ##### Changed
