@@ -284,4 +284,15 @@ i.icon.icon-minus{
   background: $border-color-dark;
 }
 
+.or-group.or-appearance-w4,
+.or-group.or-appearance-w3,
+.or-group.or-appearance-w2{
+  .question.non-select.or-appearance-w1{
+    .question-label{
+      position:absolute;
+    	top: 10px;
+    }
+  }
+}
+
 }
