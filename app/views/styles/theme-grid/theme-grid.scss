@@ -154,6 +154,9 @@ $default-text-size: 13px;
     	font-size: $default-text-size + 1;
     	line-height: 130%;
       text-transform: unset;
+      strong{
+        font-size: $default-text-size + 1
+      }
     }
     .required{
     	right: $base-unit-sm / 2;
