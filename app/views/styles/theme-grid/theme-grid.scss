@@ -37,3 +37,262 @@
 @import "form-grid";
 @import "../component/form_header";
 @import "../component/form_footer";
+
+$theme-green: #395e2f;
+$secondary-green: #557a4b;
+$helper-green: #d8ebb5;
+$theme-yellow: #eeca33;
+$border-color: #eeeeee;
+$border-color-dark: #cccccc;
+$body-bg: #ffffff;
+$text-color: #4e514e;
+
+$checkbox-size: 17px;
+$base-unit: 20px;
+$base-unit-sm: 10px;
+$padding-unit: 30px;
+$default-text-size: 13px;
+
+.paper{
+  padding: $padding-unit;
+  border:2px solid $border-color;
+	box-shadow: none;
+	padding: $padding-unit $padding-unit + 10 $padding-unit $padding-unit * 2;
+
+  .or{
+    > h3{
+    	color: $theme-green;
+    	margin: 0;
+    	padding: 0;
+    }
+    > .or-group,
+    > .or-group-data{
+      border-right: none;
+    }
+    > .question{
+    	border: none;
+    }
+  }
+
+  .or-group:not(.or-appearance-no-collapse) > h4::before{
+  	border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid $theme-green;
+      top: $base-unit-sm;
+  }
+  .or-group:not(.or-appearance-no-collapse).or-appearance-compact > h4::before{
+  	border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 5px solid $theme-green;
+      left: -27px;
+      top: $base-unit-sm;
+  }
+
+  .or-group,
+  .or-repeat{
+    h4{
+      border-bottom: 2px solid $theme-yellow;
+    	color: $secondary-green;
+    	font-size: $default-text-size + 4;
+    	font-weight: 600;
+    	line-height: 120%;
+    	padding-bottom: $base-unit-sm;
+    }
+  }
+
+
+  #form-title{
+  	border-bottom: 2px solid $border-color;
+  	margin-bottom: $base-unit;
+    padding-bottom: $base-unit-sm;
+  }
+
+  .question{
+  	border-bottom: 2px solid $border-color;
+  	border-left: 2px solid $border-color;
+  	border-right: 2px solid transparent;
+  	padding: $base-unit;
+    &:last-of-type{
+    	border-right: 2px solid $border-color;
+    }
+    &.readonly{
+    background-color: #f9f9f9;
+      h3{
+        font-size: $default-text-size + 2;
+      }
+    }
+    &:not(.or-appearance-label):not(.or-appearance-compact):not(.or-appearance-quickcompact){
+      .geopicker{
+        label{
+          font-size: $default-text-size;
+        }
+      }
+    }
+    input[type=radio]{
+      border:2px solid $border-color;
+      height: $checkbox-size;
+      margin-top: 2px;
+      width: $checkbox-size;
+      &:checked{
+        border:2px solid $border-color-dark;
+      	background-color: $theme-yellow;
+      	background-image: none;
+      }
+    }
+    input[type=checkbox]{
+      border:2px solid $border-color;
+    	height: $checkbox-size;
+    	margin-top: 2px;
+    	width: $checkbox-size;
+      &:checked{
+        border:2px solid $border-color-dark;
+      	background-color: $theme-yellow;
+      	background-image: none;
+      }
+    }
+    .question-label{
+    	font-size: $default-text-size + 1;
+    	line-height: 130%;
+      text-transform: unset;
+    }
+    .required{
+    	right: $base-unit-sm / 2;
+    	top: $base-unit-sm / 2;
+    }
+    .or-hint{
+      &.active{
+        font-size: $default-text-size - 1;
+        line-height: 135%;
+        margin-top: 12px;
+      }
+    }
+  }
+
+  input[type=text],
+  input[type=tel],
+  input[type=password],
+  input[type=url],
+  input[type=email],
+  input[type=file],
+  input[type=date],
+  input[type=month],
+  input[type=time],
+  input[type=datetime-local],
+  input[type=number],
+  select,
+  textarea{
+  	border-bottom: 2px solid $border-color;
+  	font-size: $default-text-size + 1;
+  	color:$theme-green;
+  }
+
+  a{
+  	color: $secondary-green;
+  	text-decoration: none;
+  }
+  .form-header__branding{
+    img{
+      margin-top: -($base-unit + 10);
+      max-height: 150px;
+      max-width: 300px;
+    }
+  }
+  .form-header__button--print{
+  	height: $base-unit - 2;
+  	margin-top: $base-unit + 5;
+  	width: $base-unit - 2;
+  }
+.option-wrapper{
+  label{
+    &:hover{
+      background-color: $theme-yellow;
+    }
+  }
+  .option-label{
+    font-size: $default-text-size;
+  }
+}
+
+.range-widget__ticks{
+  span{
+  	border-left: 2px solid $border-color-dark;
+    &:last-child{
+      border-right: 2px solid $border-color-dark;
+    }
+  }
+}
+
+.or-repeat{
+	background: $body-bg;
+  &:not(:empty){
+  	border-bottom: none;
+  }
+}
+
+.or-repeat-info{
+  &:not(:empty){
+    border-bottom: 2px solid $border-color;
+  	border-left: 2px solid $border-color;
+  	border-right: 2px solid $border-color;
+  }
+}
+
+.btn.btn-default,
+.vex.vex-theme-plain
+.btn-default.vex-dialog-button {
+	background-color: $border-color;
+	border: 2px solid transparent;
+	border-radius: 0;
+}
+
+.btn.btn-default.remove{
+	background-color: transparent;
+	border: none;
+	color: $secondary-green;
+}
+
+.add-repeat-btn{
+  .icon{
+    color: $secondary-green;
+  	font-size: $default-text-size + 2;
+  }
+}
+button#submit-form{
+	background-color: $secondary-green;
+	border: 2px solid $border-color;
+	color: $body-bg;
+}
+
+i.icon.icon-minus{
+	background-color: transparent;
+	color: $secondary-green;
+}
+
+.form-footer{
+  .btn{
+    background-color: $secondary-green;
+    border-color: $secondary-green;
+    color: $body-bg;
+  }
+}
+
+[type=range]::-webkit-slider-thumb{
+  background: $secondary-green;
+  border:2px solid $theme-yellow;
+}
+[type=range]::-webkit-slider-runnable-track{
+  background: $border-color-dark;
+}
+
+.or-group.or-appearance-w4,
+.or-group.or-appearance-w3,
+.or-group.or-appearance-w2{
+  .question.non-select.or-appearance-w1{
+    .question-label{
+      position:absolute;
+    	top: 10px;
+    }
+  }
+}
+
+}
