@@ -35,12 +35,16 @@ router
     //.get( '*', loggedInCheck )
     .get( `${config[ 'offline path' ]}/:enketo_id`, offlineWebform )
     .get( `${config[ 'offline path' ]}/`, redirect )
-    .get( '/:enketo_id', webform )
-    .get( '/:mod/:enketo_id', webform )
-    .get( '/preview/:enketo_id', preview )
-    .get( '/preview/:mod/:enketo_id', preview )
+    .get( '/connection', ( req, res ) => {
+        res.status = 200;
+        res.send( `connected ${Math.random()}` );
+    } )
     .get( '/preview', preview )
     .get( '/preview/:mod', preview )
+    .get( '/preview/:enketo_id', preview )
+    .get( '/preview/:mod/:enketo_id', preview )
+    .get( '/:enketo_id', webform )
+    .get( '/:mod/:enketo_id', webform )
     .get( '/single/:enketo_id', single )
     .get( '/single/:encrypted_enketo_id_single', single )
     .get( '/single/:mod/:enketo_id', single )
@@ -52,11 +56,7 @@ router
     .get( '/xform/:enketo_id', xform )
     .get( '/xform/:encrypted_enketo_id_single', xform )
     .get( '/xform/:encrypted_enketo_id_view', xform )
-    .get( /.*\/::[A-z0-9]{4,8}/, redirect )
-    .get( '/connection', ( req, res ) => {
-        res.status = 200;
-        res.send( `connected ${Math.random()}` );
-    } );
+    .get( /.*\/::[A-z0-9]{4,8}/, redirect );
 
 // TODO: I suspect this check is no longer used and can be removed
 //function loggedInCheck( req, res, next ) {
@@ -89,7 +89,8 @@ function webform( req, res, next ) {
     const options = {
         offlinePath: req.offlinePath,
         iframe: req.iframe,
-        print: req.query.print === 'true'
+        print: req.query.print === 'true',
+        desktop: req.query.desktop === 'true'
     };
 
     _renderWebform( req, res, next, options );

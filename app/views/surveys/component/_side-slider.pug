@@ -1,18 +1,20 @@
 aside.record-list.side-slider
 	button.btn-icon-only.close(type="button", aria-hidden="true") ×
-	h3= t('record-list.title')
-	p= t('record-list.msg1')
+	h3(data-i18n='record-list.title')= t('record-list.title')
+	p(data-i18n='record-list.msg1')= t('record-list.msg1')
 	progress.record-list__upload-progress
 	ul.record-list__records
 	.record-list__button-bar
-		button.record-list__button-bar__button.upload.btn.btn-primary(type="button", disabled)= t('record-list.upload') 
-		button.record-list__button-bar__button.export.btn.btn-default(type="button", disabled)= t('record-list.export')
-	- var uploadGuidance = (draftEnabled) ? t('record-list.msg2', {icon: '<span class="icon icon-pencil"> </span>', interpolation: {escapeValue: false}}) : t('record-list.msg2-nodraft')
-		p!= uploadGuidance + ' ' + t('record-list.msg3')
-	p.side-slider__app-version= t('version') + ' '
+		button.record-list__button-bar__button.upload.btn.btn-primary(type="button", disabled, data-i18n='record-list.upload')= t('record-list.upload') 
+		button.record-list__button-bar__button.export.btn.btn-default(type="button", disabled, data-i18n='record-list.export')= t('record-list.export')
+	- var uploadGuidanceKey = draftEnabled ? 'record-list.msg2' : 'record-list.msg2-nodraft';
+		p(data-i18n=uploadGuidanceKey, data-i18n-icon='icon-pencil')!= draftEnabled ? t('record-list.msg2', {icon: '<span class="icon icon-pencil"> </span>', interpolation: {escapeValue: false}}) : t('record-list.msg2-nodraft')
+		p(data-i18n='record-list.msg3')= t('record-list.msg3')
+	p.side-slider__app-version
+		span(data-i18n='version')= t('version')
 		span.side-slider__app-version__value
 	p.side-slider__advanced.hide
-		button.side-slider__advanced__button.flush-db.btn.btn-default(type="button")= t('advanced.flushdb')
+		button.side-slider__advanced__button.flush-db.btn.btn-default(type="button", data-i18n='advanced.flushdb')= t('advanced.flushdb')
 button.side-slider__toggle.open(type="button", aria-label="open")
 button.side-slider__toggle.close(type="button", aria-label="close")
 div.slider-overlay

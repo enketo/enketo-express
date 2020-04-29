@@ -4,6 +4,7 @@
 
 const crypto = require( 'crypto' );
 const config = require( '../models/config-model' ).server;
+const EVP_BytesToKey = require( 'evp_bytestokey' );
 const validUrl = require( 'valid-url' );
 // var debug = require( 'debug' )( 'utils' );
 
@@ -107,7 +108,8 @@ function md5( message ) {
  */
 function insecureAes192Encrypt( text, pw ) {
     let encrypted;
-    const cipher = crypto.createCipher( 'aes192', pw );
+    const stuff = _getKeyIv( pw );
+    const cipher = crypto.createCipheriv( 'aes192', stuff.key, stuff.iv );
     encrypted = cipher.update( text, 'utf8', 'hex' );
     encrypted += cipher.final( 'hex' );
 
@@ -124,7 +126,8 @@ function insecureAes192Encrypt( text, pw ) {
  */
 function insecureAes192Decrypt( encrypted, pw ) {
     let decrypted;
-    const decipher = crypto.createDecipher( 'aes192', pw );
+    const stuff = _getKeyIv( pw );
+    const decipher = crypto.createDecipheriv( 'aes192', stuff.key, stuff.iv );
     decrypted = decipher.update( encrypted, 'hex', 'utf8' );
     decrypted += decipher.final( 'utf8' );
 
@@ -146,6 +149,14 @@ function randomString( howMany = 8, chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHI
         .fill() // create indices, so map can iterate
         .map( ( val, i ) => chars[ rnd[ i ] % chars.length ] )
         .join( '' );
+}
+
+/**
+ * Not secure, but used for backward compatibility with deprecated crypto.createCipher
+ * It's okay to use for this purpose.
+ */
+function _getKeyIv( pw ) {
+    return EVP_BytesToKey( pw, null, 192, 16 );
 }
 
 /**

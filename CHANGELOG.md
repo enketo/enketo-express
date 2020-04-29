@@ -2,6 +2,47 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Added
+- Support for multiple setvalue/xforms-value-changed actions under the same form control.
+
+##### Changed
+- More prominent and differently-worded message when saving final or draft record in offline-capable views.
+- Updated Hindi translation.
+
+##### Fixed
+- Border shown when printing a Grid Theme form.
+
+[2.2.1] - 2020-04-23
+---------------------
+##### Changed
+- Updated Georgian translation.
+- "Go to" fragment identifiers now URL-encoded.
+- Configuration item "id length" (introduced in 2.2.0) now has maximum of 31 characters.
+
+##### Fixed
+- Some URLs with encrypted Enketo IDs stopped functioning (regression in 2.2.0).
+- Max-size call fails with /single/once webform URLs (single-submission webforms with protection against multiple submissions).
+- Protection against multiple submissions for a protected single-submission form is broken (regression in 2.2.0).
+- Final records in offline-capable webform views are not attempted to be submitted.
+
+[2.2.0] - 2020-04-15
+---------------------
+##### Added
+- Sync form and UI language upon load and when switching language within a session. See [load scenarios and resolution](https://docs.google.com/spreadsheets/d/1CigMLAQewcXi-OJJHi_JQQ-fJXOam99livM0oYrtbkk/edit?pli=1#gid=0)
+- Translation into Georgian.
+- Configuration item "id length" to make the Enketo ID length configurable between 4 and ~~64~~31 characters.
+
+##### Fixed
+- Previews using a `form` query parameter show a submit button instead of a validate button.
+- Docker builds fail due to an outdated Node.js base image.
+- The dotted lines on Grid theme printouts are not positioned at the bottom of cells.
+- A text question on Grid theme printouts that has only text questions on the same row (or nothing else), has too little space to write on.
+- Date/datetime/time questions take up too much vertical space on Grid theme printouts.
+- Empty readonly text fields take up unnecessary space in the print view.
+- Irrelevant questions in Grid theme are not getting the correct width in the print view.
+
 [2.1.1] - 2020-04-02
 ---------------------
 ##### Fixed

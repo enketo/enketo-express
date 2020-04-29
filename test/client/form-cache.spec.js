@@ -50,7 +50,7 @@ describe( 'Client Form Cache', () => {
             survey.enketoId = '20';
             formCache.init( survey )
                 .then( result => {
-                    result.$form = $( result.form );
+                    result.htmlView = document.createRange().createContextualFragment( result.form );
                     return formCache.updateMedia( result );
                 } )
                 .then( () => {
