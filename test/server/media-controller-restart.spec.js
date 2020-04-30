@@ -1,8 +1,6 @@
-const chai = require( 'chai' );
-const expect = chai.expect;
-const config = require( '../../app/models/config-model' ).server;
-
-const IPfiltering = config[ 'ip filtering' ];
+const app = require( '../../config/express' );
+const request = require( 'supertest' );
+const http = require( 'http' );
 
 /**
  * Tests the request-filtering-agent to block SSRF attacks
@@ -12,40 +10,55 @@ const IPfiltering = config[ 'ip filtering' ];
  */
 
 const testHTMLBody = 'im in.';
-const enketoHost = 'http://localhost:8005';
-const testHTMLHost = 'http/localhost:1234';
+const portHTML = 1234;
+const testHTMLHost = `http/localhost:${portHTML}`;
 
-const requestURL = enketoHost + '/media/get/' + testHTMLHost;
+const requestURL = `/media/get/${testHTMLHost}`;
+const server = http.createServer( function( req, res ) {
+    res.writeHead( 200, { 'Content-Type': 'text/plain' } );
+    res.end( testHTMLBody );
+} );
 
-var http = require('http');
+describe( 'Testing request-filtering-agent', function() {
 
-var server = http.createServer(function (req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('im in.');
-});
+    // Default everything disabled
+    const allowPrivateIPAddress = false;
+    const allowMetaIPAddress = false;
+    const allowIPAddressList = [];
+    const denyIPAddressList = [];
 
-describe('Testing request-filtering-agent', function () {
+    before( function() {
+        server.listen( portHTML );
+    } );
 
-    before(function () {
-        server.listen(1234);
-    });
-
-    after(function () {
+    after( function() {
         server.close();
-    });
+    } );
 
-    describe('WITH a Referer', function () {
-        const app = require( '../../config/express' );
-        const filteringOptions = app.get('ip filtering');
-        filteringOptions['allowPrivateIPAddress'] = true;
-        filteringOptions['allowMetaIPAddress'] = false;
-        filteringOptions['allowIPAddressList'] = [];
-        filteringOptions['denyIPAddressList'] = [];
-        app.set('ip filtering', filteringOptions);
-        console.log('*****');
-        console.dir(IPfiltering);
-        http.get(requestURL, function(){}).on('error', function(err){
-            expect(err.code).contains('ECONN');
-        });
-    });
-});
+    it( 'for a private IP address WITH a Referer with allowPrivateIPAddress=false', done => {
+
+        // Don't change any default IP filtering setting
+        app.set( 'ip filtering', { allowPrivateIPAddress, allowMetaIPAddress, allowIPAddressList, denyIPAddressList } );
+
+        request( app )
+            .get( requestURL )
+            .set( 'Referer', 'https://google.com?print=true' )
+            .expect( 500, /DNS lookup .* is not allowed. Because, It is private IP address/ )
+            // Btw, a little surprising that this returns a 500 error instead of e.g. a 405 Not Allowed
+            .end( done );
+    } );
+
+    it( 'for a private IP address WITH a Referer with allowPrivateIPAddress=true', done => {
+
+        // Only change one setting
+        const allowPrivateIPAddress = true;
+
+        app.set( 'ip filtering', { allowPrivateIPAddress, allowMetaIPAddress, allowIPAddressList, denyIPAddressList } );
+
+        request( app )
+            .get( requestURL )
+            .set( 'Referer', 'https://google.com?print=true' )
+            .expect( 200, testHTMLBody )
+            .end( done );
+    } );
+} );
