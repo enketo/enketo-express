@@ -26,7 +26,7 @@ const keys = {
  * @param {string} id
  */
 function enketoIdParam( req, res, next, id ) {
-    if ( /^[A-z0-9]{4,64}$/.test( id ) ) {
+    if ( /^[A-z0-9]{4,31}$/.test( id ) ) {
         req.enketoId = id;
         next();
     } else {
