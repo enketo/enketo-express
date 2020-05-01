@@ -71,6 +71,7 @@
         "puppeteer": "^2.1.1",
         "redis": "^3.0.2",
         "request": "^2.88.2",
+        "request-filtering-agent": "^1.0.4",
         "rollup": "^2.6.1",
         "rollup-plugin-alias": "2.2.x",
         "rollup-plugin-commonjs": "10.1.x",

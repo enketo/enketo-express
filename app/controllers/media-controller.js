@@ -9,6 +9,7 @@ const request = require( 'request' );
 const express = require( 'express' );
 const router = express.Router();
 const debug = require( 'debug' )( 'media-controller' );
+const { RequestFilteringHttpAgent, RequestFilteringHttpsAgent } = require( 'request-filtering-agent' );
 
 module.exports = app => {
     app.use( `${app.get( 'base path' )}/media`, router );
@@ -51,8 +52,16 @@ function getMedia( req, res, next ) {
     // due to a bug in request/request using options.method with Digest Auth we won't pass method as an option
     delete options.method;
 
+    //filtering agent to stop private ip access to HEAD and GET
+    if ( options.url.startsWith( 'https' ) ) {
+        options.agent = new RequestFilteringHttpsAgent( req.app.get( 'ip filtering' ) );
+    } else {
+        options.agent = new RequestFilteringHttpAgent( req.app.get( 'ip filtering' ) );
+    }
+
     if ( _isPrintView( req ) ) {
         request.head( options, ( error, response ) => {
+
             if ( error ) {
                 next( error );
             } else {
@@ -71,11 +80,13 @@ function getMedia( req, res, next ) {
 }
 
 function _pipeMedia( options, req, res, next ) {
-    request.get( options ).pipe( res ).on( 'error', error => {
-        debug( `error retrieving media from OpenRosa server: ${JSON.stringify( error )}` );
-        if ( !error.status ) {
-            error.status = ( error.code && error.code === 'ENOTFOUND' ) ? 404 : 500;
-        }
-        next( error );
-    } );
+    request.get( options ).on( 'error', error => _handleMediaRequestError( error, next ) ).pipe( res ).on( 'error', error => _handleMediaRequestError( error, next ) );
+}
+
+function _handleMediaRequestError( error, next ) {
+    debug( `error retrieving media from OpenRosa server: ${JSON.stringify( error )}` );
+    if ( !error.status ) {
+        error.status = ( error.code && error.code === 'ENOTFOUND' ) ? 404 : 500;
+    }
+    next( error );
 }

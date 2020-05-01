@@ -165,3 +165,10 @@ The default value is `100kb`.
 
 #### text field character limit
 Sets the maximum allowable text field characters with a default of 2000. This settings is meant to match any back-end database limits to avoid records that cannot be submitted because the server does no accept them.
+
+#### ip filtering
+Sets which IPs should be filtered out to prevent SSRF attacks. See more here: https://www.npmjs.com/package/request-filtering-agent
+* `allowPrivateIPAddress`: Default is `false`. Prevents or allows private IP addresses to make GET and HEAD requests.
+* `allowMetaIPAddress`: Default is `false`. Prevents or allows meta IP addresses to make GET and HEAD requests.
+* `allowIPAddressList`: Default is `[]`. The list of allowed IP addresses. These are preferred over `denyAddressList`.
+* `denyAddressList`: Default is `[]`. The list of denied IP addresses.
