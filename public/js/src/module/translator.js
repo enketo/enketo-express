@@ -1,6 +1,6 @@
 import settings from './settings';
 import i18next from 'i18next';
-import XHR from 'i18next-xhr-backend';
+import HttpApi from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 const LOADPATH = `${settings.basePath}${settings.offlinePath}/locales/build/__lng__/translation-combined.json`;
 const LANGEXTRACT = /^[a-z]{2,3}/;
@@ -27,7 +27,7 @@ const init = something => initialize
 
 const initialize = new Promise( ( resolve, reject ) => {
     i18next
-        .use( XHR )
+        .use( HttpApi )
         .use( LanguageDetector )
         .use( htmlParagraphsPostProcessor )
         .init( {

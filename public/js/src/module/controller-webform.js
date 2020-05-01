@@ -15,7 +15,6 @@ import $ from 'jquery';
 import encryptor from './encryptor';
 
 let form;
-let formSelector;
 let formData;
 let formprogress;
 const formOptions = {
@@ -23,11 +22,10 @@ const formOptions = {
     printRelevantOnly: settings.printRelevantOnly,
 };
 
-function init( selector, data ) {
+function init( formEl, data ) {
     let advice;
     let loadErrors = [];
 
-    formSelector = selector;
     formData = data;
 
     return _initializeRecords()
@@ -46,7 +44,7 @@ function init( selector, data ) {
                 formOptions.language = getCurrentUiLanguage();
             }
 
-            form = new Form( formSelector, data, formOptions );
+            form = new Form( formEl, data, formOptions );
             loadErrors = form.init();
 
             // Remove loader. This will make the form visible.
@@ -55,7 +53,7 @@ function init( selector, data ) {
             $( '.main-loader' ).remove();
 
             if ( settings.goTo && location.hash ) {
-                loadErrors = loadErrors.concat( form.goTo( location.hash.substring( 1 ) ) );
+                loadErrors = loadErrors.concat( form.goTo( decodeURIComponent( location.hash.substring( 1 ) ).split( '#' )[ 0 ] ) );
             }
 
             if ( form.encryptionKey ) {
@@ -145,8 +143,7 @@ function _resetForm( confirmed ) {
                 }
             } );
     } else {
-        form.resetView();
-        const formEl = document.querySelector( 'form.or' );
+        const formEl = form.resetView();
         form = new Form( formEl, {
             modelStr: formData.modelStr,
             external: formData.external
@@ -195,8 +192,8 @@ function _loadRecord( instanceId, confirmed ) {
                     return gui.alert( t( 'alert.recordnotfound.msg' ) );
                 }
 
-                form.resetView();
-                form = new Form( formSelector, {
+                const formEl = form.resetView();
+                form = new Form( formEl, {
                     modelStr: formData.modelStr,
                     instanceStr: record.xml,
                     external: formData.external,
@@ -240,7 +237,7 @@ function _submitRecord() {
     let msg = '';
     const include = { irrelevant: false };
 
-    form.view.$.trigger( 'beforesave' );
+    form.view.html.dispatchEvent( events.BeforeSave() );
 
     beforeMsg = ( redirect ) ? t( 'alert.submission.redirectmsg' ) : '';
     authLink = `<a href="${settings.loginUrl}" target="_blank">${t( 'here' )}</a>`;
@@ -368,8 +365,8 @@ function _confirmRecordName( recordName, errorMsg ) {
 function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
     const include = { irrelevant: draft };
 
-    // triggering "beforesave" event to update possible "timeEnd" meta data in form
-    form.view.$.trigger( 'beforesave' );
+    // triggering "before-save" event to update possible "timeEnd" meta data in form
+    form.view.html.dispatchEvent( events.BeforeSave() );
 
     // check recordName
     if ( !recordName ) {
@@ -427,13 +424,13 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
             _resetForm( true );
 
             if ( draft ) {
-                gui.feedback( t( 'alert.recordsavesuccess.draftmsg' ), 3 );
+                gui.alert( t( 'alert.recordsavesuccess.draftmsg' ), t( 'alert.savedraftinfo.heading' ), 'info', 5 );
             } else {
-                gui.feedback( t( 'alert.recordsavesuccess.finalmsg' ), 3 );
+                gui.alert( `${t('record-list.msg2')}`, t( 'alert.recordsavesuccess.finalmsg' ), 'info', 10 );
                 // The timeout simply avoids showing two messages at the same time:
                 // 1. "added to queue"
                 // 2. "successfully submitted"
-                setTimeout( records.uploadQueue, 5 * 1000 );
+                setTimeout( records.uploadQueue, 10 * 1000 );
             }
         } )
         .catch( error => {

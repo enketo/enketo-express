@@ -292,8 +292,8 @@ delete authentication[ 'managed by enketo' ];
 
 if ( config[ 'id length' ] < 4 ) {
     config[ 'id length' ] = 4;
-} else if ( config[ 'id length' ] > 64 ) {
-    config[ 'id length' ] = 64;
+} else if ( config[ 'id length' ] > 31 ) {
+    config[ 'id length' ] = 31;
 }
 
 module.exports = {
