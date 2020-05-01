@@ -57,6 +57,7 @@ function getMedia( req, res, next ) {
 
     if ( _isPrintView( req ) ) {
         request.head( options, ( error, response ) => {
+
             if ( error ) {
                 next( error );
             } else {
@@ -75,11 +76,17 @@ function getMedia( req, res, next ) {
 }
 
 function _pipeMedia( options, req, res, next ) {
-    request.get( options ).pipe( res ).on( 'error', error => {
-        debug( `error retrieving media from OpenRosa server: ${JSON.stringify( error )}` );
-        if ( !error.status ) {
-            error.status = ( error.code && error.code === 'ENOTFOUND' ) ? 404 : 500;
+    request.get( options, ( error ) => {
+        if ( error ) {
+            next( error );
+        } else {
+            request.get( options ).pipe( res ).on( 'error', error => {
+                debug( `error retrieving media from OpenRosa server: ${JSON.stringify( error )}` );
+                if ( !error.status ) {
+                    error.status = ( error.code && error.code === 'ENOTFOUND' ) ? 404 : 500;
+                }
+                next( error );
+            } );
         }
-        next( error );
     } );
 }
