@@ -143,8 +143,7 @@ function _resetForm( confirmed ) {
                 }
             } );
     } else {
-        form.resetView();
-        const formEl = document.querySelector( 'form.or' );
+        const formEl = form.resetView();
         form = new Form( formEl, {
             modelStr: formData.modelStr,
             external: formData.external
@@ -193,8 +192,7 @@ function _loadRecord( instanceId, confirmed ) {
                     return gui.alert( t( 'alert.recordnotfound.msg' ) );
                 }
 
-                form.resetView();
-                const formEl = document.querySelector( 'form.or' );
+                const formEl = form.resetView();
                 form = new Form( formEl, {
                     modelStr: formData.modelStr,
                     instanceStr: record.xml,
@@ -426,7 +424,7 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
             _resetForm( true );
 
             if ( draft ) {
-                gui.alert( t( 'alert.recordsavesuccess.draftmsg' ), t( 'alert.savedraftinfo.heading' ), 'info', 10 );
+                gui.alert( t( 'alert.recordsavesuccess.draftmsg' ), t( 'alert.savedraftinfo.heading' ), 'info', 5 );
             } else {
                 gui.alert( `${t('record-list.msg2')}`, t( 'alert.recordsavesuccess.finalmsg' ), 'info', 10 );
                 // The timeout simply avoids showing two messages at the same time:
