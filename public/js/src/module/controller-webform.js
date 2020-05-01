@@ -15,7 +15,6 @@ import $ from 'jquery';
 import encryptor from './encryptor';
 
 let form;
-let formSelector;
 let formData;
 let formprogress;
 const formOptions = {
@@ -23,11 +22,10 @@ const formOptions = {
     printRelevantOnly: settings.printRelevantOnly,
 };
 
-function init( selector, data ) {
+function init( formEl, data ) {
     let advice;
     let loadErrors = [];
 
-    formSelector = selector;
     formData = data;
 
     return _initializeRecords()
@@ -46,7 +44,7 @@ function init( selector, data ) {
                 formOptions.language = getCurrentUiLanguage();
             }
 
-            form = new Form( formSelector, data, formOptions );
+            form = new Form( formEl, data, formOptions );
             loadErrors = form.init();
 
             // Remove loader. This will make the form visible.
@@ -196,7 +194,8 @@ function _loadRecord( instanceId, confirmed ) {
                 }
 
                 form.resetView();
-                form = new Form( formSelector, {
+                const formEl = document.querySelector( 'form.or' );
+                form = new Form( formEl, {
                     modelStr: formData.modelStr,
                     instanceStr: record.xml,
                     external: formData.external,

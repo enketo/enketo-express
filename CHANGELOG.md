@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Border shown when printing a Grid Theme form.
+- Saving and loading draft records is broken (but they are saved correctly) (regression in 2.2.0).
 
 [2.2.1] - 2020-04-23
 ---------------------
