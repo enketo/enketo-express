@@ -186,6 +186,14 @@
 The default value is <code>100kb</code>.</p>
 <h4 id="text-field-character-limit">text field character limit</h4>
 <p>Sets the maximum allowable text field characters with a default of 2000. This settings is meant to match any back-end database limits to avoid records that cannot be submitted because the server does no accept them.</p>
+<h4 id="ip-filtering">ip filtering</h4>
+<p>Sets which IPs should be filtered out to prevent SSRF attacks. See more here: https://www.npmjs.com/package/request-filtering-agent</p>
+<ul>
+<li><code>allowPrivateIPAddress</code>: Default is <code>false</code>. Prevents or allows private IP addresses to make GET and HEAD requests.</li>
+<li><code>allowMetaIPAddress</code>: Default is <code>false</code>. Prevents or allows meta IP addresses to make GET and HEAD requests.</li>
+<li><code>allowIPAddressList</code>: Default is <code>[]</code>. The list of allowed IP addresses. These are preferred over <code>denyAddressList</code>.</li>
+<li><code>denyAddressList</code>: Default is <code>[]</code>. The list of denied IP addresses.</li>
+</ul>
 </article>
 
 </section>

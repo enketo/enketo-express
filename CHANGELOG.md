@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.3.0] - 2020-05-01
 ---------------------
 ##### Added
 - Support for multiple setvalue/xforms-value-changed actions under the same form control.
@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Border shown when printing a Grid Theme form.
 - Saving and loading draft records is broken (but they are saved correctly) (regression in 2.2.0).
+- SSRF vulnerability with media requests.
 
 [2.2.1] - 2020-04-23
 ---------------------
