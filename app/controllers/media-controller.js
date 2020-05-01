@@ -9,7 +9,7 @@ const request = require( 'request' );
 const express = require( 'express' );
 const router = express.Router();
 const debug = require( 'debug' )( 'media-controller' );
-const { RequestFilteringHttpAgent } = require( 'request-filtering-agent' );
+const { RequestFilteringHttpAgent, RequestFilteringHttpsAgent } = require( 'request-filtering-agent' );
 
 module.exports = app => {
     app.use( `${app.get( 'base path' )}/media`, router );
@@ -53,7 +53,11 @@ function getMedia( req, res, next ) {
     delete options.method;
 
     //filtering agent to stop private ip access to HEAD and GET
-    options.agent = new RequestFilteringHttpAgent( req.app.get( 'ip filtering' ) );
+    if ( req.url.includes( 'https' ) ) {
+        options.agent = new RequestFilteringHttpsAgent( req.app.get( 'ip filtering' ) );
+    } else {
+        options.agent = new RequestFilteringHttpAgent( req.app.get( 'ip filtering' ) );
+    }
 
     if ( _isPrintView( req ) ) {
         request.head( options, ( error, response ) => {
@@ -76,17 +80,13 @@ function getMedia( req, res, next ) {
 }
 
 function _pipeMedia( options, req, res, next ) {
-    request.get( options, ( error ) => {
-        if ( error ) {
-            next( error );
-        } else {
-            request.get( options ).pipe( res ).on( 'error', error => {
-                debug( `error retrieving media from OpenRosa server: ${JSON.stringify( error )}` );
-                if ( !error.status ) {
-                    error.status = ( error.code && error.code === 'ENOTFOUND' ) ? 404 : 500;
-                }
-                next( error );
-            } );
-        }
-    } );
+    request.get( options ).on( 'error', error => _handleMediaRequestError( error, next ) ).pipe( res ).on( 'error', error => _handleMediaRequestError( error, next ) );
+}
+
+function _handleMediaRequestError( error, next ) {
+    debug( `error retrieving media from OpenRosa server: ${JSON.stringify( error )}` );
+    if ( !error.status ) {
+        error.status = ( error.code && error.code === 'ENOTFOUND' ) ? 404 : 500;
+    }
+    next( error );
 }

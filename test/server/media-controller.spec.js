@@ -13,10 +13,12 @@ const testHTMLBody = 'im in.';
 const portHTML = 1234;
 const testHTMLHost = `http/localhost:${portHTML}`;
 const testHTMLMetaHost = `http/0.0.0.0:${portHTML}`;
+const testHTMLValidHTTPSHost = 'https/www.w3.org/People/mimasa/test/imgformat/img/w3c_home_2.jpg';
 const localhost = '127.0.0.1';
 
 const requestURL = `/media/get/${testHTMLHost}`;
 const requestMetaURL = `/media/get/${testHTMLMetaHost}`;
+const requestValidHTTPSURL = `/media/get/${testHTMLValidHTTPSHost}`;
 const server = http.createServer( function( req, res ) {
     res.writeHead( 200, { 'Content-Type': 'text/plain' } );
     res.end( testHTMLBody );
@@ -252,4 +254,15 @@ describe( 'Testing request-filtering-agent', function() {
             .end( done );
     } );
 
+    // Testing valid https resource
+    it( 'for a valid https resouce: https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home_2.jpg', done => {
+
+        // Default Settings
+        app.set( 'ip filtering', { allowPrivateIPAddress, allowMetaIPAddress, allowIPAddressList, denyIPAddressList } );
+
+        request( app )
+            .get( requestValidHTTPSURL )
+            .expect( 200 )
+            .end( done );
+    } );
 } );
