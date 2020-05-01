@@ -53,7 +53,7 @@ function getMedia( req, res, next ) {
     delete options.method;
 
     //filtering agent to stop private ip access to HEAD and GET
-    if ( req.url.includes( 'https' ) ) {
+    if ( options.url.startsWith( 'https' ) ) {
         options.agent = new RequestFilteringHttpsAgent( req.app.get( 'ip filtering' ) );
     } else {
         options.agent = new RequestFilteringHttpAgent( req.app.get( 'ip filtering' ) );
