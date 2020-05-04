@@ -153,6 +153,7 @@ $default-text-size: 13px;
     legend{
       .or-hint{
         > span{
+          right: 0;
           top: -10px !important;
         }
       }
