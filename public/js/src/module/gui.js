@@ -8,6 +8,7 @@ import settings from './settings';
 import * as printHelper from 'enketo-core/src/js/print';
 import { init as initTranslator, t } from './translator';
 import sniffer from './sniffer';
+import events from './event';
 import vex from 'vex-js';
 import $ from 'jquery';
 import './plugin';
@@ -416,20 +417,26 @@ function printForm() {
         negButton: components.negButton,
     };
     const inputs = components.gridInputs + components.gridWarning;
+    const questions = document.querySelectorAll( '.question' );
+
+    printHelper.openAllDetails();
+    questions.forEach( question => question.dispatchEvent( events.Printify() ) );
 
     if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
-        printHelper.openAllDetails();
         return prompt( texts, options, inputs )
             .then( values => {
                 if ( values ) {
-                    printGrid( values );
+                    return printGrid( values );
                 }
             } )
-            .then( printHelper.closeAllDetails );
+            .then( () => {
+                printHelper.closeAllDetails();
+                questions.forEach( question => question.dispatchEvent( events.DePrintify() ) );
+            } );
     } else {
-        printHelper.openAllDetails();
         window.print();
         printHelper.closeAllDetails();
+        questions.forEach( question => question.dispatchEvent( events.DePrintify() ) );
         return Promise.resolve();
     }
 }
