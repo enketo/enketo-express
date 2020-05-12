@@ -292,7 +292,13 @@ function _loadMedia( survey, targetContainers ) {
     let resourceUrl;
     const URL = window.URL || window.webkitURL;
 
-    targetContainers = targetContainers || [ survey.htmlView, document.querySelector( '.form-header' ) ];
+    if ( !targetContainers ) {
+        targetContainers = [ survey.htmlView ];
+        const formHeader = document.querySelector( '.form-header' );
+        if ( formHeader ) {
+            targetContainers.push( formHeader );
+        }
+    }
 
     _getElementsGroupedBySrc( targetContainers ).forEach( elements => {
         const src = elements[ 0 ].dataset.offlineSrc;
