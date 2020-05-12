@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.3.2] - 2020-05-12
 ---------------------
 ##### Fixed
 - Overflowing text not shown in printout (regression in 2.3.1).
@@ -38,6 +38,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Some URLs with encrypted Enketo IDs stopped functioning (regression in 2.2.0).
 - Max-size call fails with /single/once webform URLs (single-submission webforms with protection against multiple submissions).
+- ~~Protection against multiple submissions for a protected single-submission form is broken (regression in 2.2.0).~~ (not fixed)
 - Final records in offline-capable webform views are not attempted to be submitted.
 
 [2.2.0] - 2020-04-15
