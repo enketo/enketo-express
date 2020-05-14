@@ -1,6 +1,6 @@
 {
     "advanced": {
-        "flushdb": "Clear Storage"
+        "flushdb": "Depolamayı temizle"
     },
     "alert": {
         "addtohomescreen": {
@@ -10,36 +10,36 @@
             "androidfirefox": {
                 "msg": "To add this form to your Homescreen, long-press the address bar and select 'Add to Home Screen'."
             },
-            "heading": "Add to Home Screen",
+            "heading": "Ana Sayfaya Ekle",
             "iossafari": {
                 "msg": "To add this form to your Home screen, click the share icon __image1__ in the top right of your browser, and select: '+ Add to Home Screen'."
             }
         },
         "appupdated": {
-            "heading": "App Updated!",
-            "msg": "A new version of this application has been downloaded. Refresh this page to load the updated version."
+            "heading": "Uygulama güncellendi!",
+            "msg": "Bu uygulamanın yeni bir sürümü indirildi. Güncellenmiş sürümü yüklemek için sayfayı yenileyiniz."
         },
         "closing": {
-            "heading": "Closing..."
+            "heading": "Kapanıyor..."
         },
         "default": {
-            "button": "Close",
-            "heading": "Alert"
+            "button": "Kapat",
+            "heading": "Uyarı"
         },
         "export": {
             "error": {
                 "filecreatedmsg": "Nevertheless, an incomplete export file was still created.",
-                "heading": "Export Error",
+                "heading": "Dışa Aktarım Hatası",
                 "msg": "Errors occurred during creating of the record export file for unsubmitted records. Errors: __errors__"
             },
             "success": {
-                "heading": "Export Created",
+                "heading": "Dışa Aktarım Oluşturuldu",
                 "msg": "Export file created for all unsubmitted records belonging to this form."
             }
         },
         "formupdated": {
-            "heading": "Form Updated!",
-            "msg": "A new version of this form has been downloaded. Refresh this page to load the updated version."
+            "heading": "Form Güncellendi!",
+            "msg": "Bu biçimin yeni bir uyarlaması indirildi. Güncellenmiş uyarlamayı yüklemek için sayfayı yenileyiniz."
         },
         "gotonotfound": {
             "msg": "Failed to find question \"__path__\" in form. Is the reference to this question correct?"
@@ -47,19 +47,19 @@
         "loaderror": {
             "editadvice": "It is recommended not to edit this record until this is resolved.",
             "entryadvice": "It is recommended not to use this form for data entry until this is resolved.",
-            "heading": "Loading Error",
+            "heading": "Yükleme Hatası",
             "msg1": "Error occured during the loading of this form.",
             "msg2": "Please contact __emailLink__ with the link to this page and the error message below:",
-            "heading_plural": "Loading Errors",
+            "heading_plural": "Yükleme Hataları",
             "msg1_plural": "Errors occurred during the loading of this form.",
             "msg2_plural": "Please contact __emailLink__ with the link to this page and the error messages below:"
         },
         "logout": {
-            "heading": "Logged Out",
+            "heading": "Çıkış Yapıldı",
             "msg": "You have been logged out."
         },
         "offlinesupported": {
-            "heading": "Form works offline!",
+            "heading": "Form çevrimdışı çalışıyor!",
             "msg": [
                 "This form can now be loaded and used without an Internet connection on this device. Bookmark it for easy offline access.",
                 "Records are automatically stored and queued in your browser until an Internet connection is available. When the app is online, records will be automatically submitted - one by one.",
@@ -70,7 +70,7 @@
             "heading": "Application cannot launch offline",
             "msg": "Offline application launch is not supported by your browser. You can use the survey without this feature or see options for resolving this.",
             "negButton": "Use it",
-            "posButton": "Show options",
+            "posButton": "Seçenekleri göster",
             "refresh": "This form can no longer launch offline. Please refresh the page to try to fix this."
         },
         "queuesubmissionsuccess": {
@@ -110,15 +110,15 @@
         "submissionsuccess": {
             "heading": "Submission Successful",
             "msg": "Your data was submitted!",
-            "redirectmsg": "You will now be redirected."
+            "redirectmsg": "Şimdi yönlendirileceksiniz."
         },
         "thanks": {
-            "heading": "Thank you for participating!",
+            "heading": "Katılımınız için teşekkürler.",
             "msg": "You can close this window now.",
             "msgTaken": "You have already completed this survey."
         },
         "validationerror": {
-            "msg": "Form contains errors. Please see fields marked in red."
+            "msg": "Formda hatalar bulunuyor. Lütfen kırmızı ile işaretlenen alanları gözden geçiriniz."
         },
         "validationsuccess": {
             "heading": "OK",
@@ -128,58 +128,58 @@
             "multiple": "Select multiple question has an illegal value \"__value__\" that contains a space."
         },
         "xpatherror": {
-            "heading": "Formula Error",
+            "heading": "Formül Hatası",
             "msg": "A formula evaluation error occurred. Please contact __emailLink__ with this error:"
         }
     },
-    "changelog": "Change Log",
+    "changelog": "Değişim Günlüğü",
     "confirm": {
         "autosaveload": {
-            "heading": "Unsaved Record Found",
-            "msg": "Enketo has found an unsaved record. Would you like to load this record or discard it?",
+            "heading": "Kaydedilmemiş giriş bulundu.",
+            "msg": "Enketo kaydedişmemiş bir giriş buldu. Bu kaydı yüklemek ister misiniz veya dikkate alma.",
             "negButton": "Discard",
-            "posButton": "Load Record"
+            "posButton": "Kaydı Yükle"
         },
         "default": {
-            "heading": "Are you sure?",
-            "msg": "Please confirm this action",
-            "negButton": "Cancel",
-            "posButton": "Confirm"
+            "heading": "Emin misiniz?",
+            "msg": "Lütfen bu eylemi onaylayın",
+            "negButton": "İptal",
+            "posButton": "Onayla"
         },
         "deleteall": {
             "heading": "PANIC!",
             "msg": [
                 "This will remove all your queued data and all your forms from the browser storage. Data will be lost forever. Use this only as a last resort if the browser storage seems corrupt.",
-                "Close all other Enketo browser tabs first.",
+                "Önce tüm Enketo tarayıcı bölmelerini kapatın.",
                 "The page will reload. If you see an error you may have to repeat this action.",
-                "Are you sure you want to do this?"
+                "Bunu yapmak istediğinize emin misiniz?"
             ],
-            "posButton": "Delete All"
+            "posButton": "Tümünü Sil"
         },
         "discardcurrent": {
-            "heading": "Unsaved edits",
+            "heading": "Kaydedilmeyen düzenleme",
             "msg": "The current form has unsaved changes. Would you like to load a record without saving changes to the form you were working on?",
-            "posButton": "Proceed without saving"
+            "posButton": "Kaydetmeden işleme devam edin"
         },
         "login": {
-            "heading": "Login Required",
+            "heading": "Kullanıcı Girişi Gerekli",
             "msg": [
                 "In order to submit your queued data, you need to login. If you want to do this now, you will be redirected, and lose unsaved information.",
                 "Would you like to login now or later?"
             ],
-            "negButton": "Later",
+            "negButton": "Sonra",
             "posButton": "Log in now"
         },
         "print": {
             "a4": "A4",
-            "heading": "Select Print Settings",
+            "heading": "Yazdırma Ayarlarını Seçiniz",
             "landscape": "Landscape",
             "letter": "Letter",
             "msg": "To prepare an optimized print, please select the print settings below",
-            "orientation": "Paper Orientation",
+            "orientation": "Sayfa Yönlendirmesi",
             "portrait": "Portrait",
-            "posButton": "Prepare",
-            "psize": "Paper Size",
+            "posButton": "Hazırla",
+            "psize": "Kağıt Boyutu",
             "reminder": "Remember to set these same print settings in the browser's print menu afterwards!"
         },
         "repeatremove": {
@@ -187,35 +187,35 @@
             "msg": "This action is irreversible. Are you sure you want to proceed?"
         },
         "save": {
-            "existingerror": "This record name or ID already exists.",
+            "existingerror": "Kayıt ismi veya numarası zaten mevcut.",
             "hint": "This name allows you to easily find your draft record to finish it later.",
             "msg": "There are unsaved changes, would you like to continue without saving those?",
-            "name": "Record Name",
-            "posButton": "Save & Close",
+            "name": "Kayıt İsmi",
+            "posButton": "Kaydet ve Kapat",
             "renamemsg": "Are you sure you want to rename __currentName__ to __newName__?",
             "unkownerror": "An unknown error occurred when trying to save data."
         }
     },
     "constraint": {
-        "invalid": "Value not allowed",
-        "required": "This field is required"
+        "invalid": "İzin verilmeyen değer",
+        "required": "Bu alan zorunludur."
     },
     "contact": {
-        "admin": "Contact the survey administrator please.",
+        "admin": "Lütfen anket yöneticisi ile iletişime geçiniz.",
         "support": "Contact __supportEmail__ please."
     },
     "drawwidget": {
         "annotation": "file and drawing",
         "drawing": "drawing",
-        "signature": "signature"
+        "signature": "imza"
     },
     "enketo": {
         "power": "Powered by"
     },
     "error": {
         "code": "Error Code: __code__",
-        "dataloadfailed": "Failed to load data from __url__",
-        "econnrefused": "Could not connect with Server",
+        "dataloadfailed": "__url__ adresinden veri yükleme başarısız",
+        "econnrefused": "Sunucu ile bağlantı kurulamadı",
         "encryptionnotsupported": "This form requires local encryption of records. Unfortunately this is not supported by your browser. We recommend switching to a modern browser.",
         "instancenotfound": "Record not present. It may have expired.",
         "invalidediturl": "Not a valid edit URL",
@@ -224,40 +224,40 @@
             "Oops, this form doesn't exist (anymore). Most likely the owner of the form has deleted it, archived it, or disabled it. Please contact the form's owner to confirm.",
             "Detailed error: Form with ID __formId__ not found in /formList."
         ],
-        "pagenotfound": "Page not Found",
+        "pagenotfound": "Sayfa Bulunamadı",
         "surveyidnotactive": "Survey with this ID no longer active",
         "surveyidnotfound": "Survey with this ID not found",
-        "unknown": "An unknown error occured"
+        "unknown": "Bilinmeyen bir hata oluştu"
     },
     "feedback": {
-        "header": "Information"
+        "header": "Bilgi"
     },
     "filepicker": {
-        "file": "file",
+        "file": "dosya",
         "notFound": "File __existing__ could not be found (leave unchanged if already submitted and you want to preserve it).",
         "placeholder": "Click here to upload file. (< __maxSize__)",
         "resetWarning": "This will remove the __item__. Are you sure you want to do this?",
         "toolargeerror": "File too large (> __maxSize__)",
-        "waitingForPermissions": "Waiting for user permissions."
+        "waitingForPermissions": "Kullanıcı izinleri için bekleniyor."
     },
     "form": {
-        "chooseLanguage": "Choose Language",
+        "chooseLanguage": "Dil Seçiniz",
         "logout": "log out",
         "pages": {
-            "back": "Back",
+            "back": "Geri",
             "end": "Go to End",
-            "next": "Next",
+            "next": "İleri",
             "return": "Return to Beginning"
         },
         "required": "required"
     },
     "formfooter": {
         "complete": {
-            "btn": "Complete"
+            "btn": "Tamamen"
         },
         "savedraft": {
-            "btn": "Save Draft",
-            "label": "Save as Draft"
+            "btn": "Taslağı Kaydet",
+            "label": "Taslak Olarak Kaydet"
         },
         "submit": {
             "btn": "Submit"
@@ -267,12 +267,12 @@
         }
     },
     "geopicker": {
-        "accuracy": "accuracy (m)",
-        "altitude": "altitude (m)",
-        "closepolygon": "close polygon",
-        "kmlcoords": "KML coordinates",
-        "kmlpaste": "paste KML coordinates here",
-        "latitude": "latitude (x.y °)",
+        "accuracy": "Doğruluk (m)",
+        "altitude": "Yükseklik (m)",
+        "closepolygon": "Alanı kapat",
+        "kmlcoords": "KML koordinatları",
+        "kmlpaste": "KML koordinatlarını buraya yapıştırınız",
+        "latitude": "Enlem (y)",
         "longitude": "longitude (x.y °)",
         "points": "points",
         "removePoint": "This will completely remove the current geopoint from the list of geopoints and cannot be undone. Are you sure you want to do this?",
@@ -281,7 +281,7 @@
     "here": "here",
     "hint": {
         "guidance": {
-            "details": "more details"
+            "details": "dahada ayrıntılar"
         }
     },
     "home": {
@@ -291,37 +291,36 @@
         "svgNotFound": "SVG image could not be found"
     },
     "langs": {
-        "ar": "Arabic",
-        "cs": "Czech",
-        "de": "German",
-        "el": "Greek",
-        "en": "English",
-        "es": "Spanish",
-        "fa": "Persian",
-        "fi": "Finnish",
-        "fr": "French",
-        "he": "Hebrew",
-        "hi": "Hindi",
-        "it": "Italian",
-        "ka": "Georgian",
-        "km": "Khmer",
-        "lo": "Lao",
-        "nl": "Dutch",
-        "no": "Norwegian",
+        "ar": "Arapça",
+        "cs": "Çekçe",
+        "de": "Almanca",
+        "el": "Yunanca",
+        "en": "İngilizce",
+        "es": "İspanyolca",
+        "fa": "Farsça",
+        "fi": "Fince",
+        "fr": "Fransızca",
+        "he": "İbranice",
+        "hi": "Hinduca",
+        "it": "İtalyanca",
+        "ka": "Gürcüce",
+        "km": "Kamboçca",
+        "lo": "Laoca",
+        "nl": "Felemenkçe",
+        "no": "Norveççe",
         "pa": "Panjabi",
-        "pl": "Polish",
-        "pt": "Portuguese",
-        "ro": "Romanian",
-        "ru": "Russian",
-        "sk": "Slovak",
-        "sq": "Albanian",
-        "supported": "Languages supported: ",
-        "sv": "Swedish",
-        "sw": "Swahili",
-        "th": "Thai",
-        "tr": "Turkish",
-        "vi": "Vietnamese",
-        "zh": "Chinese"
+        "pl": "Lehçe",
+        "pt": "Portekizce",
+        "ro": "Romence",
+        "ru": "Rusça",
+        "sk": "Slovakça",
+        "sq": "Arnavutça",
+        "supported": "Languages supported:",
+        "sv": "İsveççe",
+        "sw": "Svahilice",
+        "th": "Tayca",
+        "vi": "Vietnamca",
+        "zh": "Çince"
     },
     "literacywidget": {
         "finish": "Finish",
@@ -338,20 +337,20 @@
             "msg2": "If you are using an outdated browser, we recommend upgrading to a recent version of one of the following excellent modern browsers:"
         },
         "offline": {
-            "heading": "Cannot access requested page",
+            "heading": "İstenen sayfaya ulaşılamıyor",
             "msg1": "This page is only accessible when the browser has an Internet connection and the server is accessible (unless the page does not exist)."
         }
     },
     "prompt": {
         "default": {
-            "heading": "Enter values"
+            "heading": "Değerleri giriniz"
         },
         "login": {
             "heading": "Enter your __server__ credentials",
-            "password": "Password",
-            "remember": "Remember on this computer",
+            "password": "Şifre",
+            "remember": "Bu bilgisayarda hatırla",
             "submit": "Submit",
-            "username": "Username"
+            "username": "Kullanıcı Adı"
         }
     },
     "rankwidget": {
@@ -359,14 +358,14 @@
         "tapstart": "Tap to start"
     },
     "record-list": {
-        "export": "Export",
+        "export": "Dışarı Aktar",
         "msg1": "Records are stored inside your browser until they have been uploaded (even if you turn off your computer or go offline).",
         "msg2": "Queued records, except those marked as draft __icon__, are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
         "msg2-nodraft": "Queued records are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
         "msg3": "To force an upload in between automatic attempts, click Upload.",
         "norecords": "no records queued",
-        "title": "Queue",
-        "upload": "Upload"
+        "title": "Kuyruk",
+        "upload": "Karşıya yükle"
     },
     "selectpicker": {
         "noneselected": "none selected",
@@ -386,19 +385,19 @@
         "http401": "Authentication problem with data server.",
         "http403": "Not allowed to post data to this data server.",
         "http404": "Submission service on data server not found.",
-        "http408": "Data server timed out.",
-        "http413": "Data is too large.",
+        "http408": "Veri sunucusu zaman aşımına uğradı.",
+        "http413": "Veri çok büyük",
         "http4xx": "Unknown submission problem on data server.",
         "http500": "The data server for your form or the Enketo server is down. Please try again later or contact __supportEmail__.",
-        "http504": "Could not establish connection with data server."
+        "http504": "Veri sunucusu ile bağlantı kurulamadı."
     },
     "themes": {
         "supported": "Themes supported"
     },
-    "version": "version:",
+    "version": "Sürüm:",
     "widget": {
         "comment": {
-            "update": "Update"
+            "update": "Güncelle"
         }
     }
 }

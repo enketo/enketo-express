@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Added
+- Turkish translation (45% only).
+
+##### Changed
+- Updated Hindi, Dutch, and Spanish
+
 [2.3.2] - 2020-05-12
 ---------------------
 ##### Fixed
