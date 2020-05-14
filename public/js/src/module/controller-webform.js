@@ -47,6 +47,8 @@ function init( formEl, data ) {
 
             if ( getCurrentUiLanguage() === getDesiredLanguage() ) {
                 formOptions.language = getCurrentUiLanguage();
+            } else {
+                formOptions.language = getDesiredLanguage();
             }
 
             form = new Form( formEl, data, formOptions );

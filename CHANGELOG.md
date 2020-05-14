@@ -10,6 +10,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Updated Hindi, Dutch, and Spanish
 
+##### Fixed
+- If requested language is not available as UI language, is available as form language but is not the default form language, the form shows default form language.
+
 [2.3.2] - 2020-05-12
 ---------------------
 ##### Fixed
