@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.3.3] - 2020-05-15
 ---------------------
 ##### Added
 - Turkish translation (45% only).
@@ -12,6 +12,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - If requested language is not available as UI language, is available as form language but is not the default form language, the form shows default form language.
+- SVG image in image-map widget is not always displayed in its entirety. Any SVG-specified `viewBox` attribute is overwritten.
+- SVG `<circle>` element with `id` attribute is not working in the image-map widget.
+- SVG `<circle>` element with a parent `<g>` element with an id attribute is not working in the image-map widget.
+- Geo widget update function doesn't redraw a map, e.g. when changing language.
+
 
 [2.3.2] - 2020-05-12
 ---------------------
