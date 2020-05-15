@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Turkish translation (45% only).
 
 ##### Changed
-- Updated Hindi, Dutch, and Spanish
+- Updated Swedish, Hindi, Dutch, and Spanish
 
 ##### Fixed
 - If requested language is not available as UI language, is available as form language but is not the default form language, the form shows default form language.
