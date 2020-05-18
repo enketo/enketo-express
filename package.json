@@ -25,7 +25,7 @@
         "start": "node .",
         "test": "grunt test",
         "postinstall": "grunt",
-        "beautify": "grunt jsbeautifier:fix",
+        "beautify": "grunt eslint:fix",
         "build-docs": "rimraf docs && ./node_modules/.bin/jsdoc -c jsdoc.config.js"
     },
     "private": true,
@@ -95,7 +95,6 @@
         "grunt-concurrent": "3.x.x",
         "grunt-contrib-watch": "1.1.x",
         "grunt-eslint": "22.x.x",
-        "grunt-jsbeautifier": "0.2.x",
         "grunt-karma": "^4.0.x",
         "grunt-mocha-test": "0.13.x",
         "grunt-nodemon": "0.4.x",

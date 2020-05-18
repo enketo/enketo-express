@@ -1,8 +1,11 @@
 {
     "env": {
         "es6": true,
-        "browser": false,
-        "node": true
+        "browser": true,
+        "commonjs": true
+    },
+    "globals": {
+        "Promise": true
     },
     "extends": "eslint:recommended",
     "plugins": [
@@ -20,19 +23,23 @@
         }
     },
     "rules": {
-        "indent": [ "warn", 4, {
-            "SwitchCase": 1
-        } ],
-        "no-unused-vars": [ "error", { "argsIgnorePattern": "next" } ],
-        "linebreak-style": [ "error", "unix" ],
-        "quotes": [ "error", "single" ],
-        "semi": [ "error", "always" ],
-        "no-console": 0,
+        "indent": ["warn", 4, { "SwitchCase": 1 }],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],
+        "no-console": ["warn", { "allow": ["error", "deprecate"] }],
+        "eol-last": ["error", "always"],
+        "padding-line-between-statements": ["warn", { "blankLine": "always", "prev": "*", "next": "return" }],
+        "space-before-function-paren": ["error", "never"],
+        "space-in-parens": ["error", "always"],
+        "array-bracket-spacing": ["error", "always"],
+        "no-implied-eval": "error",
+        "object-curly-spacing": ["error", "always"],
         "jsdoc/check-examples": 1,
         "jsdoc/check-param-names": 1,
         "jsdoc/check-tag-names": 1,
         "jsdoc/check-types": 1,
-        "jsdoc/newline-after-description": [ "warn", "always" ],
+        "jsdoc/newline-after-description": ["warn", "always"],
         "jsdoc/no-undefined-types": 1,
         "jsdoc/require-description": 0,
         "jsdoc/require-description-complete-sentence": 0,

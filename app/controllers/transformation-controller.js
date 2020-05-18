@@ -140,9 +140,11 @@ function _updateCache( survey ) {
                 delete survey.mediaHash;
                 delete survey.mediaUrlHash;
                 delete survey.formHash;
+
                 return _getFormDirectly( survey )
                     .then( cacheModel.set );
             }
+
             return survey;
         } )
         .then( _addMediaHash )
@@ -168,6 +170,7 @@ function _updateCache( survey ) {
  */
 function _addMediaHash( survey ) {
     survey.mediaHash = utils.getXformsManifestHash( survey.manifest, 'all' );
+
     return Promise.resolve( survey );
 }
 
@@ -203,8 +206,9 @@ function _replaceMediaSources( survey ) {
         const JR_URL = /"jr:\/\/[\w-]+\/([^"]+)"/g;
         const replacer = ( match, filename ) => {
             if ( media[ filename ] ) {
-                return `"${media[ filename ].replace('&', '&amp;')}"`;
+                return `"${media[ filename ].replace( '&', '&amp;' )}"`;
             }
+
             return match;
         };
 
@@ -267,6 +271,7 @@ function _respond( res, survey ) {
 function _getCombinedHash( survey ) {
     const FORCE_UPDATE = 1;
     const brandingHash = ( survey.account.branding && survey.account.branding.source ) ? utils.md5( survey.account.branding.source ) : '';
+
     return [ String( survey.formHash ), String( survey.mediaHash ), String( survey.xslHash ), String( survey.theme ), String( brandingHash ), String( FORCE_UPDATE ) ].join( '-' );
 }
 
@@ -280,6 +285,7 @@ function _setCookieAndCredentials( survey, req ) {
     survey.cookie = req.headers.cookie;
     // for OpenRosa authentication, add the credentials
     survey.credentials = user.getCredentials( req );
+
     return Promise.resolve( survey );
 }
 
@@ -298,16 +304,18 @@ function _getSurveyParams( req ) {
             .then( _checkQuota )
             .then( survey => {
                 survey.customParam = customParam;
+
                 return _setCookieAndCredentials( survey, req );
             } );
     } else if ( params.serverUrl && params.xformId ) {
         return account.check( {
-                openRosaServer: params.serverUrl,
-                openRosaId: params.xformId
-            } )
+            openRosaServer: params.serverUrl,
+            openRosaId: params.xformId
+        } )
             .then( _checkQuota )
             .then( survey => {
                 survey.customParam = customParam;
+
                 return _setCookieAndCredentials( survey, req );
             } );
     } else if ( params.xformUrl ) {
@@ -318,9 +326,10 @@ function _getSurveyParams( req ) {
             throw error;
         }
         const xUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+
         return account.check( {
-                openRosaServer: xUrl
-            } )
+            openRosaServer: xUrl
+        } )
             .then( survey => // no need to check quota
                 Promise.resolve( {
                     info: {

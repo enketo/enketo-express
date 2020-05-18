@@ -1,3 +1,5 @@
+/* global process, __dirname */
+
 /**
  * @module submission-model
  */
@@ -64,6 +66,7 @@ function isNew( id, instanceId ) {
     if ( !id || !instanceId ) {
         const error = new Error( 'Cannot log instanceID: either enketo ID or instance ID not provided', id, instanceId );
         error.status = 400;
+
         return Promise.reject( error );
     }
 
@@ -85,8 +88,10 @@ function isNew( id, instanceId ) {
                         } );
                     }
                 } );
+
                 return true;
             }
+
             return false;
         } );
 }
@@ -109,7 +114,7 @@ function add( id, instanceId, deprecatedId ) {
 
 /**
  * @param {string} instanceId
- * @param {Array<string>} [list] List of IDs
+ * @param {Array<string>} [list] - List of IDs
  * @return {boolean} Whather instanceID already exists in the list
  */
 function _alreadyRecorded( instanceId, list = [] ) {

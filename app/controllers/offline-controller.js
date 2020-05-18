@@ -1,3 +1,5 @@
+/* global process */
+
 /**
  * @module offline-resources-controller
  */
@@ -39,12 +41,13 @@ function getScriptContent() {
     const partialScriptHash = crypto.createHash( 'md5' ).update( partialOfflineAppWorkerScript ).digest( 'hex' ).substring( 0, 7 );
     const configurationHash = crypto.createHash( 'md5' ).update( JSON.stringify( config ) ).digest( 'hex' ).substring( 0, 7 );
     const version = [ config.version, configurationHash, partialScriptHash ].join( '-' );
-    // We add as few explicit resources as possible because the offline-app-worker can do this dynamically and that is preferred 
+    // We add as few explicit resources as possible because the offline-app-worker can do this dynamically and that is preferred
     // for easier maintenance of the offline launch feature.
     const resources = config[ 'themes supported' ]
         .reduce( ( accumulator, theme ) => {
             accumulator.push( `${config['base path']}${config['offline path']}/css/theme-${theme}.css` );
             accumulator.push( `${config['base path']}${config['offline path']}/css/theme-${theme}.print.css` );
+
             return accumulator;
         }, [] )
         .concat( [
@@ -54,7 +57,7 @@ function getScriptContent() {
     return `
 const version = '${version}';
 const resources = [
-    '${resources.join('\',\n    \'')}'
+    '${resources.join( '\',\n    \'' )}'
 ];
 
 ${partialOfflineAppWorkerScript}`;

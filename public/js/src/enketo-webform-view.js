@@ -36,9 +36,11 @@ initTranslator( survey )
                 .then( response => {
                     formParts.instance = response.instance;
                     formParts.instanceAttachments = response.instanceAttachments;
+
                     return formParts;
                 } );
         }
+
         return formParts;
     } )
     .then( formParts => {
@@ -77,6 +79,7 @@ function _convertToReadonly( formParts ) {
     // prevent adding an Add/Remove UI on repeats
     formParts.formFragment.querySelectorAll( '.or-repeat-info' )
         .forEach( el => el.setAttribute( 'data-repeat-fixed', 'fixed' ) );
+
     return formParts;
 }
 

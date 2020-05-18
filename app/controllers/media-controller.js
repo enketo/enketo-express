@@ -26,12 +26,14 @@ function _extractMediaUrl( path ) {
     if ( !path ) {
         return undefined;
     }
+
     return path.replace( /\//, '://' );
 }
 
 
 function _isPrintView( req ) {
     const refererQuery = req.headers && req.headers.referer ? url.parse( req.headers.referer ).query : null;
+
     return !!( refererQuery && refererQuery.includes( 'print=true' ) );
 }
 

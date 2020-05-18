@@ -15,6 +15,7 @@ function getErrorMessage( req, error ) {
         if ( /ECONNREFUSED/.test( error.message ) ) {
             return req.i18n.t( 'error.econnrefused' );
         }
+
         // else output the message untranslated
         return error.message;
     } else if ( error.translationKey ) {
@@ -33,7 +34,7 @@ module.exports = {
      * @param {module:api-controller~ExpressResponse} res
      * @param {Function} next - Express callback
      */
-    production( err, req, res, next ) {
+    production( err, req, res, next ) {// eslint-disable-line no-unused-vars
         const body = {
             code: err.status || 500,
             message: getErrorMessage( req, err )
@@ -52,7 +53,7 @@ module.exports = {
      * @param {module:api-controller~ExpressResponse} res
      * @param {Function} next - Express callback
      */
-    development( err, req, res, next ) {
+    development( err, req, res, next ) {// eslint-disable-line no-unused-vars
         const body = {
             code: err.status || 500,
             message: getErrorMessage( req, err ),

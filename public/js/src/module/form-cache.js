@@ -56,6 +56,7 @@ function _processDynamicData( survey ) {
     if ( !survey ) {
         return survey;
     }
+
     return store.dynamicData.get( survey.enketoId )
         .then( data => {
             const newData = {
@@ -123,7 +124,7 @@ function _setUpdateIntervals( survey ) {
  * Form resets require reloading the form media.
  * This makes form resets slower, but it makes initial form loads faster.
  *
- * @param {*} survey [description]
+ * @param {*} survey - [description]
  */
 function _setResetListener( survey ) {
 
@@ -140,23 +141,26 @@ function _setResetListener( survey ) {
 /**
  * Handles loading form media for newly added repeats.
  *
- * @param {*} survey [description]
+ * @param {*} survey - [description]
  */
 function _setRepeatListener( survey ) {
     //Instantiate only once, after loadMedia has been completed (once)
     survey.htmlView.addEventListener( events.AddRepeat().type, event => {
         _loadMedia( survey, [ event.target ] );
     } );
+
     return Promise.resolve( survey );
 }
 
 /**
  * Changes src attributes in view to data-offline-src to facilate loading those resources
  * from the browser storage.
+ *
  * @param {*} survey 
  */
 function _swapMediaSrc( survey ) {
     survey.form = survey.form.replace( /(src="[^"]*")/g, 'data-offline-$1 src=""' );
+
     return survey;
 }
 
@@ -164,6 +168,7 @@ function _swapMediaSrc( survey ) {
 /**
  * Loads all default binary files and adds them to the survey object. It removes the src
  * attributes from model nodes with default binary files.
+ *
  * @param {*} survey 
  */
 function _addBinaryDefaultsAndUpdateModel( survey ) {
@@ -196,6 +201,7 @@ function _addBinaryDefaultsAndUpdateModel( survey ) {
     return Promise.all( tasks )
         .then( () => {
             survey.model = new XMLSerializer().serializeToString( model );
+
             return survey;
         } );
 }
@@ -206,7 +212,7 @@ function _addBinaryDefaultsAndUpdateModel( survey ) {
  * If the form/data server updates their max size setting, this value
  * will be updated the next time the cache is refreshed.
  *
- * @param  {*} survey [description]
+ * @param  {*} survey - [description]
  * @return {*}        [description]
  */
 function updateMaxSubmissionSize( survey ) {
@@ -219,8 +225,10 @@ function updateMaxSubmissionSize( survey ) {
                     // Ignore resources. These should not be updated.
                     delete survey.resources;
                     delete survey.binaryDefaults;
+
                     return store.survey.update( survey );
                 }
+
                 return survey;
             } );
     } else {
@@ -231,7 +239,7 @@ function updateMaxSubmissionSize( survey ) {
 /**
  * Loads survey resources either from the store or via HTTP (and stores them).
  *
- * @param  {*} survey [description]
+ * @param  {*} survey - [description]
  * @return {Promise}        [description]
  */
 function updateMedia( survey ) {
@@ -259,6 +267,7 @@ function updateMedia( survey ) {
             // Filter out the failed requests (undefined)
             resources = resources.filter( resource => !!resource );
             survey.resources = resources;
+
             return survey;
         } )
         // Store any resources that were successful
@@ -267,6 +276,7 @@ function updateMedia( survey ) {
         .then( _setRepeatListener )
         .catch( error => {
             console.error( 'loadMedia failed', error );
+
             // Let the flow continue. 
             return survey;
         } );
@@ -276,7 +286,7 @@ function updateMedia( survey ) {
  * To be used with Promise.all if you want the results to be returned even if some 
  * have failed. Failed tasks will return undefined.
  *
- * @param  {Promise} task [description]
+ * @param  {Promise} task - [description]
  * @return {*}         [description]
  */
 function _reflect( task ) {
@@ -284,6 +294,7 @@ function _reflect( task ) {
         .then( response => response,
             error => {
                 console.error( error );
+
                 return;
             } );
 }
@@ -307,6 +318,7 @@ function _loadMedia( survey, targetContainers ) {
             .then( resource => {
                 if ( !resource || !resource.item ) {
                     console.error( 'resource not found or not complete', src );
+
                     return;
                 }
                 // create a resourceURL
@@ -363,10 +375,12 @@ function _updateCache( survey ) {
                 console.log( 'Cached survey is up to date!', hash );
             } else {
                 console.log( 'Cached survey is outdated! old:', hash, 'new:', version );
+
                 return connection.getFormParts( survey )
                     .then( formParts => {
                         // media will be updated next time the form is loaded if resources is undefined
                         formParts.resources = undefined;
+
                         return formParts;
                     } )
                     .then( _swapMediaSrc )
@@ -407,6 +421,7 @@ function flush() {
     return store.survey.removeAll()
         .then( () => {
             console.log( 'Done! The form cache is empty now. (Records have not been removed)' );
+
             return;
         } );
 }

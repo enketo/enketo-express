@@ -44,6 +44,7 @@ function init( survey ) {
         console.error( 'Service workers not supported on this browser. This form cannot launch online' );
         _reportOfflineLaunchCapable( false );
     }
+
     return Promise.resolve( survey );
 
 }
@@ -58,6 +59,7 @@ export default {
         if ( 'serviceWorker' in navigator && navigator.serviceWorker.controller ) {
             return navigator.serviceWorker.controller.scriptURL;
         }
+
         return null;
     }
 };

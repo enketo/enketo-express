@@ -37,6 +37,7 @@ if ( settings.offline ) {
         .then( _init )
         .then( formParts => {
             formParts.languages.forEach( loadTranslation );
+
             return formParts;
         } )
         .then( formCache.updateMaxSubmissionSize )
@@ -110,15 +111,16 @@ function _setEmergencyHandlers() {
     if ( flushBtn ) {
         flushBtn.addEventListener( 'click', () => {
             gui.confirm( {
-                    msg: t( 'confirm.deleteall.msg' ),
-                    heading: t( 'confirm.deleteall.heading' )
-                }, {
-                    posButton: t( 'confirm.deleteall.posButton' ),
-                } )
+                msg: t( 'confirm.deleteall.msg' ),
+                heading: t( 'confirm.deleteall.heading' )
+            }, {
+                posButton: t( 'confirm.deleteall.posButton' ),
+            } )
                 .then( confirmed => {
                     if ( !confirmed ) {
                         throw new Error( 'Cancelled by user' );
                     }
+
                     return store.flush();
                 } )
                 .then( () => {
@@ -132,7 +134,7 @@ function _setEmergencyHandlers() {
 /**
  * Adds/replaces branding if necessary, and unhides branding.
  * 
- * @param {*} survey [description]
+ * @param {*} survey - [description]
  */
 function _addBranding( survey ) {
     const brandImg = document.querySelector( '.form-header__branding img' );
@@ -150,7 +152,7 @@ function _addBranding( survey ) {
 /**
  * Swaps the theme if necessary.
  * 
- * @param  {*} survey [description]
+ * @param  {*} survey - [description]
  * @return {*}        [description]
  */
 function _swapTheme( survey ) {
@@ -182,6 +184,7 @@ function _prepareInstance( modelStr, defaults ) {
             existingInstance = model.getStr();
         }
     }
+
     return existingInstance;
 }
 

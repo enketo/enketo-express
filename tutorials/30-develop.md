@@ -18,7 +18,7 @@ curl --user enketorules: -d "server_url=https://kc.kobotoolbox.org/ali&form_id=T
 
 ```
 
-Once you have the Enketo webform URL can start development on a feature or bug. 
+Once you have the Enketo webform URL can start development on a feature or bug.
 
 Another convenient way for some subset of development work is to put your XForm on any webserver (local, public), and use a preview url with a query parameter, e.g.:
 
@@ -29,6 +29,7 @@ Another convenient way for some subset of development work is to put your XForm 
 Documentation is auto-generated and should be re-built for each new release. Do not commit updated documentation in non-release commits. The process to follow for each release that includes various helpful checks is:
 
 1. Change some code.
+2. Make sure tests (`npm run test`) pass with  (run `npm run beautify` to fix style issues).
 2. Build documentation: `npm run build-docs`.
 3. Bump the version tag in `package.json` file (we follow [semantic versioning](https://semver.org/)).
 4. Merge all your changes to `master` (through PR).

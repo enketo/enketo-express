@@ -59,6 +59,7 @@ function setEventHandlers() {
 
     $doc.on( 'click', '#feedback-bar .close, .touch #feedback-bar', () => {
         feedbackBar.hide();
+
         return false;
     } );
 
@@ -102,6 +103,7 @@ function setEventHandlers() {
 
     $( 'a.branding' ).on( 'click', function() {
         const href = this.getAttribute( 'href' );
+
         return ( !href || href === '#' ) ? false : true;
     } );
 
@@ -114,12 +116,12 @@ function setEventHandlers() {
         const link = `<a href="mailto:${email}?subject=xpath errors for: ${encodeURIComponent( location.href )}&body=${encodeURIComponent( error )}" target="_blank" >${email}</a>`;
 
         alert( `${t( 'alert.xpatherror.msg', {
-    emailLink: link,
-    // switch off escaping just for this known safe value
-    interpolation: {
-        escapeValue: false
-    }
-} )}<ul class="error-list"><li>${error}</li></ul>`, t( 'alert.xpatherror.heading' ) );
+            emailLink: link,
+            // switch off escaping just for this known safe value
+            interpolation: {
+                escapeValue: false
+            }
+        } )}<ul class="error-list"><li>${error}</li></ul>`, t( 'alert.xpatherror.heading' ) );
     } );
 
     $( '.side-slider__app-version' ).on( 'click', () => {
@@ -163,7 +165,7 @@ feedbackBar = {
      * Shows an unobtrusive feedback bar to the user.
      *
      * @param {string} message
-     * @param {number=} duration duration in seconds for the message to show
+     * @param {number=} duration - duration in seconds for the message to show
      */
     show( message, duration ) {
         let $msg;
@@ -203,7 +205,7 @@ feedbackBar = {
  * Select what type of unobtrusive feedback message to show to the user.
  *
  * @param {string}  message
- * @param {number=} duration duration in seconds for the message to show
+ * @param {number=} duration - duration in seconds for the message to show
  */
 function feedback( message, duration ) {
     if ( !support.touch ) {
@@ -219,8 +221,8 @@ function feedback( message, duration ) {
  *
  * @param {string} message
  * @param {string=} heading
- * @param {string=} level css class or normal (no styling) ('alert', 'info', 'warning', 'error', 'success')
- * @param {number=} duration duration in secondsafter which dialog should self-destruct
+ * @param {string=} level - css class or normal (no styling) ('alert', 'info', 'warning', 'error', 'success')
+ * @param {number=} duration - duration in secondsafter which dialog should self-destruct
  */
 function alert( message, heading, level, duration ) {
     level = level || 'error';
@@ -237,15 +239,16 @@ function alert( message, heading, level, duration ) {
         autoClose: duration,
         showCloseButton: true
     } );
+
     return Promise.resolve();
 }
 
 /**
  * Shows a confirmation dialog
  *
- * @param {?(Object.<string, (string|boolean)>|string)=} content - In its simplest form this is just a string but it can
+ * @param {?(object.<string, (string|boolean)>|string)=} content - In its simplest form this is just a string but it can
  *                                                         also an object with parameters msg, heading and errorMsg.
- * @param {Object=} choices - [type/description]
+ * @param {object=} choices - [type/description]
  */
 function confirm( content, choices ) {
     let errorMsg = '';
@@ -317,19 +320,19 @@ function prompt( content, choices, inputs ) {
 /**
  * Shows modal asking for confirmation to redirect to login screen
  * 
- * @param  {string=} msg       message to show
- * @param  {string=} serverURL serverURL for which authentication is required
+ * @param  {string=} msg -       message to show
+ * @param  {string=} serverURL - serverURL for which authentication is required
  */
 function confirmLogin( msg /*, serverURL*/ ) {
     msg = msg || t( 'confirm.login.msg' );
 
     confirm( {
-            msg,
-            heading: t( 'confirm.login.heading' )
-        }, {
-            posButton: t( 'confirm.login.posButton' ),
-            negButton: t( 'confirm.login.negButton' )
-        } )
+        msg,
+        heading: t( 'confirm.login.heading' )
+    }, {
+        posButton: t( 'confirm.login.posButton' ),
+        negButton: t( 'confirm.login.negButton' )
+    } )
         .then( confirmed => {
             if ( !confirmed ) {
                 return;
@@ -344,8 +347,9 @@ function confirmLogin( msg /*, serverURL*/ ) {
 
 /**
  * Shows modal with load errors
- * @param  {Array.<string>} loadErrors  load error messagesg
- * @param  {string=}        advice  a string with advice
+ *
+ * @param  {Array.<string>} loadErrors -  load error messagesg
+ * @param  {string=}        advice -  a string with advice
  */
 function alertLoadErrors( loadErrors, advice ) {
     const errorStringHTML = `<ul class="error-list"><li>${loadErrors.join( '</li><li>' )}</li></ul>`;
@@ -437,6 +441,7 @@ function printForm() {
         window.print();
         printHelper.closeAllDetails();
         questions.forEach( question => question.dispatchEvent( events.DePrintify() ) );
+
         return Promise.resolve();
     }
 }
@@ -459,6 +464,7 @@ function getPrintDialogComponents() {
 
 function printGrid( format ) {
     const swapped = printHelper.styleToAll();
+
     return printHelper.fixGrid( format, 800 )
         .then( _delay )
         .then( window.print )
@@ -489,6 +495,7 @@ function applyPrintStyle() {
         .then( () => {
             if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
                 const paper = { format: settings.format, landscape: settings.landscape, scale: settings.scale, margin: settings.margin };
+
                 return printHelper.fixGrid( paper );
             }
         } )
@@ -522,9 +529,9 @@ function alertCacheUnsupported() {
         negButton: t( 'alert.offlineunsupported.negButton' )
     };
     confirm( {
-            msg: message,
-            heading: t( 'alert.offlineunsupported.heading' )
-        }, choices )
+        msg: message,
+        heading: t( 'alert.offlineunsupported.heading' )
+    }, choices )
         .then( confirmed => {
             if ( confirmed ) {
                 window.location = settings[ 'modernBrowsersURL' ];
@@ -535,7 +542,7 @@ function alertCacheUnsupported() {
 /**
  * Updates various statuses in the GUI (connection, form-edited, browsersupport)
  *
- * @type {Object}
+ * @type {object}
  */
 updateStatus = {
     offlineCapable( offlineCapable ) {

@@ -133,6 +133,7 @@ function getNewOrExistingSurvey( req, res, next ) {
     if ( req.account.quota < req.account.quotaUsed ) {
         return _render( 403, quotaErrorMessage, res );
     }
+
     return surveyModel
         .getId( survey )
         .then( id => {
@@ -150,6 +151,7 @@ function getNewOrExistingSurvey( req, res, next ) {
                 return _render( 403, quotaErrorMessage, res );
             }
             const status = storedSurvey ? 200 : 201;
+
             // even if id was found still call .set() method to update any properties
             return surveyModel.set( survey )
                 .then( id => {
@@ -224,6 +226,7 @@ function getList( req, res, next ) {
                 obj = _generateWebformUrls( survey.enketoId, req );
                 obj.form_id = survey.openRosaId;
                 obj.server_url = survey.openRosaServer;
+
                 return obj;
             } );
             _render( 200, {
@@ -272,6 +275,7 @@ function cacheInstance( req, res, next ) {
                 if ( req.account.quota <= req.account.quotaUsed ) {
                     return _render( 403, quotaErrorMessage, res );
                 }
+
                 // Create a new enketo ID.
                 return surveyModel.set( survey );
             }
@@ -281,6 +285,7 @@ function cacheInstance( req, res, next ) {
         } )
         .then( id => {
             enketoId = id;
+
             return instanceModel.set( survey );
         } )
         .then( () => {

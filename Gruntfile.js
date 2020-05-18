@@ -109,23 +109,16 @@ module.exports = grunt => {
                 command: 'npx rollup --config'
             }
         },
-        jsbeautifier: {
-            test: {
-                src: JS_INCLUDE,
-                options: {
-                    config: './.jsbeautifyrc',
-                    mode: 'VERIFY_ONLY'
-                }
+        eslint: {
+            check: {
+                src: JS_INCLUDE
             },
             fix: {
-                src: JS_INCLUDE,
                 options: {
-                    config: './.jsbeautifyrc'
-                }
+                    fix: true,
+                },
+                src: JS_INCLUDE
             }
-        },
-        eslint: {
-            all: JS_INCLUDE,
         },
         // test server JS
         mochaTest: {
@@ -177,6 +170,7 @@ module.exports = grunt => {
                     .map( bundle => [ bundle.replace( '.js', '.min.js' ), [ bundle ] ] )
                     .reduce( ( o, [ key, value ] ) => {
                         o[ key ] = value;
+
                         return o;
                     }, {} )
             },
@@ -241,16 +235,18 @@ module.exports = grunt => {
         let content = PRE + paths.map( p => {
             if ( grunt.file.exists( WIDGETS_JS_LOC, `${p}.js` ) ) {
                 num++;
+
                 return `import w${num} from '${p}';`;
             } else {
                 return `//${p} not found`;
             }
-        } ).join( '\n' ) + `\n\nexport default [${[...Array(num).keys()].map(n => 'w'+(n+1)).join(', ')}];`;
+        } ).join( '\n' ) + `\n\nexport default [${[ ...Array( num ).keys() ].map( n => 'w'+( n+1 ) ).join( ', ' )}];`;
         grunt.file.write( WIDGETS_JS, content );
         grunt.log.writeln( `File ${WIDGETS_JS} created` );
         content = `${PRE +
     paths.map( p => {
         p = path.join( '../', p );
+
         return grunt.file.exists( WIDGETS_SASS_LOC, `${p}.scss` ) ? `@import "${p}"` : `//${p} not found`;
     } ).join( ';\n' )};`;
         grunt.file.write( WIDGETS_SASS, content );
@@ -262,7 +258,7 @@ module.exports = grunt => {
     grunt.registerTask( 'js', [ 'shell:clean-js', 'client-config-file:create', 'widgets', 'shell:rollup' ] );
     grunt.registerTask( 'js-dev', [ 'js' ] );
     grunt.registerTask( 'css', [ 'shell:clean-css', 'system-sass-variables:create', 'sass' ] );
-    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'nyc:cover', 'karma:headless', 'shell:buildReadmeBadge', 'jsbeautifier:test', 'eslint' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'nyc:cover', 'karma:headless', 'shell:buildReadmeBadge', 'eslint:check' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
     grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js-dev', 'css', 'concurrent:develop' ] );
     grunt.registerTask( 'test-and-build', [ 'env:test', 'mochaTest:all', 'karma:headless', 'env:production', 'default' ] );

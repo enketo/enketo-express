@@ -2,6 +2,8 @@
 
 /**
  * Removes a module from the cache
+ *
+ * @param moduleName
  */
 require.unCache = moduleName => {
     // Run over the cache looking for the files
@@ -22,6 +24,9 @@ require.unCache = moduleName => {
 /**
  * Runs over the cache to search for all the cached
  * files
+ *
+ * @param moduleName
+ * @param callback
  */
 require.searchCache = ( moduleName, callback ) => {
     // Resolve the module identified by the specified name

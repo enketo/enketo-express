@@ -1,3 +1,5 @@
+/* global __dirname */
+
 const resolve = require( 'rollup-plugin-node-resolve' );
 const commonjs = require( 'rollup-plugin-commonjs' );
 const builtins = require( 'rollup-plugin-node-builtins' );
@@ -12,6 +14,7 @@ const aliases = Object.entries( pkg.browser ).reduce( ( arr, cur ) => {
         find: cur[ 0 ],
         replacement: path.join( __dirname, cur[ 1 ] )
     } );
+
     return arr;
 }, [] );
 

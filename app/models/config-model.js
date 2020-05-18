@@ -1,3 +1,4 @@
+/* global process, __dirname */
 /**
  * @module config-model
  */
@@ -141,6 +142,7 @@ function _convertNumbers( str ) {
         return str;
     }
     const converted = Number( str );
+
     return !isNaN( converted ) ? converted : str;
 }
 
@@ -156,9 +158,11 @@ function _findNumberIndex( arr, start = 0 ) {
     arr.some( ( val, index ) => {
         if ( typeof val === 'number' && index >= start ) {
             i = index;
+
             return true;
         }
     } );
+
     return i;
 }
 

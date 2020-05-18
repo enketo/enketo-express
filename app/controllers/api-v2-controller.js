@@ -131,7 +131,7 @@ router
  * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
-function getVersion( req, res, next ) {
+function getVersion( req, res ) {
     const version = req.app.get( 'version' );
     _render( 200, { version }, res );
 }
@@ -231,6 +231,7 @@ function getNewOrExistingSurvey( req, res, next ) {
                 return _render( 403, quotaErrorMessage, res );
             }
             const status = storedSurvey ? 200 : 201;
+
             // even if id was found still call .set() method to update any properties
             return surveyModel.set( survey )
                 .then( id => {
@@ -327,6 +328,7 @@ function getList( req, res, next ) {
                 obj = _generateWebformUrls( survey.enketoId, req );
                 obj.form_id = survey.openRosaId;
                 obj.server_url = survey.openRosaServer;
+
                 return obj;
             } );
             _render( 200, {
@@ -375,9 +377,11 @@ function cacheInstance( req, res, next ) {
                 if ( req.account.quota <= req.account.quotaUsed ) {
                     return _render( 403, quotaErrorMessage, res );
                 }
+
                 // Create a new enketo ID.
                 return surveyModel.set( survey );
             }
+
             // Do not update properties if ID was found to avoid overwriting theme.
             return storedSurvey.enketoId;
         } )
@@ -387,6 +391,7 @@ function cacheInstance( req, res, next ) {
             // to not allow caching if it is already cached as some lame
             // protection against multiple people edit the same record simultaneously
             const protect = req.webformType === 'edit';
+
             return instanceModel.set( survey, protect );
         } )
         .then( () => {
@@ -509,7 +514,7 @@ function _setDefaultsQueryParam( req, res, next ) {
  */
 function _setGoToHash( req, res, next ) {
     const goTo = req.body.go_to || req.query.go_to;
-    req.goTo = goTo ? `#${encodeURIComponent(goTo)}` : '';
+    req.goTo = goTo ? `#${encodeURIComponent( goTo )}` : '';
 
     next();
 }
@@ -675,6 +680,7 @@ function _render( status, body = {}, res ) {
  */
 function _renderPdf( status, id, req, res ) {
     const url = _generateWebformUrls( id, req ).pdf_url;
+
     return pdf.get( url, req.page )
         .then( function( pdfBuffer ) {
             const filename = `${req.body.form_id || req.query.form_id}${req.body.instance_id ? '-'+req.body.instance_id : ''}.pdf`;
