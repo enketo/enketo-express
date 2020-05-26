@@ -60,6 +60,18 @@ $extend: 100%;
 	box-shadow: none;
 	padding: $padding-unit $padding-unit + 10 $padding-unit $padding-unit * 2;
 
+  // remove arrows from number fields
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+
   .or{
     > h3{
     	color: $theme-green;
