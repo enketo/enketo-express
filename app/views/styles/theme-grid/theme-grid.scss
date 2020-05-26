@@ -318,9 +318,35 @@ $extend: 100%;
 }
 
 .add-repeat-btn{
+  transition: all .7s ease;
+  -moz-transition: all .7s ease;
+  -webkit-transition: all .7s ease;
   .icon{
     color: $secondary-green;
   	font-size: $default-text-size + 2;
+  }
+  &:after{
+    background-color: #eeeeee;
+	  border-radius: 5px;
+	  content:"Note to Researcher: Hit plus button to enter new responses.";
+	  font-family: 'Open Sans', sans-serif;
+	  font-size: $default-text-size - 1;
+	  font-style: oblique;
+	  display:none;
+	  padding: $base-unit-sm;
+	  position: absolute;
+	  left: $base-unit * 8;
+	  bottom: 0;
+	  transition: all .7s ease;
+    -moz-transition: all .7s ease;
+    -webkit-transition: all .7s ease;
+    width: $base-unit * 10;
+  }
+  &:hover:after{
+    display:block;
+    transition: all .7s ease;
+    -moz-transition: all .7s ease;
+    -webkit-transition: all .7s ease;
   }
 }
 button#submit-form{
