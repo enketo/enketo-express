@@ -79,6 +79,7 @@ For example to use your https://kobotoolbox.org or https://ona.io account &quot;
 <p>Documentation is auto-generated and should be re-built for each new release. Do not commit updated documentation in non-release commits. The process to follow for each release that includes various helpful checks is:</p>
 <ol>
 <li>Change some code.</li>
+<li>Make sure tests (<code>npm run test</code>) pass with  (run <code>npm run beautify</code> to fix style issues).</li>
 <li>Build documentation: <code>npm run build-docs</code>.</li>
 <li>Bump the version tag in <code>package.json</code> file (we follow <a href="https://semver.org/">semantic versioning</a>).</li>
 <li>Merge all your changes to <code>master</code> (through PR).</li>

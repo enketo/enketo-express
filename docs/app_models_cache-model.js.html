@@ -47,7 +47,8 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
+            <pre class="prettyprint source linenums"><code>/* global process*/
+/**
  * @module cache-model
  */
 
@@ -316,6 +317,7 @@ function flushAll() {
  */
 function _getKey( survey ) {
     const openRosaKey = utils.getOpenRosaKey( survey, prefix );
+
     return ( openRosaKey ) ? openRosaKey : null;
 }
 

@@ -2,10 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.3.4] - 2020-05-27
 ---------------------
 ##### Changed
 - Code style.
+
+##### Fixed
+- Date fields in Grid Theme do not show values in print view.
+- Itemsets inside a non-relevant groups or questions are not updated when group becomes relevant if choice_filter condition does not include node that makes group/question relevant.
 
 [2.3.3] - 2020-05-15
 ---------------------
@@ -76,7 +80,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - A text question on Grid theme printouts that has only text questions on the same row (or nothing else), has too little space to write on.
 - Date/datetime/time questions take up too much vertical space on Grid theme printouts.
 - Empty readonly text fields take up unnecessary space in the print view.
-- Irrelevant questions in Grid theme are not getting the correct width in the print view.
+- Non-relevant questions in Grid theme are not getting the correct width in the print view.
 
 [2.1.1] - 2020-04-02
 ---------------------
@@ -353,7 +357,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Failing to clone repeats that only contain calculations.
 - Select one calculations not updating correctly.
-- Irrelevant calculations inside non-first repeat instances run upon load.
+- Non-relevant calculations inside non-first repeat instances run upon load.
 - Date strings without timezone component are not always converted correctly in time zones that have DST.
 - Hand-typed/pasted dates with spaces or invalid characters are kept shown to user, but are not stored in model.
 
@@ -435,7 +439,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Loading error in Pages mode when a page has no label.
-- Itemsets not populating if inside an irrelevant group upon load.
+- Itemsets not populating if inside an non-relevant group upon load.
 - Download link not working for Draw/Signature/Annotate widgets.
 - Broken autocomplete widget in Safari and all iOS browsers.
 - Slider in vertical range widget not aligned properly in Grid Theme.
@@ -480,7 +484,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Fixed
 - If grid form starts with a disabled question, the first question has no top border.
-- If first page in form is irrelevant upon load, it is still shown (in grayscale).
+- If first page in form is non-relevant upon load, it is still shown (in grayscale).
 - Minimal select picker (pulldown) not updating model (regression in 4.60.3).
 
 [1.72.1] - 2018-10-16
@@ -612,7 +616,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - In a form containing a group with a single child repeat (and no other repeat sibling questions), fails to load a record where that group is empty. When creating the first repeat after load an exception occurs.
-- Output inside a group that is irrelevant upon loading does not get evaluated when the group becomes relevant.
+- Output inside a group that is non-relevant upon loading does not get evaluated when the group becomes relevant.
 - Autocomplete question inside a non-first repeat shows list from first repeat.
 - Dates are now considered local to fix constraints such as ". < today()"
 
@@ -691,7 +695,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Fixed
 - Appearance "horizontal" enlarges the last option if the remainder of the options modulo 3 is 1.
-- If all repeats containing a question that has skip logic are removed, an exception occurs when obtaining the model as string without irrelevant nodes.
+- If all repeats containing a question that has skip logic are removed, an exception occurs when obtaining the model as string without non-relevant nodes.
 
 [1.65.1] - 2018-05-02
 ---------------------
@@ -970,7 +974,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Grid Theme: A table-list/list-no-label question does not have a bottom border.
 - Grid Theme: Top of page sometimes does not have a border.
 - jr:choice-name() function can not handle syntax with more complex XPaths.
-- Nodenames with dots cause an exception during extraction of a serialized model without irrelevant nodes.
+- Nodenames with dots cause an exception during extraction of a serialized model without non-relevant nodes.
 
 [1.55.5] - 2017-11-29
 --------------------
@@ -1061,8 +1065,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Ability to overwrite translations (in forks).
 
 ##### Fixed
-- Readonly fields with calculation are not cleared in model when they become irrelevant if clearIrrelevantImmediately is set to `true`.
-- Calculated items without form control were calculated even if they were inside an irrelevant group.
+- Readonly fields with calculation are not cleared in model when they become non-relevant if clearIrrelevantImmediately is set to `true`.
+- Calculated items without form control were calculated even if they were inside an non-relevant group.
 - Radiobuttons inside a repeat are sometimes incorrectly removed from the submission.
 
 [1.51.1] - 2017-09-13
@@ -1082,12 +1086,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [1.50.2] - 2017-08-17
 ----------------------
 ##### Fixed
-- In some situations, nested repeat nodes that are relevant are removed from the record string as if they were irrelevant.
+- In some situations, nested repeat nodes that are relevant are removed from the record string as if they were non-relevant.
 - In tables, the heading row (appearance=label) can be misaligned with the lower rows.
 - Cloned select minimal question with relevant inside repeat is hidden when loading record with multiple repeats.
 - Draw/signature widget is instantiated for file input types other than "image".
 - Draw/signature widget is never enabled if it has a relevant expression.
-- File inputs do not always clear properly when they become irrelevant.
+- File inputs do not always clear properly when they become non-relevant.
 
 [1.50.1] - 2017-08-10
 ---------------------
@@ -1110,7 +1114,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Changed
 - Touchscreen detection to change widgets and appearance has been tweaked and is now only considering iOS and Android browsers.
-- Hide irrelevant questions from printout if a record is loaded for editing.
+- Hide non-relevant questions from printout if a record is loaded for editing.
 
 ##### Fixed
 - A readonly select minimal (desktop) widget becomes editable when it has a "relevant" expression that evaluates to true.
@@ -1124,7 +1128,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ---------------------
 ##### Fixed
 - Emergency temporary workaround for checked state of checkbox in Firefox.
-- Error message when removing irrelevant nodes because the node cannot be found.
+- Error message when removing non-relevant nodes because the node cannot be found.
 - Readonly select minimal widget is not properly readonly in special readonly views on touchscreens.
 
 [1.48.1] - 2017-07-03
@@ -1203,7 +1207,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Support for appearance 'hide-input' in ArcGIS geo widget.
 
 ##### Fixed
-- Exception occurs when obtaining cleaned-of-irrelevants model string if repeat has a relevant and a repeat-count of 0.
+- Exception occurs when obtaining cleaned-of-non-relevants model string if repeat has a relevant and a repeat-count of 0.
 - Performance of forms with repeats (issue with dataupdate event data).
 
 [1.45.1] - 2017-05-01
@@ -1250,7 +1254,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [1.43.0] - 2017-04-13
 --------------------
 ##### Changed
-- Questions or groups that are irrelevant will no longer be included in submission. **WARNING**
+- Questions or groups that are non-relevant will no longer be included in submission. **WARNING**
 - Redirect upon submission only enabled for single submission views. Other views will ignore returnUrl parameter.
 - Hide required “*” when dynamic required expression evaluating to false at the time the input field is validated.
 - Updated Slovak and Czech translations.
@@ -1261,7 +1265,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - CSV conversion fails for some CSV files due to inability to detect delimiting character.
 - Client-side login fails if Enketo is running with basePath set
-- In pages mode, if page (group) is relevant but only includes irrelevant questions, it is displayed as an empty page.
+- In pages mode, if page (group) is relevant but only includes non-relevant questions, it is displayed as an empty page.
 - Inputupdate.enketo event fires even if value hasn't changed.
 
 [1.42.1] - 2017-03-22
@@ -1272,7 +1276,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - ArcGIS geopicker fails to initialize inside a repeat.
-- Value not cleared from widget UI when it becomes irrelevant and clearIrrelevantImmediately is set to `true`.
+- Value not cleared from widget UI when it becomes non-relevant and clearIrrelevantImmediately is set to `true`.
 - Autocomplete widget causes exception when branch is hidden or revealed (due to relevant expression).
 
 [1.42.0] - 2017-03-20
@@ -1393,7 +1397,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Excessive submission logging.
-- When a question becomes irrelevant, its value is cleared immediately, but should be kept until submission.
+- When a question becomes non-relevant, its value is cleared immediately, but should be kept until submission.
 
 [1.36.2] - 2016-12-14
 ---------------------
@@ -2145,7 +2149,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Calculations on select_one inside a repeat clone throw an exception.
-- Irrelevant questions inside a repeat clone are shown but should be hidden.
+- Non-relevant questions inside a repeat clone are shown but should be hidden.
 - Calculations inside repeat clones are not evaluated upon form load.
 
 [1.8.9] - 2015-05-08
@@ -2174,7 +2178,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Top border missing and margin too small when a visible note is preceded by a hidden note.
-- Any branch containing a geoshape widget caused an exception to occur when it was made irrelevant.
+- Any branch containing a geoshape widget caused an exception to occur when it was made non-relevant.
 - Appearance 'horizontal' no longer displays with evenly-spaced columns.
 - Some buttons in Safari have border and background when they shouldn't have.
 - Side bar in Safari is not stretching to bottom.

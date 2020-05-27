@@ -156,7 +156,7 @@
 </code></pre>
 <p>For GMaps layers you have the four options as tiles values: <code>&quot;GOOGLE_SATELLITE&quot;</code>, <code>&quot;GOOGLE_ROADMAP&quot;</code>, <code>&quot;GOOGLE_HYBRID&quot;</code>, <code>&quot;GOOGLE_TERRAIN&quot;</code>. You can also add other TileJSON properties, such as minZoom, maxZoom, id to all layers.</p>
 <h4 id="query-parameter-to-pass-to-submission">query parameter to pass to submission</h4>
-<p>For most form servers this item does nothing. If you would like to pass a particular ID to any online-only webform url as a query parameter and track submissions with this ID, you can provide the parameter name here. The parameter and its value will be copied to the submission URL.</p>
+<p>For most form servers this item does nothing. If you would like to pass a particular ID to any online-only webform url as a query parameter and track submissions with this ID, you can provide the parameter name here. The parameter and its value will be copied to the submission URL. The query parameter will also be added to /formList requests which would allow you e.g. to perform form access control per URL or serve custom external data files per user.</p>
 <h4 id="redis">redis</h4>
 <ul>
 <li>main -&gt; host: The IP address of the main redis database instance. If installed on the same server as Enketo Express, the value is <code>&quot;127.0.0.1&quot;</code></li>

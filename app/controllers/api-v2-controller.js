@@ -616,7 +616,7 @@ function _generateWebformUrls( id, req ) {
             queryParts = req.body.instance_id ? [ `instance_id=${req.body.instance_id}` ] : [];
             queryParts.push( 'print=true' );
             queryString = _generateQueryString( queryParts );
-            obj.pdf_url = `${baseUrl}${req.body.instance_id ? 'view/'+idPartView : id}${queryString}`;
+            obj.pdf_url = `${baseUrl}${req.body.instance_id ? 'view/' + idPartView : id}${queryString}`;
             break;
         case 'all':
             // non-iframe views
@@ -683,7 +683,7 @@ function _renderPdf( status, id, req, res ) {
 
     return pdf.get( url, req.page )
         .then( function( pdfBuffer ) {
-            const filename = `${req.body.form_id || req.query.form_id}${req.body.instance_id ? '-'+req.body.instance_id : ''}.pdf`;
+            const filename = `${req.body.form_id || req.query.form_id}${req.body.instance_id ? '-' + req.body.instance_id : ''}.pdf`;
             // TODO: We've already set to json content-type in authCheck. This may be bad.
             res
                 .set( 'Content-Type', 'application/pdf' )

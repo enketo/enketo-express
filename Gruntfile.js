@@ -240,7 +240,7 @@ module.exports = grunt => {
             } else {
                 return `//${p} not found`;
             }
-        } ).join( '\n' ) + `\n\nexport default [${[ ...Array( num ).keys() ].map( n => 'w'+( n+1 ) ).join( ', ' )}];`;
+        } ).join( '\n' ) + `\n\nexport default [${[ ...Array( num ).keys() ].map( n => 'w' + ( n + 1 ) ).join( ', ' )}];`;
         grunt.file.write( WIDGETS_JS, content );
         grunt.log.writeln( `File ${WIDGETS_JS} created` );
         content = `${PRE +
