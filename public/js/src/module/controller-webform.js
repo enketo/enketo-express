@@ -18,7 +18,6 @@ let form;
 let formData;
 let formprogress;
 const formOptions = {
-    clearIrrelevantImmediately: false,
     printRelevantOnly: settings.printRelevantOnly,
 };
 
@@ -298,14 +297,14 @@ function _submitRecord() {
                     const age = 31536000;
                     const d = new Date();
                     /**
-                     * Manipulate the browser history to work around potential ways to 
+                     * Manipulate the browser history to work around potential ways to
                      * circumvent protection against multiple submissions:
                      * 1. After redirect, click Back button to load cached version.
                      */
                     history.replaceState( {}, '', `${settings.defaultReturnUrl}?taken=${now.getTime()}` );
                     /**
-                     * The above replaceState doesn't work in Safari and probably in 
-                     * some other browsers (mobile). It shows the 
+                     * The above replaceState doesn't work in Safari and probably in
+                     * some other browsers (mobile). It shows the
                      * final submission dialog when clicking Back.
                      * So we remove the form...
                      */
@@ -660,7 +659,7 @@ function setLogoutLinkVisibility() {
     $( '.form-footer .logout' ).toggleClass( 'hide', !visible );
 }
 
-/** 
+/**
  * Determines whether the page is loaded inside an iframe
  *
  * @return {boolean} [description]

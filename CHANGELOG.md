@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Changed]
+---------------------
+##### Changed
+- Some of the background-logic wrt clearing non-relevant values. However, the behavior should be unchanged.
+
 [2.3.4] - 2020-05-27
 ---------------------
 ##### Changed
