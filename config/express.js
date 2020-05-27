@@ -1,24 +1,24 @@
-'use strict';
+/* global process, __dirname */
 
-var express = require( 'express' );
-var path = require( 'path' );
-var bodyParser = require( 'body-parser' );
-var cookieParser = require( 'cookie-parser' );
-var fs = require( 'fs' );
-var favicon = require( 'serve-favicon' );
-var config = require( '../app/models/config-model' ).server;
-var logger = require( 'morgan' );
-var i18next = require( 'i18next' );
-var I18nextBackend = require( 'i18next-fs-backend' );
-var i18nextMiddleware = require( 'i18next-http-middleware' );
-var compression = require( 'compression' );
-var errorHandler = require( '../app/controllers/error-handler' );
-var controllersPath = path.join( __dirname, '../app/controllers' );
-var app = express();
-var debug = require( 'debug' )( 'express' );
+const express = require( 'express' );
+const path = require( 'path' );
+const bodyParser = require( 'body-parser' );
+const cookieParser = require( 'cookie-parser' );
+const fs = require( 'fs' );
+const favicon = require( 'serve-favicon' );
+const config = require( '../app/models/config-model' ).server;
+const logger = require( 'morgan' );
+const i18next = require( 'i18next' );
+const I18nextBackend = require( 'i18next-fs-backend' );
+const i18nextMiddleware = require( 'i18next-http-middleware' );
+const compression = require( 'compression' );
+const errorHandler = require( '../app/controllers/error-handler' );
+const controllersPath = path.join( __dirname, '../app/controllers' );
+const app = express();
+const debug = require( 'debug' )( 'express' );
 
-// general 
-for ( var item in config ) {
+// general
+for ( const item in config ) {
     if ( Object.prototype.hasOwnProperty.call( config, item ) ) {
         app.set( item, app.get( item ) || config[ item ] );
     }
@@ -75,11 +75,11 @@ app.use( i18nextMiddleware.handle( i18next, {
 app.use( favicon( path.resolve( __dirname, '../public/images/favicon.ico' ) ) );
 app.use( app.get( 'base path' ), express.static( path.resolve( __dirname, '../public' ) ) );
 app.use( `${app.get( 'base path' )}/x`, express.static( path.resolve( __dirname, '../public' ) ) );
-app.use( app.get( 'base path' ) + '/locales/build', express.static( path.resolve( __dirname, '../locales/build' ) ) );
-app.use( `${app.get( 'base path' )}/x` + '/locales/build', express.static( path.resolve( __dirname, '../locales/build' ) ) );
+app.use( `${app.get( 'base path' )}/locales/build`, express.static( path.resolve( __dirname, '../locales/build' ) ) );
+app.use( `${`${app.get( 'base path' )}/x`}/locales/build`, express.static( path.resolve( __dirname, '../locales/build' ) ) );
 
 // set variables that should be accessible in all view templates
-app.use( function( req, res, next ) {
+app.use( ( req, res, next ) => {
     res.locals.livereload = req.app.get( 'env' ) === 'development';
     res.locals.environment = req.app.get( 'env' );
     res.locals.analytics = req.app.get( 'analytics' );
@@ -94,7 +94,7 @@ app.use( function( req, res, next ) {
     res.locals.logo = req.app.get( 'logo' );
     res.locals.defaultTheme = req.app.get( 'default theme' ).replace( 'theme-', '' ) || 'kobo';
     res.locals.title = req.app.get( 'app name' );
-    res.locals.dir = function( lng ) {
+    res.locals.dir = lng => {
         return i18next.dir( lng );
     };
     res.locals.basePath = req.app.get( 'base path' );
@@ -103,10 +103,10 @@ app.use( function( req, res, next ) {
 } );
 
 // load controllers (including their routers)
-fs.readdirSync( controllersPath ).forEach( function( file ) {
+fs.readdirSync( controllersPath ).forEach( file => {
     if ( file.indexOf( '-controller.js' ) >= 0 ) {
         debug( 'loading', file );
-        require( controllersPath + '/' + file )( app );
+        require( `${controllersPath}/${file}` )( app );
     }
 } );
 

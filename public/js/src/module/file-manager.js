@@ -15,6 +15,7 @@ let instanceAttachments;
 
 /**
  * Initialize the file manager .
+ *
  * @return {*} promise boolean or rejection with Error
  */
 function init() {
@@ -23,7 +24,8 @@ function init() {
 
 /**
  * Whether the filemanager is waiting for user permissions
- * @return {Boolean} [description]
+ *
+ * @return {boolean} [description]
  */
 function isWaitingForPermissions() {
     return false;
@@ -31,7 +33,9 @@ function isWaitingForPermissions() {
 
 /**
  * Sets instanceAttachments containing filename:url map
- * to use in getFileUrl 
+ * to use in getFileUrl
+ *
+ * @param attachments
  */
 function setInstanceAttachments( attachments ) {
     instanceAttachments = attachments;
@@ -40,7 +44,7 @@ function setInstanceAttachments( attachments ) {
  * Obtains a url that can be used to show a preview of the file when used
  * as a src attribute.
  *
- * @param  {?string|Object} subject File or filename
+ * @param  {?string|object} subject - File or filename
  * @return {*}         promise url string or rejection with Error
  */
 function getFileUrl( subject ) {
@@ -101,7 +105,7 @@ function getFileUrl( subject ) {
  * 
  * It is meant for loading images into a canvas.
  * 
- * @param  {?string|Object} subject File or filename in local storage
+ * @param  {?string|object} subject - File or filename in local storage
  * @return {*}         promise url string or rejection with Error
  */
 function getObjectUrl( subject ) {
@@ -110,6 +114,7 @@ function getObjectUrl( subject ) {
             if ( /https?:\/\//.test( url ) ) {
                 return connection.getMediaFile( url ).then( obj => URL.createObjectURL( obj.item ) );
             }
+
             return url;
         } );
 }
@@ -167,6 +172,7 @@ function getCurrentFiles() {
 /**
  * Traverses files currently stored in file input elements of open record to find a specific file.
  *
+ * @param filename
  * @return {Promise} array of files
  */
 function getCurrentFile( filename ) {
@@ -175,6 +181,7 @@ function getCurrentFile( filename ) {
     getCurrentFiles().some( file => {
         if ( file.name === filename ) {
             f = file;
+
             return true;
         }
     } );
@@ -193,8 +200,9 @@ function _getInstanceId() {
 
 /**
  * Whether the file is too large too handle and should be rejected
- * @param  {*}  file the File
- * @return {Boolean}
+ *
+ * @param  {*}  file - the File
+ * @return {boolean}
  */
 function isTooLarge( file ) {
     return file && file.size > _getMaxSize();
@@ -208,7 +216,8 @@ function _getMaxSizeError() {
 
 /**
  * Returns the maximum size of a file
- * @return {Number}
+ *
+ * @return {number}
  */
 function _getMaxSize() {
     return settings.maxSize || 5 * 1024 * 1024;

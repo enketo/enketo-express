@@ -21,6 +21,7 @@ function getOpenRosaKey( survey, prefix ) {
         return null;
     }
     prefix = prefix || 'or:';
+
     // Server URL is not case sensitive, form ID is case-sensitive
     return `${prefix + cleanUrl( survey.openRosaServer )},${survey.openRosaId.trim()}`;
 }
@@ -44,8 +45,10 @@ function getXformsManifestHash( manifest, type ) {
     }
     if ( type ) {
         const filtered = manifest.map( mediaFile => mediaFile[ type ] );
+
         return md5( JSON.stringify( filtered ) );
     }
+
     return hash;
 }
 
@@ -66,6 +69,7 @@ function cleanUrl( url ) {
     if ( matches && matches.length > 2 ) {
         return matches[ 2 ].toLowerCase();
     }
+
     return url;
 }
 
@@ -92,6 +96,7 @@ function isValidUrl( url ) {
 function md5( message ) {
     const hash = crypto.createHash( 'md5' );
     hash.update( message );
+
     return hash.digest( 'hex' );
 }
 
@@ -154,6 +159,8 @@ function randomString( howMany = 8, chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHI
 /**
  * Not secure, but used for backward compatibility with deprecated crypto.createCipher
  * It's okay to use for this purpose.
+ *
+ * @param pw
  */
 function _getKeyIv( pw ) {
     return EVP_BytesToKey( pw, null, 192, 16 );
@@ -174,6 +181,7 @@ function pickRandomItemFromArray( array ) {
     if ( !array[ random ] ) {
         return null;
     }
+
     return array[ random ];
 }
 
@@ -208,6 +216,7 @@ function areOwnPropertiesEqual( a, b ) {
             }
         }
     }
+
     return true;
 }
 
@@ -220,6 +229,7 @@ function areOwnPropertiesEqual( a, b ) {
  */
 function toLocalMediaUrl( url ) {
     const localUrl = `${config[ 'base path' ]}/media/get/${url.replace( /(https?):\/\//, '$1/' )}`;
+
     return localUrl;
 }
 

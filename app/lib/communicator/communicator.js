@@ -47,6 +47,7 @@ function getXForm( survey ) {
         }
     } ).then( xform => {
         survey.xform = xform;
+
         return Promise.resolve( survey );
     } );
 }
@@ -65,15 +66,16 @@ function getManifest( survey ) {
         return Promise.resolve( survey );
     } else {
         return _request( {
-                url: survey.info.manifestUrl,
-                auth: survey.credentials,
-                headers: {
-                    cookie: survey.cookie
-                }
-            } )
+            url: survey.info.manifestUrl,
+            auth: survey.credentials,
+            headers: {
+                cookie: survey.cookie
+            }
+        } )
             .then( _xmlToJson )
             .then( obj => {
                 survey.manifest = ( obj.manifest && obj.manifest.mediaFile ) ? obj.manifest.mediaFile.map( file => _simplifyFormObj( file ) ) : [];
+
                 return survey;
             } );
     }
@@ -122,6 +124,7 @@ function authenticate( survey ) {
     return _request( options )
         .then( () => {
             debug( 'successful (authenticated if it was necessary)' );
+
             return survey;
         } );
 }
@@ -316,6 +319,7 @@ function _findFormAddInfo( formListXml, survey ) {
                     // find the form and stop looking when found
                     found = formListObj.xforms.xform.some( ( xform, i ) => {
                         index = i;
+
                         return xform.formID.toString() === survey.openRosaId;
                     } );
                 }

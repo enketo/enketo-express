@@ -1,3 +1,5 @@
+/* global process */
+
 /**
  * @module instance-model
  */

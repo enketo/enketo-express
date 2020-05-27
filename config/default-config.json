@@ -13,6 +13,12 @@
             "allow insecure transport": "false"
         }
     },
+    "ip filtering" : {
+	    "allowPrivateIPAddress": false,
+	    "allowMetaIPAddress": false,
+	    "allowIPAddressList": [],
+	    "denyIPAddressList": []
+    },
     "timeout": 300000,
     "expiry for record cache": 30000,
     "encryption key": "s0m3v3rys3cr3tk3y",

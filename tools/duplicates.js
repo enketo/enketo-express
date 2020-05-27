@@ -1,4 +1,4 @@
-/* global: console, process, require, Promise */
+/* global process, __dirname */
 /**
  * @module duplicates
  */
@@ -95,6 +95,7 @@ function removeDuplicateEnketoIds() {
             if ( logs.length === 0 ) {
                 return;
             }
+
             return new Promise( ( resolve, reject ) => {
                 const p = path.join( __dirname, `../logs/duplicates-removed-${new Date().toISOString().replace( ':', '.' )}.txt` );
                 fs.writeFile( p, logs.join( '\n' ), err => {
@@ -146,6 +147,7 @@ function getDuplicates() {
             duplicates.forEach( duplicate => {
                 tasks.push( getSurveyOpenRosaId( duplicate ) );
             } );
+
             return Promise.all( tasks );
         } );
 }
@@ -216,6 +218,7 @@ function getSurveyOpenRosaId( duplicate ) {
  */
 function remove( key, id ) {
     let msg;
+
     return new Promise( ( resolve, reject ) => {
         // just remove it, the next time the Enketo button is clicked, it will add a completely new entry and generate a new Id.
         mainClient.del( key, err => {

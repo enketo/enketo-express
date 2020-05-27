@@ -48,6 +48,7 @@ function encryptRecord( form, record ) {
             const submissionXmlEnc = _encryptSubmissionXml( record.xml, symmetricKey, seed );
             manifest.addXmlSubmissionFile( submissionXmlEnc );
             blobs.push( submissionXmlEnc );
+
             return blobs;
         } )
         .then( blobs => {
@@ -58,6 +59,7 @@ function encryptRecord( form, record ) {
             // overwrite record properties so it can be process as a regular submission
             record.xml = manifest.getXmlStr();
             record.files = blobs;
+
             return record;
         } );
 }
@@ -70,12 +72,14 @@ function _generateSymmetricKey() {
 // Equivalent to "RSA/NONE/OAEPWithSHA256AndMGF1Padding"
 function _rsaEncrypt( byteString, publicKey ) {
     const encrypted = publicKey.encrypt( byteString, ASYMMETRIC_ALGORITHM, ASYMMETRIC_OPTIONS );
+
     return forge.util.encode64( encrypted );
 }
 
 function _md5Digest( byteString ) {
     const md = forge.md.md5.create();
     md.update( byteString );
+
     return md.digest();
 }
 
@@ -83,6 +87,7 @@ function _getBase64EncryptedElementSignature( elements, publicKey ) {
     // ODK Collect code also adds a newline character **at the end**!
     const elementsStr = `${elements.join( '\n' )}\n`;
     const messageDigest = _md5Digest( elementsStr ).getBytes();
+
     return _rsaEncrypt( messageDigest, publicKey );
 }
 
@@ -97,18 +102,21 @@ function _encryptMediaFiles( files, symmetricKey, seed ) {
          * caused by forge.util.createBuffer() (which accepts both types as parameter)
          */
         utils.blobToDataUri( file )
-        .then( dataUri => {
-            const byteString = forge.util.decode64( dataUri.split( ',' )[ 1 ] );
-            const buffer = forge.util.createBuffer( byteString, 'raw' );
-            const mediaFileEnc = _encryptContent( buffer, symmetricKey, seed );
-            mediaFileEnc.name = `${file.name}.enc`;
-            mediaFileEnc.md5 = _md5Digest( byteString ).toHex();
-            return mediaFileEnc;
-        } ) );
+            .then( dataUri => {
+                const byteString = forge.util.decode64( dataUri.split( ',' )[ 1 ] );
+                const buffer = forge.util.createBuffer( byteString, 'raw' );
+                const mediaFileEnc = _encryptContent( buffer, symmetricKey, seed );
+                mediaFileEnc.name = `${file.name}.enc`;
+                mediaFileEnc.md5 = _md5Digest( byteString ).toHex();
+
+                return mediaFileEnc;
+            } ) );
+
     // This needs to be sequential for seed array incrementation!
     return funcs.reduce( ( prevPromise, func ) => prevPromise.then( result => func()
         .then( blob => {
             result.push( blob );
+
             return result;
         } ) ), Promise.resolve( [] ) );
 }
@@ -117,11 +125,13 @@ function _encryptSubmissionXml( xmlStr, symmetricKey, seed ) {
     const submissionXmlEnc = _encryptContent( forge.util.createBuffer( xmlStr, 'utf8' ), symmetricKey, seed );
     submissionXmlEnc.name = 'submission.xml.enc';
     submissionXmlEnc.md5 = _md5Digest( xmlStr ).toHex();
+
     return submissionXmlEnc;
 }
 
 /**
  * Symmetric encryption equivalent to Java "AES/CFB/PKCS5Padding"
+ *
  * @param {ByteBuffer} content 
  * @param {*} symmetricKey 
  * @param {Seed} seed 
@@ -164,6 +174,7 @@ function Seed( instanceId, symmetricKey ) {
     this.getIncrementedSeedByteString = () => {
         ++ivSeedArray[ ivCounter % ivSeedArray.length ];
         ++ivCounter;
+
         return ivSeedArray.map( code => String.fromCharCode( code ) ).join( '' );
     };
 }
@@ -215,6 +226,7 @@ function Manifest( formId, formVersion ) {
         fileEl.textContent = blob.name;
         mediaEl.appendChild( fileEl );
         manifestEl.appendChild( mediaEl );
+
         return blob;
     }
 }

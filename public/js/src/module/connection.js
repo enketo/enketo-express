@@ -56,6 +56,7 @@ function uploadRecord( record ) {
     return batches.reduce( ( prevPromise, batch ) => prevPromise.then( () => _uploadBatch( batch ) ), Promise.resolve() )
         .then( results => {
             console.log( 'results of all batches submitted', results );
+
             return results[ 0 ];
         } );
 }
@@ -63,7 +64,8 @@ function uploadRecord( record ) {
 /**
  * Uploads a single batch of a single record.
  *
- * @param  {{formData: FormData, failedFiles: [string]}} data formData object to send
+ * @param {{formData: FormData, failedFiles: [string]}} data - formData object to send
+ * @param recordBatch
  * @return {Promise}      [description]
  */
 function _uploadBatch( recordBatch ) {
@@ -73,18 +75,18 @@ function _uploadBatch( recordBatch ) {
         const submissionUrl = ( settings.enketoId ) ? `${settings.basePath}/submission/${settings.enketoId}${_getQuery()}` : null;
 
         $.ajax( submissionUrl, {
-                type: 'POST',
-                data: recordBatch.formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-OpenRosa-Version': '1.0',
-                    'X-OpenRosa-Deprecated-Id': recordBatch.deprecatedId,
-                    'X-OpenRosa-Instance-Id': recordBatch.instanceId
-                },
-                timeout: settings.timeout
-            } )
+            type: 'POST',
+            data: recordBatch.formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-OpenRosa-Version': '1.0',
+                'X-OpenRosa-Deprecated-Id': recordBatch.deprecatedId,
+                'X-OpenRosa-Instance-Id': recordBatch.instanceId
+            },
+            timeout: settings.timeout
+        } )
             .done( ( data, textStatus, jqXHR ) => {
                 const result = {
                     status: jqXHR.status,
@@ -119,11 +121,13 @@ function _uploadBatch( recordBatch ) {
  * Builds up a record array including media files, divided into batches
  *
  * @param { { name: string, data: string } } record[ description ]
+ * @param record
  */
 function _prepareFormDataArray( record ) {
     const recordDoc = parser.parseFromString( record.xml, 'text/xml' );
     const fileElements = Array.prototype.slice.call( recordDoc.querySelectorAll( '[type="file"]' ) ).map( el => {
         el.removeAttribute( 'type' );
+
         return el;
     } );
     const xmlData = new XMLSerializer().serializeToString( recordDoc.documentElement );
@@ -149,8 +153,10 @@ function _prepareFormDataArray( record ) {
         availableFiles.some( f => {
             if ( f.name === fileName ) {
                 file = f;
+
                 return true;
             }
+
             return false;
         } );
 
@@ -202,8 +208,8 @@ function _prepareFormDataArray( record ) {
 /**
  * splits an array of file sizes into batches (for submission) based on a limit
  *
- * @param  {Array.<number>} fileSizes   array of file sizes
- * @param  {number}     limit   limit in byte size of one chunk (can be exceeded for a single item)
+ * @param  {Array.<number>} fileSizes -   array of file sizes
+ * @param  {number}     limit -   limit in byte size of one chunk (can be exceeded for a single item)
  * @return {Array.<Array.<number>>} array of arrays with index, each secondary array of indices represents a batch
  */
 
@@ -260,10 +266,10 @@ function getMaximumSubmissionSize() {
 
         if ( MAX_SIZE_URL ) {
             $.ajax( MAX_SIZE_URL, {
-                    type: 'GET',
-                    timeout: 5 * 1000,
-                    dataType: 'json'
-                } )
+                type: 'GET',
+                timeout: 5 * 1000,
+                dataType: 'json'
+            } )
                 .done( response => {
                     if ( response && response.maxSize && !isNaN( response.maxSize ) ) {
                         maxSubmissionSize = ( Number( response.maxSize ) > ABSOLUTE_MAX_SIZE ) ? ABSOLUTE_MAX_SIZE : Number( response.maxSize );
@@ -286,21 +292,23 @@ function getMaximumSubmissionSize() {
 /**
  * Obtains HTML Form, XML Model and External Instances
  *
- * @param  {{serverUrl: ?string=, formId: ?string=, formUrl: ?string=, enketoId: ?string=}  options
+ * @param
+ * @param props
  * @return { Promise }
  */
 function getFormParts( props ) {
     let error;
+
     //TODO: use fetch
     return new Promise( ( resolve, reject ) => {
         $.ajax( TRANSFORM_URL + _getQuery(), {
-                type: 'POST',
-                data: {
-                    serverUrl: props.serverUrl,
-                    xformId: props.xformId,
-                    xformUrl: props.xformUrl
-                }
-            } )
+            type: 'POST',
+            data: {
+                serverUrl: props.serverUrl,
+                xformId: props.xformId,
+                xformUrl: props.xformUrl
+            }
+        } )
             .done( data => {
                 data.enketoId = props.enketoId;
                 data.theme = data.theme || utils.getThemeFromFormStr( data.form ) || settings.defaultTheme;
@@ -339,6 +347,7 @@ function _getExternalData( survey ) {
                 tasks.push( _getDataFile( instance.src, survey.languageMap )
                     .then( xmlData => {
                         instance.xml = xmlData;
+
                         return instance;
                     } )
                     .catch( e => {
@@ -361,11 +370,13 @@ function _getExternalData( survey ) {
  * Obtains a media file
  * JQuery ajax doesn't support blob responses, so we're going native here.
  *
+ * @param url
  * @return {Promise} [description]
  */
 function getMediaFile( url ) {
     let error;
     const xhr = new XMLHttpRequest();
+
     // TODO: use fetch
     return new Promise( ( resolve, reject ) => {
         xhr.onreadystatechange = function() {
@@ -394,13 +405,17 @@ function getMediaFile( url ) {
 /**
  * Obtains a data/text file
  *
+ * @param url
+ * @param languageMap
  * @return {Promise} [description]
  */
 function _getDataFile( url, languageMap ) {
     let contentType;
+
     return fetch( url )
         .then( response => {
             contentType = response.headers.get( 'Content-Type' ).split( ';' )[ 0 ];
+
             return response.text();
         } )
         .then( responseText => {
@@ -434,6 +449,7 @@ function _getDataFile( url, languageMap ) {
 /**
  * Extracts version from service worker script
  *
+ * @param serviceWorkerUrl
  * @return {Promise} [description]
  */
 function getServiceWorkerVersion( serviceWorkerUrl ) {
@@ -444,6 +460,7 @@ function getServiceWorkerVersion( serviceWorkerUrl ) {
         } )
         .then( text => {
             const matches = text.match( /version\s?=\s?'([^\n]+)'/ );
+
             return matches ? matches[ 1 ] : 'unknown';
         } );
 }
@@ -454,8 +471,8 @@ function getFormPartsHash() {
 
     return new Promise( ( resolve, reject ) => {
         $.ajax( TRANSFORM_HASH_URL + _getQuery(), {
-                type: 'POST'
-            } )
+            type: 'POST'
+        } )
             .done( data => {
                 resolve( data.hash );
             } )
@@ -470,7 +487,8 @@ function getFormPartsHash() {
 /**
  * Obtains XML instance that is cached at the server
  *
- * @param  {{serverUrl: ?string=, formId: ?string=, formUrl: ?string=, enketoId: ?string=, instanceID: string}  options
+ * @param
+ * @param props
  * @return { Promise }
  */
 function getExistingInstance( props ) {
@@ -478,9 +496,9 @@ function getExistingInstance( props ) {
 
     return new Promise( ( resolve, reject ) => {
         $.ajax( INSTANCE_URL, {
-                type: 'GET',
-                data: props
-            } )
+            type: 'GET',
+            data: props
+        } )
             .done( data => {
                 resolve( data );
             } )

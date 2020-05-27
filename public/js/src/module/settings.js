@@ -83,7 +83,7 @@ settings.offlinePath = settings.offline ? '/x' : '';
 settings.enketoId = utils.getEnketoId( window.location.pathname );
 
 // Set multipleAllowed for single webform views
-if ( settings.type === 'single' && settings.enketoId.length > 31 ) {
+if ( settings.type === 'single' && settings.enketoId.length < 32 ) {
     settings.multipleAllowed = true;
 }
 

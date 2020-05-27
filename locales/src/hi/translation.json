@@ -8,7 +8,7 @@
                 "msg": "अपने होम स्क्रीन पर इस फॉर्म  को जोड़ने के लिए ब्राउज़र सेटिंग्स आइकन __image1__ पर क्लिक करें और 'होम स्क्रीन पर जोड़ें ' चुनें।"
             },
             "androidfirefox": {
-                "msg": "To add this form to your Homescreen, long-press the address bar and select 'Add to Home Screen'."
+                "msg": "इसे फ़ॉर्म को अपने होम स्क्रीन पर जोड़ने के लिए ऐड्रेस बार को थोड़ा लम्बा दबाएँ और 'होम स्क्रीन पर जोड़ें' चुनें।"
             },
             "heading": "होम स्क्रीन में  जोड़ें",
             "iossafari": {
@@ -16,7 +16,7 @@
             }
         },
         "appupdated": {
-            "heading": "एप्लिकेशन अपडेट हो गया!",
+            "heading": "एप्लिकेशन अपडेट हो गई!",
             "msg": "इस फॉर्म  का एक नया संस्करण डाउनलोड किया गया है। अपडेटेड  संस्करण लोड करने के लिए इस पेज को रिफ्रेश  करें।"
         },
         "closing": {
@@ -42,7 +42,7 @@
             "msg": "इस फार्म का एक नया संस्करण डाउनलोड किया गया है। अद्यतन संस्करण लोड करने के लिए इस पेज को रिफ्रेश करें।"
         },
         "gotonotfound": {
-            "msg": "Failed to find question \"__path__\" in form. Is the reference to this question correct?"
+            "msg": "सवाल \"__path__\" फ़ॉर्म में नहीं मिला। क्या इस सवाल का संदर्भ सही है?"
         },
         "loaderror": {
             "editadvice": "कृपया इस रिकॉर्ड को नहीं बदलें जब तक  इसका समाधान हो नहीं जाता है।",
@@ -113,9 +113,9 @@
             "redirectmsg": "अब आपको पुनः निर्देशित किया जाएगा।"
         },
         "thanks": {
-            "heading": "Thank you for participating!",
-            "msg": "You can close this window now.",
-            "msgTaken": "You have already completed this survey."
+            "heading": "भाग लेने के लिए धन्यवाद!",
+            "msg": "आप अब इस विंडो को बंद कर सकते हैं।",
+            "msgTaken": "आप यह सर्वेक्षण पहले ही पूरा कर चुके हैं।"
         },
         "validationerror": {
             "msg": "फार्म में त्रुटियां हैं। कृपया लाल रंग में चिह्नित फील्ड देखें।"
@@ -125,14 +125,14 @@
             "msg": "फार्म मान्य है!"
         },
         "valuehasspaces": {
-            "multiple": "Select multiple question has an illegal value \"__value__\" that contains a space."
+            "multiple": "एक से अधिक विकल्प वाले सवाल में \"__value__\" में अनियमित स्पेस है।"
         },
         "xpatherror": {
             "heading": "फ़ॉर्मूले में त्रुटि",
             "msg": "एक फ़ॉर्मूला मूल्यांकन त्रुटि उत्पन्न हुई। इस त्रुटि के साथ __emailLink__  पर संपर्क करें:"
         }
     },
-    "changelog": "Change Log",
+    "changelog": "बदलाव संग्रह",
     "confirm": {
         "autosaveload": {
             "heading": "बिना सहेजा हुआ रेकॉर्ड मिला ",
@@ -183,8 +183,8 @@
             "reminder": "ध्यान रखें की बाद में भी यही प्रिंट रूपरेखा ब्राउज़र के प्रिंट मेनू में लगाएँ !"
         },
         "repeatremove": {
-            "heading": "Delete this group of responses?",
-            "msg": "This action is irreversible. Are you sure you want to proceed?"
+            "heading": "इन प्रतिक्रियाओं को डिलीट करें?",
+            "msg": "यह क्रिया अपरिवर्तनीय है। क्या आप इसके साथ आगे बढ़ना चाहते हैं?"
         },
         "save": {
             "existingerror": "यह रिकॉर्ड नाम या ID पहले से  मौजूद है।",
@@ -205,9 +205,9 @@
         "support": "कृपया __supportEmail__ से संपर्क करें।"
     },
     "drawwidget": {
-        "annotation": "file and drawing",
-        "drawing": "drawing",
-        "signature": "signature"
+        "annotation": "फ़ाइल और चित्र",
+        "drawing": "चित्र",
+        "signature": "हस्ताक्षर"
     },
     "enketo": {
         "power": "द्वारा संचालित"
@@ -222,7 +222,7 @@
         "loadfailed": "__resource__ लोड करने में असफल",
         "notfoundinformlist": [
             "Oops, this form doesn't exist (anymore). Most likely the owner of the form has deleted it, archived it, or disabled it. Please contact the form's owner to confirm.",
-            "Detailed error: Form with ID __formId__ not found in /formList."
+            "आईडी __formId__ वाल फ़ॉर्म /formList में नहीं मिला।"
         ],
         "pagenotfound": "पृष्ठ नहीं मिला",
         "surveyidnotactive": "इस आईडी के साथ सर्वेक्षण अब सक्रिय नहीं है",
@@ -233,12 +233,12 @@
         "header": "सूचना"
     },
     "filepicker": {
-        "file": "file",
+        "file": "फ़ाइल",
         "notFound": "File __existing__ could not be found (leave unchanged if already submitted and you want to preserve it).",
-        "placeholder": "Click here to upload file. (< __maxSize__)",
-        "resetWarning": "This will remove the __item__. Are you sure you want to do this?",
-        "toolargeerror": "File too large (> __maxSize__)",
-        "waitingForPermissions": "Waiting for user permissions."
+        "placeholder": "फ़ाइल अपलोड करने के लिए यहाँ दबाएँ। (<__maxSize__)",
+        "resetWarning": "इस से __item__ को हटा दिया जाएगा। क्या आप यह करना चाहते हैं?",
+        "toolargeerror": "फ़ाइल बहुत बड़ी है (>__maxSize__)",
+        "waitingForPermissions": "उपयोगकर्ता अनुमतियों का इंतेज़ार है।"
     },
     "form": {
         "chooseLanguage": "भाषा चुनें",
@@ -253,7 +253,7 @@
     },
     "formfooter": {
         "complete": {
-            "btn": "Complete"
+            "btn": "पूरा हो गया है।"
         },
         "savedraft": {
             "btn": "ड्राफ्ट को सहेजें",
@@ -281,7 +281,7 @@
     "here": "यहाँ",
     "hint": {
         "guidance": {
-            "details": "more details"
+            "details": "अन्य जानकारी"
         }
     },
     "home": {
@@ -308,10 +308,11 @@
         "lo": "Lao",
         "nl": "डच",
         "no": "नार्वेजियन",
+        "pa": "Panjabi",
         "pl": "Polish",
-        "pt": "Portuguese",
+        "pt": "पॉर्चुगीज़",
         "ro": "रोमानियाई",
-        "ru": "Russian",
+        "ru": "रूसी",
         "sk": "स्लोवाक",
         "sq": "Albanian",
         "supported": "यह बोलियाँ समर्थित हैं :",
@@ -322,8 +323,8 @@
         "zh": "चीनी"
     },
     "literacywidget": {
-        "finish": "Finish",
-        "start": "Start"
+        "finish": "समाप्त करें",
+        "start": "शुरू करें"
     },
     "page": {
         "modernbrowsers": {
@@ -353,8 +354,8 @@
         }
     },
     "rankwidget": {
-        "clickstart": "Click to start",
-        "tapstart": "Tap to start"
+        "clickstart": "शुरू करने के लिए यहाँ क्लिक करें",
+        "tapstart": "शुरू करने के लिए यहाँ दबाएँ"
     },
     "record-list": {
         "export": "निर्यात करें",
@@ -367,8 +368,8 @@
         "upload": "अपलोड"
     },
     "selectpicker": {
-        "noneselected": "none selected",
-        "numberselected": "__number__ selected"
+        "noneselected": "कुछ चुना नहीं गया है",
+        "numberselected": "__number__ चुना गया है"
     },
     "store": {
         "error": {
@@ -384,11 +385,11 @@
         "http401": " डेटा  सर्वर के साथ प्रमाणीकरण समस्या है।",
         "http403": "इस डेटा सर्वर से डेटा पोस्ट करने की अनुमति नहीं है।",
         "http404": "डेटा सर्वर पर जमा करने की  सेवा नहीं मिली ।",
-        "http408": "Data server timed out.",
+        "http408": "डाटा सर्वर टाईम आउट कर गया है।",
         "http413": "डेटा बहुत बड़ा है।",
         "http4xx": "जमा करने  पर डेटा सर्वर पर अज्ञात समस्या है।",
         "http500": "आपके फार्म का डेटा सर्वर या Enketo का सर्वर डाउन है। बाद में फिर से कोशिश करें या __supportEmail__ से संपर्क करें।",
-        "http504": "Could not establish connection with data server."
+        "http504": "डाटा सर्वर से मेल नहीं हो पाया।"
     },
     "themes": {
         "supported": "Themes supported"

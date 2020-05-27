@@ -40,13 +40,15 @@ See [this tutorial](http://blog.enketo.org/install-enketo-production-ubuntu/) fo
 
 ### How to configure
 
-All configuration is normally done in config/config.json. This file only has to contain the [default properties](https://github.com/enketo/enketo-express/blob/master/config/default-config.json) that you'd like to override. For some it may be preferable to include all properties, to avoid surprises when the default configuration changes. Others may want to reduce hassle and keep the config.json as small as possible to automatically deploy configuration changes (e.g. new widgets). After editing the configuration, the app will need to be restarted. 
+All configuration is normally done in config/config.json. This file only has to contain the [default properties](https://github.com/enketo/enketo-express/blob/master/config/default-config.json) that you'd like to override. For some it may be preferable to include all properties, to avoid surprises when the default configuration changes. Others may want to reduce hassle and keep the config.json as small as possible to automatically deploy configuration changes (e.g. new widgets). After editing the configuration, the app will need to be restarted.
 
 As an alternative, there is an option to use environment variables instead of a config/config.json file. If the config/config.json file is missing Enketo will assume configuration is done with environment variables. A combination of both options is not supported. See [config/sample.env](https://github.com/enketo/enketo-express/blob/master/config/sample.env) for more information on equivalent environment variable names.
 
 The default production configuration includes 2 redis instances. You can **greatly simplify installation by using 1 redis instance** instead (for development usage). To do this set the redis.cache.port to 6379 (same as redis.main.port). To set up 2 instances properly for production, you might find the vagrant setup steps in [bootstrap.sh](https://github.com/enketo/enketo-express/blob/master/setup/vagrant/bootstrap.sh) useful.
 
 For development usages, it is helpful to set "linked form and data server" -> "server url" to `""`, so you can use any OpenRosa server with your local Enketo Express.
+
+If you'd like to run a form server such as KoBoToolbox or ODK Aggregate or ODK Central on a private IP address during development, you need to add that IP address to "ip filtering" -> "allowIPAddressList".
 
 For detailed guidance on each configuration item, see {@tutorial 10-configuration}.
 

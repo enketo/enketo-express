@@ -1,3 +1,4 @@
+/* global process*/
 /**
  * @module cache-model
  */
@@ -267,6 +268,7 @@ function flushAll() {
  */
 function _getKey( survey ) {
     const openRosaKey = utils.getOpenRosaKey( survey, prefix );
+
     return ( openRosaKey ) ? openRosaKey : null;
 }
 

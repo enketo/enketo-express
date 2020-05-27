@@ -60,6 +60,7 @@ function submit( req, res, next ) {
         .then( survey => {
             submissionUrl = communicator.getSubmissionUrl( survey.openRosaServer ) + query;
             const credentials = userModel.getCredentials( req );
+
             return communicator.getAuthHeader( submissionUrl, credentials );
         } )
         .then( authHeader => {
@@ -114,10 +115,10 @@ function maxSize( req, res, next ) {
     if ( req.query.xformUrl ) {
         // Non-standard way of attempting to obtain max submission size from XForm url directly
         communicator.getMaxSize( {
-                info: {
-                    downloadUrl: req.query.xformUrl
-                }
-            } )
+            info: {
+                downloadUrl: req.query.xformUrl
+            }
+        } )
             .then( maxSize => {
                 res.json( { maxSize } );
             } )
@@ -126,6 +127,7 @@ function maxSize( req, res, next ) {
         surveyModel.get( req.enketoId )
             .then( survey => {
                 survey.credentials = userModel.getCredentials( req );
+
                 return survey;
             } )
             .then( communicator.getMaxSize )

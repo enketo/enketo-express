@@ -7,7 +7,8 @@ import { dataUriToBlobSync } from 'enketo-core/src/js/utils';
 /**
  * Converts a Blob to a (Base64-coded) dataURL
  *
- * @param  {Blob} blob The blob
+ * @param {Blob} blob - The blob
+ * @param filename
  * @return {Promise}
  */
 function blobToDataUri( blob, filename ) {
@@ -45,7 +46,7 @@ function blobToDataUri( blob, filename ) {
 /**
  * Converts a Blob to a an ArrayBuffer
  *
- * @param  {Blob} blob The blob
+ * @param  {Blob} blob - The blob
  * @return {Promise}
  */
 function blobToArrayBuffer( blob ) {
@@ -72,7 +73,7 @@ function blobToArrayBuffer( blob ) {
 /**
  * The inverse of blobToDataUri, that converts a dataURL back to a Blob
  *
- * @param  {string} dataURI dataURI
+ * @param  {string} dataURI - dataURI
  * @return {Promise}
  */
 function dataUriToBlob( dataURI ) {
@@ -92,15 +93,18 @@ function dataUriToBlob( dataURI ) {
 
 function getThemeFromFormStr( formStr ) {
     const matches = formStr.match( /<\s?form .*theme-([A-z-]+)/ );
+
     return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
 }
 
 function getTitleFromFormStr( formStr ) {
     if ( typeof formStr !== 'string' ) {
         console.error( 'Cannot extract form title. Not a string.' );
+
         return;
     }
     const matches = formStr.match( /<\s?h3 [^>]*id="form-title">([^<]+)</ );
+
     return ( matches && matches.length > 1 ) ? matches[ 1 ] : null;
 }
 
@@ -112,6 +116,7 @@ function csvToArray( csv ) {
     if ( result.errors.length ) {
         throw result.errors[ 0 ];
     }
+
     return result.data;
 }
 
@@ -134,9 +139,11 @@ function arrayToXml( rows, langMap ) {
             lang = langMap[ parts[ 1 ] ] || parts[ 1 ];
             //langAttrs[ index ] = ' lang="' + lang + '"';
             langs[ index ] = lang;
+
             return parts[ 0 ];
         } else {
             langs[ index ] = '';
+
             return header;
         }
     } );
@@ -160,18 +167,20 @@ function arrayToXml( rows, langMap ) {
             item.appendChild( node );
         } );
     } );
+
     return xmlDoc;
 }
 
 function csvToXml( csv, langMap ) {
     const result = csvToArray( csv );
+
     return arrayToXml( result, langMap );
 }
 
 /**
  * Generates a querystring from an object or an array of objects with `name` and `value` properties.
  *
- * @param  {{name: string, value: *}|<{name: string, value: *}>} obj [description]
+ * @param  {{name: string, value: *}|<{name: string, value: *}>} obj - [description]
  * @return {*}     [description]
  */
 function getQueryString( obj ) {
@@ -190,6 +199,7 @@ function getQueryString( obj ) {
             addition = ( previousValue ) ? '&' : '';
             addition += _serializeQueryComponent( item.name, item.value );
         }
+
         return previousValue + addition;
     }, '' );
 
@@ -210,8 +220,10 @@ function _serializeQueryComponent( name, value ) {
                 serialized += `${encodeURIComponent( name )}[${encodeURIComponent( n )}]=${encodeURIComponent( value[ n ] )}`;
             }
         }
+
         return serialized;
     }
+
     return `${encodeURIComponent( name )}=${encodeURIComponent( value )}`;
 }
 
@@ -227,11 +239,12 @@ function _throwInvalidXmlNodeName( name ) {
 
 /**
  * 
- * @param {string} path location.pathname in a browser
+ * @param {string} path - location.pathname in a browser
  */
 function getEnketoId( path ) {
     path = path.endsWith( '/' ) ? path.substring( 0, path.length - 1 ) : path;
     const id = path.substring( path.lastIndexOf( '/' ) + 1 );
+
     // previews /preview, and /preview/i can be loaded (unofficially) without an ID.
     return id === 'preview' || id === 'i' ? null : id;
 }

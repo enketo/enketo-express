@@ -1,6 +1,5 @@
 import formCache from '../../public/js/src/module/form-cache';
 import connection from '../../public/js/src/module/connection';
-import $ from 'jquery';
 
 const url1 = '/path/to/source.png';
 const form1 = `<form class="or"><img src="${url1}"/></form>`;

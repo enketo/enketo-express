@@ -12,6 +12,7 @@ const htmlParagraphsPostProcessor = {
     name: 'htmlParagraphsPostProcessor',
     process( value ) {
         const paragraphs = value.split( '\n' );
+
         return ( paragraphs.length > 1 ) ? `<p>${paragraphs.join( '</p><p>' )}</p>` : value;
     }
 };
@@ -19,7 +20,7 @@ const htmlParagraphsPostProcessor = {
 /**
  * Initializes translator and resolves **when translations have been loaded**.
  * 
- * @param  {=*?} something can be anything
+ * @param  {=*?} something - can be anything
  * @return {Promise}       promise resolving the original something argument
  */
 const init = something => initialize
@@ -63,10 +64,12 @@ const t = ( key, options ) => i18next.t( key, options );
 /**
  * Localizes the descendents of an element based on the data-i18n attribute.
  * Performance-optimized in Chrome (used bench6 form).
- * 
+ *
  * Note, this does not work if there is translation context (i.e. options for t(key, options) call).
- * 
- * @param  {Element} Element [description]
+ *
+ * @param {Element} Element - [description]
+ * @param container
+ * @param lng
  */
 const localize = ( container, lng ) => {
     const cache = {};
@@ -116,7 +119,7 @@ const localize = ( container, lng ) => {
 /**
  * Loads a translation file. This function is used to cache all language files for offline usage, upon form load.
  * 
- * @param  {string} lang 2-character IANA language subtag
+ * @param  {string} lang - 2-character IANA language subtag
  */
 const loadTranslation = lang => {
     if ( lang ) {
@@ -128,6 +131,7 @@ const loadTranslation = lang => {
 
 const getCurrentUiLanguage = () => {
     const matches = i18next.language.match( LANGEXTRACT );
+
     return matches.length ? matches[ 0 ] : null;
 };
 
@@ -135,6 +139,7 @@ const getDesiredLanguage = () => {
     // Here we are essential duplicating the LanguageDetector module, which is not great, but very simple in our case.
     const src = settings.languageOverrideParameter ? settings.languageOverrideParameter.value : navigator.language;
     const matches = src.match( LANGEXTRACT );
+
     return matches.length ? matches[ 0 ] : null;
 };
 
