@@ -8,8 +8,8 @@ import { dataUriToBlobSync } from 'enketo-core/src/js/utils';
  * Converts a Blob to a (Base64-coded) dataURL
  *
  * @param {Blob} blob - The blob
- * @param filename
- * @return {Promise}
+ * @param {string} filename - The filename
+ * @return {Promise<string>} Base64-encoded-converted content of the provided Blob.
  */
 function blobToDataUri( blob, filename ) {
     let reader;
@@ -47,7 +47,7 @@ function blobToDataUri( blob, filename ) {
  * Converts a Blob to a an ArrayBuffer
  *
  * @param  {Blob} blob - The blob
- * @return {Promise}
+ * @return {Promise<ArrayBuffer>} ArrayBuffer-converted content of the provided Blob.
  */
 function blobToArrayBuffer( blob ) {
     const reader = new FileReader();
@@ -74,7 +74,7 @@ function blobToArrayBuffer( blob ) {
  * The inverse of blobToDataUri, that converts a dataURL back to a Blob
  *
  * @param  {string} dataURI - dataURI
- * @return {Promise}
+ * @return {Promise<Blob>} Blob-converted content of provided Data URI.
  */
 function dataUriToBlob( dataURI ) {
     let blob;
@@ -180,8 +180,8 @@ function csvToXml( csv, langMap ) {
 /**
  * Generates a querystring from an object or an array of objects with `name` and `value` properties.
  *
- * @param  {{name: string, value: *}|<{name: string, value: *}>} obj - [description]
- * @return {*}     [description]
+ * @param  {{name: string, value: string}|Array.<{name: string, value: string}>} obj - Object or array of objects to turn into a querystring.
+ * @return {string} querystring
  */
 function getQueryString( obj ) {
     let arr;
@@ -238,7 +238,7 @@ function _throwInvalidXmlNodeName( name ) {
 }
 
 /**
- * 
+ *
  * @param {string} path - location.pathname in a browser
  */
 function getEnketoId( path ) {

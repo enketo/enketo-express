@@ -1,4 +1,5 @@
 /* global process, __dirname */
+/* eslint no-console: 0 */
 /**
  * @module duplicates
  */
@@ -47,9 +48,9 @@ if ( mode === 'analyze' ) {
 }
 
 /**
- * Generates a raport about duplicate Enketo ids.
+ * Generates a rapport about duplicate Enketo ids.
  *
- * @return {Promise}
+ * @return {Promise<undefined>} A promise that resolves with undefined.
  */
 function checkDuplicateEnketoIds() {
     return getDuplicates()
@@ -64,7 +65,7 @@ function checkDuplicateEnketoIds() {
 /**
  * Removes duplicate Enketo ids.
  *
- * @return {Promise}
+ * @return {Promise<undefined>} A promise that resolves with undefined
  */
 function removeDuplicateEnketoIds() {
     return getDuplicates()
@@ -112,7 +113,7 @@ function removeDuplicateEnketoIds() {
 /**
  * Returns a list of duplicate Enketo ids.
  *
- * @return {Promise}
+ * @return {Promise<string[]>} A promise that resolves with an array of keys.
  */
 function getDuplicates() {
     return getAllKeys()
@@ -155,7 +156,7 @@ function getDuplicates() {
 /**
  * Returns all keys.
  *
- * @return {Promise<Error|Array>} a list of keys.
+ * @return {Promise<Error|string[]>} a list of keys.
  */
 function getAllKeys() {
     return new Promise( ( resolve, reject ) => {
@@ -172,8 +173,8 @@ function getAllKeys() {
 /**
  * Gets id from key.
  *
- * @param {string} key
- * @return {Promise<Error|{key: string, id: string}>} a promise that resolves with key and id object.
+ * @param {string} key - The key for which an enketoId sought.
+ * @return {Promise<Error|{key: string, id: string}>} A promise that resolves with key and id object.
  */
 function getId( key ) {
     return new Promise( ( resolve, reject ) => {
@@ -191,10 +192,10 @@ function getId( key ) {
 }
 
 /**
- * getSurveyOpenRosaId
+ * Gets the OpenRosaId belonging to a duplicate.
  *
- * @param {object} duplicate
- * @return {Promise<Error|object>}
+ * @param {object} duplicate - Duplicate database entry.
+ * @return {Promise<Error|object>} A promise that resolves with id and openRosaId object
  */
 function getSurveyOpenRosaId( duplicate ) {
     return new Promise( ( resolve, reject ) => {
@@ -210,11 +211,11 @@ function getSurveyOpenRosaId( duplicate ) {
 }
 
 /**
- * remove
+ * Removes an item from the main database.
  *
- * @param {string} key
- * @param {string} id
- * @return {Promise<Error|string>}
+ * @param {string} key - The key to remove from the main database.
+ * @param {string} id - The enketoId belonging to the database item.
+ * @return {Promise<Error|string>} A promise that resolves with a message.
  */
 function remove( key, id ) {
     let msg;
@@ -236,9 +237,9 @@ function remove( key, id ) {
 }
 
 /**
- * removeCache
+ * Removes an item from the cache database.
  *
- * @param {string} key
+ * @param {string} key - The key to remove from the cache database.
  */
 function removeCache( key ) {
     const cacheKey = key.replace( 'or:', 'ca:' );

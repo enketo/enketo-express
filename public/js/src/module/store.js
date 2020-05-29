@@ -336,7 +336,7 @@ const surveyStore = {
      * Removes survey form and all its resources
      *
      * @param  {string} id - Enketo form ID
-     * @return {Promise}
+     * @return {Promise} [description]
      */
     remove( id ) {
         let resources;
@@ -368,7 +368,7 @@ const surveyStore = {
          *
          * @param  {string} id -  Enketo survey ID
          * @param  {string} url - URL of resource
-         * @return {Promise}
+         * @return {Promise} A promise resolving with the file.
          */
         get( id, url ) {
             return _getFile( 'resources', id, url );
@@ -376,9 +376,9 @@ const surveyStore = {
         /**
          * Updates a form resource in storage or creates it if it does not yet exist.
          *
-         * @param id
-         * @param {{item:Blob, url:string}} resource
-         * @return {*}          [description]
+         * @param {string} id - Enketo survey ID
+         * @param {{item:Blob, url:string}} resource - Form resource to update.
+         * @return {Promise<Blob>}         A promise resolving with the file that was updated.
          */
         update( id, resource ) {
             return _updateFile( 'resources', id, resource );
@@ -388,7 +388,7 @@ const surveyStore = {
          *
          * @param  {string} id -  Enketo survey ID
          * @param  {string} url - URL of resource
-         * @return {Promise}
+         * @return {Promise} [description]
          */
         remove( id, url ) {
             return server.resources.remove( `${id}:${url}` );
@@ -401,7 +401,7 @@ const dataStore = {
      * Obtains the stored dynamic data belonging to a form.
      *
      * @param  {string} id - [description]
-     * @return {Promise}    promise that resolves with data object
+     * @return {Promise}  A Promise that resolves with data object
      */
     get( id ) {
         return server.data.get( id )
@@ -411,7 +411,7 @@ const dataStore = {
      * Updates the dynamic data belonging to a form
      *
      * @param  {{enketoId: string, submissionParameter: {name: string, value: string}}} data - object with dynamic data
-     * @return {Promise}        promise that resolves with data object
+     * @return {Promise}        A Promise that resolves with data object
      */
     update( data ) {
         if ( !data.enketoId ) {
@@ -437,9 +437,8 @@ const recordStore = {
     /**
      * Obtains a single record (XML + files)
      *
-     * @param {*} record - [description]
-     * @param instanceId
-     * @return {Promise}        [description]
+     * @param {string} instanceId - the instance ID of the record to be retrieved
+     * @return {Promise} A record from the database.
      */
     get( instanceId ) {
         const tasks = [];
@@ -469,9 +468,8 @@ const recordStore = {
      * Obtains all stored records for a particular survey without record files
      *
      * @param {string} enketoId -   EnketoId of the survey the record belongs to
-     * @param { boolean} finalonly -  Only included records that are 'final' (i.e. not 'draft')
-     * @param finalOnly
-     * @return {Promise}
+     * @param {boolean} finalOnly -  Only included records that are 'final' (i.e. not 'draft')
+     * @return {Promise} [description]
      */
     getAll( enketoId, finalOnly ) {
 
@@ -589,8 +587,7 @@ const recordStore = {
     /**
      * Removes a single record (XML + files)
      *
-     * @param {*} record - [description]
-     * @param instanceId
+     * @param {string} instanceId - the instance ID of the record to remove
      * @return {Promise}        [description]
      */
     remove( instanceId ) {
@@ -622,7 +619,7 @@ const recordStore = {
          *
          * @param  {string} instanceId - The instanceId that is part of the record (meta>instancID)
          * @param  {string} fileKey -     unique key that identifies the file in the record (meant to be fileName)
-         * @return {Promise}          [description]
+         * @return {Promise}  A promise resolving with a File.
          */
         get( instanceId, fileKey ) {
             return _getFile( 'files', instanceId, fileKey );
@@ -633,7 +630,7 @@ const recordStore = {
          *
          * @param  {string}                     instanceId -  instanceId that is part of the record (meta>instancID)
          * @param  {{item:Blob, name:string }}   file -        file object
-         * @return {Promise}
+         * @return {Promise} A promise resolving with the File.
          */
         update( instanceId, file ) {
             return _updateFile( 'files', instanceId, file );
@@ -643,7 +640,7 @@ const recordStore = {
          *
          * @param  {string} instanceId -  instanceId that is part of the record (meta>instancID)
          * @param  {string} fileKey -     unique key that identifies the file in the record (meant to be fileName)
-         * @return {Promise}
+         * @return {Promise} A promise
          */
         remove( instanceId, fileKey ) {
             return server.files.remove( `${instanceId}:${fileKey}` );
@@ -656,8 +653,7 @@ const recordStore = {
  * Db.js get and update functions return arrays. This function extracts the first item of the array
  * and passes it along.
  *
- * @param {<*>} array - Array of retrieve database items.
- * @param results
+ * @param {object[]} results - Array of retrieved database items.
  * @return {Promise}       [description]
  */
 function _firstItemOnly( results ) {
@@ -705,7 +701,7 @@ function _transformExternalDataToXmlDoc( survey ) {
  * @param  {string} table - database table name
  * @param  {string} id -    Enketo id of the survey
  * @param  {string} key -   unique key of the file (url or fileName)
- * @return {Promise}
+ * @return {Promise<Blob>} A promise that resolves with a File.
  */
 function _getFile( table, id, key ) {
     let prop;
@@ -744,9 +740,11 @@ function _getFile( table, id, key ) {
  *
  * @param {string} table - database table name
  * @param {string} id -    Enketo id of the survey
- * @param {{(url:string | name: string), item: Blob}} The - new file (url or name property)
- * @param file
- * @return {Promise]}       [description]
+ * @param {object} file - new file object (url or name property)
+ * @param {string} [file.url] - url of the file
+ * @param {string} [file.name] - name of the file (required if url not provided)
+ * @param {Blob} file.item - the new file
+ * @return {Promise}       [description]
  */
 function _updateFile( table, id, file ) {
     let error;
@@ -833,7 +831,7 @@ function flush() {
 /**
  * Removes a table from the store
  *
- * @param  {string} table - [description]
+ * @param  {string} table - The database table to flush
  * @return {Promise}       [description]
  */
 function _flushTable( table ) {
