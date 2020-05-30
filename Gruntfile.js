@@ -259,7 +259,7 @@ module.exports = grunt => {
     } );
 
     grunt.registerTask( 'default', [ 'locales', 'widgets', 'css', 'js', 'terser' ] );
-    grunt.registerTask( 'edge', [ 'js-edge' ] );
+    grunt.registerTask( 'edge', [ 'js-edge', 'terser' ] );
     grunt.registerTask( 'locales', [ 'shell:clean-locales', 'i18next' ] );
     grunt.registerTask( 'js', [ 'shell:clean-js', 'client-config-file:create', 'widgets', 'shell:rollup' ] );
     grunt.registerTask( 'js-dev', [ 'js' ] );
