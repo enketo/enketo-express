@@ -19,7 +19,7 @@ const htmlParagraphsPostProcessor = {
 
 /**
  * Initializes translator and resolves **when translations have been loaded**.
- * 
+ *
  * @param  {=*?} something - can be anything
  * @return {Promise}       promise resolving the original something argument
  */
@@ -67,9 +67,8 @@ const t = ( key, options ) => i18next.t( key, options );
  *
  * Note, this does not work if there is translation context (i.e. options for t(key, options) call).
  *
- * @param {Element} Element - [description]
- * @param container
- * @param lng
+ * @param {Element} container - The element to localize.
+ * @param {string} [lng] - The 2-character IANA subtag.
  */
 const localize = ( container, lng ) => {
     const cache = {};
@@ -87,7 +86,7 @@ const localize = ( container, lng ) => {
                 if ( key ) {
                     if ( !cache[ key ] ) {
                         let options = {};
-                        // quick hack for __icon__ replacement 
+                        // quick hack for __icon__ replacement
                         if ( el.dataset.i18nIcon ) {
                             options = {
                                 icon: `<span class="icon ${el.dataset.i18nIcon}"> </span>`,
@@ -118,7 +117,7 @@ const localize = ( container, lng ) => {
 
 /**
  * Loads a translation file. This function is used to cache all language files for offline usage, upon form load.
- * 
+ *
  * @param  {string} lang - 2-character IANA language subtag
  */
 const loadTranslation = lang => {
@@ -158,9 +157,9 @@ export {
  * t('constraint.invalid');
  * t('constraint.required');
  * t('form.required');
- * 
+ *
  * and from custom widgets
- * 
+ *
  * t('literacywidget.start');
  * t('literacywidget.finish');
  */
