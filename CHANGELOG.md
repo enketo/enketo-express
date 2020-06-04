@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - The autosave feature does not work for drawings, signatures, annotations on mobile browsers.
 - Drawings, signatures and annotations submit empty PNG files on mobile browsers.
 - Readonly select-minimal widgets are not readonly.
+- Readonly select-minimal widget get erroneously enabled when relevancy changes to positive.
 
 [2.3.4] - 2020-05-27
 ---------------------
