@@ -395,7 +395,6 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
 
     return fileManager.getCurrentFiles()
         .then( files => {
-            console.log( 'files', files );
             // build the record object
             const record = {
                 'draft': draft,
@@ -420,7 +419,6 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
                 return record;
             }
         } ).then( record => {
-            console.log( 'record', record );
             // Change file object for database, not sure why this was chosen.
             record.files = record.files.map( file => ( typeof file === 'string' ) ? {
                 name: file
@@ -431,7 +429,6 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
 
             // Save the record, determine the save method
             const saveMethod = form.recordName ? 'update' : 'set';
-            console.log( 'saving record with', saveMethod, record );
 
             return records[ saveMethod ]( record );
         } )
@@ -650,7 +647,11 @@ function _setEventHandlers() {
     }
 
     if ( settings.offline ) {
-        document.addEventListener( events.XFormsValueChanged().type, _autoSaveRecord );
+        document.addEventListener( events.XFormsValueChanged().type, () => {
+            // The delay works around an issue with drawing widgets, where the canvas
+            // capture is an empty image. https://github.com/enketo/enketo-express/issues/174
+            setTimeout( _autoSaveRecord, 500 );
+        } );
     }
 }
 
