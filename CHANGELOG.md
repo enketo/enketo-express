@@ -13,6 +13,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Drawings, signatures and annotations submit empty PNG files on mobile browsers.
 - Readonly select-minimal widgets are not readonly.
 - Readonly select-minimal widget get erroneously enabled when relevancy changes to positive.
+- Calculation with form control fires input-update event upon load if the underlying model value doesn't change.
+- Number mask do not work in non-first repeat instances.
 
 [2.3.4] - 2020-05-27
 ---------------------
