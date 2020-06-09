@@ -93,6 +93,11 @@ const localize = ( container, lng ) => {
                                 interpolation: { escapeValue: false }
                             };
                         }
+                        if ( el.dataset.i18nNumber ){
+                            options = {
+                                number: el.dataset.i18nNumber
+                            };
+                        }
                         cache[ key ] = t( key, options );
                     }
                     // This assumes that if the element has a placeholder, that's the thing that
