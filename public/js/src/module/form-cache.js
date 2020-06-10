@@ -13,7 +13,6 @@ let hash;
 function init( survey ) {
     return store.init()
         .then( () => get( survey ) )
-        .then( _removeQueryString )
         .then( result => {
             if ( result ) {
                 return result;
@@ -39,14 +38,6 @@ function set( survey ) {
 
 function remove( survey ) {
     return store.survey.remove( survey.enketoId );
-}
-
-function _removeQueryString( survey ) {
-    const bareUrl = window.location.pathname + window.location.hash;
-
-    history.replaceState( null, '', bareUrl );
-
-    return survey;
 }
 
 function _processDynamicData( survey ) {
@@ -106,8 +97,8 @@ function _setUpdateIntervals( survey ) {
     hash = survey.hash;
 
     // Check for form update upon loading.
-    // Note that for large Xforms where the XSL transformation takes more than 30 seconds, 
-    // the first update make take 20 minutes to propagate to the browser of the very first user(s) 
+    // Note that for large Xforms where the XSL transformation takes more than 30 seconds,
+    // the first update make take 20 minutes to propagate to the browser of the very first user(s)
     // that open the form right after the XForm update.
     setTimeout( () => {
         _updateCache( survey );
@@ -156,7 +147,7 @@ function _setRepeatListener( survey ) {
  * Changes src attributes in view to data-offline-src to facilate loading those resources
  * from the browser storage.
  *
- * @param {*} survey 
+ * @param {*} survey
  */
 function _swapMediaSrc( survey ) {
     survey.form = survey.form.replace( /(src="[^"]*")/g, 'data-offline-$1 src=""' );
@@ -169,12 +160,12 @@ function _swapMediaSrc( survey ) {
  * Loads all default binary files and adds them to the survey object. It removes the src
  * attributes from model nodes with default binary files.
  *
- * @param {*} survey 
+ * @param {*} survey
  */
 function _addBinaryDefaultsAndUpdateModel( survey ) {
     // The mechanism for default binary files is as follows:
     // 1. They are stored as binaryDefaults in the resources table with the key being comprised of the VALUE (i.e. jr:// url)
-    // 2. Filemanager.getFileUrl will determine whether to load from (survey) resources of (record) files  
+    // 2. Filemanager.getFileUrl will determine whether to load from (survey) resources of (record) files
 
     const model = new DOMParser().parseFromString( survey.model, 'text/xml' );
     const binaryDefaultElements = [ ...model.querySelectorAll( 'instance:first-child > * *[src]' ) ];
@@ -184,11 +175,11 @@ function _addBinaryDefaultsAndUpdateModel( survey ) {
     binaryDefaultElements.forEach( el => {
         tasks.push( connection.getMediaFile( el.getAttribute( 'src' ) )
             .then( result => {
-                // Overwrite the url to use the jr://images/img.png value. This makes the magic happen. 
+                // Overwrite the url to use the jr://images/img.png value. This makes the magic happen.
                 // It causes a jr:// value to be treated the same as a filename.ext value.
                 result.url = el.textContent;
                 survey.binaryDefaults.push( result );
-                // Now the src attribute should be removed because the filemanager.js can return the blob for 
+                // Now the src attribute should be removed because the filemanager.js can return the blob for
                 // the jr://images/... key (as if it is a file).
                 el.removeAttribute( 'src' );
             } )
@@ -277,13 +268,13 @@ function updateMedia( survey ) {
         .catch( error => {
             console.error( 'loadMedia failed', error );
 
-            // Let the flow continue. 
+            // Let the flow continue.
             return survey;
         } );
 }
 
 /**
- * To be used with Promise.all if you want the results to be returned even if some 
+ * To be used with Promise.all if you want the results to be returned even if some
  * have failed. Failed tasks will return undefined.
  *
  * @param  {Promise} task - [description]

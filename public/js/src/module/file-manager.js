@@ -6,7 +6,6 @@ import store from './store';
 
 import settings from './settings';
 import connection from './connection';
-import $ from 'jquery';
 import utils from './utils';
 import { getFilename } from 'enketo-core/src/js/utils';
 import { t } from './translator';
@@ -61,7 +60,7 @@ function getFileUrl( subject ) {
                 reject( new Error( 'store not available' ) );
             } else if ( URL_RE.test( subject ) ) {
                 // Any URL values are default binary values. These should only occur in offline-capable views,
-                // because the form cache module removed the src attributes 
+                // because the form cache module removed the src attributes
                 // (which are /urls/like/this/http:// and are caught above this statement)
                 store.survey.resource.get( settings.enketoId, subject )
                     .then( file => {
@@ -102,9 +101,9 @@ function getFileUrl( subject ) {
 
 /**
  * Similar to getFileURL, except that this one is guaranteed to return an objectURL
- * 
+ *
  * It is meant for loading images into a canvas.
- * 
+ *
  * @param  {?string|object} subject - File or filename in local storage
  * @return {*}         promise url string or rejection with Error
  */
@@ -122,51 +121,61 @@ function getObjectUrl( subject ) {
 /**
  * Obtain files currently stored in file input elements of open record
  *
- * @return {Promise} array of files
+ * @return {Promise} A promise that resolves with an array of files
  */
 function getCurrentFiles() {
-    const files = [];
-    const $fileInputs = $( 'form.or input[type="file"], form.or input[type="text"][data-drawing="true"]' );
+    const fileInputs = [ ...document.querySelectorAll( 'form.or input[type="file"], form.or input[type="text"][data-drawing="true"]' ) ];
+    const fileTasks = [];
 
-    // first get any files inside file input elements
-    $fileInputs.each( function() {
-        let newFilename;
-        let file = null;
-        let canvas = null;
-        if ( this.type === 'file' ) {
-            file = this.files[ 0 ]; // Why doesn't this fail for empty file inputs?
-        } else if ( this.value ) {
-            canvas = $( this ).closest( '.question' )[ 0 ].querySelector( '.draw-widget canvas' );
-            if ( canvas && !URL_RE.test( this.value ) ) {
-                // TODO: In the future, we could do canvas.toBlob()
-                file = utils.dataUriToBlobSync( canvas.toDataURL() );
-                file.name = this.value;
-            }
-        }
+
+    const _processNameAndSize = function( input, file ){
         if ( file && file.name ) {
             // Correct file names by adding a unique-ish postfix
             // First create a clone, because the name property is immutable
             // TODO: in the future, when browser support increase we can invoke
             // the File constructor to do this.
-            newFilename = getFilename( file, this.dataset.filenamePostfix );
+            const newFilename = getFilename( file, input.dataset.filenamePostfix );
             // If file is resized, get Blob representation of data URI
-            if ( this.dataset.resized && this.dataset.resizedDataURI ) {
-                file = utils.dataUriToBlobSync( this.dataset.resizedDataURI );
+            if ( input.dataset.resized && input.dataset.resizedDataURI ) {
+                file = utils.dataUriToBlobSync( input.dataset.resizedDataURI );
             }
             file = new Blob( [ file ], {
                 type: file.type
             } );
             file.name = newFilename;
-            files.push( file );
         }
+
+        return file;
+    };
+
+    fileInputs.forEach( input => {
+        if ( input.type === 'file' ) {
+            // first get any files inside file input elements
+            if ( input.files[0] ){
+                fileTasks.push( Promise.resolve( _processNameAndSize( input, input.files[ 0 ] ) ) );
+            }
+        } else if ( input.value ) {
+            // then from canvases
+            const canvas = input.closest( '.question' ).querySelector( '.draw-widget canvas' );
+            if ( canvas && !URL_RE.test( input.value ) ) {
+                fileTasks.push( new Promise( resolve => canvas.toBlob( blob => {
+                    blob.name = input.value;
+                    resolve( _processNameAndSize( input, blob ) );
+                } ) ) );
+            }
+        }
+
     } );
 
-    // then get any file names of files that were loaded as DataURI and have remained unchanged (i.e. loaded from Storage)
-    $fileInputs.filter( '[data-loaded-file-name]' ).each( function() {
-        files.push( $( this ).attr( 'data-loaded-file-name' ) );
-    } );
+    return Promise.all( fileTasks )
+        .then( files => {
+            // get any file names of files that were loaded as DataURI and have remained unchanged (i.e. loaded from Storage)
+            fileInputs
+                .filter( input => input.matches( '[data-loaded-file-name]' ) )
+                .forEach( input => files.push( input.getAttribute( 'data-loaded-file-name' ) ) );
 
-    return files;
+            return files;
+        } );
 }
 
 /**
@@ -191,7 +200,7 @@ function getCurrentFile( filename ) {
 
 /**
  * Obtains the instanceId of the current record.
- * 
+ *
  * @return {?string} [description]
  */
 function _getInstanceId() {

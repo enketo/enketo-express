@@ -2,10 +2,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Changed]
+[Unreleased]
+----------------------
+##### Changed
+- Made fixed English geopicker warning translatable.
+
+##### Fixed
+- The "selected" message in the desktop select picker does not switch language immediately.
+
+[2.3.5] - 2020-06-05
 ---------------------
 ##### Changed
 - Some of the background-logic wrt clearing non-relevant values. However, the behavior should be unchanged.
+- No longer stripping querystring from offline-capable URLs after loading.
+
+##### Fixed
+- The autosave feature does not work for drawings, signatures, annotations on mobile browsers.
+- Drawings, signatures and annotations submit empty PNG files on mobile browsers.
+- Readonly select-minimal widgets are not readonly.
+- Readonly select-minimal widget get erroneously enabled when relevancy changes to positive.
+- Calculation with form control fires input-update event upon load if the underlying model value doesn't change.
+- Number mask do not work in non-first repeat instances.
 
 [2.3.4] - 2020-05-27
 ---------------------

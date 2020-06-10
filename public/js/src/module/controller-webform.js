@@ -256,25 +256,27 @@ function _submitRecord() {
 
 
 
-    return new Promise( resolve => {
-        const record = {
-            'xml': form.getDataStr( include ),
-            'files': fileManager.getCurrentFiles(),
-            'instanceId': form.instanceID,
-            'deprecatedId': form.deprecatedID
-        };
-
-        if ( form.encryptionKey ) {
-            const formProps = {
-                encryptionKey: form.encryptionKey,
-                id: form.view.html.id, // TODO: after enketo-core support, use form.id
-                version: form.version,
+    return fileManager.getCurrentFiles()
+        .then( files => {
+            const record = {
+                'xml': form.getDataStr( include ),
+                'files': files,
+                'instanceId': form.instanceID,
+                'deprecatedId': form.deprecatedID
             };
-            resolve( encryptor.encryptRecord( formProps, record ) );
-        } else {
-            resolve( record );
-        }
-    } )
+
+            if ( form.encryptionKey ) {
+                const formProps = {
+                    encryptionKey: form.encryptionKey,
+                    id: form.view.html.id, // TODO: after enketo-core support, use form.id
+                    version: form.version,
+                };
+
+                return encryptor.encryptRecord( formProps, record );
+            } else {
+                return record;
+            }
+        } )
         .then( connection.uploadRecord )
         .then( result => {
             result = result || {};
@@ -391,44 +393,45 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
             .catch( () => {} );
     }
 
-    return new Promise( resolve => {
-        // build the record object
-        const record = {
-            'draft': draft,
-            'xml': form.getDataStr( include ),
-            'name': recordName,
-            'instanceId': form.instanceID,
-            'deprecateId': form.deprecatedID,
-            'enketoId': settings.enketoId,
-            'files': fileManager.getCurrentFiles()
-        };
-
-        // encrypt the record
-        if ( form.encryptionKey && !draft ) {
-            const formProps = {
-                encryptionKey: form.encryptionKey,
-                id: form.view.html.id, // TODO: after enketo-core support, use form.id
-                version: form.version,
+    return fileManager.getCurrentFiles()
+        .then( files => {
+            // build the record object
+            const record = {
+                'draft': draft,
+                'xml': form.getDataStr( include ),
+                'name': recordName,
+                'instanceId': form.instanceID,
+                'deprecateId': form.deprecatedID,
+                'enketoId': settings.enketoId,
+                'files': files
             };
-            resolve( encryptor.encryptRecord( formProps, record ) );
-        } else {
-            resolve( record );
-        }
-    } ).then( record => {
-        // Change file object for database, not sure why this was chosen.
-        record.files = record.files.map( file => ( typeof file === 'string' ) ? {
-            name: file
-        } : {
-            name: file.name,
-            item: file
-        } );
 
-        // Save the record, determine the save method
-        const saveMethod = form.recordName ? 'update' : 'set';
-        console.log( 'saving record with', saveMethod, record );
+            // encrypt the record
+            if ( form.encryptionKey && !draft ) {
+                const formProps = {
+                    encryptionKey: form.encryptionKey,
+                    id: form.view.html.id, // TODO: after enketo-core support, use form.id
+                    version: form.version,
+                };
 
-        return records[ saveMethod ]( record );
-    } )
+                return encryptor.encryptRecord( formProps, record );
+            } else {
+                return record;
+            }
+        } ).then( record => {
+            // Change file object for database, not sure why this was chosen.
+            record.files = record.files.map( file => ( typeof file === 'string' ) ? {
+                name: file
+            } : {
+                name: file.name,
+                item: file
+            } );
+
+            // Save the record, determine the save method
+            const saveMethod = form.recordName ? 'update' : 'set';
+
+            return records[ saveMethod ]( record );
+        } )
         .then( () => {
 
             records.removeAutoSavedRecord();
@@ -463,19 +466,21 @@ function _autoSaveRecord() {
         return Promise.resolve();
     }
 
-    // build the variable portions of the record object
-    const record = {
-        'xml': form.getDataStr(),
-        'files': fileManager.getCurrentFiles().map( file => ( typeof file === 'string' ) ? {
-            name: file
-        } : {
-            name: file.name,
-            item: file
-        } )
-    };
+    return fileManager.getCurrentFiles()
+        .then( files => {
+            // build the variable portions of the record object
+            const record = {
+                'xml': form.getDataStr(),
+                'files': files.map( file => ( typeof file === 'string' ) ? {
+                    name: file
+                } : {
+                    name: file.name,
+                    item: file
+                } )
+            };
 
-    // save the record
-    return records.updateAutoSavedRecord( record )
+            return records.updateAutoSavedRecord( record );
+        } )
         .then( () => {
             console.log( 'autosave successful' );
         } )
@@ -642,7 +647,11 @@ function _setEventHandlers() {
     }
 
     if ( settings.offline ) {
-        document.addEventListener( events.XFormsValueChanged().type, _autoSaveRecord );
+        document.addEventListener( events.XFormsValueChanged().type, () => {
+            // The delay works around an issue with drawing widgets, where the canvas
+            // capture is an empty image. https://github.com/enketo/enketo-express/issues/174
+            setTimeout( _autoSaveRecord, 500 );
+        } );
     }
 }
 
