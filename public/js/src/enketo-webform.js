@@ -133,7 +133,7 @@ function _setEmergencyHandlers() {
 
 /**
  * Adds/replaces branding if necessary, and unhides branding.
- * 
+ *
  * @param {*} survey - [description]
  */
 function _addBranding( survey ) {
@@ -151,7 +151,7 @@ function _addBranding( survey ) {
 
 /**
  * Swaps the theme if necessary.
- * 
+ *
  * @param  {*} survey - [description]
  * @return {*}        [description]
  */
@@ -224,3 +224,38 @@ function _init( formParts ) {
         }
     } );
 }
+
+var wrapper = document.createElement('div');
+var c_wrap  = document.createElement('div');
+var count   = document.createElement('span');
+var texts = document.getElementsByTagName("textarea");
+
+for(var i = 0; i < texts.length; i++)
+{
+var text = texts[i];
+var max = text.maxLength;
+wrapper.style.position = 'relative';
+c_wrap.style.position = 'absolute';
+c_wrap.style.bottom = '8px';
+c_wrap.style.color = '#ccc';
+c_wrap.innerHTML = 'Character limit: ' + max + ' | Remaining characters:  ';
+
+text.parentNode.appendChild(wrapper);
+wrapper.appendChild(text);
+
+c_wrap.appendChild(count);
+wrapper.appendChild(c_wrap);
+
+text.style.color = "#ccc";
+text.style.resize = "none";
+text.style.height = "auto";
+text.rows = "3";
+}
+
+function _set() {
+	c_wrap.style.left = (text.clientWidth - c_wrap.clientWidth - 12) + 'px';
+	count.innerHTML = this.value.length || 0;
+}
+
+text.addEventListener('input', _set);
+_set.call(text);
