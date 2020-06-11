@@ -107,6 +107,11 @@ module.exports = grunt => {
             },
             rollup: {
                 command: 'npx rollup --config'
+            },
+            babel: {
+                command: bundles
+                    .map( bundle => `npx babel ${bundle} --out-file ${bundle}` )
+                    .join( '&&' )
             }
         },
         eslint: {
@@ -254,9 +259,11 @@ module.exports = grunt => {
     } );
 
     grunt.registerTask( 'default', [ 'locales', 'widgets', 'css', 'js', 'terser' ] );
+    grunt.registerTask( 'edge', [ 'js-edge', 'terser' ] );
     grunt.registerTask( 'locales', [ 'shell:clean-locales', 'i18next' ] );
     grunt.registerTask( 'js', [ 'shell:clean-js', 'client-config-file:create', 'widgets', 'shell:rollup' ] );
     grunt.registerTask( 'js-dev', [ 'js' ] );
+    grunt.registerTask( 'js-edge', [ 'js', 'shell:babel' ] );
     grunt.registerTask( 'css', [ 'shell:clean-css', 'system-sass-variables:create', 'sass' ] );
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'nyc:cover', 'karma:headless', 'shell:buildReadmeBadge', 'eslint:check' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
