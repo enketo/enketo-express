@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.3.6] - 2020-06-12
 ----------------------
 ##### Changed
 - Made fixed English geopicker warning translatable.
@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - The "selected" message in the desktop select picker does not switch language immediately.
+- Image-map widget is transparent, not visible but functional, when it is included on a non-first page.
 
 [2.3.5] - 2020-06-05
 ---------------------
