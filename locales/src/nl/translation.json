@@ -276,7 +276,8 @@
         "longitude": "lengtegraad (x.y °)",
         "points": "punten",
         "removePoint": "Hiermee wordt het huidige GPS coordinaat volledig verwijderd uit de lijst met coordinaten en kan dit niet ongedaan worden gemaakt. Weet je zeker dat je dit wilt doen?",
-        "searchPlaceholder": "zoek naar plaats of adres"
+        "searchPlaceholder": "zoek naar plaats of adres",
+        "bordersintersectwarning": "Grenzen kunnen elkaar niet snijden"
     },
     "here": "hier",
     "hint": {

@@ -276,7 +276,8 @@
         "longitude": "longitud (x.y °)",
         "points": "puntos",
         "removePoint": "Esto eliminará completamente el punto geográfico actual de la lista de puntos geográficos y no se puede deshacerlo. ¿Seguro que quieres hacer esto?",
-        "searchPlaceholder": "buscar lugar o dirección"
+        "searchPlaceholder": "buscar lugar o dirección",
+        "bordersintersectwarning": "Las fronteras no pueden cruzarse"
     },
     "here": "aquí",
     "hint": {
@@ -319,6 +320,7 @@
         "sv": "Sueco",
         "sw": "Swahili",
         "th": "Tailandés",
+        "tr": "Turco",
         "vi": "Vietnamita",
         "zh": "Chino"
     },
