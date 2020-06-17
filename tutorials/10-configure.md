@@ -104,7 +104,7 @@ Which analytics service you'd like to use, either `"google"` or `"piwik"` or if 
 #### google
 * analytics -> ua: The UA (user agent) that Google has assigned to your domain if you choose to collect statistics on Enketo Express' usage using the Google Analytics service. Required if google service is selected under [analytics](#analytics).
 * analytics -> domain: If you are running Enketo Express on a subdomain, you may need to add the subdomain there (without protocol), e.g. "odk.enke.to" for Google Analytics to pick up the data. When left empty (`""`) the value will be set to "auto" in the GA script.
-* api key: The Google API key that is used for geolocation (in the geo widgets' search box). Can be obtained [here](https://console.developers.google.com/project). Make sure to enable the _GeoCoding API_ service. If you are using Google Maps layers, the same API key is used. Make sure to enable the _Google Maps JavaScript API v3_ service as well in that case (see next item).
+* api key: The Google API key that is used for geocoding (i.e. the search box in the geo widgets). Can be obtained [here](https://console.developers.google.com/project). Make sure to enable the _GeoCoding API_ service. If you are using Google Maps layers, the same API key is used. Make sure to enable the _Google Maps JavaScript API v3_ service as well in that case (see next item).
 
 #### piwik
 * analytics -> tracker url -> URL on which your piwik service is hosted. The protocol can be omitted, e.g. `"//enketo.piwikpro.com/"`. Required if piwik service is selected under [analytics](#analytics).
