@@ -126,6 +126,12 @@ $extend: 100%;
   	border-right: 2px solid transparent;
   	padding: $base-unit;
 
+    &:not(.readonly){
+      &:hover{
+       background-color: rgba(252, 239, 149, 0.4);
+      }
+    }
+
     strong{
       font-size: $default-text-size + 1;
     }
