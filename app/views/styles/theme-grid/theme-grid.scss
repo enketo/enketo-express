@@ -334,6 +334,7 @@ input[data-constraint="(. >= '0') and (. <= '100')"]{
   }
 
 .or-repeat{
+  background: rgba(255, 251, 227, 0.9);
   &:not(:empty){
   	border-bottom: none;
   }
