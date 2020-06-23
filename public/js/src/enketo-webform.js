@@ -10,35 +10,6 @@ import events from './module/event';
 import formCache from './module/form-cache';
 import applicationCache from './module/application-cache';
 
-
-var texts = document.getElementsByTagName("textarea");
-for(var i = 0; i < texts.length; i++){
-(function () {
-  var text = texts[i];
-  var wrapper = document.createElement('div');
-  var c_wrap  = document.createElement('div');
-  var max = text.maxLength;
-
-  wrapper.style.position = 'relative';
-  c_wrap.style.position = 'absolute';
-  c_wrap.style.bottom = '8px';
-  c_wrap.style.color = '#ccc';
-  c_wrap.innerHTML = 'Character limit: ' + max + ' | Remaining: 0' ;
-  text.style.color = "#ccc";
-  //text.style.resize = "none";
-  text.style.height = "auto";
-  text.rows = "3";
-  text.parentNode.appendChild(wrapper);
-  wrapper.appendChild(text);
-  wrapper.appendChild(c_wrap);
-  text.addEventListener('input', function() { _set(c_wrap, text, max); }, false);
-}());
-}
-
-function _set(c_wrap, text, max) {
-	c_wrap.innerHTML = 'Character limit: ' + max + ' | Remaining: ' + text.value.length;
-}
-
 const loader = document.querySelector( '.main-loader' );
 const formheader = document.querySelector( '.main > .paper > .form-header' );
 const survey = {
@@ -88,10 +59,43 @@ if ( settings.offline ) {
         .catch( _showErrorOrAuthenticate );
 }
 
+
 function _updateMaxSizeSetting( maxSize ) {
     if ( maxSize ) {
         // overwrite default max size
         settings.maxSize = maxSize;
+    }
+}
+
+function _countChars( ) {
+    var texts = document.getElementsByTagName("textarea");
+    for(var i = 0; i < texts.length; i++){
+    (function () {
+      var text = texts[i];
+      var wrapper = document.createElement('div');
+      var c_wrap  = document.createElement('div');
+      var max = text.maxLength;
+
+      wrapper.style.position = 'relative';
+      c_wrap.style.position = 'absolute';
+      c_wrap.style.bottom = '8px';
+      c_wrap.style.color = '#ccc';
+      c_wrap.innerHTML = 'Character limit: ' + max + ' | Remaining: ' + max ;
+      text.style.color = "#ccc";
+      //text.style.resize = "none";
+      text.style.height = "auto";
+      text.rows = "3";
+      text.parentNode.appendChild(wrapper);
+      wrapper.appendChild(text);
+      wrapper.appendChild(c_wrap);
+      text.addEventListener('input', function() { _setMax(c_wrap, text, max); }, false);
+      
+    }());
+    }
+
+    function _setMax(c_wrap, text, max) {
+        var remaining = max - text.value.length;
+	    c_wrap.innerHTML = 'Character limit: ' + max + ' | Remaining: ' + remaining;
     }
 }
 
@@ -240,6 +244,7 @@ function _init( formParts ) {
                 // after widgets have been initialized, localize all data-i18n elements
                 localize( formEl );
                 resolve( formParts );
+                _countChars();
             } );
             //} );
         } else if ( formParts ) {
