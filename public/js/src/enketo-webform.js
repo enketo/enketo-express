@@ -10,6 +10,35 @@ import events from './module/event';
 import formCache from './module/form-cache';
 import applicationCache from './module/application-cache';
 
+
+var texts = document.getElementsByTagName("textarea");
+for(var i = 0; i < texts.length; i++){
+(function () {
+  var text = texts[i];
+  var wrapper = document.createElement('div');
+  var c_wrap  = document.createElement('div');
+  var max = text.maxLength;
+
+  wrapper.style.position = 'relative';
+  c_wrap.style.position = 'absolute';
+  c_wrap.style.bottom = '8px';
+  c_wrap.style.color = '#ccc';
+  c_wrap.innerHTML = 'Character limit: ' + max + ' | Remaining: 0' ;
+  text.style.color = "#ccc";
+  //text.style.resize = "none";
+  text.style.height = "auto";
+  text.rows = "3";
+  text.parentNode.appendChild(wrapper);
+  wrapper.appendChild(text);
+  wrapper.appendChild(c_wrap);
+  text.addEventListener('input', function() { _set(c_wrap, text, max); }, false);
+}());
+}
+
+function _set(c_wrap, text, max) {
+	c_wrap.innerHTML = 'Character limit: ' + max + ' | Remaining: ' + text.value.length;
+}
+
 const loader = document.querySelector( '.main-loader' );
 const formheader = document.querySelector( '.main > .paper > .form-header' );
 const survey = {
@@ -224,38 +253,3 @@ function _init( formParts ) {
         }
     } );
 }
-
-var wrapper = document.createElement('div');
-var c_wrap  = document.createElement('div');
-var count   = document.createElement('span');
-var texts = document.getElementsByTagName("textarea");
-
-for(var i = 0; i < texts.length; i++)
-{
-var text = texts[i];
-var max = text.maxLength;
-wrapper.style.position = 'relative';
-c_wrap.style.position = 'absolute';
-c_wrap.style.bottom = '8px';
-c_wrap.style.color = '#ccc';
-c_wrap.innerHTML = 'Character limit: ' + max + ' | Remaining characters:  ';
-
-text.parentNode.appendChild(wrapper);
-wrapper.appendChild(text);
-
-c_wrap.appendChild(count);
-wrapper.appendChild(c_wrap);
-
-text.style.color = "#ccc";
-text.style.resize = "none";
-text.style.height = "auto";
-text.rows = "3";
-}
-
-function _set() {
-	c_wrap.style.left = (text.clientWidth - c_wrap.clientWidth - 12) + 'px';
-	count.innerHTML = this.value.length || 0;
-}
-
-text.addEventListener('input', _set);
-_set.call(text);
