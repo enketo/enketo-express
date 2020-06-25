@@ -440,6 +440,28 @@ i.icon.icon-minus{
 
 }
 
+.question.non-select.or-appearance-multiline{
+  padding-bottom: $base-unit + 5;
+  .or-constraint-msg{
+    &.active{
+      left: auto;
+      right: $base-unit-sm;
+      top: $base-unit-sm - 3;
+    }
+  }
+  >span{
+    position: absolute;
+    top: $base-unit-sm - 2;
+  }
+  > div{
+    >div{
+      font-size: $base-unit-sm - 2 !important;
+      font-weight: 400;
+      color: #666666;
+    }
+  }
+}
+
 .form-progress{
 	background-color: $secondary-green;
 	border-bottom: 4px solid $theme-yellow;
