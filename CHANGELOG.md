@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - The "selected" message in the desktop select picker does not switch language immediately.
 - Image-map widget is transparent, not visible but functional, when it is included on a non-first page.
+- Forms no longer work in Edge Legacy.
 
 [2.3.5] - 2020-06-05
 ---------------------
