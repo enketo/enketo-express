@@ -243,6 +243,8 @@ function flushSurvey( survey ) {
  */
 function flushAll() {
     return new Promise( ( resolve, reject ) => {
+        // TODO: "Don't use KEYS in your regular application code"
+        // (https://redis.io/commands/keys)
         client.keys( `${prefix}*`, ( error, keys ) => {
             if ( error ) {
                 reject( error );

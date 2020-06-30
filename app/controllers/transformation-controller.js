@@ -228,6 +228,12 @@ function _replaceMediaSources( survey ) {
  * @return {Promise}
  */
 function _checkQuota( survey ) {
+    if ( survey.account.linkedServer === '' ) {
+        // if the linked server is not set (e.g. when controlling access by api
+        // key only), then no meaningful quota check can be made
+        console.log( 'Linked server URL not specified. Quotas not enforced.' );
+        return Promise.resolve( survey );
+    }
     return surveyModel
         .getNumber( survey.account.linkedServer )
         .then( quotaUsed => {

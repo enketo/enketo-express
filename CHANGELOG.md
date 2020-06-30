@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Changed
+- Do not check quotas when the linked server URL is empty, avoiding slow Redis queries.
+
+
 [2.3.6] - 2020-06-12
 ----------------------
 ##### Changed
