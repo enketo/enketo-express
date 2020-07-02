@@ -251,6 +251,45 @@ $extend: 100%;
     }
   }
 
+
+// tooltip for grid questions
+  .question{
+    &.or-appearance-w3{
+      .or-hint{
+        > span{
+          left: auto;
+          right: $base-unit-sm * 3;
+          top: -$base-unit-sm + 2;
+        }
+      }
+    }
+  }
+
+  .question{
+    &.or-appearance-w2{
+      .or-hint{
+        > span{
+          left: auto;
+          right: $base-unit-sm * 3;
+          top: -$base-unit-sm + 2;
+        }
+      }
+    }
+  }
+  // tooltip grid question - readonly
+  .question{
+    &.or-appearance-w2{
+      &.readonly{
+        .or-hint{
+          > span{
+            right: $base-unit-sm;
+            top: 0;
+          }
+        }
+      }
+    }
+  }
+
   input[type=text],
   input[type=tel],
   input[type=password],
