@@ -72,11 +72,10 @@ function _countChars( ) {
     for(var i = 0; i < texts.length; i++){
     (function () {
       var text = texts[i];
-      var wrapper = document.createElement('div');
       var c_wrap  = document.createElement('div');
       var max = text.maxLength;
 
-      wrapper.style.position = 'relative';
+      text.style.position = 'relative';
       c_wrap.style.position = 'absolute';
       c_wrap.style.bottom = '-20px';
       c_wrap.style.color = '#888888';
@@ -84,9 +83,7 @@ function _countChars( ) {
       text.style.color = "#888888";
       text.style.height = "auto";
       text.rows = "3";
-      text.parentNode.appendChild(wrapper);
-      wrapper.appendChild(text);
-      wrapper.appendChild(c_wrap);
+      text.parentNode.appendChild(c_wrap);
       text.addEventListener('input', function() { _setMax(c_wrap, text, max); }, false);
 
     }());
