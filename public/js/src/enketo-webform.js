@@ -77,7 +77,7 @@ function _countChars( ) {
 
       text.style.position = 'relative';
       c_wrap.style.position = 'absolute';
-      c_wrap.style.bottom = '-20px';
+      c_wrap.style.bottom = '5px';
       c_wrap.style.color = '#888888';
       c_wrap.innerHTML = 'Character limit: ' + max + ' | Remaining: ' + max ;
       text.style.color = "#888888";
