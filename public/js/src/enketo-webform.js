@@ -77,15 +77,15 @@ function _countChars( ) {
 
       text.style.position = 'relative';
       c_wrap.style.position = 'absolute';
-      c_wrap.style.bottom = '1px';
-      c_wrap.style.color = '#ccc';
+      c_wrap.style.bottom = '-20px';
+      c_wrap.style.color = '#888888';
       c_wrap.innerHTML = 'Character limit: ' + max + ' | Remaining: ' + max ;
-      text.style.color = "#ccc";
+      text.style.color = "#888888";
       text.style.height = "auto";
       text.rows = "3";
       text.parentNode.appendChild(c_wrap);
       text.addEventListener('input', function() { _setMax(c_wrap, text, max); }, false);
-      
+
     }());
     }
 
