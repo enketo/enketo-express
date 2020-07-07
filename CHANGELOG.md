@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Changed
+- Changed when dataupdate event is fired for setvalue/odk-instance-first-load actions to facilitate custom clients with field submissions (like OpenClinica).
+
 [2.3.6] - 2020-06-12
 ----------------------
 ##### Changed
