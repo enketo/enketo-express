@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Changed when dataupdate event is fired for setvalue/odk-instance-first-load actions to facilitate custom clients with field submissions (like OpenClinica).
 
+##### Fixed
+- Docker `create_config.py` script stored `encryption key` in the wrong place
+
 [2.3.6] - 2020-06-12
 ----------------------
 ##### Changed
