@@ -72,22 +72,18 @@ function _countChars( ) {
     for(var i = 0; i < texts.length; i++){
     (function () {
       var text = texts[i];
-      var wrapper = document.createElement('div');
       var c_wrap  = document.createElement('div');
       var max = text.maxLength;
 
-      wrapper.style.position = 'relative';
+      text.style.position = 'relative';
       c_wrap.style.position = 'absolute';
-      c_wrap.style.bottom = '8px';
+      c_wrap.style.bottom = '1px';
       c_wrap.style.color = '#ccc';
       c_wrap.innerHTML = 'Character limit: ' + max + ' | Remaining: ' + max ;
       text.style.color = "#ccc";
-      //text.style.resize = "none";
       text.style.height = "auto";
       text.rows = "3";
-      text.parentNode.appendChild(wrapper);
-      wrapper.appendChild(text);
-      wrapper.appendChild(c_wrap);
+      text.parentNode.appendChild(c_wrap);
       text.addEventListener('input', function() { _setMax(c_wrap, text, max); }, false);
       
     }());
