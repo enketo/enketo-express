@@ -28,7 +28,7 @@ router
         next();
     } )
     .get( '/max-size/:encrypted_enketo_id_single', maxSize )
-    .get( '/max-size/:enketo_id_view', maxSize )
+    .get( '/max-size/:encrypted_enketo_id_view', maxSize )
     .get( '/max-size/:enketo_id?', maxSize )
     .get( '/:encrypted_enketo_id_view', getInstance )
     .get( '/:enketo_id', getInstance )
