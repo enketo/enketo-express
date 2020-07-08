@@ -27,7 +27,7 @@ describe( 'api', () => {
     };
     const invalidApiKey = 'def';
     const invalidAuth = {
-        'Authorization': `Basic ${Buffer.from( `${invalidApiKey}:`).toString( 'base64' )}`
+        'Authorization': `Basic ${Buffer.from( `${invalidApiKey}:` ).toString( 'base64' )}`
     };
     const beingEdited = 'beingEdited';
     const validServer = 'https://testserver.com/bob';
@@ -47,6 +47,7 @@ describe( 'api', () => {
                 };
                 s.form = '<form/>';
                 s.model = '<model/>';
+
                 return cacheModel.set( s );
             } )
             .then( () => {
@@ -65,6 +66,7 @@ describe( 'api', () => {
                 if ( err ) {
                     return done( err );
                 }
+
                 return instanceModel.set( {
                     openRosaServer: validServer,
                     openRosaId: validFormId,
@@ -141,6 +143,7 @@ describe( 'api', () => {
                     .expect( resp => {
                         if ( test.res && test.res.expected ) {
                             const valueToTest = ( test.res.property ) ? resp.body[ test.res.property ] : resp.body;
+
                             return responseCheck( valueToTest, test.res.expected );
                         }
                     } )
@@ -256,6 +259,7 @@ describe( 'api', () => {
             v1Survey.map( obj => {
                 obj.version = version;
                 obj.endpoint = '/survey';
+
                 return obj;
             } ).forEach( testResponse );
         } );
@@ -520,6 +524,7 @@ describe( 'api', () => {
             v1Instance.map( obj => {
                 obj.version = version;
                 obj.endpoint = '/instance';
+
                 return obj;
             } ).forEach( testResponse );
         } );
@@ -533,6 +538,7 @@ describe( 'api', () => {
             // make sure v2 is backwards-compatible with v1
             v1Survey.map( obj => {
                 obj.version = version;
+
                 return obj;
             } ).forEach( testResponse );
         } );
@@ -544,6 +550,7 @@ describe( 'api', () => {
                 if ( obj.instanceId === 'AAA' ) {
                     obj.instanceId = 'BBB';
                 }
+
                 return obj;
             } ).forEach( testResponse );
         } );
@@ -552,507 +559,508 @@ describe( 'api', () => {
             // make sure v2 is backwards-compatible with v1
             v1Surveys.map( obj => {
                 obj.version = version;
+
                 return obj;
             } ).forEach( testResponse );
         } );
 
         [ {
-                endpoint: '/version',
-                method: 'get',
-                auth: false,
-                status: 200,
-                res: {
-                    property: 'version',
-                    expected: /.{5,20}/
-                }
+            endpoint: '/version',
+            method: 'get',
+            auth: false,
+            status: 200,
+            res: {
+                property: 'version',
+                expected: /.{5,20}/
+            }
+        },
+        {
+            endpoint: '/version',
+            method: 'post',
+            auth: false,
+            status: 200,
+            res: {
+                property: 'version',
+                expected: /.{5,20}/
+            }
+        },
+        // TESTING THE OFFLINE/ONLINE VIEWS (not compatible with v1)
+        // the /survey endpoint always returns the online-only view
+        {
+            endpoint: '/survey',
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /\/[A-z0-9]{4,31}/
             },
-            {
-                endpoint: '/version',
-                method: 'post',
-                auth: false,
-                status: 200,
-                res: {
-                    property: 'version',
-                    expected: /.{5,20}/
-                }
+            offline: false
+        }, {
+            endpoint: '/survey/iframe',
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'iframe_url',
+                expected: /\/i\/[A-z0-9]{4,31}/
             },
-            // TESTING THE OFFLINE/ONLINE VIEWS (not compatible with v1)
-            // the /survey endpoint always returns the online-only view
-            {
-                endpoint: '/survey',
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'url',
-                    expected: /\/[A-z0-9]{4,31}/
-                },
-                offline: false
-            }, {
-                endpoint: '/survey/iframe',
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'iframe_url',
-                    expected: /\/i\/[A-z0-9]{4,31}/
-                },
-                offline: false
-            }, {
-                endpoint: '/survey',
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'url',
-                    expected: /\/[A-z0-9]{4,31}/
-                },
-                offline: true
-            }, {
-                endpoint: '/survey/iframe',
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'iframe_url',
-                    expected: /\/i\/[A-z0-9]{4,31}/
-                },
-                offline: true
+            offline: false
+        }, {
+            endpoint: '/survey',
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /\/[A-z0-9]{4,31}/
             },
-            // clear survey cache pro-actively
-            {
-                endpoint: '/survey/cache',
-                method: 'delete',
-                status: 204
-            }, {
-                endpoint: '/survey/cache',
-                method: 'delete',
-                server: invalidServer,
-                status: 403 // no account
-            }, {
-                endpoint: '/survey/cache',
-                method: 'delete',
-                id: 'invalidID',
-                auth: true,
-                status: 404 // not found
+            offline: true
+        }, {
+            endpoint: '/survey/iframe',
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'iframe_url',
+                expected: /\/i\/[A-z0-9]{4,31}/
             },
-            // single submission
-            {
-                endpoint: '/survey/single',
-                method: 'get',
-                status: 200,
-                ret: true,
-                res: {
-                    property: 'single_url',
-                    expected: /\/single\/[A-z0-9]{4,31}\?/
-                },
-                offline: true
-            }, {
-                endpoint: '/survey/single/iframe',
-                method: 'get',
-                ret: true,
-                status: 200,
-                res: {
-                    property: 'single_iframe_url',
-                    expected: /\/single\/i\/[A-z0-9]{4,31}\?/
-                },
-                offline: true
-            }, {
-                endpoint: '/survey/single',
-                method: 'post',
-                ret: true,
-                status: 200,
-                res: {
-                    property: 'single_url',
-                    expected: /\/single\/[A-z0-9]{4,31}\?/
-                },
-                offline: true
-            }, {
-                endpoint: '/survey/single/iframe',
-                method: 'post',
-                ret: true,
-                status: 200,
-                res: {
-                    property: 'single_iframe_url',
-                    expected: /\/single\/i\/[A-z0-9]{4,31}\?/
-                },
-                offline: true
+            offline: true
+        },
+        // clear survey cache pro-actively
+        {
+            endpoint: '/survey/cache',
+            method: 'delete',
+            status: 204
+        }, {
+            endpoint: '/survey/cache',
+            method: 'delete',
+            server: invalidServer,
+            status: 403 // no account
+        }, {
+            endpoint: '/survey/cache',
+            method: 'delete',
+            id: 'invalidID',
+            auth: true,
+            status: 404 // not found
+        },
+        // single submission
+        {
+            endpoint: '/survey/single',
+            method: 'get',
+            status: 200,
+            ret: true,
+            res: {
+                property: 'single_url',
+                expected: /\/single\/[A-z0-9]{4,31}\?/
             },
+            offline: true
+        }, {
+            endpoint: '/survey/single/iframe',
+            method: 'get',
+            ret: true,
+            status: 200,
+            res: {
+                property: 'single_iframe_url',
+                expected: /\/single\/i\/[A-z0-9]{4,31}\?/
+            },
+            offline: true
+        }, {
+            endpoint: '/survey/single',
+            method: 'post',
+            ret: true,
+            status: 200,
+            res: {
+                property: 'single_url',
+                expected: /\/single\/[A-z0-9]{4,31}\?/
+            },
+            offline: true
+        }, {
+            endpoint: '/survey/single/iframe',
+            method: 'post',
+            ret: true,
+            status: 200,
+            res: {
+                property: 'single_iframe_url',
+                expected: /\/single\/i\/[A-z0-9]{4,31}\?/
+            },
+            offline: true
+        },
 
-            // /single/once
-            {
-                endpoint: '/survey/single/once',
-                method: 'get',
-                ret: true,
-                status: 200,
-                res: {
-                    property: 'single_once_url',
-                    expected: /\/single\/[a-fA-F0-9]{32,160}\?/
-                },
-                offline: true
-            }, {
-                endpoint: '/survey/single/once/iframe',
-                method: 'get',
-                ret: true,
-                status: 200,
-                res: {
-                    property: 'single_once_iframe_url',
-                    expected: /\/single\/i\/[a-fA-F0-9]{32,160}\?/
-                },
-                offline: true
-            }, {
-                endpoint: '/survey/single/once',
-                method: 'post',
-                ret: true,
-                status: 200,
-                res: {
-                    property: 'single_once_url',
-                    expected: /\/single\/[a-fA-F0-9]{32,160}\?/
-                },
-                offline: true
-            }, {
-                endpoint: '/survey/single/once/iframe',
-                method: 'post',
-                ret: true,
-                status: 200,
-                res: {
-                    property: 'single_once_iframe_url',
-                    expected: /\/single\/i\/[a-fA-F0-9]{32,160}\?/
-                },
-                offline: true
+        // /single/once
+        {
+            endpoint: '/survey/single/once',
+            method: 'get',
+            ret: true,
+            status: 200,
+            res: {
+                property: 'single_once_url',
+                expected: /\/single\/[a-fA-F0-9]{32,160}\?/
             },
+            offline: true
+        }, {
+            endpoint: '/survey/single/once/iframe',
+            method: 'get',
+            ret: true,
+            status: 200,
+            res: {
+                property: 'single_once_iframe_url',
+                expected: /\/single\/i\/[a-fA-F0-9]{32,160}\?/
+            },
+            offline: true
+        }, {
+            endpoint: '/survey/single/once',
+            method: 'post',
+            ret: true,
+            status: 200,
+            res: {
+                property: 'single_once_url',
+                expected: /\/single\/[a-fA-F0-9]{32,160}\?/
+            },
+            offline: true
+        }, {
+            endpoint: '/survey/single/once/iframe',
+            method: 'post',
+            ret: true,
+            status: 200,
+            res: {
+                property: 'single_once_iframe_url',
+                expected: /\/single\/i\/[a-fA-F0-9]{32,160}\?/
+            },
+            offline: true
+        },
 
-            // the /survey/offline endpoint always returns the offline-capable view (if enabled)
-            {
-                endpoint: '/survey/offline',
-                method: 'post',
-                status: 405,
-                offline: false
-            }, {
-                endpoint: '/survey/offline/iframe',
-                method: 'post',
-                status: 405,
-                offline: false
-            }, {
-                endpoint: '/survey/offline',
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'offline_url',
-                    expected: /\/x\/[A-z0-9]{4,31}/
-                },
-                offline: true
-            }, {
-                endpoint: '/survey/offline/iframe',
-                method: 'post',
-                status: 405,
-                offline: true
+        // the /survey/offline endpoint always returns the offline-capable view (if enabled)
+        {
+            endpoint: '/survey/offline',
+            method: 'post',
+            status: 405,
+            offline: false
+        }, {
+            endpoint: '/survey/offline/iframe',
+            method: 'post',
+            status: 405,
+            offline: false
+        }, {
+            endpoint: '/survey/offline',
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'offline_url',
+                expected: /\/x\/[A-z0-9]{4,31}/
             },
-            // TESTING THE DEFAULTS[] PARAMETER
-            // defaults are optional
-            {
-                endpoint: '/survey',
-                defaults: null,
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'url',
-                    expected: /[^?d[\]]+/
-                }
-            }, {
-                endpoint: '/survey',
-                defaults: '',
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'url',
-                    expected: /[^?d[\]]/
-                }
+            offline: true
+        }, {
+            endpoint: '/survey/offline/iframe',
+            method: 'post',
+            status: 405,
+            offline: true
+        },
+        // TESTING THE DEFAULTS[] PARAMETER
+        // defaults are optional
+        {
+            endpoint: '/survey',
+            defaults: null,
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /[^?d[\]]+/
+            }
+        }, {
+            endpoint: '/survey',
+            defaults: '',
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /[^?d[\]]/
+            }
+        },
+        // same for GET
+        {
+            endpoint: '/survey',
+            defaults: null,
+            method: 'get',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /[^?d[\]]+/
+            }
+        }, {
+            endpoint: '/survey',
+            defaults: '',
+            method: 'get',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /[^?d[\]]+/
+            }
+        },
+        // responses including url-encoded defaults queryparams
+        {
+            endpoint: '/survey',
+            defaults: {
+                '/path/to/node': '2,3',
+                '/path/to/other/node': 5
             },
-            // same for GET
-            {
-                endpoint: '/survey',
-                defaults: null,
-                method: 'get',
-                status: 200,
-                res: {
-                    property: 'url',
-                    expected: /[^?d[\]]+/
-                }
-            }, {
-                endpoint: '/survey',
-                defaults: '',
-                method: 'get',
-                status: 200,
-                res: {
-                    property: 'url',
-                    expected: /[^?d[\]]+/
-                }
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /.+\?d%5B%2Fpath%2Fto%2Fnode%5D=2%2C3&d%5B%2Fpath%2Fto%2Fother%2Fnode%5D=5/
+            }
+        }, {
+            endpoint: '/survey',
+            defaults: {
+                '/path/to/node': '[@]?'
             },
-            // responses including url-encoded defaults queryparams
-            {
-                endpoint: '/survey',
-                defaults: {
-                    '/path/to/node': '2,3',
-                    '/path/to/other/node': 5
-                },
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'url',
-                    expected: /.+\?d%5B%2Fpath%2Fto%2Fnode%5D=2%2C3&d%5B%2Fpath%2Fto%2Fother%2Fnode%5D=5/
-                }
-            }, {
-                endpoint: '/survey',
-                defaults: {
-                    '/path/to/node': '[@]?'
-                },
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'url',
-                    expected: /.+\?d%5B%2Fpath%2Fto%2Fnode%5D=%5B%40%5D%3F/
-                }
-            }, {
-                endpoint: '/survey',
-                defaults: {
-                    '/path/to/node': 'one line\nanother line'
-                },
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'url',
-                    expected: /.+\?d%5B%2Fpath%2Fto%2Fnode%5D=one%20line%0Aanother%20line/
-                }
-            }, {
-                endpoint: '/survey/all',
-                defaults: {
-                    '/path/to/node': 'one line\nanother line'
-                },
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'url',
-                    expected: /.+\?d%5B%2Fpath%2Fto%2Fnode%5D=one%20line%0Aanother%20line/
-                }
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /.+\?d%5B%2Fpath%2Fto%2Fnode%5D=%5B%40%5D%3F/
+            }
+        }, {
+            endpoint: '/survey',
+            defaults: {
+                '/path/to/node': 'one line\nanother line'
             },
-            // /instance endpoint will ignore defaults
-            {
-                endpoint: '/instance',
-                instance: true,
-                instanceId: true,
-                ret: true,
-                defaults: {
-                    '/path/to/node': '2,3',
-                },
-                method: 'post',
-                status: 201,
-                res: {
-                    property: 'edit_url',
-                    expected: /[^(d[)]+/
-                }
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /.+\?d%5B%2Fpath%2Fto%2Fnode%5D=one%20line%0Aanother%20line/
+            }
+        }, {
+            endpoint: '/survey/all',
+            defaults: {
+                '/path/to/node': 'one line\nanother line'
             },
-            // TESTING THE PARENT_WINDOW_ORIGIN PARAMETER
-            // parentWindowOrigin parameter is optional
-            {
-                endpoint: '/survey/iframe',
-                parentWindowOrigin: null,
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'url',
-                    expected: /[^parentWindowOrigin[\]]+/
-                }
-            }, {
-                endpoint: '/survey',
-                parentWindowOrigin: '',
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'url',
-                    expected: /[^parentWindowOrigin[\]]/
-                }
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /.+\?d%5B%2Fpath%2Fto%2Fnode%5D=one%20line%0Aanother%20line/
+            }
+        },
+        // /instance endpoint will ignore defaults
+        {
+            endpoint: '/instance',
+            instance: true,
+            instanceId: true,
+            ret: true,
+            defaults: {
+                '/path/to/node': '2,3',
             },
-            // same for GET
-            {
-                endpoint: '/survey/iframe',
-                parentWindowOrigin: null,
-                method: 'get',
-                status: 200,
-                res: {
-                    property: 'iframe_url',
-                    expected: /[^parentWindowOrigin[\]]+/
-                }
-            }, {
-                endpoint: '/survey/iframe',
-                parentWindowOrigin: '',
-                method: 'get',
-                status: 200,
-                res: {
-                    property: 'iframe_url',
-                    expected: /[^parentWindowOrigin[\]]+/
-                }
-            },
-            // responses include the url-encoded parentWindowOrigin query parameter
-            {
-                endpoint: '/survey/iframe',
-                parentWindowOrigin: 'http://example.com/',
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'iframe_url',
-                    expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
-                }
-            }, {
-                endpoint: '/survey/offline/iframe',
-                parentWindowOrigin: 'http://example.com/',
-                method: 'post',
-                status: 405
-            }, {
-                endpoint: '/survey/preview/iframe',
-                parentWindowOrigin: 'http://example.com/',
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'preview_iframe_url',
-                    expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
-                }
+            method: 'post',
+            status: 201,
+            res: {
+                property: 'edit_url',
+                expected: /[^(d[)]+/
+            }
+        },
+        // TESTING THE PARENT_WINDOW_ORIGIN PARAMETER
+        // parentWindowOrigin parameter is optional
+        {
+            endpoint: '/survey/iframe',
+            parentWindowOrigin: null,
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /[^parentWindowOrigin[\]]+/
+            }
+        }, {
+            endpoint: '/survey',
+            parentWindowOrigin: '',
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /[^parentWindowOrigin[\]]/
+            }
+        },
+        // same for GET
+        {
+            endpoint: '/survey/iframe',
+            parentWindowOrigin: null,
+            method: 'get',
+            status: 200,
+            res: {
+                property: 'iframe_url',
+                expected: /[^parentWindowOrigin[\]]+/
+            }
+        }, {
+            endpoint: '/survey/iframe',
+            parentWindowOrigin: '',
+            method: 'get',
+            status: 200,
+            res: {
+                property: 'iframe_url',
+                expected: /[^parentWindowOrigin[\]]+/
+            }
+        },
+        // responses include the url-encoded parentWindowOrigin query parameter
+        {
+            endpoint: '/survey/iframe',
+            parentWindowOrigin: 'http://example.com/',
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'iframe_url',
+                expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+            }
+        }, {
+            endpoint: '/survey/offline/iframe',
+            parentWindowOrigin: 'http://example.com/',
+            method: 'post',
+            status: 405
+        }, {
+            endpoint: '/survey/preview/iframe',
+            parentWindowOrigin: 'http://example.com/',
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'preview_iframe_url',
+                expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+            }
 
-                // ADD TESTS that compare allow_multiple=true and false and undefined
-            }, {
-                endpoint: '/survey/single/iframe',
-                parentWindowOrigin: 'http://example.com/',
-                ret: true,
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'single_iframe_url',
-                    expected: /.+(&|\?)parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
-                }
-            }, {
-                endpoint: '/survey/all',
-                parentWindowOrigin: 'http://example.com/',
-                method: 'post',
-                status: 200,
-                res: {
-                    property: 'iframe_url',
-                    expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
-                }
-            }, {
-                endpoint: '/instance/iframe',
-                parentWindowOrigin: 'http://example.com/',
-                instance: true,
-                instanceId: true,
-                method: 'post',
-                status: 201,
-                res: {
-                    property: 'edit_url',
-                    expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
-                }
-            },
-            // non-iframe endpoints will ignore the parentWindowOrigin parameter
-            {
-                endpoint: '/survey',
-                parentWindowOrigin: 'http://example.com/',
-                method: 'post',
-                status: 200,
-                res: {
-                    expected: /[^parentWindowOrigin[\]]/
-                }
-            }, {
-                endpoint: '/survey/preview',
-                parentWindowOrigin: 'http://example.com/',
-                method: 'post',
-                status: 200,
-                res: {
-                    expected: /[^parentWindowOrigin[\]]/
-                }
-            }, {
-                endpoint: '/instance',
-                instance: true,
-                instanceId: true,
-                parentWindowOrigin: 'http://example.com/',
-                ret: true,
-                method: 'post',
-                status: 201,
-                res: {
-                    property: 'edit_url',
-                    expected: /[^parentWindowOrigin[\]]/
-                }
-            },
-            // TESTING THE THEME PARAMETER
-            // theme parameter is optional
-            {
-                endpoint: '/survey',
-                theme: 'gorgeous',
-                method: 'post',
-                status: 200
-            },
-            // TESTING THE GO_TO PARAMETER
-            // go_to parameter is optional
-            {
-                endpoint: '/survey/preview',
-                method: 'post',
-                goTo: '//node',
-                status: 200,
-                res: {
-                    property: 'preview_url',
-                    expected: /.+#%2F%2Fnode$/
-                }
-            }, {
-                endpoint: '/survey/preview/iframe',
-                method: 'post',
-                goTo: '//node',
-                status: 200,
-                res: {
-                    property: 'preview_iframe_url',
-                    expected: /.+#%2F%2Fnode$/
-                }
-            }, {
-                endpoint: '/instance/iframe',
-                parentWindowOrigin: 'http://example.com/',
-                instance: true,
-                instanceId: true,
-                ret: true,
-                method: 'post',
-                goTo: '//node',
-                status: 201,
-                res: {
-                    property: 'edit_url',
-                    expected: /#%2F%2Fnode$/
-                }
-            }, {
-                endpoint: '/survey',
-                method: 'post',
-                goTo: '//node',
-                status: 200,
-                res: {
-                    property: 'url',
-                    expected: /[A-z0-9]{4,16}$/
-                }
-            },
-            // TESTING /SURVEYS/LIST RESPONSES THAT DEVIATE FROM V1
-            // GET /surveys/list
-            {
-                endpoint: '/surveys/list',
-                method: 'get',
-                server: validServer,
-                status: 200,
-                res: {
-                    property: 'forms',
-                    expected: /"offline_url":"http:\/\/.*\/[A-z0-9]{4,31}".*"form_id":"something"/
-                }
-            },
-            // POST /surveys/list (same)
-            {
-                endpoint: '/surveys/list',
-                method: 'post',
-                server: validServer,
-                status: 200,
-                res: {
-                    property: 'forms',
-                    expected: /"offline_url":"http:\/\/.*\/[A-z0-9]{4,31}".*"form_id":"something"/
-                }
-            },
-            // GET /surveys/all)
-            // To easily notice regressions.
-            /*{
+            // ADD TESTS that compare allow_multiple=true and false and undefined
+        }, {
+            endpoint: '/survey/single/iframe',
+            parentWindowOrigin: 'http://example.com/',
+            ret: true,
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'single_iframe_url',
+                expected: /.+(&|\?)parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+            }
+        }, {
+            endpoint: '/survey/all',
+            parentWindowOrigin: 'http://example.com/',
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'iframe_url',
+                expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+            }
+        }, {
+            endpoint: '/instance/iframe',
+            parentWindowOrigin: 'http://example.com/',
+            instance: true,
+            instanceId: true,
+            method: 'post',
+            status: 201,
+            res: {
+                property: 'edit_url',
+                expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+            }
+        },
+        // non-iframe endpoints will ignore the parentWindowOrigin parameter
+        {
+            endpoint: '/survey',
+            parentWindowOrigin: 'http://example.com/',
+            method: 'post',
+            status: 200,
+            res: {
+                expected: /[^parentWindowOrigin[\]]/
+            }
+        }, {
+            endpoint: '/survey/preview',
+            parentWindowOrigin: 'http://example.com/',
+            method: 'post',
+            status: 200,
+            res: {
+                expected: /[^parentWindowOrigin[\]]/
+            }
+        }, {
+            endpoint: '/instance',
+            instance: true,
+            instanceId: true,
+            parentWindowOrigin: 'http://example.com/',
+            ret: true,
+            method: 'post',
+            status: 201,
+            res: {
+                property: 'edit_url',
+                expected: /[^parentWindowOrigin[\]]/
+            }
+        },
+        // TESTING THE THEME PARAMETER
+        // theme parameter is optional
+        {
+            endpoint: '/survey',
+            theme: 'gorgeous',
+            method: 'post',
+            status: 200
+        },
+        // TESTING THE GO_TO PARAMETER
+        // go_to parameter is optional
+        {
+            endpoint: '/survey/preview',
+            method: 'post',
+            goTo: '//node',
+            status: 200,
+            res: {
+                property: 'preview_url',
+                expected: /.+#%2F%2Fnode$/
+            }
+        }, {
+            endpoint: '/survey/preview/iframe',
+            method: 'post',
+            goTo: '//node',
+            status: 200,
+            res: {
+                property: 'preview_iframe_url',
+                expected: /.+#%2F%2Fnode$/
+            }
+        }, {
+            endpoint: '/instance/iframe',
+            parentWindowOrigin: 'http://example.com/',
+            instance: true,
+            instanceId: true,
+            ret: true,
+            method: 'post',
+            goTo: '//node',
+            status: 201,
+            res: {
+                property: 'edit_url',
+                expected: /#%2F%2Fnode$/
+            }
+        }, {
+            endpoint: '/survey',
+            method: 'post',
+            goTo: '//node',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /[A-z0-9]{4,16}$/
+            }
+        },
+        // TESTING /SURVEYS/LIST RESPONSES THAT DEVIATE FROM V1
+        // GET /surveys/list
+        {
+            endpoint: '/surveys/list',
+            method: 'get',
+            server: validServer,
+            status: 200,
+            res: {
+                property: 'forms',
+                expected: /"offline_url":"http:\/\/.*\/[A-z0-9]{4,31}".*"form_id":"something"/
+            }
+        },
+        // POST /surveys/list (same)
+        {
+            endpoint: '/surveys/list',
+            method: 'post',
+            server: validServer,
+            status: 200,
+            res: {
+                property: 'forms',
+                expected: /"offline_url":"http:\/\/.*\/[A-z0-9]{4,31}".*"form_id":"something"/
+            }
+        },
+        // GET /surveys/all)
+        // To easily notice regressions.
+        /*{
                 endpoint: '/survey/all',
                 method: 'get',
                 auth: true,
@@ -1074,230 +1082,231 @@ describe( 'api', () => {
                     }
                 }
             },*/
-            // /survey/view
-            {
-                endpoint: '/survey/view',
-                method: 'get',
-                instance: false,
-                status: 200,
-                res: {
-                    property: 'view_url',
-                    expected: /\/view\/[a-fA-F0-9]{32,160}$/
-                },
-                offline: true
-            }, {
-                endpoint: '/survey/view/iframe',
-                method: 'get',
-                instance: false,
-                status: 200,
-                res: {
-                    property: 'view_iframe_url',
-                    expected: /\/view\/i\/[a-fA-F0-9]{32,160}$/
-                },
-                offline: true
-            }, {
-                endpoint: '/survey/view',
-                method: 'post',
-                instance: false,
-                status: 200,
-                res: {
-                    property: 'view_url',
-                    expected: /\/view\/[a-fA-F0-9]{32,160}$/
-                },
-                offline: true
-            }, {
-                endpoint: '/survey/view/iframe',
-                method: 'post',
-                instance: false,
-                status: 200,
-                res: {
-                    property: 'view_iframe_url',
-                    expected: /\/view\/i\/[a-fA-F0-9]{32,160}$/
-                },
-                offline: true
+        // /survey/view
+        {
+            endpoint: '/survey/view',
+            method: 'get',
+            instance: false,
+            status: 200,
+            res: {
+                property: 'view_url',
+                expected: /\/view\/[a-fA-F0-9]{32,160}$/
             },
-            // with goto
-            {
-                endpoint: '/survey/view',
-                method: 'post',
-                instance: false,
-                goTo: '//node',
-                status: 200,
-                res: {
-                    property: 'view_url',
-                    expected: /\/view\/[a-fA-F0-9]{32,160}#%2F%2Fnode$/
-                },
-                offline: true
+            offline: true
+        }, {
+            endpoint: '/survey/view/iframe',
+            method: 'get',
+            instance: false,
+            status: 200,
+            res: {
+                property: 'view_iframe_url',
+                expected: /\/view\/i\/[a-fA-F0-9]{32,160}$/
             },
-            // survey/view/pdf
-            {
-                endpoint: '/survey/view/pdf',
-                method: 'get',
-                id: 'invalidID',
-                instance: false,
-                status: 404,
-                offline: true
-            }, {
-                endpoint: '/survey/view/pdf',
-                method: 'post',
-                auth: true,
-                margin: '10px',
-                instance: false,
-                status: 400,
-                offline: true
-            }, {
-                endpoint: '/survey/view/pdf',
-                method: 'post',
-                margin: '10',
-                instance: false,
-                status: 400,
-                offline: true,
-                res: {
-                    property: 'message',
-                    expected: /Margin/
-                }
-            }, {
-                endpoint: '/survey/view/pdf',
-                method: 'post',
-                margin: '1in',
-                format: 'fake',
-                instance: false,
-                status: 400,
-                offline: true,
-                res: {
-                    property: 'message',
-                    expected: /Format/
-                }
-            }, {
-                endpoint: '/survey/view/pdf',
-                method: 'post',
-                margin: '1.1cm',
-                format: 'A4',
-                landscape: 'yes',
-                instance: false,
-                status: 400,
-                offline: true,
-                res: {
-                    property: 'message',
-                    expected: /Landscape/
-                }
+            offline: true
+        }, {
+            endpoint: '/survey/view',
+            method: 'post',
+            instance: false,
+            status: 200,
+            res: {
+                property: 'view_url',
+                expected: /\/view\/[a-fA-F0-9]{32,160}$/
             },
-            // instance/view
-            {
-                endpoint: '/instance/view',
-                method: 'post',
-                ret: true,
-                status: 400,
-                offline: true
-            }, {
-                endpoint: '/instance/view',
-                method: 'post',
-                instance: true,
-                ret: true,
-                status: 400,
-                offline: true
-            }, {
-                endpoint: '/instance/view',
-                method: 'post',
-                instance_id: true,
-                ret: true,
-                status: 400,
-                offline: true
-            }, {
-                endpoint: '/instance/view',
-                method: 'post',
-                instance: true,
-                status: 201,
-                instanceId: 'A',
-                res: {
-                    property: 'view_url',
-                    expected: /\/view\/[a-fA-F0-9]{32,160}\?instance_id=A$/
-                },
-                offline: true
+            offline: true
+        }, {
+            endpoint: '/survey/view/iframe',
+            method: 'post',
+            instance: false,
+            status: 200,
+            res: {
+                property: 'view_iframe_url',
+                expected: /\/view\/i\/[a-fA-F0-9]{32,160}$/
             },
-            // /instance/view/pdf
-            {
-                endpoint: '/instance/view/pdf',
-                method: 'post',
-                instance: false,
-                status: 400,
-                offline: true,
-                res: {
-                    property: 'message',
-                    expected: /Survey/
-                }
-            }, {
-                endpoint: '/instance/view/pdf',
-                method: 'post',
-                auth: true,
-                margin: '10px',
-                instance: true,
-                status: 400,
-                offline: true,
-                res: {
-                    property: 'message',
-                    expected: /Margin/
-                }
+            offline: true
+        },
+        // with goto
+        {
+            endpoint: '/survey/view',
+            method: 'post',
+            instance: false,
+            goTo: '//node',
+            status: 200,
+            res: {
+                property: 'view_url',
+                expected: /\/view\/[a-fA-F0-9]{32,160}#%2F%2Fnode$/
             },
-            // return_url
-            {
-                endpoint: '/instance/view',
-                method: 'post',
-                instance: true,
-                ret: true,
-                status: 201,
-                instanceId: 'A',
-                res: {
-                    property: 'view_url',
-                    expected: /\/view\/[a-fA-F0-9]{32,160}\?instance_id=A&returnUrl=/
-                },
-                offline: true
-            },
-            // check parent window origin
-            {
-                endpoint: '/instance/view/iframe',
-                method: 'post',
-                instance: true,
-                status: 201,
-                instanceId: 'A',
-                parentWindowOrigin: 'http://example.com/',
-                ret: true,
-                res: {
-                    property: 'view_iframe_url',
-                    expected: /\/view\/i\/[a-fA-F0-9]{32,160}\?instance_id=A&parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
-                },
-                offline: true
-            }, {
-                endpoint: '/instance/view',
-                method: 'post',
-                instance: true,
-                goTo: '//node',
-                status: 201,
-                instanceId: 'A',
-                res: {
-                    property: 'view_url',
-                    expected: /\/view\/[a-fA-F0-9]{32,160}\?instance_id=A#%2F%2Fnode$/
-                },
-                offline: true
-            },
-            // check parent window origin
-            {
-                endpoint: '/instance/view/iframe',
-                method: 'post',
-                instance: true,
-                goTo: '//node',
-                parentWindowOrigin: 'http://example.com/',
-                status: 201,
-                instanceId: 'A',
-                res: {
-                    property: 'view_iframe_url',
-                    expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
-                },
-                offline: true
+            offline: true
+        },
+        // survey/view/pdf
+        {
+            endpoint: '/survey/view/pdf',
+            method: 'get',
+            id: 'invalidID',
+            instance: false,
+            status: 404,
+            offline: true
+        }, {
+            endpoint: '/survey/view/pdf',
+            method: 'post',
+            auth: true,
+            margin: '10px',
+            instance: false,
+            status: 400,
+            offline: true
+        }, {
+            endpoint: '/survey/view/pdf',
+            method: 'post',
+            margin: '10',
+            instance: false,
+            status: 400,
+            offline: true,
+            res: {
+                property: 'message',
+                expected: /Margin/
             }
+        }, {
+            endpoint: '/survey/view/pdf',
+            method: 'post',
+            margin: '1in',
+            format: 'fake',
+            instance: false,
+            status: 400,
+            offline: true,
+            res: {
+                property: 'message',
+                expected: /Format/
+            }
+        }, {
+            endpoint: '/survey/view/pdf',
+            method: 'post',
+            margin: '1.1cm',
+            format: 'A4',
+            landscape: 'yes',
+            instance: false,
+            status: 400,
+            offline: true,
+            res: {
+                property: 'message',
+                expected: /Landscape/
+            }
+        },
+        // instance/view
+        {
+            endpoint: '/instance/view',
+            method: 'post',
+            ret: true,
+            status: 400,
+            offline: true
+        }, {
+            endpoint: '/instance/view',
+            method: 'post',
+            instance: true,
+            ret: true,
+            status: 400,
+            offline: true
+        }, {
+            endpoint: '/instance/view',
+            method: 'post',
+            instance_id: true,
+            ret: true,
+            status: 400,
+            offline: true
+        }, {
+            endpoint: '/instance/view',
+            method: 'post',
+            instance: true,
+            status: 201,
+            instanceId: 'A',
+            res: {
+                property: 'view_url',
+                expected: /\/view\/[a-fA-F0-9]{32,160}\?instance_id=A$/
+            },
+            offline: true
+        },
+        // /instance/view/pdf
+        {
+            endpoint: '/instance/view/pdf',
+            method: 'post',
+            instance: false,
+            status: 400,
+            offline: true,
+            res: {
+                property: 'message',
+                expected: /Survey/
+            }
+        }, {
+            endpoint: '/instance/view/pdf',
+            method: 'post',
+            auth: true,
+            margin: '10px',
+            instance: true,
+            status: 400,
+            offline: true,
+            res: {
+                property: 'message',
+                expected: /Margin/
+            }
+        },
+        // return_url
+        {
+            endpoint: '/instance/view',
+            method: 'post',
+            instance: true,
+            ret: true,
+            status: 201,
+            instanceId: 'A',
+            res: {
+                property: 'view_url',
+                expected: /\/view\/[a-fA-F0-9]{32,160}\?instance_id=A&returnUrl=/
+            },
+            offline: true
+        },
+        // check parent window origin
+        {
+            endpoint: '/instance/view/iframe',
+            method: 'post',
+            instance: true,
+            status: 201,
+            instanceId: 'A',
+            parentWindowOrigin: 'http://example.com/',
+            ret: true,
+            res: {
+                property: 'view_iframe_url',
+                expected: /\/view\/i\/[a-fA-F0-9]{32,160}\?instance_id=A&parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+            },
+            offline: true
+        }, {
+            endpoint: '/instance/view',
+            method: 'post',
+            instance: true,
+            goTo: '//node',
+            status: 201,
+            instanceId: 'A',
+            res: {
+                property: 'view_url',
+                expected: /\/view\/[a-fA-F0-9]{32,160}\?instance_id=A#%2F%2Fnode$/
+            },
+            offline: true
+        },
+        // check parent window origin
+        {
+            endpoint: '/instance/view/iframe',
+            method: 'post',
+            instance: true,
+            goTo: '//node',
+            parentWindowOrigin: 'http://example.com/',
+            status: 201,
+            instanceId: 'A',
+            res: {
+                property: 'view_iframe_url',
+                expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+            },
+            offline: true
+        }
         ].map( obj => {
             obj.auth = typeof obj.auth === 'undefined' ? true : obj.auth;
             obj.version = version;
+
             return obj;
         } ).forEach( testResponse );
 
@@ -1317,6 +1326,8 @@ describe( 'api', () => {
                 linkedServer[ 'api key' ] = 'abc';
                 linkedServer.quota = 1;
                 app.set( 'linked form and data server', linkedServer );
+                app.set( 'account lib', '../path/to/something' );
+                // TODO: teardown?
 
                 return request( app )
                     .post( endpoint )

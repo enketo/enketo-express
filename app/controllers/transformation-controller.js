@@ -8,6 +8,7 @@ const surveyModel = require( '../models/survey-model' );
 const cacheModel = require( '../models/cache-model' );
 const account = require( '../models/account-model' );
 const user = require( '../models/user-model' );
+const config = require( '../models/config-model' ).server;
 const utils = require( '../lib/utils' );
 const routerUtils = require( '../lib/router-utils' );
 const isArray = require( 'lodash/isArray' );
@@ -228,12 +229,11 @@ function _replaceMediaSources( survey ) {
  * @return {Promise}
  */
 function _checkQuota( survey ) {
-    if ( survey.account.linkedServer === '' ) {
-        // if the linked server is not set (e.g. when controlling access by api
-        // key only), then no meaningful quota check can be made
-        console.log( 'Linked server URL not specified. Quotas not enforced.' );
+    if ( !config['account lib'] ) {
+        // Don't check quota if not running SaaS
         return Promise.resolve( survey );
     }
+
     return surveyModel
         .getNumber( survey.account.linkedServer )
         .then( quotaUsed => {

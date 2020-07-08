@@ -323,19 +323,19 @@ function removeInstance( req, res, next ) {
  * @param {Function} next - Express callback
  */
 function _setQuotaUsed( req, res, next ) {
-    if ( req.account.linkedServer === '' ) {
-        // if the linked server is not set (e.g. when controlling access by api
-        // key only), then no meaningful quota check can be made
-        console.log( 'Linked server URL not specified. Quotas not enforced.' );
+    if ( !req.app.get( 'account lib' ) ) {
+        // Pretend quota used = 0 if not running SaaS.
         req.account.quotaUsed = 0;
         next();
     } else {
+        // For SaaS service:
         surveyModel
             .getNumber( req.account.linkedServer )
             .then( number => {
                 req.account.quotaUsed = number;
                 next();
-            } );
+            } )
+            .catch( next );
     }
 }
 
