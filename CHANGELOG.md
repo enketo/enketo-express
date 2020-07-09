@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [Unreleased]
 ----------------------
 ##### Changed
+- Do not check quotas when the linked server URL is empty, avoiding slow Redis queries.
 - Changed when dataupdate event is fired for setvalue/odk-instance-first-load actions to facilitate custom clients with field submissions (like OpenClinica).
 
 ##### Fixed

@@ -251,6 +251,8 @@ function getNumberOfSurveys( server ) {
             error.status = 400;
             reject( error );
         } else {
+            // TODO: "Don't use KEYS in your regular application code"
+            // (https://redis.io/commands/keys)
             client.keys( `or:${cleanServerUrl}[/,]*`, ( err, keys ) => {
                 if ( error ) {
                     reject( error );
@@ -285,6 +287,8 @@ function getListOfSurveys( server ) {
             error.status = 400;
             reject( error );
         } else {
+            // TODO: "Don't use KEYS in your regular application code"
+            // (https://redis.io/commands/keys)
             client.keys( `or:${cleanServerUrl}[/,]*`, ( err, keys ) => {
                 if ( error ) {
                     reject( error );

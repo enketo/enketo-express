@@ -435,13 +435,20 @@ function removeInstance( req, res, next ) {
  * @param {Function} next - Express callback
  */
 function _setQuotaUsed( req, res, next ) {
-    surveyModel
-        .getNumber( req.account.linkedServer )
-        .then( number => {
-            req.account.quotaUsed = number;
-            next();
-        } )
-        .catch( next );
+    if ( !req.app.get( 'account lib' ) ) {
+        // Pretend quota used = 0 if not running SaaS.
+        req.account.quotaUsed = 0;
+        next();
+    } else {
+        // For SaaS service:
+        surveyModel
+            .getNumber( req.account.linkedServer )
+            .then( number => {
+                req.account.quotaUsed = number;
+                next();
+            } )
+            .catch( next );
+    }
 }
 
 /**
