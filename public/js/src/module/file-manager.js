@@ -127,7 +127,6 @@ function getCurrentFiles() {
     const fileInputs = [ ...document.querySelectorAll( 'form.or input[type="file"], form.or input[type="text"][data-drawing="true"]' ) ];
     const fileTasks = [];
 
-
     const _processNameAndSize = function( input, file ){
         if ( file && file.name ) {
             // Correct file names by adding a unique-ish postfix
@@ -185,17 +184,9 @@ function getCurrentFiles() {
  * @return {Promise} array of files
  */
 function getCurrentFile( filename ) {
-    let f;
     // relies on all file names to be unique (which they are)
-    getCurrentFiles().some( file => {
-        if ( file.name === filename ) {
-            f = file;
-
-            return true;
-        }
-    } );
-
-    return f;
+    return getCurrentFiles()
+        .then( files => files.find( file => file.name === filename )  );
 }
 
 /**
