@@ -258,8 +258,12 @@ $extend: 100%;
       .or-hint{
         > span{
           left: auto;
-          right: $base-unit-sm * 3;
+          right: -455px;
           top: -$base-unit-sm + 2;
+          z-index: 1;
+          @media only screen and (max-width: 600px) {
+            right: -320px;
+          }
         }
       }
     }
@@ -270,8 +274,9 @@ $extend: 100%;
       .or-hint{
         > span{
           left: auto;
-          right: $base-unit-sm * 3;
+          right: -455px;
           top: -$base-unit-sm + 2;
+          z-index: 1;
         }
       }
     }
@@ -282,8 +287,12 @@ $extend: 100%;
       &.readonly{
         .or-hint{
           > span{
-            right: $base-unit-sm;
+            right: -$extend;
             top: 0;
+            z-index: 1;
+            @media only screen and (max-width: 600px) {
+              right: 0;
+            }
           }
         }
       }
@@ -497,7 +506,7 @@ i.icon.icon-minus{
       font-weight: 400;
       color: #666666;
     }
-  
+
 }
 
 .form-progress{
