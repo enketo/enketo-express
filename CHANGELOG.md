@@ -2,11 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.3.7] - 2020-07-10
 ----------------------
 ##### Changed
 - Do not check quotas when the linked server URL is empty, avoiding slow Redis queries.
 - Changed when dataupdate event is fired for setvalue/odk-instance-first-load actions to facilitate custom clients with field submissions (like OpenClinica).
+- Speed up loading.
 
 ##### Fixed
 - Docker `create_config.py` script stored `encryption key` in the wrong place

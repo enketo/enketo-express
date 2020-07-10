@@ -56,7 +56,7 @@
     <p>All configuration is done in config/config.json or with equivalent environment variables (see <a href="https://github.com/enketo/enketo-express/blob/master/config/sample.env">sample.env</a>). <strong>Leave config/default-config.json unchanged.</strong> Whichever of these 2 methods you choose, will override the defaults set in config/default-config.json.</p>
 <p>Below is a complete list of all configuration items. The <strong>bold items are important to set</strong>. Others are less important.</p>
 <h4 id="app-name">app name</h4>
-<p>Just use <code>&quot;Enketo for [your service name]&quot;</code>. It is not used much in the app.</p>
+<p>Just used in home page <code>&quot;Enketo for [your service name]&quot;</code>..</p>
 <h4 id="port">port</h4>
 <p>The port on which your app is run, e.g. <code>&quot;8005&quot;</code>. Any unique assignable port will do. Generally you can leave this alone as you'll use a reverse proxy to map the public port.</p>
 <h4 id="offline-enabled">offline enabled</h4>
@@ -107,9 +107,9 @@
 <h4 id="expiry-for-record-cache">expiry for record cache</h4>
 <p>Expiry in milliseconds for a cached record from the moment it is offered to Enketo for editing through one of Enketo's <strong>/instance/*</strong> API endpoints. Once the expiry time is reached, the record is removed.</p>
 <h4 id="encryption-key">encryption key</h4>
-<p>Enketo will use this to encrypt sensitive information whenever necessary (e.g. for the form server credentials that are stored in a cookie in the user's browser). Never share this key and never change it after the initial configuration (unless it was compromised). No specific key length requirements (I think).</p>
+<p>Enketo will use this to encrypt sensitive information whenever necessary (e.g. for the form server credentials that are stored in a cookie in the user's browser). Never share this key and never change it after the initial configuration (unless it was compromised). No specific key length requirements as far as we are aware.</p>
 <h4 id="less-secure-encryption-key">less secure encryption key</h4>
-<p>Enketo will use this to symmetrically encrypt enketo IDs for the special single-submission webform views. This encryption should be considered crackable and is not used for sensitive data. For security reasons it therefore requires a separate key. Do not change this key after initial configuration as it will break some webform URLs.</p>
+<p>Enketo will use this to symmetrically encrypt enketo IDs (in URLs) for the special single-submission webform views to avoid easy guessing of the equivalent multi-submission view of the same form. This encryption should be considered crackable and is not used for sensitive data. For security reasons it therefore requires a separate key. Do not change this key after initial configuration as it will break some webform URLs.</p>
 <h4 id="default-theme">default theme</h4>
 <p>The theme to use if the survey has no user-or-api-defined theme. Values could be <code>&quot;kobo&quot;</code>, <code>&quot;formhub&quot;</code>, <code>&quot;grid&quot;</code>, or <code>&quot;[yourowncustomtheme]&quot;</code>.</p>
 <h4 id="base-path">base path</h4>
@@ -125,14 +125,14 @@
 <li><strong>email: The email address your users can contact when they experience problems with the service.</strong></li>
 </ul>
 <h4 id="widgets">widgets</h4>
-<p>An Array of widgets to enable. Enketo Core widgets are simple strings (&quot;note&quot;, &quot;select-desktop&quot;, &quot;select-mobile&quot;, &quot;autocomplete&quot;, &quot;geo&quot;, &quot;textarea&quot;, &quot;table&quot;, &quot;radio&quot;, &quot;date&quot;, &quot;time&quot;, &quot;datetime&quot;, &quot;compact&quot;, &quot;file&quot;, &quot;draw&quot;, &quot;likert&quot;, &quot;range&quot;, &quot;rank&quot;, &quot;url&quot;, &quot;horizontal&quot;, &quot;image-view&quot;, &quot;comment&quot;, &quot;image-map&quot;, &quot;date-mobile&quot;). See <a href="https://github.com/enketo/enketo-express/blob/master/public/js/src/module/core-widgets.json">this file</a> for an update list. You can also add custom widgets by adding a local path. More info: <a href="tutorial-34-custom-widgets.html">Custom widgets</a>. Note that any value for <code>&quot;widgets&quot;</code> will completely override the default array in default-config.json, so it's best to start copying the default array value and amend it as desired or leave it out of config.json if you don't need to modify widgets. If this configuration item is present in config.json, you will need to manually add any new widgets that are added to default-config.json in the future.</p>
+<p>An Array of widgets to enable. Enketo Core widgets are simple strings (&quot;note&quot;, &quot;select-desktop&quot;, &quot;select-mobile&quot;, &quot;autocomplete&quot;, &quot;geo&quot;, &quot;textarea&quot;, &quot;table&quot;, &quot;radio&quot;, &quot;date&quot;, &quot;time&quot;, &quot;datetime&quot;, &quot;compact&quot;, &quot;file&quot;, &quot;draw&quot;, &quot;likert&quot;, &quot;range&quot;, &quot;rank&quot;, &quot;url&quot;, &quot;horizontal&quot;, &quot;image-view&quot;, &quot;comment&quot;, &quot;image-map&quot;, &quot;date-mobile&quot;). See <a href="https://github.com/enketo/enketo-express/blob/master/public/js/src/module/core-widgets.json">this file</a> for an up-to-date list. You can also add custom widgets by adding a local path. More info: <a href="tutorial-34-custom-widgets.html">Custom widgets</a>. Note that any value for <code>&quot;widgets&quot;</code> will completely override the default array in default-config.json, so it's best to start copying the default array value and amend it as desired or leave it out of config.json if you don't need to modify widgets. If this configuration item is present in config.json, you will need to manually add any new widgets that are added to default-config.json in the future.</p>
 <h4 id="analytics">analytics</h4>
 <p>Which analytics service you'd like to use, either <code>&quot;google&quot;</code> or <code>&quot;piwik&quot;</code> or if none is required either <code>&quot;&quot;</code> or <code>false</code>.</p>
 <h4 id="google">google</h4>
 <ul>
 <li>analytics -&gt; ua: The UA (user agent) that Google has assigned to your domain if you choose to collect statistics on Enketo Express' usage using the Google Analytics service. Required if google service is selected under <a href="#analytics">analytics</a>.</li>
 <li>analytics -&gt; domain: If you are running Enketo Express on a subdomain, you may need to add the subdomain there (without protocol), e.g. &quot;odk.enke.to&quot; for Google Analytics to pick up the data. When left empty (<code>&quot;&quot;</code>) the value will be set to &quot;auto&quot; in the GA script.</li>
-<li>api key: The Google API key that is used for geolocation (in the geo widgets' search box). Can be obtained <a href="https://console.developers.google.com/project">here</a>. Make sure to enable the <em>GeoCoding API</em> service. If you are using Google Maps layers, the same API key is used. Make sure to enable the <em>Google Maps JavaScript API v3</em> service as well in that case (see next item).</li>
+<li>api key: The Google API key that is used for geocoding (i.e. the search box in the geo widgets). Can be obtained <a href="https://console.developers.google.com/project">here</a>. Make sure to enable the <em>GeoCoding API</em> service. If you are using Google Maps layers, the same API key is used. Make sure to enable the <em>Google Maps JavaScript API v3</em> service as well in that case (see next item).</li>
 </ul>
 <h4 id="piwik">piwik</h4>
 <ul>
@@ -172,9 +172,9 @@
 <li>href: The optional link to redirect to if the logo is clicked by the user.</li>
 </ul>
 <h4 id="disable-save-as-draft">disable save as draft</h4>
-<p>Completely disable save-as-draft functionality in offline-capable webforms by settings this to true.</p>
+<p>Completely disable save-as-draft functionality in offline-capable webforms by setting this to <code>true</code>.</p>
 <h4 id="repeat-ordinals">repeat ordinals</h4>
-<p>Whether to add custom http://enketo.org/xforms namespaced <code>ordinal</code> and <code>last-used-ordinal</code> attributes to repeat nodes in the model. The default is <code>false</code>. Most user will not need to set this configuration item.</p>
+<p>Whether to add custom http://enketo.org/xforms namespaced <code>ordinal</code> and <code>last-used-ordinal</code> attributes to repeat nodes in the model. The default is <code>false</code>. Most users will not need to set this configuration item.</p>
 <h4 id="validate-continuously">validate continuously</h4>
 <p>Determines whether Enketo should validate questions immediately if a related question value changes. E.g. if question A has a constraint that depends on question B, this mode would re-validate question A if the value for question B changes. This mode will slow down form traversal. When set to <code>false</code> that type of validation is only done at the end when the Submit button is clicked or in Pages mode when the user clicks Next. The default value is <code>false</code>.</p>
 <h4 id="validate-page">validate page</h4>
@@ -182,10 +182,10 @@
 <h4 id="swipe-page">swipe page</h4>
 <p>This setting with default <code>true</code> value determines whether to enable support for <em>swiping</em> to the next and previous page for forms that are divided into pages.</p>
 <h4 id="payload-limit">payload limit</h4>
-<p>This setting sets the maximum weight of payload sent to the API. Unit can be <code>b</code>, <code>kb</code> or <code>mb</code>.
+<p>This setting sets the maximum weight of payload sent to Enketo's API. Unit can be <code>b</code>, <code>kb</code> or <code>mb</code>.
 The default value is <code>100kb</code>.</p>
 <h4 id="text-field-character-limit">text field character limit</h4>
-<p>Sets the maximum allowable text field characters with a default of 2000. This settings is meant to match any back-end database limits to avoid records that cannot be submitted because the server does no accept them.</p>
+<p>Sets the maximum allowable text field characters with a default of 2000. This settings is meant to match any back-end database limits to avoid a situation where records cannot be submitted because the server does not accept them.</p>
 <h4 id="ip-filtering">ip filtering</h4>
 <p>Sets which IPs should be filtered out to prevent SSRF attacks. See more here: https://www.npmjs.com/package/request-filtering-agent</p>
 <ul>
