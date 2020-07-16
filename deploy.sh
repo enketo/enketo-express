@@ -1,6 +1,6 @@
 #!/bin/sh
 GENERATE_SOURCEMAP=false
-SRC="public/"
+SRC="./public/"
 TARGET="/opt/enketo-express/public"
 
 if [ -f $SRC ]; then
