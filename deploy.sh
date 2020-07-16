@@ -1,9 +1,9 @@
 #!/bin/sh
 GENERATE_SOURCEMAP=false
-SRC="./public/"
+SRC="./public"
 TARGET="/opt/enketo-express/public"
 
-if [ -f $SRC ]; then
+if [ -d $SRC ]; then
   rm -Rf /opt/enketo-express/public
   cp -R $SRC $TARGET
   sudo systemctl restart enketo
