@@ -319,7 +319,7 @@ function prompt( content, choices, inputs ) {
 
 /**
  * Shows modal asking for confirmation to redirect to login screen
- * 
+ *
  * @param  {string=} msg -       message to show
  * @param  {string=} serverURL - serverURL for which authentication is required
  */
@@ -448,7 +448,7 @@ function printForm() {
 
 /**
  * Separated this to allow using parts in custom print dialogs.
- * 
+ *
  */
 function getPrintDialogComponents() {
     // used function because i18next needs to be initalized for t() to work
@@ -491,8 +491,12 @@ function _delay( delay = 400 ) {
  * This is function is used by PDF creation functionality from a special print view of the form..
  */
 function applyPrintStyle() {
+
     imagesLoaded()
         .then( () => {
+            printHelper.openAllDetails();
+            document.querySelectorAll( '.question' ).forEach( question => question.dispatchEvent( events.Printify() ) );
+
             if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
                 const paper = { format: settings.format, landscape: settings.landscape, scale: settings.scale, margin: settings.margin };
 
@@ -511,7 +515,7 @@ function applyPrintStyle() {
 
 function imagesLoaded() {
     return new Promise( resolve => {
-        let images = Array.prototype.slice.call( document.images );
+        let images = [ ... document.images ];
         const interval = setInterval( () => {
             images = images.filter( image => !image.complete );
             if ( images.length === 0 ) {

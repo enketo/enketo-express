@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Fixed
 - Pulldata fails to work when the search value looks like a number in scientific notation.
+- Text fields with overflowing text have invisible overflow on PDF.
 
 [2.3.7] - 2020-07-10
 ----------------------
