@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ----------------------
+##### Changed
+- Updated French translation
+
 ##### Fixed
 - Pulldata fails to work when the search value looks like a number in scientific notation.
 

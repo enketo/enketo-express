@@ -70,7 +70,8 @@
             "heading": "L'application ne peut être lancée hors-ligne",
             "msg": "Le lancement de l'application hors-ligne n'est pas supporté par votre navigateur. Vous pouvez utiliser l'enquête sans cette fonctionnalité ou voir des options pour résoudre cela. ",
             "negButton": "L'utiliser",
-            "posButton": "Voir les options"
+            "posButton": "Voir les options",
+            "refresh": "Ce formulaire ne peut plus être lancé sans connexion internet. Veuillez actualiser cette page pour essayer de corriger le problème."
         },
         "queuesubmissionsuccess": {
             "msg": "__recordNames__ a été soumis avec succès",
@@ -275,7 +276,8 @@
         "longitude": "longitude (x.y °)",
         "points": "points",
         "removePoint": "Cela va supprimer définitivement la position géographique actuelle de la liste des géopoints et vous ne pourrez pas revenir en arrière. Êtes-vous sûr de vouloir faire cela ?",
-        "searchPlaceholder": "Chercher un lieu ou une adresse"
+        "searchPlaceholder": "Chercher un lieu ou une adresse",
+        "bordersintersectwarning": "Les bordures ne peuvent pas s'intersecter"
     },
     "here": "ici",
     "hint": {
@@ -302,10 +304,12 @@
         "he": "Hébreu",
         "hi": "Hindi",
         "it": "Italien",
+        "ka": "Géorgien",
         "km": "Khmer",
         "lo": "Lao",
         "nl": "Néerlandais",
         "no": "Norvégien",
+        "pa": "Pendjabi",
         "pl": "Polonais",
         "pt": "Portugais",
         "ro": "Roumain",
@@ -316,6 +320,7 @@
         "sv": "Suédois",
         "sw": "Swahili",
         "th": "Thaï",
+        "tr": "Turc",
         "vi": "Vietnamien",
         "zh": "Chinois"
     },
