@@ -500,13 +500,10 @@ function applyPrintStyle() {
             if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
                 const paper = { format: settings.format, landscape: settings.landscape, scale: settings.scale, margin: settings.margin };
 
-                return printHelper.fixGrid( paper );
+                return printHelper.fixGrid( paper, 800 );
             }
         } )
-        .then( () => // allow some time for repainting
-            new Promise( resolve => {
-                setTimeout( resolve, 300 );
-            } ) )
+        .then( _delay )
         .then( () => {
             window.printReady = true;
         } )
