@@ -27,11 +27,12 @@
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "single"],
         "semi": ["error", "always"],
-        "no-console": ["warn", { "allow": ["error", "deprecate"] }],
+        "no-console": ["warn", { "allow": ["error", "deprecate", "warn"] }],
         "eol-last": ["error", "always"],
         "padding-line-between-statements": ["warn", { "blankLine": "always", "prev": "*", "next": "return" }],
         "space-before-function-paren": ["error", "never"],
         "space-in-parens": ["error", "always"],
+        "space-infix-ops": "error",
         "array-bracket-spacing": ["error", "always"],
         "no-implied-eval": "error",
         "object-curly-spacing": ["error", "always"],
@@ -55,3 +56,4 @@
         "jsdoc/valid-types": 1
     }
 }
+

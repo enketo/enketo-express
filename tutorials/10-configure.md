@@ -12,11 +12,11 @@ The port on which your app is run, e.g. `"8005"`. Any unique assignable port wil
 Enable or disable offline functionality. Is either `false` or `true`.
 
 #### id length
-The length of the random enketo ID that is generated for a webform and is part of the webform URL. The default length is 8 characters, the maximum length is 31 characters and the minimum length is 4 characters. 
+The length of the random enketo ID that is generated for a webform and is part of the webform URL. The default length is 8 characters, the maximum length is 31 characters and the minimum length is 4 characters.
 
-When this value is  changed on an active server that had already generated webform URLs before the change, those old URLs will remain functional. Only new form launches will use the new ID length. 
+When this value is  changed on an active server that had already generated webform URLs before the change, those old URLs will remain functional. Only new form launches will use the new ID length.
 
-If you are tempted to make this setting as short as possible, make sure you understand that the chance of collisions in random ID generation will increase and it may eventually become too slow or impossible to generate a new unique ID. 
+If you are tempted to make this setting as short as possible, make sure you understand that the chance of collisions in random ID generation will increase and it may eventually become too slow or impossible to generate a new unique ID.
 
 #### linked form and data server
 * name: The (short) name of your form server. This name will be used in various places in the app to provide feedback to the user. E.g. "ODK Aggregate", "KoboToolbox", "MyCoolService"
@@ -130,7 +130,7 @@ The `maps` configuration can include an array of Mapbox TileJSON objects (or a s
 For GMaps layers you have the four options as tiles values: `"GOOGLE_SATELLITE"`, `"GOOGLE_ROADMAP"`, `"GOOGLE_HYBRID"`, `"GOOGLE_TERRAIN"`. You can also add other TileJSON properties, such as minZoom, maxZoom, id to all layers.
 
 #### query parameter to pass to submission
-For most form servers this item does nothing. If you would like to pass a particular ID to any online-only webform url as a query parameter and track submissions with this ID, you can provide the parameter name here. The parameter and its value will be copied to the submission URL.
+For most form servers this item does nothing. If you would like to pass a particular ID to any online-only webform url as a query parameter and track submissions with this ID, you can provide the parameter name here. The parameter and its value will be copied to the submission URL. The query parameter will also be added to /formList requests which would allow you e.g. to perform form access control per URL or serve custom external data files per user.
 
 #### redis
 * main -> host: The IP address of the main redis database instance. If installed on the same server as Enketo Express, the value is `"127.0.0.1"`

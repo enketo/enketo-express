@@ -196,11 +196,12 @@ function preview( req, res, next ) {
  * This serves a page that redirects old pre-2.0.0 urls into new urls.
  * The reason this on the client-side is to cache the redirect itself which is important
  * in case people have bookmarked an offline-capable old-style url and go into the field without Internet.
+ *
  * @param {module:api-controller~ExpressRequest} req
  * @param {module:api-controller~ExpressResponse} res
  * @param {Function} next - Express callback
  */
-function redirect( req, res, next ) {
+function redirect( req, res ) {
     res.render( 'surveys/webform-redirect' );
 }
 
@@ -253,6 +254,7 @@ function xform( req, res, next ) {
     return surveyModel.get( req.enketoId )
         .then( survey => {
             survey.credentials = userModel.getCredentials( req );
+
             return survey;
         } )
         .then( communicator.getXFormInfo )

@@ -52,7 +52,9 @@ function get( instanceId ) {
 function set( record ) {
     return getAutoSavedRecord()
         .then( autoSavedRecord => {
-            // Add files from autoSavedRecord
+            // Add files from autoSavedRecord in case this record was recovered.
+            // A more intelligent way to do is to maintain and check a recovered flag
+            // first, and only then replace the files.
             if ( autoSavedRecord ) {
                 record.files = autoSavedRecord.files;
             }

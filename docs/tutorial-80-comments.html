@@ -53,8 +53,8 @@
 <p>This feature has the following characteristics:</p>
 <ul>
 <li>A comment is coded in XForms like a separate question. It has it's own XML data node. This means that XPath can be used to add form logic that references this question, e.g. a dynamic &quot;required&quot; expression that specifies that a particular question is required unless it has a comment.</li>
-<li>The <code>for</code> attribute, in the <em>http://enketo.org/xforms</em> namespace, is used on the <code>&lt;bind&gt;</code> element to point a comment node to a question node.</li>
-<li>An appearance is used to instantiate the widget. Without this appearance the comment input would show up as a regular question.</li>
+<li>The <code>for</code> attribute, in the <em>http://enketo.org/xforms</em> namespace, is used on the <code>&lt;bind&gt;</code> element to link a comment to a question.</li>
+<li>An appearance is used to instantiate the widget. Without this appearance the comment input would show up as a regular question (and the <code>for</code> attribute would be ignored).</li>
 <li>Optionally a custom-namespaced attribute could be added to the data node in the model in the XForm definition. Enketo will not use that information but it could be helpful to link user-entered data with a comment in the analysis.</li>
 </ul>
 <p>This feature is not meant to be hand-coded into an XLSForm or XForm, as it quite tedious (but it can be done). It is meant to be added to advanced XLSForm or XForm form builders.</p>
@@ -77,7 +77,7 @@
 </tbody>
 </table>
 <h4 id="question">Question</h4>
-<p>Add a question of type <code>text</code>, optionally with appearance <code>multiline</code>, preferably immediately after the question node it refers to (for future printability of records).</p>
+<p>Add a question of type <code>text</code>, optionally with appearance <code>multiline</code>, preferably immediately after the question node it refers to (only for future printability of records - it doesn't affect functionality). The name of the question is free to choose.</p>
 <table>
 <thead>
 <tr>
@@ -129,7 +129,7 @@
 </tbody>
 </table>
 <h4 id="add-a-bind%3A%3Aenk%3Afor-column">Add a bind::enk:for column</h4>
-<p>For each discrepancy note question, add a reference to the question node it refers to in the <code>bind::enk:for</code> column, e.g. <code>${a}</code>. The prefix <code>enk</code> corresponds with the namespace prefix added on the settings sheet.</p>
+<p>For each comment question, add a reference to the question node it refers to in the <code>bind::enk:for</code> column, e.g. <code>${a}</code>. The prefix <code>enk</code> corresponds with the namespace prefix added on the settings sheet.</p>
 <table>
 <thead>
 <tr>
