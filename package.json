@@ -47,7 +47,7 @@
         "db.js": "0.15.0",
         "debug": "4.1.x",
         "enketo-core": "5.16.4",
-        "enketo-transformer": "1.40.2",
+        "enketo-transformer": "github:FrankApiyo/enketo-transformer#fix-branch",
         "evp_bytestokey": "^1.0.3",
         "express": "^4.17.1",
         "grunt": "^1.1.0",
