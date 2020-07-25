@@ -130,7 +130,7 @@ The `maps` configuration can include an array of Mapbox TileJSON objects (or a s
 For GMaps layers you have the four options as tiles values: `"GOOGLE_SATELLITE"`, `"GOOGLE_ROADMAP"`, `"GOOGLE_HYBRID"`, `"GOOGLE_TERRAIN"`. You can also add other TileJSON properties, such as minZoom, maxZoom, id to all layers.
 
 #### query parameter to pass to submission
-For most form servers this item does nothing. If you would like to pass a particular ID to any online-only webform url as a query parameter and track submissions with this ID, you can provide the parameter name here. The parameter and its value will be copied to the submission URL. The query parameter will also be added to /formList requests which would allow you e.g. to perform form access control per URL or serve custom external data files per user.
+Specifies the name of a query parameter that will be copied from an Enketo URL to the submission and formList requests. The value of this parameter can be used by the data server to e.g. track submission sources, perform form access control, or serve custom external data per user. **Does not apply to offline-capable webforms.**
 
 #### redis
 * main -> host: The IP address of the main redis database instance. If installed on the same server as Enketo Express, the value is `"127.0.0.1"`
