@@ -312,6 +312,10 @@ $extend: 100%;
   	color:$theme-green;
   }
 
+  textarea{
+    padding-top: $base-unit - 5;
+  }
+
   a{
   	color: $secondary-green;
   	text-decoration: underline;
@@ -495,13 +499,14 @@ i.icon.icon-minus{
   >span{
     position: absolute;
     top: $base-unit-sm - 2;
+    right: 0;
   }
     >div{
       font-size: $base-unit-sm - 2 !important;
       font-weight: 400;
       color: #666666;
     }
-  
+
 }
 
 .form-progress{
