@@ -286,6 +286,7 @@ $extend: 100%;
       &.readonly{
         .or-hint{
           > span{
+            right: -$extend !important;
             right: $base-unit-sm;
             top: 0;
           }
@@ -500,6 +501,9 @@ i.icon.icon-minus{
     position: absolute;
     top: $base-unit-sm - 2;
     right: 0;
+    &:first-child{
+      position: relative;
+    }
   }
     >div{
       font-size: $base-unit-sm - 2 !important;
