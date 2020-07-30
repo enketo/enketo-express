@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Changed
+- Add csrf cookie to submission if it exists.
+
 [2.3.8] - 2020-07-23
 ----------------------
 ##### Changed
