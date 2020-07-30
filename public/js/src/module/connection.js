@@ -51,7 +51,7 @@ function uploadRecord( record ) {
         batch.deprecatedId = record.deprecatedId;
     } );
 
-    // Perform batch uploads sequentially for to avoid issues when connections are very poor and 
+    // Perform batch uploads sequentially for to avoid issues when connections are very poor and
     // a serious issue with ODK Aggregate (https://github.com/kobotoolbox/enketo-express/issues/400)
     return batches.reduce( ( prevPromise, batch ) => prevPromise.then( () => _uploadBatch( batch ) ), Promise.resolve() )
         .then( results => {
@@ -184,6 +184,8 @@ function _prepareFormDataArray( record ) {
         const fd = new FormData();
 
         fd.append( 'xml_submission_file', xmlSubmissionBlob, 'xml_submission_file' );
+        const csrfToken = ( document.cookie.split( '; ' ).find( c => c.startsWith( '__csrf' ) ) || '' ).split( '=' )[1];
+        if ( csrfToken ) fd.append( '__csrf', csrfToken );
 
         // batch with XML data
         batchPrepped = {

@@ -42,9 +42,9 @@ This is the default authentication that lets Enketo collect credentials from the
 
 ##### External cookie authentication
 
-This allows a deeper integration for a custom server. It configures a (required) `url` on your form/data server where Enketo should redirect a user to when the server returns a 401 response. That url should set a cookie that Enketo will pass to the server whenever it needs to retrieve a form resource or submit data. The url should contain a {RETURNURL} portion which Enketo will populate to send the user back to the webform once authentication has completed.
+This allows a deeper integration with a custom server. To use cookie auth, your Enketo configuration must define a `url` on your form/data server where Enketo should redirect a user to when the server returns a 401 response. That url should set a cookie that Enketo will pass to the server whenever it needs to retrieve a form resource or submit data. The url should contain a {RETURNURL} portion which Enketo will populate to send the user back to the webform once authentication has completed.
 
-This mechanism requires any enketo-express webform to have access to these browser cookies so the form/data server and Enketo Express would have to be on the same domain (a different subdomain is possible when setting cross-domain cookies).
+Cookie authentication is vulnerable to Cross-Site Request Forgery (CSRF) attacks in which a malicious website could trick the user into submitting bad data to the data server by forwarding the same authentication cookie as Enketo does. To protect against this, the data server should set the [`SameSite`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite) attribute as strictly as possible. However, this may not be respected by all browsers and may not be appropriate for all data server implementations because of other cookie-based integrations. For additional protection, if the data server provides a JavaScript-readable `__csrf` cookie field, Enketo will include a `__csrf` form data field on the submission `POST` with the value from the `__csrf` cookie. This allows the data server to verify that the `POST` definitively came from the same origin.
 
 ```json
 "authentication" : {
