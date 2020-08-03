@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Add csrf cookie to submission if it exists.
 
+##### Fixed
+- Xforms-version check relies on specific namespace prefix.
+- jr:choice-name() not working if parameters are relative paths.
+
 [2.3.8] - 2020-07-23
 ----------------------
 ##### Changed
