@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - Xforms-version check relies on specific namespace prefix.
 - jr:choice-name() not working if parameters are relative paths.
+- Readonly empty fields are displayed but should be invisible (regression in 2.3.8).
 
 [2.3.8] - 2020-07-23
 ----------------------
