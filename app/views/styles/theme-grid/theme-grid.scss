@@ -126,6 +126,12 @@ $extend: 100%;
   	border-right: 2px solid transparent;
   	padding: $base-unit;
 
+    &.disabled{
+      input{
+        margin-top: $base-unit-sm;
+      }
+    }
+
     &:not(.readonly){
       &:hover{
        background-color: rgba(252, 239, 149, 0.4);
@@ -205,6 +211,7 @@ $extend: 100%;
     .question-label{
     	font-size: $default-text-size + 1;
     	line-height: 130%;
+      padding-left: $base-unit-sm / 2;
       text-transform: unset;
     }
     .required{
@@ -238,16 +245,17 @@ $extend: 100%;
 
         position: absolute;
         top: $base-unit-sm;
-        right: $base-unit-sm;
+        left: $base-unit-sm / 2;
 
         &:hover{
+        background-position:$base-unit-sm / 2 $base-unit-sm;
         text-indent: 0;
         display: block;
         background-color: $border-color;
         height: auto;
         min-width: 100px;
         max-width: 300px;
-        padding-right: 25px;
+        padding-left: 25px;
         width: auto;
         z-index: 1;
         }
@@ -275,7 +283,7 @@ $extend: 100%;
         > span{
           left: auto;
           right: $base-unit-sm * 3;
-          top: -$base-unit-sm + 2;
+          top: -$base-unit-sm + 5;
         }
       }
     }
@@ -286,9 +294,8 @@ $extend: 100%;
       &.readonly{
         .or-hint{
           > span{
-            right: -$extend !important;
-            right: $base-unit-sm;
-            top: 0;
+            right: -($base-unit-sm + 15) !important;
+            top: $base-unit-sm / 2;
           }
         }
       }
