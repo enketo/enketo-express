@@ -70,7 +70,8 @@
             "heading": "Anwendung kann nicht offline gestartet werden",
             "msg": "Ihr Browser unterstützt keine Offline-Anwendungen. Sie können dieses Formular auch ohne diese Funktion verwenden oder eine der folgenden Optionen als Lösung auswählen.",
             "negButton": "Benutzen",
-            "posButton": "Optionen anzeigen"
+            "posButton": "Optionen anzeigen",
+            "refresh": "Dieses Formular kann nicht mehr offline geöffnet werden. Bitte aktualisieren Sie die Seite, um zu versuchen dies zu beheben."
         },
         "queuesubmissionsuccess": {
             "msg": "__recordNames__ wurde erfolgreich verschickt",
@@ -85,6 +86,14 @@
         "recordsavesuccess": {
             "draftmsg": "Datensatz als Entwurf gespeichert.",
             "finalmsg": "Datensatz wurde für den Versand in die Warteschlange gestellt."
+        },
+        "savedraftinfo": {
+            "heading": "Aufzeichnung später abschließen",
+            "msg": [
+                "Die Entwurfsaufzeichnung wird nur im aktuellen Browser gespeichert. Sie können diesen Browser schließen, ohne die gespeicherte Aufzeichnung zu verlieren.",
+                "Auf Entwurfsaufzeichnungen kann durch erneutes Öffnen dieser Seite zugegriffen werden und durch Klick auf den Button links auf diesem Bildschirm, der so aussieht: __icon__",
+                "Warnung: Wenn Sie Ihren Browser-Cache leeren, werden alle Entwürfe und noch nicht übermittelten, abgeschlossenen Aufzeichnungen permanent gelöscht."
+            ]
         },
         "submission": {
             "msg": "Sendet...",
@@ -267,7 +276,8 @@
         "longitude": "Länge (x.y °)",
         "points": "Punkte",
         "removePoint": "Diese Handlung wird den aktuellen Geopunkt von den Geopunktliste unwiderrufbar entfernen. Sind Sie sicher, dass Sie dies tun wollen?",
-        "searchPlaceholder": "Suche nach dem Ort oder Adresse"
+        "searchPlaceholder": "Suche nach dem Ort oder Adresse",
+        "bordersintersectwarning": "Umrandungen dürfen sich nicht überschneiden"
     },
     "here": "hier",
     "hint": {
@@ -294,10 +304,12 @@
         "he": "Hebräisch",
         "hi": "Indisch",
         "it": "Italienisch",
+        "ka": "Georgisch",
         "km": "Khmer",
         "lo": "Lao",
         "nl": "Niederländisch",
         "no": "Norwegisch",
+        "pa": "Pandschabi",
         "pl": "Polnisch",
         "pt": "Portugiesisch ",
         "ro": "Rumänisch",
@@ -308,6 +320,7 @@
         "sv": "Schwedisch",
         "sw": "Suaheli",
         "th": "Thailändisch",
+        "tr": "Türkisch",
         "vi": "Vietnamesisch",
         "zh": "Chinesisch"
     },
