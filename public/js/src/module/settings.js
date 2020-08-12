@@ -62,18 +62,7 @@ settings.languageOverrideParameter = queryParams.lang ? {
 // set default maxSubmissionSize
 settings.maxSize = DEFAULT_MAX_SIZE;
 
-// add type
-if ( window.location.pathname.indexOf( '/preview' ) === 0 ) {
-    settings.type = 'preview';
-} else if ( window.location.pathname.indexOf( '/single' ) === 0 ) {
-    settings.type = 'single';
-} else if ( window.location.pathname.indexOf( '/edit' ) === 0 ) {
-    settings.type = 'edit';
-} else if ( window.location.pathname.indexOf( '/view' ) === 0 ) {
-    settings.type = 'view';
-} else {
-    settings.type = 'other';
-}
+settings.type = settings.type || 'other';
 
 // Determine whether view is offline-capable
 settings.offline = window.location.pathname.includes( '/x/' );
