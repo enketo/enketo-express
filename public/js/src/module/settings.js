@@ -63,7 +63,7 @@ settings.languageOverrideParameter = queryParams.lang ? {
 settings.maxSize = DEFAULT_MAX_SIZE;
 
 // add type
-if ( window.location.pathname.includes( '/preview/' ) ) {
+if ( window.location.pathname.includes( '/preview/' ) || window.location.pathname.endsWith('/preview') ) {
     settings.type = 'preview';
 } else if ( window.location.pathname.includes( '/single/' ) ) {
     settings.type = 'single';
