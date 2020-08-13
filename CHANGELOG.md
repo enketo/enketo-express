@@ -11,7 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - When a `setvalue` element has no `value` attribute and no textContent, it does not work for resetting value.
 - When nested repeats using jr:count have values that empty or 0, a nested repeat can never be created (exception).
-- When Enketo is served from a base path form is not identified causing things such as redirects in single-submission views to break.
+- When Enketo is served from a base path, the form type is not identified causing things such as redirects in single-submission views to break.
 
 [2.3.9] - 2020-08-03
 ----------------------
