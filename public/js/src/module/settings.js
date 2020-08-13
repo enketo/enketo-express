@@ -63,13 +63,13 @@ settings.languageOverrideParameter = queryParams.lang ? {
 settings.maxSize = DEFAULT_MAX_SIZE;
 
 // add type
-if ( window.location.pathname.indexOf( '/preview' ) === 0 ) {
+if ( window.location.pathname.includes( '/preview/' ) || window.location.pathname.endsWith('/preview') ) {
     settings.type = 'preview';
-} else if ( window.location.pathname.indexOf( '/single' ) === 0 ) {
+} else if ( window.location.pathname.includes( '/single/' ) ) {
     settings.type = 'single';
-} else if ( window.location.pathname.indexOf( '/edit' ) === 0 ) {
+} else if ( window.location.pathname.includes( '/edit/' ) ) {
     settings.type = 'edit';
-} else if ( window.location.pathname.indexOf( '/view' ) === 0 ) {
+} else if ( window.location.pathname.includes( '/view/' ) ) {
     settings.type = 'view';
 } else {
     settings.type = 'other';
