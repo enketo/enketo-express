@@ -9,7 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Removed animation when removing a repeat.
 
 ##### Fixed
-- When a `setvalue` element has no `value` attribute and no textContent, it does not work for resetting values(enketo-transformer fix).
+- When a `setvalue` element has no `value` attribute and no textContent, it does not work for resetting value.
 - When nested repeats using jr:count have values that empty or 0, a nested repeat can never be created (exception)
 
 [2.3.9] - 2020-08-03
