@@ -173,7 +173,7 @@ function getAllKeys() {
 /**
  * Gets id from key.
  *
- * @param {string} key - The key for which an enketoId sought.
+ * @param { string } key - The key for which an enketoId sought.
  * @return {Promise<Error|{key: string, id: string}>} A promise that resolves with key and id object.
  */
 function getId( key ) {
@@ -194,7 +194,7 @@ function getId( key ) {
 /**
  * Gets the OpenRosaId belonging to a duplicate.
  *
- * @param {object} duplicate - Duplicate database entry.
+ * @param { object } duplicate - Duplicate database entry.
  * @return {Promise<Error|object>} A promise that resolves with id and openRosaId object
  */
 function getSurveyOpenRosaId( duplicate ) {
@@ -213,8 +213,8 @@ function getSurveyOpenRosaId( duplicate ) {
 /**
  * Removes an item from the main database.
  *
- * @param {string} key - The key to remove from the main database.
- * @param {string} id - The enketoId belonging to the database item.
+ * @param { string } key - The key to remove from the main database.
+ * @param { string } id - The enketoId belonging to the database item.
  * @return {Promise<Error|string>} A promise that resolves with a message.
  */
 function remove( key, id ) {
@@ -239,7 +239,7 @@ function remove( key, id ) {
 /**
  * Removes an item from the cache database.
  *
- * @param {string} key - The key to remove from the cache database.
+ * @param { string } key - The key to remove from the cache database.
  */
 function removeCache( key ) {
     const cacheKey = key.replace( 'or:', 'ca:' );

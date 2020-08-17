@@ -35,7 +35,7 @@ function getOnlineStatus() {
  * Uploads a complete record
  *
  * @param  {{xml: string, files: [File]}} record
- * @return {Promise}
+ * @return { Promise }
  */
 function uploadRecord( record ) {
     let batches;
@@ -64,9 +64,8 @@ function uploadRecord( record ) {
 /**
  * Uploads a single batch of a single record.
  *
- * @param {{formData: FormData, failedFiles: [string]}} data - formData object to send
- * @param recordBatch
- * @return {Promise}      [description]
+ * @param {{formData: FormData, failedFiles: [string]}} recordBatch - formData object to send
+ * @return { Promise }      [description]
  */
 function _uploadBatch( recordBatch ) {
     return new Promise( ( resolve, reject ) => {
@@ -120,8 +119,7 @@ function _uploadBatch( recordBatch ) {
 /**
  * Builds up a record array including media files, divided into batches
  *
- * @param { { name: string, data: string } } record[ description ]
- * @param record
+ * @param { { name: string, data: string } } record - record object
  */
 function _prepareFormDataArray( record ) {
     const recordDoc = parser.parseFromString( record.xml, 'text/xml' );
@@ -259,7 +257,7 @@ function _divideIntoBatches( fileSizes, limit ) {
 /**
  * Returns the value of the X-OpenRosa-Content-Length header returned by the OpenRosa server for this form.
  *
- * @return {Promise} [description]
+ * @return { Promise } [description]
  */
 function getMaximumSubmissionSize() {
     let maxSubmissionSize;
@@ -294,9 +292,8 @@ function getMaximumSubmissionSize() {
 /**
  * Obtains HTML Form, XML Model and External Instances
  *
- * @param
- * @param props
- * @return { Promise }
+ * @param { object } props - form properties object
+ * @return { Promise } a Promise that resolves with a form parts object
  */
 function getFormParts( props ) {
     let error;
@@ -372,8 +369,8 @@ function _getExternalData( survey ) {
  * Obtains a media file
  * JQuery ajax doesn't support blob responses, so we're going native here.
  *
- * @param url
- * @return {Promise} [description]
+ * @param { string } url - a URL to a media file
+ * @return {Promise<{url: string, item: Blob}>} a Promise that resolves with a media file object
  */
 function getMediaFile( url ) {
     let error;
@@ -407,9 +404,9 @@ function getMediaFile( url ) {
 /**
  * Obtains a data/text file
  *
- * @param url
- * @param languageMap
- * @return {Promise} [description]
+ * @param { string } url - URL to data tile
+ * @param {object } languageMap - language map object with language name properties and IANA subtag values
+ * @return {Promise<XMLDocument>} a Promise that resolves with an XML Document
  */
 function _getDataFile( url, languageMap ) {
     let contentType;
@@ -451,8 +448,8 @@ function _getDataFile( url, languageMap ) {
 /**
  * Extracts version from service worker script
  *
- * @param serviceWorkerUrl
- * @return {Promise} [description]
+ * @param { string } serviceWorkerUrl - service worker URL
+ * @return {Promise<string>} a Promise that resolves with the version of the service worker or 'unknown'
  */
 function getServiceWorkerVersion( serviceWorkerUrl ) {
 
@@ -489,9 +486,8 @@ function getFormPartsHash() {
 /**
  * Obtains XML instance that is cached at the server
  *
- * @param
- * @param props
- * @return { Promise }
+ * @param { object } props - form properties object
+ * @return { Promise<string> } a Promise that resolves with an XML instance as text
  */
 function getExistingInstance( props ) {
     let error;

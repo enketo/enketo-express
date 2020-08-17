@@ -5,7 +5,7 @@
 // var debug = require( 'debug' )( 'error-handler' );
 
 /**
- * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
  * @param {Error} error - Error object.
  */
 function getErrorMessage( req, error ) {
@@ -30,8 +30,8 @@ function getErrorMessage( req, error ) {
 module.exports = {
     /**
      * @param {Error} err - Error object
-     * @param {module:api-controller~ExpressRequest} req
-     * @param {module:api-controller~ExpressResponse} res
+     * @param {module:api-controller~ExpressRequest} req - HTTP request
+     * @param {module:api-controller~ExpressResponse} res - HTTP response
      * @param {Function} next - Express callback
      */
     production( err, req, res, next ) {// eslint-disable-line no-unused-vars
@@ -49,8 +49,8 @@ module.exports = {
     },
     /**
      * @param {Error} err - Error object
-     * @param {module:api-controller~ExpressRequest} req
-     * @param {module:api-controller~ExpressResponse} res
+     * @param {module:api-controller~ExpressRequest} req - HTTP request
+     * @param {module:api-controller~ExpressResponse} res - HTTP response
      * @param {Function} next - Express callback
      */
     development( err, req, res, next ) {// eslint-disable-line no-unused-vars
@@ -68,8 +68,8 @@ module.exports = {
         }
     },
     /**
-     * @param {module:api-controller~ExpressRequest} req
-     * @param {module:api-controller~ExpressResponse} res
+     * @param {module:api-controller~ExpressRequest} req - HTTP request
+     * @param {module:api-controller~ExpressResponse} res - HTTP response
      * @param {Function} next - Express callback
      */
     '404': function( req, res, next ) {

@@ -21,7 +21,7 @@ const htmlParagraphsPostProcessor = {
  * Initializes translator and resolves **when translations have been loaded**.
  *
  * @param  {=*?} something - can be anything
- * @return {Promise}       promise resolving the original something argument
+ * @return { Promise }       promise resolving the original something argument
  */
 const init = something => initialize
     .then( () => something );
@@ -68,7 +68,7 @@ const t = ( key, options ) => i18next.t( key, options );
  * Note, this does not work if there is translation context (i.e. options for t(key, options) call).
  *
  * @param {Element} container - The element to localize.
- * @param {string} [lng] - The 2-character IANA subtag.
+ * @param { string } [lng] - The 2-character IANA subtag.
  */
 const localize = ( container, lng ) => {
     const cache = {};
@@ -123,7 +123,7 @@ const localize = ( container, lng ) => {
 /**
  * Loads a translation file. This function is used to cache all language files for offline usage, upon form load.
  *
- * @param  {string} lang - 2-character IANA language subtag
+ * @param  { string } lang - 2-character IANA language subtag
  */
 const loadTranslation = lang => {
     if ( lang ) {

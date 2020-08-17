@@ -30,8 +30,7 @@ router
     } );
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * Assembles script contentå
  */
 function getScriptContent() {
     // Determining hash every time, is done to make development less painful (refreshing service worker)

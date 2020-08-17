@@ -15,7 +15,7 @@ let instanceAttachments;
 /**
  * Initialize the file manager .
  *
- * @return {*} promise boolean or rejection with Error
+ * @return { object } promise boolean or rejection with Error
  */
 function init() {
     return Promise.resolve( true );
@@ -24,7 +24,7 @@ function init() {
 /**
  * Whether the filemanager is waiting for user permissions
  *
- * @return {boolean} [description]
+ * @return { boolean } [description]
  */
 function isWaitingForPermissions() {
     return false;
@@ -34,7 +34,7 @@ function isWaitingForPermissions() {
  * Sets instanceAttachments containing filename:url map
  * to use in getFileUrl
  *
- * @param attachments
+ * @param {{filename: string}} attachments - attachments sent with record to be loaded
  */
 function setInstanceAttachments( attachments ) {
     instanceAttachments = attachments;
@@ -44,7 +44,7 @@ function setInstanceAttachments( attachments ) {
  * as a src attribute.
  *
  * @param  {?string|object} subject - File or filename
- * @return {*}         promise url string or rejection with Error
+ * @return { object }         promise url string or rejection with Error
  */
 function getFileUrl( subject ) {
     return new Promise( ( resolve, reject ) => {
@@ -105,7 +105,7 @@ function getFileUrl( subject ) {
  * It is meant for loading images into a canvas.
  *
  * @param  {?string|object} subject - File or filename in local storage
- * @return {*}         promise url string or rejection with Error
+ * @return { object }         promise url string or rejection with Error
  */
 function getObjectUrl( subject ) {
     return getFileUrl( subject )
@@ -121,7 +121,7 @@ function getObjectUrl( subject ) {
 /**
  * Obtain files currently stored in file input elements of open record
  *
- * @return {Promise} A promise that resolves with an array of files
+ * @return { Promise } A promise that resolves with an array of files
  */
 function getCurrentFiles() {
     const fileInputs = [ ...document.querySelectorAll( 'form.or input[type="file"], form.or input[type="text"][data-drawing="true"]' ) ];
@@ -180,8 +180,8 @@ function getCurrentFiles() {
 /**
  * Traverses files currently stored in file input elements of open record to find a specific file.
  *
- * @param filename
- * @return {Promise} array of files
+ * @param { string } filename - filename
+ * @return { Promise } array of files
  */
 function getCurrentFile( filename ) {
     // relies on all file names to be unique (which they are)
@@ -201,8 +201,8 @@ function _getInstanceId() {
 /**
  * Whether the file is too large too handle and should be rejected
  *
- * @param  {*}  file - the File
- * @return {boolean}
+ * @param  { object }  file - the File
+ * @return { boolean } whether file is too large
  */
 function isTooLarge( file ) {
     return file && file.size > _getMaxSize();
@@ -217,7 +217,7 @@ function _getMaxSizeError() {
 /**
  * Returns the maximum size of a file
  *
- * @return {number}
+ * @return {number} the maximum size of a file in bytes
  */
 function _getMaxSize() {
     return settings.maxSize || 5 * 1024 * 1024;

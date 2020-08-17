@@ -24,8 +24,8 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @static
  * @name get
  * @function
- * @param {module:survey-model~SurveyObject} survey
- * @return {Promise<Error|null|SurveyObject>} Promise that resolves with cached {@link module:survey-model~SurveyObject|SurveyObject} or `null`
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ * @return {Promise<Error|null|module:survey-model~SurveyObject>} Promise that resolves with cached {@link module:survey-model~SurveyObject|SurveyObject} or `null`
  */
 function getSurvey( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -63,8 +63,8 @@ function getSurvey( survey ) {
  * @static
  * @name getHashes
  * @function
- * @param {module:survey-model~SurveyObject} survey
- * @return {Promise<Error|SurveyObject>} Promise that resolves with {@link module:survey-model~SurveyObject|SurveyObject} (updated with hash array if such exist)
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ * @return {Promise<Error|module:survey-model~SurveyObject>} Promise that resolves with {@link module:survey-model~SurveyObject|SurveyObject} (updated with hash array if such exist)
  */
 function getSurveyHashes( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -96,8 +96,8 @@ function getSurveyHashes( survey ) {
  * @static
  * @name check
  * @function
- * @param {module:survey-model~SurveyObject} survey
- * @return {Promise<Error|null|boolean>}
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ * @return {Promise<Error|null|boolean>} a Promise that resolves with a boolean
  */
 function isCacheUpToDate( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -149,10 +149,11 @@ function isCacheUpToDate( survey ) {
  * Adds an item to the cache
  *
  * @static
+ *
  * @name set
  * @function
- * @param {module:survey-model~SurveyObject} survey
- * @return {Promise<Error|SurveyObject>}
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ * @return {Promise<Error|module:survey-model~SurveyObject>} a Promise that resolves with the survey object
  */
 function setSurvey( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -195,8 +196,8 @@ function setSurvey( survey ) {
  * @static
  * @name flush
  * @function
- * @param {module:survey-model~SurveyObject} survey
- * @return {Promise<Error|SurveyObject>} Flushed {@link module:survey-model~SurveyObject|SurveyObject}
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ * @return {Promise<Error|module:survey-model~SurveyObject>} Flushed {@link module:survey-model~SurveyObject|SurveyObject}
  */
 function flushSurvey( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -265,8 +266,9 @@ function flushAll() {
 /**
  * Gets the key used for the cache item
  *
- * @param {module:survey-model~SurveyObject} survey
+ * @param {module:survey-model~SurveyObject} survey - survey object
  * @return {string|null} openRosaKey or `null`
+ *
  */
 function _getKey( survey ) {
     const openRosaKey = utils.getOpenRosaKey( survey, prefix );
@@ -277,7 +279,8 @@ function _getKey( survey ) {
 /**
  * Adds the 3 relevant hashes to the survey object if they haven't been added already.
  *
- * @param {module:survey-model~SurveyObject} survey
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ *
  */
 function _addHashes( survey ) {
     survey.formHash = survey.formHash || survey.info.hash;

@@ -164,7 +164,7 @@ feedbackBar = {
     /**
      * Shows an unobtrusive feedback bar to the user.
      *
-     * @param {string} message
+     * @param { string } message - message to show
      * @param {number=} duration - duration in seconds for the message to show
      */
     show( message, duration ) {
@@ -204,7 +204,7 @@ feedbackBar = {
 /**
  * Select what type of unobtrusive feedback message to show to the user.
  *
- * @param {string}  message
+ * @param { string }  message - message to show
  * @param {number=} duration - duration in seconds for the message to show
  */
 function feedback( message, duration ) {
@@ -219,8 +219,8 @@ function feedback( message, duration ) {
  * Shows a modal alert dialog.
  * TODO: parameters should change to (content, options)
  *
- * @param {string} message
- * @param {string=} heading
+ * @param { string } message - message to show
+ * @param {string=} heading - heading to show
  * @param {string=} level - css class or normal (no styling) ('alert', 'info', 'warning', 'error', 'success')
  * @param {number=} duration - duration in secondsafter which dialog should self-destruct
  */
@@ -321,9 +321,8 @@ function prompt( content, choices, inputs ) {
  * Shows modal asking for confirmation to redirect to login screen
  *
  * @param  {string=} msg -       message to show
- * @param  {string=} serverURL - serverURL for which authentication is required
  */
-function confirmLogin( msg /*, serverURL*/ ) {
+function confirmLogin( msg ) {
     msg = msg || t( 'confirm.login.msg' );
 
     confirm( {
@@ -543,7 +542,7 @@ function alertCacheUnsupported() {
 /**
  * Updates various statuses in the GUI (connection, form-edited, browsersupport)
  *
- * @type {object}
+ * @type { object }
  */
 updateStatus = {
     offlineCapable( offlineCapable ) {

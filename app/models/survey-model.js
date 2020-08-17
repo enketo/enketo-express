@@ -20,12 +20,12 @@ if ( process.env.NODE_ENV === 'test' ) {
 
 /**
  * @typedef SurveyObject
- * @property {string} openRosaServer
- * @property {string} openRosaId
- * @property {string} enketoId
- * @property {string} theme
- * @property {object} info
- * @property {string} info.hash
+ * @property { string } openRosaServer
+ * @property { string } openRosaId
+ * @property { string } enketoId
+ * @property { string } theme
+ * @property { object } info
+ * @property { string } info.hash
  */
 
 /**
@@ -34,8 +34,8 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @static
  * @name get
  * @function
- * @param {string} id - Survey ID
- * @return {Promise<Error|SurveyObject>} Promise that resolves with survey object
+ * @param { string } id - Survey ID
+ * @return {Promise<Error|SurveyObject>} Promise that resolves with a survey object
  */
 function getSurvey( id ) {
     return new Promise( ( resolve, reject ) => {
@@ -76,7 +76,7 @@ function getSurvey( id ) {
  * @static
  * @name set
  * @function
- * @param {SurveyObject} survey
+ * @param {SurveyObject} survey - survey object
  * @return {Promise<Error|string>} Promise that eventually resolves with Survey ID
  */
 function setSurvey( survey ) {
@@ -120,8 +120,8 @@ function setSurvey( survey ) {
  * @static
  * @name update
  * @function
- * @param {module:survey-model~SurveyObject} survey
- * @return {Promise<Error|string>} Promise that resolves with survey ID
+* @param {module:survey-model~SurveyObject} survey - survey object
+* @return {Promise<Error|string>} Promise that resolves with survey ID
  */
 function updateSurvey( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -150,7 +150,7 @@ function updateSurvey( survey ) {
 }
 
 /**
- * @param {string} id - Survey ID
+ * @param { string } id - Survey ID
  * @param {module:survey-model~SurveyObject} survey - New survey
  * @return {Promise<Error|string>} Promise that resolves with survey ID
  */
@@ -179,8 +179,8 @@ function _updateProperties( id, survey ) {
 }
 
 /**
- * @param {string} openRosaKey
- * @param {module:survey-model~SurveyObject} survey
+ * @param { string } openRosaKey -
+ * @param {module:survey-model~SurveyObject} survey - survey object
  * @return {Promise<Error|string>} Promise that eventually resolves with survey ID
  */
 function _addSurvey( openRosaKey, survey ) {
@@ -217,7 +217,7 @@ function _addSurvey( openRosaKey, survey ) {
  * @static
  * @name incrementSubmissions
  * @function
- * @param {string} id - Survey ID
+ * @param { string } id - Survey ID
  * @return {Promise<Error|string>} Promise that eventually resolves with survey ID
  */
 function incrSubmissions( id ) {
@@ -239,7 +239,7 @@ function incrSubmissions( id ) {
  * @static
  * @name getNumber
  * @function
- * @param {string} server - Server URL
+ * @param { string } server - Server URL
  * @return {Promise<Error|string|number>} Promise that resolves with number of surveys
  */
 function getNumberOfSurveys( server ) {
@@ -275,7 +275,7 @@ function getNumberOfSurveys( server ) {
  * @static
  * @name getList
  * @function
- * @param {string} server - Server URL
+ * @param { string } server - Server URL
  * @return {Promise<Error|Array<SurveyObject>>} Promise that resolves with a list of SurveyObjects
  */
 function getListOfSurveys( server ) {
@@ -315,7 +315,7 @@ function getListOfSurveys( server ) {
 }
 
 /**
- * @param {string} openRosaKey
+ * @param { string } openRosaKey - database key of survey
  * @return {Promise<Error|null|string>} Promise that resolves with survey ID
  */
 function _getEnketoId( openRosaKey ) {
@@ -348,7 +348,7 @@ function _getEnketoId( openRosaKey ) {
  * @static
  * @name getId
  * @function
- * @param {module:survey-model~SurveyObject} survey
+ * @param {module:survey-model~SurveyObject} survey - survey object
  * @return {Promise<Error|null|string>} Promise that resolves with survey ID
  */
 function getEnketoIdFromSurveyObject( survey ) {
@@ -359,7 +359,7 @@ function getEnketoIdFromSurveyObject( survey ) {
 
 /**
  * @param {Array<string>} openRosaIds - A list of `openRosaId`s
- * @return {Promise}
+ * @return { Promise<[module:survey-model~SurveyObject]> } a Promise that resolves with a list of survey objects
  */
 function _getActiveSurveys( openRosaIds ) {
     const tasks = openRosaIds.map( openRosaId => _getEnketoId( openRosaId ) );
@@ -378,9 +378,9 @@ function _getActiveSurveys( openRosaIds ) {
  * @static
  * @name createNewEnketoId
  * @function
- * @param {string} [id] - This is only really included to write tests for collissions or a future "vanity ID" feature
- * @param {number} [triesRemaining] - Avoid infinite loops when collissions become the norm.
- * @return {Promise<Error|string|Promise>}
+ * @param { string } [id] - This is only really included to write tests for collissions or a future "vanity ID" feature
+ * @param { number } [triesRemaining] - Avoid infinite loops when collissions become the norm.
+ * @return {Promise<Error|string|Promise>} a Promise that resolves with a new unique Enketo ID
  */
 function _createNewEnketoId( id = utils.randomString( config[ 'id length' ] ), triesRemaining = 10 ) {
     return new Promise( ( resolve, reject ) => {
@@ -405,25 +405,25 @@ function _createNewEnketoId( id = utils.randomString( config[ 'id length' ] ), t
 /**
  * Function for launch date comparison
  *
- * @param {module:survey-model~SurveyObject} a
- * @param {module:survey-model~SurveyObject} b
- * @return {number}
+ * @param {module:survey-model~SurveyObject} a - a survey object
+ * @param {module:survey-model~SurveyObject} b - a survey object
+ * @return {number} difference in launch date as a number
  */
 function _ascendingLaunchDate( a, b ) {
     return new Date( a.launchDate ) - new Date( b.launchDate );
 }
 
 /**
- * @param {module:survey-model~SurveyObject} survey
- * @return {boolean} Whether survey has openRosaId
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ * @return { boolean } Whether survey has openRosaId
  */
 function _nonEmpty( survey ) {
     return !!survey.openRosaId;
 }
 
 /**
- * @param {Error} error
- * @return {object} Empty object for `404` errors; throws normally for other
+ * @param {Error} error - error object
+ * @return { object } Empty object for `404` errors; throws normally for other
  */
 function _404Empty( error ) {
     if ( error && error.status && error.status === 404 ) {

@@ -65,8 +65,8 @@ router
 //}
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function offlineWebform( req, res, next ) {
@@ -81,8 +81,8 @@ function offlineWebform( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function webform( req, res, next ) {
@@ -97,8 +97,8 @@ function webform( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function single( req, res, next ) {
@@ -114,8 +114,8 @@ function single( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function view( req, res, next ) {
@@ -129,8 +129,8 @@ function view( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function preview( req, res, next ) {
@@ -148,17 +148,16 @@ function preview( req, res, next ) {
  * The reason this on the client-side is to cache the redirect itself which is important
  * in case people have bookmarked an offline-capable old-style url and go into the field without Internet.
  *
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
- * @param {Function} next - Express callback
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  */
 function redirect( req, res ) {
     res.render( 'surveys/webform-redirect' );
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function edit( req, res, next ) {
@@ -177,10 +176,10 @@ function edit( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
- * @param {object} options - Options passed to render
+ * @param { object } options - Options passed to render
  */
 function _renderWebform( req, res, next, options ) {
     const deviceId = req.signedCookies[ '__enketo_meta_deviceid' ] || `${req.hostname}:${utils.randomString( 16 )}`,
@@ -197,8 +196,8 @@ function _renderWebform( req, res, next, options ) {
 /**
  * Debugging view that shows underlying XForm
  *
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function xform( req, res, next ) {

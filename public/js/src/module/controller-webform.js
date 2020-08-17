@@ -173,7 +173,7 @@ function _resetForm( confirmed ) {
 /**
  * Loads a record from storage
  *
- * @param  {string} instanceId - [description]
+ * @param  { string } instanceId - [description]
  * @param  {=boolean?} confirmed -  [description]
  */
 function _loadRecord( instanceId, confirmed ) {
@@ -671,7 +671,7 @@ function setLogoutLinkVisibility() {
 /**
  * Determines whether the page is loaded inside an iframe
  *
- * @return {boolean} [description]
+ * @return { boolean } [description]
  */
 function inIframe() {
     try {
@@ -684,7 +684,7 @@ function inIframe() {
 /**
  * Attempts to send a message to the parent window, useful if the webform is loaded inside an iframe.
  *
- * @param  {{type: string}} event
+ * @param  {Event} event - event
  */
 function postEventAsMessageToParentWindow( event ) {
     if ( event && event.type ) {
