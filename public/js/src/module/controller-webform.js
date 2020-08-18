@@ -313,7 +313,7 @@ function _submitRecord() {
                     $( 'form.or' ).empty();
                     $( 'button#submit-form' ).remove();
                     d.setTime( d.getTime() + age * 1000 );
-                    document.cookie = `${settings.enketoId}=${now.getTime()};path=/single;max-age=${age};expires=${d.toGMTString()};`;
+                    document.cookie = `${settings.enketoId}=${now.getTime()};path=${settings.basePath}/single;max-age=${age};expires=${d.toGMTString()};`;
                 }
                 msg += t( 'alert.submissionsuccess.redirectmsg' );
                 gui.alert( msg, t( 'alert.submissionsuccess.heading' ), level );

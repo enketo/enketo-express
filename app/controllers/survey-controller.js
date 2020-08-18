@@ -107,7 +107,7 @@ function single( req, res, next ) {
         iframe: req.iframe
     };
     if ( req.encryptedEnketoId && req.cookies[ req.encryptedEnketoId ] ) {
-        res.redirect( `/thanks?taken=${req.cookies[ req.encryptedEnketoId ]}` );
+        res.redirect( `${req.baseUrl}/thanks?taken=${req.cookies[ req.encryptedEnketoId ]}` );
     } else {
         _renderWebform( req, res, next, options );
     }
