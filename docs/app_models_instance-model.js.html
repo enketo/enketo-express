@@ -67,11 +67,14 @@ if ( process.env.NODE_ENV === 'test' ) {
 }
 
 /**
+ * * @param protect
+ * * @param protect
+ *
  * @static
  * @name set
  * @function
- * @param {module:survey-model~SurveyObject} survey
- * @param {boolean} [protect] - whether to refuse if record is currently pending (to avoid editing conflicts)
+* @param {module:survey-model~SurveyObject} survey - survey object
+* @param { boolean } [protect] - whether to refuse if record is currently pending (to avoid editing conflicts)
  */
 function _cacheInstance( survey, protect = true ) {
     return new Promise( ( resolve, reject ) => {
@@ -116,9 +119,10 @@ function _cacheInstance( survey, protect = true ) {
 
 /**
  * @static
+ *
  * @name get
  * @function
- * @param {module:survey-model~SurveyObject} survey
+* @param {module:survey-model~SurveyObject} survey - survey object \n
  */
 function _getInstance( survey ) {
     return new Promise( ( resolve, reject ) => {
@@ -149,9 +153,10 @@ function _getInstance( survey ) {
 
 /**
  * @static
+ *
  * @name remove
  * @function
- * @param {module:survey-model~SurveyObject} survey
+* @param {module:survey-model~SurveyObject} survey - survey object \n
  */
 function _removeInstance( survey ) {
     return new Promise( ( resolve, reject ) => {

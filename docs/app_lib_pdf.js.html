@@ -57,10 +57,10 @@ const { URL } = require( 'url' );
 
 /**
  * @typedef PdfGetOptions
- * @property {string} [format]
- * @property {string} [margin]
- * @property {string} [landscape]
- * @property {string} [scale]
+ * @property { string } [format]
+ * @property { string } [margin]
+ * @property { string } [landscape]
+ * @property { string } [scale]
  */
 
 /**
@@ -79,9 +79,9 @@ const DEFAULTS = {
  * Asynchronously gets pdf from url using Puppeteer.
  *
  * @static
- * @param {string} url
- * @param {PdfGetOptions} [options]
- * @return {Promise}
+ * @param { string } url - URL to load
+ * @param {PdfGetOptions} [options] - PDF options
+ * @return { Promise } a promise that returns the PDF
  */
 async function get( url, options = {} ) {
     if ( !url ) {

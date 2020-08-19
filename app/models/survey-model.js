@@ -358,8 +358,8 @@ function getEnketoIdFromSurveyObject( survey ) {
 }
 
 /**
- * @param {Array<string>} openRosaIds - A list of `openRosaId`s
- * @return { Promise<[module:survey-model~SurveyObject]> } a Promise that resolves with a list of survey objects
+ * @param { Array<string> } openRosaIds - A list of `openRosaId`s
+ * @return { Promise<SurveyObject> } a Promise that resolves with a list of survey objects
  */
 function _getActiveSurveys( openRosaIds ) {
     const tasks = openRosaIds.map( openRosaId => _getEnketoId( openRosaId ) );
