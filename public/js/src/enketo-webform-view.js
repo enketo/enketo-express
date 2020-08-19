@@ -59,7 +59,11 @@ function _showErrorOrAuthenticate( error ) {
     if ( error.status === 401 ) {
         window.location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( window.location.href )}`;
     } else {
-        gui.alert( error.message, t( 'alert.loaderror.heading' ) );
+        if ( !Array.isArray( error ) ) {
+            error = [ error.message  || t( 'error.unknown' ) ];
+        }
+
+        gui.alertLoadErrors( error );
     }
 }
 
@@ -86,18 +90,20 @@ function _convertToReadonly( formParts ) {
 function _init( formParts ) {
     formheader.after( formParts.formFragment );
     const formEl = document.querySelector( 'form.or' );
-    localize( formEl );
-    controller.init( formEl, {
+
+    return controller.init( formEl, {
         modelStr: formParts.model,
         instanceStr: formParts.instance,
         external: formParts.externalData,
         instanceAttachments: formParts.instanceAttachments,
-    } ).then( form => {
-        formParts.languages = form.languages;
-        document.querySelector( 'head>title' ).textContent = document.querySelector( '#form-title' ).textContent;
-        if ( settings.print ) {
-            gui.applyPrintStyle();
-        }
-    } );
-
+    } )
+        .then( form => {
+            formParts.languages = form.languages;
+            document.querySelector( 'head>title' ).textContent = document.querySelector( '#form-title' ).textContent;
+            if ( settings.print ) {
+                gui.applyPrintStyle();
+            }
+            // after widgets have been initialized, localize all data-i18n elements
+            localize( formEl );
+        } );
 }

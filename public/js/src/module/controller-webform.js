@@ -22,9 +22,6 @@ const formOptions = {
 };
 
 function init( formEl, data ) {
-    let advice;
-    let loadErrors = [];
-
     formData = data;
 
     return _initializeRecords()
@@ -51,7 +48,7 @@ function init( formEl, data ) {
             }
 
             form = new Form( formEl, data, formOptions );
-            loadErrors = form.init();
+            let loadErrors = form.init();
 
             // Remove loader. This will make the form visible.
             // In order to aggregate regular loadErrors and GoTo loaderrors,
@@ -81,18 +78,7 @@ function init( formEl, data ) {
                 throw loadErrors;
             }
 
-
             return form;
-        } )
-        .catch( error => {
-            if ( Array.isArray( error ) ) {
-                loadErrors = error;
-            } else {
-                loadErrors.unshift( error.message || t( 'error.unknown' ) );
-            }
-
-            advice = ( data.instanceStr ) ? t( 'alert.loaderror.editadvice' ) : t( 'alert.loaderror.entryadvice' );
-            gui.alertLoadErrors( loadErrors, advice );
         } );
 }
 

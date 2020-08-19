@@ -68,12 +68,16 @@ function _updateMaxSizeSetting( maxSize ) {
 
 function _showErrorOrAuthenticate( error ) {
     error = ( typeof error === 'string' ) ? new Error( error ) : error;
-    console.error( error, error.stack );
     loader.classList.add( 'fail' );
+
     if ( error.status === 401 ) {
         window.location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( window.location.href )}`;
     } else {
-        gui.alert( error.message, t( 'alert.loaderror.heading' ) );
+        if ( !Array.isArray( error ) ) {
+            error = [ error.message  || t( 'error.unknown' ) ];
+        }
+
+        gui.alertLoadErrors( error,  t( 'alert.loaderror.entryadvice' ) );
     }
 }
 
@@ -178,9 +182,9 @@ function _prepareInstance( modelStr, defaults ) {
                 // if this fails, the FormModel will output a console error and ignore the instruction
                 model.node( path ).setVal( defaults[ path ] );
             }
-            // TODO would be good to not include nodes that weren't in the defaults parameter
+            // TODO: would be good to not include nodes that weren't in the defaults parameter
             // HOWEVER, that would also set number of repeats to 0, which may be undesired
-            // TODO would be good to just pass model along instead of converting to string first
+            // TODO: would be good to just pass model along instead of converting to string first
             existingInstance = model.getStr();
         }
     }
@@ -189,38 +193,25 @@ function _prepareInstance( modelStr, defaults ) {
 }
 
 function _init( formParts ) {
-    let error;
+    const formFragment = range.createContextualFragment( formParts.form );
+    formheader.after( formFragment );
+    const formEl = document.querySelector( 'form.or' );
 
-    return new Promise( ( resolve, reject ) => {
-        if ( formParts && formParts.form && formParts.model ) {
-            const formFragment = range.createContextualFragment( formParts.form );
-            formheader.after( formFragment );
-            const formEl = document.querySelector( 'form.or' );
+    return controller.init( formEl, {
+        modelStr: formParts.model,
+        instanceStr: _prepareInstance( formParts.model, settings.defaults ),
+        external: formParts.externalData,
+    } )
+        .then( form => {
+            formParts.languages = form.languages;
+            formParts.htmlView = formEl;
+            document.querySelector( 'head>title' ).textContent = utils.getTitleFromFormStr( formParts.form );
+            if ( settings.print ) {
+                gui.applyPrintStyle();
+            }
+            // after widgets have been initialized, localize all data-i18n elements
+            localize( formEl );
 
-            controller.init( formEl, {
-                modelStr: formParts.model,
-                instanceStr: _prepareInstance( formParts.model, settings.defaults ),
-                external: formParts.externalData,
-            } ).then( form => {
-                formParts.languages = form.languages;
-                formParts.htmlView = formEl;
-                document.querySelector( 'head>title' ).textContent = utils.getTitleFromFormStr( formParts.form );
-                if ( settings.print ) {
-                    gui.applyPrintStyle();
-                }
-                // after widgets have been initialized, localize all data-i18n elements
-                localize( formEl );
-                resolve( formParts );
-            } );
-            //} );
-        } else if ( formParts ) {
-            error = new Error( 'Form not complete.' );
-            error.status = 400;
-            reject( error );
-        } else {
-            error = new Error( 'Form not found' );
-            error.status = 404;
-            reject( error );
-        }
-    } );
+            return  formParts;
+        } );
 }
