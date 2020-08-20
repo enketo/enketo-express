@@ -393,6 +393,21 @@ input[data-constraint="(. >= '0') and (. <= '100')"]{
     background-size: 15px 15px;
     padding-left: 10px;
   }
+  // adding tons symbols
+
+  input[name="/data/gSeedProdSales/gSeedProdCount/iSeedProdCountCrop1"],
+  input[name="/data/gSeedProdSales/gSeedProdCount/iSeedProdCountCrop2"],
+  input[name="/data/gSeedProdSales/gSeedProdCount/iSeedProdCountCrop3"],
+  input[name="/data/gSeedProdSales/gSeedProdCount/iSeedProdCountCrop4"],
+  input[name="/data/gSeedProdSales/gSeedSalesCount/iSeedSalesCountCrop1"],
+  input[name="/data/gSeedProdSales/gSeedSalesCount/iSeedSalesCountCrop2"],
+  input[name="/data/gSeedProdSales/gSeedSalesCount/iSeedSalesCountCrop3"],
+  input[name="/data/gSeedProdSales/gSeedSalesCount/iSeedSalesCountCrop4"]{
+  	background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI0LjIuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAzMiA2NSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzIgNjU7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDojODg4ODg4O30KCS5zdDF7Zm9udC1mYW1pbHk6J015cmlhZFByby1SZWd1bGFyJzt9Cgkuc3Qye2ZvbnQtc2l6ZTo4OC4zNjg0cHg7fQo8L3N0eWxlPgo8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDEuNDMzNiA2MC45MDgyKSIgY2xhc3M9InN0MCBzdDEgc3QyIj50PC90ZXh0Pgo8L3N2Zz4K");
+  	background-position: 97% 12px;
+  	background-repeat: no-repeat;
+  	background-size: 10px 10px;
+  }
 
 .or-repeat{
   background: rgba(255, 251, 227, 0.9);
