@@ -31,10 +31,6 @@
     "private": true,
     "license": "Apache-2.0",
     "dependencies": {
-        "@babel/cli": "^7.10.1",
-        "@babel/core": "^7.11.1",
-        "@babel/plugin-transform-spread": "^7.11.0",
-        "@babel/preset-env": "^7.11.0",
         "aliasify": "2.1.x",
         "basic-auth": "2.0.x",
         "body-parser": "1.x.x",

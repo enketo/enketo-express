@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Changed
+- Build task no longer includes Babel transpilation (possibly affecting support for obscure outdated browsers).
+
 [2.3.11] - 2020-08-19
 ----------------------
 ##### Fixed
