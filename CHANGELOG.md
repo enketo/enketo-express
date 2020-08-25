@@ -5,17 +5,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [2.3.11] - 2020-08-19
 ----------------------
 ##### Fixed
-- "Once" protection not enabled when served from base path.
+- Single submission "once" protection not enabled when served from base path.
 
 [2.3.10] - 2020-08-17
 ----------------------
 ##### Changed
-- Update German translation.
+- Updated German translation.
 - Removed animation when removing a repeat.
 
 ##### Fixed
-- When a `setvalue` element has no `value` attribute and no textContent, it does not work for resetting value.
-- When nested repeats using jr:count have values that empty or 0, a nested repeat can never be created (exception).
+- When a `setvalue` element has no `value` attribute and no textContent, it does not work to reset a value.
+- When nested repeats using jr:count have values that empty or 0, a nested repeat can never be created (exception occurs).
 - When Enketo is served from a base path, the form type is not identified causing things such as redirects in single-submission views to break.
 
 [2.3.9] - 2020-08-03
