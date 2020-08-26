@@ -14,7 +14,7 @@ const TRANSFORM_HASH_URL = `${settings.basePath}/transform/xform/hash/${settings
 const INSTANCE_URL = ( settings.enketoId ) ? `${settings.basePath}/submission/${settings.enketoId}` : null;
 const MAX_SIZE_URL = ( settings.enketoId ) ? `${settings.basePath}/submission/max-size/${settings.enketoId}` :
     `${settings.basePath}/submission/max-size/?xformUrl=${encodeURIComponent( settings.xformUrl )}`;
-const ABSOLUTE_MAX_SIZE = 100 * 1024 * 1024;
+const ABSOLUTE_MAX_SIZE = 100 * 1000 * 1000;
 
 /**
 /**
@@ -221,7 +221,6 @@ function _divideIntoBatches( fileSizes, limit ) {
     const sizes = [];
     const batches = [];
 
-    //limit = limit || 5 * 1024 * 1024;
     for ( i = 0; i < fileSizes.length; i++ ) {
         sizes.push( {
             'index': i,

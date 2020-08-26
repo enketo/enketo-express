@@ -220,11 +220,11 @@ function _getMaxSizeError() {
  * @return {number} the maximum size of a file in bytes
  */
 function _getMaxSize() {
-    return settings.maxSize || 5 * 1024 * 1024;
+    return settings.maxSize;
 }
 
 function getMaxSizeReadable() {
-    return `${Math.round( _getMaxSize() * 100 / ( 1024 * 1024 ) / 100 )}MB`;
+    return `${Math.round( _getMaxSize() * 100 / ( 1000 * 1000 * 100 ) )}MB`;
 }
 
 export default {

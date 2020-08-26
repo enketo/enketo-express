@@ -9,7 +9,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Ordered markdown lists should always be preceded by a newline character (partially reverted change in 2.38) because it's very common to number labels in forms.
 
 ##### Fixed
-- Maximum size of upload questions sometimes reverts to default 5MB if server response is not received quick enough.
+- Maximum file size of upload questions sometimes reverts to default 5MB if server response is not received quick enough.
+- Maximum file size of upload questions is displayed using mebibytes (2<sup>20</sup> bytes) instead of megabytes (10<sup>6 bytes).
 
 [2.3.11] - 2020-08-19
 ----------------------
