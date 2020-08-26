@@ -8,6 +8,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Build task no longer includes Babel transpilation (possibly affecting support for obscure outdated browsers).
 - Ordered markdown lists should always be preceded by a newline character (partially reverted change in 2.38) because it's very common to number labels in forms.
 
+##### Fixed
+- Maximum size of upload questions sometimes reverts to default 5MB if server response is not received quick enough.
+
 [2.3.11] - 2020-08-19
 ----------------------
 ##### Fixed

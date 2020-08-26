@@ -257,36 +257,22 @@ function _divideIntoBatches( fileSizes, limit ) {
 /**
  * Returns the value of the X-OpenRosa-Content-Length header returned by the OpenRosa server for this form.
  *
- * @return { Promise } [description]
+ * @param {object} survey - survey object
+ * @return { Promise } a Promise that resolves with the provided survey object with added maxSize property if successful
  */
-function getMaximumSubmissionSize() {
-    let maxSubmissionSize;
-
-    return new Promise( resolve => {
-
-        if ( MAX_SIZE_URL ) {
-            $.ajax( MAX_SIZE_URL, {
-                type: 'GET',
-                timeout: 5 * 1000,
-                dataType: 'json'
-            } )
-                .done( response => {
-                    if ( response && response.maxSize && !isNaN( response.maxSize ) ) {
-                        maxSubmissionSize = ( Number( response.maxSize ) > ABSOLUTE_MAX_SIZE ) ? ABSOLUTE_MAX_SIZE : Number( response.maxSize );
-                        resolve( maxSubmissionSize );
-                    } else {
-                        console.error( 'Error retrieving maximum submission size. Unexpected response: ', response );
-                        // Note that in /previews the MAX_SIZE_URL is null, which will immediately call this handler
-                        resolve( null );
-                    }
-                } )
-                .fail( () => {
-                    resolve( null );
-                } );
-        } else {
-            resolve( null );
-        }
-    } );
+function getMaximumSubmissionSize( survey ) {
+    // TODO: add 5 sec timeout?
+    return fetch ( MAX_SIZE_URL )
+        .then( response => response.json() )
+        .then( data  => {
+            if ( data && data.maxSize && !isNaN( data.maxSize ) ) {
+                survey.maxSize = Number( data.maxSize ) > ABSOLUTE_MAX_SIZE ? ABSOLUTE_MAX_SIZE : Number( data.maxSize );
+            } else {
+                console.error( 'Error retrieving maximum submission size. Unexpected response: ', data );
+            }
+        } )
+        .catch( () => {} )
+        .then( () => survey );
 }
 
 /**

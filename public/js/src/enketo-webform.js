@@ -34,18 +34,16 @@ if ( settings.offline ) {
         .then( formCache.init )
         .then( _addBranding )
         .then( _swapTheme )
+        .then( formCache.updateMaxSubmissionSize )
+        .then ( _updateMaxSizeSetting )
         .then( _init )
         .then( formParts => {
             formParts.languages.forEach( loadTranslation );
 
             return formParts;
         } )
-        .then( formCache.updateMaxSubmissionSize )
         .then( formCache.updateMedia )
-        .then( s => {
-            _updateMaxSizeSetting( s.maxSize );
-            _setFormCacheEventHandlers();
-        } )
+        .then( _setFormCacheEventHandlers )
         .catch( _showErrorOrAuthenticate );
 } else {
     console.log( 'App in online-only mode.' );
@@ -53,17 +51,19 @@ if ( settings.offline ) {
         .then( connection.getFormParts )
         .then( _swapTheme )
         .then( _addBranding )
-        .then( _init )
-        .then( connection.getMaximumSubmissionSize )
+        .then ( connection.getMaximumSubmissionSize )
         .then( _updateMaxSizeSetting )
+        .then( _init )
         .catch( _showErrorOrAuthenticate );
 }
 
-function _updateMaxSizeSetting( maxSize ) {
-    if ( maxSize ) {
+function _updateMaxSizeSetting( survey ) {
+    if ( survey.maxSize ) {
         // overwrite default max size
-        settings.maxSize = maxSize;
+        settings.maxSize = survey.maxSize;
     }
+
+    return survey;
 }
 
 function _showErrorOrAuthenticate( error ) {
@@ -100,10 +100,12 @@ function _setAppCacheEventHandlers() {
     } );
 }
 
-function _setFormCacheEventHandlers() {
+function _setFormCacheEventHandlers( survey ) {
     document.addEventListener( events.FormUpdated().type, () => {
         gui.feedback( t( 'alert.formupdated.msg' ), 20, t( 'alert.formupdated.heading' ) );
     } );
+
+    return survey;
 }
 
 /**

@@ -28,16 +28,18 @@ initTranslator( survey )
             throw new Error( t( 'error.unknown' ) );
         }
     } )
-    .then( _init )
     .then( connection.getMaximumSubmissionSize )
     .then( _updateMaxSizeSetting )
+    .then( _init )
     .catch( _showErrorOrAuthenticate );
 
-function _updateMaxSizeSetting( maxSize ) {
-    if ( maxSize ) {
+function _updateMaxSizeSetting( survey ) {
+    if ( survey.maxSize ) {
         // overwrite default max size
-        settings.maxSize = maxSize;
+        settings.maxSize = survey.maxSize;
     }
+
+    return survey;
 }
 
 function _showErrorOrAuthenticate( error ){

@@ -209,10 +209,9 @@ function _addBinaryDefaultsAndUpdateModel( survey ) {
 function updateMaxSubmissionSize( survey ) {
 
     if ( !survey.maxSize ) {
-        return connection.getMaximumSubmissionSize()
-            .then( maxSize => {
-                if ( maxSize ) {
-                    survey.maxSize = maxSize;
+        return connection.getMaximumSubmissionSize( survey )
+            .then( survey => {
+                if ( survey.maxSize ) {
                     // Ignore resources. These should not be updated.
                     delete survey.resources;
                     delete survey.binaryDefaults;
@@ -223,7 +222,7 @@ function updateMaxSubmissionSize( survey ) {
                 return survey;
             } );
     } else {
-        return Promise.resolve( survey );
+        return survey;
     }
 }
 
