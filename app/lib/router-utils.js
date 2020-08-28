@@ -90,7 +90,7 @@ function _encryptedEnketoIdParam( req, res, next, id, key ) {
             req.encryptedEnketoId = id;
             next();
         } else {
-            console.error( `decryption with ${key} worked but result is not alphanumeric, ignoring result:`, decrypted );
+            console.error( `decryption with "${key}" worked but result is not alphanumeric, ignoring result:`, decrypted );
             next( 'route' );
         }
     } catch ( e ) {

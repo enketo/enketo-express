@@ -2,7 +2,7 @@ const chai = require( 'chai' );
 const sinon = require( 'sinon' );
 const sinonChai = require( 'sinon-chai' );
 chai.should();
-chai.use(sinonChai);
+chai.use( sinonChai );
 const expect = chai.expect;
 const chaiAsPromised = require( 'chai-as-promised' );
 
@@ -62,6 +62,8 @@ describe( 'Router utilities', () => {
         } );
 
         it( 'should pass "route" when decrypted id is invalid', () => {
+            const originalConsoleError = console.error;
+            console.error = () => {};
             const req = {};
             const res = {};
             const next = sinon.fake();
@@ -73,6 +75,7 @@ describe( 'Router utilities', () => {
             routerUtils.encryptedEnketoIdSingle( req, res, next, id );
             expect( req ).should.not.have.property( 'enketoId' );
             expect( next ).to.have.been.calledWith( 'route' );
+            console.error = originalConsoleError;
         } );
     } );
 
