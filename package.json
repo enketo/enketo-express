@@ -42,7 +42,7 @@
         "csurf": "1.11.x",
         "db.js": "0.15.0",
         "debug": "4.1.x",
-        "enketo-core": "enketo/enketo-core#e7159f95",
+        "enketo-core": "5.16.8",
         "enketo-transformer": "1.41.1",
         "evp_bytestokey": "^1.0.3",
         "express": "^4.17.1",
