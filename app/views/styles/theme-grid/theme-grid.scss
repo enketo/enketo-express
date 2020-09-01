@@ -203,8 +203,9 @@ $extend: 100%;
     legend{
       .or-hint{
         > span{
-          right: 0;
-          top: -$base-unit-sm !important;
+          left: -14px;
+          right: auto;
+          top: -($base-unit-sm + 1)!important;
         }
       }
     }
@@ -247,6 +248,7 @@ $extend: 100%;
         top: $base-unit-sm;
         left: $base-unit-sm / 2;
 
+
         &:hover{
         background-position:$base-unit-sm / 2 $base-unit-sm;
         text-indent: 0;
@@ -269,9 +271,9 @@ $extend: 100%;
     &.or-appearance-w3{
       .or-hint{
         > span{
-          left: auto;
+          left: -($base-unit-sm + 3);
           right: $base-unit-sm * 3;
-          top: -$base-unit-sm + 2;
+          top: -($base-unit + 10);
         }
       }
     }
@@ -508,9 +510,13 @@ i.icon.icon-minus{
     }
   }
   >span{
-    position: absolute;
+    position: relative;
     top: $base-unit-sm - 2;
-    right: 0;
+    >span{
+      left: -14px;
+      position: absolute;
+      top: -29px;
+    }
     &:first-child{
       position: relative;
     }
