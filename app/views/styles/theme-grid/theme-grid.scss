@@ -564,6 +564,7 @@ i.icon.icon-minus{
    border-left: $base-unit-sm - 2 solid $theme-green;
    border-right: $base-unit-sm - 2 solid transparent;
    outline:none;
+ }
 // offline mode
 .offline-enabled{
 	margin-top: $base-unit + 10;
@@ -606,5 +607,4 @@ i.icon.icon-minus{
   border-right: 1px solid transparent;
   left: -15px;
   outline:none;
-}
 }
