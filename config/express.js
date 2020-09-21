@@ -6,7 +6,7 @@ const bodyParser = require( 'body-parser' );
 const cookieParser = require( 'cookie-parser' );
 const fs = require( 'fs' );
 const favicon = require( 'serve-favicon' );
-const config = require( '../app/models/config-model' ).server;
+const config = require( '../app/models/config-model' );
 const logger = require( 'morgan' );
 const i18next = require( 'i18next' );
 const I18nextBackend = require( 'i18next-fs-backend' );
@@ -18,9 +18,9 @@ const app = express();
 const debug = require( 'debug' )( 'express' );
 
 // general
-for ( const item in config ) {
-    if ( Object.prototype.hasOwnProperty.call( config, item ) ) {
-        app.set( item, app.get( item ) || config[ item ] );
+for ( const item in config.server ) {
+    if ( Object.prototype.hasOwnProperty.call( config.server, item ) ) {
+        app.set( item, app.get( item ) || config.server[ item ] );
     }
 }
 app.set( 'port', process.env.PORT || app.get( 'port' ) || 3000 );
@@ -62,10 +62,10 @@ i18next
 // middleware
 app.use( compression() );
 app.use( bodyParser.json( {
-    limit: config[ 'payload limit' ]
+    limit: config.server[ 'payload limit' ]
 } ) );
 app.use( bodyParser.urlencoded( {
-    limit: config[ 'payload limit' ],
+    limit: config.server[ 'payload limit' ],
     extended: true
 } ) );
 app.use( cookieParser( app.get( 'encryption key' ) ) );
@@ -99,6 +99,7 @@ app.use( ( req, res, next ) => {
     };
     res.locals.basePath = req.app.get( 'base path' );
     res.locals.draftEnabled = !req.app.get( 'disable save as draft' );
+    res.locals.clientSettings = config.client;
     next();
 } );
 

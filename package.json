@@ -120,7 +120,7 @@
         "supertest": "4.0.x"
     },
     "browser": {
-        "enketo/config": "./public/js/build/client-config",
+        "enketo/config": "./public/js/src/module/client-config",
         "enketo/widgets": "./public/js/build/widgets",
         "enketo/translator": "./public/js/src/module/translator",
         "enketo/dialog": "./public/js/src/module/gui",

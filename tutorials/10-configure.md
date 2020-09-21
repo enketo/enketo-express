@@ -1,5 +1,21 @@
 All configuration is done in config/config.json or with equivalent environment variables (see [sample.env](https://github.com/enketo/enketo-express/blob/master/config/sample.env)). **Leave config/default-config.json unchanged.** Whichever of these 2 methods you choose, will override the defaults set in config/default-config.json.
 
+### When to rebuild
+
+Javascript only needs to be rebuilt when changes to these configuration items are made:
+
+* [widgets](#widgets)
+
+CSS only needs to be rebuilt when changes to these configuration items are made:
+
+* [widgets](#widgets)
+* [base path](#base-path)
+
+In all other case, changes to configuration items, only require restarting the app.
+
+
+### All items
+
 Below is a complete list of all configuration items. The **bold items are important to set**. Others are less important.
 
 #### app name

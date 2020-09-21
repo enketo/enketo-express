@@ -15,8 +15,8 @@ block style
     include ../../../public/css/common.css
 
   - var media = print ? 'all' : 'print';
-  link(rel='stylesheet', media='all', type='text/css' href=`${basePath}${offlinePath || ''}/css/theme-${defaultTheme}.css`) 
-  link(rel='stylesheet', media=`${media}`, type='text/css' href=`${basePath}${offlinePath || ''}/css/theme-${defaultTheme}.print.css`) 
+  link(rel='stylesheet', media='all', type='text/css' href=`${basePath}${offlinePath || ''}/css/theme-${defaultTheme}.css`)
+  link(rel='stylesheet', media=`${media}`, type='text/css' href=`${basePath}${offlinePath || ''}/css/theme-${defaultTheme}.print.css`)
 
 block script
   - var suffix = (type && type !== 'preview' && type !== 'single') ? '-' + type : ''
@@ -32,6 +32,9 @@ block script
     script.type = 'text/javascript';
     script.src = mainScriptSrc.replace('-bundle.', '-ie11-bundle.');
     document.body.appendChild( script );
+
+  script.
+    var env = !{JSON.stringify(clientSettings).replace(/<\//g, '<\\/')};
 
 block content
   include component/_notification
