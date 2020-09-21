@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ----------------------
+##### Changed
+- Client configuration no longer part of JS build.
+
 ##### Fixed
 - In custom (OC) analog-scale widget, if the widget itself is a page (not its parent group), it is not hidden when it should be when the page is not current.
 - When pasting an invalid number into a number field with an existing value, the existing value does not get cleared in the model.

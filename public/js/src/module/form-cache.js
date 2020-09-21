@@ -57,7 +57,7 @@ function _processDynamicData( survey ) {
             // Carefully compare settings data with stored data to determine what to update.
 
             // submissionParameter
-            if ( settings.submissionParameter.name ) {
+            if ( settings.submissionParameter && settings.submissionParameter.name ) {
                 if ( settings.submissionParameter.value ) {
                     // use the settings value
                     newData.submissionParameter = settings.submissionParameter;
