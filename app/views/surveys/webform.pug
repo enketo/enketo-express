@@ -34,7 +34,7 @@ block script
     document.body.appendChild( script );
 
   script.
-    var env = !{JSON.stringify(clientSettings).replace(/<\//g, '<\\/')};
+    var env = !{JSON.stringify(clientConfig).replace(/<\//g, '<\\/')};
 
 block content
   include component/_notification

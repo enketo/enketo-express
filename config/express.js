@@ -99,7 +99,7 @@ app.use( ( req, res, next ) => {
     };
     res.locals.basePath = req.app.get( 'base path' );
     res.locals.draftEnabled = !req.app.get( 'disable save as draft' );
-    res.locals.clientSettings = config.client;
+    res.locals.clientConfig = config.client;
     next();
 } );
 
