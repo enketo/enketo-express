@@ -24,14 +24,6 @@ block script
     script#main-script(defer, module, src=`${basePath}${offlinePath || ''}/js/build/enketo-webform${suffix}-bundle.min.js`)
   else
     script#main-script(defer, module, src=`${basePath}${offlinePath || ''}/js/build/enketo-webform${suffix}-bundle.js`)
-  script(nomodule).
-    var mainScript = document.querySelector( '#main-script' );
-    var mainScriptSrc = mainScript.src;
-    mainScript.remove();
-    var script = document.createElement( 'script' );
-    script.type = 'text/javascript';
-    script.src = mainScriptSrc.replace('-bundle.', '-ie11-bundle.');
-    document.body.appendChild( script );
 
   script.
     var env = !{JSON.stringify(clientConfig).replace(/<\//g, '<\\/')};
