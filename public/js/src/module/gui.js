@@ -464,8 +464,7 @@ function getPrintDialogComponents() {
 function printGrid( format ) {
     const swapped = printHelper.styleToAll();
 
-    return printHelper.fixGrid( format, 800 )
-        .then( _delay )
+    return printHelper.fixGrid( format )
         .then( window.print )
         .catch( console.error )
         .then( () => {
@@ -478,12 +477,6 @@ function printGrid( format ) {
                 } );
             }
         } );
-}
-
-function _delay( delay = 400 ) {
-    return new Promise( ( resolve ) => {
-        setTimeout( resolve, delay );
-    } );
 }
 
 /**
@@ -499,10 +492,9 @@ function applyPrintStyle() {
             if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
                 const paper = { format: settings.format, landscape: settings.landscape, scale: settings.scale, margin: settings.margin };
 
-                return printHelper.fixGrid( paper, 800 );
+                return printHelper.fixGrid( paper );
             }
         } )
-        .then( _delay )
         .then( () => {
             window.printReady = true;
         } )
