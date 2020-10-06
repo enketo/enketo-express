@@ -5,7 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [Unreleased]
 -----------------------
 ##### Changed
-- Improved timings of print script for Grid Theme forms
+- Improved timings of print script for Grid Theme forms.
+
+##### Fixed
+- A missing external data file does not show a loading error if the XForm contains dummy content.
 
 [2.4.0] - 2020-09-28
 ----------------------
