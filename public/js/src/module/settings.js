@@ -6,11 +6,11 @@ const DEFAULT_MAX_SIZE = 5 * 1000 * 1000;
 const DEFAULT_LOGIN_URL = '/login';
 const DEFAULT_THANKS_URL = '/thanks';
 const settingsMap = [
-    { q: 'return', s: 'returnUrl' }, { q: 'returnURL', s: 'returnUrl' }, 'returnUrl',
-    { q: 'server', s: 'serverUrl' }, { q: 'serverURL', s: 'serverUrl' }, 'serverUrl',
-    { q: 'form', s: 'xformUrl' }, { q: 'id', s: 'xformId' },
+    'returnUrl', { q: 'return_url', s: 'returnUrl' },
+    { q: 'form', s: 'xformUrl' }, { q: 'xform', s: 'xformUrl' },
     'instanceId', { q: 'instance_id', s: 'instanceId' },
-    'parentWindowOrigin', 'print', 'format', 'landscape', 'margin', 'touch',
+    'parentWindowOrigin', { q: 'parent_window_origin', s: 'parentWindowOrigin' },
+    'print', 'format', 'landscape', 'margin', 'touch',
 ];
 
 // rename query string parameters to settings, but only if they do not exist already

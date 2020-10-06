@@ -14,8 +14,6 @@ const loader = document.querySelector( '.main-loader' );
 const formheader = document.querySelector( '.main > .paper > .form-header' );
 const survey = {
     enketoId: settings.enketoId,
-    serverUrl: settings.serverUrl,
-    xformId: settings.xformId,
     xformUrl: settings.xformUrl,
     defaults: settings.defaults
 };
@@ -25,8 +23,6 @@ _setEmergencyHandlers();
 
 if ( settings.offline ) {
     console.log( 'App in offline-capable mode.' );
-    delete survey.serverUrl;
-    delete survey.xformId;
     delete survey.xformUrl;
     _setAppCacheEventHandlers();
     applicationCache.init( survey )

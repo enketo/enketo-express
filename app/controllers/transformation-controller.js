@@ -325,17 +325,6 @@ function _getSurveyParams( req ) {
 
                 return _setCookieAndCredentials( survey, req );
             } );
-    } else if ( params.serverUrl && params.xformId ) {
-        return account.check( {
-            openRosaServer: params.serverUrl,
-            openRosaId: params.xformId
-        } )
-            .then( _checkQuota )
-            .then( survey => {
-                survey.customParam = customParam;
-
-                return _setCookieAndCredentials( survey, req );
-            } );
     } else if ( params.xformUrl ) {
         const urlObj = url.parse( params.xformUrl );
         if ( !urlObj || !urlObj.protocol || !urlObj.host ) {

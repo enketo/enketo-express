@@ -287,8 +287,6 @@ function getMaximumSubmissionSize( survey ) {
 function getFormParts( props ) {
 
     return _postData( TRANSFORM_URL + _getQuery(), {
-        serverUrl: props.serverUrl,
-        xformId: props.xformId,
         xformUrl: props.xformUrl
     } )
         .then( data => {
