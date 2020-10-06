@@ -458,7 +458,7 @@ describe( 'api', () => {
                     status: 201,
                     res: {
                         property: 'edit_url',
-                        expected: /.+\?.*returnUrl=http%3A%2F%2Fenke.to/
+                        expected: /.+\?.*return_url=http%3A%2F%2Fenke.to/
                     }
                 },
                 // invalid parameters
@@ -905,7 +905,7 @@ describe( 'api', () => {
             status: 200,
             res: {
                 property: 'iframe_url',
-                expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                expected: /.+\?.*parent_window_origin=http%3A%2F%2Fexample.com%2F/
             }
         }, {
             endpoint: '/survey/offline/iframe',
@@ -919,7 +919,7 @@ describe( 'api', () => {
             status: 200,
             res: {
                 property: 'preview_iframe_url',
-                expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                expected: /.+\?.*parent_window_origin=http%3A%2F%2Fexample.com%2F/
             }
 
             // ADD TESTS that compare allow_multiple=true and false and undefined
@@ -931,7 +931,7 @@ describe( 'api', () => {
             status: 200,
             res: {
                 property: 'single_iframe_url',
-                expected: /.+(&|\?)parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                expected: /.+(&|\?)parent_window_origin=http%3A%2F%2Fexample.com%2F/
             }
         }, {
             endpoint: '/survey/all',
@@ -940,7 +940,7 @@ describe( 'api', () => {
             status: 200,
             res: {
                 property: 'iframe_url',
-                expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                expected: /.+\?.*parent_window_origin=http%3A%2F%2Fexample.com%2F/
             }
         }, {
             endpoint: '/instance/iframe',
@@ -951,7 +951,7 @@ describe( 'api', () => {
             status: 201,
             res: {
                 property: 'edit_url',
-                expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                expected: /.+\?.*parent_window_origin=http%3A%2F%2Fexample.com%2F/
             }
         },
         // non-iframe endpoints will ignore the parentWindowOrigin parameter
@@ -1257,7 +1257,7 @@ describe( 'api', () => {
             instanceId: 'A',
             res: {
                 property: 'view_url',
-                expected: /\/view\/[a-fA-F0-9]{32,160}\?instance_id=A&returnUrl=/
+                expected: /\/view\/[a-fA-F0-9]{32,160}\?instance_id=A&return_url=/
             },
             offline: true
         },
@@ -1272,7 +1272,7 @@ describe( 'api', () => {
             ret: true,
             res: {
                 property: 'view_iframe_url',
-                expected: /\/view\/i\/[a-fA-F0-9]{32,160}\?instance_id=A&parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                expected: /\/view\/i\/[a-fA-F0-9]{32,160}\?instance_id=A&parent_window_origin=http%3A%2F%2Fexample.com%2F/
             },
             offline: true
         }, {
@@ -1299,7 +1299,7 @@ describe( 'api', () => {
             instanceId: 'A',
             res: {
                 property: 'view_iframe_url',
-                expected: /.+\?.*parentWindowOrigin=http%3A%2F%2Fexample.com%2F/
+                expected: /.+\?.*parent_window_origin=http%3A%2F%2Fexample.com%2F/
             },
             offline: true
         }
