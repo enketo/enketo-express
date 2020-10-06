@@ -535,7 +535,7 @@ function _setIframe( req, res, next ) {
 
     req.iframe = true;
     if ( parentWindowOrigin ) {
-        req.parentWindowOriginParam = `parentWindowOrigin=${encodeURIComponent( decodeURIComponent( parentWindowOrigin ) )}`;
+        req.parentWindowOriginParam = `parent_window_origin=${encodeURIComponent( decodeURIComponent( parentWindowOrigin ) )}`;
     }
     next();
 }
@@ -549,7 +549,7 @@ function _setReturnQueryParam( req, res, next ) {
     const returnUrl = req.body.return_url || req.query.return_url;
 
     if ( returnUrl ) {
-        req.returnQueryParam = `returnUrl=${encodeURIComponent( decodeURIComponent( returnUrl ) )}`;
+        req.returnQueryParam = `return_url=${encodeURIComponent( decodeURIComponent( returnUrl ) )}`;
     }
     next();
 }
