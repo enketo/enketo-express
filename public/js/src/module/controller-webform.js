@@ -21,7 +21,7 @@ const formOptions = {
     printRelevantOnly: settings.printRelevantOnly,
 };
 
-function init( formEl, data ) {
+function init( formEl, data, loadErrors = [] ) {
     formData = data;
 
     return _initializeRecords()
@@ -48,7 +48,7 @@ function init( formEl, data ) {
             }
 
             form = new Form( formEl, data, formOptions );
-            let loadErrors = form.init();
+            loadErrors = loadErrors.concat( form.init() );
 
             // Remove loader. This will make the form visible.
             // In order to aggregate regular loadErrors and GoTo loaderrors,

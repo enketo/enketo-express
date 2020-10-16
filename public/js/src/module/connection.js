@@ -409,7 +409,11 @@ function getMediaFile( url ) {
         .then( item => ( { url, item } ) )
         .catch(  data => {
             const error = new Error( data.message || t( 'error.loadfailed', {
-                resource: url
+                resource: url,
+                // switch off escaping just for this known safe value
+                interpolation: {
+                    escapeValue: false
+                }
             } ) );
             error.status = data.status;
             throw error;
@@ -454,7 +458,11 @@ function _getDataFile( url, languageMap ) {
         } )
         .catch( error => {
             const errorMsg = error.msg || t( 'error.dataloadfailed', {
-                url
+                url,
+                // switch off escaping just for this known safe value
+                interpolation: {
+                    escapeValue: false
+                }
             } );
             throw new Error( errorMsg );
         } );
