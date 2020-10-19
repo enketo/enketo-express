@@ -46,7 +46,7 @@
         },
         "loaderror": {
             "editadvice": "Es wird empfohlen, diesen Eintrag nicht zu bearbeiten bis dieser Fehler behoben wurde.",
-            "entryadvice": "Es wird empfohlen, dieses Formular für die Dateneingabe verwenden, bis das Problem behoben wurde.",
+            "entryadvice": "Es wird empfohlen, dieses Formular nicht für die Dateneingabe verwenden, bis das Problem behoben wurde.",
             "heading": "Ladefehler",
             "msg1": "Fehler beim Laden des Formulars aufgetreten.",
             "msg2": "Bitte senden Sie eine E-Mail mit der Adresse dieser Seite und die untenstehende Fehlermeldung an __emailLink__.",
@@ -215,7 +215,7 @@
     "error": {
         "code": "Fehlercode: __code__",
         "dataloadfailed": "Daten konnten nicht aus __url__ laden",
-        "econnrefused": "Konnte nicht mit Server verbinden",
+        "econnrefused": "Could not connect with Form Server",
         "encryptionnotsupported": "Dieses Formular erfordert eine lokale Verschlüsselung der Datensätze. Leider wird dies von Ihrem Browser nicht unterstützt. Wir empfehlen den Umstieg auf einen modernen Browser.",
         "instancenotfound": "Datensatz nicht vorhanden. Er ist wahrscheinlich abgelaufen.",
         "invalidediturl": "Keine gültige Bearbeitungs-URL",

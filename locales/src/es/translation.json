@@ -215,7 +215,7 @@
     "error": {
         "code": "Código de error: __code__",
         "dataloadfailed": "Se ha producido un error al cargar los datos de __url__",
-        "econnrefused": "No se pudo conectar con el servidor",
+        "econnrefused": "No se pudo conectar con el servidor de formularios",
         "encryptionnotsupported": "Este formulario requiere encriptamiento local de registros. Desafortunadamente su navegador actual no lo soporta. Se recomienda cambiarse a una versión más moderna de su navegador o a otro navegador.",
         "instancenotfound": "Registro no hallado. Puede haber expirado.",
         "invalidediturl": "Esta URL no es válida",
