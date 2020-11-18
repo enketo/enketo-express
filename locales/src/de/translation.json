@@ -215,7 +215,7 @@
     "error": {
         "code": "Fehlercode: __code__",
         "dataloadfailed": "Daten konnten nicht aus __url__ laden",
-        "econnrefused": "Could not connect with Form Server",
+        "econnrefused": "Verbindung zum Form-Server konnte nicht hergestellt werden",
         "encryptionnotsupported": "Dieses Formular erfordert eine lokale Verschlüsselung der Datensätze. Leider wird dies von Ihrem Browser nicht unterstützt. Wir empfehlen den Umstieg auf einen modernen Browser.",
         "instancenotfound": "Datensatz nicht vorhanden. Er ist wahrscheinlich abgelaufen.",
         "invalidediturl": "Keine gültige Bearbeitungs-URL",

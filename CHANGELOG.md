@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Improved timings of print script for Grid Theme forms.
 - API now returning consistent query parameter names (with underscores, no camelcase).
-- Updated German, Swedish, Dutch and Spanish translations.
+- Updated German, Swedish, Dutch, French, Slovak, and Spanish translations.
 
 ##### Fixed
 - A missing external data file does not show a loading error if the XForm contains dummy content.

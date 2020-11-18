@@ -42,7 +42,7 @@
             "msg": "Nová verzia tohto formulára bola stiahnutá. Obnovte túto stránku pre načítanie aktualizovanej verzie."
         },
         "gotonotfound": {
-            "msg": "Nepodarilo sa nájsť otázku \"__path__\" vo formulári. Je odkaz na túto otázku správny?"
+            "msg": "Vo formulári sa nepodarilo nájsť otázku \"__path__\". Je odkaz na túto otázku správny?"
         },
         "loaderror": {
             "editadvice": "Odporúča sa neupravovať tento záznam kým sa to nevyrieši.",
@@ -70,7 +70,8 @@
             "heading": "Aplikácia nemôžno spustiť v režime offline",
             "msg": "Váš prehliadač nepodporuje offline spustenie aplikácie. Môžete pokračovať na prieskum bez využitia tejto funkcie, alebo sa pozrite na možností pre riešenie tohto problému.",
             "negButton": "Použi",
-            "posButton": "Zobraziť možnosti"
+            "posButton": "Zobraziť možnosti",
+            "refresh": "Tento formulár už nie je možné spustiť offline. Pre vyriešenie problému skúste obnoviť stránku. "
         },
         "queuesubmissionsuccess": {
             "msg": "__recordNames__ bol úspešne odoslaný",
@@ -85,6 +86,14 @@
         "recordsavesuccess": {
             "draftmsg": "Záznam uložený ako koncept.",
             "finalmsg": "Záznam vložený do fronty dát pre odoslanie."
+        },
+        "savedraftinfo": {
+            "heading": "Dokončite záznam neskôr",
+            "msg": [
+                "Koncept záznamu je uložený iba v tomto aktuálnom prehliadači. Môžete zavrieť tento prehliadač bez straty uloženého záznamu.",
+                "Ku konceptom záznamov sa dostanete opätovným otvorením tejto stránky a kliknutím na tlačidlo vľavo na obrazovke, ktoré vyzerá takto: __icon__",
+                "Varovanie: Ak vymažete cache prehliadača, všetky koncepty a neodoslané konečné záznamy budú natrvalo odstránené."
+            ]
         },
         "submission": {
             "msg": "Odosielam...",
@@ -206,7 +215,7 @@
     "error": {
         "code": "Chybový Kód: __code__",
         "dataloadfailed": "Nepodarilo sa načítať dáta z __url__",
-        "econnrefused": "Nepodarilo sa pripojiť na Server",
+        "econnrefused": "Nepodarilo sa nadviazať spojenie s formulárovým serverom",
         "encryptionnotsupported": "Tento formulár vyžaduje lokálne šifrovanie záznamov. Váš prehliadač to bohužiaľ nepodporuje. Odporúčame použitie moderného prehliadača.",
         "instancenotfound": "Záznam nie je k dispozícii. Môže to byť spôsobené tým že expiroval.",
         "invalidediturl": "Neplatná URL pre úpravu",
@@ -267,7 +276,8 @@
         "longitude": "zemepisná dĺžka (x.y °)",
         "points": "body",
         "removePoint": "Touto akciou úplne a nenávratne odstránite súčasný geolokačný bod z listu geolokacných bodov. Ste si istý že toto chcete urobiť.",
-        "searchPlaceholder": "hľadanie miesta alebo adresy"
+        "searchPlaceholder": "hľadanie miesta alebo adresy",
+        "bordersintersectwarning": "Hranice sa nemôžu pretínať"
     },
     "here": "tu",
     "hint": {
@@ -294,10 +304,12 @@
         "he": "Hebrejčina",
         "hi": "Hindčina",
         "it": "Taliančina",
+        "ka": "Gruzínčina",
         "km": "Khmérčina",
         "lo": "Laoština",
         "nl": "Holandčina ",
         "no": "Nórčina ",
+        "pa": "Pandžábčina",
         "pl": "Poľština",
         "pt": "Portugalčina",
         "ro": "Rumunčina",
@@ -308,6 +320,7 @@
         "sv": "Švédčina",
         "sw": "Svahilčina",
         "th": "Thajčina",
+        "tr": "Turečtina",
         "vi": "Vietnamčina",
         "zh": "Čínština"
     },
@@ -343,8 +356,8 @@
         }
     },
     "rankwidget": {
-        "clickstart": "Kliknutím spustíte",
-        "tapstart": "Klepnutím spustíte"
+        "clickstart": "Kliknite pre spustenie",
+        "tapstart": "Klepnite pre spustenie"
     },
     "record-list": {
         "export": "Exportovať",
