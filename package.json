@@ -63,7 +63,7 @@
         "load-grunt-tasks": "^5.1.0",
         "lodash": "^4.17.20",
         "morgan": "^1.10.0",
-        "node-forge": "^0.7.6",
+        "node-forge": "^0.10.0",
         "node-sass": "^4.14.1",
         "papaparse": "5.2.x",
         "pug": "^3.0.0",
