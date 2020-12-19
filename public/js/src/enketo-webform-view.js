@@ -72,7 +72,8 @@ function _convertToReadonly( formParts ) {
     // mark form controls as read only
     // Note: Enketo made a syntax error by adding the readonly attribute on a <select>
     // Hence, we cannot use .prop('readonly', true). We'll continue the syntax error.
-    formParts.formFragment.querySelectorAll( 'input:not([readonly]), textarea:not([readonly]), select:not(#form-languages):not([readonly])' )
+    [ ...formParts.formFragment.querySelectorAll( 'input:not([readonly]), textarea:not([readonly]), select:not(#form-languages):not([readonly])' ) ]
+        .filter( el => !el.closest( '#or-calculated-items, #or-preload-items, #or-setvalue-items' ) )
         .forEach( el => {
             el.setAttribute( 'readonly', 'readonly' );
             el.classList.add( 'readonly-forced' );
