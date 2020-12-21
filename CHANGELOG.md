@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 -----------------------
 ##### Fixed
 - Readonly views load with a TypeError.
+- If the same repeat question has both a setvalue/odk-instance-first-load as well as a setvalue/xforms-value-changed, the output can get messed up.
 
 [2.5.4] - 2020-12-18
 -----------------------
