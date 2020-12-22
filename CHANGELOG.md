@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.5.5] - 2020-12-22
 -----------------------
 ##### Fixed
 - Readonly views load with a TypeError.
