@@ -25,12 +25,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [2.5.2] - 2020-12-04
 -----------------------
 ##### Changed
-- setvalue/odk-instance-first-load actions without form controls are evaluated (in form order) before setvalue/odk-instance-first-load actions with form controls (in form order).
+- setvalue/odk-instance-first-load actions without form controls are now evaluated (in form order) before setvalue/odk-instance-first-load actions with form controls (in form order).
 
 [2.5.1] - 2020-12-02
 -----------------------
 ##### Fixed
-- Print/pdf view creates image-map that overlaps in cell below with Grid theme (#744).
+- Print/pdf view creates image-map that overlaps in cell below with Grid theme.
 - In Safari on MacOS, dates are offset incorrectly by the UTC offset.
 - Grid Theme designed for rows with 9 or 10 cells display 1 cell too many.
 - Inconsistent and unsafe HTML rendering of select minimal labels and values.
@@ -62,7 +62,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Changed
 - Build task no longer includes Babel transpilation (possibly affecting support for obscure outdated browsers).
-- Ordered markdown lists should always be preceded by a newline character (partially reverted change in 2.38) because it's very common to number labels in forms.
+- Ordered markdown lists should always be preceded by a newline character (partially reverted change in 2.3.8) because it's very common to number labels in forms.
 
 ##### Fixed
 - Maximum file size of upload questions sometimes reverts to default 5MB if server response is not received quick enough.
