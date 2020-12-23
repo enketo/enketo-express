@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Changed
+- Vastly improved performance for most slow forms because by replacing the XPath evaluator. See [blog post to follow]().
+
 [2.5.6] - 2020-12-23
 -----------------------
 ##### Fixed
