@@ -2,10 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.6.0] - 2020-12-28
 ----------------------
 ##### Changed
-- Vastly improved performance for most slow forms because by replacing the XPath evaluator. See [blog post to follow]().
+- Vastly improved performance for most slow forms by replacing the XPath evaluator. See [blog post](https://blog.enketo.org/performance-leap/).
 
 [2.5.6] - 2020-12-23
 -----------------------
