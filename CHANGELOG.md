@@ -4,8 +4,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [2.6.0] - 2020-12-28
 ----------------------
+### THIS VERSION WAS REVEALED TO HAVE A SERIOUS BUG WITH THE IF() FUNCTION. DO NOT USE IT.
+
+##### Added
+- Support for digest() function.
+
 ##### Changed
-- Vastly improved performance for most slow forms by replacing the XPath evaluator. See [blog post](https://blog.enketo.org/performance-leap/).
+- **Vastly improved performance for most slow forms by replacing the XPath evaluator**. See (post to follow).
 
 [2.5.6] - 2020-12-23
 -----------------------
