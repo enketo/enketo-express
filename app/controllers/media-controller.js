@@ -19,8 +19,8 @@ router
     .get( '/get/*', getMedia );
 
 /**
- * @param {string} [path]
- * @return {string|undefined}
+ * @param { string } [path] - path to media
+ * @return {string|undefined} path transformed to a URL
  */
 function _extractMediaUrl( path ) {
     if ( !path ) {
@@ -38,8 +38,8 @@ function _isPrintView( req ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function getMedia( req, res, next ) {

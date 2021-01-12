@@ -28,14 +28,16 @@ describe( 'Config Model', () => {
 
 
     describe( 'can be set using flat environment variables instead of config.json', () => {
+        const originalConsoleWarn = console.warn;
         const testStringValue = 'test';
 
         before( () => {
             try {
                 fs.renameSync( path.join( __dirname, '../../config/config.json' ), path.join( __dirname, '../../config/config.disabled.json' ) );
             } catch ( e ) {
-                console.error(e);
+                console.error( e );
             }
+            console.warn = () => {};
         } );
 
         after( () => {
@@ -43,8 +45,9 @@ describe( 'Config Model', () => {
                 fs.renameSync( path.join( __dirname, '../../config/config.disabled.json' ), path.join( __dirname, '../../config/config.json' ) );
 
             } catch ( e ) {
-                console.error(e);
+                console.error( e );
             }
+            console.warn = originalConsoleWarn;
         } );
 
         it( 'for string values in a top level config item', () => {

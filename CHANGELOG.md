@@ -2,13 +2,148 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.6.0] - 2020-12-28
+----------------------
+### THIS VERSION WAS REVEALED TO HAVE A SERIOUS BUG WITH THE IF() FUNCTION. DO NOT USE IT.
+
+##### Added
+- Support for digest() function.
+
+##### Changed
+- **Vastly improved performance for most slow forms by replacing the XPath evaluator**. See (post to follow).
+
+[2.5.6] - 2020-12-23
+-----------------------
+##### Fixed
+- A form with a repeat count that has a relevant, will not create the required amount of repeats when loading an existing record.
+
+[2.5.5] - 2020-12-22
+-----------------------
+##### Fixed
+- Readonly views load with a TypeError.
+- If the same repeat question has both a setvalue/odk-instance-first-load as well as a setvalue/xforms-value-changed, the output can get messed up.
+
+[2.5.4] - 2020-12-18
+-----------------------
+##### Fixed
+- The setvalue/odk-instance-first-load default in the first repeat instance is not populated if that repeat or question is non-relevant upon load.
+- If the result of a non-first setvalue/odk-new-repeat calculation is an empty string but the first repeat instance has a non-empty default for that question, the view will show the non-empty default (model is correct).
+
+[2.5.3] - 2020-12-16
+-----------------------
+##### Fixed
+- An exception occurs when a repeat is deleted.
+- When a calculation becomes non-relevant, values are sometimes cleared (they should stay).
+- The input field of a readonly question without a calculation but with a triggered setvalue/xforms-value-changed action remains hidden.
+- Calculation updates do not trigger setvalue/xforms-value-changed actions.
+
+[2.5.2] - 2020-12-04
+-----------------------
+##### Changed
+- setvalue/odk-instance-first-load actions without form controls are now evaluated (in form order) before setvalue/odk-instance-first-load actions with form controls (in form order).
+
+[2.5.1] - 2020-12-02
+-----------------------
+##### Fixed
+- Print/pdf view creates image-map that overlaps in cell below with Grid theme.
+- In Safari on MacOS, dates are offset incorrectly by the UTC offset.
+- Grid Theme designed for rows with 9 or 10 cells display 1 cell too many.
+- Inconsistent and unsafe HTML rendering of select minimal labels and values.
+- Primary instance node names starting with underscore followed by number, break autocomplete widget.
+
+[2.5.0] - 2020-11-18
+-----------------------
+##### Changed
+- Improved timings of print script for Grid Theme forms.
+- API now returning consistent query parameter names (with underscores, no camelcase).
+- Updated German, Swedish, Dutch, French, Slovak, and Spanish translations.
+
+##### Fixed
+- A missing external data file does not show a loading error if the XForm contains dummy content.
+- Geopicker on mobile devices won't show map any more after first map reveal.
+- jr:choice-name not working for questions with radiobuttons.
+- If a ref or nodeset attribute starts with a space, the absolute path is not determined correctly.
+
+[2.4.0] - 2020-09-28
+----------------------
+##### Changed
+- Client configuration no longer part of JS build.
+
+##### Fixed
+- In custom (OC) analog-scale widget, if the widget itself is a page (not its parent group), it is not hidden when it should be when the page is not current.
+- When pasting an invalid number into a number field with an existing value, the existing value does not get cleared in the model.
+
+[2.3.12] - 2020-08-28
+----------------------
+##### Changed
+- Build task no longer includes Babel transpilation (possibly affecting support for obscure outdated browsers).
+- Ordered markdown lists should always be preceded by a newline character (partially reverted change in 2.3.8) because it's very common to number labels in forms.
+
+##### Fixed
+- Maximum file size of upload questions sometimes reverts to default 5MB if server response is not received quick enough.
+- Maximum file size of upload questions is displayed using mebibytes (2<sup>20</sup> bytes) instead of megabytes (10<sup>6 bytes).
+
+[2.3.11] - 2020-08-19
+----------------------
+##### Fixed
+- Single submission "once" protection not enabled when served from base path.
+
+[2.3.10] - 2020-08-17
+----------------------
+##### Changed
+- Updated German translation.
+- Removed animation when removing a repeat.
+
+##### Fixed
+- When a `setvalue` element has no `value` attribute and no textContent, it does not work to reset a value.
+- When nested repeats using jr:count have values that empty or 0, a nested repeat can never be created (exception occurs).
+- When Enketo is served from a base path, the form type is not identified causing things such as redirects in single-submission views to break.
+
+[2.3.9] - 2020-08-03
+----------------------
+##### Changed
+- Add csrf cookie to submission if it exists.
+
+##### Fixed
+- Xforms-version check relies on specific namespace prefix.
+- jr:choice-name() not working if parameters are relative paths.
+- Readonly empty fields are displayed but should be invisible (regression in 2.3.8).
+
+[2.3.8] - 2020-07-23
+----------------------
+##### Changed
+- Updated French translation
+- Markdown lists no longer require preceding newline.
+- Markdown ordered lists detect non-1 numbering start.
+- Add rel="noopener" to markdown links.
+- Focus date/time/datetime pickers when clicking label.
+
+##### Fixed
+- Pulldata fails to work when the search value looks like a number in scientific notation.
+- Text fields with overflowing text have invisible overflow on PDF.
+- Textarea contains unnecessary space character.
+- In Firefox the native datepicker launches when the question label is clicked.
+
+[2.3.7] - 2020-07-10
+----------------------
+##### Changed
+- Do not check quotas when the linked server URL is empty, avoiding slow Redis queries.
+- Changed when dataupdate event is fired for setvalue/odk-instance-first-load actions to facilitate custom clients with field submissions (like OpenClinica).
+- Speed up loading.
+
+##### Fixed
+- Docker `create_config.py` script stored `encryption key` in the wrong place
+
+[2.3.6] - 2020-06-12
 ----------------------
 ##### Changed
 - Made fixed English geopicker warning translatable.
+- Updated Dutch and Spanish translations.
 
 ##### Fixed
 - The "selected" message in the desktop select picker does not switch language immediately.
+- Image-map widget is transparent, not visible but functional, when it is included on a non-first page.
+- Forms no longer work in Edge Legacy.
 
 [2.3.5] - 2020-06-05
 ---------------------

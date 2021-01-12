@@ -2,15 +2,15 @@ import config from 'enketo/config';
 import utils from './utils';
 const queryParams = _getAllQueryParams();
 const settings = {};
-const DEFAULT_MAX_SIZE = 5 * 1024 * 1024;
+const DEFAULT_MAX_SIZE = 5 * 1000 * 1000;
 const DEFAULT_LOGIN_URL = '/login';
 const DEFAULT_THANKS_URL = '/thanks';
 const settingsMap = [
-    { q: 'return', s: 'returnUrl' }, { q: 'returnURL', s: 'returnUrl' }, 'returnUrl',
-    { q: 'server', s: 'serverUrl' }, { q: 'serverURL', s: 'serverUrl' }, 'serverUrl',
-    { q: 'form', s: 'xformUrl' }, { q: 'id', s: 'xformId' },
+    'returnUrl', { q: 'return_url', s: 'returnUrl' },
+    { q: 'form', s: 'xformUrl' }, { q: 'xform', s: 'xformUrl' },
     'instanceId', { q: 'instance_id', s: 'instanceId' },
-    'parentWindowOrigin', 'print', 'format', 'landscape', 'margin', 'touch',
+    'parentWindowOrigin', { q: 'parent_window_origin', s: 'parentWindowOrigin' },
+    'print', 'format', 'landscape', 'margin', 'touch',
 ];
 
 // rename query string parameters to settings, but only if they do not exist already
@@ -63,13 +63,13 @@ settings.languageOverrideParameter = queryParams.lang ? {
 settings.maxSize = DEFAULT_MAX_SIZE;
 
 // add type
-if ( window.location.pathname.indexOf( '/preview' ) === 0 ) {
+if ( window.location.pathname.includes( '/preview/' ) || window.location.pathname.endsWith( '/preview' ) ) {
     settings.type = 'preview';
-} else if ( window.location.pathname.indexOf( '/single' ) === 0 ) {
+} else if ( window.location.pathname.includes( '/single/' ) ) {
     settings.type = 'single';
-} else if ( window.location.pathname.indexOf( '/edit' ) === 0 ) {
+} else if ( window.location.pathname.includes( '/edit/' ) ) {
     settings.type = 'edit';
-} else if ( window.location.pathname.indexOf( '/view' ) === 0 ) {
+} else if ( window.location.pathname.includes( '/view/' ) ) {
     settings.type = 'view';
 } else {
     settings.type = 'other';

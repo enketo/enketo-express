@@ -36,8 +36,8 @@ function init() {
 /**
  * Obtains a record
  *
- * @param  {string} instanceId - [description]
- * @return {Promise}            [description]
+ * @param  { string } instanceId - instanceID of record
+ * @return {Promise<*|undefined>} a Promise that resolves with a record object or undefined
  */
 function get( instanceId ) {
     return store.record.get( instanceId );
@@ -46,8 +46,8 @@ function get( instanceId ) {
 /**
  * Stores a new record. Overwrites (media) files from auto-saved record.
  *
- * @param {*} record - [description]
- * @return {Promise}
+ * @param { object } record - a record object
+ * @return {Promise<undefined>} a promise that resolves with undefined
  */
 function set( record ) {
     return getAutoSavedRecord()
@@ -67,8 +67,8 @@ function set( record ) {
 /**
  * Updates an existing record
  *
- * @param  {*} record - [description]
- * @return {Promise}        [description]
+ * @param  { object } record - a record object
+ * @return { Promise } a promise that resolves with undefined
  */
 function update( record ) {
     return store.record.update( record )
@@ -78,24 +78,33 @@ function update( record ) {
 /**
  * Removes a record
  *
- * @param {string} intanceId - [description]
- * @param instanceId
- * @return {Promise}        [description]
+ * @param { string } instanceId - instanceID of record
+ * @return { Promise } a promise that resolves with undefined
  */
 function remove( instanceId ) {
     return store.record.remove( instanceId )
         .then( _updateRecordList );
 }
 
+/**
+ * Obtains auto-saved record key
+ */
 function getAutoSavedKey() {
     return autoSaveKey;
 }
 
-
+/**
+ * Obtains auto-saved record.
+ */
 function getAutoSavedRecord() {
     return get( autoSaveKey );
 }
 
+/**
+ * Updates auto-saved record
+ *
+ * @param { object } record - record object created from the current state of the form
+ */
 function updateAutoSavedRecord( record ) {
     // prevent this record from accidentally being submitted
     record.draft = true;
@@ -110,6 +119,9 @@ function updateAutoSavedRecord( record ) {
     // do not update recordList
 }
 
+/**
+ * Removes auto-saved record
+ */
 function removeAutoSavedRecord() {
     return store.record.remove( autoSaveKey );
     // do not update recordList
@@ -118,8 +130,8 @@ function removeAutoSavedRecord() {
 /**
  * Gets the countervalue of a new record (guaranteed to be unique)
  *
- * @param  {string} enketoId - [description]
- * @return {Promise}          [description]
+ * @param  { string } enketoId - Enketo ID
+ * @return {Promise<undefined>} Promise that resolves with undefined
  */
 function getCounterValue( enketoId ) {
     return store.property.getSurveyStats( enketoId )
@@ -129,7 +141,7 @@ function getCounterValue( enketoId ) {
 /**
  * Marks a record as active (opened)
  *
- * @param {string} instanceId - [description]
+ * @param { string } instanceId - instanceID of a record
  */
 function setActive( instanceId ) {
     settings.recordId = instanceId;
@@ -155,7 +167,7 @@ function _setUploadIntervals() {
 /**
  * Uploads all final records in the queue
  *
- * @return {Promise} [description]
+ * @return {Promise<undefined>} a Promise that resolves with undefined
  */
 function uploadQueue() {
     let errorMsg;
@@ -170,7 +182,7 @@ function uploadQueue() {
     uploadOngoing = true;
     $uploadButton.prop( 'disabled', true );
 
-    connection.getOnlineStatus()
+    return connection.getOnlineStatus()
         .then( appearsOnline => {
             if ( !appearsOnline ) {
                 return;
@@ -236,6 +248,12 @@ function uploadQueue() {
         } );
 }
 
+/**
+ * Creates a zip file of all locally-saved records.
+ *
+ * @param { string } formTitle - the title of the form
+ * @return {Promise<Blob>} a Promise that resolves with a zip file as Blob
+ */
 function exportToZip( formTitle ) {
 
     $exportButton.prop( 'disabled', true );
@@ -255,7 +273,7 @@ function exportToZip( formTitle ) {
 /**
  * Shows upload progress and record-specific feedback
  *
- * @type {object}
+ * @type { object }
  */
 uploadProgress = {
     _getLi( instanceId ) {
@@ -324,7 +342,7 @@ uploadProgress = {
 /**
  * Updates the record list in the UI
  *
- * @return {Promise} [description]
+ * @return { Promise } [description]
  */
 function _updateRecordList() {
     let $li;
@@ -386,7 +404,7 @@ function _updateRecordList() {
 /**
  * Completely flush the form cache (not the record storage)
  *
- * @return {Promise} [description]
+ * @return {Promise<undefined>} a Promise that resolves with undefined
  */
 function flush() {
     return store.flushTable( 'records' )

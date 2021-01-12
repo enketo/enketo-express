@@ -8,6 +8,7 @@ const surveyModel = require( '../models/survey-model' );
 const cacheModel = require( '../models/cache-model' );
 const account = require( '../models/account-model' );
 const user = require( '../models/user-model' );
+const config = require( '../models/config-model' ).server;
 const utils = require( '../lib/utils' );
 const routerUtils = require( '../lib/router-utils' );
 const isArray = require( 'lodash/isArray' );
@@ -40,8 +41,8 @@ router
 /**
  * Obtains HTML Form, XML model, and existing XML instance
  *
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function getSurveyParts( req, res, next ) {
@@ -76,8 +77,8 @@ function getSurveyParts( req, res, next ) {
 /**
  * Obtains the hash of the cached Survey Parts
  *
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function getSurveyHash( req, res, next ) {
@@ -97,8 +98,10 @@ function getSurveyHash( req, res, next ) {
 }
 
 /**
- * @param {module:survey-model~SurveyObject} survey
- * @return {Promise}
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ *
+ * @return { Promise<module:survey-model~SurveyObject> } a Promise resolving with survey object with form transformation result
+ *
  */
 function _getFormDirectly( survey ) {
     return communicator.getXForm( survey )
@@ -106,16 +109,18 @@ function _getFormDirectly( survey ) {
 }
 
 /**
- * @param {module:survey-model~SurveyObject} survey
- * @return {Promise}
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ *
+ * @return { Promise<module:survey-model~SurveyObject> } a Promise resolving with survey object
  */
 function _authenticate( survey ) {
     return communicator.authenticate( survey );
 }
 
 /**
- * @param {module:survey-model~SurveyObject} survey
- * @return {Promise}
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ *
+ * @return { Promise<module:survey-model~SurveyObject> } a Promise resolving with survey object
  */
 function _getFormFromCache( survey ) {
     return cacheModel.get( survey );
@@ -124,8 +129,9 @@ function _getFormFromCache( survey ) {
 /**
  * Update the Cache if necessary.
  *
- * @param {module:survey-model~SurveyObject} survey
- * @param {Promise}
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ *
+ * @return { Promise<module:survey-model~SurveyObject> } a Promise resolving with survey object
  */
 function _updateCache( survey ) {
     return communicator.getXFormInfo( survey )
@@ -165,8 +171,11 @@ function _updateCache( survey ) {
 }
 
 /**
- * @param {module:survey-model~SurveyObject} survey
- * @return {Promise} always resolved promise
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ *
+ * @return { Promise } always resolved promise
+ *
+
  */
 function _addMediaHash( survey ) {
     survey.mediaHash = utils.getXformsManifestHash( survey.manifest, 'all' );
@@ -177,7 +186,7 @@ function _addMediaHash( survey ) {
 /**
  * Adds a media map, see enketo/enketo-transformer
  *
- * @param {Array|*} manifest
+ * @param {Array|*} manifest - manifest
  * @return {object|null} media map object
  */
 function _getMediaMap( manifest ) {
@@ -196,8 +205,9 @@ function _getMediaMap( manifest ) {
 }
 
 /**
- * @param {module:survey-model~SurveyObject} survey
- * @return {*} updated survey
+ * @param { module:survey-model~SurveyObject } survey - survey object
+ *
+ * @return { module:survey-model~SurveyObject } updated survey
  */
 function _replaceMediaSources( survey ) {
     const media = _getMediaMap( survey.manifest );
@@ -224,10 +234,16 @@ function _replaceMediaSources( survey ) {
 }
 
 /**
- * @param {module:survey-model~SurveyObject} survey
- * @return {Promise}
+ * @param { module:survey-model~SurveyObject } survey - survey object
+ *
+ * @return { Promise<module:survey-model~SurveyObject> } a Promise resolving with survey object
  */
 function _checkQuota( survey ) {
+    if ( !config['account lib'] ) {
+        // Don't check quota if not running SaaS
+        return Promise.resolve( survey );
+    }
+
     return surveyModel
         .getNumber( survey.account.linkedServer )
         .then( quotaUsed => {
@@ -241,8 +257,8 @@ function _checkQuota( survey ) {
 }
 
 /**
- * @param {module:api-controller~ExpressResponse} res
- * @param {module:survey-model~SurveyObject} survey
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
+ * @param {module:survey-model~SurveyObject} survey - survey object
  */
 function _respond( res, survey ) {
     delete survey.credentials;
@@ -266,7 +282,8 @@ function _respond( res, survey ) {
 }
 
 /**
- * @param {module:survey-model~SurveyObject} survey
+ * @param { module:survey-model~SurveyObject } survey - survey object
+ * @return { string } - a hash
  */
 function _getCombinedHash( survey ) {
     const FORCE_UPDATE = 1;
@@ -276,9 +293,10 @@ function _getCombinedHash( survey ) {
 }
 
 /**
- * @param {module:survey-model~SurveyObject} survey
- * @param {module:api-controller~ExpressRequest} req
- * @return {Promise}
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ *
+ * @return { Promise<module:survey-model~SurveyObject> } a Promise resolving with survey object with added credentials
  */
 function _setCookieAndCredentials( survey, req ) {
     // for external authentication, pass the cookie(s)
@@ -290,8 +308,8 @@ function _setCookieAndCredentials( survey, req ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @return {Promise}
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @return { Promise<module:survey-model~SurveyObject> } a Promise resolving with survey object
  */
 function _getSurveyParams( req ) {
     const params = req.body;
@@ -301,17 +319,6 @@ function _getSurveyParams( req ) {
     if ( req.enketoId ) {
         return surveyModel.get( req.enketoId )
             .then( account.check )
-            .then( _checkQuota )
-            .then( survey => {
-                survey.customParam = customParam;
-
-                return _setCookieAndCredentials( survey, req );
-            } );
-    } else if ( params.serverUrl && params.xformId ) {
-        return account.check( {
-            openRosaServer: params.serverUrl,
-            openRosaId: params.xformId
-        } )
             .then( _checkQuota )
             .then( survey => {
                 survey.customParam = customParam;

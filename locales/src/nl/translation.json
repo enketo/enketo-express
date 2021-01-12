@@ -215,7 +215,7 @@
     "error": {
         "code": "Fout Code: __code__",
         "dataloadfailed": "Kon data niet laden van __url__",
-        "econnrefused": "Kon niet verbinden met de Server",
+        "econnrefused": "Kon niet verbinden met de Form Server",
         "encryptionnotsupported": "Voor dit formulier is lokale codering van records vereist. Helaas wordt dit niet ondersteund door uw browser. We raden aan over te schakelen naar een moderne browser.",
         "instancenotfound": "Record niet gevonden. Het kan verlopen zijn.",
         "invalidediturl": "Niet een geldig edit URL",
@@ -276,7 +276,8 @@
         "longitude": "lengtegraad (x.y °)",
         "points": "punten",
         "removePoint": "Hiermee wordt het huidige GPS coordinaat volledig verwijderd uit de lijst met coordinaten en kan dit niet ongedaan worden gemaakt. Weet je zeker dat je dit wilt doen?",
-        "searchPlaceholder": "zoek naar plaats of adres"
+        "searchPlaceholder": "zoek naar plaats of adres",
+        "bordersintersectwarning": "Grenzen kunnen elkaar niet snijden"
     },
     "here": "hier",
     "hint": {

@@ -8,7 +8,7 @@ import { dataUriToBlobSync } from 'enketo-core/src/js/utils';
  * Converts a Blob to a (Base64-coded) dataURL
  *
  * @param {Blob} blob - The blob
- * @param {string} filename - The filename
+ * @param { string } filename - The filename
  * @return {Promise<string>} Base64-encoded-converted content of the provided Blob.
  */
 function blobToDataUri( blob, filename ) {
@@ -73,7 +73,7 @@ function blobToArrayBuffer( blob ) {
 /**
  * The inverse of blobToDataUri, that converts a dataURL back to a Blob
  *
- * @param  {string} dataURI - dataURI
+ * @param  { string } dataURI - dataURI
  * @return {Promise<Blob>} Blob-converted content of provided Data URI.
  */
 function dataUriToBlob( dataURI ) {
@@ -181,7 +181,7 @@ function csvToXml( csv, langMap ) {
  * Generates a querystring from an object or an array of objects with `name` and `value` properties.
  *
  * @param  {{name: string, value: string}|Array.<{name: string, value: string}>} obj - Object or array of objects to turn into a querystring.
- * @return {string} querystring
+ * @return { string } querystring
  */
 function getQueryString( obj ) {
     let arr;
@@ -239,7 +239,7 @@ function _throwInvalidXmlNodeName( name ) {
 
 /**
  *
- * @param {string} path - location.pathname in a browser
+ * @param { string } path - location.pathname in a browser
  */
 function getEnketoId( path ) {
     path = path.endsWith( '/' ) ? path.substring( 0, path.length - 1 ) : path;
