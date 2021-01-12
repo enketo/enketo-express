@@ -28,40 +28,48 @@ initTranslator( survey )
             throw new Error( t( 'error.unknown' ) );
         }
     } )
-    .then( _init )
     .then( connection.getMaximumSubmissionSize )
     .then( _updateMaxSizeSetting )
+    .then( _init )
     .catch( _showErrorOrAuthenticate );
 
-function _updateMaxSizeSetting( maxSize ) {
-    if ( maxSize ) {
+function _updateMaxSizeSetting( survey ) {
+    if ( survey.maxSize ) {
         // overwrite default max size
-        settings.maxSize = maxSize;
+        settings.maxSize = survey.maxSize;
     }
+
+    return survey;
 }
 
-function _showErrorOrAuthenticate( error ) {
+function _showErrorOrAuthenticate( error ){
     loader.classList.add( 'fail' );
+
     if ( error.status === 401 ) {
         window.location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( window.location.href )}`;
     } else {
-        gui.alert( error.message, t( 'alert.loaderror.heading' ) );
+        if ( !Array.isArray( error ) ) {
+            error = [ error.message  || t( 'error.unknown' ) ];
+        }
+
+        gui.alertLoadErrors( error, t( 'alert.loaderror.editadvice' ) );
     }
 }
 
 function _init( formParts ) {
     const formFragment = range.createContextualFragment( formParts.form );
     formheader.after( formFragment );
-    localize( formFragment );
     const formEl = document.querySelector( 'form.or' );
-    controller.init( formEl, {
+
+    return controller.init( formEl, {
         modelStr: formParts.model,
         instanceStr: formParts.instance,
         external: formParts.externalData,
         instanceAttachments: formParts.instanceAttachments,
-    } ).then( form => {
-        formParts.languages = form.languages;
-        document.querySelector( 'head>title' ).textContent = utils.getTitleFromFormStr( formParts.form );
-    } );
-
+    } )
+        .then( form => {
+            formParts.languages = form.languages;
+            document.querySelector( 'head>title' ).textContent = utils.getTitleFromFormStr( formParts.form );
+            localize( formEl );
+        } );
 }

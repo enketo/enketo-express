@@ -6,8 +6,8 @@
  * Error to be translated
  *
  * @static
- * @param {string} translationKey
- * @param {object} translationObject
+ * @param { string } translationKey - translation key
+ * @param { object } translationObject - translation object
  */
 function TranslatedError( translationKey, translationObject ) {
     this.message = '';
@@ -20,7 +20,7 @@ TranslatedError.prototype.name = 'TranslatedError';
 
 module.exports = {
     /**
-     * @type Error
+     * @type { Error }
      */
     Error,
     TranslatedError

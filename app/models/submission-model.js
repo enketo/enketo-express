@@ -58,9 +58,9 @@ if ( process.env.NODE_ENV === 'test' ) {
  * Note that edited records are submitted multiple times with different instanceIDs.
  *
  * @static
- * @param {string} id
- * @param {string} instanceId
- * @return {Promise<Error|boolean>}
+ * @param { string } id - Enketo ID of survey
+ * @param { string } instanceId - instance ID of record
+ * @return {Promise<Error|boolean>} a Promis that resolves with a boolean
  */
 function isNew( id, instanceId ) {
     if ( !id || !instanceId ) {
@@ -98,9 +98,9 @@ function isNew( id, instanceId ) {
 
 /**
  * @static
- * @param {string} id
- * @param {string} instanceId
- * @param {string} deprecatedId
+ * @param { string } id - Enketo ID of survey
+ * @param { string } instanceId - instance ID of record
+ * @param { string } deprecatedId - deprecated ID of record
  */
 function add( id, instanceId, deprecatedId ) {
     if ( logger ) {
@@ -113,17 +113,17 @@ function add( id, instanceId, deprecatedId ) {
 }
 
 /**
- * @param {string} instanceId
+ * @param { string } instanceId - instance ID of record
  * @param {Array<string>} [list] - List of IDs
- * @return {boolean} Whather instanceID already exists in the list
+ * @return { boolean } Whether instanceID already exists in the list
  */
 function _alreadyRecorded( instanceId, list = [] ) {
     return list.indexOf( instanceId ) !== -1;
 }
 
 /**
- * @param {string} key
- * @return {Promise}
+ * @param { string } key - database key
+ * @return { Promise } a Promise that resolves with a redis list of submission IDs
  */
 function _getLatestSubmissionIds( key ) {
     return new Promise( ( resolve, reject ) => {
@@ -140,10 +140,10 @@ function _getLatestSubmissionIds( key ) {
 /**
  * Formatter function for logger
  *
- * @param {*} options
- * @param {*} severity
- * @param {*} date
- * @param {Array<object>} elems
+ * @param { object } options - logger formatting options
+ * @param { object } severity - level of log message
+ * @param { object } date - date
+ * @param {Array<object>} elems - object to log
  */
 function _formatter( options, severity, date, elems ) {
     let instanceId = '-';

@@ -14,8 +14,6 @@ const loader = document.querySelector( '.main-loader' );
 const formheader = document.querySelector( '.main > .paper > .form-header' );
 const survey = {
     enketoId: settings.enketoId,
-    serverUrl: settings.serverUrl,
-    xformId: settings.xformId,
     xformUrl: settings.xformUrl,
     defaults: settings.defaults
 };
@@ -25,8 +23,6 @@ _setEmergencyHandlers();
 
 if ( settings.offline ) {
     console.log( 'App in offline-capable mode.' );
-    delete survey.serverUrl;
-    delete survey.xformId;
     delete survey.xformUrl;
     _setAppCacheEventHandlers();
     applicationCache.init( survey )
@@ -34,18 +30,16 @@ if ( settings.offline ) {
         .then( formCache.init )
         .then( _addBranding )
         .then( _swapTheme )
+        .then( formCache.updateMaxSubmissionSize )
+        .then ( _updateMaxSizeSetting )
         .then( _init )
         .then( formParts => {
             formParts.languages.forEach( loadTranslation );
 
             return formParts;
         } )
-        .then( formCache.updateMaxSubmissionSize )
         .then( formCache.updateMedia )
-        .then( s => {
-            _updateMaxSizeSetting( s.maxSize );
-            _setFormCacheEventHandlers();
-        } )
+        .then( _setFormCacheEventHandlers )
         .catch( _showErrorOrAuthenticate );
 } else {
     console.log( 'App in online-only mode.' );
@@ -53,18 +47,20 @@ if ( settings.offline ) {
         .then( connection.getFormParts )
         .then( _swapTheme )
         .then( _addBranding )
-        .then( _init )
-        .then( connection.getMaximumSubmissionSize )
+        .then ( connection.getMaximumSubmissionSize )
         .then( _updateMaxSizeSetting )
+        .then( _init )
         .catch( _showErrorOrAuthenticate );
 }
 
 
-function _updateMaxSizeSetting( maxSize ) {
-    if ( maxSize ) {
+function _updateMaxSizeSetting( survey ) {
+    if ( survey.maxSize ) {
         // overwrite default max size
-        settings.maxSize = maxSize;
+        settings.maxSize = survey.maxSize;
     }
+
+    return survey;
 }
 
 function _countChars( ) {
@@ -97,12 +93,16 @@ function _countChars( ) {
 
 function _showErrorOrAuthenticate( error ) {
     error = ( typeof error === 'string' ) ? new Error( error ) : error;
-    console.error( error, error.stack );
     loader.classList.add( 'fail' );
+
     if ( error.status === 401 ) {
         window.location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( window.location.href )}`;
     } else {
-        gui.alert( error.message, t( 'alert.loaderror.heading' ) );
+        if ( !Array.isArray( error ) ) {
+            error = [ error.message  || t( 'error.unknown' ) ];
+        }
+
+        gui.alertLoadErrors( error,  t( 'alert.loaderror.entryadvice' ) );
     }
 }
 
@@ -125,10 +125,12 @@ function _setAppCacheEventHandlers() {
     } );
 }
 
-function _setFormCacheEventHandlers() {
+function _setFormCacheEventHandlers( survey ) {
     document.addEventListener( events.FormUpdated().type, () => {
         gui.feedback( t( 'alert.formupdated.msg' ), 20, t( 'alert.formupdated.heading' ) );
     } );
+
+    return survey;
 }
 
 /**
@@ -163,7 +165,7 @@ function _setEmergencyHandlers() {
 /**
  * Adds/replaces branding if necessary, and unhides branding.
  *
- * @param {*} survey - [description]
+ * @param { object } survey - [description]
  */
 function _addBranding( survey ) {
     const brandImg = document.querySelector( '.form-header__branding img' );
@@ -181,8 +183,8 @@ function _addBranding( survey ) {
 /**
  * Swaps the theme if necessary.
  *
- * @param  {*} survey - [description]
- * @return {*}        [description]
+ * @param  { object } survey - [description]
+ * @return { object }        [description]
  */
 function _swapTheme( survey ) {
     if ( survey.form && survey.model ) {
@@ -207,9 +209,9 @@ function _prepareInstance( modelStr, defaults ) {
                 // if this fails, the FormModel will output a console error and ignore the instruction
                 model.node( path ).setVal( defaults[ path ] );
             }
-            // TODO would be good to not include nodes that weren't in the defaults parameter
+            // TODO: would be good to not include nodes that weren't in the defaults parameter
             // HOWEVER, that would also set number of repeats to 0, which may be undesired
-            // TODO would be good to just pass model along instead of converting to string first
+            // TODO: would be good to just pass model along instead of converting to string first
             existingInstance = model.getStr();
         }
     }
@@ -218,39 +220,25 @@ function _prepareInstance( modelStr, defaults ) {
 }
 
 function _init( formParts ) {
-    let error;
+    const formFragment = range.createContextualFragment( formParts.form );
+    formheader.after( formFragment );
+    const formEl = document.querySelector( 'form.or' );
 
-    return new Promise( ( resolve, reject ) => {
-        if ( formParts && formParts.form && formParts.model ) {
-            const formFragment = range.createContextualFragment( formParts.form );
-            formheader.after( formFragment );
-            const formEl = document.querySelector( 'form.or' );
-
-            controller.init( formEl, {
-                modelStr: formParts.model,
-                instanceStr: _prepareInstance( formParts.model, settings.defaults ),
-                external: formParts.externalData,
-            } ).then( form => {
-                formParts.languages = form.languages;
-                formParts.htmlView = formEl;
-                document.querySelector( 'head>title' ).textContent = utils.getTitleFromFormStr( formParts.form );
-                if ( settings.print ) {
-                    gui.applyPrintStyle();
-                }
-                // after widgets have been initialized, localize all data-i18n elements
-                localize( formEl );
-                resolve( formParts );
-                _countChars();
-            } );
-            //} );
-        } else if ( formParts ) {
-            error = new Error( 'Form not complete.' );
-            error.status = 400;
-            reject( error );
-        } else {
-            error = new Error( 'Form not found' );
-            error.status = 404;
-            reject( error );
-        }
-    } );
+    return controller.init( formEl, {
+        modelStr: formParts.model,
+        instanceStr: _prepareInstance( formParts.model, settings.defaults ),
+        external: formParts.externalData,
+    } )
+        .then( form => {
+            formParts.languages = form.languages;
+            formParts.htmlView = formEl;
+            document.querySelector( 'head>title' ).textContent = utils.getTitleFromFormStr( formParts.form );
+            if ( settings.print ) {
+                gui.applyPrintStyle();
+            }
+            // after widgets have been initialized, localize all data-i18n elements
+            localize( formEl );
+            _countChars();
+            return  formParts;
+        } );
 }

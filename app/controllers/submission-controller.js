@@ -28,6 +28,7 @@ router
         next();
     } )
     .get( '/max-size/:encrypted_enketo_id_single', maxSize )
+    .get( '/max-size/:encrypted_enketo_id_view', maxSize )
     .get( '/max-size/:enketo_id?', maxSize )
     .get( '/:encrypted_enketo_id_view', getInstance )
     .get( '/:enketo_id', getInstance )
@@ -43,8 +44,8 @@ router
  * Simply pipes well-formed request to the OpenRosa server and
  * copies the response received.
  *
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function submit( req, res, next ) {
@@ -107,8 +108,8 @@ function submit( req, res, next ) {
 /**
  * Get max submission size.
  *
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function maxSize( req, res, next ) {
@@ -141,8 +142,8 @@ function maxSize( req, res, next ) {
 /**
  * Obtains cached instance (for editing)
  *
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function getInstance( req, res, next ) {
@@ -171,9 +172,9 @@ function getInstance( req, res, next ) {
 }
 
 /**
- * @param {string} id
- * @param {string} instanceId
- * @param {string} deprecatedId
+ * @param { string } id - Enketo ID of survey
+ * @param { string } instanceId - instance ID of record
+ * @param { string } deprecatedId - deprecated (previous) ID of record
  */
 function _logSubmission( id, instanceId, deprecatedId ) {
     submissionModel.isNew( id, instanceId )

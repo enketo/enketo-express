@@ -11,7 +11,7 @@ const url = require( 'url' );
  * Handles `'basic'` and `'token'` authentication types.
  *
  * @static
- * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
  * @return {object|null} Credentials
  */
 function getCredentials( req ) {
