@@ -2,9 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+--------------------
+##### Fixed
+- Readonly views with triggered calculations load with a TypeError.
+
 [2.6.0] - 2020-12-28
 ----------------------
-### THIS VERSION WAS REVEALED TO HAVE A SERIOUS BUG WITH THE IF() FUNCTION. DO NOT USE IT.
+### THIS VERSION WAS REVEALED TO HAVE A SERIOUS BUG WITH THE IF() FUNCTION. DO NOT USE IT. WAIT FOR 2.6.1.
 
 ##### Added
 - Support for digest() function.
