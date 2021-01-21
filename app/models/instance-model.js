@@ -92,7 +92,7 @@ function _getInstance( survey ) {
                     reject( error );
                 } else {
                     survey.instance = obj.instance;
-                    survey.instance = survey.instance.replace(/<mAuditComment>.*<\/mAuditComment>/g, "<mAuditComment></mAuditComment>")
+                    survey.instance = survey.instance.replace(/<auditComment>.*<\/auditComment>/g, "<auditComment></auditComment>")
                     survey.instance = survey.instance.replace(/<mUsername>.*<\/mUsername>/g, "<mUsername></mUsername>")
                     survey.returnUrl = obj.returnUrl;
                     survey.openRosaKey = obj.openRosaKey;
