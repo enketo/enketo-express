@@ -164,7 +164,7 @@ feedbackBar = {
     /**
      * Shows an unobtrusive feedback bar to the user.
      *
-     * @param {string} message
+     * @param { string } message - message to show
      * @param {number=} duration - duration in seconds for the message to show
      */
     show( message, duration ) {
@@ -204,7 +204,7 @@ feedbackBar = {
 /**
  * Select what type of unobtrusive feedback message to show to the user.
  *
- * @param {string}  message
+ * @param { string }  message - message to show
  * @param {number=} duration - duration in seconds for the message to show
  */
 function feedback( message, duration ) {
@@ -219,8 +219,8 @@ function feedback( message, duration ) {
  * Shows a modal alert dialog.
  * TODO: parameters should change to (content, options)
  *
- * @param {string} message
- * @param {string=} heading
+ * @param { string } message - message to show
+ * @param {string=} heading - heading to show
  * @param {string=} level - css class or normal (no styling) ('alert', 'info', 'warning', 'error', 'success')
  * @param {number=} duration - duration in secondsafter which dialog should self-destruct
  */
@@ -319,11 +319,10 @@ function prompt( content, choices, inputs ) {
 
 /**
  * Shows modal asking for confirmation to redirect to login screen
- * 
+ *
  * @param  {string=} msg -       message to show
- * @param  {string=} serverURL - serverURL for which authentication is required
  */
-function confirmLogin( msg /*, serverURL*/ ) {
+function confirmLogin( msg ) {
     msg = msg || t( 'confirm.login.msg' );
 
     confirm( {
@@ -448,7 +447,7 @@ function printForm() {
 
 /**
  * Separated this to allow using parts in custom print dialogs.
- * 
+ *
  */
 function getPrintDialogComponents() {
     // used function because i18next needs to be initalized for t() to work
@@ -465,8 +464,7 @@ function getPrintDialogComponents() {
 function printGrid( format ) {
     const swapped = printHelper.styleToAll();
 
-    return printHelper.fixGrid( format, 800 )
-        .then( _delay )
+    return printHelper.fixGrid( format )
         .then( window.print )
         .catch( console.error )
         .then( () => {
@@ -481,28 +479,22 @@ function printGrid( format ) {
         } );
 }
 
-function _delay( delay = 400 ) {
-    return new Promise( ( resolve ) => {
-        setTimeout( resolve, delay );
-    } );
-}
-
 /**
  * This is function is used by PDF creation functionality from a special print view of the form..
  */
 function applyPrintStyle() {
+
     imagesLoaded()
         .then( () => {
+            printHelper.openAllDetails();
+            document.querySelectorAll( '.question' ).forEach( question => question.dispatchEvent( events.Printify() ) );
+
             if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
                 const paper = { format: settings.format, landscape: settings.landscape, scale: settings.scale, margin: settings.margin };
 
                 return printHelper.fixGrid( paper );
             }
         } )
-        .then( () => // allow some time for repainting
-            new Promise( resolve => {
-                setTimeout( resolve, 300 );
-            } ) )
         .then( () => {
             window.printReady = true;
         } )
@@ -511,7 +503,7 @@ function applyPrintStyle() {
 
 function imagesLoaded() {
     return new Promise( resolve => {
-        let images = Array.prototype.slice.call( document.images );
+        let images = [ ... document.images ];
         const interval = setInterval( () => {
             images = images.filter( image => !image.complete );
             if ( images.length === 0 ) {
@@ -542,7 +534,7 @@ function alertCacheUnsupported() {
 /**
  * Updates various statuses in the GUI (connection, form-edited, browsersupport)
  *
- * @type {object}
+ * @type { object }
  */
 updateStatus = {
     offlineCapable( offlineCapable ) {

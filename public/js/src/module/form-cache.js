@@ -57,7 +57,7 @@ function _processDynamicData( survey ) {
             // Carefully compare settings data with stored data to determine what to update.
 
             // submissionParameter
-            if ( settings.submissionParameter.name ) {
+            if ( settings.submissionParameter && settings.submissionParameter.name ) {
                 if ( settings.submissionParameter.value ) {
                     // use the settings value
                     newData.submissionParameter = settings.submissionParameter;
@@ -115,7 +115,7 @@ function _setUpdateIntervals( survey ) {
  * Form resets require reloading the form media.
  * This makes form resets slower, but it makes initial form loads faster.
  *
- * @param {*} survey - [description]
+ * @param { object } survey - [description]
  */
 function _setResetListener( survey ) {
 
@@ -132,7 +132,7 @@ function _setResetListener( survey ) {
 /**
  * Handles loading form media for newly added repeats.
  *
- * @param {*} survey - [description]
+ * @param { object } survey - [description]
  */
 function _setRepeatListener( survey ) {
     //Instantiate only once, after loadMedia has been completed (once)
@@ -144,10 +144,10 @@ function _setRepeatListener( survey ) {
 }
 
 /**
- * Changes src attributes in view to data-offline-src to facilate loading those resources
+ * Changes src attributes in view to data-offline-src to facilitate loading those resources
  * from the browser storage.
  *
- * @param {*} survey
+ * @param { object } survey - survey object
  */
 function _swapMediaSrc( survey ) {
     survey.form = survey.form.replace( /(src="[^"]*")/g, 'data-offline-$1 src=""' );
@@ -160,7 +160,7 @@ function _swapMediaSrc( survey ) {
  * Loads all default binary files and adds them to the survey object. It removes the src
  * attributes from model nodes with default binary files.
  *
- * @param {*} survey
+ * @param { object } survey - survey object
  */
 function _addBinaryDefaultsAndUpdateModel( survey ) {
     // The mechanism for default binary files is as follows:
@@ -203,16 +203,15 @@ function _addBinaryDefaultsAndUpdateModel( survey ) {
  * If the form/data server updates their max size setting, this value
  * will be updated the next time the cache is refreshed.
  *
- * @param  {*} survey - [description]
- * @return {*}        [description]
+ * @param  { object } survey - [description]
+ * @return { object }        [description]
  */
 function updateMaxSubmissionSize( survey ) {
 
     if ( !survey.maxSize ) {
-        return connection.getMaximumSubmissionSize()
-            .then( maxSize => {
-                if ( maxSize ) {
-                    survey.maxSize = maxSize;
+        return connection.getMaximumSubmissionSize( survey )
+            .then( survey => {
+                if ( survey.maxSize ) {
                     // Ignore resources. These should not be updated.
                     delete survey.resources;
                     delete survey.binaryDefaults;
@@ -223,15 +222,15 @@ function updateMaxSubmissionSize( survey ) {
                 return survey;
             } );
     } else {
-        return Promise.resolve( survey );
+        return survey;
     }
 }
 
 /**
  * Loads survey resources either from the store or via HTTP (and stores them).
  *
- * @param  {*} survey - [description]
- * @return {Promise}        [description]
+ * @param  { object } survey - [description]
+ * @return { Promise }        [description]
  */
 function updateMedia( survey ) {
     const requests = [];
@@ -277,8 +276,8 @@ function updateMedia( survey ) {
  * To be used with Promise.all if you want the results to be returned even if some
  * have failed. Failed tasks will return undefined.
  *
- * @param  {Promise} task - [description]
- * @return {*}         [description]
+ * @param  { Promise } task - [description]
+ * @return { object }         [description]
  */
 function _reflect( task ) {
     return task
@@ -406,7 +405,7 @@ function _updateCache( survey ) {
 /**
  * Completely flush the form cache (not the data storage)
  *
- * @return {Promise} [description]
+ * @return { Promise } [description]
  */
 function flush() {
     return store.survey.removeAll()

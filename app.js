@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint no-console: ["error", { allow: ["log", "error"] }] */
 
 const cluster = require( 'cluster' );
 const numCPUs = require( 'os' ).cpus().length;

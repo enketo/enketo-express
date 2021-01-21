@@ -59,7 +59,11 @@ function _showErrorOrAuthenticate( error ) {
     if ( error.status === 401 ) {
         window.location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( window.location.href )}`;
     } else {
-        gui.alert( error.message, t( 'alert.loaderror.heading' ) );
+        if ( !Array.isArray( error ) ) {
+            error = [ error.message  || t( 'error.unknown' ) ];
+        }
+
+        gui.alertLoadErrors( error );
     }
 }
 
@@ -68,7 +72,8 @@ function _convertToReadonly( formParts ) {
     // mark form controls as read only
     // Note: Enketo made a syntax error by adding the readonly attribute on a <select>
     // Hence, we cannot use .prop('readonly', true). We'll continue the syntax error.
-    formParts.formFragment.querySelectorAll( 'input:not([readonly]), textarea:not([readonly]), select:not(#form-languages):not([readonly])' )
+    [ ...formParts.formFragment.querySelectorAll( 'input:not([readonly]), textarea:not([readonly]), select:not(#form-languages):not([readonly])' ) ]
+        .filter( el => !el.closest( '#or-calculated-items, #or-preload-items, #or-setvalue-items' ) )
         .forEach( el => {
             el.setAttribute( 'readonly', 'readonly' );
             el.classList.add( 'readonly-forced' );
@@ -86,18 +91,20 @@ function _convertToReadonly( formParts ) {
 function _init( formParts ) {
     formheader.after( formParts.formFragment );
     const formEl = document.querySelector( 'form.or' );
-    localize( formEl );
-    controller.init( formEl, {
+
+    return controller.init( formEl, {
         modelStr: formParts.model,
         instanceStr: formParts.instance,
         external: formParts.externalData,
         instanceAttachments: formParts.instanceAttachments,
-    } ).then( form => {
-        formParts.languages = form.languages;
-        document.querySelector( 'head>title' ).textContent = document.querySelector( '#form-title' ).textContent;
-        if ( settings.print ) {
-            gui.applyPrintStyle();
-        }
-    } );
-
+    } )
+        .then( form => {
+            formParts.languages = form.languages;
+            document.querySelector( 'head>title' ).textContent = document.querySelector( '#form-title' ).textContent;
+            if ( settings.print ) {
+                gui.applyPrintStyle();
+            }
+            // after widgets have been initialized, localize all data-i18n elements
+            localize( formEl );
+        } );
 }

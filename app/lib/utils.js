@@ -12,8 +12,8 @@ const validUrl = require( 'valid-url' );
  * Returns a unique, predictable openRosaKey from a survey oject
  *
  * @static
- * @param {module:survey-model~SurveyObject} survey
- * @param {string} [prefix]
+ * @param {module:survey-model~SurveyObject} survey - survey object
+ * @param { string } [prefix] - prefix
  * @return {string|null} openRosaKey
  */
 function getOpenRosaKey( survey, prefix ) {
@@ -30,9 +30,9 @@ function getOpenRosaKey( survey, prefix ) {
  * Returns a XForm manifest hash.
  *
  * @static
- * @param {Array} manifest
- * @param {string} type - Webform type
- * @return {string} Hash
+ * @param {Array} manifest - hash of XForm manifest
+ * @param { string } type - Webform type
+ * @return { string } Hash
  */
 function getXformsManifestHash( manifest, type ) {
     const hash = '';
@@ -57,8 +57,8 @@ function getXformsManifestHash( manifest, type ) {
  * It strips the protocol, removes a trailing slash, removes www, and converts to lowercase
  *
  * @static
- * @param {string} url - Url to be cleaned up
- * @return {string} Cleaned up url
+ * @param { string } url - Url to be cleaned up
+ * @return { string } Cleaned up url
  */
 function cleanUrl( url ) {
     url = url.trim();
@@ -79,8 +79,8 @@ function cleanUrl( url ) {
  * - query strings
  *
  * @static
- * @param {string} url - Url to be validated
- * @return {boolean} Whether the url is valid
+ * @param { string } url - Url to be validated
+ * @return { boolean } Whether the url is valid
  */
 function isValidUrl( url ) {
     return !!validUrl.isWebUri( url ) && !( /\?/.test( url ) ) && !( /#/.test( url ) );
@@ -90,8 +90,8 @@ function isValidUrl( url ) {
  * Returns md5 hash of given message
  *
  * @static
- * @param {string} message - Message to be hashed
- * @return {string} Hash string
+ * @param { string } message - Message to be hashed
+ * @return { string } Hash string
  */
 function md5( message ) {
     const hash = crypto.createHash( 'md5' );
@@ -107,9 +107,9 @@ function md5( message ) {
  * and we should use a dedicated low-importance password for this.
  *
  * @static
- * @param {string} text - The text to be encrypted
- * @param {string} pw - The password to use for encryption
- * @return {string} The encrypted result
+ * @param { string } text - The text to be encrypted
+ * @param { string } pw - The password to use for encryption
+ * @return { string } The encrypted result
  */
 function insecureAes192Encrypt( text, pw ) {
     let encrypted;
@@ -125,9 +125,9 @@ function insecureAes192Encrypt( text, pw ) {
  * Decrypts encrypted text.
  *
  * @static
- * @param {*} encrypted - The text to be decrypted
- * @param {*} pw - The password to use for decryption
- * @return {string} The decrypted result
+ * @param { object } encrypted - The text to be decrypted
+ * @param { object } pw - The password to use for decryption
+ * @return { string } The decrypted result
  */
 function insecureAes192Decrypt( encrypted, pw ) {
     let decrypted;
@@ -143,9 +143,9 @@ function insecureAes192Decrypt( encrypted, pw ) {
  * Returns random howMany-lengthed string from provided characters.
  *
  * @static
- * @param {number} [howMany] - Desired length of string
- * @param {string} [chars] - Characters to use
- * @return {string} Random string
+ * @param { number } [howMany] - Desired length of string
+ * @param { string } [chars] - Characters to use
+ * @return { string } Random string
  */
 function randomString( howMany = 8, chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' ) {
     const rnd = crypto.randomBytes( howMany );
@@ -160,7 +160,7 @@ function randomString( howMany = 8, chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHI
  * Not secure, but used for backward compatibility with deprecated crypto.createCipher
  * It's okay to use for this purpose.
  *
- * @param pw
+ * @param { string } pw - password
  */
 function _getKeyIv( pw ) {
     return EVP_BytesToKey( pw, null, 192, 16 );
@@ -189,8 +189,8 @@ function pickRandomItemFromArray( array ) {
  * Compares two objects by shallow properties.
  *
  * @static
- * @param {object} a - First object to be compared
- * @param {object} b - Second object to be compared
+ * @param { object } a - First object to be compared
+ * @param { object } b - Second object to be compared
  * @return {null|boolean} Whether objects are equal (`null` for invalid arguments)
  */
 function areOwnPropertiesEqual( a, b ) {
@@ -224,8 +224,8 @@ function areOwnPropertiesEqual( a, b ) {
  * Converts a url to a local (proxied) url.
  *
  * @static
- * @param {string} url - The url to convert
- * @return {string} The converted url
+ * @param { string } url - The url to convert
+ * @return { string } The converted url
  */
 function toLocalMediaUrl( url ) {
     const localUrl = `${config[ 'base path' ]}/media/get/${url.replace( /(https?):\/\//, '$1/' )}`;

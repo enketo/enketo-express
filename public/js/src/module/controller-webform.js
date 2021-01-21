@@ -6,7 +6,7 @@ import gui from './gui';
 import connection from './connection';
 import settings from './settings';
 import { Form } from 'enketo-core';
-import { updateDownloadLink } from 'enketo-core/src/js/utils';
+import downloadUtils from 'enketo-core/src/js/download-utils';
 import events from './event';
 import fileManager from './file-manager';
 import { t, localize, getCurrentUiLanguage, getDesiredLanguage } from './translator';
@@ -21,10 +21,7 @@ const formOptions = {
     printRelevantOnly: settings.printRelevantOnly,
 };
 
-function init( formEl, data ) {
-    let advice;
-    let loadErrors = [];
-
+function init( formEl, data, loadErrors = [] ) {
     formData = data;
 
     return _initializeRecords()
@@ -51,7 +48,7 @@ function init( formEl, data ) {
             }
 
             form = new Form( formEl, data, formOptions );
-            loadErrors = form.init();
+            loadErrors = loadErrors.concat( form.init() );
 
             // Remove loader. This will make the form visible.
             // In order to aggregate regular loadErrors and GoTo loaderrors,
@@ -81,18 +78,7 @@ function init( formEl, data ) {
                 throw loadErrors;
             }
 
-
             return form;
-        } )
-        .catch( error => {
-            if ( Array.isArray( error ) ) {
-                loadErrors = error;
-            } else {
-                loadErrors.unshift( error.message || t( 'error.unknown' ) );
-            }
-
-            advice = ( data.instanceStr ) ? t( 'alert.loaderror.editadvice' ) : t( 'alert.loaderror.entryadvice' );
-            gui.alertLoadErrors( loadErrors, advice );
         } );
 }
 
@@ -173,7 +159,7 @@ function _resetForm( confirmed ) {
 /**
  * Loads a record from storage
  *
- * @param  {string} instanceId - [description]
+ * @param  { string } instanceId - [description]
  * @param  {=boolean?} confirmed -  [description]
  */
 function _loadRecord( instanceId, confirmed ) {
@@ -313,7 +299,7 @@ function _submitRecord() {
                     $( 'form.or' ).empty();
                     $( 'button#submit-form' ).remove();
                     d.setTime( d.getTime() + age * 1000 );
-                    document.cookie = `${settings.enketoId}=${now.getTime()};path=/single;max-age=${age};expires=${d.toGMTString()};`;
+                    document.cookie = `${settings.enketoId}=${now.getTime()};path=${settings.basePath}/single;max-age=${age};expires=${d.toGMTString()};`;
                 }
                 msg += t( 'alert.submissionsuccess.redirectmsg' );
                 gui.alert( msg, t( 'alert.submissionsuccess.heading' ), level );
@@ -659,7 +645,7 @@ function updateDownloadLinkAndClick( anchor, file ) {
     const objectUrl = URL.createObjectURL( file );
 
     anchor.textContent = file.name;
-    updateDownloadLink( anchor, objectUrl, file.name );
+    downloadUtils.updateDownloadLink( anchor, objectUrl, file.name );
     anchor.click();
 }
 
@@ -671,7 +657,7 @@ function setLogoutLinkVisibility() {
 /**
  * Determines whether the page is loaded inside an iframe
  *
- * @return {boolean} [description]
+ * @return { boolean } [description]
  */
 function inIframe() {
     try {
@@ -684,7 +670,7 @@ function inIframe() {
 /**
  * Attempts to send a message to the parent window, useful if the webform is loaded inside an iframe.
  *
- * @param  {{type: string}} event
+ * @param  {Event} event - event
  */
 function postEventAsMessageToParentWindow( event ) {
     if ( event && event.type ) {

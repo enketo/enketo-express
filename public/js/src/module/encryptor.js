@@ -1,11 +1,10 @@
 /**********************************************************************************************
- * Just a word of warning. Be extra careful changing this code by always testing the decryption 
- * of submissions with and without media files in ODK Briefcase. If a regression is created it 
- * may be impossible to retrieve encrypted data (also the user likely cannot share the private 
+ * Just a word of warning. Be extra careful changing this code by always testing the decryption
+ * of submissions with and without media files in ODK Briefcase. If a regression is created it
+ * may be impossible to retrieve encrypted data (also the user likely cannot share the private
  * key).
  **********************************************************************************************/
 import forge from 'node-forge';
-
 import utils from './utils';
 const SYMMETRIC_ALGORITHM = 'AES-CFB'; // JAVA: "AES/CFB/PKCS5Padding"
 const ASYMMETRIC_ALGORITHM = 'RSA-OAEP'; // JAVA: "RSA/NONE/OAEPWithSHA256AndMGF1Padding"
@@ -14,6 +13,11 @@ const ASYMMETRIC_OPTIONS = {
     mgf: forge.mgf.mgf1.create( forge.md.sha1.create() )
 };
 
+/**
+ * Checks whether encryption is supported by the browser.
+ *
+ * @return { boolean } whether encryption is support by the browser
+ */
 function isSupported() {
     return typeof ArrayBuffer !== 'undefined' &&
         new ArrayBuffer( 8 ).byteLength === 8 &&
@@ -22,9 +26,10 @@ function isSupported() {
 }
 
 /**
- * 
- * @param {{id: string, version: string, encryptionKey: string}} form 
- * @param {{instanceId: string, xml: string, files?: [blob]}} record 
+ * Encrypts a record.
+ *
+ * @param {{id: string, version: string, encryptionKey: string}} form - form properties object
+ * @param {{instanceId: string, xml: string, files?: [Blob]}} record - record to encrypt
  */
 function encryptRecord( form, record ) {
     const symmetricKey = _generateSymmetricKey();
@@ -98,7 +103,7 @@ function _encryptMediaFiles( files, symmetricKey, seed ) {
         /*
          * Note using new fileReader().readAsBinaryString() is about 30% faster than using readAsDataURL
          * However, readAsDataURL() works in IE11, and readAsBinaryString() is a bit frowned upon.
-         * Interestingly, readAsArrayBuffer() is significantly slower than both. That difference is 
+         * Interestingly, readAsArrayBuffer() is significantly slower than both. That difference is
          * caused by forge.util.createBuffer() (which accepts both types as parameter)
          */
         utils.blobToDataUri( file )
@@ -132,9 +137,9 @@ function _encryptSubmissionXml( xmlStr, symmetricKey, seed ) {
 /**
  * Symmetric encryption equivalent to Java "AES/CFB/PKCS5Padding"
  *
- * @param {ByteBuffer} content 
- * @param {*} symmetricKey 
- * @param {Seed} seed 
+ * @param { ByteBuffer } content - content to encrypt
+ * @param { object } symmetricKey - symmetric encryption key
+ * @param { Seed } seed - seed
  */
 function _encryptContent( content, symmetricKey, seed ) {
     const cipher = forge.cipher.createCipher( SYMMETRIC_ALGORITHM, symmetricKey );

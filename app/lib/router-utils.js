@@ -8,8 +8,8 @@ const config = require( '../models/config-model' ).server;
  * @static
  * @name idEncryptionKeys
  * @constant
- * @property {string} singleOnce
- * @property {string} view
+ * @property { string } singleOnce
+ * @property { string } view
  */
 const keys = {
     singleOnce: config[ 'less secure encryption key' ],
@@ -20,10 +20,10 @@ const keys = {
  * @static
  * @name enketoId
  * @function
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
- * @param {string} id
+ * @param { string } id - Enketo ID
  */
 function enketoIdParam( req, res, next, id ) {
     if ( /^[A-z0-9]{4,31}$/.test( id ) ) {
@@ -40,10 +40,10 @@ function enketoIdParam( req, res, next, id ) {
  * @static
  * @name encryptedEnketoIdSingle
  * @function
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
- * @param {string} id
+ * @param { string } id - Enketo ID
  */
 function encryptedEnketoIdParamSingle( req, res, next, id ) {
     _encryptedEnketoIdParam( req, res, next, id, keys.singleOnce );
@@ -55,10 +55,10 @@ function encryptedEnketoIdParamSingle( req, res, next, id ) {
  * @static
  * @name encryptedEnketoIdView
  * @function
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
- * @param {string} id
+ * @param { string } id - Enketo ID
  */
 function encryptedEnketoIdParamView( req, res, next, id ) {
     _encryptedEnketoIdParam( req, res, next, id, keys.view );
@@ -67,11 +67,11 @@ function encryptedEnketoIdParamView( req, res, next, id ) {
 /**
  * Returns decrypted Enketo ID
  *
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
- * @param {string} id
- * @param {string} key - Encryption key
+ * @param { string } id - Enketo ID
+ * @param { string } key - Encryption key
  */
 function _encryptedEnketoIdParam( req, res, next, id, key ) {
     // Do not do a size check because we now have a configurable id size which can be used on an existing server,
@@ -90,7 +90,7 @@ function _encryptedEnketoIdParam( req, res, next, id, key ) {
             req.encryptedEnketoId = id;
             next();
         } else {
-            console.error( `decryption with ${key} worked but result is not alphanumeric, ignoring result:`, decrypted );
+            console.error( `decryption with "${key}" worked but result is not alphanumeric, ignoring result:`, decrypted );
             next( 'route' );
         }
     } catch ( e ) {
