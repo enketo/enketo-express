@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.6.1] - 2021-02-03
 --------------------
 ##### Changed
 - The uuid() function implementation has improved with a reduced chance of collisions.
@@ -19,13 +19,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [2.6.0] - 2020-12-28
 ----------------------
-### THIS VERSION WAS REVEALED TO HAVE A SERIOUS BUG WITH THE IF() FUNCTION. DO NOT USE IT. WAIT FOR 2.6.1.
-
 ##### Added
 - Support for digest() function.
 
 ##### Changed
-- **Vastly improved performance for most slow forms by replacing the XPath evaluator**. See (post to follow).
+- **Vastly improved performance for most slow forms by replacing the XPath evaluator**. See (https://blog.enketo.org/performance-leap/).
 
 [2.5.6] - 2020-12-23
 -----------------------
