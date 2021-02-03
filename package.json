@@ -82,7 +82,7 @@
         "serve-favicon": "2.x.x",
         "time-grunt": "2.x.x",
         "valid-url": "^1.0.9",
-        "vex-dialog-enketo": "github:enketo/vex-dialog#b6e0f01",
+        "vex-dialog-enketo": "enketo/vex-dialog-enketo#b6e0f01",
         "vex-js": "4.1.x",
         "xml2js": "^0.4.23"
     },

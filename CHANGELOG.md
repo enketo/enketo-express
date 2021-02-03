@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[2.6.1] - 2021-02-03
+[2.6.1] - 2021-02-04
 --------------------
 ##### Changed
 - The uuid() function implementation has improved with a reduced chance of collisions.
@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Draw widget changes file name whenever browser window resizes.
 - Draw widget updates file name when canvas loses focus if drawing hasn't changed.
 - Nested XPath expressions with dead branches cause an exception (since 5.17.0).
+- Installation issue in Travis-CI, possible affecting other servers as well.
 
 [2.6.0] - 2020-12-28
 ----------------------
