@@ -221,7 +221,7 @@
         "invalidediturl": "Not a valid edit URL",
         "loadfailed": "Failed to load __resource__",
         "notfoundinformlist": [
-            "Oops, this form doesn't exist (anymore). Most likely the owner of the form has deleted it, archived it, or disabled it. Please contact the form's owner to confirm.",
+            "Oops, this form doesn't exist (anymore) or you have no access permission for it. Most likely the owner of the form has deleted it, archived it, disabled it, or did not grant you access permissions. Please contact the form's owner to confirm.",
             "Detailed error: Form with ID __formId__ not found in /formList."
         ],
         "pagenotfound": "Page not Found",
