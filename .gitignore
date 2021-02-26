@@ -18,6 +18,8 @@ config/config.json
 enketo-main.rdb
 setup/docker/secrets/*
 setup/docker/redis_main_data/*
+setup/docker/redis_cache_data/
+setup/docker/.vols/
 logs/submissions*
 logs/logrotate
 .nyc_output

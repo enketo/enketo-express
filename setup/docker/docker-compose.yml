@@ -35,17 +35,22 @@ services:
       - ./.vols/build/locales:/srv/src/enketo_express/locales/build
       - ./secrets/:/srv/src/enketo_express/setup/docker/secrets/
     restart: unless-stopped
+    depends_on:
+      - redis_main
+      - redis_cache
 
   redis_main:
     image: redis:5
     volumes:
-      - ../redis/conf/redis-enketo-main.conf:/etc/redis/redis.conf:ro
+      - ../redis/conf/redis-enketo-main-docker.conf:/usr/local/etc/redis/redis.conf:ro
       - ./redis_main_data/:/data/
     restart: unless-stopped
+    command: "redis-server /usr/local/etc/redis/redis.conf"
 
   redis_cache:
     image: redis:5
     volumes:
-      - ../redis/conf/redis-enketo-cache.conf:/etc/redis/redis.conf:ro
+      - ../redis/conf/redis-enketo-cache-docker.conf:/usr/local/etc/redis/redis.conf:ro
       - ./redis_cache_data/:/data/
     restart: unless-stopped
+    command: "redis-server /usr/local/etc/redis/redis.conf"
