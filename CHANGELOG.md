@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[2.6.2] - 2021-03-02
+--------------------
+##### Fixed
+- Setvalue/xforms-value-changed inside a select multiple question is not working.
+- Setvalue/xforms-value-changed with trigger inside a repeat and target outside the repeat does not work.
+- A calculation without form control inside a non-relevant repeat with 0 instances, fails to prune non-relevant nodes.
+- Misplaced image-map when used in conjunction with complex custom comment widgets (OC).
+- The function jr:choice-name causes an exception if the choices list of radiobuttons or checkboxes is empty.
+- The function jr:choice-name causes an exception if the choices list of pulldown selects is empty.
+
 [2.6.1] - 2021-02-04
 --------------------
 ##### Changed
