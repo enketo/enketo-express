@@ -355,6 +355,11 @@ $extend: 100%;
   line-height: $base-unit-sm * 4.5;
   min-height: $base-unit-sm * 5.5;
 }
+.range-widget__current:empty:before {
+  content: 'Not rated';
+  color: $secondary-green;
+  font-size: $default-text-size + 1;
+}
 
 .range-widget__ticks{
   span{
