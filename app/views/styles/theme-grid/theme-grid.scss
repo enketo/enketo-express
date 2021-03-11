@@ -613,3 +613,9 @@ i.icon.icon-minus{
   left: -15px;
   outline:none;
 }
+
+@media print, screen and (min-width: 600px) {
+  .or-appearance-w6 .or-appearance-w1.or-appearance-dropdown-matrix {
+      width: calc(16.6666666667%);
+  }
+}
