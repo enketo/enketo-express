@@ -57,7 +57,7 @@ module.exports = grunt => {
         watch: {
             sass: {
                 files: [ 'app/views/styles/**/*.scss', 'widget/**/*.scss', '!app/views/styles/component/_system_variables.scss' ],
-                tasks: [ 'sass' ],
+                tasks: [ 'shell:clean-css', 'sass' ],
                 options: {
                     spawn: false,
                     livereload: true
@@ -72,11 +72,11 @@ module.exports = grunt => {
             },
             language: {
                 files: [ 'app/views/**/*.pug', 'app/controllers/**/*.js', 'app/models/**/*.js', 'public/js/src/**/*.js' ],
-                tasks: [ 'shell:translation', 'i18next' ]
+                tasks: [ 'shell:clean-locales', 'shell:translation', 'i18next' ]
             },
             js: {
                 files: [ 'public/js/src/**/*.js', 'widget/**/*.js' ],
-                tasks: [ 'js' ],
+                tasks: [ 'shell:clean-js', 'js' ],
                 options: {
                     spawn: false,
                     livereload: true
@@ -234,10 +234,11 @@ module.exports = grunt => {
         grunt.log.writeln( `File ${WIDGETS_SASS} created` );
     } );
 
-    grunt.registerTask( 'default', [ 'locales', 'widgets', 'css', 'js', 'terser' ] );
-    grunt.registerTask( 'locales', [ 'shell:clean-locales', 'i18next' ] );
-    grunt.registerTask( 'js', [ 'shell:clean-js', 'widgets', 'shell:rollup' ] );
-    grunt.registerTask( 'css', [ 'shell:clean-css', 'system-sass-variables:create', 'sass' ] );
+    grunt.registerTask( 'default', [ 'clean', 'locales', 'widgets', 'css', 'js', 'terser' ] );
+    grunt.registerTask( 'clean', [ 'shell:clean-js','shell:clean-css' , 'shell:clean-locales' ] );
+    grunt.registerTask( 'locales', [ 'i18next' ] );
+    grunt.registerTask( 'js', [ 'widgets', 'shell:rollup' ] );
+    grunt.registerTask( 'css', [ 'system-sass-variables:create', 'sass' ] );
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'nyc:cover', 'karma:headless', 'shell:buildReadmeBadge', 'eslint:check' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'karma:browsers' ] );
     grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js', 'css', 'concurrent:develop' ] );
