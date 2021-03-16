@@ -13,6 +13,8 @@ const utils = require( '../lib/utils' );
 const keys = require( '../lib/router-utils' ).idEncryptionKeys;
 const router = express.Router();
 const quotaErrorMessage = 'Forbidden. No quota left';
+const configModel = require( '../models/config-model' );
+const getMapboxResponse = require( '../lib/geocoder/mapbox' );
 // var debug = require( 'debug' )( 'api-controller-v2' );
 
 module.exports = app => {
@@ -27,6 +29,9 @@ router
     } )
     .get( '/version', getVersion )
     .post( '/version', getVersion )
+
+    .get( '/geocoder', getGeocodeResponse )
+
     .all( '*', authCheck )
     .all( '*', _setQuotaUsed )
     .all( '*', _setDefaultsQueryParam )
@@ -427,6 +432,17 @@ function removeInstance( req, res, next ) {
         .catch( next );
 }
 
+function getGeocodeResponse( req, res ){
+    switch( configModel.server.geocoder.provider ){
+        case 'mapbox':
+            getMapboxResponse( req.query, ( response ) => {
+                res.json(  response  );
+            } );
+            break;
+        default:
+            throw new Error( 'Geocoder provider is not configured. Please configure `config.geocoder.provider`' );
+    }
+}
 
 /**
  * @param {module:api-controller~ExpressRequest} req - HTTP request
