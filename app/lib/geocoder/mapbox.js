@@ -11,6 +11,7 @@ module.exports = function getMapboxResponse( query, callback ) {
         access_token: accessToken,
         proximity: query.$center, // -93.17284130807734,45.070291367515466
         bbox: query.$bbox, // -93.13644718051957,45.05118347242032,-93.17284130807734,45.070291367515466
+        limit: query.$limit,
     } );
 
     return request( url.replace( '{address}', query.address ),
@@ -26,7 +27,7 @@ module.exports = function getMapboxResponse( query, callback ) {
                     features: [],
                 };
             }
-            callback(
+            data = data.features ?
                 data.features.map( f => {
                     return {
                         geometry: f.geometry,
@@ -39,8 +40,8 @@ module.exports = function getMapboxResponse( query, callback ) {
                             accuracy: f.properties.accuracy,
                         }
                     };
-                } )
-            );
+                } ) : { error: data.message };
+            callback( data );
         }
     );
 };
