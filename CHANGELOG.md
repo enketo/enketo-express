@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+----------------------
+##### Fixed
+- Exception occurs with lazy evaluation of and-or statements.
+
 [2.6.2] - 2021-03-02
 --------------------
 ##### Fixed
