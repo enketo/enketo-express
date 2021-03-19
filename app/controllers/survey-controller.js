@@ -161,9 +161,11 @@ function redirect( req, res ) {
  * @param {Function} next - Express callback
  */
 function edit( req, res, next ) {
+    debugger;
     const options = {
         type: 'edit',
         iframe: req.iframe,
+        allowSubmit: req.query.viewMode
     };
 
     if ( req.query.instance_id ) {

@@ -9,6 +9,9 @@ section.form-footer
         else if type === 'view'
           button#close-form.btn.btn-default.hide
             span(data-i18n='alert.default.button')= t('alert.default.button')
+        else if allowSubmit === 'false'
+          button#close-form.btn.btn-default.hide
+            span(data-i18n='alert.default.button')= t('alert.default.button')
         else
           if draftEnabled && offlinePath
             button#save-draft.btn.btn-default
@@ -23,7 +26,7 @@ section.form-footer
           span(data-i18n='form.pages.next')= t('form.pages.next')
 
         include _logout
-        include _enketo-power
+        //include _enketo-power
         a.previous-page.disabled(href="#", data-i18n='form.pages.back')= t('form.pages.back')
 
       .form-footer__content__jump-nav

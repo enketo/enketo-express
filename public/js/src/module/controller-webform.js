@@ -204,6 +204,7 @@ function _loadRecord( instanceId, confirmed ) {
                 if ( loadErrors.length > 0 ) {
                     throw loadErrors;
                 } else {
+                    _initRange();
                     gui.feedback( t( 'alert.recordloadsuccess.msg', {
                         recordName: record.name
                     } ), 2 );
@@ -217,6 +218,21 @@ function _loadRecord( instanceId, confirmed ) {
                 }
                 gui.alertLoadErrors( errors, t( 'alert.loaderror.editadvice' ) );
             } );
+    }
+}
+
+/**
+ * temporary workaround for https://github.com/enketo/enketo-core/issues/771
+ */
+function _initRange() {
+    const rangeEls = document.getElementsByClassName("range-widget__current");
+    for (let i = 0; i < rangeEls.length; i++) {
+        const rangeEl = rangeEls[i];
+        const labelEl = rangeEl.closest("label");
+        const inputEl = labelEl === null ? null : labelEl.querySelector("input.hide");
+        if (inputEl !== null && inputEl.value) {
+            rangeEl.innerHTML = inputEl.valueAsNumber;
+        }
     }
 }
 
