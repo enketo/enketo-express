@@ -236,9 +236,26 @@ function _init( formParts ) {
             if ( settings.print ) {
                 gui.applyPrintStyle();
             }
+            _initRange();
             // after widgets have been initialized, localize all data-i18n elements
             localize( formEl );
             _countChars();
             return  formParts;
         } );
+}
+
+
+/**
+ * temporary workaround for https://github.com/enketo/enketo-core/issues/771
+ */
+function _initRange() {
+    const rangeEls = document.getElementsByClassName("range-widget__current");
+    for (let i = 0; i < rangeEls.length; i++) {
+        const rangeEl = rangeEls[i];
+        const labelEl = rangeEl.closest("label");
+        const inputEl = labelEl === null ? null : labelEl.querySelector("input.hide");
+        if (inputEl !== null && inputEl.value) {
+            rangeEl.innerHTML = inputEl.valueAsNumber;
+        }
+    }
 }
