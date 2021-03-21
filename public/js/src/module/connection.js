@@ -457,7 +457,7 @@ function _getDataFile( url, languageMap ) {
             return result;
         } )
         .catch( error => {
-            const errorMsg = error.msg || t( 'error.dataloadfailed', {
+            const errorMsg = error.message || t( 'error.dataloadfailed', {
                 url,
                 // switch off escaping just for this known safe value
                 interpolation: {
