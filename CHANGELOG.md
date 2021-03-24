@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+----------------------
+##### Change
+- Default form languages will now be shown upon load regards of browser language.
+
 [2.6.3] - 2021-03-18
 ----------------------
 ##### Fixed

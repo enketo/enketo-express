@@ -9,7 +9,7 @@ import { Form } from 'enketo-core';
 import downloadUtils from 'enketo-core/src/js/download-utils';
 import events from './event';
 import fileManager from './file-manager';
-import { t, localize, getCurrentUiLanguage, getDesiredLanguage } from './translator';
+import { t, localize, getCurrentUiLanguage, getBrowserLanguage } from './translator';
 import records from './records-queue';
 import $ from 'jquery';
 import encryptor from './encryptor';
@@ -41,14 +41,25 @@ function init( formEl, data, loadErrors = [] ) {
                 fileManager.setInstanceAttachments( data.instanceAttachments );
             }
 
-            if ( getCurrentUiLanguage() === getDesiredLanguage() ) {
-                formOptions.language = getCurrentUiLanguage();
-            } else {
-                formOptions.language = getDesiredLanguage();
+            const langSelector = formEl.querySelector( '#form-languages' );
+            const formDefaultLanguage = langSelector.dataset.defaultLang;
+            const browserLanguage = getBrowserLanguage();
+
+            // Determine which form language to load
+            if ( settings.languageOverrideParameter ) {
+                formOptions.language = settings.languageOverrideParameter.value;
+            } else if ( !formDefaultLanguage && langSelector.querySelector( `option[value="${browserLanguage}"]` ) ){
+                formOptions.language = browserLanguage;
             }
 
             form = new Form( formEl, data, formOptions );
             loadErrors = loadErrors.concat( form.init() );
+
+            // Determine whether UI language should be attempted to be switched.
+            if ( getCurrentUiLanguage() !== form.currentLanguage &&  /^[a-z]{2,3}/.test( form.currentLanguage ) )  {
+                localize( document.querySelector( 'body' ), form.currentLanguage )
+                    .then( dir => document.querySelector( 'html' ).setAttribute( 'dir', dir ) );
+            }
 
             // Remove loader. This will make the form visible.
             // In order to aggregate regular loadErrors and GoTo loaderrors,
@@ -626,8 +637,8 @@ function _setEventHandlers() {
     if ( formLanguages ) {
         formLanguages.addEventListener( events.Change().type, event => {
             event.preventDefault();
-            console.log( 'ready to set UI lang', form.langs.currentLang );
-            localize( document.querySelector( 'body' ), form.langs.currentLang )
+            console.log( 'ready to set UI lang', form.currentLanguage );
+            localize( document.querySelector( 'body' ), form.currentLanguage )
                 .then( dir => document.querySelector( 'html' ).setAttribute( 'dir', dir ) );
         } );
     }
