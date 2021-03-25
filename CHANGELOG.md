@@ -4,8 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ----------------------
-##### Change
+##### Changed
 - Default form languages will now be shown upon load regards of browser language.
+
+##### Fixed
+- Preview button does not switch to another language.
 
 [2.6.3] - 2021-03-18
 ----------------------

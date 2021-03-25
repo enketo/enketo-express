@@ -1,11 +1,11 @@
 section.form-footer
   .form-footer__content
     if !headless
-      .form-footer__content__main-controls  
+      .form-footer__content__main-controls
         if type === 'preview'
           button#validate-form.btn.btn-primary
             i.icon.icon-check= ' '
-            span(data-18n='formfooter.validate.btn')= t('formfooter.validate.btn')
+            span(data-i18n='formfooter.validate.btn')= t('formfooter.validate.btn')
         else if type === 'view'
           button#close-form.btn.btn-default.hide
             span(data-i18n='alert.default.button')= t('alert.default.button')
