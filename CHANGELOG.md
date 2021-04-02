@@ -5,10 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [Unreleased]
 ----------------------
 ##### Changed
-- Default form languages will now be shown upon load regards of browser language.
+- Default form languages will now be shown upon load regardless of browser language.
 
 ##### Fixed
 - Preview button does not switch to another language.
+- Forms containing select questions with very large lists of options become unbearably slow to validate.
+- Some relevant groups will no longer ignore page break rules.
+- Native XPath functions do not handle node-set arguments.
 
 [2.6.3] - 2021-03-18
 ----------------------
