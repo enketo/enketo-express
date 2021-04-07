@@ -42,13 +42,13 @@ function init( formEl, data, loadErrors = [] ) {
             }
 
             const langSelector = formEl.querySelector( '#form-languages' );
-            const formDefaultLanguage = langSelector.dataset.defaultLang;
+            const formDefaultLanguage = langSelector ? langSelector.dataset.defaultLang : undefined;
             const browserLanguage = getBrowserLanguage();
 
             // Determine which form language to load
             if ( settings.languageOverrideParameter ) {
                 formOptions.language = settings.languageOverrideParameter.value;
-            } else if ( !formDefaultLanguage && langSelector.querySelector( `option[value="${browserLanguage}"]` ) ){
+            } else if ( !formDefaultLanguage && langSelector && langSelector.querySelector( `option[value="${browserLanguage}"]` ) ){
                 formOptions.language = browserLanguage;
             }
 
