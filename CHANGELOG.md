@@ -2,6 +2,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[2.7.3] - 2021-04-20
+---------------------
+##### Removed
+- `decimal-date()` function (as it was an accident and is not in the spec).
+
+##### Changed
+- Improved accessibility for screen readers.
+- Improved performance.
+
+##### Fixed
+- Using `decimal-time()` with a node-set parameter fails.
+- The not-equals operator fails when preceded by a node-set without a trailing space.
+- Using `uuid()` with a node-set parameter fails.
+- Redirect doesn't work with a base root url.
+
 [2.7.2] - 2021-04-12
 ---------------------
 ##### Fixed
@@ -18,7 +33,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Completed Turkish translation.
 
 ##### Fixed
-- Some unlaunched previews (using a `form` queryparameter) fail to load.
+- Some unlaunched previews (using a `form` query parameter) fail to load.
 
 [2.7.0] - 2021-04-02
 ----------------------
