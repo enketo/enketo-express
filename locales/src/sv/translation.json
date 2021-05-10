@@ -215,7 +215,7 @@
     "error": {
         "code": "Felkod: __code__",
         "dataloadfailed": "Misslyckades med att ladda in data från__url__",
-        "econnrefused": "Det gick inte att ansluta till servern",
+        "econnrefused": "Det gick inte att ansluta till formulärservern",
         "encryptionnotsupported": "Denna blankett kräver lokal kryptering av poster. Tyvärr stöds detta inte av din webbläsare. Vi rekommenderar att du byter till en modern webbläsare.",
         "instancenotfound": "Post finns inte. Den kan ha blivit ogiltig.",
         "invalidediturl": "Inte en giltig URL för redigering",
@@ -276,7 +276,8 @@
         "longitude": "longitud (x.y °)",
         "points": "punkter",
         "removePoint": "Detta kommer helt att ta bort den aktuella geopointen från listan över geopoints och kan inte ångras. Är du säker på att du vill göra det här?",
-        "searchPlaceholder": "sök efter plats eller adress"
+        "searchPlaceholder": "sök efter plats eller adress",
+        "bordersintersectwarning": "Gränslinjer får inte korsas"
     },
     "here": "här",
     "hint": {
@@ -303,10 +304,12 @@
         "he": "Hebreiska",
         "hi": "Hindi",
         "it": "Italienska",
+        "ka": "georgiska",
         "km": "Khmer",
         "lo": "Laotiska",
         "nl": "Nederländska",
         "no": "Norska",
+        "pa": "panjabi",
         "pl": "Polska",
         "pt": "Portugisiska",
         "ro": "Rumänska",
@@ -317,6 +320,7 @@
         "sv": "Svenska",
         "sw": "Swahili",
         "th": "Thailändska",
+        "tr": "turkiska",
         "vi": "Vietnamesiska",
         "zh": "Kinesiska"
     },

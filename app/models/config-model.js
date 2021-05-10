@@ -1,3 +1,4 @@
+/* global process, __dirname */
 /**
  * @module config-model
  */
@@ -25,7 +26,7 @@ try {
 }
 // Override default config with environment variables if a local config.json does not exist
 catch ( err ) {
-    console.log( 'No local config.json found. Will check environment variables instead.' );
+    console.warn( 'No local config.json found. Will check environment variables instead.' );
     _updateConfigFromEnv( config );
     _setRedisConfigFromEnv();
 }
@@ -48,7 +49,7 @@ function _updateConfigFromEnv() {
 /**
  * Updates a configuration item that corresponds to the provided environment variable name.
  *
- * @param {string} envVarName
+ * @param { string } envVarName - environment variable name
  */
 function _updateConfigItemFromEnv( envVarName ) {
     const parts = envVarName.split( '_' ).slice( 1 ).map( _convertNumbers );
@@ -89,7 +90,7 @@ function _updateConfigItemFromEnv( envVarName ) {
 /**
  * Converts stringified booleans and `null` to original types
  *
- * @param {string} str - A thing to be converted.
+ * @param { string } str - A thing to be converted.
  * @return {string|boolean|null} an un-stringified value or input value itself
  */
 function _convertType( str ) {
@@ -109,9 +110,9 @@ function _convertType( str ) {
  * Searches the configuration object to find a match for an environment variable,
  * or the first part of such a variable.
  *
- * @param {object} obj - Configuration object
- * @param {string} envName - Environment variable name or the first part of one
- * @param {string} prefix - Prefix to use (for nested objects)
+ * @param { object } obj - Configuration object
+ * @param { string } envName - Environment variable name or the first part of one
+ * @param { string } prefix - Prefix to use (for nested objects)
  * @return {{0: object, 1: string}} 2-item array of object and property name
  */
 function _findSetting( obj, envName, prefix = '' ) {
@@ -133,7 +134,7 @@ function _findSetting( obj, envName, prefix = '' ) {
 /**
  * Convert a non-empty string number to a number.
  *
- * @param {string} str - A stringified number
+ * @param { string } str - A stringified number
  * @return {string|number} an input value or unstrigified number
  */
 function _convertNumbers( str ) {
@@ -141,6 +142,7 @@ function _convertNumbers( str ) {
         return str;
     }
     const converted = Number( str );
+
     return !isNaN( converted ) ? converted : str;
 }
 
@@ -148,7 +150,7 @@ function _convertNumbers( str ) {
  * Finds the index of the first array item that is a number.
  *
  * @param {Array<string|number>} arr - Array of strings and numbers
- * @param {number} [start] - Start index
+ * @param { number } [start] - Start index
  * @return {number|undefined} The found index
  */
 function _findNumberIndex( arr, start = 0 ) {
@@ -156,17 +158,19 @@ function _findNumberIndex( arr, start = 0 ) {
     arr.some( ( val, index ) => {
         if ( typeof val === 'number' && index >= start ) {
             i = index;
+
             return true;
         }
     } );
+
     return i;
 }
 
 /**
  * Returns an empty clone of the provided simple object
  *
- * @param {object} obj - A simple object
- * @return {object} Clone of input object with emptied properties
+ * @param { object } obj - A simple object
+ * @return { object } Clone of input object with emptied properties
  */
 function _getEmptyClone( obj ) {
     const clone = JSON.parse( JSON.stringify( obj ) );
@@ -178,7 +182,7 @@ function _getEmptyClone( obj ) {
 /**
  * Replaces all non-null and non-object property values with empty string.
  *
- * @param {object} obj - A simple object
+ * @param { object } obj - A simple object
  */
 function _emptyObjectProperties( obj ) {
     for ( const prop in obj ) {
@@ -211,7 +215,7 @@ function _setRedisConfigFromEnv() {
 /**
  * Parses a redis URL and returns an object with `host`, `port` and `password` properties.
  *
- * @param {string} redisUrl - A compliant redis url
+ * @param { string } redisUrl - A compliant redis url
  * @return {{host: string, port: string, password: string|null}} config object
  */
 function _extractRedisConfigFromUrl( redisUrl ) {
@@ -255,7 +259,8 @@ function getThemesSupported( themeList ) {
 }
 
 try {
-    config[ 'version' ] = execSync( 'git describe --tags', { encoding: 'utf-8' } ).trim();
+    // need to be in the correct directory to run git describe --tags
+    config[ 'version' ] = execSync( `cd ${__dirname}; git describe --tags`, { encoding: 'utf-8' } ).trim();
 } catch ( e ) {
     // Probably not deployed with git, try special .tag.txt file
     try {
@@ -290,13 +295,19 @@ if ( authentication[ 'managed by enketo' ] === false && authentication[ 'externa
 delete authentication[ 'external login url that sets cookie' ];
 delete authentication[ 'managed by enketo' ];
 
+if ( config[ 'id length' ] < 4 ) {
+    config[ 'id length' ] = 4;
+} else if ( config[ 'id length' ] > 31 ) {
+    config[ 'id length' ] = 31;
+}
+
 module.exports = {
     /**
-     * @type object
+     * @type { object }
      */
     server: config,
     /**
-     * @type object
+     * @type { object }
      */
     client: {
         googleApiKey: config.google[ 'api key' ],

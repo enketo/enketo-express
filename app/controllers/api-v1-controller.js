@@ -62,8 +62,8 @@ router
     } );
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function authCheck( req, res, next ) {
@@ -94,8 +94,8 @@ function authCheck( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function getExistingSurvey( req, res, next ) {
@@ -120,8 +120,8 @@ function getExistingSurvey( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function getNewOrExistingSurvey( req, res, next ) {
@@ -133,6 +133,7 @@ function getNewOrExistingSurvey( req, res, next ) {
     if ( req.account.quota < req.account.quotaUsed ) {
         return _render( 403, quotaErrorMessage, res );
     }
+
     return surveyModel
         .getId( survey )
         .then( id => {
@@ -150,6 +151,7 @@ function getNewOrExistingSurvey( req, res, next ) {
                 return _render( 403, quotaErrorMessage, res );
             }
             const status = storedSurvey ? 200 : 201;
+
             // even if id was found still call .set() method to update any properties
             return surveyModel.set( survey )
                 .then( id => {
@@ -164,8 +166,8 @@ function getNewOrExistingSurvey( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function deactivateSurvey( req, res, next ) {
@@ -187,8 +189,8 @@ function deactivateSurvey( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function getNumber( req, res, next ) {
@@ -210,8 +212,8 @@ function getNumber( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function getList( req, res, next ) {
@@ -224,6 +226,7 @@ function getList( req, res, next ) {
                 obj = _generateWebformUrls( survey.enketoId, req );
                 obj.form_id = survey.openRosaId;
                 obj.server_url = survey.openRosaServer;
+
                 return obj;
             } );
             _render( 200, {
@@ -235,8 +238,8 @@ function getList( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function cacheInstance( req, res, next ) {
@@ -272,6 +275,7 @@ function cacheInstance( req, res, next ) {
                 if ( req.account.quota <= req.account.quotaUsed ) {
                     return _render( 403, quotaErrorMessage, res );
                 }
+
                 // Create a new enketo ID.
                 return surveyModel.set( survey );
             }
@@ -281,6 +285,7 @@ function cacheInstance( req, res, next ) {
         } )
         .then( id => {
             enketoId = id;
+
             return instanceModel.set( survey );
         } )
         .then( () => {
@@ -290,8 +295,8 @@ function cacheInstance( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function removeInstance( req, res, next ) {
@@ -313,22 +318,30 @@ function removeInstance( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function _setQuotaUsed( req, res, next ) {
-    surveyModel
-        .getNumber( req.account.linkedServer )
-        .then( number => {
-            req.account.quotaUsed = number;
-            next();
-        } );
+    if ( !req.app.get( 'account lib' ) ) {
+        // Pretend quota used = 0 if not running SaaS.
+        req.account.quotaUsed = 0;
+        next();
+    } else {
+        // For SaaS service:
+        surveyModel
+            .getNumber( req.account.linkedServer )
+            .then( number => {
+                req.account.quotaUsed = number;
+                next();
+            } )
+            .catch( next );
+    }
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function _setIframe( req, res, next ) {
@@ -337,14 +350,14 @@ function _setIframe( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function _setReturnQueryParam( req, res, next ) {
     const returnUrl = req.body.return_url || req.query.return_url;
     if ( returnUrl && ( req.webformType === 'edit' || req.webformType === 'single' ) ) {
-        req.returnQueryParam = `returnUrl=${encodeURIComponent( decodeURIComponent( returnUrl ) )}`;
+        req.returnQueryParam = `return_url=${encodeURIComponent( decodeURIComponent( returnUrl ) )}`;
     }
     next();
 }
@@ -359,8 +372,8 @@ function _generateQueryString( params = [] ) {
 }
 
 /**
- * @param {string} id - Form id.
- * @param {module:api-controller~ExpressRequest} req
+ * @param { string } id - Form id.
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
  */
 function _generateWebformUrls( id, req ) {
     let queryString;
@@ -404,9 +417,9 @@ function _generateWebformUrls( id, req ) {
 }
 
 /**
- * @param {number} status
- * @param {object|string} [body]
- * @param {module:api-controller~ExpressResponse} res
+ * @param { number } status - HTTP status code
+ * @param {object|string} [body] - response body
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  */
 function _render( status, body = {}, res ) {
     if ( status === 204 ) {

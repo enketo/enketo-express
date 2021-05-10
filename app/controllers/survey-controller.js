@@ -35,12 +35,16 @@ router
     //.get( '*', loggedInCheck )
     .get( `${config[ 'offline path' ]}/:enketo_id`, offlineWebform )
     .get( `${config[ 'offline path' ]}/`, redirect )
-    .get( '/:enketo_id', webform )
-    .get( '/:mod/:enketo_id', webform )
-    .get( '/preview/:enketo_id', preview )
-    .get( '/preview/:mod/:enketo_id', preview )
+    .get( '/connection', ( req, res ) => {
+        res.status = 200;
+        res.send( `connected ${Math.random()}` );
+    } )
     .get( '/preview', preview )
     .get( '/preview/:mod', preview )
+    .get( '/preview/:enketo_id', preview )
+    .get( '/preview/:mod/:enketo_id', preview )
+    .get( '/:enketo_id', webform )
+    .get( '/:mod/:enketo_id', webform )
     .get( '/single/:enketo_id', single )
     .get( '/single/:encrypted_enketo_id_single', single )
     .get( '/single/:mod/:enketo_id', single )
@@ -52,11 +56,7 @@ router
     .get( '/xform/:enketo_id', xform )
     .get( '/xform/:encrypted_enketo_id_single', xform )
     .get( '/xform/:encrypted_enketo_id_view', xform )
-    .get( /.*\/::[A-z0-9]{4,8}/, redirect )
-    .get( '/connection', ( req, res ) => {
-        res.status = 200;
-        res.send( `connected ${Math.random()}` );
-    } );
+    .get( /.*\/::[A-z0-9]{4,8}/, redirect );
 
 // TODO: I suspect this check is no longer used and can be removed
 //function loggedInCheck( req, res, next ) {
@@ -65,8 +65,8 @@ router
 //}
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function offlineWebform( req, res, next ) {
@@ -81,23 +81,24 @@ function offlineWebform( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function webform( req, res, next ) {
     const options = {
         offlinePath: req.offlinePath,
         iframe: req.iframe,
-        print: req.query.print === 'true'
+        print: req.query.print === 'true',
+        desktop: req.query.desktop === 'true'
     };
 
     _renderWebform( req, res, next, options );
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function single( req, res, next ) {
@@ -106,15 +107,15 @@ function single( req, res, next ) {
         iframe: req.iframe
     };
     if ( req.encryptedEnketoId && req.cookies[ req.encryptedEnketoId ] ) {
-        res.redirect( `/thanks?taken=${req.cookies[ req.encryptedEnketoId ]}` );
+        res.redirect( `${req.baseUrl}/thanks?taken=${req.cookies[ req.encryptedEnketoId ]}` );
     } else {
         _renderWebform( req, res, next, options );
     }
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function view( req, res, next ) {
@@ -128,8 +129,8 @@ function view( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function preview( req, res, next ) {
@@ -146,17 +147,17 @@ function preview( req, res, next ) {
  * This serves a page that redirects old pre-2.0.0 urls into new urls.
  * The reason this on the client-side is to cache the redirect itself which is important
  * in case people have bookmarked an offline-capable old-style url and go into the field without Internet.
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
- * @param {Function} next - Express callback
+ *
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  */
-function redirect( req, res, next ) {
+function redirect( req, res ) {
     res.render( 'surveys/webform-redirect' );
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function edit( req, res, next ) {
@@ -175,10 +176,10 @@ function edit( req, res, next ) {
 }
 
 /**
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
- * @param {object} options - Options passed to render
+ * @param { object } options - Options passed to render
  */
 function _renderWebform( req, res, next, options ) {
     const deviceId = req.signedCookies[ '__enketo_meta_deviceid' ] || `${req.hostname}:${utils.randomString( 16 )}`,
@@ -195,14 +196,15 @@ function _renderWebform( req, res, next, options ) {
 /**
  * Debugging view that shows underlying XForm
  *
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function xform( req, res, next ) {
     return surveyModel.get( req.enketoId )
         .then( survey => {
             survey.credentials = userModel.getCredentials( req );
+
             return survey;
         } )
         .then( communicator.getXFormInfo )

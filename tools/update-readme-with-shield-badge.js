@@ -1,3 +1,6 @@
+/* global process, __dirname */
+/* eslint no-console: 0 */
+
 /* **************
 The only purpose of this script is to be used by the npm test script to write the shield badge within the README.md file
 ************** */

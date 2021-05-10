@@ -1,6 +1,5 @@
 import formCache from '../../public/js/src/module/form-cache';
 import connection from '../../public/js/src/module/connection';
-import $ from 'jquery';
 
 const url1 = '/path/to/source.png';
 const form1 = `<form class="or"><img src="${url1}"/></form>`;
@@ -50,7 +49,7 @@ describe( 'Client Form Cache', () => {
             survey.enketoId = '20';
             formCache.init( survey )
                 .then( result => {
-                    result.$form = $( result.form );
+                    result.htmlView = document.createRange().createContextualFragment( result.form );
                     return formCache.updateMedia( result );
                 } )
                 .then( () => {

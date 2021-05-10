@@ -1,10 +1,9 @@
 ### Requirements
 
-Install [gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md#getting-started)
 
 ### 1. Update translation keys from code
 
-The translation keys in [/locales/src/en/translation.json](https://github.com/enketo/enketo-express/blob/master/locales/src/en/translation.json) will be continuously updated with `grunt develop`. You can also do this manually by running `gulp` from locales/.
+The translation keys in [/locales/src/en/translation.json](https://github.com/enketo/enketo-express/blob/master/locales/src/en/translation.json) will be continuously updated with `grunt develop`. You can also do this manually by running [BROKEN TBC].
 
 ### 2. Update English strings for new keys (or for existing keys)
 

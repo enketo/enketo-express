@@ -8,6 +8,7 @@ import settings from './settings';
 import * as printHelper from 'enketo-core/src/js/print';
 import { init as initTranslator, t } from './translator';
 import sniffer from './sniffer';
+import events from './event';
 import vex from 'vex-js';
 import $ from 'jquery';
 import './plugin';
@@ -58,6 +59,7 @@ function setEventHandlers() {
 
     $doc.on( 'click', '#feedback-bar .close, .touch #feedback-bar', () => {
         feedbackBar.hide();
+
         return false;
     } );
 
@@ -101,6 +103,7 @@ function setEventHandlers() {
 
     $( 'a.branding' ).on( 'click', function() {
         const href = this.getAttribute( 'href' );
+
         return ( !href || href === '#' ) ? false : true;
     } );
 
@@ -113,12 +116,12 @@ function setEventHandlers() {
         const link = `<a href="mailto:${email}?subject=xpath errors for: ${encodeURIComponent( location.href )}&body=${encodeURIComponent( error )}" target="_blank" >${email}</a>`;
 
         alert( `${t( 'alert.xpatherror.msg', {
-    emailLink: link,
-    // switch off escaping just for this known safe value
-    interpolation: {
-        escapeValue: false
-    }
-} )}<ul class="error-list"><li>${error}</li></ul>`, t( 'alert.xpatherror.heading' ) );
+            emailLink: link,
+            // switch off escaping just for this known safe value
+            interpolation: {
+                escapeValue: false
+            }
+        } )}<ul class="error-list"><li>${error}</li></ul>`, t( 'alert.xpatherror.heading' ) );
     } );
 
     $( '.side-slider__app-version' ).on( 'click', () => {
@@ -161,8 +164,8 @@ feedbackBar = {
     /**
      * Shows an unobtrusive feedback bar to the user.
      *
-     * @param {string} message
-     * @param {number=} duration duration in seconds for the message to show
+     * @param { string } message - message to show
+     * @param {number=} duration - duration in seconds for the message to show
      */
     show( message, duration ) {
         let $msg;
@@ -201,8 +204,8 @@ feedbackBar = {
 /**
  * Select what type of unobtrusive feedback message to show to the user.
  *
- * @param {string}  message
- * @param {number=} duration duration in seconds for the message to show
+ * @param { string }  message - message to show
+ * @param {number=} duration - duration in seconds for the message to show
  */
 function feedback( message, duration ) {
     if ( !support.touch ) {
@@ -216,10 +219,10 @@ function feedback( message, duration ) {
  * Shows a modal alert dialog.
  * TODO: parameters should change to (content, options)
  *
- * @param {string} message
- * @param {string=} heading
- * @param {string=} level css class or normal (no styling) ('alert', 'info', 'warning', 'error', 'success')
- * @param {number=} duration duration in secondsafter which dialog should self-destruct
+ * @param { string } message - message to show
+ * @param {string=} heading - heading to show
+ * @param {string=} level - css class or normal (no styling) ('alert', 'info', 'warning', 'error', 'success')
+ * @param {number=} duration - duration in secondsafter which dialog should self-destruct
  */
 function alert( message, heading, level, duration ) {
     level = level || 'error';
@@ -236,15 +239,16 @@ function alert( message, heading, level, duration ) {
         autoClose: duration,
         showCloseButton: true
     } );
+
     return Promise.resolve();
 }
 
 /**
  * Shows a confirmation dialog
  *
- * @param {?(Object.<string, (string|boolean)>|string)=} content - In its simplest form this is just a string but it can
+ * @param {?(object.<string, (string|boolean)>|string)=} content - In its simplest form this is just a string but it can
  *                                                         also an object with parameters msg, heading and errorMsg.
- * @param {Object=} choices - [type/description]
+ * @param {object=} choices - [type/description]
  */
 function confirm( content, choices ) {
     let errorMsg = '';
@@ -315,20 +319,19 @@ function prompt( content, choices, inputs ) {
 
 /**
  * Shows modal asking for confirmation to redirect to login screen
- * 
- * @param  {string=} msg       message to show
- * @param  {string=} serverURL serverURL for which authentication is required
+ *
+ * @param  {string=} msg -       message to show
  */
-function confirmLogin( msg /*, serverURL*/ ) {
+function confirmLogin( msg ) {
     msg = msg || t( 'confirm.login.msg' );
 
     confirm( {
-            msg,
-            heading: t( 'confirm.login.heading' )
-        }, {
-            posButton: t( 'confirm.login.posButton' ),
-            negButton: t( 'confirm.login.negButton' )
-        } )
+        msg,
+        heading: t( 'confirm.login.heading' )
+    }, {
+        posButton: t( 'confirm.login.posButton' ),
+        negButton: t( 'confirm.login.negButton' )
+    } )
         .then( confirmed => {
             if ( !confirmed ) {
                 return;
@@ -343,8 +346,9 @@ function confirmLogin( msg /*, serverURL*/ ) {
 
 /**
  * Shows modal with load errors
- * @param  {Array.<string>} loadErrors  load error messagesg
- * @param  {string=}        advice  a string with advice
+ *
+ * @param  {Array.<string>} loadErrors -  load error messagesg
+ * @param  {string=}        advice -  a string with advice
  */
 function alertLoadErrors( loadErrors, advice ) {
     const errorStringHTML = `<ul class="error-list"><li>${loadErrors.join( '</li><li>' )}</li></ul>`;
@@ -416,27 +420,34 @@ function printForm() {
         negButton: components.negButton,
     };
     const inputs = components.gridInputs + components.gridWarning;
+    const questions = document.querySelectorAll( '.question' );
+
+    printHelper.openAllDetails();
+    questions.forEach( question => question.dispatchEvent( events.Printify() ) );
 
     if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
-        printHelper.openAllDetails();
         return prompt( texts, options, inputs )
             .then( values => {
                 if ( values ) {
-                    printGrid( values );
+                    return printGrid( values );
                 }
             } )
-            .then( printHelper.closeAllDetails );
+            .then( () => {
+                printHelper.closeAllDetails();
+                questions.forEach( question => question.dispatchEvent( events.DePrintify() ) );
+            } );
     } else {
-        printHelper.openAllDetails();
         window.print();
         printHelper.closeAllDetails();
+        questions.forEach( question => question.dispatchEvent( events.DePrintify() ) );
+
         return Promise.resolve();
     }
 }
 
 /**
  * Separated this to allow using parts in custom print dialogs.
- * 
+ *
  */
 function getPrintDialogComponents() {
     // used function because i18next needs to be initalized for t() to work
@@ -452,8 +463,8 @@ function getPrintDialogComponents() {
 
 function printGrid( format ) {
     const swapped = printHelper.styleToAll();
-    return printHelper.fixGrid( format, 800 )
-        .then( _delay )
+
+    return printHelper.fixGrid( format )
         .then( window.print )
         .catch( console.error )
         .then( () => {
@@ -468,27 +479,22 @@ function printGrid( format ) {
         } );
 }
 
-function _delay( delay = 400 ) {
-    return new Promise( ( resolve ) => {
-        setTimeout( resolve, delay );
-    } );
-}
-
 /**
  * This is function is used by PDF creation functionality from a special print view of the form..
  */
 function applyPrintStyle() {
+
     imagesLoaded()
         .then( () => {
+            printHelper.openAllDetails();
+            document.querySelectorAll( '.question' ).forEach( question => question.dispatchEvent( events.Printify() ) );
+
             if ( formTheme === 'grid' || ( !formTheme && printHelper.isGrid() ) ) {
                 const paper = { format: settings.format, landscape: settings.landscape, scale: settings.scale, margin: settings.margin };
+
                 return printHelper.fixGrid( paper );
             }
         } )
-        .then( () => // allow some time for repainting
-            new Promise( resolve => {
-                setTimeout( resolve, 300 );
-            } ) )
         .then( () => {
             window.printReady = true;
         } )
@@ -497,7 +503,7 @@ function applyPrintStyle() {
 
 function imagesLoaded() {
     return new Promise( resolve => {
-        let images = Array.prototype.slice.call( document.images );
+        let images = [ ... document.images ];
         const interval = setInterval( () => {
             images = images.filter( image => !image.complete );
             if ( images.length === 0 ) {
@@ -515,9 +521,9 @@ function alertCacheUnsupported() {
         negButton: t( 'alert.offlineunsupported.negButton' )
     };
     confirm( {
-            msg: message,
-            heading: t( 'alert.offlineunsupported.heading' )
-        }, choices )
+        msg: message,
+        heading: t( 'alert.offlineunsupported.heading' )
+    }, choices )
         .then( confirmed => {
             if ( confirmed ) {
                 window.location = settings[ 'modernBrowsersURL' ];
@@ -528,7 +534,7 @@ function alertCacheUnsupported() {
 /**
  * Updates various statuses in the GUI (connection, form-edited, browsersupport)
  *
- * @type {Object}
+ * @type { object }
  */
 updateStatus = {
     offlineCapable( offlineCapable ) {

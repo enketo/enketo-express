@@ -8,8 +8,10 @@ PROJECT_ROOT_PATH = os.path.abspath(os.path.join(CURRENT_DIR_PATH, '../..'))
 
 
 def get_or_create_encryption_key():
-    '''Automate the inconvenient task of generating and maintaining a consistent
-       encryption key.'''
+    """
+    Automate the inconvenient task of generating and maintaining a consistent
+    encryption key.
+    """
     # Attempt to get the key from an environment variable.
     encryption_key = os.environ.get('ENKETO_ENCRYPTION_KEY')
 
@@ -48,7 +50,7 @@ def create_config():
         raise EnvironmentError('An API key for Enketo Express is required.')
 
     # Retrieve/generate the encryption key if not present.
-    config['linked form and data server'].setdefault('encryption key', get_or_create_encryption_key())
+    config.setdefault('encryption key', get_or_create_encryption_key())
 
     # Set the Docker Redis settings.
     config.setdefault('redis', dict()).setdefault('main', dict()).setdefault('host', 'redis_main')
@@ -57,7 +59,12 @@ def create_config():
 
     # Write the potentially-updated config file to disk.
     with open(CONFIG_FILE_PATH, 'w') as config_file:
-        config_file.write(json.dumps(config, indent=4, sort_keys=True))
+        config_file.write(
+            # Sort keys so that the file remains consistent between runs.
+            # Indent for readability. Specify separators to avoid trailing
+            # whitespace (https://bugs.python.org/issue16333)
+            json.dumps(config, indent=4, separators=(',', ': '), sort_keys=True)
+        )
 
 
 if __name__ == '__main__':

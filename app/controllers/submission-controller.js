@@ -27,12 +27,13 @@ router
         res.set( 'Content-Type', 'application/json' );
         next();
     } )
-    .get( '/max-size/:enketo_id?', maxSize )
     .get( '/max-size/:encrypted_enketo_id_single', maxSize )
-    .get( '/:enketo_id', getInstance )
+    .get( '/max-size/:encrypted_enketo_id_view', maxSize )
+    .get( '/max-size/:enketo_id?', maxSize )
     .get( '/:encrypted_enketo_id_view', getInstance )
-    .post( '/:enketo_id', submit )
+    .get( '/:enketo_id', getInstance )
     .post( '/:encrypted_enketo_id_single', submit )
+    .post( '/:enketo_id', submit )
     .all( '/*', ( req, res, next ) => {
         const error = new Error( 'Not allowed' );
         error.status = 405;
@@ -43,8 +44,8 @@ router
  * Simply pipes well-formed request to the OpenRosa server and
  * copies the response received.
  *
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function submit( req, res, next ) {
@@ -60,6 +61,7 @@ function submit( req, res, next ) {
         .then( survey => {
             submissionUrl = communicator.getSubmissionUrl( survey.openRosaServer ) + query;
             const credentials = userModel.getCredentials( req );
+
             return communicator.getAuthHeader( submissionUrl, credentials );
         } )
         .then( authHeader => {
@@ -106,18 +108,18 @@ function submit( req, res, next ) {
 /**
  * Get max submission size.
  *
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function maxSize( req, res, next ) {
     if ( req.query.xformUrl ) {
         // Non-standard way of attempting to obtain max submission size from XForm url directly
         communicator.getMaxSize( {
-                info: {
-                    downloadUrl: req.query.xformUrl
-                }
-            } )
+            info: {
+                downloadUrl: req.query.xformUrl
+            }
+        } )
             .then( maxSize => {
                 res.json( { maxSize } );
             } )
@@ -126,6 +128,7 @@ function maxSize( req, res, next ) {
         surveyModel.get( req.enketoId )
             .then( survey => {
                 survey.credentials = userModel.getCredentials( req );
+
                 return survey;
             } )
             .then( communicator.getMaxSize )
@@ -139,8 +142,8 @@ function maxSize( req, res, next ) {
 /**
  * Obtains cached instance (for editing)
  *
- * @param {module:api-controller~ExpressRequest} req
- * @param {module:api-controller~ExpressResponse} res
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
+ * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
 function getInstance( req, res, next ) {
@@ -169,9 +172,9 @@ function getInstance( req, res, next ) {
 }
 
 /**
- * @param {string} id
- * @param {string} instanceId
- * @param {string} deprecatedId
+ * @param { string } id - Enketo ID of survey
+ * @param { string } instanceId - instance ID of record
+ * @param { string } deprecatedId - deprecated (previous) ID of record
  */
 function _logSubmission( id, instanceId, deprecatedId ) {
     submissionModel.isNew( id, instanceId )

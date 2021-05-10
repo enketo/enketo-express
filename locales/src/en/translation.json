@@ -215,7 +215,7 @@
     "error": {
         "code": "Error Code: __code__",
         "dataloadfailed": "Failed to load data from __url__",
-        "econnrefused": "Could not connect with Server",
+        "econnrefused": "Could not connect with Form Server",
         "encryptionnotsupported": "This form requires local encryption of records. Unfortunately this is not supported by your browser. We recommend switching to a modern browser.",
         "instancenotfound": "Record not present. It may have expired.",
         "invalidediturl": "Not a valid edit URL",
@@ -276,7 +276,8 @@
         "longitude": "longitude (x.y °)",
         "points": "points",
         "removePoint": "This will completely remove the current geopoint from the list of geopoints and cannot be undone. Are you sure you want to do this?",
-        "searchPlaceholder": "search for place or address"
+        "searchPlaceholder": "search for place or address",
+        "bordersintersectwarning": "Borders cannot intersect"
     },
     "here": "here",
     "hint": {
@@ -303,10 +304,12 @@
         "he": "Hebrew",
         "hi": "Hindi",
         "it": "Italian",
+        "ka": "Georgian",
         "km": "Khmer",
         "lo": "Lao",
         "nl": "Dutch",
         "no": "Norwegian",
+        "pa": "Panjabi",
         "pl": "Polish",
         "pt": "Portuguese",
         "ro": "Romanian",
@@ -317,6 +320,7 @@
         "sv": "Swedish",
         "sw": "Swahili",
         "th": "Thai",
+        "tr": "Turkish",
         "vi": "Vietnamese",
         "zh": "Chinese"
     },

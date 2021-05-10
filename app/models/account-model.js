@@ -9,9 +9,9 @@ const customGetAccount = config[ 'account lib' ] ? require( config[ 'account lib
 
 /**
  * @typedef AccountObj
- * @property {string} linkedServer
- * @property {string} [openRosaServer]
- * @property {string} key
+ * @property { string } linkedServer
+ * @property { string } [openRosaServer]
+ * @property { string } key
  * @property {number} quota
  */
 
@@ -19,8 +19,8 @@ const customGetAccount = config[ 'account lib' ] ? require( config[ 'account lib
  * Obtains account.
  *
  * @static
- * @param {module:survey-model~SurveyObject} survey
- * @return {Promise<Error|AccountObj>} promise that resolves in {@link module:account-model~AccountObj|Account object}
+* @param {module:survey-model~SurveyObject} survey - survey object
+* @return {Promise<Error|AccountObj>} promise that resolves in {@link module:account-model~AccountObj|Account object}
  */
 function get( survey ) {
     let error;
@@ -29,10 +29,12 @@ function get( survey ) {
     if ( !server ) {
         error = new Error( 'Bad Request. Server URL missing.' );
         error.status = 400;
+
         return Promise.reject( error );
     } else if ( !utils.isValidUrl( server ) ) {
         error = new Error( 'Bad Request. Server URL is not a valid URL.' );
         error.status = 400;
+
         return Promise.reject( error );
     } else if ( /https?:\/\/testserver.com\/bob/.test( server ) ) {
         return Promise.resolve( {
@@ -43,18 +45,22 @@ function get( survey ) {
     } else if ( /https?:\/\/testserver.com\/noquota/.test( server ) ) {
         error = new Error( 'Forbidden. No quota left.' );
         error.status = 403;
+
         return Promise.reject( error );
     } else if ( /https?:\/\/testserver.com\/noapi/.test( server ) ) {
         error = new Error( 'Forbidden. No API access granted.' );
         error.status = 405;
+
         return Promise.reject( error );
     } else if ( /https?:\/\/testserver.com\/noquotanoapi/.test( server ) ) {
         error = new Error( 'Forbidden. No API access granted.' );
         error.status = 405;
+
         return Promise.reject( error );
     } else if ( /https?:\/\/testserver.com\/notpaid/.test( server ) ) {
         error = new Error( 'Forbidden. The account is not active.' );
         error.status = 403;
+
         return Promise.reject( error );
     }
 
@@ -66,13 +72,14 @@ function get( survey ) {
  * This passes back the original survey object and therefore differs from the get function!
  *
  * @static
- * @param {module:survey-model~SurveyObject} survey
- * @return {Promise<module:survey-model~SurveyObject>} updated SurveyObject
+* @param {module:survey-model~SurveyObject} survey - survey object
+* @return {Promise<module:survey-model~SurveyObject>} updated SurveyObject
  */
 function check( survey ) {
     return get( survey )
         .then( account => {
             survey.account = account;
+
             return survey;
         } );
 }
@@ -80,9 +87,9 @@ function check( survey ) {
 /**
  * Checks if the provided serverUrl is part of the allowed 'linked' OpenRosa Server.
  *
- * @param {AccountObj} account
- * @param {string} serverUrl
- * @return {boolean} Whether server URL is allowed
+ * @param { AccountObj } account - an account object
+ * @param { string } serverUrl - server URL
+ * @return { boolean } Whether server URL is allowed
  */
 function _isAllowed( account, serverUrl ) {
     return account.linkedServer === '' || new RegExp( `https?://${_stripProtocol( account.linkedServer )}` ).test( serverUrl );
@@ -91,7 +98,7 @@ function _isAllowed( account, serverUrl ) {
 /**
  * Strips http(s):// from the provided url
  *
- * @param {string} url
+ * @param { string } url - URL
  * @return {string|null} stripped url
  */
 function _stripProtocol( url ) {
@@ -103,14 +110,15 @@ function _stripProtocol( url ) {
     if ( /https?:\/\//.test( url ) ) {
         url = url.substring( url.indexOf( '://' ) + 3 );
     }
+
     return url;
 }
 
 /**
  * Obtains account from either configuration (hardcoded) or via custom function
  *
- * @param {string} serverUrl - The serverUrl to be used to look up the account.
- * @return {AccountObj} {@link module:account-model~AccountObj|Account object}
+ * @param { string } serverUrl - The serverUrl to be used to look up the account.
+ * @return { AccountObj } {@link module:account-model~AccountObj|Account object}
  */
 function _getAccount( serverUrl ) {
     const hardcodedAccount = _getHardcodedAccount();
@@ -125,13 +133,14 @@ function _getAccount( serverUrl ) {
 
     const error = new Error( 'Forbidden. This server is not linked with Enketo.' );
     error.status = 403;
+
     return Promise.reject( error );
 }
 
 /**
  * Obtains the hardcoded account from the config
  *
- * @return {null|AccountObj} `null` or {@link module:account-model~AccountObj|Account object}
+ * @return { null|AccountObj } `null` or {@link module:account-model~AccountObj|Account object}
  */
 function _getHardcodedAccount() {
     const app = require( '../../config/express' );
@@ -153,13 +162,14 @@ function _getHardcodedAccount() {
 /**
  * Extracts the server from a survey object or server string.
  *
- * @param  {string|module:survey-model~SurveyObject} survey - Server string or survey object.
- * @return {string|null} server
+ * @param  { string|module:survey-model~SurveyObject } survey - Server string or survey object.
+ * @return { string|null } server
  */
 function _getServer( survey ) {
     if ( !survey || ( typeof survey === 'object' && !survey.openRosaServer ) ) {
         return null;
     }
+
     return ( typeof survey === 'string' ) ? survey : survey.openRosaServer;
 }
 

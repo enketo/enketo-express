@@ -1,0 +1,21 @@
+name: Build and push image to Docker Hub
+
+on:
+  push:
+    # Don't waste time building every push: consider only tags, which are
+    # usually releases
+    tags:
+      - '*'
+
+jobs:
+  docker-build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: mr-smithers-excellent/docker-build-push@v2
+        with:
+          image: enketo/enketo-express
+          registry: docker.io
+          dockerfile: Dockerfile
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}

@@ -215,7 +215,7 @@
     "error": {
         "code": "Código de error: __code__",
         "dataloadfailed": "Se ha producido un error al cargar los datos de __url__",
-        "econnrefused": "No se pudo conectar con el servidor",
+        "econnrefused": "No se pudo conectar con el servidor de formularios",
         "encryptionnotsupported": "Este formulario requiere encriptamiento local de registros. Desafortunadamente su navegador actual no lo soporta. Se recomienda cambiarse a una versión más moderna de su navegador o a otro navegador.",
         "instancenotfound": "Registro no hallado. Puede haber expirado.",
         "invalidediturl": "Esta URL no es válida",
@@ -276,7 +276,8 @@
         "longitude": "longitud (x.y °)",
         "points": "puntos",
         "removePoint": "Esto eliminará completamente el punto geográfico actual de la lista de puntos geográficos y no se puede deshacerlo. ¿Seguro que quieres hacer esto?",
-        "searchPlaceholder": "buscar lugar o dirección"
+        "searchPlaceholder": "buscar lugar o dirección",
+        "bordersintersectwarning": "Las fronteras no pueden cruzarse"
     },
     "here": "aquí",
     "hint": {
@@ -303,10 +304,12 @@
         "he": "Hebreo",
         "hi": "Hindi",
         "it": "Italiano",
+        "ka": "Georgiano",
         "km": "Khmer",
         "lo": "Lao",
         "nl": "Holandés",
         "no": "Noruego",
+        "pa": "Panjabi",
         "pl": "Polaco",
         "pt": "Portugués",
         "ro": "Rumano",
@@ -317,6 +320,7 @@
         "sv": "Sueco",
         "sw": "Swahili",
         "th": "Tailandés",
+        "tr": "Turco",
         "vi": "Vietnamita",
         "zh": "Chino"
     },

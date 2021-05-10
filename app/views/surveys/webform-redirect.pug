@@ -4,8 +4,8 @@ block script
   script.
     const url = new URL(window.location.href);
 
-    if( url.pathname === '/x/' || url.pathname === '/_/' ){
-      url.pathname = `/x/${url.hash.substring(1)}`;
+    if( url.pathname.endsWith('/x/') || url.pathname.endsWith('/_/') ){
+      url.pathname = `${url.pathname.slice(0, -3)}/x/${url.hash.substring(1)}`;
       url.hash = '';
     } else {
       url.pathname = url.pathname.replace('::', '');

@@ -1,28 +1,32 @@
 section.form-footer
   .form-footer__content
     if !headless
-      .form-footer__content__main-controls  
+      .form-footer__content__main-controls
         if type === 'preview'
           button#validate-form.btn.btn-primary
             i.icon.icon-check= ' '
-            | #{t('formfooter.validate.btn')}
+            span(data-i18n='formfooter.validate.btn')= t('formfooter.validate.btn')
         else if type === 'view'
-          button#close-form.btn.btn-default.hide #{t('alert.default.button')}
+          button#close-form.btn.btn-default.hide
+            span(data-i18n='alert.default.button')= t('alert.default.button')
         else
           if draftEnabled && offlinePath
             button#save-draft.btn.btn-default
               i.icon.icon-info-circle.save-draft-info= ' '
               i.icon.icon-pencil= ' '
-              | #{t( 'formfooter.savedraft.btn' )}
+              span(data-i18n='formfooter.savedraft.btn')= t( 'formfooter.savedraft.btn' )
           button#submit-form.btn.btn-primary
             i.icon.icon-check= ' '
-            | #{t('formfooter.submit.btn')}
-        a.btn.btn-primary.next-page(href="#")= t('form.pages.next')
+            span(data-i18n='formfooter.submit.btn')= t('formfooter.submit.btn')
+        a.btn.btn-primary.next-page(href="#")
+          i.icon.icon-arrow-right
+          span(data-i18n='form.pages.next')= t('form.pages.next')
+
         include _logout
         include _enketo-power
-        a.previous-page.disabled(href="#")= t('form.pages.back')
+        a.previous-page.disabled(href="#", data-i18n='form.pages.back')= t('form.pages.back')
 
       .form-footer__content__jump-nav
-        a.btn.btn-default.disabled.first-page(href="#")= t('form.pages.return')
-        a.btn.btn-default.disabled.last-page(href="#")= t('form.pages.end')
+        a.btn.btn-default.disabled.first-page(href="#", data-i18n='form.pages.return')= t('form.pages.return')
+        a.btn.btn-default.disabled.last-page(href="#", data-i18n='form.pages.end')= t('form.pages.end')
 

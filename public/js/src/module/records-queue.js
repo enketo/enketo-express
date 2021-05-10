@@ -36,8 +36,8 @@ function init() {
 /**
  * Obtains a record
  *
- * @param  {string} instanceId [description]
- * @return {Promise}            [description]
+ * @param  { string } instanceId - instanceID of record
+ * @return {Promise<*|undefined>} a Promise that resolves with a record object or undefined
  */
 function get( instanceId ) {
     return store.record.get( instanceId );
@@ -46,16 +46,19 @@ function get( instanceId ) {
 /**
  * Stores a new record. Overwrites (media) files from auto-saved record.
  *
- * @param {*} record [description]
- * @return {Promise}
+ * @param { object } record - a record object
+ * @return {Promise<undefined>} a promise that resolves with undefined
  */
 function set( record ) {
     return getAutoSavedRecord()
         .then( autoSavedRecord => {
-            // Add files from autoSavedRecord
+            // Add files from autoSavedRecord in case this record was recovered.
+            // A more intelligent way to do is to maintain and check a recovered flag
+            // first, and only then replace the files.
             if ( autoSavedRecord ) {
                 record.files = autoSavedRecord.files;
             }
+
             return store.record.set( record );
         } )
         .then( _updateRecordList );
@@ -64,8 +67,8 @@ function set( record ) {
 /**
  * Updates an existing record
  *
- * @param  {*} record [description]
- * @return {Promise}        [description]
+ * @param  { object } record - a record object
+ * @return { Promise } a promise that resolves with undefined
  */
 function update( record ) {
     return store.record.update( record )
@@ -74,23 +77,34 @@ function update( record ) {
 
 /**
  * Removes a record
- * @param  {string} intanceId [description]
- * @return {Promise}        [description]
+ *
+ * @param { string } instanceId - instanceID of record
+ * @return { Promise } a promise that resolves with undefined
  */
 function remove( instanceId ) {
     return store.record.remove( instanceId )
         .then( _updateRecordList );
 }
 
+/**
+ * Obtains auto-saved record key
+ */
 function getAutoSavedKey() {
     return autoSaveKey;
 }
 
-
+/**
+ * Obtains auto-saved record.
+ */
 function getAutoSavedRecord() {
     return get( autoSaveKey );
 }
 
+/**
+ * Updates auto-saved record
+ *
+ * @param { object } record - record object created from the current state of the form
+ */
 function updateAutoSavedRecord( record ) {
     // prevent this record from accidentally being submitted
     record.draft = true;
@@ -105,6 +119,9 @@ function updateAutoSavedRecord( record ) {
     // do not update recordList
 }
 
+/**
+ * Removes auto-saved record
+ */
 function removeAutoSavedRecord() {
     return store.record.remove( autoSaveKey );
     // do not update recordList
@@ -123,8 +140,8 @@ function updateLastSavedRecord( record ) {
 /**
  * Gets the countervalue of a new record (guaranteed to be unique)
  *
- * @param  {string} enketoId [description]
- * @return {Promise}          [description]
+ * @param  { string } enketoId - Enketo ID
+ * @return {Promise<undefined>} Promise that resolves with undefined
  */
 function getCounterValue( enketoId ) {
     return store.property.getSurveyStats( enketoId )
@@ -134,7 +151,7 @@ function getCounterValue( enketoId ) {
 /**
  * Marks a record as active (opened)
  *
- * @param {string} instanceId [description]
+ * @param { string } instanceId - instanceID of a record
  */
 function setActive( instanceId ) {
     settings.recordId = instanceId;
@@ -160,7 +177,7 @@ function _setUploadIntervals() {
 /**
  * Uploads all final records in the queue
  *
- * @return {Promise} [description]
+ * @return {Promise<undefined>} a Promise that resolves with undefined
  */
 function uploadQueue() {
     let errorMsg;
@@ -175,66 +192,78 @@ function uploadQueue() {
     uploadOngoing = true;
     $uploadButton.prop( 'disabled', true );
 
-    connection.getOnlineStatus()
+    return connection.getOnlineStatus()
         .then( appearsOnline => {
             if ( !appearsOnline ) {
                 return;
             }
+
             return store.record.getAll( settings.enketoId, true );
         } )
         .then( records => {
             if ( !records || records.length === 0 ) {
                 uploadOngoing = false;
+
                 return;
             }
             console.debug( `Uploading queue of ${records.length} records.` );
+
             // Perform record uploads sequentially for nicer feedback and to avoid issues when connections are very poor
             return records.reduce( ( prevPromise, record ) => prevPromise.then( () => // get the whole record including files
                 store.record.get( record.instanceId )
-                .then( record => {
+                    .then( record => {
                     // convert record.files to a simple <File> array
-                    record.files = record.files.map( object => {
+                        record.files = record.files.map( object => {
                         // do not add name property if already has one (a File will throw exception)
-                        if ( typeof object.item.name === 'undefined' ) {
-                            object.item.name = object.name;
-                        }
-                        return object.item;
-                    } );
-                    uploadProgress.update( record.instanceId, 'ongoing', '', successes.length + fails.length, records.length );
-                    return connection.uploadRecord( record );
-                } )
-                .then( () => {
-                    successes.push( record.name );
-                    uploadProgress.update( record.instanceId, 'success', '', successes.length + fails.length, records.length );
-                    return store.record.remove( record.instanceId )
-                        .then( () => store.property.addSubmittedInstanceId( record ) );
-                } )
-                .catch( result => {
+                            if ( typeof object.item.name === 'undefined' ) {
+                                object.item.name = object.name;
+                            }
+
+                            return object.item;
+                        } );
+                        uploadProgress.update( record.instanceId, 'ongoing', '', successes.length + fails.length, records.length );
+
+                        return connection.uploadRecord( record );
+                    } )
+                    .then( () => {
+                        successes.push( record.name );
+                        uploadProgress.update( record.instanceId, 'success', '', successes.length + fails.length, records.length );
+
+                        return store.record.remove( record.instanceId )
+                            .then( () => store.property.addSubmittedInstanceId( record ) );
+                    } )
+                    .catch( result => {
                     // catch 401 responses (1 of them)
-                    if ( result.status === 401 ) {
-                        authRequired = true;
-                    }
-                    // if any non HTTP error occurs, output the error.message
-                    errorMsg = result.message || gui.getErrorResponseMsg( result.status );
-                    fails.push( record.name );
-                    uploadProgress.update( record.instanceId, 'error', errorMsg, successes.length + fails.length, records.length );
-                } )
-                .then( () => {
-                    if ( successes.length + fails.length === records.length ) {
-                        uploadOngoing = false;
-                        if ( authRequired ) {
-                            gui.confirmLogin();
-                        } else if ( successes.length > 0 ) {
-                            // let gui send a feedback message
-                            document.dispatchEvent( events.QueueSubmissionSuccess( successes ) );
+                        if ( result.status === 401 ) {
+                            authRequired = true;
                         }
-                        // update the list by properly removing obsolete records, reactivating button(s)
-                        _updateRecordList();
-                    }
-                } ) ), Promise.resolve() );
+                        // if any non HTTP error occurs, output the error.message
+                        errorMsg = result.message || gui.getErrorResponseMsg( result.status );
+                        fails.push( record.name );
+                        uploadProgress.update( record.instanceId, 'error', errorMsg, successes.length + fails.length, records.length );
+                    } )
+                    .then( () => {
+                        if ( successes.length + fails.length === records.length ) {
+                            uploadOngoing = false;
+                            if ( authRequired ) {
+                                gui.confirmLogin();
+                            } else if ( successes.length > 0 ) {
+                            // let gui send a feedback message
+                                document.dispatchEvent( events.QueueSubmissionSuccess( successes ) );
+                            }
+                            // update the list by properly removing obsolete records, reactivating button(s)
+                            _updateRecordList();
+                        }
+                    } ) ), Promise.resolve() );
         } );
 }
 
+/**
+ * Creates a zip file of all locally-saved records.
+ *
+ * @param { string } formTitle - the title of the form
+ * @return {Promise<Blob>} a Promise that resolves with a zip file as Blob
+ */
 function exportToZip( formTitle ) {
 
     $exportButton.prop( 'disabled', true );
@@ -242,6 +271,7 @@ function exportToZip( formTitle ) {
     return exporter.recordsToZip( settings.enketoId, formTitle )
         .then( blob => {
             $exportButton.prop( 'disabled', false );
+
             return blob;
         } )
         .catch( error => {
@@ -253,7 +283,7 @@ function exportToZip( formTitle ) {
 /**
  * Shows upload progress and record-specific feedback
  *
- * @type {Object}
+ * @type { object }
  */
 uploadProgress = {
     _getLi( instanceId ) {
@@ -322,7 +352,7 @@ uploadProgress = {
 /**
  * Updates the record list in the UI
  *
- * @return {Promise} [description]
+ * @return { Promise } [description]
  */
 function _updateRecordList() {
     let $li;
@@ -346,7 +376,7 @@ function _updateRecordList() {
 
             // add 'no records' message
             if ( records.length === 0 ) {
-                $recordList.empty().append( `<li class="record-list__records--none">${t( 'record-list.norecords' )}</li>` );
+                $recordList.empty().append( `<li class="record-list__records--none" data-i18n="record-list.norecords">${t( 'record-list.norecords' )}</li>` );
             } else {
                 $recordList.find( '.record-list__records--none' ).remove();
                 $exportButton.prop( 'disabled', false );
@@ -384,13 +414,14 @@ function _updateRecordList() {
 /**
  * Completely flush the form cache (not the record storage)
  *
- * @return {Promise} [description]
+ * @return {Promise<undefined>} a Promise that resolves with undefined
  */
 function flush() {
     return store.flushTable( 'records' )
         .then( () => store.flushTable( 'files' ) )
         .then( () => {
             console.log( 'Done! The record store is empty now.' );
+
             return;
         } );
 }

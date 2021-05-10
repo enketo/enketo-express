@@ -5,7 +5,7 @@
 // var debug = require( 'debug' )( 'error-handler' );
 
 /**
- * @param {module:api-controller~ExpressRequest} req
+ * @param {module:api-controller~ExpressRequest} req - HTTP request
  * @param {Error} error - Error object.
  */
 function getErrorMessage( req, error ) {
@@ -15,6 +15,7 @@ function getErrorMessage( req, error ) {
         if ( /ECONNREFUSED/.test( error.message ) ) {
             return req.i18n.t( 'error.econnrefused' );
         }
+
         // else output the message untranslated
         return error.message;
     } else if ( error.translationKey ) {
@@ -29,11 +30,11 @@ function getErrorMessage( req, error ) {
 module.exports = {
     /**
      * @param {Error} err - Error object
-     * @param {module:api-controller~ExpressRequest} req
-     * @param {module:api-controller~ExpressResponse} res
+     * @param {module:api-controller~ExpressRequest} req - HTTP request
+     * @param {module:api-controller~ExpressResponse} res - HTTP response
      * @param {Function} next - Express callback
      */
-    production( err, req, res, next ) {
+    production( err, req, res, next ) {// eslint-disable-line no-unused-vars
         const body = {
             code: err.status || 500,
             message: getErrorMessage( req, err )
@@ -48,11 +49,11 @@ module.exports = {
     },
     /**
      * @param {Error} err - Error object
-     * @param {module:api-controller~ExpressRequest} req
-     * @param {module:api-controller~ExpressResponse} res
+     * @param {module:api-controller~ExpressRequest} req - HTTP request
+     * @param {module:api-controller~ExpressResponse} res - HTTP response
      * @param {Function} next - Express callback
      */
-    development( err, req, res, next ) {
+    development( err, req, res, next ) {// eslint-disable-line no-unused-vars
         const body = {
             code: err.status || 500,
             message: getErrorMessage( req, err ),
@@ -67,8 +68,8 @@ module.exports = {
         }
     },
     /**
-     * @param {module:api-controller~ExpressRequest} req
-     * @param {module:api-controller~ExpressResponse} res
+     * @param {module:api-controller~ExpressRequest} req - HTTP request
+     * @param {module:api-controller~ExpressResponse} res - HTTP response
      * @param {Function} next - Express callback
      */
     '404': function( req, res, next ) {
