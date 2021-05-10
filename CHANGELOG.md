@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+#### Changed
+- Updated Russian translation.
+
 #### Fixed
 - Range default or loaded value (number) not shown.
 - Distresspicker default or loaded mercury level not shown.
