@@ -19,3 +19,4 @@ This document covers the state of Enketo Express as well as the Enketo libraries
 - Switch to latest official Sass tool (Dart sass but the node version of that).
 - Tests in Enketo Core should be able to run much faster with some work.
 - The events.js module in Enketo Core (used in Enketo Express too) might need a redesign. The API just doesn't look attractive (rewrite affects OpenClinica fork).
+- Expand testing coverage in Enketo Express, and perhaps figure out a better way to test XForms.
