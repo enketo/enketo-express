@@ -432,13 +432,22 @@ const dataStore = {
     }
 };
 
+/**
+ * @typedef Record
+ * @property { string } name
+ * @property { string } instanceId
+ * @property { string } enketoId
+ * @property { string } xml
+ * @property { boolean } [draft]
+ * @property { File[] } [files]
+ */
 
 const recordStore = {
     /**
      * Obtains a single record (XML + files)
      *
      * @param { string } instanceId - the instance ID of the record to be retrieved
-     * @return { Promise } A record from the database.
+     * @return { Promise<Record> } A record from the database.
      */
     get( instanceId ) {
         const tasks = [];
@@ -493,8 +502,8 @@ const recordStore = {
     /**
      * Sets a new single record (XML + files)
      *
-     * @param { object } record - [description]
-     * @return { Promise }        [description]
+     * @param { Record } record    - [description]
+     * @return { Promise<Record> } - [description]
      */
     set( record ) {
         let fileKeys;
@@ -534,8 +543,8 @@ const recordStore = {
     /**
      * Updates (or creates) a single record (XML + files)
      *
-     * @param { object } record - [description]
-     * @return { Promise }        [description]
+     * @param { Record } record    - [description]
+     * @return { Promise<Record> } - [description]
      */
     update( record ) {
         let fileKeys;

@@ -130,5 +130,8 @@
         "public/js/src/enketo-webform-edit.js",
         "public/js/src/enketo-webform-view.js",
         "public/js/src/enketo-offline-fallback.js"
-    ]
+    ],
+    "volta": {
+        "node": "12.18.4"
+    }
 }

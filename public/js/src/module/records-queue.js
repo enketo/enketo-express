@@ -18,7 +18,7 @@ let $queueNumber;
 let uploadProgress;
 let finalRecordPresent;
 const autoSaveKey = `__autoSave_${settings.enketoId}`;
-const lastSaveKey = `__lastSaved_${settings.enketoId}`;
+const lastSavedKey = `__lastSaved_${settings.enketoId}`;
 let uploadOngoing = false;
 
 function init() {
@@ -34,10 +34,14 @@ function init() {
 }
 
 /**
+ * @typedef Record { import('./store').Record }
+ */
+
+/**
  * Obtains a record
  *
  * @param  { string } instanceId - instanceID of record
- * @return {Promise<*|undefined>} a Promise that resolves with a record object or undefined
+ * @return { Promise<Record | undefined> } a Promise that resolves with a record object or undefined
  */
 function get( instanceId ) {
     return store.record.get( instanceId );
@@ -46,7 +50,7 @@ function get( instanceId ) {
 /**
  * Stores a new record. Overwrites (media) files from auto-saved record.
  *
- * @param { object } record - a record object
+ * @param { Record } record - a record object
  * @return {Promise<undefined>} a promise that resolves with undefined
  */
 function set( record ) {
@@ -60,26 +64,35 @@ function set( record ) {
             }
 
             return store.record.set( record );
-        } )
-        .then( _updateRecordList );
+        } );
 }
 
 /**
- * Updates an existing record
+ * Creates (sets) or updates a record.
  *
- * @param  { object } record - a record object
- * @return { Promise } a promise that resolves with undefined
+ * @param { 'set' | 'update' } action - determines whether to create or update the record
+ * @param { Record } record - the record to save
+ *
+ * @return { Promise<undefined> }
  */
-function update( record ) {
-    return store.record.update( record )
-        .then( _updateRecordList );
+function save( action, record ) {
+    /** @type { Promise<Record> } */
+    let result;
+
+    if ( action === 'set' ) {
+        result = set( record );
+    } else {
+        result = store.record.update( record );
+    }
+
+    return result.then( setLastSavedRecord ).then( _updateRecordList );
 }
 
 /**
  * Removes a record
  *
  * @param { string } instanceId - instanceID of record
- * @return { Promise } a promise that resolves with undefined
+ * @return { Promise<undefined> } a promise that resolves with undefined
  */
 function remove( instanceId ) {
     return store.record.remove( instanceId )
@@ -103,7 +116,7 @@ function getAutoSavedRecord() {
 /**
  * Updates auto-saved record
  *
- * @param { object } record - record object created from the current state of the form
+ * @param { Record } record - record object created from the current state of the form
  */
 function updateAutoSavedRecord( record ) {
     // prevent this record from accidentally being submitted
@@ -127,15 +140,40 @@ function removeAutoSavedRecord() {
     // do not update recordList
 }
 
-function updateLastSavedRecord( record ) {
-    // give an internal name
-    record.name = `__lastSave_${Date.now()}`;
-    // use the pre-defined key
-    record.instanceId = lastSaveKey;
-    console.log( 'saving last saved', record );
-    return store.record.update( record );
+/**
+ * Obtains auto-saved record key
+ */
+ function getLastSavedKey() {
+    return lastSavedKey;
 }
 
+/**
+ * @return { Promise<Record | undefined> } a Promise that resolves with a record object or undefined
+ */
+function getLastSavedRecord() {
+    return get( lastSavedKey );
+}
+
+/**
+ * Sets the last-saved record for the provided record's instance.
+ *
+ * @param { Record } lastSavedRecord - the record which was last saved
+ * @return { Promise<Record> } - the last-saved record
+ */
+function setLastSavedRecord( lastSavedRecord ) {
+    const lastSavedData = {
+        // give an internal name
+        name: `__lastSaved_${Date.now()}`,
+        // use the pre-defined key
+        instanceId: lastSavedKey,
+    };
+
+    const record = Object.assign( {}, lastSavedRecord, lastSavedData );
+
+    return store.record.remove( lastSavedKey ).then( () => {
+        return store.record.set( record );
+    } );
+}
 
 /**
  * Gets the countervalue of a new record (guaranteed to be unique)
@@ -429,14 +467,15 @@ function flush() {
 export default {
     init,
     get,
-    set,
-    update,
+    save,
     remove,
     getAutoSavedKey,
     getAutoSavedRecord,
     updateAutoSavedRecord,
     removeAutoSavedRecord,
-    updateLastSavedRecord,
+    getLastSavedKey,
+    getLastSavedRecord,
+    setLastSavedRecord,
     flush,
     getCounterValue,
     setActive,
