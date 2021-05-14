@@ -1,4 +1,3 @@
-import settings from '../../public/js/src/module/settings';
 import records from '../../public/js/src/module/records-queue';
 import store from '../../public/js/src/module/store';
 
@@ -12,8 +11,7 @@ import store from '../../public/js/src/module/store';
  */
 describe( 'Records queue', () => {
     const autoSavedKey = records.getAutoSavedKey();
-    const enketoIdA = 'surveyA';
-    const enketoIdB = 'surveyB';
+    const enketoId = 'surveyA';
     const instanceId = 'recordA';
 
     /** @type { Record } */
@@ -24,8 +22,8 @@ describe( 'Records queue', () => {
 
     beforeEach( done => {
         record = {
+            enketoId,
             instanceId,
-            enketoId: enketoIdA,
             name: 'name A',
             xml: '<model><something>a</something></model>'
         };
@@ -48,7 +46,7 @@ describe( 'Records queue', () => {
         store.init().then( records.init ).then( () => {
             return store.record.set( {
                 instanceId: autoSavedKey,
-                enketoId: settings.enketoId,
+                enketoId,
                 name: `__autoSave_${Date.now()}`,
                 xml: '<model><autosaved/></model>',
                 files: [],
@@ -125,8 +123,8 @@ describe( 'Records queue', () => {
 
         it( 'updates a record', done => {
             const update = {
+                enketoId,
                 instanceId,
-                enketoId: 'surveyAUpdated',
                 name: 'name A updated',
                 xml: '<model><updated/></model>'
             };
@@ -169,8 +167,8 @@ describe( 'Records queue', () => {
             const originalRecord = Object.assign( {}, record );
 
             records.save( 'set', {
+                enketoId,
                 instanceId: 'b',
-                enketoId: enketoIdB,
                 name: 'name B',
                 xml: '<model><something>b</something></model>'
             } )
@@ -196,8 +194,8 @@ describe( 'Records queue', () => {
 
         it( 'creates a last-saved record when updating a record', done => {
             const update = {
+                enketoId,
                 instanceId,
-                enketoId: 'surveyAUpdated',
                 name: 'name A updated',
                 xml: '<model><updated/></model>'
             };
@@ -231,8 +229,8 @@ describe( 'Records queue', () => {
 
         it( 'replaces a last-saved record when updating a record', done => {
             const update = {
+                enketoId,
                 instanceId,
-                enketoId: 'surveyAUpdated',
                 name: 'name A updated',
                 xml: '<model><updated/></model>'
             };

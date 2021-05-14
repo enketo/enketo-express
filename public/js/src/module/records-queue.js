@@ -141,9 +141,9 @@ function removeAutoSavedRecord() {
 }
 
 /**
- * Obtains auto-saved record key
+ * Obtains last-saved record key
  */
- function getLastSavedKey() {
+function getLastSavedKey() {
     return lastSavedKey;
 }
 
