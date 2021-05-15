@@ -55,7 +55,17 @@ describe( 'Records queue', () => {
     } );
 
     afterEach( done => {
-        store.flush().then( done, done );
+        store.flush()
+            .then( done )
+            .catch( reason => {
+                // It's not entirely clear to me why, but the `flush` call is throwing
+                // an event from `IDBOpenDBRequest.onupgradeneeded` on the first call.
+                if ( reason instanceof IDBVersionChangeEvent ) {
+                    return store.flush();
+                }
+
+                throw reason;
+            } );
     } );
 
     describe( 'storing records', () => {
