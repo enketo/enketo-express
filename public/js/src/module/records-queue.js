@@ -155,12 +155,12 @@ function getLastSavedRecord() {
 }
 
 /**
- * Sets the last-saved record for the provided record's instance.
+ * Sets the last-saved record.
  *
- * @param { Record } lastSavedRecord - the record which was last saved
+ * @param { Record } record - the record which was last saved
  * @return { Promise<Record> } - the last-saved record
  */
-function setLastSavedRecord( lastSavedRecord ) {
+function setLastSavedRecord( record ) {
     const lastSavedData = {
         // give an internal name
         name: `__lastSaved_${Date.now()}`,
@@ -168,10 +168,10 @@ function setLastSavedRecord( lastSavedRecord ) {
         instanceId: lastSavedKey,
     };
 
-    const record = Object.assign( {}, lastSavedRecord, lastSavedData );
+    const payload = Object.assign( {}, record, lastSavedData );
 
     return store.record.remove( lastSavedKey ).then( () => {
-        return store.record.set( record );
+        return store.record.set( payload );
     } );
 }
 

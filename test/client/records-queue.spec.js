@@ -130,7 +130,10 @@ describe( 'Records queue', () => {
             };
             const payload = Object.assign( {}, update );
 
-            records.save( 'update', payload )
+            records.save( 'set', record )
+                .then( () => {
+                    return records.save( 'update', payload );
+                } )
                 .then( () => {
                     return store.record.get( instanceId );
                 } )
