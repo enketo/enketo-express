@@ -433,13 +433,13 @@ const dataStore = {
 };
 
 /**
- * @typedef Record
- * @property { string } name
- * @property { string } instanceId
- * @property { string } enketoId
- * @property { string } xml
- * @property { boolean } [draft]
- * @property { File[] } [files]
+ * @typedef Record - Enketo's data model representing an [XForms Instance](https://getodk.github.io/xforms-spec/#instance)
+ * @property { string } enketoId - identifier for the form the record is associated with
+ * @property { string } instanceId - the record's primary key identifier
+ * @property { string } name - a unique name assigned to the record by a user
+ * @property { string } xml - the serialized representation of the record's current state
+ * @property { boolean } [draft] - whether the record was saved either as a draft or auto-saved
+ * @property { window.File[] } [files] - any files attached to the record
  */
 
 const recordStore = {
