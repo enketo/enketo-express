@@ -17,8 +17,7 @@ let $recordList;
 let $queueNumber;
 let uploadProgress;
 let finalRecordPresent;
-const autoSaveKey = `__autoSave_${settings.enketoId}`;
-const lastSavedKey = `__lastSaved_${settings.enketoId}`;
+
 let uploadOngoing = false;
 
 function init() {
@@ -103,14 +102,14 @@ function remove( instanceId ) {
  * Obtains auto-saved record key
  */
 function getAutoSavedKey() {
-    return autoSaveKey;
+    return `__autoSave_${settings.enketoId}`;
 }
 
 /**
  * Obtains auto-saved record.
  */
 function getAutoSavedRecord() {
-    return get( autoSaveKey );
+    return get( getAutoSavedKey() );
 }
 
 /**
@@ -124,7 +123,7 @@ function updateAutoSavedRecord( record ) {
     // give an internal name
     record.name = `__autoSave_${Date.now()}`;
     // use the pre-defined key
-    record.instanceId = autoSaveKey;
+    record.instanceId = getAutoSavedKey();
     // make the record valid
     record.enketoId = settings.enketoId;
 
@@ -136,7 +135,7 @@ function updateAutoSavedRecord( record ) {
  * Removes auto-saved record
  */
 function removeAutoSavedRecord() {
-    return store.record.remove( autoSaveKey );
+    return store.record.remove( getAutoSavedKey() );
     // do not update recordList
 }
 
@@ -144,14 +143,14 @@ function removeAutoSavedRecord() {
  * Obtains last-saved record key
  */
 function getLastSavedKey() {
-    return lastSavedKey;
+    return `__lastSaved_${settings.enketoId}`;
 }
 
 /**
  * @return { Promise<Record | undefined> } a Promise that resolves with a record object or undefined
  */
 function getLastSavedRecord() {
-    return get( lastSavedKey );
+    return get( getLastSavedKey() );
 }
 
 /**
@@ -165,12 +164,12 @@ function setLastSavedRecord( record ) {
         // give an internal name
         name: `__lastSaved_${Date.now()}`,
         // use the pre-defined key
-        instanceId: lastSavedKey,
+        instanceId: getLastSavedKey(),
     };
 
     const payload = Object.assign( {}, record, lastSavedData );
 
-    return store.record.remove( lastSavedKey ).then( () => {
+    return store.record.remove( getLastSavedKey() ).then( () => {
         return store.record.set( payload );
     } );
 }
@@ -407,7 +406,7 @@ function _updateRecordList() {
             records = records || [];
 
             // remove autoSaved record
-            records = records.filter( record => record.instanceId !== autoSaveKey );
+            records = records.filter( record => record.instanceId !== getAutoSavedKey() );
 
             // update queue number
             $queueNumber.text( records.length );
