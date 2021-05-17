@@ -1,4 +1,5 @@
 import records from '../../public/js/src/module/records-queue';
+import settings from '../../public/js/src/module/settings';
 import store from '../../public/js/src/module/store';
 
 /**
@@ -6,24 +7,45 @@ import store from '../../public/js/src/module/store';
  */
 
 /**
+ * @typedef SinonSandbox { import('sinon').SinonSandbox }
+ */
+
+/**
  * While some of this is tested in store.spec.js, this suite tests the additional
  * logic performed in records-queue.js functionality around the client store.
  */
 describe( 'Records queue', () => {
-    const autoSavedKey = records.getAutoSavedKey();
-    const enketoId = 'surveyA';
-    const instanceId = 'recordA';
+    const enketoIdA = 'surveyA';
+    const instanceIdA = 'recordA';
+    const enketoIdB = 'surveyB';
+    const instanceIdB = 'recordB';
+
+    /** @type {string} */
+    let autoSavedKey;
+
+    /** @type { string } */
+    let enketoId;
+
+    /** @type { SinonSandbox } */
+    let sandbox;
 
     /** @type { Record } */
-    let record;
+    let recordA;
 
     /** @type { File[] } */
     let files;
 
     beforeEach( done => {
-        record = {
+        enketoId = enketoIdA;
+
+        sandbox = sinon.createSandbox();
+        sandbox.stub( settings, 'enketoId' ).get( () => enketoId );
+
+        autoSavedKey = records.getAutoSavedKey();
+
+        recordA = {
             enketoId,
-            instanceId,
+            instanceId: instanceIdA,
             name: 'name A',
             xml: '<model><something>a</something></model>'
         };
@@ -83,11 +105,11 @@ describe( 'Records queue', () => {
 
     describe( 'storing records', () => {
         it( 'creates a record', done => {
-            const originalRecord = Object.assign( {}, record );
+            const originalRecord = Object.assign( {}, recordA );
 
-            records.save( 'set', record )
+            records.save( 'set', recordA )
                 .then( () => {
-                    return store.record.get( instanceId );
+                    return store.record.get( instanceIdA );
                 } )
                 .then( ( record ) => {
                     Object.entries( originalRecord ).forEach( ( [ key, value ] ) => {
@@ -98,9 +120,9 @@ describe( 'Records queue', () => {
         } );
 
         it( 'updates an autosave draft record with files', done => {
-            record.files = files.slice();
+            recordA.files = files.slice();
 
-            records.updateAutoSavedRecord( record )
+            records.updateAutoSavedRecord( recordA )
                 .then( () => {
                     return records.getAutoSavedRecord();
                 } )
@@ -122,14 +144,14 @@ describe( 'Records queue', () => {
         it( 'creates a record with the current autosaved record\'s files', done => {
             const autoSavedUpdate = Object.assign( {
                 files: files.slice(),
-            }, record );
+            }, recordA );
 
             records.updateAutoSavedRecord( autoSavedUpdate )
                 .then( () => {
-                    return records.save( 'set', record );
+                    return records.save( 'set', recordA );
                 } )
                 .then( () => {
-                    return store.record.get( instanceId );
+                    return store.record.get( instanceIdA );
                 } )
                 .then( ( record ) => {
                     expect( record.files.length ).to.equal( files.length );
@@ -147,18 +169,18 @@ describe( 'Records queue', () => {
         it( 'updates a record', done => {
             const update = {
                 enketoId,
-                instanceId,
+                instanceId: instanceIdA,
                 name: 'name A updated',
                 xml: '<model><updated/></model>'
             };
             const payload = Object.assign( {}, update );
 
-            records.save( 'set', record )
+            records.save( 'set', recordA )
                 .then( () => {
                     return records.save( 'update', payload );
                 } )
                 .then( () => {
-                    return store.record.get( instanceId );
+                    return store.record.get( instanceIdA );
                 } )
                 .then( ( record ) => {
                     Object.entries( update ).forEach( ( [ key, value ] ) => {
@@ -169,9 +191,9 @@ describe( 'Records queue', () => {
         } );
 
         it( 'creates a last-saved record when creating a record', done => {
-            const originalRecord = Object.assign( {}, record );
+            const originalRecord = Object.assign( {}, recordA );
 
-            records.save( 'set', record )
+            records.save( 'set', recordA )
                 .then( () => {
                     return records.getLastSavedRecord();
                 } )
@@ -190,7 +212,7 @@ describe( 'Records queue', () => {
         } );
 
         it( 'replaces a last-saved record when creating a newer record', done => {
-            const originalRecord = Object.assign( {}, record );
+            const originalRecord = Object.assign( {}, recordA );
 
             records.save( 'set', {
                 enketoId,
@@ -199,7 +221,7 @@ describe( 'Records queue', () => {
                 xml: '<model><something>b</something></model>'
             } )
                 .then( () => {
-                    return records.save( 'set', record );
+                    return records.save( 'set', recordA );
                 } )
                 .then( () => {
                     return records.getLastSavedRecord();
@@ -221,13 +243,13 @@ describe( 'Records queue', () => {
         it( 'creates a last-saved record when updating a record', done => {
             const update = {
                 enketoId,
-                instanceId,
+                instanceId: instanceIdA,
                 name: 'name A updated',
                 xml: '<model><updated/></model>'
             };
             const payload = Object.assign( {}, update );
 
-            records.save( 'set', record )
+            records.save( 'set', recordA )
                 .then( () => {
                     // This would be the condition in cases where a record already
                     // existed before this feature was implemented
@@ -256,13 +278,13 @@ describe( 'Records queue', () => {
         it( 'replaces a last-saved record when updating a record', done => {
             const update = {
                 enketoId,
-                instanceId,
+                instanceId: instanceIdA,
                 name: 'name A updated',
                 xml: '<model><updated/></model>'
             };
             const payload = Object.assign( {}, update );
 
-            records.save( 'set', record )
+            records.save( 'set', recordA )
                 .then( () => {
                     return records.save( 'update', update );
                 } )
@@ -277,6 +299,76 @@ describe( 'Records queue', () => {
                             expect( record[key] ).to.match( /^__lastSaved_\d+$/ );
                         } else {
                             expect( record[key] ).to.equal( value );
+                        }
+                    } );
+                } )
+                .then( done, done );
+        } );
+
+        it( 'creates separate last-saved records for different forms', done => {
+            const enketoIdA = enketoId;
+            const enketoIdB = 'surveyB';
+            const originalRecordA = Object.assign( {}, recordA );
+
+            /** @type { Record } */
+            const recordB = {
+                enketoId: enketoIdB,
+                instanceId: instanceIdB,
+                name: 'name B',
+                xml: '<model><something>b</something></model>'
+            };
+
+            const originalRecordB = Object.assign( {}, recordB );
+
+            // Create record/last-saved for first form id
+            records.save( 'set', recordA )
+                // Create autosave record for second form id
+                .then( () => {
+                    enketoId = enketoIdB;
+
+                    return store.record.set( {
+                        instanceId: records.getAutoSavedKey(),
+                        enketoId,
+                        name: `__autoSave_${Date.now()}`,
+                        xml: '<model><autosaved/></model>',
+                        files: [],
+                    } );
+                } )
+                // Create record/last-saved for second form id
+                .then( () => {
+                    return records.save( 'set', recordB );
+                } )
+                // Get last-saved record for second form id
+                .then( () => {
+                    return records.getLastSavedRecord();
+                } )
+                // Validate last-saved record for second form id
+                .then( lastSavedB => {
+                    Object.entries( originalRecordB ).forEach( ( [ key, value ] ) => {
+                        if ( key === 'instanceId' ) {
+                            expect( lastSavedB[key] ).to.equal( records.getLastSavedKey() );
+                        } else if ( key === 'name' ) {
+                            expect( lastSavedB[key] ).to.match( /^__lastSaved_\d+$/ );
+                        } else {
+                            expect( lastSavedB[key] ).to.equal( value );
+                        }
+                    } );
+                } )
+                // Get last-saved record for first form id
+                .then( () => {
+                    enketoId = enketoIdA;
+
+                    return records.getLastSavedRecord();
+                } )
+                // Validate last-saved record for first form id has not changed
+                .then( lastSavedA => {
+                    Object.entries( originalRecordA ).forEach( ( [ key, value ] ) => {
+                        if ( key === 'instanceId' ) {
+                            expect( lastSavedA[key] ).to.equal( records.getLastSavedKey() );
+                        } else if ( key === 'name' ) {
+                            expect( lastSavedA[key] ).to.match( /^__lastSaved_\d+$/ );
+                        } else {
+                            expect( lastSavedA[key] ).to.equal( value );
                         }
                     } );
                 } )
