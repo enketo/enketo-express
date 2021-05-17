@@ -4,8 +4,10 @@ node_js:
   - "12"
 dist: xenial
 before_script:
+  - sudo systemctl stop redis-server
   - sudo apt-get install upstart-sysv
   - sudo update-initramfs -u
+  - sudo systemctl start redis-server
   - npm install -g grunt-cli
   - chmod 777 ./setup/travis/travis-redis.sh
   - ./setup/travis/travis-redis.sh
