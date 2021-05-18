@@ -387,6 +387,27 @@ uploadProgress = {
 };
 
 /**
+ * Retrieves records for display in the UI. This was isolated from the
+ * `_updateRecordList` function to allow testing, but is not currently
+ * used in the UI.
+ *
+ * @return { Promise<Record[]> } - records to be displayed in the UI
+ */
+function getRecordList() {
+    const excludeKeys = new Set( [
+        getAutoSavedKey(),
+        getLastSavedKey(),
+    ] );
+
+    const records = store.record.getAll( settings.enketoId )
+        .then( records => {
+            return records.filter( record => !excludeKeys.has( record.instanceId ) );
+        } );
+
+    return records;
+}
+
+/**
  * Updates the record list in the UI
  *
  * @return { Promise } [description]
@@ -401,13 +422,8 @@ function _updateRecordList() {
     finalRecordPresent = false;
 
     // rebuild the list
-    return store.record.getAll( settings.enketoId )
+    return getRecordList()
         .then( records => {
-            records = records || [];
-
-            // remove autoSaved record
-            records = records.filter( record => record.instanceId !== getAutoSavedKey() );
-
             // update queue number
             $queueNumber.text( records.length );
 
@@ -470,6 +486,7 @@ export default {
     remove,
     getAutoSavedKey,
     getAutoSavedRecord,
+    getRecordList,
     updateAutoSavedRecord,
     removeAutoSavedRecord,
     getLastSavedKey,

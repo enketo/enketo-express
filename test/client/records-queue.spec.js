@@ -307,7 +307,6 @@ describe( 'Records queue', () => {
 
         it( 'creates separate last-saved records for different forms', done => {
             const enketoIdA = enketoId;
-            const enketoIdB = 'surveyB';
             const originalRecordA = Object.assign( {}, recordA );
 
             /** @type { Record } */
@@ -370,6 +369,50 @@ describe( 'Records queue', () => {
                         } else {
                             expect( lastSavedA[key] ).to.equal( value );
                         }
+                    } );
+                } )
+                .then( done, done );
+        } );
+
+        it( 'gets the record list, excludes the auto-saved/last-saved records', done => {
+            const recordB = {
+                enketoId,
+                instanceId: 'b',
+                name: 'name B',
+                xml: '<model><something>b</something></model>'
+            };
+
+            const autoSavedKey = records.getAutoSavedKey();
+            const expectedExcludedKeys = new Set( [
+                autoSavedKey,
+                records.getLastSavedKey(),
+            ] );
+
+            const expectedRecordData = [
+                Object.assign( {}, recordA ),
+                Object.assign( {}, recordB ),
+            ];
+
+            records.save( 'set', recordA )
+                .then( () => {
+                    return records.save( 'set', recordB );
+                } )
+                .then( () => {
+                    return records.getRecordList();
+                } )
+                .then( ( records ) => {
+                    expect( records.length ).to.equal( expectedRecordData.length );
+
+                    records.forEach( record => {
+                        expect( expectedExcludedKeys.has( record.instanceId ) ).to.equal( false );
+                    } );
+
+                    expectedRecordData.forEach( ( recordData, index ) => {
+                        const record = records[index];
+
+                        Object.entries( recordData ).forEach( ( [ key, value ] ) => {
+                            expect( record[key] ).to.equal( value );
+                        } );
                     } );
                 } )
                 .then( done, done );
