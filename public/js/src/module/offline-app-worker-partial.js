@@ -12,13 +12,11 @@ self.addEventListener( 'install', event => {
             .then( cache => {
                 console.log( 'Opened cache' );
 
-                return cache.addAll( resources );
+                // To bypass any HTTP caching, always obtain resource from network
+                return cache.addAll( resources.map( resource => new Request( resource, { cache: 'reload' } ) ) );
             } )
             .catch( e => {
                 console.log( 'Service worker install error', e );
-            } )
-            .catch( e => {
-                console.error( 'Error posting service worker install message to client', e );
             } )
     );
 } );
@@ -53,7 +51,8 @@ self.addEventListener( 'fetch', event => {
 
                 // TODO: we have a fallback page we could serve when offline, but tbc if that is actually useful at all
 
-                return fetch( event.request, { credentials: 'same-origin' } )
+                // To bypass any HTTP caching, always obtain resource from network
+                return fetch( event.request, { credentials: 'same-origin', cache: 'reload' } )
                     .then( response => {
                         const isScopedResource = event.request.url.includes( '/x/' );
                         const isTranslation = event.request.url.includes( '/locales/build/' );
