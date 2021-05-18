@@ -114,7 +114,11 @@ describe( 'Records queue', () => {
 
                 caught = reason;
             } )
-            .then( () => done( caught ) );
+            .then( () => {
+                sandbox.restore();
+
+                done( caught );
+            } );
     } );
 
     describe( 'storing records', () => {
