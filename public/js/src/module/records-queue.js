@@ -235,7 +235,7 @@ function uploadQueue() {
                 return;
             }
 
-            return store.record.getAll( settings.enketoId, true );
+            return getRecordList( true );
         } )
         .then( records => {
             if ( !records || records.length === 0 ) {
@@ -387,19 +387,21 @@ uploadProgress = {
 };
 
 /**
- * Retrieves records for display in the UI. This was isolated from the
- * `_updateRecordList` function to allow testing, but is not currently
- * used in the UI.
+ * Retrieves a list of records for the active form, excluding auto-saved
+ * and last-saved records. This was isolated from the `_updateRecordList`
+ * function to allow testing, and reused in `uploadQueue` to share the
+ * behavior.
  *
+ * @param { boolean } finalOnly - Only included records that are 'final' (i.e. not 'draft')
  * @return { Promise<Record[]> } - records to be displayed in the UI
  */
-function getRecordList() {
+function getRecordList( finalOnly ) {
     const excludeKeys = new Set( [
         getAutoSavedKey(),
         getLastSavedKey(),
     ] );
 
-    const records = store.record.getAll( settings.enketoId )
+    const records = store.record.getAll( settings.enketoId, finalOnly )
         .then( records => {
             return records.filter( record => !excludeKeys.has( record.instanceId ) );
         } );

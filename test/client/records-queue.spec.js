@@ -1,3 +1,4 @@
+import connection from '../../public/js/src/module/connection';
 import records from '../../public/js/src/module/records-queue';
 import settings from '../../public/js/src/module/settings';
 import store from '../../public/js/src/module/store';
@@ -32,6 +33,9 @@ describe( 'Records queue', () => {
     /** @type { Record } */
     let recordA;
 
+    /** @type { Record } */
+    let recordB;
+
     /** @type { File[] } */
     let files;
 
@@ -44,10 +48,19 @@ describe( 'Records queue', () => {
         autoSavedKey = records.getAutoSavedKey();
 
         recordA = {
+            draft: false,
             enketoId,
             instanceId: instanceIdA,
             name: 'name A',
             xml: '<model><something>a</something></model>'
+        };
+
+        recordB = {
+            draft: false,
+            enketoId,
+            instanceId: 'b',
+            name: 'name B',
+            xml: '<model><something>b</something></model>'
         };
 
         files = [
@@ -67,6 +80,7 @@ describe( 'Records queue', () => {
 
         store.init().then( records.init ).then( () => {
             return store.record.set( {
+                draft: true,
                 instanceId: autoSavedKey,
                 enketoId,
                 name: `__autoSave_${Date.now()}`,
@@ -168,6 +182,7 @@ describe( 'Records queue', () => {
 
         it( 'updates a record', done => {
             const update = {
+                draft: false,
                 enketoId,
                 instanceId: instanceIdA,
                 name: 'name A updated',
@@ -214,12 +229,7 @@ describe( 'Records queue', () => {
         it( 'replaces a last-saved record when creating a newer record', done => {
             const originalRecord = Object.assign( {}, recordA );
 
-            records.save( 'set', {
-                enketoId,
-                instanceId: 'b',
-                name: 'name B',
-                xml: '<model><something>b</something></model>'
-            } )
+            records.save( 'set', recordB )
                 .then( () => {
                     return records.save( 'set', recordA );
                 } )
@@ -242,6 +252,7 @@ describe( 'Records queue', () => {
 
         it( 'creates a last-saved record when updating a record', done => {
             const update = {
+                draft: false,
                 enketoId,
                 instanceId: instanceIdA,
                 name: 'name A updated',
@@ -277,6 +288,7 @@ describe( 'Records queue', () => {
 
         it( 'replaces a last-saved record when updating a record', done => {
             const update = {
+                draft: false,
                 enketoId,
                 instanceId: instanceIdA,
                 name: 'name A updated',
@@ -311,6 +323,7 @@ describe( 'Records queue', () => {
 
             /** @type { Record } */
             const recordB = {
+                draft: false,
                 enketoId: enketoIdB,
                 instanceId: instanceIdB,
                 name: 'name B',
@@ -326,6 +339,7 @@ describe( 'Records queue', () => {
                     enketoId = enketoIdB;
 
                     return store.record.set( {
+                        draft: true,
                         instanceId: records.getAutoSavedKey(),
                         enketoId,
                         name: `__autoSave_${Date.now()}`,
@@ -375,16 +389,8 @@ describe( 'Records queue', () => {
         } );
 
         it( 'gets the record list, excludes the auto-saved/last-saved records', done => {
-            const recordB = {
-                enketoId,
-                instanceId: 'b',
-                name: 'name B',
-                xml: '<model><something>b</something></model>'
-            };
-
-            const autoSavedKey = records.getAutoSavedKey();
             const expectedExcludedKeys = new Set( [
-                autoSavedKey,
+                records.getAutoSavedKey(),
                 records.getLastSavedKey(),
             ] );
 
@@ -409,6 +415,73 @@ describe( 'Records queue', () => {
 
                     expectedRecordData.forEach( ( recordData, index ) => {
                         const record = records[index];
+
+                        Object.entries( recordData ).forEach( ( [ key, value ] ) => {
+                            expect( record[key] ).to.equal( value );
+                        } );
+                    } );
+                } )
+                .then( done, done );
+        } );
+
+        // This is primarily testing that an empty array is returned as the db.js
+        // types indicate, rather than needing to keep using falsy checks.
+        it( 'gets an empty record list', done => {
+            records.getRecordList()
+                .then( ( records ) => {
+                    expect( Array.isArray( records ) ).to.equal( true );
+                    expect( records.length ).to.equal( 0 );
+                } )
+                .then( done, done );
+        } );
+
+        it( 'uploads queued records, excluding auto-saved/last-saved and draft records', done => {
+            const expectedExcludedKeys = new Set( [
+                records.getAutoSavedKey(),
+                records.getLastSavedKey(),
+            ] );
+
+            const expectedUploadedData = [
+                Object.assign( {}, recordA ),
+                Object.assign( {}, recordB ),
+            ];
+
+            sandbox.stub( connection, 'getOnlineStatus' ).callsFake( () => {
+                return Promise.resolve( true );
+            } );
+
+            /** @type { Record[] } */
+            let uploaded = [];
+
+            sandbox.stub( connection, 'uploadRecord' ).callsFake( record => {
+                uploaded.push( record );
+            } );
+
+            records.save( 'set', recordA )
+                .then( () => {
+                    return records.save( 'set', recordB );
+                } )
+                .then( () => {
+                    return store.record.set( {
+                        draft: true,
+                        enketoId,
+                        instanceId: 'c',
+                        name: 'name C',
+                        xml: '<model><something>c</something></model>',
+                    } );
+                } )
+                .then( () => {
+                    return records.uploadQueue();
+                } )
+                .then( () => {
+                    expect( uploaded.length ).to.equal( expectedUploadedData.length );
+
+                    uploaded.forEach( record => {
+                        expect( expectedExcludedKeys.has( record.instanceId ) ).to.equal( false );
+                    } );
+
+                    expectedUploadedData.forEach( ( recordData, index ) => {
+                        const record = uploaded[index];
 
                         Object.entries( recordData ).forEach( ( [ key, value ] ) => {
                             expect( record[key] ).to.equal( value );
