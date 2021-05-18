@@ -114,7 +114,7 @@ describe( 'Records queue', () => {
 
                 caught = reason;
             } )
-            .finally( () => done( caught ) );
+            .then( () => done( caught ) );
     } );
 
     describe( 'storing records', () => {
