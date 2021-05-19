@@ -91,34 +91,16 @@ describe( 'Records queue', () => {
     } );
 
     afterEach( done => {
-        let caught;
-
-        store.flush()
-            .then( () => done )
-            .catch( reason => {
-                // It's not entirely clear to me why, but the `flush` call is throwing
-                // an event from `IDBOpenDBRequest.onupgradeneeded` on the first call.
-                if ( reason instanceof IDBVersionChangeEvent ) {
-                    console.log( 'caught unexpected IDBVersionChangeEvent, attempting to flush again', reason );
-
-                    return store.flush();
-                }
-
-                caught = reason;
-            } )
-            .catch( reason => {
-                console.log(
-                    'second attempt to flush failed', reason,
-                    'is IDBVersionChangeEvent again?', reason instanceof IDBVersionChangeEvent
-                );
-
-                caught = reason;
+        store.property.removeAll()
+            .then( () => {
+                return store.record.removeAll();
             } )
             .then( () => {
                 sandbox.restore();
 
-                done( caught );
-            } );
+                done();
+            } )
+            .catch( done );
     } );
 
     describe( 'storing records', () => {
