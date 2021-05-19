@@ -2,7 +2,16 @@ import JSZip from 'jszip';
 import store from './store';
 import utils from './utils';
 
-function recordsToZip( enketoId, formTitle ) {
+/**
+ *
+ * Creates a zip file of all locally-saved records.
+ *
+ * @param { string } enketoId - identifier for the form the records are associated with
+ * @param { string } formTitle - the title of the form
+ * @param { string } records - the records to export
+ * @return {Promise<Blob>} a Promise that resolves with a zip file as Blob
+ */
+function recordsToZip( enketoId, formTitle, records ) {
     let folder;
     let folderName;
     const failures = [];
@@ -11,7 +20,7 @@ function recordsToZip( enketoId, formTitle ) {
     const name = formTitle || enketoId;
     const zip = new JSZip();
 
-    return store.record.getAll( enketoId )
+    return Promise.resolve( records )
         .then( records => // sequentially to be kind to indexedDB
             records.reduce(
                 ( prevPromise, record ) => prevPromise.then( () => // get the full record with all its files

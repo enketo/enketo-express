@@ -296,7 +296,7 @@ function uploadQueue() {
 }
 
 /**
- * Creates a zip file of all locally-saved records.
+ * Creates a zip file of all locally-saved records, except last-saved.
  *
  * @param { string } formTitle - the title of the form
  * @return {Promise<Blob>} a Promise that resolves with a zip file as Blob
@@ -305,7 +305,10 @@ function exportToZip( formTitle ) {
 
     $exportButton.prop( 'disabled', true );
 
-    return exporter.recordsToZip( settings.enketoId, formTitle )
+    return getRecordList()
+        .then( records => {
+            return exporter.recordsToZip( settings.enketoId, formTitle, records );
+        } )
         .then( blob => {
             $exportButton.prop( 'disabled', false );
 

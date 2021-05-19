@@ -1,4 +1,5 @@
 import connection from '../../public/js/src/module/connection';
+import exporter from '../../public/js/src/module/exporter';
 import records from '../../public/js/src/module/records-queue';
 import settings from '../../public/js/src/module/settings';
 import store from '../../public/js/src/module/store';
@@ -373,7 +374,9 @@ describe( 'Records queue', () => {
                 } )
                 .then( done, done );
         } );
+    } );
 
+    describe( 'Retrieving records', () => {
         it( 'gets the record list, excludes the auto-saved/last-saved records', done => {
             const expectedExcludedKeys = new Set( [
                 records.getAutoSavedKey(),
@@ -420,7 +423,9 @@ describe( 'Records queue', () => {
                 } )
                 .then( done, done );
         } );
+    } );
 
+    describe( 'Uploading records', () => {
         it( 'uploads queued records, excluding auto-saved/last-saved and draft records', done => {
             const expectedExcludedKeys = new Set( [
                 records.getAutoSavedKey(),
@@ -468,6 +473,52 @@ describe( 'Records queue', () => {
 
                     expectedUploadedData.forEach( ( recordData, index ) => {
                         const record = uploaded[index];
+
+                        Object.entries( recordData ).forEach( ( [ key, value ] ) => {
+                            expect( record[key] ).to.equal( value );
+                        } );
+                    } );
+                } )
+                .then( done, done );
+        } );
+    } );
+
+    describe( 'Exporting records', () => {
+        it( 'exports records to a zip file, excluding last-saved', done => {
+            const expectedExcludedKeys = new Set( [
+                records.getAutoSavedKey(),
+                records.getLastSavedKey(),
+            ] );
+
+            const expectedUploadedData = [
+                Object.assign( {}, recordA ),
+                Object.assign( {}, recordB ),
+            ];
+
+            /** @type { Record[] } */
+            let exported;
+
+            sinon.stub( exporter, 'recordsToZip' ).callsFake( ( enketoId, formTitle, records ) => {
+                exported = records;
+            } );
+
+
+            records.save( 'set', recordA )
+                .then( () => {
+                    return records.save( 'set', recordB );
+                } )
+                .then( () => {
+                    return records.exportToZip( enketoId );
+                } )
+                .then( () => {
+                    expect( exported.length ).to.equal( expectedUploadedData.length );
+
+                    exported.forEach( record => {
+                        expect( expectedExcludedKeys.has( record.instanceId ) ).to.equal( false );
+                    } );
+
+                    expectedUploadedData.forEach( ( recordData, index ) => {
+                        const record = exported[index];
 
                         Object.entries( recordData ).forEach( ( [ key, value ] ) => {
                             expect( record[key] ).to.equal( value );
