@@ -393,7 +393,7 @@ describe( 'Records queue', () => {
                     return records.save( 'set', recordB );
                 } )
                 .then( () => {
-                    return records.getRecordList();
+                    return records.getDisplayableRecordList();
                 } )
                 .then( ( records ) => {
                     expect( records.length ).to.equal( expectedRecordData.length );
@@ -416,7 +416,7 @@ describe( 'Records queue', () => {
         // This is primarily testing that an empty array is returned as the db.js
         // types indicate, rather than needing to keep using falsy checks.
         it( 'gets an empty record list', done => {
-            records.getRecordList()
+            records.getDisplayableRecordList()
                 .then( ( records ) => {
                     expect( Array.isArray( records ) ).to.equal( true );
                     expect( records.length ).to.equal( 0 );

@@ -235,7 +235,7 @@ function uploadQueue() {
                 return;
             }
 
-            return getRecordList( true );
+            return getDisplayableRecordList( true );
         } )
         .then( records => {
             if ( !records || records.length === 0 ) {
@@ -305,7 +305,7 @@ function exportToZip( formTitle ) {
 
     $exportButton.prop( 'disabled', true );
 
-    return getRecordList()
+    return getDisplayableRecordList()
         .then( records => {
             return exporter.recordsToZip( settings.enketoId, formTitle, records );
         } )
@@ -398,7 +398,7 @@ uploadProgress = {
  * @param { boolean } finalOnly - Only included records that are 'final' (i.e. not 'draft')
  * @return { Promise<Record[]> } - records to be displayed in the UI
  */
-function getRecordList( finalOnly ) {
+function getDisplayableRecordList( finalOnly ) {
     const excludeKeys = new Set( [
         getAutoSavedKey(),
         getLastSavedKey(),
@@ -427,7 +427,7 @@ function _updateRecordList() {
     finalRecordPresent = false;
 
     // rebuild the list
-    return getRecordList()
+    return getDisplayableRecordList()
         .then( records => {
             // update queue number
             $queueNumber.text( records.length );
@@ -491,7 +491,7 @@ export default {
     remove,
     getAutoSavedKey,
     getAutoSavedRecord,
-    getRecordList,
+    getDisplayableRecordList,
     updateAutoSavedRecord,
     removeAutoSavedRecord,
     getLastSavedKey,
