@@ -296,7 +296,8 @@ function uploadQueue() {
 }
 
 /**
- * Creates a zip file of all locally-saved records, except last-saved.
+ * Creates a zip file of all locally-saved records, including drafts and auto-saved
+ * records, excluding last-saved.
  *
  * @param { string } formTitle - the title of the form
  * @return {Promise<Blob>} a Promise that resolves with a zip file as Blob
