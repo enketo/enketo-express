@@ -274,7 +274,7 @@ function _submitRecord() {
                 return record;
             }
         } )
-        .then( connection.uploadRecord )
+        .then( record => connection.uploadRecord( record, true ) )
         .then( result => {
             result = result || {};
             level = 'success';

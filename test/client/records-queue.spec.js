@@ -22,7 +22,7 @@ describe( 'Records queue', () => {
     const enketoIdB = 'surveyB';
     const instanceIdB = 'recordB';
 
-    /** @type {string} */
+    /** @type { string } */
     let autoSavedKey;
 
     /** @type { string } */

@@ -2,9 +2,11 @@
  * Deals with communication to the server (in process of being transformed to using Promises)
  */
 
+import shared from './records-shared';
 import settings from './settings';
 import { t } from './translator';
 import utils from './utils';
+
 const parser = new DOMParser();
 const CONNECTION_URL = `${settings.basePath}/connection`;
 const TRANSFORM_URL = `${settings.basePath}/transform/xform${settings.enketoId ? `/${settings.enketoId}` : ''}`;
@@ -29,34 +31,44 @@ function getOnlineStatus() {
         .catch( () => false );
 }
 
-/*
+/**
+ * @typedef Record { import('./store').Record }
+ */
+
+/**
  * Uploads a complete record
  *
- * @param  {{xml: string, files: [File]}} record
- * @return { Promise }
+ * @param {{xml: string, files: File[]}} record - record to upload
+ * @param {boolean} uploadLastSaved - whether to also upload a last-saved record
+ * @return { Promise<Response> } - the first response from batched uploads
  */
-function uploadRecord( record ) {
+function uploadRecord( record, uploadLastSaved ) {
     let batches;
 
     try {
         batches = _prepareFormDataArray( record );
+
+        if ( uploadLastSaved ) {
+            const lastSavedPayload = shared.lastSavedRecordPayload( record );
+
+            batches = batches.concat( _prepareFormDataArray( lastSavedPayload )  );
+        }
     } catch ( e ) {
         return Promise.reject( e );
     }
 
-    batches.forEach( batch => {
-        batch.instanceId = record.instanceId;
-        batch.deprecatedId = record.deprecatedId;
-    } );
-
     // Perform batch uploads sequentially for to avoid issues when connections are very poor and
     // a serious issue with ODK Aggregate (https://github.com/kobotoolbox/enketo-express/issues/400)
-    return batches.reduce( ( prevPromise, batch ) => prevPromise.then( () => _uploadBatch( batch ) ), Promise.resolve() )
-        .then( results => {
-            console.log( 'results of all batches submitted', results );
+    return batches.reduce( ( prevPromise, batch ) => {
+        return prevPromise.then( results => {
+            return _uploadBatch( batch ).then( result => {
+                results.push( result );
 
-            return results[ 0 ];
+                return results;
+            } );
         } );
+    }, Promise.resolve( [] ) )
+        .then( results => results[ 0 ] );
 }
 
 /**
@@ -189,8 +201,10 @@ function _prepareFormDataArray( record ) {
         const csrfToken = ( document.cookie.split( '; ' ).find( c => c.startsWith( '__csrf' ) ) || '' ).split( '=' )[1];
         if ( csrfToken ) fd.append( '__csrf', csrfToken );
 
-        // batch with XML data
+        // batch with XML and record data
         batchPrepped = {
+            instanceId: record.instanceId,
+            deprecatedId: record.deprecatedId,
             formData: fd,
             failedFiles
         };

@@ -10,6 +10,9 @@ import settings from './settings';
 import exporter from './exporter';
 import { t } from './translator';
 import $ from 'jquery';
+import shared from './records-shared';
+
+const getLastSavedKey = shared.getLastSavedKey;
 
 let $exportButton;
 let $uploadButton;
@@ -140,13 +143,6 @@ function removeAutoSavedRecord() {
 }
 
 /**
- * Obtains last-saved record key
- */
-function getLastSavedKey() {
-    return `__lastSaved_${settings.enketoId}`;
-}
-
-/**
  * @return { Promise<Record | undefined> } a Promise that resolves with a record object or undefined
  */
 function getLastSavedRecord() {
@@ -160,14 +156,7 @@ function getLastSavedRecord() {
  * @return { Promise<Record> } - the last-saved record
  */
 function setLastSavedRecord( record ) {
-    const lastSavedData = {
-        // give an internal name
-        name: `__lastSaved_${Date.now()}`,
-        // use the pre-defined key
-        instanceId: getLastSavedKey(),
-    };
-
-    const payload = Object.assign( {}, record, lastSavedData );
+    const payload = shared.lastSavedRecordPayload( record );
 
     return store.record.remove( getLastSavedKey() ).then( () => {
         return store.record.set( payload );
