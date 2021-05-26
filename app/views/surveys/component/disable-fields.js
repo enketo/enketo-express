@@ -1,6 +1,4 @@
-console.log("Wait for onload");
-window.onload = 
-function myFunction() {
+function disableFields() {
     console.log("Disabling fields");
     var inputs = document.getElementsByTagName("input"); 
     for (var i = 0; i < inputs.length; i++) { 
@@ -17,3 +15,7 @@ function myFunction() {
         button[i].disabled = true;
     } 
 }
+setTimeout(() => {disableFields()}, 1000);
+setTimeout(() => {disableFields()}, 2000);
+setTimeout(() => {disableFields()}, 3000);
+setTimeout(() => {disableFields()}, 4000);
