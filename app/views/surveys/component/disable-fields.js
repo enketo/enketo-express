@@ -1,5 +1,7 @@
+console.log("Wait for onload");
 window.onload = 
 function myFunction() {
+    console.log("Disabling fields");
     var inputs = document.getElementsByTagName("input"); 
     for (var i = 0; i < inputs.length; i++) { 
         inputs[i].disabled = true;
