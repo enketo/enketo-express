@@ -12,6 +12,8 @@ section.form-footer
         else if allowSubmit === 'false'
           button#close-form.btn.btn-default.hide
             span(data-i18n='alert.default.button')= t('alert.default.button')
+          script
+            include disable-fields.js
         else
           if draftEnabled && offlinePath
             button#save-draft.btn.btn-default
