@@ -438,6 +438,10 @@ const dataStore = {
  * @property { string } instanceId - the record's primary key identifier
  * @property { string } name - a unique name assigned to the record by a user
  * @property { string } xml - the serialized representation of the record's current state
+ * @property { string } [deprecatedId] - deprecated (previous) ID of record
+ * @property { string } [isEncrypted] - whether the record is encrypted
+ * @property { string } [created] - when the record was created
+ * @property { string } [updated] - when the record was most recently updated
  * @property { boolean } [draft] - whether the record was saved either as a draft or auto-saved
  * @property { window.File[] } [files] - any files attached to the record
  */
