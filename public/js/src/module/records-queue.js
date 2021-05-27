@@ -87,11 +87,7 @@ function save( action, record ) {
         result = store.record.update( record );
     }
 
-    return result.then( record => {
-        if ( !record.isEncrypted ) {
-            return setLastSavedRecord( record );
-        }
-    } ).then( _updateRecordList );
+    return result.then( setLastSavedRecord ).then( _updateRecordList );
 }
 
 /**
@@ -157,9 +153,13 @@ function getLastSavedRecord() {
  * Sets the last-saved record.
  *
  * @param { Record } record - the record which was last saved
- * @return { Promise<Record> } - the last-saved record
+ * @return { Promise<Record | undefined> } - the last-saved record
  */
 function setLastSavedRecord( record ) {
+    if ( record.isEncrypted ) {
+        return;
+    }
+
     const payload = shared.lastSavedRecordPayload( record );
 
     return store.record.remove( getLastSavedKey() ).then( () => {
