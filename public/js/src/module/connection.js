@@ -39,16 +39,16 @@ function getOnlineStatus() {
  * Uploads a complete record
  *
  * @param {{xml: string, files: File[]}} record - record to upload
- * @param {boolean} uploadLastSaved - whether to also upload a last-saved record
+ * @param {{ isLastSavedRecord?: boolean}} [options] - whether to also upload a last-saved record
  * @return { Promise<Response> } - the first response from batched uploads
  */
-function uploadRecord( record, uploadLastSaved ) {
+function uploadRecord( record, { isLastSavedRecord } = {} ) {
     let batches;
 
     try {
         batches = _prepareFormDataArray( record );
 
-        if ( uploadLastSaved ) {
+        if ( isLastSavedRecord && !record.isEncrypted ) {
             const lastSavedPayload = shared.lastSavedRecordPayload( record );
 
             batches = batches.concat( _prepareFormDataArray( lastSavedPayload )  );

@@ -14,7 +14,9 @@ import records from './records-queue';
 import $ from 'jquery';
 import encryptor from './encryptor';
 
+/** @type {Form} */
 let form;
+
 let formData;
 let formprogress;
 const formOptions = {
@@ -274,7 +276,7 @@ function _submitRecord() {
                 return record;
             }
         } )
-        .then( record => connection.uploadRecord( record, true ) )
+        .then( record => connection.uploadRecord( record, { isLastSavedRecord: true } ) )
         .then( result => {
             result = result || {};
             level = 'success';

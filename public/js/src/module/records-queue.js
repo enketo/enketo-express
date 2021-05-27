@@ -87,7 +87,11 @@ function save( action, record ) {
         result = store.record.update( record );
     }
 
-    return result.then( setLastSavedRecord ).then( _updateRecordList );
+    return result.then( record => {
+        if ( !record.isEncrypted ) {
+            return setLastSavedRecord( record );
+        }
+    } ).then( _updateRecordList );
 }
 
 /**
