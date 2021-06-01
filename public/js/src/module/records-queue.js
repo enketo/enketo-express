@@ -157,7 +157,7 @@ function getLastSavedRecord() {
  * Sets the last-saved record.
  *
  * @param { Record } record - the record which was last saved
- * @return { Promise<Record> } - the last-saved record
+ * @return { Promise<{ lastSaved: Record; record: Record }> } - resolves to an object with both the original record and the last-saved record
  */
 function setLastSavedRecord( record ) {
     const lastSavedData = {
@@ -169,9 +169,14 @@ function setLastSavedRecord( record ) {
 
     const payload = Object.assign( {}, record, lastSavedData );
 
-    return store.record.remove( getLastSavedKey() ).then( () => {
-        return store.record.set( payload );
-    } );
+    return store.record.remove( getLastSavedKey() )
+        .then( () => store.record.set( payload ) )
+        .then( lastSaved => {
+            return {
+                lastSaved,
+                record,
+            };
+        } );
 }
 
 /**

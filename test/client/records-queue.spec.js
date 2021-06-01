@@ -374,6 +374,26 @@ describe( 'Records queue', () => {
                 } )
                 .then( done, done );
         } );
+
+        // Note: this is primarily to support the online use case without introducing
+        // a circular dependency between connection.js and records-queue.js, instead
+        // allowing controller-webform.js (which calls into both) to call
+        // `setLastSavedRecord` directly before calling `uploadRecord`.
+        it( 'returns the original record when creating a last-saved record directly', done => {
+            const originalRecord = Object.assign( {}, recordA );
+
+            records.setLastSavedRecord( recordA )
+                .then( ( { record } ) => {
+                    // Apparently `expect( ... ).to.be` is not available in this
+                    // test environment.
+                    expect( record === recordA ).to.equal( true );
+
+                    Object.entries( originalRecord ).forEach( ( [ key, value ] ) => {
+                        expect( record[key] ).to.equal( value );
+                    } );
+                } )
+                .then( done, done );
+        } );
     } );
 
     describe( 'Retrieving records', () => {

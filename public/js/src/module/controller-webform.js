@@ -274,7 +274,8 @@ function _submitRecord() {
                 return record;
             }
         } )
-        .then( connection.uploadRecord )
+        .then( records.setLastSavedRecord )
+        .then( ( { record } ) => connection.uploadRecord( record ) )
         .then( result => {
             result = result || {};
             level = 'success';
