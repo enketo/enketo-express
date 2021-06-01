@@ -62,6 +62,7 @@ function encryptRecord( form, record ) {
             manifest.addElement( 'base64EncryptedElementSignature', _getBase64EncryptedElementSignature( elements, forgePublicKey ) );
 
             // overwrite record properties so it can be process as a regular submission
+            record.isEncrypted = true;
             record.xml = manifest.getXmlStr();
             record.files = blobs;
 

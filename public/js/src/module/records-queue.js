@@ -157,9 +157,13 @@ function getLastSavedRecord() {
  * Sets the last-saved record.
  *
  * @param { Record } record - the record which was last saved
- * @return { Promise<{ lastSaved: Record; record: Record }> } - resolves to an object with both the original record and the last-saved record
+ * @return { Promise<{ lastSaved?: Record; record: Record }> } - resolves to an object with both the original record and the last-saved record
  */
 function setLastSavedRecord( record ) {
+    if ( record.isEncrypted ) {
+        return Promise.resolve( { record } );
+    }
+
     const lastSavedData = {
         // give an internal name
         name: `__lastSaved_${Date.now()}`,
