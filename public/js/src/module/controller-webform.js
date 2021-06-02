@@ -425,7 +425,7 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
             // Save the record, determine the save method
             const saveMethod = form.recordName ? 'update' : 'set';
 
-            return records[ saveMethod ]( record );
+            return records.save( saveMethod, record );
         } )
         .then( () => {
 

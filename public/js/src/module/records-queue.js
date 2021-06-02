@@ -60,19 +60,28 @@ function set( record ) {
             }
 
             return store.record.set( record );
-        } )
-        .then( _updateRecordList );
+        } );
 }
 
 /**
- * Updates an existing record
+ * Creates (sets) or updates a record.
  *
- * @param  { object } record - a record object
- * @return { Promise } a promise that resolves with undefined
+ * @param { 'set' | 'update' } action - determines whether to create or update the record
+ * @param { Record } record - the record to save
+ *
+ * @return { Promise<undefined> }
  */
-function update( record ) {
-    return store.record.update( record )
-        .then( _updateRecordList );
+function save( action, record ) {
+    /** @type { Promise<Record> } */
+    let result;
+
+    if ( action === 'set' ) {
+        result = set( record );
+    } else {
+        result = store.record.update( record );
+    }
+
+    return result.then( _updateRecordList );
 }
 
 /**
@@ -419,8 +428,7 @@ function flush() {
 export default {
     init,
     get,
-    set,
-    update,
+    save,
     remove,
     getAutoSavedKey,
     getAutoSavedRecord,
