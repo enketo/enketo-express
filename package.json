@@ -130,5 +130,9 @@
         "public/js/src/enketo-webform-edit.js",
         "public/js/src/enketo-webform-view.js",
         "public/js/src/enketo-offline-fallback.js"
-    ]
+    ],
+    "//": "While CI runs Node v12.21.0, v12.18.4 is currently the latest version which is able to run the full test suite without crashing",
+    "volta": {
+        "node": "12.18.4"
+    }
 }
