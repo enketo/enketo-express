@@ -6,6 +6,11 @@
  **********************************************************************************************/
 import forge from 'node-forge';
 import utils from './utils';
+
+/**
+ * @typedef {import('./account-model').EnketoRecord} EnketoRecord
+ */
+
 const SYMMETRIC_ALGORITHM = 'AES-CFB'; // JAVA: "AES/CFB/PKCS5Padding"
 const ASYMMETRIC_ALGORITHM = 'RSA-OAEP'; // JAVA: "RSA/NONE/OAEPWithSHA256AndMGF1Padding"
 const ASYMMETRIC_OPTIONS = {
@@ -23,6 +28,12 @@ function isSupported() {
         new ArrayBuffer( 8 ).byteLength === 8 &&
         typeof Uint8Array !== 'undefined' &&
         new Uint8Array( 8 ).length === 8;
+}
+
+const isEncryptedSymbol = Symbol( 'isEncrypted' );
+
+function isEncrypted( record ) {
+    return Boolean( record[isEncryptedSymbol] );
 }
 
 /**
@@ -64,6 +75,14 @@ function encryptRecord( form, record ) {
             // overwrite record properties so it can be process as a regular submission
             record.xml = manifest.getXmlStr();
             record.files = blobs;
+
+            Object.defineProperty( record, isEncryptedSymbol, {
+                configurable: false,
+                enumerable: false,
+                get() {
+                    return true;
+                },
+            } );
 
             return record;
         } );
@@ -237,7 +256,8 @@ function Manifest( formId, formVersion ) {
 }
 
 export default {
+    isEncrypted,
     isSupported,
     encryptRecord,
-    Seed
+    Seed,
 };

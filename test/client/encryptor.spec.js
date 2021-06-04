@@ -56,6 +56,7 @@ describe( 'Encryptor', () => {
             encryptor.encryptRecord( form, record )
                 .then( encryptedRecord => {
                     const doc = new DOMParser().parseFromString( encryptedRecord.xml, 'text/xml' );
+                    expect( encryptor.isEncrypted( record ) ).to.equal( true );
                     expect( doc.querySelectorAll( 'data' ).length ).to.equal( 1 );
                     expect( doc.querySelector( 'data' ).namespaceURI ).to.equal( SUBMISSION_NS );
                     expect( doc.querySelector( 'data' ).getAttribute( 'id' ) ).to.equal( 'abc' );

@@ -7,6 +7,7 @@ import events from './event';
 import settings from './settings';
 import connection from './connection';
 import assign from 'lodash/assign';
+import encryptor from './encryptor';
 
 /**
  * @typedef {import('../../../../app/models/record-model').EnketoRecord} EnketoRecord
@@ -73,6 +74,10 @@ function getLastSavedRecord( enketoId ) {
  * @return { Promise<Survey> }
  */
 function setLastSavedRecord( enketoId, lastSavedRecord ) {
+    if ( encryptor.isEncrypted( lastSavedRecord ) ) {
+        return store.survey.get( enketoId );
+    }
+
     return store.survey.get( enketoId )
         .then( survey => {
             const update = Object.assign( {}, survey, { lastSavedRecord } );
