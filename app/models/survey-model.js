@@ -19,13 +19,63 @@ if ( process.env.NODE_ENV === 'test' ) {
 }
 
 /**
+ * @typedef {import('./account-model').AccountObj} AccountObj
+ */
+
+/**
+ * @typedef {import('./account-model').EnketoRecord} EnketoRecord
+ */
+
+/**
+ * @typedef {typeof import('libxmljs').Document} XMLJSDocument
+ */
+
+/**
+ * @typedef {(doc: XMLJSDocument) => XMLJSDocument} EnketoTransformerPreprocess
+ */
+
+/**
+ * @typedef {import('../../public/js/src/module/store').Record} InstanceRecord
+ */
+
+/**
+ * @typedef SurveyCredentials
+ * @property { string } user
+ * @property { string } pass
+ * @property { string } bearer
+ */
+
+/**
+ * @typedef SurveyInfo
+ * @property { string } downloadUrl
+ * @property { string } manifestUrl
+ */
+
+/**
  * @typedef SurveyObject
  * @property { string } openRosaServer
  * @property { string } openRosaId
  * @property { string } enketoId
  * @property { string } theme
- * @property { object } info
- * @property { string } info.hash
+ * @property { SurveyInfo } [info]
+ * @property { AccountObj } [account]
+ * @property { boolean | 'true' | 'false' } [active]
+ * @property { string } [cookie]
+ * @property { SurveyCredentials } [credentials]
+ * @property { string } [customParam]
+ * @property { Array<string | Document> } [externalData]
+ * @property { string } [form]
+ * @property { string } [formHash]
+ * @property { InstanceRecord } [instance]
+ * @property { string | object } [instanceAttachments]
+ * @property { string } [instanceId]
+ * @property { EnketoRecord } [lastSavedRecord]
+ * @property { Record<string, unknown> } [languageMap]
+ * @property { Record<string, unknown> } [manifest]
+ * @property { string } [model]
+ * @property { EnketoTransformerPreprocess } [preprocess]
+ * @property { string } [returnUrl]
+ * @property { string } [xslHash]
  */
 
 /**
@@ -35,7 +85,7 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @name get
  * @function
  * @param { string } id - Survey ID
- * @return {Promise<Error|SurveyObject>} Promise that resolves with a survey object
+ * @return {Promise<SurveyObject>} Promise that resolves with a survey object
  */
 function getSurvey( id ) {
     return new Promise( ( resolve, reject ) => {

@@ -8,6 +8,14 @@ import sniffer from './sniffer';
 import { t } from './translator';
 const parser = new DOMParser();
 
+/**
+ * @typedef {import('../../../../app/models/record-model').EnketoRecord} EnketoRecord
+ */
+
+/**
+ * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
+ */
+
 let server;
 let blobEncoding;
 let available = false;
@@ -232,7 +240,7 @@ const surveyStore = {
      * Obtains a single survey's form HTML and XML model, theme, external instances from storage
      *
      * @param  { object } id - [description]
-     * @return { object }    [description]
+     * @return { Promise<Survey> }    [description]
      */
     get( id ) {
         return server.surveys.get( id )
@@ -243,7 +251,7 @@ const surveyStore = {
      * Stores a single survey's form HTML and XML model, theme, external instances
      *
      * @param { object } survey - [description]
-     * @return { Promise }        [description]
+     * @return { Promise<Survey> }        [description]
      */
     set( survey ) {
         if ( !survey.form || !survey.model || !survey.enketoId || !survey.hash ) {
@@ -270,7 +278,7 @@ const surveyStore = {
      * Updates a single survey's form HTML and XML model as well any external resources belonging to the form
      *
      * @param  { object } survey - [description]
-     * @return { Promise }        [description]
+     * @return { Promise<Survey> }        [description]
      */
     update( survey ) {
         let obsoleteResources = [];
@@ -296,23 +304,15 @@ const surveyStore = {
                         .filter( existing => binaryDefaultKeys.indexOf( existing ) < 0 );
                 }
 
-                _transformExternalDataToXmlStr( survey );
-
-                // Update the existing survey
-                return server.surveys.update( {
-                    form: survey.form,
-                    model: survey.model,
-                    enketoId: survey.enketoId,
-                    hash: survey.hash,
-                    theme: survey.theme,
+                const update = Object.assign( {}, _transformExternalDataToXmlStr( survey ), {
                     // Note: if survey.resources = undefined/null, do not store empty array
                     // as it means there are no resources to store (and load) - they may be added later by form-cache.js
                     resources: survey.resources ? resourceKeys : undefined,
                     binaryDefaults: survey.binaryDefaults ? binaryDefaultKeys : undefined,
-                    maxSize: survey.maxSize,
-                    externalData: survey.externalData,
-                    branding: survey.branding
                 } );
+
+                // Update the existing survey
+                return server.surveys.update( update );
             } )
             .then( () => {
                 const tasks = [];
@@ -336,7 +336,7 @@ const surveyStore = {
      * Removes survey form and all its resources
      *
      * @param  { string } id - Enketo form ID
-     * @return { Promise } [description]
+     * @return { Promise<void> } [description]
      */
     remove( id ) {
         let resources;
@@ -351,7 +351,8 @@ const surveyStore = {
                 tasks.push( server.surveys.remove( id ) );
 
                 return Promise.all( tasks );
-            } );
+            } )
+            .then( () => {} );
     },
     /**
      * removes all surveys and survey resources
@@ -368,7 +369,7 @@ const surveyStore = {
          *
          * @param  { string } id -  Enketo survey ID
          * @param  { string } url - URL of resource
-         * @return { Promise } A promise resolving with the file.
+         * @return { Promise<Blob> } A promise resolving with the file.
          */
         get( id, url ) {
             return _getFile( 'resources', id, url );

@@ -8,8 +8,20 @@ import settings from './settings';
 import connection from './connection';
 import assign from 'lodash/assign';
 
+/**
+ * @typedef {import('../../../../app/models/record-model').EnketoRecord} EnketoRecord
+ */
+
+/**
+ * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
+ */
+
 let hash;
 
+/**
+ * @param {Survey} survey
+ * @return {Promise<Survey>}
+ */
 function init( survey ) {
     return store.init()
         .then( () => get( survey ) )
@@ -25,10 +37,18 @@ function init( survey ) {
         .then( _setResetListener );
 }
 
+/**
+ * @param {Survey} survey
+ * @return Survey
+ */
 function get( survey ) {
     return store.survey.get( survey.enketoId );
 }
 
+/**
+ * @param {Survey} survey
+ * @return {Promise<Survey>}
+ */
 function set( survey ) {
     return connection.getFormParts( survey )
         .then( _swapMediaSrc )
@@ -36,10 +56,43 @@ function set( survey ) {
         .then( store.survey.set );
 }
 
+/**
+ *
+ * @param { string } enketoId
+ * @return { Promise<EnketoRecord | undefined> }
+ */
+function getLastSavedRecord( enketoId ) {
+    return store.survey.get( enketoId )
+        .then( survey => survey.lastSavedRecord );
+}
+
+/**
+ *
+ * @param { string } enketoId
+ * @param { EnketoRecord } lastSavedRecord
+ * @return { Promise<Survey> }
+ */
+function setLastSavedRecord( enketoId, lastSavedRecord ) {
+    return store.survey.get( enketoId )
+        .then( survey => {
+            const update = Object.assign( {}, survey, { lastSavedRecord } );
+
+            return store.survey.update( update );
+        } );
+}
+
+/**
+ * @param {Survey} survey
+ * @return {Promise<void>}
+ */
 function remove( survey ) {
     return store.survey.remove( survey.enketoId );
 }
 
+/**
+ * @param {Survey} survey
+ * @return {PRomise<Survey>}
+ */
 function _processDynamicData( survey ) {
     // TODO: In the future this method could perhaps be used to also store
     // dynamic defaults. However, the issue would be to figure out how to clear
@@ -93,6 +146,10 @@ function _processDynamicData( survey ) {
         .then( () => survey );
 }
 
+/**
+ * @param {Survey} survey
+ * @return {Promise<Survey>}
+ */
 function _setUpdateIntervals( survey ) {
     hash = survey.hash;
 
@@ -115,7 +172,8 @@ function _setUpdateIntervals( survey ) {
  * Form resets require reloading the form media.
  * This makes form resets slower, but it makes initial form loads faster.
  *
- * @param { object } survey - [description]
+ * @param { Survey } survey - survey object
+ * @return { Promise<Survey> }
  */
 function _setResetListener( survey ) {
 
@@ -132,7 +190,8 @@ function _setResetListener( survey ) {
 /**
  * Handles loading form media for newly added repeats.
  *
- * @param { object } survey - [description]
+ * @param { Survey } survey - survey object
+ * @return { Promise<Survey> }
  */
 function _setRepeatListener( survey ) {
     //Instantiate only once, after loadMedia has been completed (once)
@@ -147,7 +206,8 @@ function _setRepeatListener( survey ) {
  * Changes src attributes in view to data-offline-src to facilitate loading those resources
  * from the browser storage.
  *
- * @param { object } survey - survey object
+ * @param { Survey } survey - survey object
+ * @return { Promise<Survey> }
  */
 function _swapMediaSrc( survey ) {
     survey.form = survey.form.replace( /(src="[^"]*")/g, 'data-offline-$1 src=""' );
@@ -160,7 +220,8 @@ function _swapMediaSrc( survey ) {
  * Loads all default binary files and adds them to the survey object. It removes the src
  * attributes from model nodes with default binary files.
  *
- * @param { object } survey - survey object
+ * @param { Survey } survey - survey object
+ * @return { Promise<Survey> }
  */
 function _addBinaryDefaultsAndUpdateModel( survey ) {
     // The mechanism for default binary files is as follows:
@@ -203,8 +264,8 @@ function _addBinaryDefaultsAndUpdateModel( survey ) {
  * If the form/data server updates their max size setting, this value
  * will be updated the next time the cache is refreshed.
  *
- * @param  { object } survey - [description]
- * @return { object }        [description]
+ * @param { Survey } survey - survey object
+ * @return { Promise<Survey> }
  */
 function updateMaxSubmissionSize( survey ) {
 
@@ -222,15 +283,15 @@ function updateMaxSubmissionSize( survey ) {
                 return survey;
             } );
     } else {
-        return survey;
+        return Promise.resolve( survey );
     }
 }
 
 /**
  * Loads survey resources either from the store or via HTTP (and stores them).
  *
- * @param  { object } survey - [description]
- * @return { Promise }        [description]
+ * @param { Survey } survey - survey object
+ * @return { Promise<Survey> }
  */
 function updateMedia( survey ) {
     const requests = [];
@@ -422,5 +483,7 @@ export default {
     updateMaxSubmissionSize,
     updateMedia,
     remove,
-    flush
+    flush,
+    getLastSavedRecord,
+    setLastSavedRecord,
 };

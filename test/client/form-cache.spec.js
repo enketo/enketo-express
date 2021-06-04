@@ -1,5 +1,14 @@
 import formCache from '../../public/js/src/module/form-cache';
 import connection from '../../public/js/src/module/connection';
+import store from '../../public/js/src/module/store';
+
+/**
+ * @typedef {import('../../app/models/record-model').EnketoRecord} EnketoRecord
+ */
+
+/**
+ * @typedef {import('../../app/models/survey-model').SurveyObject} Survey
+ */
 
 const url1 = '/path/to/source.png';
 const form1 = `<form class="or"><img src="${url1}"/></form>`;
@@ -9,7 +18,7 @@ const hash1 = '12345';
 describe( 'Client Form Cache', () => {
     let survey, sandbox, getFormPartsSpy, getFileSpy;
 
-    beforeEach( () => {
+    beforeEach( done => {
         survey = {};
         sandbox = sinon.createSandbox();
         getFormPartsSpy = sandbox.stub( connection, 'getFormParts' ).callsFake( survey => Promise.resolve( {
@@ -24,10 +33,14 @@ describe( 'Client Form Cache', () => {
                 type: 'image/png'
             } )
         } ) );
+
+        store.init().then( done, done );
     } );
 
-    afterEach( () => {
+    afterEach( done => {
         sandbox.restore();
+
+        store.survey.removeAll().then( done, done );
     } );
 
     it( 'is loaded', () => {
@@ -50,6 +63,7 @@ describe( 'Client Form Cache', () => {
             formCache.init( survey )
                 .then( result => {
                     result.htmlView = document.createRange().createContextualFragment( result.form );
+
                     return formCache.updateMedia( result );
                 } )
                 .then( () => {
@@ -63,6 +77,7 @@ describe( 'Client Form Cache', () => {
             formCache.get( survey )
                 .then( result => {
                     expect( result ).to.equal( undefined );
+
                     return formCache.init( survey );
                 } )
                 .then( () => // we could also leave this out as formCache.init will return the survey object
@@ -86,40 +101,69 @@ describe( 'Client Form Cache', () => {
 
     } );
 
-    /*
-    describe( 'in cached state', function() {
-        
-        it( 'initializes succesfully', function( done ) {
-            survey = {
-                enketoId: 'TESt',
-                form: '<form class="or"></form>',
-                model: '<model></model>',
-                hash: '12345'
+    describe( 'last-saved records', () => {
+        const enketoId = 'surveyA';
+
+        /** @type {EnketoRecord} */
+        let record;
+
+        /** @type {Survey} */
+        let survey;
+
+        beforeEach( done => {
+            record = {
+                draft: false,
+                enketoId,
+                instanceId: 'recordA',
+                name: 'name A',
+                xml: '<model><something>a</something></model>',
             };
-            
-            formCache.set( survey )
-                .then( function() {
-                    return formCache.init( survey );
+
+            survey = {
+                openRosaId: 'formA',
+                openRosaServer: 'http://localhost:3000',
+                enketoId,
+                theme: '',
+            };
+
+            store.init().then( done, done );
+        } );
+
+        afterEach( done => {
+            store.survey.removeAll().then( done, done );
+        } );
+
+        it( 'sets the survey\'s last saved record', done => {
+            const originalRecord = Object.assign( {}, record );
+
+            formCache.init( survey )
+                .then( () => {
+                    return formCache.setLastSavedRecord( enketoId, record );
                 } )
-                .then( function( result ) {
-                    expect( result ).to.deep.equal( survey );
+                .then( survey => {
+                    Object.entries( originalRecord ).forEach( ( [ key, value ] ) => {
+                        expect( survey.lastSavedRecord[ key ] ).to.equal( value );
+                    } );
                 } )
                 .then( done, done );
-                
         } );
 
+        it( 'gets the survey\'s last saved record', done => {
+            const originalRecord = Object.assign( {}, record );
+
+            formCache.init( survey )
+                .then( survey => {
+                    return formCache.setLastSavedRecord( survey.enketoId, record );
+                } )
+                .then( survey => {
+                    return formCache.getLastSavedRecord( survey.enketoId );
+                } )
+                .then( lastSavedRecord => {
+                    Object.entries( originalRecord ).forEach( ( [ key, value ] ) => {
+                        expect( lastSavedRecord[ key ] ).to.equal( value );
+                    } );
+                } )
+                .then( done, done );
+        } );
     } );
-
-        
-    describe( 'in outdated cached state', function() {
-
-        it( 'initializes (the outdated survey) succesfully', function() {
-
-        } );
-
-        it( 'updates automatically', function() {
-
-        } );
-    } );
-    */
 } );
