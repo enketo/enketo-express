@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 ---------------------
+#### Added
+- Support for odk:setgeopoint for odk-instance-first-load and xforms-value-changed events.
+
 #### Changed
 - Updated Russian translation.
 
@@ -11,6 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Range default or loaded value (number) not shown.
 - Distresspicker default or loaded mercury level not shown.
 - Radiobuttons value still shown in view after programmatic clearing (e.g. by a calculation).
+- Triple-nested repeats and higher are not created properly.
 
 [2.7.3] - 2021-04-20
 ---------------------
