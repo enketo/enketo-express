@@ -2,9 +2,15 @@
  * Deals with communication to the server (in process of being transformed to using Promises)
  */
 
+import encryptor from './encryptor';
 import settings from './settings';
 import { t } from './translator';
 import utils from './utils';
+
+/**
+ * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
+ */
+
 const parser = new DOMParser();
 const CONNECTION_URL = `${settings.basePath}/connection`;
 const TRANSFORM_URL = `${settings.basePath}/transform/xform${settings.enketoId ? `/${settings.enketoId}` : ''}`;
@@ -285,15 +291,23 @@ function getMaximumSubmissionSize( survey ) {
  * @return { Promise } a Promise that resolves with a form parts object
  */
 function getFormParts( props ) {
-
     return _postData( TRANSFORM_URL + _getQuery(), {
         xformUrl: props.xformUrl
     } )
         .then( data => {
-            data.enketoId = props.enketoId;
-            data.theme = data.theme || utils.getThemeFromFormStr( data.form ) || settings.defaultTheme;
+            const model = parser.parseFromString( data.model, 'text/xml' );
+            let survey = Object.assign( {}, data, {
+                enketoId: props.enketoId,
+                theme: survey.theme || utils.getThemeFromFormStr( survey.form ) || settings.defaultTheme,
+            } );
 
-            return _getExternalData( data );
+            const encryptedSubmission = model.querySelector( 'submission[base64RsaPublicKey]' );
+
+            if ( encryptedSubmission != null ) {
+                survey = encryptor.setEncryptionEnabled( survey );
+            }
+
+            return _getExternalData( survey, model );
         } );
 }
 
@@ -356,13 +370,16 @@ function _encodeFormData( data ){
         .join( '&' );
 }
 
-function _getExternalData( survey ) {
+/**
+ * @param {Survey} survey
+ * @param {Document} model
+ * @return {Promise<Survey>}
+ */
+function _getExternalData( survey, model ) {
     const tasks = [];
 
     try {
-        const doc = parser.parseFromString( survey.model, 'text/xml' );
-
-        survey.externalData = [ ...doc.querySelectorAll ( 'instance[id][src]' ) ]
+        survey.externalData = [ ...model.querySelectorAll( 'instance[id][src]' ) ]
             .map( instance => ( {
                 id:  instance.id,
                 src: instance.getAttribute( 'src' )

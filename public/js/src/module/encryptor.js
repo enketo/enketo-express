@@ -8,7 +8,11 @@ import forge from 'node-forge';
 import utils from './utils';
 
 /**
- * @typedef {import('./account-model').EnketoRecord} EnketoRecord
+ * @typedef {import('../../../../app/models/record-model').EnketoRecord} EnketoRecord
+ */
+
+/**
+ * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
  */
 
 const SYMMETRIC_ALGORITHM = 'AES-CFB'; // JAVA: "AES/CFB/PKCS5Padding"
@@ -30,10 +34,47 @@ function isSupported() {
         new Uint8Array( 8 ).length === 8;
 }
 
-const isEncryptedSymbol = Symbol( 'isEncrypted' );
+const isEncryptionEnabledSymbol = Symbol( 'isEncryptionEnabled' );
 
-function isEncrypted( record ) {
-    return Boolean( record[isEncryptedSymbol] );
+/**
+ * @param {Survey} survey
+ * @return {boolean}
+ */
+function isEncryptionEnabled( survey ) {
+    return Boolean( survey[isEncryptionEnabledSymbol] );
+}
+
+function serializeEncryptedSurvey( survey ) {
+    if ( isEncryptionEnabled( survey ) ) {
+        return Object.assign( {}, survey, {
+            isEncryptionEnabled: true,
+        } );
+    }
+
+    return survey;
+}
+
+function deserializeEncryptedSurvey( survey ) {
+    if ( survey.isEncryptionEnabled ) {
+        let result = Object.assign( {}, survey );
+
+        delete result.isEncryptionEnabled;
+
+        return setEncryptionEnabled( result );
+    }
+
+    return survey;
+}
+
+/**
+ * @param {Survey} survey
+ * @return {Survey}
+ */
+function setEncryptionEnabled( survey ) {
+    return Object.defineProperty( survey, isEncryptionEnabledSymbol, {
+        configurable: false,
+        value: true,
+    } );
 }
 
 /**
@@ -75,14 +116,6 @@ function encryptRecord( form, record ) {
             // overwrite record properties so it can be process as a regular submission
             record.xml = manifest.getXmlStr();
             record.files = blobs;
-
-            Object.defineProperty( record, isEncryptedSymbol, {
-                configurable: false,
-                enumerable: false,
-                get() {
-                    return true;
-                },
-            } );
 
             return record;
         } );
@@ -256,7 +289,10 @@ function Manifest( formId, formVersion ) {
 }
 
 export default {
-    isEncrypted,
+    isEncryptionEnabled,
+    setEncryptionEnabled,
+    serializeEncryptedSurvey,
+    deserializeEncryptedSurvey,
     isSupported,
     encryptRecord,
     Seed,

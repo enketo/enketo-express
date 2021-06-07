@@ -11,6 +11,7 @@ import settings from './settings';
 import exporter from './exporter';
 import { t } from './translator';
 import $ from 'jquery';
+import formCache from './form-cache';
 
 let $exportButton;
 let $uploadButton;
@@ -18,8 +19,11 @@ let $recordList;
 let $queueNumber;
 let uploadProgress;
 let finalRecordPresent;
-const autoSaveKey = `__autoSave_${settings.enketoId}`;
 let uploadOngoing = false;
+
+/**
+ * @typedef {import('../../app/models/record-model').EnketoRecord} EnketoRecord
+ */
 
 function init() {
     _setUploadIntervals();
@@ -37,7 +41,7 @@ function init() {
  * Obtains a record
  *
  * @param  { string } instanceId - instanceID of record
- * @return {Promise<*|undefined>} a Promise that resolves with a record object or undefined
+ * @return {Promise<EnketoRecord|undefined>} a Promise that resolves with a record object or undefined
  */
 function get( instanceId ) {
     return store.record.get( instanceId );
@@ -46,7 +50,7 @@ function get( instanceId ) {
 /**
  * Stores a new record. Overwrites (media) files from auto-saved record.
  *
- * @param { object } record - a record object
+ * @param { EnketoRecord } record - a record object
  * @return {Promise<undefined>} a promise that resolves with undefined
  */
 function set( record ) {
@@ -67,12 +71,12 @@ function set( record ) {
  * Creates (sets) or updates a record.
  *
  * @param { 'set' | 'update' } action - determines whether to create or update the record
- * @param { Record } record - the record to save
+ * @param { EnketoRecord } record - the record to save
  *
  * @return { Promise<undefined> }
  */
 function save( action, record ) {
-    /** @type { Promise<Record> } */
+    /** @type { Promise<EnketoRecord> } */
     let result;
 
     if ( action === 'set' ) {
@@ -81,14 +85,16 @@ function save( action, record ) {
         result = store.record.update( record );
     }
 
-    return result.then( _updateRecordList );
+    return result.then( record => {
+        return formCache.setLastSavedRecord( record.enketoId, record );
+    } ).then( _updateRecordList );
 }
 
 /**
  * Removes a record
  *
  * @param { string } instanceId - instanceID of record
- * @return { Promise } a promise that resolves with undefined
+ * @return { Promise<undefined> } a promise that resolves with undefined
  */
 function remove( instanceId ) {
     return store.record.remove( instanceId )
@@ -99,20 +105,21 @@ function remove( instanceId ) {
  * Obtains auto-saved record key
  */
 function getAutoSavedKey() {
-    return autoSaveKey;
+    return `__autoSave_${settings.enketoId}`;
 }
 
 /**
  * Obtains auto-saved record.
  */
 function getAutoSavedRecord() {
-    return get( autoSaveKey );
+    return get( getAutoSavedKey() );
 }
 
 /**
  * Updates auto-saved record
  *
- * @param { object } record - record object created from the current state of the form
+ * @param { EnketoRecord } record - record object created from the current state of the form
+ * @return { Promise<Record> }
  */
 function updateAutoSavedRecord( record ) {
     // prevent this record from accidentally being submitted
@@ -120,7 +127,7 @@ function updateAutoSavedRecord( record ) {
     // give an internal name
     record.name = `__autoSave_${Date.now()}`;
     // use the pre-defined key
-    record.instanceId = autoSaveKey;
+    record.instanceId = getAutoSavedKey();
     // make the record valid
     record.enketoId = settings.enketoId;
 
@@ -132,7 +139,7 @@ function updateAutoSavedRecord( record ) {
  * Removes auto-saved record
  */
 function removeAutoSavedRecord() {
-    return store.record.remove( autoSaveKey );
+    return store.record.remove( getAutoSavedKey() );
     // do not update recordList
 }
 
@@ -349,9 +356,28 @@ uploadProgress = {
 };
 
 /**
+ * Retrieves a list of records for the active form, excluding auto-saved
+ * and last-saved records. This was isolated from the `_updateRecordList`
+ * function to allow testing, and reused in `uploadQueue` to share the
+ * behavior.
+ *
+ * @param { { finalOnly?: boolean } } [options] - Only included records that are 'final' (i.e. not 'draft')
+ * @return { Promise<Record[]> } - records to be displayed in the UI
+ */
+function getDisplayableRecordList( { finalOnly = false } ) {
+    const autoSavedKey = getAutoSavedKey();
+    const records = store.record.getAll( settings.enketoId, finalOnly )
+        .then( records => {
+            return records.filter( record => record.instanceId !== autoSavedKey );
+        } );
+
+    return records;
+}
+
+/**
  * Updates the record list in the UI
  *
- * @return { Promise } [description]
+ * @return { Promise<undefined> } [description]
  */
 function _updateRecordList() {
     let $li;
@@ -365,10 +391,8 @@ function _updateRecordList() {
     // rebuild the list
     return store.record.getAll( settings.enketoId )
         .then( records => {
-            records = records || [];
-
             // remove autoSaved record
-            records = records.filter( record => record.instanceId !== autoSaveKey );
+            records = records.filter( record => record.instanceId !== getAutoSavedKey() );
 
             // update queue number
             $queueNumber.text( records.length );
@@ -432,6 +456,7 @@ export default {
     remove,
     getAutoSavedKey,
     getAutoSavedRecord,
+    getDisplayableRecordList,
     updateAutoSavedRecord,
     removeAutoSavedRecord,
     flush,

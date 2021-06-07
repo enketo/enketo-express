@@ -35,10 +35,6 @@ if ( process.env.NODE_ENV === 'test' ) {
  */
 
 /**
- * @typedef {import('../../public/js/src/module/store').Record} InstanceRecord
- */
-
-/**
  * @typedef SurveyCredentials
  * @property { string } user
  * @property { string } pass
@@ -66,8 +62,8 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @property { Array<string | Document> } [externalData]
  * @property { string } [form]
  * @property { string } [formHash]
- * @property { InstanceRecord } [instance]
- * @property { string | object } [instanceAttachments]
+ * @property { EnketoRecord } [instance]
+ * @property { Array<string | object> } [instanceAttachments]
  * @property { string } [instanceId]
  * @property { EnketoRecord } [lastSavedRecord]
  * @property { Record<string, unknown> } [languageMap]
@@ -76,6 +72,14 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @property { EnketoTransformerPreprocess } [preprocess]
  * @property { string } [returnUrl]
  * @property { string } [xslHash]
+ * @description
+ *   `SureveyObject` is Enketo's internal representation of an XForm, with some
+ *   additional properties representing resolved/deserialized external data.
+ *   This type definition captures the current state of "what is"—i.e. the full
+ *   known set of properties which may be added to a `SureveyObject` through
+ *   several data flow paths throught enketo-express. Some related resources,
+ *   notably those describing instances, are only populated in paths specific
+ *   to the interaction between a `SurveyObject` and those resources.
  */
 
 /**

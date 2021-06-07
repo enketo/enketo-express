@@ -14,13 +14,34 @@ import records from './records-queue';
 import $ from 'jquery';
 import encryptor from './encryptor';
 
+/** @type {Form} */
 let form;
+
 let formData;
 let formprogress;
 const formOptions = {
     printRelevantOnly: settings.printRelevantOnly,
 };
 
+/**
+ * @typedef InstanceAttachment
+ * @property {string} filename
+ */
+
+/**
+ * @typedef ControllerWebformInitData
+ * @property {string} modelStr
+ * @property {string} instanceStr
+ * @property {Document[]} external
+ * @property {InstanceAttachment[]} [instanceAttachments]
+ */
+
+/**
+ * @param {Element} formEl
+ * @param {ControllerWebformInitData} data
+ * @param {string[]} [loadErrors]
+ * @return {Promise<Form>}
+ */
 function init( formEl, data, loadErrors = [] ) {
     formData = data;
 

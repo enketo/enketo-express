@@ -44,6 +44,28 @@ describe( 'Encryptor', () => {
 
     } );
 
+    describe( 'survey encryption', () => {
+        let survey;
+
+        beforeEach( () => {
+            survey = {
+                openRosaId: 'formA',
+                openRosaServer: 'http://localhost:3000',
+                enketoId: 'surveyA',
+                theme: '',
+            };
+        } );
+
+        it( 'is not enabled by default', () => {
+            expect( encryptor.isEncryptionEnabled( survey ) ).to.equal( false );
+        } );
+
+        it( 'is enabled when set', () => {
+            const result = encryptor.setEncryptionEnabled( survey );
+
+            expect( encryptor.isEncryptionEnabled( result ) ).to.equal( true );
+        } );
+    } );
 
     describe( 'submission encryption', () => {
         const form = { id: 'abc', version: '2', encryptionKey: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5s9p+VdyX1ikG8nnoXLCC9hKfivAp/e1sHr3O15UQ+a8CjR/QV29+cO8zjS/KKgXZiOWvX+gDs2+5k9Kn4eQm5KhoZVw5Xla2PZtJESAd7dM9O5QrqVJ5Ukrq+kG/uV0nf6X8dxyIluNeCK1jE55J5trQMWT2SjDcj+OVoTdNGJ1H6FL+Horz2UqkIObW5/elItYF8zUZcO1meCtGwaPHxAxlvODe8JdKs3eMiIo9eTT4WbH1X+7nJ21E/FBd8EmnK/91UGOx2AayNxM0RN7pAcj47a434LzeM+XCnBztd+mtt1PSflF2CFE116ikEgLcXCj4aklfoON9TwDIQSp0wIDAQAB' };
@@ -56,7 +78,6 @@ describe( 'Encryptor', () => {
             encryptor.encryptRecord( form, record )
                 .then( encryptedRecord => {
                     const doc = new DOMParser().parseFromString( encryptedRecord.xml, 'text/xml' );
-                    expect( encryptor.isEncrypted( record ) ).to.equal( true );
                     expect( doc.querySelectorAll( 'data' ).length ).to.equal( 1 );
                     expect( doc.querySelector( 'data' ).namespaceURI ).to.equal( SUBMISSION_NS );
                     expect( doc.querySelector( 'data' ).getAttribute( 'id' ) ).to.equal( 'abc' );
