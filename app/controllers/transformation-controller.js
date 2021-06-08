@@ -215,8 +215,11 @@ function _replaceMediaSources( survey ) {
     if ( media ) {
         const JR_URL = /"jr:\/\/[\w-]+\/([^"]+)"/g;
         const replacer = ( match, filename ) => {
-            if ( media[ filename ] ) {
-                return `"${media[ filename ].replace( '&', '&amp;' )}"`;
+            // Image names containing spaces are URL encoded and therefore need
+            // to be decoded to access the mapping: enketo-express#218
+            const decodedFilename = decodeURIComponent(filename)
+            if ( media[ decodedFilename ] ) {
+                return `"${media[ decodedFilename ].replace( '&', '&amp;' )}"`;
             }
 
             return match;
