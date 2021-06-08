@@ -217,7 +217,7 @@ function _replaceMediaSources( survey ) {
         const replacer = ( match, filename ) => {
             // Image names containing spaces are URL encoded and therefore need
             // to be decoded to access the mapping: enketo-express#218
-            const decodedFilename = decodeURIComponent(filename)
+            const decodedFilename = decodeURIComponent( filename );
             if ( media[ decodedFilename ] ) {
                 return `"${media[ decodedFilename ].replace( '&', '&amp;' )}"`;
             }
