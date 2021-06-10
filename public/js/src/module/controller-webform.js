@@ -13,6 +13,7 @@ import { t, localize, getCurrentUiLanguage, getBrowserLanguage } from './transla
 import records from './records-queue';
 import $ from 'jquery';
 import encryptor from './encryptor';
+import formCache from './form-cache';
 
 /** @type {Form} */
 let form;
@@ -155,6 +156,16 @@ function _checkAutoSavedRecord() {
 }
 
 /**
+ * @param {string} enketoId
+ */
+function _updateFormData( enketoId ) {
+    return formCache.get( { enketoId } )
+        .then( survey => {
+            formData.external = survey.externalData;
+        } );
+}
+
+/**
  * Controller function to reset to a blank form. Checks whether all changes have been saved first
  *
  * @param  {boolean=} confirmed - Whether unsaved changes can be discarded and lost forever
@@ -275,10 +286,11 @@ function _submitRecord() {
     return fileManager.getCurrentFiles()
         .then( files => {
             const record = {
-                'xml': form.getDataStr( include ),
-                'files': files,
-                'instanceId': form.instanceID,
-                'deprecatedId': form.deprecatedID
+                enketoId: settings.enketoId,
+                xml: form.getDataStr( include ),
+                files: files,
+                instanceId: form.instanceID,
+                deprecatedId: form.deprecatedID
             };
 
             if ( form.encryptionKey ) {
@@ -293,7 +305,7 @@ function _submitRecord() {
                 return record;
             }
         } )
-        .then( connection.uploadRecord )
+        .then( record => connection.uploadRecord( record, { isLastSaved: true } ) )
         .then( result => {
             result = result || {};
             level = 'success';
@@ -306,6 +318,9 @@ function _submitRecord() {
                 level = 'warning';
             }
 
+            return _updateFormData( settings.enketoId );
+        } )
+        .then( () => {
             // this event is used in communicating back to iframe parent window
             document.dispatchEvent( events.SubmissionSuccess() );
 
@@ -448,6 +463,7 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
 
             return records.save( saveMethod, record );
         } )
+        .then( record => _updateFormData( record.enketoId ) )
         .then( () => {
 
             records.removeAutoSavedRecord();

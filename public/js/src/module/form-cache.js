@@ -17,6 +17,12 @@ import encryptor from './encryptor';
  * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
  */
 
+const CACHE_UPDATE_INITIAL_DELAY = 3 * 1000;
+const CACHE_UPDATE_INTERVAL = 20 * 60 * 1000;
+const LAST_SAVED_VIRTUAL_ENDPOINT = 'jr://instance/last-saved';
+
+const parser = new DOMParser();
+
 let hash;
 
 /**
@@ -64,7 +70,11 @@ function set( survey ) {
  */
 function getLastSavedRecord( enketoId ) {
     return store.survey.get( enketoId )
-        .then( survey => survey.lastSavedRecord );
+        .then( survey => {
+            if ( survey != null ) {
+                return survey.lastSavedRecord;
+            }
+        } );
 }
 
 /**
@@ -78,6 +88,16 @@ function setLastSavedRecord( enketoId, lastSavedRecord ) {
         .then( survey => {
             if ( encryptor.isEncryptionEnabled( survey ) ) {
                 return Promise.resolve( survey );
+            }
+
+            if ( Array.isArray( survey.externalData ) ) {
+                const { xml } = lastSavedRecord;
+
+                survey.externalData.forEach( item => {
+                    if ( item.src === LAST_SAVED_VIRTUAL_ENDPOINT ) {
+                        item.xml = parser.parseFromString( xml, 'text/xml' );
+                    }
+                } );
             }
 
             const update = Object.assign( {}, survey, { lastSavedRecord } );
@@ -164,11 +184,11 @@ function _setUpdateIntervals( survey ) {
     // that open the form right after the XForm update.
     setTimeout( () => {
         _updateCache( survey );
-    }, 3 * 1000 );
+    }, CACHE_UPDATE_INITIAL_DELAY );
     // check for form update every 20 minutes
     setInterval( () => {
         _updateCache( survey );
-    }, 20 * 60 * 1000 );
+    }, CACHE_UPDATE_INTERVAL );
 
     return Promise.resolve( survey );
 }
@@ -184,7 +204,6 @@ function _setResetListener( survey ) {
 
     document.addEventListener( events.FormReset().type, event => {
         if ( event.target.nodeName.toLowerCase() === 'form' ) {
-            survey.htmlView = event.target;
             updateMedia( survey );
         }
     } );
@@ -200,7 +219,7 @@ function _setResetListener( survey ) {
  */
 function _setRepeatListener( survey ) {
     //Instantiate only once, after loadMedia has been completed (once)
-    survey.htmlView.addEventListener( events.AddRepeat().type, event => {
+    document.querySelector( 'form.or' ).addEventListener( events.AddRepeat().type, event => {
         _loadMedia( survey, [ event.target ] );
     } );
 
@@ -305,7 +324,7 @@ function updateMedia( survey ) {
         return _loadMedia( survey )
             .then( _setRepeatListener );
     }
-    const containers = [ survey.htmlView ];
+    const containers = [ document.querySelector( 'form.or' ) ];
     const formHeader = document.querySelector( '.form-header' );
     if ( formHeader ) {
         containers.push( formHeader );
@@ -360,7 +379,7 @@ function _loadMedia( survey, targetContainers ) {
     const URL = window.URL || window.webkitURL;
 
     if ( !targetContainers ) {
-        targetContainers = [ survey.htmlView ];
+        targetContainers = [ document.querySelector( 'form.or' ) ];
         const formHeader = document.querySelector( '.form-header' );
         if ( formHeader ) {
             targetContainers.push( formHeader );
@@ -491,4 +510,7 @@ export default {
     flush,
     getLastSavedRecord,
     setLastSavedRecord,
+    CACHE_UPDATE_INITIAL_DELAY,
+    CACHE_UPDATE_INTERVAL,
+    LAST_SAVED_VIRTUAL_ENDPOINT,
 };

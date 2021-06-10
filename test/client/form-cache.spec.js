@@ -24,20 +24,41 @@ import settings from '../../public/js/src/module/settings';
  * @typedef {import('../../app/models/survey-model').SurveyObject} Survey
  */
 
+/**
+ * @typedef {import('../../../../app/models/survey-model').SurveyExternalData} SurveyExternalData
+ */
+
+/**
+ * @typedef GetFormPartsStubResult
+ * @property { string } enketoId
+ * @property { string } form
+ * @property { string } model
+ * @property { string } hash
+ */
+
+ const parser = new DOMParser();
+
 const url1 = '/path/to/source.png';
 const form1 = `<form class="or"><img src="${url1}"/></form>`;
-const model1 = '<model/>';
+const defaultInstanceData = '<data id="modelA"><item>initial</item><meta><instanceID/></meta></data>';
+const model1 = `<model><instance>${defaultInstanceData}</instance><instance id="last-saved" src="jr://instance/last-saved"/></model>`;
 const hash1 = '12345';
 
 describe( 'Client Form Cache', () => {
     /** @type {Survey} */
     let survey;
 
+    /** @type {SurveyExternalData} */
+    let lastSavedExternalData;
+
     /** @type {SinonSandbox} */
     let sandbox;
 
     /** @type {SinonStub} */
     let getFormPartsSpy;
+
+    /** @type {GetFormPartsStubResult} */
+    let getFormPartsStubResult;
 
     /** @type {SinonStub} */
     let getFileSpy;
@@ -46,25 +67,52 @@ describe( 'Client Form Cache', () => {
     let timers;
 
     beforeEach( done => {
+        const formElement = document.createElement( 'form' );
+
+        formElement.className = 'or';
+        document.body.appendChild( formElement );
+
         survey = {};
         sandbox = sinon.createSandbox();
 
         // Prevent calls to `_updateCache` after tests complete/stubs are restored
         timers = sinon.useFakeTimers();
 
+        lastSavedExternalData = {
+            id: 'last-saved',
+            src: 'jr://instance/last-saved',
+            xml: parser.parseFromString( defaultInstanceData, 'text/xml' ),
+        };
+
+        getFormPartsStubResult = {
+            externalData: [
+                lastSavedExternalData,
+            ],
+            form: form1,
+            model: model1,
+            hash: hash1
+        };
+
         getFormPartsSpy = sandbox.stub( connection, 'getFormParts' ).callsFake( survey => {
-            let result = {
-                enketoId: survey.enketoId,
-                form: form1,
-                model: model1,
-                hash: hash1
-            };
+            return formCache.getLastSavedRecord( survey.enketoId )
+                .then( lastSavedRecord => {
+                    if ( lastSavedRecord != null ) {
+                        return { lastSavedRecord };
+                    }
 
-            if ( encryptor.isEncryptionEnabled( survey ) ) {
-                result = encryptor.setEncryptionEnabled( result );
-            }
+                    return {};
+                } )
+                .then( lastSavedData => {
+                    const formParts = Object.assign( {
+                        enketoId: survey.enketoId,
+                    }, getFormPartsStubResult, lastSavedData );
 
-            return Promise.resolve( result );
+                    if ( encryptor.isEncryptionEnabled( survey ) ) {
+                        return encryptor.setEncryptionEnabled( formParts );
+                    }
+
+                    return formParts;
+                } );
         } );
 
         getFileSpy = sandbox.stub( connection, 'getMediaFile' ).callsFake( url => Promise.resolve( {
@@ -81,6 +129,8 @@ describe( 'Client Form Cache', () => {
         sandbox.restore();
         timers.restore();
 
+        document.body.removeChild( document.querySelector( 'form.or' ) );
+
         store.survey.removeAll().then( done, done );
     } );
 
@@ -89,7 +139,6 @@ describe( 'Client Form Cache', () => {
     } );
 
     describe( 'in empty state', () => {
-
         it( 'will call connection.getFormParts to obtain the form parts', done => {
             survey.enketoId = '10';
             formCache.init( survey )
@@ -103,7 +152,10 @@ describe( 'Client Form Cache', () => {
             survey.enketoId = '20';
             formCache.init( survey )
                 .then( result => {
-                    result.htmlView = document.createRange().createContextualFragment( result.form );
+                    const currentForm = document.querySelector( 'form.or' );
+                    const form = document.createRange().createContextualFragment( result.form );
+
+                    currentForm.parentNode.replaceChild( form, currentForm );
 
                     return formCache.updateMedia( result );
                 } )
@@ -154,7 +206,7 @@ describe( 'Client Form Cache', () => {
                 enketoId,
                 instanceId: 'recordA',
                 name: 'name A',
-                xml: '<model><something>a</something></model>',
+                xml: '<data id="modelA"><item>initial</item><meta><instanceID/></meta></data>',
             };
 
             survey = {
@@ -184,6 +236,86 @@ describe( 'Client Form Cache', () => {
                     Object.entries( originalRecord ).forEach( ( [ key, value ] ) => {
                         expect( survey.lastSavedRecord[ key ] ).to.equal( value );
                     } );
+                } )
+                .then( done, done );
+        } );
+
+        it( 'preserves the last saved record when a form is updated', done => {
+            const originalRecord = Object.assign( {}, record );
+            const updates = {
+                model: `${model1}<!-- updated -->`,
+                hash: '123456',
+            };
+
+            // Ensure `_updateCache` receives a new hash indicating it should perform an update
+            sinon.stub( connection, 'getFormPartsHash' ).callsFake( () => {
+                return Promise.resolve( updates.hash );
+            } );
+
+            let updatePromise = new Promise( resolve => {
+                setTimeout( resolve, formCache.CACHE_UPDATE_INITIAL_DELAY + 1 );
+            } );
+
+            const originalStoreUpdate = store.survey.update.bind( store.survey );
+
+            sinon.stub( store.survey, 'update' ).callsFake( update => {
+                return originalStoreUpdate( update ).then( result => {
+                    if ( update.model === updates.model ) {
+                        timers.tick( 1 );
+                    }
+
+                    return result;
+                } );
+            } );
+
+            formCache.init( survey )
+                .then( () => {
+                    return formCache.setLastSavedRecord( enketoId, record );
+                } )
+                .then( () => {
+                    getFormPartsStubResult = Object.assign( {}, getFormPartsStubResult, updates );
+
+                    timers.tick( formCache.CACHE_UPDATE_INITIAL_DELAY );
+
+                    // Wait for `_updateCache` to resolve
+                    return updatePromise;
+                } ).then( () => formCache.get( survey ) )
+                .then( survey => {
+                    Object.entries( updates ).forEach( ( [ key, value ] ) => {
+                        expect( survey[key] ).to.equal( value );
+                    } );
+
+                    Object.entries( originalRecord ).forEach( ( [ key, value ] ) => {
+                        expect( survey.lastSavedRecord[ key ] ).to.equal( value );
+                    } );
+                } )
+                .then( done, done );
+        } );
+
+        it( 'updates last-saved externalData when the last saved record is updated', done => {
+            const updatedItemValue = 'populated';
+            const update = Object.assign( {}, record, {
+                xml: `<data id="surveyA"><item>${updatedItemValue}</item><meta><instanceID>uuid:ea3baa91-74b5-4892-af6f-96267f7fe12e</instanceID></meta></data>`,
+            } );
+
+            formCache.init( survey )
+                .then( () => formCache.setLastSavedRecord( enketoId, update ) )
+                .then( () => formCache.get( survey ) )
+                .then( survey => {
+                    expect( Array.isArray( survey.externalData ) ).to.equal( true );
+                    expect( survey.externalData.length ).to.equal( 1 );
+
+                    const data = survey.externalData[0];
+
+                    expect( data.id ).to.equal( lastSavedExternalData.id );
+                    expect( data.src ).to.equal( lastSavedExternalData.src );
+
+                    /** @type {Element} */
+                    const xmlDocument = data.xml.documentElement;
+
+                    const dataItemValue = xmlDocument.querySelector( 'item' ).innerHTML;
+
+                    expect( dataItemValue ).to.equal( updatedItemValue );
                 } )
                 .then( done, done );
         } );

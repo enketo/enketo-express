@@ -1,6 +1,5 @@
 import connection from '../../public/js/src/module/connection';
 import encryptor from '../../public/js/src/module/encryptor';
-import exporter from '../../public/js/src/module/exporter';
 import formCache from '../../public/js/src/module/form-cache';
 import records from '../../public/js/src/module/records-queue';
 import settings from '../../public/js/src/module/settings';

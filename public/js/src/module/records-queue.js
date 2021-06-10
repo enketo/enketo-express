@@ -73,21 +73,29 @@ function set( record ) {
  * @param { 'set' | 'update' } action - determines whether to create or update the record
  * @param { EnketoRecord } record - the record to save
  *
- * @return { Promise<undefined> }
+ * @return { Promise<EnketoRecord> }
  */
 function save( action, record ) {
     /** @type { Promise<EnketoRecord> } */
+    let promise;
+
+    /** @type { EnketoRecord } */
     let result;
 
     if ( action === 'set' ) {
-        result = set( record );
+        promise = set( record );
     } else {
-        result = store.record.update( record );
+        promise = store.record.update( record );
     }
 
-    return result.then( record => {
-        return formCache.setLastSavedRecord( record.enketoId, record );
-    } ).then( _updateRecordList );
+    return promise
+        .then( record => {
+            result = record;
+
+            return formCache.setLastSavedRecord( record.enketoId, record );
+        } )
+        .then( _updateRecordList )
+        .then( () => result );
 }
 
 /**

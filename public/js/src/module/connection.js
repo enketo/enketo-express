@@ -3,15 +3,53 @@
  */
 
 import encryptor from './encryptor';
+import formCache from './form-cache';
 import settings from './settings';
 import { t } from './translator';
 import utils from './utils';
 
 /**
+ * @typedef {import('../../../../app/models/record-model').EnketoRecord} EnketoRecord
+ */
+
+/**
  * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
  */
 
+/**
+ * @typedef {import('../../../../app/models/survey-model').SurveyExternalData} SurveyExternalData
+ */
+
+/**
+ * @typedef BatchPrepped
+ * @property { string } instanceId
+ * @property { string } deprecatedId
+ * @property { FormData } formData
+ * @property { string[] } failedFiles
+ */
+
+/**
+ * @typedef UploadRecordOptions
+ * @property { boolean } [isLastSaved]
+ */
+
+/**
+ * @typedef UploadBatchResult
+ * @property { number } status
+ * @property { Array<string | undefined> } failedFiles
+ * @property { string } [message]
+ */
+
+/**
+ * @typedef GetFormPartsProps
+ * @property { string } enketoId
+ * @property { Record<string, string> } [defaults]
+ * @property { string } [instanceId]
+ * @property { string } [xformUrl]
+ */
+
 const parser = new DOMParser();
+const xmlSerializer = new XMLSerializer();
 const CONNECTION_URL = `${settings.basePath}/connection`;
 const TRANSFORM_URL = `${settings.basePath}/transform/xform${settings.enketoId ? `/${settings.enketoId}` : ''}`;
 const TRANSFORM_HASH_URL = `${settings.basePath}/transform/xform/hash/${settings.enketoId}`;
@@ -35,13 +73,14 @@ function getOnlineStatus() {
         .catch( () => false );
 }
 
-/*
+/**
  * Uploads a complete record
  *
- * @param  {{xml: string, files: [File]}} record
- * @return { Promise }
+ * @param  { EnketoRecord } record
+ * @param  { UploadRecordOptions } [options]
+ * @return { Promise<UploadBatchResult> }
  */
-function uploadRecord( record ) {
+function uploadRecord( record, options = {} ) {
     let batches;
 
     try {
@@ -50,26 +89,40 @@ function uploadRecord( record ) {
         return Promise.reject( e );
     }
 
-    batches.forEach( batch => {
-        batch.instanceId = record.instanceId;
-        batch.deprecatedId = record.deprecatedId;
-    } );
+    /** @type { Promise<UploadBatchResult[]> } */
+    let resultsPromise = Promise.resolve( [] );
+
+    /** @type { UploadBatchResult } */
+    let result;
 
     // Perform batch uploads sequentially for to avoid issues when connections are very poor and
     // a serious issue with ODK Aggregate (https://github.com/kobotoolbox/enketo-express/issues/400)
-    return batches.reduce( ( prevPromise, batch ) => prevPromise.then( () => _uploadBatch( batch ) ), Promise.resolve() )
+    return batches.reduce( ( prevPromise, batch ) => {
+        return prevPromise.then( results => {
+            return _uploadBatch( batch ).then( result => {
+                results.push( result );
+
+                return results;
+            } );
+        } );
+    }, resultsPromise )
         .then( results => {
             console.log( 'results of all batches submitted', results );
 
-            return results[ 0 ];
-        } );
+            result = results[ 0 ];
+
+            if ( options.isLastSaved ) {
+                return formCache.setLastSavedRecord( record.enketoId, record );
+            }
+        } )
+        .then( () => result );
 }
 
 /**
  * Uploads a single batch of a single record.
  *
- * @param {{formData: FormData, failedFiles: [string]}} recordBatch - formData object to send
- * @return { Promise }      [description]
+ * @param { BatchPrepped } recordBatch - formData object to send
+ * @return { Promise<UploadBatchResult> }      [description]
  */
 function _uploadBatch( recordBatch ) {
     // Submission URL is dynamic, because settings.submissionParameter only gets populated after loading form from
@@ -93,7 +146,8 @@ function _uploadBatch( recordBatch ) {
         body: recordBatch.formData
     } )
         .then( response => {
-            const result = {
+            /** @type { UploadBatchResult } */
+            let result = {
                 status: response.status,
                 failedFiles: ( recordBatch.failedFiles ) ? recordBatch.failedFiles : undefined
             };
@@ -129,27 +183,36 @@ function _uploadBatch( recordBatch ) {
 /**
  * Builds up a record array including media files, divided into batches
  *
- * @param { { name: string, data: string } } record - record object
+ * @param { EnketoRecord } record - record object
+ * @return { BatchPrepped[] }
  */
 function _prepareFormDataArray( record ) {
     const recordDoc = parser.parseFromString( record.xml, 'text/xml' );
+
+    /** @type {Array<Omit<HTMLInputElement, 'type'>>} */
     const fileElements = Array.prototype.slice.call( recordDoc.querySelectorAll( '[type="file"]' ) ).map( el => {
         el.removeAttribute( 'type' );
 
         return el;
     } );
-    const xmlData = new XMLSerializer().serializeToString( recordDoc.documentElement );
+    const xmlData = xmlSerializer.serializeToString( recordDoc.documentElement );
     const xmlSubmissionBlob = new Blob( [ xmlData ], {
         type: 'text/xml'
     } );
     const availableFiles = record.files || [];
     const sizes = [];
-    const failedFiles = [];
+
+    /** @type {string[]} */
+    let failedFiles = [];
+
     const submissionFiles = [];
     let batches = [
         []
     ];
-    const batchesPrepped = [];
+
+    /** @type {BatchPrepped[]} */
+    let batchesPrepped = [];
+
     const maxSize = settings.maxSize;
 
     fileElements.forEach( el => {
@@ -188,7 +251,6 @@ function _prepareFormDataArray( record ) {
     console.log( `splitting record into ${batches.length} batches to reduce submission size `, batches );
 
     batches.forEach( batch => {
-        let batchPrepped;
         const fd = new FormData();
 
         fd.append( 'xml_submission_file', xmlSubmissionBlob, 'xml_submission_file' );
@@ -196,7 +258,9 @@ function _prepareFormDataArray( record ) {
         if ( csrfToken ) fd.append( '__csrf', csrfToken );
 
         // batch with XML data
-        batchPrepped = {
+        let batchPrepped = {
+            instanceId: record.instanceId,
+            deprecatedId: record.deprecatedId,
             formData: fd,
             failedFiles
         };
@@ -287,28 +351,44 @@ function getMaximumSubmissionSize( survey ) {
 /**
  * Obtains HTML Form, XML Model and External Instances
  *
- * @param { object } props - form properties object
- * @return { Promise } a Promise that resolves with a form parts object
+ * @param { GetFormPartsProps } props - form properties object
+ * @return { Promise<Survey> } a Promise that resolves with a form parts object
  */
 function getFormParts( props ) {
+    /** @type {Survey} */
+    let survey;
+
+    /** @type {XMLDocument} */
+    let model;
+
+    /** @type {EnketoRecord | undefined} */
+    let lastSavedRecord;
+
     return _postData( TRANSFORM_URL + _getQuery(), {
         xformUrl: props.xformUrl
     } )
         .then( data => {
-            const model = parser.parseFromString( data.model, 'text/xml' );
-            let survey = Object.assign( {}, data, {
-                enketoId: props.enketoId,
-                theme: survey.theme || utils.getThemeFromFormStr( survey.form ) || settings.defaultTheme,
-            } );
+            model = parser.parseFromString( data.model, 'text/xml' );
 
             const encryptedSubmission = model.querySelector( 'submission[base64RsaPublicKey]' );
+
+            survey = Object.assign( {}, data, {
+                enketoId: props.enketoId,
+                theme: data.theme || utils.getThemeFromFormStr( data.form ) || settings.defaultTheme,
+            } );
 
             if ( encryptedSubmission != null ) {
                 survey = encryptor.setEncryptionEnabled( survey );
             }
 
-            return _getExternalData( survey, model );
-        } );
+            return formCache.getLastSavedRecord( props.enketoId );
+        } )
+        .then( lastSaved => {
+            lastSavedRecord = lastSaved;
+
+            return _getExternalData( survey, model, lastSavedRecord );
+        } )
+        .then( externalData => Object.assign( survey, { externalData, lastSavedRecord } ) );
 }
 
 function _postData( url, data = {}  ){
@@ -346,6 +426,10 @@ function _request( url, method = 'POST', data = {}  ){
         } );
 }
 
+/**
+ * @param { Response } response
+ * @return { Response }
+ */
 function _throwResponseError( response ){
     if ( !response.ok ){
         return response.json()
@@ -371,30 +455,54 @@ function _encodeFormData( data ){
 }
 
 /**
+ * @param {Document} model
+ * @param {EnketoRecord} [lastSavedRecord]
+ * @return {XMLDocument}
+ */
+function _getLastSavedInstance( model, lastSavedRecord ) {
+    if ( lastSavedRecord == null ) {
+        const modelDefault = model.querySelector( 'model > instance > *' ).cloneNode( true );
+
+        let doc = document.implementation.createDocument( null, '', null );
+
+        doc.appendChild( modelDefault );
+
+        return doc;
+    } else {
+        return parser.parseFromString( lastSavedRecord.xml, 'text/xml' );
+    }
+}
+
+/**
  * @param {Survey} survey
  * @param {Document} model
- * @return {Promise<Survey>}
+ * @param {EnketoRecord} [lastSavedRecord]
+ * @return {Promise<SurveyExternalData[]>}
  */
-function _getExternalData( survey, model ) {
-    const tasks = [];
+function _getExternalData( survey, model, lastSavedRecord ) {
+    /** @type {Array<Promise<SurveyExternalData>>} */
+    let tasks = [];
 
     try {
-        survey.externalData = [ ...model.querySelectorAll( 'instance[id][src]' ) ]
+        const externalInstances = [ ...model.querySelectorAll( 'instance[id][src]' ) ]
             .map( instance => ( {
                 id:  instance.id,
                 src: instance.getAttribute( 'src' )
             } ) );
 
-        survey.externalData
+        externalInstances
             .forEach( ( instance, index ) => {
-                tasks.push( _getDataFile( instance.src, survey.languageMap )
-                    .then( xmlData => {
-                        instance.xml = xmlData;
+                /** @type {Promise<SurveyExternalData>} */
+                const request = instance.src === formCache.LAST_SAVED_VIRTUAL_ENDPOINT
+                    ? Promise.resolve( _getLastSavedInstance( model, lastSavedRecord ) )
+                    : _getDataFile( instance.src, survey.languageMap );
 
-                        return instance;
+                tasks.push( request
+                    .then( xmlData => {
+                        return Object.assign( {}, instance, { xml: xmlData } );
                     } )
                     .catch( e => {
-                        survey.externalData.splice( index, 1 );
+                        tasks.splice( index, 1 );
                         // let external data files fail quietly in previews with ?form= parameter
                         if ( !survey.enketoId ){
                             return;
@@ -407,8 +515,7 @@ function _getExternalData( survey, model ) {
         return Promise.reject( e );
     }
 
-    return Promise.all( tasks )
-        .then( () => survey );
+    return Promise.all( tasks );
 }
 
 

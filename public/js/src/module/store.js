@@ -294,7 +294,6 @@ const surveyStore = {
         const binaryDefaultKeys = [].concat( survey.binaryDefaults || [] ).map( resource => resource.url );
 
         return server.surveys.get( survey.enketoId )
-            .then( _deserializeSurvey )
             .then( result => {
                 // Determine obsolete resources to be removed
                 // But if undefined, do not determine this!

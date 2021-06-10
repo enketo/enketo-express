@@ -42,6 +42,12 @@ if ( process.env.NODE_ENV === 'test' ) {
  */
 
 /**
+ * @typedef SurveyExternalData
+ * @property { string } id
+ * @property { string } src
+ * @property { string | Document } xml
+ */
+/**
  * @typedef SurveyInfo
  * @property { string } downloadUrl
  * @property { string } manifestUrl
@@ -59,7 +65,7 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @property { string } [cookie]
  * @property { SurveyCredentials } [credentials]
  * @property { string } [customParam]
- * @property { Array<string | Document> } [externalData]
+ * @property { SurveyExternalData[] } [externalData]
  * @property { string } [form]
  * @property { string } [formHash]
  * @property { EnketoRecord } [instance]
