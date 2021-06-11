@@ -116,7 +116,7 @@ function remove( survey ) {
 
 /**
  * @param {Survey} survey
- * @return {PRomise<Survey>}
+ * @return {Promise<Survey>}
  */
 function _processDynamicData( survey ) {
     // TODO: In the future this method could perhaps be used to also store
