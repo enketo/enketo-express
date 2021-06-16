@@ -1,7 +1,16 @@
+/**
+ * @module store.spec.js
+ * @description Tests client-side data storage logic
+ * @see {SurveyEncryptionSpec}
+ */
+
 // TODO: when chai-as-promised adapter is working, convert these tests using .eventually.
 
-import encryptor from '../../public/js/src/module/encryptor';
 import store from '../../public/js/src/module/store';
+
+/**
+ * @typedef {import('./feature/survey-encryption.spec.js')} SurveyEncryptionSpec
+ */
 
 /**
  * @typedef {import('../../app/models/survey-model').SurveyObject} Survey
@@ -257,16 +266,6 @@ describe( 'Client Storage', () => {
                     done();
                 } );
         } );
-
-        it( 'creates an encryption-enabled survey', done => {
-            const encryptedSurvey = encryptor.setEncryptionEnabled( surveyA );
-
-            store.survey.set( encryptedSurvey )
-                .then( result => {
-                    expect( encryptor.isEncryptionEnabled( result ) ).to.equal( true );
-                } )
-                .then( done, done );
-        } );
     } );
 
     describe( 'getting surveys', () => {
@@ -279,17 +278,6 @@ describe( 'Client Storage', () => {
             store.survey.get( 'nonexisting' )
                 .then( result => {
                     expect( result ).to.equal( undefined );
-                } )
-                .then( done, done );
-        } );
-
-        it( 'gets an encryption-enabled survey', done => {
-            const encryptedSurvey = encryptor.setEncryptionEnabled( surveyA );
-
-            store.survey.set( encryptedSurvey )
-                .then( () => store.survey.get( surveyA.enketoId ) )
-                .then( result => {
-                    expect( encryptor.isEncryptionEnabled( result ) ).to.equal( true );
                 } )
                 .then( done, done );
         } );
@@ -375,24 +363,6 @@ describe( 'Client Storage', () => {
                 .then( result => {
                     // check response of getResource
                     expect( result ).to.equal( undefined );
-                } )
-                .then( done, done );
-        } );
-
-        it( 'updates an encryption-enabled survey', done => {
-            const encryptedSurvey = encryptor.setEncryptionEnabled( surveyA );
-            const model = '<model><updated/></model>';
-            const update = Object.assign( encryptedSurvey, {
-                model,
-            } );
-
-            store.survey.set( encryptedSurvey )
-                .then( () => {
-                    return store.survey.update( update );
-                } )
-                .then( result => {
-                    expect( encryptor.isEncryptionEnabled( result ) ).to.equal( true );
-                    expect( result.model ).to.equal( model );
                 } )
                 .then( done, done );
         } );

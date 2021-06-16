@@ -1,3 +1,13 @@
+/**
+ * @module encryptor.spec.js
+ * @description Tests encryption logic.
+ * @see {SurveyEncryptionSpec}
+ */
+
+/**
+ * @typedef {import('./feature/survey-encryption.spec.js')} SurveyEncryptionSpec
+ */
+
 import encryptor from '../../public/js/src/module/encryptor';
 
 describe( 'Encryptor', () => {
@@ -42,29 +52,6 @@ describe( 'Encryptor', () => {
             expect( array ).to.deep.equal( [ 27, 167, 251, 185, 158, 88, 117, 19, 87, 101, 26, 165, 28, 113, 193, 231 ] );
         } );
 
-    } );
-
-    describe( 'survey encryption', () => {
-        let survey;
-
-        beforeEach( () => {
-            survey = {
-                openRosaId: 'formA',
-                openRosaServer: 'http://localhost:3000',
-                enketoId: 'surveyA',
-                theme: '',
-            };
-        } );
-
-        it( 'is not enabled by default', () => {
-            expect( encryptor.isEncryptionEnabled( survey ) ).to.equal( false );
-        } );
-
-        it( 'is enabled when set', () => {
-            const result = encryptor.setEncryptionEnabled( survey );
-
-            expect( encryptor.isEncryptionEnabled( result ) ).to.equal( true );
-        } );
     } );
 
     describe( 'submission encryption', () => {
