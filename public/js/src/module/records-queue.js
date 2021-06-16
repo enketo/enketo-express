@@ -364,10 +364,9 @@ uploadProgress = {
 };
 
 /**
- * Retrieves a list of records for the active form, excluding auto-saved
- * and last-saved records. This was isolated from the `_updateRecordList`
- * function to allow testing, and reused in `uploadQueue` to share the
- * behavior.
+ * Retrieves a list of records for the active form, excluding auto-saved records.
+ * This was isolated from the `_updateRecordList` function to allow testing, and
+ * reused in `uploadQueue` to share the behavior.
  *
  * @param { { finalOnly?: boolean } } [options] - Only included records that are 'final' (i.e. not 'draft')
  * @return { Promise<Record[]> } - records to be displayed in the UI

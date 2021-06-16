@@ -469,7 +469,7 @@ describe( 'Records queue', () => {
     } );
 
     describe( 'Uploading records', () => {
-        it( 'uploads queued records, excluding auto-saved/last-saved and draft records', done => {
+        it( 'uploads queued records, excluding auto-saved and draft records', done => {
             const autoSavedKey = records.getAutoSavedKey();
 
             const expectedUploadedData = [

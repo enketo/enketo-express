@@ -315,7 +315,7 @@ const surveyStore = {
                 }
 
                 if ( survey.binaryDefaults ) {
-                    update.resources = binaryDefaultKeys;
+                    update.binaryDefaults = binaryDefaultKeys;
                 }
 
                 // Update the existing survey

@@ -79,10 +79,10 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @property { string } [returnUrl]
  * @property { string } [xslHash]
  * @description
- *   `SureveyObject` is Enketo's internal representation of an XForm, with some
+ *   `SurveyObject` is Enketo's internal representation of an XForm, with some
  *   additional properties representing resolved/deserialized external data.
  *   This type definition captures the current state of "what is"—i.e. the full
- *   known set of properties which may be added to a `SureveyObject` through
+ *   known set of properties which may be added to a `SurveyObject` through
  *   several data flow paths throught enketo-express. Some related resources,
  *   notably those describing instances, are only populated in paths specific
  *   to the interaction between a `SurveyObject` and those resources.
