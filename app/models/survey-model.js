@@ -42,7 +42,10 @@ if ( process.env.NODE_ENV === 'test' ) {
  */
 
 /**
- * @typedef SurveyExternalData
+ * @typedef SurveyExternalData Note: a survey's `externalData` may include data from
+ *   that survey's {@link https://getodk.github.io/xforms-spec/#virtual-endpoints last-saved virtual endpoint}
+ *   when referenced in the survey's model. If the survey does not yet have a last-saved
+ *   record, those references will be populated by default with the survey's model.
  * @property { string } id
  * @property { string } src
  * @property { string | Document } xml

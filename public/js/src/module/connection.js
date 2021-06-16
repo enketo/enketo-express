@@ -455,6 +455,9 @@ function _encodeFormData( data ){
 }
 
 /**
+ * Gets a survey's last-saved record data as an `XMLDocument`, defaulting to
+ * the survey's model when no last-saved record exists.
+ *
  * @param {Document} model
  * @param {EnketoRecord} [lastSavedRecord]
  * @return {XMLDocument}
