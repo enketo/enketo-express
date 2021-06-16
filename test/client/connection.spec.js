@@ -8,8 +8,10 @@ import connection from '../../public/js/src/module/connection';
 import settings from '../../public/js/src/module/settings';
 
 /**
- * @typedef {import('./feature/last-saved.spec.js')} LastSavedFeatureSpec
+ * @see {@link https://github.com/enketo/enketo-express/pull/269#issuecomment-861887583}
+ * TODO [2021-07-16]: remove this polyfill when CI is able to use a newer version of Chrome
  */
+import 'abortcontroller-polyfill/dist/polyfill-patch-fetch';
 
 /**
  * @typedef {import('../../app/models/record-model').EnketoRecord} EnketoRecord

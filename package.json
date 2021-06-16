@@ -87,10 +87,12 @@
         "xml2js": "^0.4.23"
     },
     "devDependencies": {
+        "abortcontroller-polyfill": "^1.7.3",
         "chai": "^4.3.4",
         "chai-as-promised": "^7.1.1",
         "docdash": "^1.2.0",
         "eslint-plugin-jsdoc": "^32.3.4",
+        "eslint-plugin-unicorn": "^33.0.1",
         "grunt-concurrent": "^3.0.0",
         "grunt-contrib-watch": "^1.1.0",
         "grunt-eslint": "^23.0.0",
