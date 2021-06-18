@@ -35,7 +35,7 @@ for ( const p in queryParams ) {
         // URLs with encoded brackets as well us not-encode brackets will work.
         const matches = decodeURIComponent( p ).match( /d\[(.*)\]/ );
         if ( matches && matches[ 1 ] ) {
-            settings.defaults[ matches[ 1 ] ] = decodeURIComponent( queryParams[ p ] );
+            settings.defaults[ matches[ 1 ] ] = queryParams[ p ];
         }
     }
 }
