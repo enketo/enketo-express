@@ -100,7 +100,7 @@ describe( 'Connection', () => {
                     expect( instanceId ).to.equal( record.instanceId );
                     expect( submission instanceof File ).to.equal( true );
 
-                    return submission.text();
+                    return ( new Response( submission ) ).text();
                 } )
                 .then( submission => {
                     expect( submission ).to.equal( record.xml );
