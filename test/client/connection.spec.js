@@ -9,9 +9,14 @@ import settings from '../../public/js/src/module/settings';
 
 /**
  * @see {@link https://github.com/enketo/enketo-express/pull/269#issuecomment-861887583}
- * TODO [2021-07-16]: remove this polyfill when CI is able to use a newer version of Chrome
+ * TODO [2021-07-22]: remove these polyfills when CI is able to use a newer version of Chrome
  */
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch';
+import fromEntries from 'object.fromentries'; 'object.fromentries';
+if ( Object.fromEntries == null ) {
+    fromEntries.shim();
+}
+
 
 /**
  * @typedef {import('../../app/models/record-model').EnketoRecord} EnketoRecord
