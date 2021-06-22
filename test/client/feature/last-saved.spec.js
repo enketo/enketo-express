@@ -83,6 +83,13 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
             openRosaId: 'formA',
             openRosaServer: 'http://localhost:3000',
             enketoId: enketoIdA,
+            externalData: [
+                {
+                    id: 'last-saved',
+                    src: 'jr://instance/last-saved',
+                    xml: '<data id="modelA"><foo/></data>',
+                },
+            ],
             theme: '',
             form: `<form class="or"><img src="/path/to/${enketoIdA}.jpg"/></form>`,
             model: '<model><foo/></model>',
@@ -93,6 +100,13 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
             openRosaId: 'formB',
             openRosaServer: 'http://localhost:3000',
             enketoId: enketoIdB,
+            externalData: [
+                {
+                    id: 'last-saved',
+                    src: 'jr://instance/last-saved',
+                    xml: '<data id="modelB"><foo/></data>',
+                },
+            ],
             theme: '',
             form: `<form class="or"><img src="/path/to/${enketoIdB}.jpg"/></form>`,
             model: '<model><bar/></model>',

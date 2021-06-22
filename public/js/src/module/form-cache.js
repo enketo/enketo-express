@@ -78,6 +78,17 @@ function getLastSavedRecord( enketoId ) {
 }
 
 /**
+ * @param {Survey} survey
+ */
+function _isLastSaveEnabled( survey ) {
+    return (
+        survey.externalData != null &&
+        survey.externalData.find( data => data.src === LAST_SAVED_VIRTUAL_ENDPOINT ) != null &&
+        !encryptor.isEncryptionEnabled( survey )
+    );
+}
+
+/**
  *
  * @param { string } enketoId
  * @param { EnketoRecord } lastSavedRecord
@@ -86,7 +97,7 @@ function getLastSavedRecord( enketoId ) {
 function setLastSavedRecord( enketoId, lastSavedRecord ) {
     return store.survey.get( enketoId )
         .then( survey => {
-            if ( encryptor.isEncryptionEnabled( survey ) ) {
+            if ( !_isLastSaveEnabled( survey ) ) {
                 return Promise.resolve( survey );
             }
 
@@ -455,6 +466,10 @@ function _updateCache( survey ) {
                     .then( formParts => {
                         // media will be updated next time the form is loaded if resources is undefined
                         formParts.resources = undefined;
+
+                        if ( !_isLastSaveEnabled( formParts ) ) {
+                            delete formParts.lastSavedRecord;
+                        }
 
                         return formParts;
                     } )

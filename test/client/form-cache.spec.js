@@ -127,6 +127,8 @@ describe( 'Client Form Cache', () => {
 
     afterEach( done => {
         sandbox.restore();
+        timers.clearTimeout();
+        timers.clearInterval();
         timers.restore();
 
         document.body.removeChild( document.querySelector( 'form.or' ) );
@@ -197,6 +199,39 @@ describe( 'Client Form Cache', () => {
     describe( 'last-saved records', () => {
         const enketoId = 'surveyA';
 
+        /**
+         * @param {Partial<GetFormPartsStubResult>} updates
+         */
+        const updateSurvey = ( updates ) => {
+            // Ensure `_updateCache` receives a new hash indicating it should perform an update
+            sandbox.stub( connection, 'getFormPartsHash' ).callsFake( () => {
+                return Promise.resolve( updates.hash );
+            } );
+
+            let updatePromise = new Promise( resolve => {
+                setTimeout( resolve, formCache.CACHE_UPDATE_INITIAL_DELAY + 1 );
+            } );
+
+            const originalStoreUpdate = store.survey.update.bind( store.survey );
+
+            sandbox.stub( store.survey, 'update' ).callsFake( update => {
+                return originalStoreUpdate( update ).then( result => {
+                    if ( update.model === updates.model ) {
+                        timers.tick( 1 );
+                    }
+
+                    return result;
+                } );
+            } );
+
+            timers.tick( formCache.CACHE_UPDATE_INITIAL_DELAY );
+
+            getFormPartsStubResult = Object.assign( {}, getFormPartsStubResult, updates );
+
+            // Wait for `_updateCache` to resolve
+            return updatePromise.then( () => formCache.get( survey ) );
+        };
+
         /** @type {EnketoRecord} */
         let record;
 
@@ -242,48 +277,19 @@ describe( 'Client Form Cache', () => {
 
         it( 'preserves the last saved record when a form is updated', done => {
             const originalRecord = Object.assign( {}, record );
-            const updates = {
-                model: `${model1}<!-- updated -->`,
+            const update = Object.assign( {}, survey, {
                 hash: '123456',
-            };
-
-            // Ensure `_updateCache` receives a new hash indicating it should perform an update
-            sinon.stub( connection, 'getFormPartsHash' ).callsFake( () => {
-                return Promise.resolve( updates.hash );
-            } );
-
-            let updatePromise = new Promise( resolve => {
-                setTimeout( resolve, formCache.CACHE_UPDATE_INITIAL_DELAY + 1 );
-            } );
-
-            const originalStoreUpdate = store.survey.update.bind( store.survey );
-
-            sinon.stub( store.survey, 'update' ).callsFake( update => {
-                return originalStoreUpdate( update ).then( result => {
-                    if ( update.model === updates.model ) {
-                        timers.tick( 1 );
-                    }
-
-                    return result;
-                } );
+                model: `${model1}<!-- updated -->`,
             } );
 
             formCache.init( survey )
                 .then( () => {
                     return formCache.setLastSavedRecord( enketoId, record );
                 } )
-                .then( () => {
-                    getFormPartsStubResult = Object.assign( {}, getFormPartsStubResult, updates );
-
-                    timers.tick( formCache.CACHE_UPDATE_INITIAL_DELAY );
-
-                    // Wait for `_updateCache` to resolve
-                    return updatePromise;
-                } ).then( () => formCache.get( survey ) )
+                .then( () => updateSurvey( update ) )
                 .then( survey => {
-                    Object.entries( updates ).forEach( ( [ key, value ] ) => {
-                        expect( survey[key] ).to.equal( value );
-                    } );
+                    expect( survey.hash ).to.equal( update.hash );
+                    expect( survey.model ).to.equal( update.model );
 
                     Object.entries( originalRecord ).forEach( ( [ key, value ] ) => {
                         expect( survey.lastSavedRecord[ key ] ).to.equal( value );
@@ -349,6 +355,40 @@ describe( 'Client Form Cache', () => {
                     expect( survey.lastSavedRecord ).to.equal( undefined );
                 } )
                 .then( done, done );
+        } );
+
+        it( 'does not set the survey\'s last saved record when the model does not populate a last-saved secondary instance', done => {
+            getFormPartsStubResult = Object.assign( {}, getFormPartsStubResult, {
+                externalData: [],
+            } );
+
+            formCache.init( survey )
+                .then( () => {
+                    return formCache.setLastSavedRecord( enketoId, record );
+                } )
+                .then( survey => {
+                    expect( survey.lastSavedRecord ).to.equal( undefined );
+                } )
+                .then( done, done );
+        } );
+
+        it( 'removes the survey\'s last saved record when the model no longer populates a last-saved secondary instance', done => {
+            const update = Object.assign( {}, survey, {
+                hash: '123456',
+                model: `${model1}<!-- updated -->`,
+                externalData: [],
+            } );
+
+            formCache.init( survey )
+                .then( () => {
+                    return formCache.setLastSavedRecord( enketoId, record );
+                } )
+                .then( () => updateSurvey( update ) )
+                .then( survey => {
+                    expect( survey.lastSavedRecord ).to.equal( undefined );
+                } )
+                .then( done, done );
+
         } );
 
         it( 'gets the survey\'s last saved record', done => {
