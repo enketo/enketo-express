@@ -1,8 +1,6 @@
-import encryptor from '../../public/js/src/module/encryptor';
 import formCache from '../../public/js/src/module/form-cache';
 import connection from '../../public/js/src/module/connection';
 import store from '../../public/js/src/module/store';
-import settings from '../../public/js/src/module/settings';
 
 /**
  * @typedef { import('sinon').SinonSandbox } SinonSandbox
@@ -36,7 +34,7 @@ import settings from '../../public/js/src/module/settings';
  * @property { string } hash
  */
 
- const parser = new DOMParser();
+const parser = new DOMParser();
 
 const url1 = '/path/to/source.png';
 const form1 = `<form class="or"><img src="${url1}"/></form>`;
@@ -106,10 +104,6 @@ describe( 'Client Form Cache', () => {
                     const formParts = Object.assign( {
                         enketoId: survey.enketoId,
                     }, getFormPartsStubResult, lastSavedData );
-
-                    if ( encryptor.isEncryptionEnabled( survey ) ) {
-                        return encryptor.setEncryptionEnabled( formParts );
-                    }
 
                     return formParts;
                 } );
@@ -194,219 +188,5 @@ describe( 'Client Form Cache', () => {
                 .then( done, done );
         } );
 
-    } );
-
-    describe( 'last-saved records', () => {
-        const enketoId = 'surveyA';
-
-        /**
-         * @param {Partial<GetFormPartsStubResult>} updates
-         */
-        const updateSurvey = ( updates ) => {
-            // Ensure `_updateCache` receives a new hash indicating it should perform an update
-            sandbox.stub( connection, 'getFormPartsHash' ).callsFake( () => {
-                return Promise.resolve( updates.hash );
-            } );
-
-            let updatePromise = new Promise( resolve => {
-                setTimeout( resolve, formCache.CACHE_UPDATE_INITIAL_DELAY + 1 );
-            } );
-
-            const originalStoreUpdate = store.survey.update.bind( store.survey );
-
-            sandbox.stub( store.survey, 'update' ).callsFake( update => {
-                return originalStoreUpdate( update ).then( result => {
-                    if ( update.model === updates.model ) {
-                        timers.tick( 1 );
-                    }
-
-                    return result;
-                } );
-            } );
-
-            timers.tick( formCache.CACHE_UPDATE_INITIAL_DELAY );
-
-            getFormPartsStubResult = Object.assign( {}, getFormPartsStubResult, updates );
-
-            // Wait for `_updateCache` to resolve
-            return updatePromise.then( () => formCache.get( survey ) );
-        };
-
-        /** @type {EnketoRecord} */
-        let record;
-
-        beforeEach( done => {
-            record = {
-                draft: false,
-                enketoId,
-                instanceId: 'recordA',
-                name: 'name A',
-                xml: '<data id="modelA"><item>initial</item><meta><instanceID/></meta></data>',
-            };
-
-            survey = {
-                openRosaId: 'formA',
-                openRosaServer: 'http://localhost:3000',
-                enketoId,
-                theme: '',
-            };
-
-            sandbox.stub( settings, 'enketoId' ).get( () => survey.enketoId );
-
-            store.init().then( done, done );
-        } );
-
-        afterEach( done => {
-            store.survey.removeAll().then( done, done );
-        } );
-
-        it( 'sets the survey\'s last saved record', done => {
-            const originalRecord = Object.assign( {}, record );
-
-            formCache.init( survey )
-                .then( () => {
-                    return formCache.setLastSavedRecord( enketoId, record );
-                } )
-                .then( survey => {
-                    Object.entries( originalRecord ).forEach( ( [ key, value ] ) => {
-                        expect( survey.lastSavedRecord[ key ] ).to.equal( value );
-                    } );
-                } )
-                .then( done, done );
-        } );
-
-        it( 'preserves the last saved record when a form is updated', done => {
-            const originalRecord = Object.assign( {}, record );
-            const update = Object.assign( {}, survey, {
-                hash: '123456',
-                model: `${model1}<!-- updated -->`,
-            } );
-
-            formCache.init( survey )
-                .then( () => {
-                    return formCache.setLastSavedRecord( enketoId, record );
-                } )
-                .then( () => updateSurvey( update ) )
-                .then( survey => {
-                    expect( survey.hash ).to.equal( update.hash );
-                    expect( survey.model ).to.equal( update.model );
-
-                    Object.entries( originalRecord ).forEach( ( [ key, value ] ) => {
-                        expect( survey.lastSavedRecord[ key ] ).to.equal( value );
-                    } );
-                } )
-                .then( done, done );
-        } );
-
-        it( 'updates last-saved externalData when the last saved record is updated', done => {
-            const updatedItemValue = 'populated';
-            const update = Object.assign( {}, record, {
-                xml: `<data id="surveyA"><item>${updatedItemValue}</item><meta><instanceID>uuid:ea3baa91-74b5-4892-af6f-96267f7fe12e</instanceID></meta></data>`,
-            } );
-
-            formCache.init( survey )
-                .then( () => formCache.setLastSavedRecord( enketoId, update ) )
-                .then( () => formCache.get( survey ) )
-                .then( survey => {
-                    expect( Array.isArray( survey.externalData ) ).to.equal( true );
-                    expect( survey.externalData.length ).to.equal( 1 );
-
-                    const data = survey.externalData[0];
-
-                    expect( data.id ).to.equal( lastSavedExternalData.id );
-                    expect( data.src ).to.equal( lastSavedExternalData.src );
-
-                    /** @type {Element} */
-                    const xmlDocument = data.xml.documentElement;
-
-                    const dataItemValue = xmlDocument.querySelector( 'item' ).innerHTML;
-
-                    expect( dataItemValue ).to.equal( updatedItemValue );
-                } )
-                .then( done, done );
-        } );
-
-        it( 'does not set the survey\'s last saved record when encryption is enabled', done => {
-            encryptor.setEncryptionEnabled( survey );
-
-            const form = { id: 'abc', version: '2', encryptionKey: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5s9p+VdyX1ikG8nnoXLCC9hKfivAp/e1sHr3O15UQ+a8CjR/QV29+cO8zjS/KKgXZiOWvX+gDs2+5k9Kn4eQm5KhoZVw5Xla2PZtJESAd7dM9O5QrqVJ5Ukrq+kG/uV0nf6X8dxyIluNeCK1jE55J5trQMWT2SjDcj+OVoTdNGJ1H6FL+Horz2UqkIObW5/elItYF8zUZcO1meCtGwaPHxAxlvODe8JdKs3eMiIo9eTT4WbH1X+7nJ21E/FBd8EmnK/91UGOx2AayNxM0RN7pAcj47a434LzeM+XCnBztd+mtt1PSflF2CFE116ikEgLcXCj4aklfoON9TwDIQSp0wIDAQAB' };
-
-            formCache.init( survey )
-                .then( () => encryptor.encryptRecord( form, record ) )
-                .then( encryptedRecord => {
-                    return formCache.setLastSavedRecord( enketoId, encryptedRecord );
-                } )
-                .then( survey => {
-                    expect( survey.lastSavedRecord ).to.equal( undefined );
-                } )
-                .then( done, done );
-        } );
-
-        it( 'does not set the survey\'s last saved unencrypted draft record when encryption is enabled', done => {
-            encryptor.setEncryptionEnabled( survey );
-
-            record.draft = true;
-
-            formCache.init( survey )
-                .then( () => {
-                    return formCache.setLastSavedRecord( enketoId, record );
-                } )
-                .then( survey => {
-                    expect( survey.lastSavedRecord ).to.equal( undefined );
-                } )
-                .then( done, done );
-        } );
-
-        it( 'does not set the survey\'s last saved record when the model does not populate a last-saved secondary instance', done => {
-            getFormPartsStubResult = Object.assign( {}, getFormPartsStubResult, {
-                externalData: [],
-            } );
-
-            formCache.init( survey )
-                .then( () => {
-                    return formCache.setLastSavedRecord( enketoId, record );
-                } )
-                .then( survey => {
-                    expect( survey.lastSavedRecord ).to.equal( undefined );
-                } )
-                .then( done, done );
-        } );
-
-        it( 'removes the survey\'s last saved record when the model no longer populates a last-saved secondary instance', done => {
-            const update = Object.assign( {}, survey, {
-                hash: '123456',
-                model: `${model1}<!-- updated -->`,
-                externalData: [],
-            } );
-
-            formCache.init( survey )
-                .then( () => {
-                    return formCache.setLastSavedRecord( enketoId, record );
-                } )
-                .then( () => updateSurvey( update ) )
-                .then( survey => {
-                    expect( survey.lastSavedRecord ).to.equal( undefined );
-                } )
-                .then( done, done );
-
-        } );
-
-        it( 'gets the survey\'s last saved record', done => {
-            const originalRecord = Object.assign( {}, record );
-
-            formCache.init( survey )
-                .then( survey => {
-                    return formCache.setLastSavedRecord( survey.enketoId, record );
-                } )
-                .then( survey => {
-                    return formCache.getLastSavedRecord( survey.enketoId );
-                } )
-                .then( lastSavedRecord => {
-                    Object.entries( originalRecord ).forEach( ( [ key, value ] ) => {
-                        expect( lastSavedRecord[ key ] ).to.equal( value );
-                    } );
-                } )
-                .then( done, done );
-        } );
     } );
 } );
