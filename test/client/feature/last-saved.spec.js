@@ -439,5 +439,32 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
                 } )
                 .then( done, done );
         } );
+
+        it( 'populates a last-saved secondary instance with the model\'s defaults when editing an instance', done => {
+            const lastSavedRecord = {
+                enketoId,
+                instanceId,
+                name: 'name A',
+                xml: '<data id="surveyA"><item>populated</item><meta><instanceID>uuid:ea3baa91-74b5-4892-af6f-96267f7fe12e</instanceID></meta></data>',
+                files: [],
+            };
+
+            formCache.setLastSavedRecord( enketoId, lastSavedRecord )
+                .then( () => connection.getFormParts( { enketoId, instanceId } ) )
+                .then( result => {
+                    expect( Array.isArray( result.externalData ) ).to.equal( true );
+                    expect( result.externalData.length ).to.equal( 1 );
+
+                    const data = result.externalData[0];
+
+                    expect( data.id ).to.equal( 'last-saved' );
+                    expect( data.src ).to.equal( 'jr://instance/last-saved' );
+
+                    const xml = xmlSerializer.serializeToString( data.xml.documentElement, 'text/xml' );
+
+                    expect( xml ).to.equal( defaultInstanceData );
+                } )
+                .then( done, done );
+        } );
     } );
 } );

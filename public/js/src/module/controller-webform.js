@@ -15,6 +15,10 @@ import $ from 'jquery';
 import encryptor from './encryptor';
 import formCache from './form-cache';
 
+/**
+ * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
+ */
+
 /** @type {Form} */
 let form;
 
@@ -35,6 +39,7 @@ const formOptions = {
  * @property {string} instanceStr
  * @property {Document[]} external
  * @property {InstanceAttachment[]} [instanceAttachments]
+ * @property {boolean} [isEditing]
  */
 
 /**
@@ -104,7 +109,7 @@ function init( formEl, data, loadErrors = [] ) {
 
             formprogress = document.querySelector( '.form-progress' );
 
-            _setEventHandlers();
+            _setEventHandlers( data.isEditing );
             setLogoutLinkVisibility();
 
             if ( loadErrors.length > 0 ) {
@@ -156,46 +161,55 @@ function _checkAutoSavedRecord() {
 }
 
 /**
+ * Updates the runtime state of `formData` with changes made to `survey` in the
+ * course of submitting a record. Currently this addresses issues where a survey's
+ * `lastSavedRecord` and `externalData` are updated on submission.
+ *
  * @param {string} enketoId
  */
 function _updateFormData( enketoId ) {
     return formCache.get( { enketoId } )
         .then( survey => {
             formData.external = survey.externalData;
+            formData.lastSavedRecord = survey.lastSavedRecord || {};
+
+            return survey;
         } );
 }
 
 /**
- * Controller function to reset to a blank form. Checks whether all changes have been saved first
+ * Controller function to reset to the initial state of a form.
  *
- * @param  {boolean=} confirmed - Whether unsaved changes can be discarded and lost forever
+ * Note: Previously this function accepted a boolean `confirmed` parameter, presumably
+ * intending to block the reset behavior until user confirmation of save. But this
+ * parameter was always passed as `true`. Relatedly, the `FormReset` event fired here
+ * previously indirectly triggered `formCache.updateMedia` method, but it was triggered
+ * with stale `survey` state, overwriting any changes to * `survey.lastSavedRecord`.
+ * That event listener has been removed in favor of calling `updateMedia` directly with
+ * the current state of `survey`. This change is being called out in case the removal
+ * of that event listener impacts downstream forks.
+ *
+ * @param {Survey} survey
  */
-function _resetForm( confirmed ) {
-    let message;
+function _resetForm( survey ) {
+    const formEl = form.resetView();
 
-    if ( !confirmed && form.editStatus ) {
-        message = t( 'confirm.save.msg' );
-        gui.confirm( message )
-            .then( confirmed => {
-                if ( confirmed ) {
-                    _resetForm( true );
-                }
-            } );
-    } else {
-        const formEl = form.resetView();
-        form = new Form( formEl, {
-            modelStr: formData.modelStr,
-            external: formData.external
-        }, formOptions );
-        const loadErrors = form.init();
-        // formreset event will update the form media:
-        form.view.html.dispatchEvent( events.FormReset() );
-        if ( records ) {
-            records.setActive( null );
-        }
-        if ( loadErrors.length > 0 ) {
-            gui.alertLoadErrors( loadErrors );
-        }
+    form = new Form( formEl, {
+        modelStr: formData.modelStr,
+        external: formData.external
+    }, formOptions );
+
+    const loadErrors = form.init();
+
+    // formreset event will update the form media:
+    form.view.html.dispatchEvent( events.FormReset() );
+    formCache.updateMedia( survey );
+
+    if ( records ) {
+        records.setActive( null );
+    }
+    if ( loadErrors.length > 0 ) {
+        gui.alertLoadErrors( loadErrors );
     }
 }
 
@@ -267,8 +281,10 @@ function _loadRecord( instanceId, confirmed ) {
  * Used to submit a form.
  * This function does not save the record in the browser storage
  * and is not used in offline-capable views.
+ *
+ * @param {boolean} isEditing
  */
-function _submitRecord() {
+function _submitRecord( isEditing ) {
     const redirect = settings.type === 'single' || settings.type === 'edit' || settings.type === 'view';
     let beforeMsg;
     let authLink;
@@ -305,7 +321,7 @@ function _submitRecord() {
                 return record;
             }
         } )
-        .then( record => connection.uploadRecord( record, { isLastSaved: true } ) )
+        .then( record => connection.uploadRecord( record, { isLastSaved: !isEditing } ) )
         .then( result => {
             result = result || {};
             level = 'success';
@@ -320,7 +336,7 @@ function _submitRecord() {
 
             return _updateFormData( settings.enketoId );
         } )
-        .then( () => {
+        .then( survey => {
             // this event is used in communicating back to iframe parent window
             document.dispatchEvent( events.SubmissionSuccess() );
 
@@ -354,7 +370,7 @@ function _submitRecord() {
             } else {
                 msg = ( msg.length > 0 ) ? msg : t( 'alert.submissionsuccess.msg' );
                 gui.alert( msg, t( 'alert.submissionsuccess.heading' ), level );
-                _resetForm( true );
+                _resetForm( survey );
             }
         } )
         .catch( result => {
@@ -464,10 +480,10 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
             return records.save( saveMethod, record );
         } )
         .then( record => _updateFormData( record.enketoId ) )
-        .then( () => {
+        .then( survey => {
 
             records.removeAutoSavedRecord();
-            _resetForm( true );
+            _resetForm( survey );
 
             if ( draft ) {
                 gui.alert( t( 'alert.recordsavesuccess.draftmsg' ), t( 'alert.savedraftinfo.heading' ), 'info', 5 );
@@ -521,7 +537,10 @@ function _autoSaveRecord() {
         } );
 }
 
-function _setEventHandlers() {
+/**
+ * @param {boolean} [isEditing]
+ */
+function _setEventHandlers( isEditing = false ) {
     const $doc = $( document );
 
     $( 'button#submit-form' ).click( function() {
@@ -534,7 +553,7 @@ function _setEventHandlers() {
                         if ( settings.offline ) {
                             return _saveRecord( false );
                         } else {
-                            return _submitRecord();
+                            return _submitRecord( isEditing );
                         }
                     } else {
                         gui.alert( t( 'alert.validationerror.msg' ) );

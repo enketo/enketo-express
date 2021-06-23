@@ -680,6 +680,16 @@ function _firstItemOnly( results ) {
     }
 }
 
+/**
+ * Serializes a survey for storage in IndexedDB:
+ *
+ * - externalData XMLDocuments are serialized to strings
+ * - surveys with encryption enabled are converted to a state which can be deserialized on retrieval
+ *
+ * @see {encryptor.serializeEncryptedSurvey}
+ * @param {Survey} survey
+ * @return {Promise<Survey>}
+ */
 function _serializeSurvey( survey ) {
     if ( survey ) {
         if ( survey.externalData ) {
@@ -696,6 +706,16 @@ function _serializeSurvey( survey ) {
     }
 }
 
+/**
+ * Deserializes a survey retrieved from IndexedDB:
+ *
+ * - externalData strings are deserialized to XMLDocuments
+ * - surveys which should have encryption enabled are restored to that state
+ *
+ * @see {encryptor.deserializeEncryptedSurvey}
+ * @param {Survey} survey
+ * @return {Promise<Survey>}
+ */
 function _deserializeSurvey( survey ) {
     if ( survey ) {
         if ( survey.externalData ) {

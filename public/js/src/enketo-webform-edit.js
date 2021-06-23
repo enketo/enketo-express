@@ -66,6 +66,7 @@ function _init( formParts ) {
         instanceStr: formParts.instance,
         external: formParts.externalData,
         instanceAttachments: formParts.instanceAttachments,
+        isEditing: true,
     } )
         .then( form => {
             formParts.languages = form.languages;

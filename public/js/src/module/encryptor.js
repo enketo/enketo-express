@@ -44,6 +44,14 @@ function isEncryptionEnabled( survey ) {
     return Boolean( survey[isEncryptionEnabledSymbol] );
 }
 
+/**
+ * Converts an encryption-enabled survey's private `isEncryptionEnabledSymbol`
+ * property to a serializable string property.
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm#supported_types}
+ * @param {Survey} survey
+ * @return {Survey}
+ */
 function serializeEncryptedSurvey( survey ) {
     if ( isEncryptionEnabled( survey ) ) {
         return Object.assign( {}, survey, {
@@ -54,6 +62,14 @@ function serializeEncryptedSurvey( survey ) {
     return survey;
 }
 
+/**
+ * Restores a serialized survey's encryption-enabled state by converting its
+ * `isEncryptionEnabled` property to the private `isEncryptionEnabledSymbol`.
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm#supported_types}
+ * @param {Survey} survey
+ * @return {Survey}
+ */
 function deserializeEncryptedSurvey( survey ) {
     if ( survey.isEncryptionEnabled ) {
         let result = Object.assign( {}, survey );

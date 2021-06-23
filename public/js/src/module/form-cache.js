@@ -40,8 +40,7 @@ function init( survey ) {
             }
         } )
         .then( _processDynamicData )
-        .then( _setUpdateIntervals )
-        .then( _setResetListener );
+        .then( _setUpdateIntervals );
 }
 
 /**
@@ -200,24 +199,6 @@ function _setUpdateIntervals( survey ) {
     setInterval( () => {
         _updateCache( survey );
     }, CACHE_UPDATE_INTERVAL );
-
-    return Promise.resolve( survey );
-}
-
-/**
- * Form resets require reloading the form media.
- * This makes form resets slower, but it makes initial form loads faster.
- *
- * @param { Survey } survey - survey object
- * @return { Promise<Survey> }
- */
-function _setResetListener( survey ) {
-
-    document.addEventListener( events.FormReset().type, event => {
-        if ( event.target.nodeName.toLowerCase() === 'form' ) {
-            updateMedia( survey );
-        }
-    } );
 
     return Promise.resolve( survey );
 }
