@@ -27,11 +27,13 @@ if ( process.env.NODE_ENV === 'test' ) {
  */
 
 /**
- * @typedef {typeof import('libxmljs').Document} XMLJSDocument
+ * @typedef {import('libxmljs').Document} XMLJSDocument
  */
 
 /**
- * @typedef {(doc: XMLJSDocument) => XMLJSDocument} EnketoTransformerPreprocess
+ * @typedef {Function} EnketoTransformerPreprocess
+ * @param {XMLJSDocument} doc
+ * @return {XMLJSDocument}
  */
 
 /**
