@@ -809,6 +809,17 @@ describe( 'api', () => {
         }, {
             endpoint: '/survey',
             defaults: {
+                '/path/to/node': '10%25 tax',
+            },
+            method: 'post',
+            status: 200,
+            res: {
+                property: 'url',
+                expected: /.+\?d%5B%2Fpath%2Fto%2Fnode%5D=10%25%20tax/
+            }
+        }, {
+            endpoint: '/survey',
+            defaults: {
                 '/path/to/node': '[@]?'
             },
             method: 'post',
