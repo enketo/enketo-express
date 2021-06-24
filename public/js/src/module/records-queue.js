@@ -212,7 +212,7 @@ function uploadQueue() {
                 return;
             }
 
-            return store.record.getAll( settings.enketoId, true );
+            return getDisplayableRecordList( settings.enketoId, { finalOnly: true } );
         } )
         .then( records => {
             if ( !records || records.length === 0 ) {
@@ -368,12 +368,13 @@ uploadProgress = {
  * This was isolated from the `_updateRecordList` function to allow testing, and
  * reused in `uploadQueue` to share the behavior.
  *
+ * @param { string } enketoId
  * @param { { finalOnly?: boolean } } [options] - Only included records that are 'final' (i.e. not 'draft')
  * @return { Promise<Record[]> } - records to be displayed in the UI
  */
-function getDisplayableRecordList( { finalOnly = false } ) {
+function getDisplayableRecordList( enketoId, { finalOnly = false } = {} ) {
     const autoSavedKey = getAutoSavedKey();
-    const records = store.record.getAll( settings.enketoId, finalOnly )
+    const records = store.record.getAll( enketoId, finalOnly )
         .then( records => {
             return records.filter( record => record.instanceId !== autoSavedKey );
         } );
@@ -396,11 +397,8 @@ function _updateRecordList() {
     finalRecordPresent = false;
 
     // rebuild the list
-    return store.record.getAll( settings.enketoId )
+    return getDisplayableRecordList( settings.enketoId )
         .then( records => {
-            // remove autoSaved record
-            records = records.filter( record => record.instanceId !== getAutoSavedKey() );
-
             // update queue number
             $queueNumber.text( records.length );
 
