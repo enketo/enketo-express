@@ -7,9 +7,28 @@ import events from './event';
 import settings from './settings';
 import connection from './connection';
 import assign from 'lodash/assign';
+import encryptor from './encryptor';
+
+/**
+ * @typedef {import('../../../../app/models/record-model').EnketoRecord} EnketoRecord
+ */
+
+/**
+ * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
+ */
+
+const CACHE_UPDATE_INITIAL_DELAY = 3 * 1000;
+const CACHE_UPDATE_INTERVAL = 20 * 60 * 1000;
+const LAST_SAVED_VIRTUAL_ENDPOINT = 'jr://instance/last-saved';
+
+const parser = new DOMParser();
 
 let hash;
 
+/**
+ * @param {Survey} survey
+ * @return {Promise<Survey>}
+ */
 function init( survey ) {
     return store.init()
         .then( () => get( survey ) )
@@ -21,14 +40,21 @@ function init( survey ) {
             }
         } )
         .then( _processDynamicData )
-        .then( _setUpdateIntervals )
-        .then( _setResetListener );
+        .then( _setUpdateIntervals );
 }
 
+/**
+ * @param {Survey} survey
+ * @return Survey
+ */
 function get( survey ) {
     return store.survey.get( survey.enketoId );
 }
 
+/**
+ * @param {Survey} survey
+ * @return {Promise<Survey>}
+ */
 function set( survey ) {
     return connection.getFormParts( survey )
         .then( _swapMediaSrc )
@@ -36,10 +62,72 @@ function set( survey ) {
         .then( store.survey.set );
 }
 
+/**
+ *
+ * @param { string } enketoId
+ * @return { Promise<EnketoRecord | undefined> }
+ */
+function getLastSavedRecord( enketoId ) {
+    return store.survey.get( enketoId )
+        .then( survey => {
+            if ( survey != null ) {
+                return survey.lastSavedRecord;
+            }
+        } );
+}
+
+/**
+ * @param {Survey} survey
+ */
+function _isLastSaveEnabled( survey ) {
+    return (
+        survey.externalData != null &&
+        survey.externalData.find( data => data.src === LAST_SAVED_VIRTUAL_ENDPOINT ) != null &&
+        !encryptor.isEncryptionEnabled( survey )
+    );
+}
+
+/**
+ *
+ * @param { string } enketoId
+ * @param { EnketoRecord } lastSavedRecord
+ * @return { Promise<Survey> }
+ */
+function setLastSavedRecord( enketoId, lastSavedRecord ) {
+    return store.survey.get( enketoId )
+        .then( survey => {
+            if ( !_isLastSaveEnabled( survey ) ) {
+                return Promise.resolve( survey );
+            }
+
+            if ( Array.isArray( survey.externalData ) ) {
+                const { xml } = lastSavedRecord;
+
+                survey.externalData.forEach( item => {
+                    if ( item.src === LAST_SAVED_VIRTUAL_ENDPOINT ) {
+                        item.xml = parser.parseFromString( xml, 'text/xml' );
+                    }
+                } );
+            }
+
+            const update = Object.assign( {}, survey, { lastSavedRecord } );
+
+            return store.survey.update( update );
+        } );
+}
+
+/**
+ * @param {Survey} survey
+ * @return {Promise<void>}
+ */
 function remove( survey ) {
     return store.survey.remove( survey.enketoId );
 }
 
+/**
+ * @param {Survey} survey
+ * @return {Promise<Survey>}
+ */
 function _processDynamicData( survey ) {
     // TODO: In the future this method could perhaps be used to also store
     // dynamic defaults. However, the issue would be to figure out how to clear
@@ -93,6 +181,10 @@ function _processDynamicData( survey ) {
         .then( () => survey );
 }
 
+/**
+ * @param {Survey} survey
+ * @return {Promise<Survey>}
+ */
 function _setUpdateIntervals( survey ) {
     hash = survey.hash;
 
@@ -102,29 +194,11 @@ function _setUpdateIntervals( survey ) {
     // that open the form right after the XForm update.
     setTimeout( () => {
         _updateCache( survey );
-    }, 3 * 1000 );
+    }, CACHE_UPDATE_INITIAL_DELAY );
     // check for form update every 20 minutes
     setInterval( () => {
         _updateCache( survey );
-    }, 20 * 60 * 1000 );
-
-    return Promise.resolve( survey );
-}
-
-/**
- * Form resets require reloading the form media.
- * This makes form resets slower, but it makes initial form loads faster.
- *
- * @param { object } survey - [description]
- */
-function _setResetListener( survey ) {
-
-    document.addEventListener( events.FormReset().type, event => {
-        if ( event.target.nodeName.toLowerCase() === 'form' ) {
-            survey.htmlView = event.target;
-            updateMedia( survey );
-        }
-    } );
+    }, CACHE_UPDATE_INTERVAL );
 
     return Promise.resolve( survey );
 }
@@ -132,11 +206,12 @@ function _setResetListener( survey ) {
 /**
  * Handles loading form media for newly added repeats.
  *
- * @param { object } survey - [description]
+ * @param { Survey } survey - survey object
+ * @return { Promise<Survey> }
  */
 function _setRepeatListener( survey ) {
     //Instantiate only once, after loadMedia has been completed (once)
-    survey.htmlView.addEventListener( events.AddRepeat().type, event => {
+    document.querySelector( 'form.or' ).addEventListener( events.AddRepeat().type, event => {
         _loadMedia( survey, [ event.target ] );
     } );
 
@@ -147,7 +222,8 @@ function _setRepeatListener( survey ) {
  * Changes src attributes in view to data-offline-src to facilitate loading those resources
  * from the browser storage.
  *
- * @param { object } survey - survey object
+ * @param { Survey } survey - survey object
+ * @return { Promise<Survey> }
  */
 function _swapMediaSrc( survey ) {
     survey.form = survey.form.replace( /(src="[^"]*")/g, 'data-offline-$1 src=""' );
@@ -160,7 +236,8 @@ function _swapMediaSrc( survey ) {
  * Loads all default binary files and adds them to the survey object. It removes the src
  * attributes from model nodes with default binary files.
  *
- * @param { object } survey - survey object
+ * @param { Survey } survey - survey object
+ * @return { Promise<Survey> }
  */
 function _addBinaryDefaultsAndUpdateModel( survey ) {
     // The mechanism for default binary files is as follows:
@@ -203,8 +280,8 @@ function _addBinaryDefaultsAndUpdateModel( survey ) {
  * If the form/data server updates their max size setting, this value
  * will be updated the next time the cache is refreshed.
  *
- * @param  { object } survey - [description]
- * @return { object }        [description]
+ * @param { Survey } survey - survey object
+ * @return { Promise<Survey> }
  */
 function updateMaxSubmissionSize( survey ) {
 
@@ -222,15 +299,15 @@ function updateMaxSubmissionSize( survey ) {
                 return survey;
             } );
     } else {
-        return survey;
+        return Promise.resolve( survey );
     }
 }
 
 /**
  * Loads survey resources either from the store or via HTTP (and stores them).
  *
- * @param  { object } survey - [description]
- * @return { Promise }        [description]
+ * @param { Survey } survey - survey object
+ * @return { Promise<Survey> }
  */
 function updateMedia( survey ) {
     const requests = [];
@@ -239,7 +316,7 @@ function updateMedia( survey ) {
         return _loadMedia( survey )
             .then( _setRepeatListener );
     }
-    const containers = [ survey.htmlView ];
+    const containers = [ document.querySelector( 'form.or' ) ];
     const formHeader = document.querySelector( '.form-header' );
     if ( formHeader ) {
         containers.push( formHeader );
@@ -294,7 +371,7 @@ function _loadMedia( survey, targetContainers ) {
     const URL = window.URL || window.webkitURL;
 
     if ( !targetContainers ) {
-        targetContainers = [ survey.htmlView ];
+        targetContainers = [ document.querySelector( 'form.or' ) ];
         const formHeader = document.querySelector( '.form-header' );
         if ( formHeader ) {
             targetContainers.push( formHeader );
@@ -371,6 +448,10 @@ function _updateCache( survey ) {
                         // media will be updated next time the form is loaded if resources is undefined
                         formParts.resources = undefined;
 
+                        if ( !_isLastSaveEnabled( formParts ) ) {
+                            delete formParts.lastSavedRecord;
+                        }
+
                         return formParts;
                     } )
                     .then( _swapMediaSrc )
@@ -422,5 +503,10 @@ export default {
     updateMaxSubmissionSize,
     updateMedia,
     remove,
-    flush
+    flush,
+    getLastSavedRecord,
+    setLastSavedRecord,
+    CACHE_UPDATE_INITIAL_DELAY,
+    CACHE_UPDATE_INTERVAL,
+    LAST_SAVED_VIRTUAL_ENDPOINT,
 };

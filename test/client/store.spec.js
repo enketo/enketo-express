@@ -1,9 +1,26 @@
+/**
+ * @module store.spec.js
+ * @description Tests client-side data storage logic
+ * @see {SurveyEncryptionSpec}
+ */
+
 // TODO: when chai-as-promised adapter is working, convert these tests using .eventually.
 
 import store from '../../public/js/src/module/store';
 
+/**
+ * @typedef {import('./feature/survey-encryption.spec.js')} SurveyEncryptionSpec
+ */
+
+/**
+ * @typedef {import('../../app/models/survey-model').SurveyObject} Survey
+ */
+
 describe( 'Client Storage', () => {
-    let resourceA, resourceB, fileA, fileB, recordA, recordB, surveyA;
+    let resourceA, resourceB, fileA, fileB, recordA, recordB;
+
+    /** @type {Survey} */
+    let surveyA;
 
     before( done => {
         store.init()
@@ -249,10 +266,13 @@ describe( 'Client Storage', () => {
                     done();
                 } );
         } );
-
     } );
 
     describe( 'getting surveys', () => {
+        beforeEach( done => {
+            store.survey.removeAll()
+                .then( done, done );
+        } );
 
         it( 'returns undefined if a survey does not exist', done => {
             store.survey.get( 'nonexisting' )
@@ -261,7 +281,6 @@ describe( 'Client Storage', () => {
                 } )
                 .then( done, done );
         } );
-
     } );
 
     describe( 'updating surveys', () => {

@@ -87,10 +87,12 @@
         "xml2js": "^0.4.23"
     },
     "devDependencies": {
+        "abortcontroller-polyfill": "^1.7.3",
         "chai": "^4.3.4",
         "chai-as-promised": "^7.1.1",
         "docdash": "^1.2.0",
         "eslint-plugin-jsdoc": "^32.3.4",
+        "eslint-plugin-unicorn": "^33.0.1",
         "grunt-concurrent": "^3.0.0",
         "grunt-contrib-watch": "^1.1.0",
         "grunt-eslint": "^23.0.0",
@@ -102,6 +104,7 @@
         "istanbul": "^0.4.5",
         "istanbul-reporter-shield-badge": "^1.2.1",
         "jsdoc": "^3.6.7",
+        "jsdoc-ts-utils": "^2.0.0",
         "karma": "^6.3.3",
         "karma-chrome-launcher": "^3.1.0",
         "karma-coverage": "^1.1.2",
@@ -113,6 +116,7 @@
         "karma-sinon-chai": "^2.0.2",
         "mocha": "^8.4.0",
         "nock": "^13.1.0",
+        "object.fromentries": "^2.0.4",
         "rimraf": "^3.0.2",
         "sinon": "^9.2.4",
         "sinon-chai": "^3.7.0",
@@ -130,5 +134,9 @@
         "public/js/src/enketo-webform-edit.js",
         "public/js/src/enketo-webform-view.js",
         "public/js/src/enketo-offline-fallback.js"
-    ]
+    ],
+    "//": "While CI runs Node v12.21.0, v12.18.4 is currently the latest version which is able to run the full test suite without crashing",
+    "volta": {
+        "node": "12.18.4"
+    }
 }

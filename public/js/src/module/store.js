@@ -6,7 +6,17 @@ import db from 'db.js';
 import utils from './utils';
 import sniffer from './sniffer';
 import { t } from './translator';
+import encryptor from './encryptor';
+
 const parser = new DOMParser();
+
+/**
+ * @typedef {import('../../../../app/models/record-model').EnketoRecord} EnketoRecord
+ */
+
+/**
+ * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
+ */
 
 let server;
 let blobEncoding;
@@ -231,26 +241,26 @@ const surveyStore = {
     /**
      * Obtains a single survey's form HTML and XML model, theme, external instances from storage
      *
-     * @param  { object } id - [description]
-     * @return { object }    [description]
+     * @param  { string } id - [description]
+     * @return { Promise<Survey> }    [description]
      */
     get( id ) {
         return server.surveys.get( id )
             .then( _firstItemOnly )
-            .then( _transformExternalDataToXmlDoc );
+            .then( _deserializeSurvey );
     },
     /**
      * Stores a single survey's form HTML and XML model, theme, external instances
      *
-     * @param { object } survey - [description]
-     * @return { Promise }        [description]
+     * @param { Survey } survey - [description]
+     * @return { Promise<Survey> }        [description]
      */
     set( survey ) {
         if ( !survey.form || !survey.model || !survey.enketoId || !survey.hash ) {
             throw new Error( 'Survey not complete' );
         }
 
-        return server.surveys.add( _transformExternalDataToXmlStr( survey ) )
+        return server.surveys.add( _serializeSurvey( survey ) )
             .then( _firstItemOnly )
             .then( storedSurvey => {
                 const tasks = [];
@@ -264,13 +274,13 @@ const surveyStore = {
                     // return original survey with orginal survey.binaryDefaults
                     .then( () => storedSurvey );
             } )
-            .then( _transformExternalDataToXmlDoc );
+            .then( _deserializeSurvey );
     },
     /**
      * Updates a single survey's form HTML and XML model as well any external resources belonging to the form
      *
-     * @param  { object } survey - [description]
-     * @return { Promise }        [description]
+     * @param  { Survey } survey - [description]
+     * @return { Promise<Survey> }        [description]
      */
     update( survey ) {
         let obsoleteResources = [];
@@ -296,25 +306,23 @@ const surveyStore = {
                         .filter( existing => binaryDefaultKeys.indexOf( existing ) < 0 );
                 }
 
-                _transformExternalDataToXmlStr( survey );
+                let update = Object.assign( {}, _serializeSurvey( survey ) );
+
+                // Note: if survey.resources = undefined/null, do not store empty array
+                // as it means there are no resources to store (and load) - they may be added later by form-cache.js
+                if ( survey.resources ) {
+                    update.resources = resourceKeys;
+                }
+
+                if ( survey.binaryDefaults ) {
+                    update.binaryDefaults = binaryDefaultKeys;
+                }
 
                 // Update the existing survey
-                return server.surveys.update( {
-                    form: survey.form,
-                    model: survey.model,
-                    enketoId: survey.enketoId,
-                    hash: survey.hash,
-                    theme: survey.theme,
-                    // Note: if survey.resources = undefined/null, do not store empty array
-                    // as it means there are no resources to store (and load) - they may be added later by form-cache.js
-                    resources: survey.resources ? resourceKeys : undefined,
-                    binaryDefaults: survey.binaryDefaults ? binaryDefaultKeys : undefined,
-                    maxSize: survey.maxSize,
-                    externalData: survey.externalData,
-                    branding: survey.branding
-                } );
+                return server.surveys.update( update );
             } )
-            .then( () => {
+            .then( _firstItemOnly )
+            .then( result => {
                 const tasks = [];
                 // Add new or update existing resources, combining binaryDefaults and form resources
                 ( survey.resources || [] ).concat( survey.binaryDefaults || [] ).forEach( file => {
@@ -322,21 +330,25 @@ const surveyStore = {
                 } );
                 // Remove obsolete resources
                 obsoleteResources.concat( obsoleteBinaryDefaults ).forEach( key => {
-                    tasks.push( surveyStore.resource.remove( survey.enketoId, key ) );
+                    tasks.push( surveyStore.resource.remove( survey.enketoId, key ).then( () => null ) );
                 } );
 
                 // Execution
                 return Promise.all( tasks )
-                    .then( () => // resolving with original survey (not the array returned by server.surveys.update)
-                        survey )
-                    .then( _transformExternalDataToXmlDoc );
+                    .then( resources => {
+                        if ( survey.resources ) {
+                            result.resources = resources.filter( resource => resource != null );
+                        }
+
+                        return _deserializeSurvey( result );
+                    } );
             } );
     },
     /**
      * Removes survey form and all its resources
      *
      * @param  { string } id - Enketo form ID
-     * @return { Promise } [description]
+     * @return { Promise<void> } [description]
      */
     remove( id ) {
         let resources;
@@ -351,7 +363,8 @@ const surveyStore = {
                 tasks.push( server.surveys.remove( id ) );
 
                 return Promise.all( tasks );
-            } );
+            } )
+            .then( () => {} );
     },
     /**
      * removes all surveys and survey resources
@@ -368,7 +381,7 @@ const surveyStore = {
          *
          * @param  { string } id -  Enketo survey ID
          * @param  { string } url - URL of resource
-         * @return { Promise } A promise resolving with the file.
+         * @return { Promise<Blob> } A promise resolving with the file.
          */
         get( id, url ) {
             return _getFile( 'resources', id, url );
@@ -667,32 +680,56 @@ function _firstItemOnly( results ) {
     }
 }
 
-function _transformExternalDataToXmlStr( survey ) {
-    if ( survey && survey.externalData ) {
-        survey.externalData = survey.externalData.map( instance => {
-            if ( instance.xml instanceof XMLDocument ) {
-                instance.xml = new XMLSerializer().serializeToString( instance.xml.documentElement, 'text/xml' );
-            }
+/**
+ * Serializes a survey for storage in IndexedDB:
+ *
+ * - externalData XMLDocuments are serialized to strings
+ * - surveys with encryption enabled are converted to a state which can be deserialized on retrieval
+ *
+ * @see {encryptor.serializeEncryptedSurvey}
+ * @param {Survey} survey
+ * @return {Promise<Survey>}
+ */
+function _serializeSurvey( survey ) {
+    if ( survey ) {
+        if ( survey.externalData ) {
+            survey.externalData = survey.externalData.map( instance => {
+                if ( instance.xml instanceof XMLDocument ) {
+                    instance.xml = new XMLSerializer().serializeToString( instance.xml.documentElement, 'text/xml' );
+                }
 
-            return instance;
-        } );
+                return instance;
+            } );
+        }
+
+        return encryptor.serializeEncryptedSurvey( survey );
     }
-
-    return survey;
 }
 
-function _transformExternalDataToXmlDoc( survey ) {
-    if ( survey && survey.externalData ) {
-        survey.externalData = survey.externalData.map( instance => {
-            if ( typeof instance.xml === 'string' ) {
-                instance.xml = parser.parseFromString( instance.xml, 'text/xml' );
-            }
+/**
+ * Deserializes a survey retrieved from IndexedDB:
+ *
+ * - externalData strings are deserialized to XMLDocuments
+ * - surveys which should have encryption enabled are restored to that state
+ *
+ * @see {encryptor.deserializeEncryptedSurvey}
+ * @param {Survey} survey
+ * @return {Promise<Survey>}
+ */
+function _deserializeSurvey( survey ) {
+    if ( survey ) {
+        if ( survey.externalData ) {
+            survey.externalData = survey.externalData.map( instance => {
+                if ( typeof instance.xml === 'string' ) {
+                    instance.xml = parser.parseFromString( instance.xml, 'text/xml' );
+                }
 
-            return instance;
-        } );
+                return instance;
+            } );
+        }
+
+        return encryptor.deserializeEncryptedSurvey( survey );
     }
-
-    return survey;
 }
 
 /**

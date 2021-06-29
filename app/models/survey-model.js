@@ -19,13 +19,78 @@ if ( process.env.NODE_ENV === 'test' ) {
 }
 
 /**
+ * @typedef {import('./account-model').AccountObj} AccountObj
+ */
+
+/**
+ * @typedef {import('./account-model').EnketoRecord} EnketoRecord
+ */
+
+/**
+ * @typedef {import('libxmljs').Document} XMLJSDocument
+ */
+
+/**
+ * @typedef {Function} EnketoTransformerPreprocess
+ * @param {XMLJSDocument} doc
+ * @return {XMLJSDocument}
+ */
+
+/**
+ * @typedef SurveyCredentials
+ * @property { string } user
+ * @property { string } pass
+ * @property { string } bearer
+ */
+
+/**
+ * @typedef SurveyExternalData Note: a survey's `externalData` may include data from
+ *   that survey's {@link https://getodk.github.io/xforms-spec/#virtual-endpoints last-saved virtual endpoint}
+ *   when referenced in the survey's model. If the survey does not yet have a last-saved
+ *   record, those references will be populated by default with the survey's model.
+ * @property { string } id
+ * @property { string } src
+ * @property { string | Document } xml
+ */
+/**
+ * @typedef SurveyInfo
+ * @property { string } downloadUrl
+ * @property { string } manifestUrl
+ */
+
+/**
  * @typedef SurveyObject
  * @property { string } openRosaServer
  * @property { string } openRosaId
  * @property { string } enketoId
  * @property { string } theme
- * @property { object } info
- * @property { string } info.hash
+ * @property { SurveyInfo } [info]
+ * @property { AccountObj } [account]
+ * @property { boolean | 'true' | 'false' } [active]
+ * @property { string } [cookie]
+ * @property { SurveyCredentials } [credentials]
+ * @property { string } [customParam]
+ * @property { SurveyExternalData[] } [externalData]
+ * @property { string } [form]
+ * @property { string } [formHash]
+ * @property { EnketoRecord } [instance]
+ * @property { Array<string | object> } [instanceAttachments]
+ * @property { string } [instanceId]
+ * @property { EnketoRecord } [lastSavedRecord]
+ * @property { Record<string, unknown> } [languageMap]
+ * @property { Record<string, unknown> } [manifest]
+ * @property { string } [model]
+ * @property { EnketoTransformerPreprocess } [preprocess]
+ * @property { string } [returnUrl]
+ * @property { string } [xslHash]
+ * @description
+ *   `SurveyObject` is Enketo's internal representation of an XForm, with some
+ *   additional properties representing resolved/deserialized external data.
+ *   This type definition captures the current state of "what is"—i.e. the full
+ *   known set of properties which may be added to a `SurveyObject` through
+ *   several data flow paths throught enketo-express. Some related resources,
+ *   notably those describing instances, are only populated in paths specific
+ *   to the interaction between a `SurveyObject` and those resources.
  */
 
 /**
@@ -35,7 +100,7 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @name get
  * @function
  * @param { string } id - Survey ID
- * @return {Promise<Error|SurveyObject>} Promise that resolves with a survey object
+ * @return {Promise<SurveyObject>} Promise that resolves with a survey object
  */
 function getSurvey( id ) {
     return new Promise( ( resolve, reject ) => {
