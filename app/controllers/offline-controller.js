@@ -1,5 +1,3 @@
-/* global process */
-
 /**
  * @module offline-resources-controller
  */
@@ -36,7 +34,7 @@ function getScriptContent() {
     // Determining hash every time, is done to make development less painful (refreshing service worker)
     // The partialScriptHash is not actually required but useful to see which offline-app-worker-partial.js is used during troubleshooting.
     // by going to http://localhost:8005/x/offline-app-worker.js and comparing the version with the version shown in the side slider of the webform.
-    const partialOfflineAppWorkerScript = fs.readFileSync( path.join( process.cwd(), 'public/js/src/module/offline-app-worker-partial.js' ), 'utf8' );
+    const partialOfflineAppWorkerScript = fs.readFileSync( path.resolve( config.root, 'public/js/src/module/offline-app-worker-partial.js' ), 'utf8' );
     const partialScriptHash = crypto.createHash( 'md5' ).update( partialOfflineAppWorkerScript ).digest( 'hex' ).substring( 0, 7 );
     const configurationHash = crypto.createHash( 'md5' ).update( JSON.stringify( config ) ).digest( 'hex' ).substring( 0, 7 );
     const version = [ config.version, configurationHash, partialScriptHash ].join( '-' );
