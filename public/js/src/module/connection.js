@@ -355,7 +355,7 @@ function getMaximumSubmissionSize( survey ) {
  * @return { Promise<Survey> } a Promise that resolves with a form parts object
  */
 function getFormParts( props ) {
-    const isEditing = props.instanceId != null;
+    const isLastSavedEnabled = settings.type === 'other';
 
     /** @type {Survey} */
     let survey;
@@ -383,7 +383,7 @@ function getFormParts( props ) {
                 survey = encryptor.setEncryptionEnabled( survey );
             }
 
-            if ( !isEditing ) {
+            if ( isLastSavedEnabled ) {
                 return formCache.getLastSavedRecord( props.enketoId );
             }
         } )

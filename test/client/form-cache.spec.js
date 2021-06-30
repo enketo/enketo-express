@@ -1,6 +1,7 @@
 import formCache from '../../public/js/src/module/form-cache';
 import connection from '../../public/js/src/module/connection';
 import store from '../../public/js/src/module/store';
+import settings from '../../public/js/src/module/settings';
 
 /**
  * @typedef { import('sinon').SinonSandbox } SinonSandbox
@@ -92,7 +93,12 @@ describe( 'Client Form Cache', () => {
         };
 
         getFormPartsSpy = sandbox.stub( connection, 'getFormParts' ).callsFake( survey => {
-            return formCache.getLastSavedRecord( survey.enketoId )
+            return Promise.resolve( survey.enketoId )
+                .then( enketoId => {
+                    if ( enketoId != null ) {
+                        return formCache.getLastSavedRecord( survey.enketoId );
+                    }
+                } )
                 .then( lastSavedRecord => {
                     if ( lastSavedRecord != null ) {
                         return { lastSavedRecord };
@@ -188,5 +194,32 @@ describe( 'Client Form Cache', () => {
                 .then( done, done );
         } );
 
+    } );
+
+    describe( 'previews', () => {
+        beforeEach( () => {
+            sandbox.stub( settings, 'type' ).get( () => 'preview' );
+        } );
+
+        it( 'bypasses the store when initializing a form in preview mode', done => {
+            const previewSurvey = {
+                enketoId: null,
+                xformUrl: 'https://xlsform.getodk.org/downloads/b0x0gdti/Range%20test.xml',
+                defaults: {}
+            };
+
+            let initResult;
+
+            formCache.init( previewSurvey )
+                .then( survey => {
+                    initResult = survey;
+
+                    return getFormPartsSpy.getCall( 0 ).returnValue;
+                } )
+                .then( formParts => {
+                    expect( initResult ).to.deep.equal( formParts );
+                } )
+                .then( done, done );
+        } );
     } );
 } );

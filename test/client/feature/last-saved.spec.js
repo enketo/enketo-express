@@ -640,7 +640,14 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
         const defaultInstanceData = '<data id="modelA"><item>initial</item><meta><instanceID/></meta></data>';
         const xmlSerializer = new XMLSerializer();
 
+        /** @type {string} */
+        let settingsType;
+
         beforeEach( () => {
+            settingsType = 'other';
+
+            sandbox.stub( settings, 'type' ).get( () => settingsType );
+
             sandbox.stub( settings, 'enketoId' ).get( () => enketoId );
 
             sandbox.stub( window, 'fetch' ).callsFake( () => {
@@ -723,6 +730,8 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
         } );
 
         it( 'populates a last-saved secondary instance with the model\'s defaults when editing an instance', done => {
+            settingsType = 'edit';
+
             const lastSavedRecord = {
                 enketoId,
                 instanceId,
@@ -733,6 +742,26 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
 
             formCache.setLastSavedRecord( enketoId, lastSavedRecord )
                 .then( () => connection.getFormParts( { enketoId, instanceId } ) )
+                .then( result => {
+                    expect( Array.isArray( result.externalData ) ).to.equal( true );
+                    expect( result.externalData.length ).to.equal( 1 );
+
+                    const data = result.externalData[0];
+
+                    expect( data.id ).to.equal( 'last-saved' );
+                    expect( data.src ).to.equal( 'jr://instance/last-saved' );
+
+                    const xml = xmlSerializer.serializeToString( data.xml.documentElement, 'text/xml' );
+
+                    expect( xml ).to.equal( defaultInstanceData );
+                } )
+                .then( done, done );
+        } );
+
+        it( 'populates a last-saved secondary instance with the model\'s defaults when previewing a form', done => {
+            settingsType = 'preview';
+
+            connection.getFormParts( { enketoId, instanceId } )
                 .then( result => {
                     expect( Array.isArray( result.externalData ) ).to.equal( true );
                     expect( result.externalData.length ).to.equal( 1 );
