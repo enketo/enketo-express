@@ -24,6 +24,7 @@
     "scripts": {
         "start": "node .",
         "test": "grunt test",
+        "test-watch": "grunt test-watch",
         "postinstall": "grunt",
         "beautify": "grunt eslint:fix",
         "build-docs": "rimraf docs && ./node_modules/.bin/jsdoc -c jsdoc.config.js"
