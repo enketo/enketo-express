@@ -1,0 +1,31 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "test-watch",
+            "type": "shell",
+            "command": "npm run test-watch",
+            "group": "test",
+            "isBackground": true,
+
+            // See https://stackoverflow.com/a/54017304
+            "problemMatcher": [
+                {
+                    "pattern": [
+                        {
+                            "regexp": "karma:watch",
+                            "file": 1,
+                            "location": 2,
+                            "message": 3
+                        }
+                    ],
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "karma:watch",
+                        "endsPattern": "karma:watch",
+                    }
+                }
+            ]
+        }
+    ]
+}

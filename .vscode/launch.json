@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "name": "Test (watch + debug)",
+            "type": "chrome",
+            "request": "attach",
+            "address": "localhost",
+            "port": 9333,
+            "pathMapping": {
+                "/": "${workspaceRoot}/"
+            },
+            "preLaunchTask": "test-watch",
+            "sourceMaps": true
+        }
+    ]
+}
