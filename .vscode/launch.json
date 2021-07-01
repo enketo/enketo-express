@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Test (watch + debug)",
+            "name": "Test client (watch + debug)",
             "type": "chrome",
             "request": "attach",
             "address": "localhost",
@@ -9,8 +9,23 @@
             "pathMapping": {
                 "/": "${workspaceRoot}/"
             },
-            "preLaunchTask": "test-watch",
+            "preLaunchTask": "test-watch-client",
             "sourceMaps": true
+        },
+        {
+            "name": "Test server (watch + debug)",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "test-watch-server"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "sourceMaps": true,
+            "console": "integratedTerminal"
         }
     ]
 }

@@ -24,7 +24,11 @@
     "scripts": {
         "start": "node .",
         "test": "grunt test",
-        "test-watch": "grunt test-watch",
+        "test-browser": "grunt test-browser",
+        "test-headless": "grunt karma:headless",
+        "test-server": "grunt mochaTest:all",
+        "test-watch-client": "grunt test-watch-client",
+        "test-watch-server": "grunt test-watch-server",
         "postinstall": "grunt",
         "beautify": "grunt eslint:fix",
         "build-docs": "rimraf docs && ./node_modules/.bin/jsdoc -c jsdoc.config.js"

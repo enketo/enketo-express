@@ -2,9 +2,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "test-watch",
+            "label": "test-watch-client",
             "type": "shell",
-            "command": "npm run test-watch",
+            "command": "npm run test-watch-client",
             "group": "test",
             "isBackground": true,
 
