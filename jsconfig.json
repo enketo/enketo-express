@@ -1,0 +1,12 @@
+{
+    "exclude": [
+        "node_modules"
+    ],
+    "include": [
+        "app",
+        "public/js/src",
+        "test/client",
+        "test/server",
+        "typings"
+    ]
+}
