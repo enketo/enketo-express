@@ -1,6 +1,7 @@
 import formCache from '../../public/js/src/module/form-cache';
 import connection from '../../public/js/src/module/connection';
 import store from '../../public/js/src/module/store';
+import settings from '../../public/js/src/module/settings';
 
 /**
  * @typedef { import('sinon').SinonSandbox } SinonSandbox
@@ -92,7 +93,12 @@ describe( 'Client Form Cache', () => {
         };
 
         getFormPartsSpy = sandbox.stub( connection, 'getFormParts' ).callsFake( survey => {
-            return formCache.getLastSavedRecord( survey.enketoId )
+            return Promise.resolve( survey.enketoId )
+                .then( enketoId => {
+                    if ( enketoId != null ) {
+                        return formCache.getLastSavedRecord( survey.enketoId );
+                    }
+                } )
                 .then( lastSavedRecord => {
                     if ( lastSavedRecord != null ) {
                         return { lastSavedRecord };
@@ -188,5 +194,114 @@ describe( 'Client Form Cache', () => {
                 .then( done, done );
         } );
 
+    } );
+
+    describe( 'access types', () => {
+        /** @type {import('sinon').SinonStub} */
+        let getSpy;
+
+        /** @type {import('sinon').SinonStub} */
+        let setSpy;
+
+        beforeEach( () => {
+            getSpy = sandbox.stub( store.survey, 'get' );
+            setSpy = sandbox.stub( store.survey, 'set' );
+        } );
+
+        it( 'bypasses the store when initializing a form in preview mode', done => {
+            sandbox.stub( settings, 'type' ).get( () => 'preview' );
+
+            const previewSurvey = {
+                enketoId: null,
+                xformUrl: 'https://xlsform.getodk.org/downloads/b0x0gdti/Range%20test.xml',
+                defaults: {}
+            };
+
+            let initResult;
+
+            formCache.init( previewSurvey )
+                .then( survey => {
+                    initResult = survey;
+
+                    return getFormPartsSpy.getCall( 0 ).returnValue;
+                } )
+                .then( formParts => {
+                    expect( getSpy.called ).to.equal( false );
+                    expect( setSpy.called ).to.equal( false );
+                    expect( initResult ).to.deep.equal( formParts );
+                } )
+                .then( done, done );
+        } );
+
+        it( 'bypasses the store when initializing a form in single mode', done => {
+            sandbox.stub( settings, 'type' ).get( () => 'single' );
+
+            const singleSurvey = {
+                enketoId: 'surveyA',
+            };
+
+            let initResult;
+
+            formCache.init( singleSurvey )
+                .then( survey => {
+                    initResult = survey;
+
+                    return getFormPartsSpy.getCall( 0 ).returnValue;
+                } )
+                .then( formParts => {
+                    expect( getSpy.called ).to.equal( false );
+                    expect( setSpy.called ).to.equal( false );
+                    expect( initResult ).to.deep.equal( formParts );
+                } )
+                .then( done, done );
+        } );
+
+        it( 'bypasses the store when initializing a form in edit mode', done => {
+            sandbox.stub( settings, 'type' ).get( () => 'edit' );
+
+            const editSurvey = {
+                enketoId: 'surveyA',
+                instanceId: 'instance',
+            };
+
+            let initResult;
+
+            formCache.init( editSurvey )
+                .then( survey => {
+                    initResult = survey;
+
+                    return getFormPartsSpy.getCall( 0 ).returnValue;
+                } )
+                .then( formParts => {
+                    expect( getSpy.called ).to.equal( false );
+                    expect( setSpy.called ).to.equal( false );
+                    expect( initResult ).to.deep.equal( formParts );
+                } )
+                .then( done, done );
+        } );
+
+        it( 'bypasses the store when initializing a form in view mode', done => {
+            sandbox.stub( settings, 'type' ).get( () => 'view' );
+
+            const viewSurvey = {
+                enketoId: 'surveyA',
+                instanceId: 'instance',
+            };
+
+            let initResult;
+
+            formCache.init( viewSurvey )
+                .then( survey => {
+                    initResult = survey;
+
+                    return getFormPartsSpy.getCall( 0 ).returnValue;
+                } )
+                .then( formParts => {
+                    expect( getSpy.called ).to.equal( false );
+                    expect( setSpy.called ).to.equal( false );
+                    expect( initResult ).to.deep.equal( formParts );
+                } )
+                .then( done, done );
+        } );
     } );
 } );

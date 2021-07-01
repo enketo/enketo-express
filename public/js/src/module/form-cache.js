@@ -30,6 +30,14 @@ let hash;
  * @return {Promise<Survey>}
  */
 function init( survey ) {
+    /**
+     * Note: it would probably be better if this were in enketo-webform.js, as it
+     * doesn't relate to the form cache per se. It's included here for testability.
+     */
+    if ( settings.type !== 'other' ) {
+        return connection.getFormParts( survey );
+    }
+
     return store.init()
         .then( () => get( survey ) )
         .then( result => {
@@ -68,6 +76,10 @@ function set( survey ) {
  * @return { Promise<EnketoRecord | undefined> }
  */
 function getLastSavedRecord( enketoId ) {
+    if ( settings.type !== 'other' ) {
+        return Promise.resolve();
+    }
+
     return store.survey.get( enketoId )
         .then( survey => {
             if ( survey != null ) {
