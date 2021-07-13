@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 #### Changed
 - Updated Russian translation.
+- Increased maximum number of columns in Grid Theme from 10 to 13.
 
 #### Fixed
 - Range default or loaded value (number) not shown.
@@ -18,6 +19,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Triple-nested repeats and higher are not created properly.
 - The "d" query parameter to supply dynamic defaults is decoded twice.
 - Static resources caching at web-server level could break offline functionality.
+- When loading a long text default value into a multiline text widget, it doesn't expand automatically.
+- When using "goto" on a comment question with a form divided into pages, it doesn't open the comment dialog.
+- XPath inconsistencies with date-as-string result formats.
+- XPath Result of if() is no longer cast to a string (recently updated ODK XForms spec).
 
 [2.7.3] - 2021-04-20
 ---------------------
