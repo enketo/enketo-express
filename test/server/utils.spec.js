@@ -2,7 +2,6 @@ const utils = require( '../../app/lib/utils' );
 const chai = require( 'chai' );
 const expect = chai.expect;
 const chaiAsPromised = require( 'chai-as-promised' );
-const config = require( '../../app/models/config-model' ).server;
 
 chai.use( chaiAsPromised );
 
@@ -219,21 +218,5 @@ describe( 'Utilities', () => {
                 expect( utils.pickRandomItemFromArray(test) ).to.equal( null );
             } );
         } );
-    } );
-
-    describe( 'toLocalMediaUrl function', () => {
-        const basePathDefault = config[ 'base path' ];
-
-        beforeEach(() => {
-            config[ 'base path' ] = 'http://enke.to';
-        });
-
-        it( 'should return proxied url', () => {
-            expect( utils.toLocalMediaUrl('http://foo.bar/fum/baz') ).to.equal( 'http://enke.to/media/get/http/foo.bar/fum/baz' );
-        } );
-
-        afterEach( () => {
-            config[ 'base path' ] = basePathDefault;
-        });
     } );
 } );

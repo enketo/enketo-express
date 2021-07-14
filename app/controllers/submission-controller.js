@@ -12,6 +12,7 @@ const request = require( 'request' );
 const express = require( 'express' );
 const router = express.Router();
 const routerUtils = require( '../lib/router-utils' );
+const { toLocalMediaUrl } = require( '../lib/url' );
 // var debug = require( 'debug' )( 'submission-controller' );
 
 module.exports = app => {
@@ -155,7 +156,7 @@ function getInstance( req, res, next ) {
                     // check if found instance actually belongs to the form
                     if ( utils.getOpenRosaKey( survey ) === survey.openRosaKey ) {
                         // Change URLs of instanceAttachments to local URLs
-                        Object.keys( survey.instanceAttachments ).forEach( key => survey.instanceAttachments[ key ] = utils.toLocalMediaUrl( survey.instanceAttachments[ key ] ) );
+                        Object.keys( survey.instanceAttachments ).forEach( key => survey.instanceAttachments[ key ] = toLocalMediaUrl( survey.instanceAttachments[ key ] ) );
 
                         res.json( {
                             instance: survey.instance,
