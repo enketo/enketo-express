@@ -51,6 +51,7 @@ if ( settings.offline ) {
         .then ( connection.getMaximumSubmissionSize )
         .then( _updateMaxSizeSetting )
         .then( _init )
+        .then( formCache.updateMedia )
         .catch( _showErrorOrAuthenticate );
 }
 
