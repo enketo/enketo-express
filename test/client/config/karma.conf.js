@@ -1,12 +1,7 @@
 // Karma configuration
 // Generated on Wed Nov 26 2014 15:52:30 GMT-0700 (MST)
-const resolve = require( 'rollup-plugin-node-resolve' );
-const commonjs = require( 'rollup-plugin-commonjs' );
-const json = require( 'rollup-plugin-json' );
-const builtins = require( 'rollup-plugin-node-builtins' );
-const globals = require( 'rollup-plugin-node-globals' );
-const rollupIstanbul = require( 'rollup-plugin-istanbul' );
-const istanbul = require( 'istanbul' );
+
+
 
 module.exports = config => {
     config.set( {
@@ -36,30 +31,18 @@ module.exports = config => {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'test/client/**/*.spec.js': [ 'rollup' ],
+            'test/client/**/*.spec.js': [ 'esbuild' ],
         },
-        rollupPreprocessor: {
-            output: {
-                format: 'iife'
+
+        esbuild: {
+            // TODO [2021-08-01]: this fixes an issue with the `Object.fromEntries` polyfill, remove when CI is able to use a newer version
+            define: {
+                global: 'window',
             },
-            plugins: [
-                resolve( {
-                    browser: true, // Default: false
-                } ),
-                commonjs( {
-                    include: 'node_modules/**', // Default: undefined
-                    sourceMap: false, // Default: true
-                } ),
-                json(), // used to import package.json in tests
-                builtins(),
-                globals(),
-                rollupIstanbul( {
-                    include: [
-                        'public/js/src/**/*.js'
-                    ],
-                    exclude: []
-                } )
-            ]
+            // TODO [2021-08-01]: target more up to date version when CI is able to use a newer verison of Chrome
+            target: [
+                'chrome51',
+            ],
         },
 
         browserify: {

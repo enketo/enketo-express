@@ -78,7 +78,7 @@ describe( 'Client Storage', () => {
 
     describe( 'storing settings and properties', () => {
 
-        beforeEach( done => {
+        afterEach( done => {
             store.property.removeAll()
                 .then( done, done );
         } );
@@ -150,7 +150,7 @@ describe( 'Client Storage', () => {
 
     describe( 'storing (form) resources', () => {
 
-        beforeEach( done => {
+        afterEach( done => {
             store.survey.removeAll()
                 .then( done, done );
         } );
@@ -207,7 +207,7 @@ describe( 'Client Storage', () => {
 
     describe( 'storing surveys', () => {
 
-        beforeEach( done => {
+        afterEach( done => {
             store.survey.removeAll()
                 .then( done, done );
         } );
@@ -269,7 +269,7 @@ describe( 'Client Storage', () => {
     } );
 
     describe( 'getting surveys', () => {
-        beforeEach( done => {
+        afterEach( done => {
             store.survey.removeAll()
                 .then( done, done );
         } );
@@ -285,7 +285,7 @@ describe( 'Client Storage', () => {
 
     describe( 'updating surveys', () => {
 
-        beforeEach( done => {
+        afterEach( done => {
             store.survey.removeAll()
                 .then( done, done );
         } );
@@ -370,7 +370,7 @@ describe( 'Client Storage', () => {
 
     describe( 'removing surveys', () => {
 
-        beforeEach( done => {
+        afterEach( done => {
             store.survey.removeAll()
                 .then( done, done );
         } );
@@ -408,7 +408,7 @@ describe( 'Client Storage', () => {
 
     describe( 'storing (record) files', () => {
 
-        beforeEach( done => {
+        afterEach( done => {
             store.record.removeAll()
                 .then( done, done );
         } );
@@ -466,7 +466,7 @@ describe( 'Client Storage', () => {
 
     describe( 'storing records', () => {
 
-        beforeEach( done => {
+        afterEach( done => {
             store.record.removeAll()
                 .then( done, done );
         } );
@@ -603,7 +603,7 @@ describe( 'Client Storage', () => {
 
     describe( 'updating records', () => {
 
-        beforeEach( done => {
+        afterEach( done => {
             store.record.removeAll()
                 .then( done, done );
         } );
@@ -763,7 +763,7 @@ describe( 'Client Storage', () => {
 
     describe( 'removing records', () => {
 
-        beforeEach( done => {
+        afterEach( done => {
             store.record.removeAll()
                 .then( done, done );
         } );
@@ -806,7 +806,7 @@ describe( 'Client Storage', () => {
 
     describe( 'obtaining a list of records', () => {
 
-        beforeEach( done => {
+        afterEach( done => {
             store.record.removeAll()
                 .then( done, done );
         } );

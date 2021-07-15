@@ -6,6 +6,32 @@ See [Getting Started](./tutorial-00-getting-started.html).
 
 The easiest way to start the app in development and debugging mode with livereload is with `grunt develop`.
 
+### Testing
+
+* Testing is done with Mocha and Karma.
+    * all: `npm run test`
+    * headless: `npm run test-headless`
+    * browsers: `npm run test-browsers`
+* Tests can be run in watch mode for [TDD](https://en.wikipedia.org/wiki/Test-driven_development) workflows with.
+    * client: `npm run test-watch-client`
+    * server: `npm run test-watch-server`
+
+    Support for debugging in [VSCode](https://code.visualstudio.com/) is provided. For instructions see [./#debugging-test-watch-mode-in-vscode](Debugging test watch mode in VSCode) below.
+
+#### Debugging test watch mode in VSCode
+
+Basic usage:
+
+1. Go to VSCode's "Run and Debug" panel
+2. Select "Test client (watch + debug)" or "Test server (watch + debug)"
+3. Click the play button
+
+Optionally, you can add a keyboard shortcut to select launch tasks:
+
+1. Open the keyboard shortcuts settings (cmd+k cmd+s on Mac, ctrl+k ctrl+s on other OSes)
+2. Search for `workbench.action.debug.selectandstart`
+3. Click the + button to add your preferred keybinding keybinding
+
 ### Launch a test form
 
 Enketo Express needs an OpenRosa-compliant server to obtain forms and submit data too. For development you can conveniently use any public or local server for this with the {@tutorial 32-api}.

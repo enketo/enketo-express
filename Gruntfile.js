@@ -81,7 +81,14 @@ module.exports = grunt => {
                     spawn: false,
                     livereload: true
                 }
-            }
+            },
+            mochaTest: {
+                files: [ 'app/**/*.js', 'test/server/**/*.js' ],
+                tasks: [ 'mochaTest:all' ],
+                options: {
+                    atBegin: true,
+                },
+            },
         },
         shell: {
             buildReadmeBadge: {
@@ -132,14 +139,33 @@ module.exports = grunt => {
         karma: {
             options: {
                 singleRun: true,
-                configFile: 'test/client/config/karma.conf.js'
+                configFile: 'test/client/config/karma.conf.js',
+                customLaunchers: {
+                    ChromeHeadlessDebug: {
+                        base: 'ChromeHeadless',
+                        flags: [ '--no-sandbox', '--remote-debugging-port=9333' ],
+                    },
+                },
             },
             headless: {
                 browsers: [ 'ChromeHeadless' ]
             },
             browsers: {
                 browsers: [ 'Chrome', 'ChromeCanary', 'Firefox', 'Opera' /*,'Safari'*/ ],
-            }
+            },
+            watch: {
+                browsers: [ 'ChromeHeadlessDebug' ],
+                options: {
+                    autoWatch: true,
+                    client: {
+                        mocha: {
+                            timeout: Number.MAX_SAFE_INTEGER,
+                        },
+                    },
+                    reporters: [ 'dots' ],
+                    singleRun: false,
+                }
+            },
         },
         nyc: {
             cover: {
@@ -241,6 +267,8 @@ module.exports = grunt => {
     grunt.registerTask( 'css', [ 'system-sass-variables:create', 'sass' ] );
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'nyc:cover', 'karma:headless', 'shell:buildReadmeBadge', 'eslint:check' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'karma:browsers' ] );
+    grunt.registerTask( 'test-watch-client', [ 'env:test', 'karma:watch' ], );
+    grunt.registerTask( 'test-watch-server', [ 'env:test', 'watch:mochaTest' ], );
     grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js', 'css', 'concurrent:develop' ] );
     grunt.registerTask( 'test-and-build', [ 'env:test', 'mochaTest:all', 'karma:headless', 'env:production', 'default' ] );
 };
