@@ -194,6 +194,15 @@ describe( 'Client Form Cache', () => {
                 .then( done, done );
         } );
 
+        it( 'does not empty src attributes or populate data-offline-src attributes when online', done => {
+            survey.enketoId = '40';
+            formCache.init( survey, { isOnline: true } )
+                .then( result => {
+                    expect( result.form ).to.contain( `src="${url1}"` ).and.not.to.contain( `data-offline-src="${url1}"` );
+                } )
+                .then( done, done );
+        } );
+
     } );
 
     describe( 'access types', () => {

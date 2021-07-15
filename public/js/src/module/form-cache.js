@@ -17,6 +17,11 @@ import encryptor from './encryptor';
  * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
  */
 
+/**
+ * @typedef NetworkModeOptions
+ * @property {boolean} [isOnline]
+ */
+
 const CACHE_UPDATE_INITIAL_DELAY = 3 * 1000;
 const CACHE_UPDATE_INTERVAL = 20 * 60 * 1000;
 const LAST_SAVED_VIRTUAL_ENDPOINT = 'jr://instance/last-saved';
@@ -27,9 +32,10 @@ let hash;
 
 /**
  * @param {Survey} survey
+ * @param {NetworkModeOptions} [options]
  * @return {Promise<Survey>}
  */
-function init( survey ) {
+function init( survey, options = {} ) {
     /**
      * Note: it would probably be better if this were in enketo-webform.js, as it
      * doesn't relate to the form cache per se. It's included here for testability.
@@ -44,7 +50,7 @@ function init( survey ) {
             if ( result ) {
                 return result;
             } else {
-                return set( survey );
+                return set( survey, options );
             }
         } )
         .then( _processDynamicData )
@@ -61,11 +67,18 @@ function get( survey ) {
 
 /**
  * @param {Survey} survey
+ * @param {NetworkModeOptions} [options]
  * @return {Promise<Survey>}
  */
-function set( survey ) {
+function set( survey, { isOnline } ) {
     return connection.getFormParts( survey )
-        .then( _swapMediaSrc )
+        .then( survey => {
+            if ( !isOnline ) {
+                return _swapMediaSrc( survey );
+            }
+
+            return survey;
+        } )
         .then( _addBinaryDefaultsAndUpdateModel )
         .then( store.survey.set );
 }

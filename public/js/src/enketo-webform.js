@@ -45,13 +45,12 @@ if ( settings.offline ) {
     console.log( 'App in online-only mode.' );
     store.init()
         .then( () => initTranslator( survey ) )
-        .then( formCache.init )
+        .then( survey => formCache.init( survey, { isOnline: true } ) )
         .then( _swapTheme )
         .then( _addBranding )
         .then ( connection.getMaximumSubmissionSize )
         .then( _updateMaxSizeSetting )
         .then( _init )
-        .then( formCache.updateMedia )
         .catch( _showErrorOrAuthenticate );
 }
 
