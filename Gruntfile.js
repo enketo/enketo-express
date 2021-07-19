@@ -12,7 +12,6 @@ module.exports = grunt => {
     ];
     const path = require( 'path' );
     const nodeSass = require( 'node-sass' );
-    const bundles = require( './buildFiles' ).bundles;
 
     require( 'time-grunt' )( grunt );
     require( 'load-grunt-tasks' )( grunt );
@@ -108,8 +107,8 @@ module.exports = grunt => {
                 // Does not work correctly yet for TError() calls and probably not for pug files either.
                 // npx i18next -c ./i18next-parser.config.js
             },
-            rollup: {
-                command: 'npx rollup --config'
+            build: {
+                command: 'node ./scripts/build.js'
             }
         },
         eslint: {
@@ -182,21 +181,6 @@ module.exports = grunt => {
                 args: [ 'grunt', 'mochaTest:all' ]
             }
         },
-        terser: {
-            options: {
-                // https://github.com/enketo/enketo-express/issues/72
-                keep_classnames: true,
-            },
-            all: {
-                files: bundles
-                    .map( bundle => [ bundle.replace( '.js', '.min.js' ), [ bundle ] ] )
-                    .reduce( ( o, [ key, value ] ) => {
-                        o[ key ] = value;
-
-                        return o;
-                    }, {} )
-            },
-        },
         env: {
             develop: {
                 NODE_ENV: 'develop'
@@ -260,10 +244,10 @@ module.exports = grunt => {
         grunt.log.writeln( `File ${WIDGETS_SASS} created` );
     } );
 
-    grunt.registerTask( 'default', [ 'clean', 'locales', 'widgets', 'css', 'js', 'terser' ] );
+    grunt.registerTask( 'default', [ 'clean', 'locales', 'widgets', 'css', 'js' ] );
     grunt.registerTask( 'clean', [ 'shell:clean-js','shell:clean-css' , 'shell:clean-locales' ] );
     grunt.registerTask( 'locales', [ 'i18next' ] );
-    grunt.registerTask( 'js', [ 'widgets', 'shell:rollup' ] );
+    grunt.registerTask( 'js', [ 'widgets', 'shell:build' ] );
     grunt.registerTask( 'css', [ 'system-sass-variables:create', 'sass' ] );
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'nyc:cover', 'karma:headless', 'shell:buildReadmeBadge', 'eslint:check' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'karma:browsers' ] );
