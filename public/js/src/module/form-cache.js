@@ -54,7 +54,7 @@ function init( survey, options = {} ) {
             }
         } )
         .then( _processDynamicData )
-        .then( _setUpdateIntervals );
+        .then( survey => _setUpdateIntervals( survey, options ) );
 }
 
 /**
@@ -67,7 +67,7 @@ function get( survey ) {
 
 /**
  * @param {Survey} survey
- * @param {NetworkModeOptions} [options]
+ * @param {NetworkModeOptions} options
  * @return {Promise<Survey>}
  */
 function set( survey, { isOnline } ) {
@@ -208,9 +208,10 @@ function _processDynamicData( survey ) {
 
 /**
  * @param {Survey} survey
+ * @param {NetworkModeOptions} options
  * @return {Promise<Survey>}
  */
-function _setUpdateIntervals( survey ) {
+function _setUpdateIntervals( survey, options ) {
     hash = survey.hash;
 
     // Check for form update upon loading.
@@ -218,11 +219,11 @@ function _setUpdateIntervals( survey ) {
     // the first update make take 20 minutes to propagate to the browser of the very first user(s)
     // that open the form right after the XForm update.
     setTimeout( () => {
-        _updateCache( survey );
+        _updateCache( survey, options );
     }, CACHE_UPDATE_INITIAL_DELAY );
     // check for form update every 20 minutes
     setInterval( () => {
-        _updateCache( survey );
+        _updateCache( survey, options );
     }, CACHE_UPDATE_INTERVAL );
 
     return Promise.resolve( survey );
@@ -457,11 +458,16 @@ function _getElementsGroupedBySrc( containers ) {
     return groupedElements;
 }
 
-function _updateCache( survey ) {
+/**
+ * @param {Survey} survey
+ * @param {NetworkModeOptions} options
+ * @return {Promise<void>}
+ */
+function _updateCache( survey, { isOnline } ) {
 
     console.log( 'Checking for survey update...' );
 
-    connection.getFormPartsHash( survey )
+    return connection.getFormPartsHash( survey )
         .then( version => {
             if ( hash === version ) {
                 console.log( 'Cached survey is up to date!', hash );
@@ -479,7 +485,13 @@ function _updateCache( survey ) {
 
                         return formParts;
                     } )
-                    .then( _swapMediaSrc )
+                    .then( formParts => {
+                        if ( !isOnline ) {
+                            return _swapMediaSrc( formParts );
+                        }
+
+                        return formParts;
+                    } )
                     .then( _addBinaryDefaultsAndUpdateModel )
                     .then( store.survey.update )
                     .then( result => {
