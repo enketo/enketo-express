@@ -17,10 +17,7 @@ module.exports = config => {
 
         // list of files / patterns to load in the browser
         files: [
-            'test/client/**/*.spec.js', {
-                pattern: 'public/js/src/**/*.js',
-                included: false
-            },
+            'test/client/**/*.spec.js'
         ],
 
 
@@ -31,7 +28,8 @@ module.exports = config => {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'test/client/**/*.spec.js': [ 'esbuild' ],
+            'public/js/**/!(enketo-offline-fallback).js': [ 'esbuild' ],
+            'test/client/**/*.js': [ 'esbuild' ],
         },
 
         esbuild: {
