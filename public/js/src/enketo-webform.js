@@ -43,9 +43,8 @@ if ( settings.offline ) {
         .catch( _showErrorOrAuthenticate );
 } else {
     console.log( 'App in online-only mode.' );
-    store.init()
-        .then( () => initTranslator( survey ) )
-        .then( formCache.init )
+    initTranslator( survey )
+        .then( connection.getFormParts )
         .then( _swapTheme )
         .then( _addBranding )
         .then ( connection.getMaximumSubmissionSize )
