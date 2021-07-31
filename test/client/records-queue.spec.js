@@ -301,7 +301,7 @@ describe( 'Records queue', () => {
             /** @type { EnketoRecord[] } */
             let uploaded = [];
 
-            sandbox.stub( connection, 'uploadRecord' ).callsFake( record => {
+            sandbox.stub( connection, 'uploadQueuedRecord' ).callsFake( record => {
                 uploaded.push( record );
             } );
 

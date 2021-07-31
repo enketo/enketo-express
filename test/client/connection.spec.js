@@ -28,6 +28,10 @@ if ( Object.fromEntries == null ) {
  */
 
 /**
+ * @typedef {import('../../app/models/survey-model').SurveyObject} Survey
+ */
+
+/**
  * @typedef SinonSandbox { import('sinon').SinonSandbox }
  */
 
@@ -49,6 +53,9 @@ describe( 'Connection', () => {
         /** @type { EnketoRecord } */
         let record;
 
+        /** @type { Survey } */
+        let survey;
+
         /** @type { StubbedRequest[] } */
         let requests;
 
@@ -62,6 +69,8 @@ describe( 'Connection', () => {
                 xml: '<model><something>a</something></model>',
                 files: [],
             };
+
+            survey = { enketoId };
 
             sandbox = sinon.createSandbox();
             sandbox.stub( settings, 'enketoId' ).get( () => enketoId );
@@ -92,7 +101,7 @@ describe( 'Connection', () => {
         } );
 
         it( 'uploads a record', done => {
-            connection.uploadRecord( record )
+            connection.uploadRecord( survey, record )
                 .then( result => {
                     expect( result.status ).to.equal( 201 );
                     expect( requests.length ).to.equal( 1 );

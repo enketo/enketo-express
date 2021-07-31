@@ -7,7 +7,10 @@ import events from './event';
 import settings from './settings';
 import connection from './connection';
 import assign from 'lodash/assign';
-import encryptor from './encryptor';
+import {
+    isLastSaveEnabled,
+    removeLastSavedRecord,
+} from './last-saved';
 
 /**
  * @typedef {import('../../../../app/models/record-model').EnketoRecord} EnketoRecord
@@ -19,9 +22,6 @@ import encryptor from './encryptor';
 
 const CACHE_UPDATE_INITIAL_DELAY = 3 * 1000;
 const CACHE_UPDATE_INTERVAL = 20 * 60 * 1000;
-const LAST_SAVED_VIRTUAL_ENDPOINT = 'jr://instance/last-saved';
-
-const parser = new DOMParser();
 
 let hash;
 
@@ -30,14 +30,6 @@ let hash;
  * @return {Promise<Survey>}
  */
 function init( survey ) {
-    /**
-     * Note: it would probably be better if this were in enketo-webform.js, as it
-     * doesn't relate to the form cache per se. It's included here for testability.
-     */
-    if ( settings.type !== 'other' ) {
-        return connection.getFormParts( survey );
-    }
-
     return store.init()
         .then( () => get( survey ) )
         .then( result => {
@@ -52,12 +44,32 @@ function init( survey ) {
 }
 
 /**
+ * @typedef GetSurveyOptions
+ * @property {string} enketoId
+*/
+
+/**
  * @param {Survey} survey
  * @return Survey
  */
-function get( survey ) {
-    return store.survey.get( survey.enketoId );
+function get( { enketoId } ) {
+    return store.survey.get( enketoId );
 }
+
+/**
+ * @param {Survey} survey
+ * @return {Promise<Survey>}
+ */
+function prepareOfflineSurvey( survey ) {
+    return Promise.resolve( _swapMediaSrc( survey ) )
+        .then( _addBinaryDefaultsAndUpdateModel );
+}
+
+/**
+ * @param {Survey} survey
+ * @return {Promise<Survey>}
+ */
+const updateSurveyCache = ( survey ) => store.survey.update( survey );
 
 /**
  * @param {Survey} survey
@@ -65,67 +77,8 @@ function get( survey ) {
  */
 function set( survey ) {
     return connection.getFormParts( survey )
-        .then( _swapMediaSrc )
-        .then( _addBinaryDefaultsAndUpdateModel )
+        .then( prepareOfflineSurvey )
         .then( store.survey.set );
-}
-
-/**
- *
- * @param { string } enketoId
- * @return { Promise<EnketoRecord | undefined> }
- */
-function getLastSavedRecord( enketoId ) {
-    if ( settings.type !== 'other' ) {
-        return Promise.resolve();
-    }
-
-    return store.survey.get( enketoId )
-        .then( survey => {
-            if ( survey != null ) {
-                return survey.lastSavedRecord;
-            }
-        } );
-}
-
-/**
- * @param {Survey} survey
- */
-function _isLastSaveEnabled( survey ) {
-    return (
-        survey.externalData != null &&
-        survey.externalData.find( data => data.src === LAST_SAVED_VIRTUAL_ENDPOINT ) != null &&
-        !encryptor.isEncryptionEnabled( survey )
-    );
-}
-
-/**
- *
- * @param { string } enketoId
- * @param { EnketoRecord } lastSavedRecord
- * @return { Promise<Survey> }
- */
-function setLastSavedRecord( enketoId, lastSavedRecord ) {
-    return store.survey.get( enketoId )
-        .then( survey => {
-            if ( !_isLastSaveEnabled( survey ) ) {
-                return Promise.resolve( survey );
-            }
-
-            if ( Array.isArray( survey.externalData ) ) {
-                const { xml } = lastSavedRecord;
-
-                survey.externalData.forEach( item => {
-                    if ( item.src === LAST_SAVED_VIRTUAL_ENDPOINT ) {
-                        item.xml = parser.parseFromString( xml, 'text/xml' );
-                    }
-                } );
-            }
-
-            const update = Object.assign( {}, survey, { lastSavedRecord } );
-
-            return store.survey.update( update );
-        } );
 }
 
 /**
@@ -235,7 +188,7 @@ function _setRepeatListener( survey ) {
  * from the browser storage.
  *
  * @param { Survey } survey - survey object
- * @return { Promise<Survey> }
+ * @return { Survey }
  */
 function _swapMediaSrc( survey ) {
     survey.form = survey.form.replace( /(src="[^"]*")/g, 'data-offline-$1 src=""' );
@@ -302,7 +255,6 @@ function updateMaxSubmissionSize( survey ) {
             .then( survey => {
                 if ( survey.maxSize ) {
                     // Ignore resources. These should not be updated.
-                    delete survey.resources;
                     delete survey.binaryDefaults;
 
                     return store.survey.update( survey );
@@ -460,18 +412,18 @@ function _updateCache( survey ) {
                         // media will be updated next time the form is loaded if resources is undefined
                         formParts.resources = undefined;
 
-                        if ( !_isLastSaveEnabled( formParts ) ) {
-                            delete formParts.lastSavedRecord;
-                        }
-
                         return formParts;
                     } )
-                    .then( _swapMediaSrc )
-                    .then( _addBinaryDefaultsAndUpdateModel )
-                    .then( store.survey.update )
+                    .then( updateSurveyCache )
                     .then( result => {
                         // set the hash so that subsequent update checks won't redownload the form
                         hash = result.hash;
+
+                        if ( !isLastSaveEnabled( result ) ) {
+                            return removeLastSavedRecord( result.enketoId );
+                        }
+                    } )
+                    .then( () => {
                         console.log( 'Survey is now updated in the store. Need to refresh.' );
                         document.dispatchEvent( events.FormUpdated() );
                     } );
@@ -516,9 +468,7 @@ export default {
     updateMedia,
     remove,
     flush,
-    getLastSavedRecord,
-    setLastSavedRecord,
     CACHE_UPDATE_INITIAL_DELAY,
     CACHE_UPDATE_INTERVAL,
-    LAST_SAVED_VIRTUAL_ENDPOINT,
+    updateSurveyCache,
 };

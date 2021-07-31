@@ -12,6 +12,7 @@ import exporter from './exporter';
 import { t } from './translator';
 import $ from 'jquery';
 import formCache from './form-cache';
+import { setLastSavedRecord } from './last-saved';
 
 let $exportButton;
 let $uploadButton;
@@ -92,8 +93,10 @@ function save( action, record ) {
         .then( record => {
             result = record;
 
-            return formCache.setLastSavedRecord( record.enketoId, record );
+            return result;
         } )
+        .then( ( { enketoId } ) => formCache.get( { enketoId } ) )
+        .then( survey => setLastSavedRecord( survey, record ) )
         .then( _updateRecordList )
         .then( () => result );
 }
@@ -237,7 +240,7 @@ function uploadQueue() {
                         } );
                         uploadProgress.update( record.instanceId, 'ongoing', '', successes.length + fails.length, records.length );
 
-                        return connection.uploadRecord( record );
+                        return connection.uploadQueuedRecord( record );
                     } )
                     .then( () => {
                         successes.push( record.name );

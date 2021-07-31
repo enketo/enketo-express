@@ -7,7 +7,7 @@
  */
 
 import encryptor from '../../../public/js/src/module/encryptor';
-import formCache from '../../../public/js/src/module/form-cache';
+import { getLastSavedRecord } from '../../../public/js/src/module/last-saved';
 import records from '../../../public/js/src/module/records-queue';
 import settings from '../../../public/js/src/module/settings';
 import store from '../../../public/js/src/module/store';
@@ -151,14 +151,14 @@ describe( 'Encryption-enabled surveys', () => {
                     return records.save( 'set', encryptedRecordA );
                 } )
                 .then( () => {
-                    return formCache.getLastSavedRecord( enketoId );
+                    return getLastSavedRecord( enketoId );
                 } )
                 .then( () => encryptor.encryptRecord( form, recordB ) )
                 .then( encryptedRecordB => {
                     return records.save( 'set', encryptedRecordB );
                 } )
                 .then( () => {
-                    return formCache.getLastSavedRecord( enketoId );
+                    return getLastSavedRecord( enketoId );
                 } )
                 .then( record => {
                     expect( record ).to.equal( undefined );
