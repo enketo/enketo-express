@@ -396,11 +396,15 @@ function _getElementsGroupedBySrc( containers ) {
     return groupedElements;
 }
 
+/**
+ * @param {Survey} survey
+ * @return {Promise<void>}
+ */
 function _updateCache( survey ) {
 
     console.log( 'Checking for survey update...' );
 
-    connection.getFormPartsHash( survey )
+    return connection.getFormPartsHash( survey )
         .then( version => {
             if ( hash === version ) {
                 console.log( 'Cached survey is up to date!', hash );
@@ -414,6 +418,7 @@ function _updateCache( survey ) {
 
                         return formParts;
                     } )
+                    .then( prepareOfflineSurvey )
                     .then( updateSurveyCache )
                     .then( result => {
                         // set the hash so that subsequent update checks won't redownload the form

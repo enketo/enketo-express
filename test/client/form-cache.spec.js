@@ -193,6 +193,70 @@ describe( 'Client Form Cache', () => {
                 } )
                 .then( done, done );
         } );
+    } );
 
+    describe( 'form cache updates', () => {
+        /**
+         * @param {Partial<GetFormPartsStubResult>} updates
+         */
+        const updateSurvey = ( updates ) => {
+            // Ensure `_updateCache` receives a new hash indicating it should perform an update
+            sandbox.stub( connection, 'getFormPartsHash' ).callsFake( () => {
+                return Promise.resolve( updates.hash );
+            } );
+
+            let updatePromise = new Promise( resolve => {
+                setTimeout( resolve, formCache.CACHE_UPDATE_INITIAL_DELAY + 1 );
+            } );
+
+            const originalStoreUpdate = store.survey.update.bind( store.survey );
+
+            sandbox.stub( store.survey, 'update' ).callsFake( update => {
+                return originalStoreUpdate( update ).then( result => {
+                    if ( update.model === updates.model ) {
+                        timers.tick( 1 );
+                    }
+
+                    return result;
+                } );
+            } );
+
+            timers.tick( formCache.CACHE_UPDATE_INITIAL_DELAY );
+
+            getFormPartsStubResult = Object.assign( {}, getFormPartsStubResult, updates );
+
+            // Wait for `_updateCache` to resolve
+            return updatePromise.then( () => formCache.get( survey ) );
+        };
+
+        it( 'updates the survey when the form cache is out of date', done => {
+            Object.assign( survey, {
+                enketoId: '60',
+                hash: '1234',
+                model: model1,
+            } );
+
+            const originalSurvey = Object.assign( {}, survey );
+            const update = Object.assign( {}, survey, {
+                hash: '123456',
+                model: `${model1}<!-- updated -->`,
+            } );
+
+            formCache.init( survey )
+                .then( () => updateSurvey( update ) )
+                .then( result => {
+                    Object.entries( originalSurvey ).forEach( ( [ key, value ] ) => {
+                        if ( key in update ) {
+                            expect( result[ key ] ).to.equal( update[ key ] );
+                        } else {
+                            expect( result[ key ] ).to.equal ( value );
+                        }
+                    } );
+
+                    expect( result.hash ).to.equal( update.hash );
+                    expect( result.model ).to.equal( update.model );
+                } )
+                .then( done, done );
+        } );
     } );
 } );
