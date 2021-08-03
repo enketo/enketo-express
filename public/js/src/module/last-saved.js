@@ -1,5 +1,4 @@
 import encryptor from './encryptor';
-import formCache from './form-cache';
 import settings from './settings';
 import store from './store';
 
@@ -72,7 +71,7 @@ const getLastSavedInstanceDocument = ( survey, lastSavedRecord ) => {
 
 /**
  * @param {Survey} survey
- * @param {EnketoRecord | null} lastSavedRecord
+ * @param {EnketoRecord} [lastSavedRecord]
  * @return {Survey}
  */
 export const populateLastSavedInstances = ( survey, lastSavedRecord ) => {
@@ -94,23 +93,6 @@ export const populateLastSavedInstances = ( survey, lastSavedRecord ) => {
 };
 
 /**
- * @param {Survey} survey
- * @param {EnketoRecord | | null} lastSavedRecord
- * @return {Promise<Survey>}
- */
-const updateLastSavedInstances = ( survey, lastSavedRecord ) => {
-    return Promise.resolve( populateLastSavedInstances( survey, lastSavedRecord ) )
-        .then( result => Promise.all( [ result, formCache.get( survey ) ] ) )
-        .then( ( [ result, cachedSurvey ] ) => {
-            if ( cachedSurvey == null ) {
-                return result;
-            }
-
-            return formCache.updateSurveyCache( result );
-        } );
-};
-
-/**
  * @typedef SetLastSavedRecordResult
  * @property {Survey} survey
  * @property {EnketoRecord} [lastSavedRecord]
@@ -128,25 +110,12 @@ export const setLastSavedRecord = ( survey, record ) => {
         } )
         : null;
 
-    // If the survey is cached, update the cached
-    return updateLastSavedInstances( survey, lastSavedRecord )
-        .then( survey => {
-            return Promise.all( [
-                survey,
-                lastSavedRecord == null
-                    ? removeLastSavedRecord( survey.enketoId )
-                    : store.lastSavedRecords.update( lastSavedRecord )
-            ] );
-        } )
-        .then( ( [ survey, records ] ) => {
-            if ( records == null ) {
-                return { survey };
-            }
-
-            const [ lastSavedRecord ] = records;
-
-            delete lastSavedRecord._enketoId;
-
-            return { survey, lastSavedRecord };
-        } );
+    return (
+        lastSavedRecord == null
+            ? removeLastSavedRecord( survey.enketoId )
+            : store.lastSavedRecords.update( lastSavedRecord )
+    ).then( ( [ lastSavedRecord ] = [] ) => ( {
+        survey: populateLastSavedInstances( survey, lastSavedRecord ),
+        lastSavedRecord,
+    } ) );
 };

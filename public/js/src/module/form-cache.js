@@ -8,7 +8,9 @@ import settings from './settings';
 import connection from './connection';
 import assign from 'lodash/assign';
 import {
+    getLastSavedRecord,
     isLastSaveEnabled,
+    populateLastSavedInstances,
     removeLastSavedRecord,
 } from './last-saved';
 
@@ -53,7 +55,16 @@ function init( survey ) {
  * @return Survey
  */
 function get( { enketoId } ) {
-    return store.survey.get( enketoId );
+    return store.survey.get( enketoId )
+        .then( survey => Promise.all( [
+            survey,
+            getLastSavedRecord( enketoId ),
+        ] ) )
+        .then( ( [ survey, lastSavedRecord ] ) => (
+            survey == null
+                ? survey
+                : populateLastSavedInstances( survey, lastSavedRecord )
+        ) );
 }
 
 /**
@@ -69,7 +80,13 @@ function prepareOfflineSurvey( survey ) {
  * @param {Survey} survey
  * @return {Promise<Survey>}
  */
-const updateSurveyCache = ( survey ) => store.survey.update( survey );
+const updateSurveyCache = ( survey ) => {
+    return (
+        isLastSaveEnabled( survey )
+            ? Promise.resolve( survey )
+            : removeLastSavedRecord( survey.enketoId )
+    ).then( () => store.survey.update( survey ) );
+};
 
 /**
  * @param {Survey} survey
@@ -257,7 +274,7 @@ function updateMaxSubmissionSize( survey ) {
                     // Ignore resources. These should not be updated.
                     delete survey.binaryDefaults;
 
-                    return store.survey.update( survey );
+                    return updateSurveyCache( survey );
                 }
 
                 return survey;
@@ -302,7 +319,7 @@ function updateMedia( survey ) {
             return survey;
         } )
         // Store any resources that were successful
-        .then( store.survey.update )
+        .then( updateSurveyCache )
         .then( _loadMedia )
         .then( _setRepeatListener )
         .catch( error => {
@@ -475,5 +492,4 @@ export default {
     flush,
     CACHE_UPDATE_INITIAL_DELAY,
     CACHE_UPDATE_INTERVAL,
-    updateSurveyCache,
 };

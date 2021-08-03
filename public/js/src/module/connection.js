@@ -399,9 +399,9 @@ function getFormParts( props ) {
             survey,
             getLastSavedRecord( survey.enketoId ),
         ] ) )
-        .then( ( [ survey, lastSavedRecord ] ) => {
-            return populateLastSavedInstances( survey, lastSavedRecord );
-        } );
+        .then( ( [ survey, lastSavedRecord ] ) => (
+            populateLastSavedInstances( survey, lastSavedRecord )
+        ) );
 }
 
 function _postData( url, data = {}  ){
@@ -605,7 +605,6 @@ function getServiceWorkerVersion( serviceWorkerUrl ) {
 }
 
 function getFormPartsHash() {
-
     return _postData( TRANSFORM_HASH_URL + _getQuery() )
         .then( data => data.hash );
 }

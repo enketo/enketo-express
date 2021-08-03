@@ -47,6 +47,7 @@ import store from '../../../public/js/src/module/store';
  */
 
 describe( 'Support for jr://instance/last-saved endpoint', () => {
+    const nativeDateNow = Date.now.bind( Date );
     const enketoIdA = 'surveyA';
     const instanceIdA = 'recordA';
     const enketoIdB = 'surveyB';
@@ -60,6 +61,9 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
 
     /** @type { SinonSandbox } */
     let sandbox;
+
+    /** @type {SinonFakeTimers} */
+    let timers;
 
     /** @type { Survey } */
     let surveyA;
@@ -77,6 +81,10 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
         enketoId = enketoIdA;
 
         sandbox = sinon.createSandbox();
+
+        // Prevent calls to `_updateCache` after tests complete/stubs are restored
+        timers = sandbox.useFakeTimers();
+
         sandbox.stub( settings, 'enketoId' ).get( () => enketoId );
 
         autoSavedKey = records.getAutoSavedKey();
@@ -89,12 +97,11 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
                 {
                     id: 'last-saved',
                     src: 'jr://instance/last-saved',
-                    xml: '<data id="modelA"><foo/></data>',
                 },
             ],
             theme: '',
             form: `<form class="or"><img src="/path/to/${enketoIdA}.jpg"/></form>`,
-            model: '<model><foo/></model>',
+            model: `<model><instance><data id="${enketoIdA}"><foo/></data></instance></model>`,
             hash: '12345',
         };
 
@@ -106,12 +113,11 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
                 {
                     id: 'last-saved',
                     src: 'jr://instance/last-saved',
-                    xml: '<data id="modelB"><foo/></data>',
                 },
             ],
             theme: '',
             form: `<form class="or"><img src="/path/to/${enketoIdB}.jpg"/></form>`,
-            model: '<model><bar/></model>',
+            model: `<model><instance><data id="${enketoIdB}"><bar/></data></instance></model>`,
             hash: '67890',
         };
 
@@ -139,7 +145,7 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
                 draft: true,
                 instanceId: autoSavedKey,
                 enketoId,
-                name: `__autoSave_${Date.now()}`,
+                name: `__autoSave_${nativeDateNow()}`,
                 xml: '<model><autosaved/></model>',
                 files: [],
             } ) )
@@ -149,6 +155,9 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
     } );
 
     afterEach( done => {
+        timers.clearTimeout();
+        timers.clearInterval();
+        timers.restore();
         sandbox.restore();
 
         Promise.all( [
@@ -210,9 +219,6 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
         /** @type {GetFormPartsStubResult} */
         let getFormPartsStubResult;
 
-        /** @type {SinonFakeTimers} */
-        let timers;
-
         /** @type {EnketoRecord} */
         let record;
 
@@ -235,9 +241,6 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
             };
 
             sandbox.stub( settings, 'enketoId' ).get( () => enketoId );
-
-            // Prevent calls to `_updateCache` after tests complete/stubs are restored
-            timers = sinon.useFakeTimers();
 
             lastSavedExternalData = {
                 id: 'last-saved',
@@ -280,10 +283,6 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
         } );
 
         afterEach( done => {
-            timers.clearTimeout();
-            timers.clearInterval();
-            timers.restore();
-
             store.survey.removeAll().then( done, done );
         } );
 
@@ -545,7 +544,7 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
                 enketoId: enketoIdB,
                 instanceId: instanceIdB,
                 name: 'name B',
-                xml: '<model><something>b</something></model>'
+                xml: `<model><instance><something id="${enketoIdB}">b</something></model>`,
             };
 
             const originalRecordB = Object.assign( {}, recordB );
@@ -560,8 +559,8 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
                         draft: true,
                         instanceId: records.getAutoSavedKey(),
                         enketoId,
-                        name: `__autoSave_${Date.now()}`,
-                        xml: '<model><autosaved/></model>',
+                        name: `__autoSave_${nativeDateNow()}`,
+                        xml: `<model><instance><autosaved id="${enketoId}"/></instance></model>`,
                         files: [],
                     } );
                 } )

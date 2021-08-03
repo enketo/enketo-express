@@ -75,7 +75,7 @@ describe( 'Client Form Cache', () => {
         sandbox = sinon.createSandbox();
 
         // Prevent calls to `_updateCache` after tests complete/stubs are restored
-        timers = sinon.useFakeTimers();
+        timers = sandbox.useFakeTimers();
 
         lastSavedExternalData = {
             id: 'last-saved',
@@ -126,10 +126,10 @@ describe( 'Client Form Cache', () => {
     } );
 
     afterEach( done => {
-        sandbox.restore();
         timers.clearTimeout();
         timers.clearInterval();
         timers.restore();
+        sandbox.restore();
 
         document.body.removeChild( document.querySelector( 'form.or' ) );
 
