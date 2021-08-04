@@ -7,6 +7,7 @@ Documentation=http://redis.io/documentation, man:redis-server(1)
 
 [Service]
 Type=notify
+NotifyAccess=all
 ExecStart=/usr/bin/redis-server /etc/redis/redis-enketo-main.conf
 PIDFile=/var/run/redis/redis-enketo-main.pid
 TimeoutStopSec=0

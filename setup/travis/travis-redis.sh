@@ -29,7 +29,7 @@ sudo cp $SYSTEMD_SOURCE/redis-enketo-main.service $SYSTEMD_TARGET/redis-enketo-m
 
 sudo systemctl enable redis-enketo-cache.service redis-enketo-main.service
 sudo systemctl start redis-enketo-cache.service redis-enketo-main.service
-journalctl -xe
+sudo journalctl -xe
 
 # Wait for Redis services to start
 
