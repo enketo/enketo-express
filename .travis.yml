@@ -2,13 +2,13 @@ language: node_js
 sudo: true
 node_js:
   - "12"
-dist: trusty
+dist: focal
 before_script:
   - npm install -g grunt-cli
   - chmod 777 ./setup/travis/travis-redis.sh
   - ./setup/travis/travis-redis.sh
   - grunt css
-addons: 
+addons:
   chrome: stable
 services:
   - redis-server
