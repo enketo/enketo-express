@@ -3,10 +3,11 @@ sudo: true
 node_js:
   - "12"
 dist: focal
-before_script:
-  - npm install -g grunt-cli
+before_install:
   - chmod 777 ./setup/travis/travis-redis.sh
   - ./setup/travis/travis-redis.sh
+before_script:
+  - npm install -g grunt-cli
   - grunt css
 addons:
   chrome: stable
