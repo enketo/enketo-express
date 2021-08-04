@@ -33,13 +33,11 @@ module.exports = config => {
         },
 
         esbuild: {
-            // TODO [2021-08-01]: this fixes an issue with the `Object.fromEntries` polyfill, remove when CI is able to use a newer version
-            define: {
-                global: 'window',
-            },
-            // TODO [2021-08-01]: target more up to date version when CI is able to use a newer verison of Chrome
             target: [
-                'chrome51',
+                'chrome89',
+                'edge89',
+                'firefox90',
+                'safari13',
             ],
         },
 
