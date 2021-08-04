@@ -4,9 +4,9 @@ echo "Setting up Redis instances on ports 6379 and 6380..."
 
 # Based on setup/vagrant/bootstrap.sh
 
-systemctl stop redis
-systemctl disable redis
-systemctl daemon-reload
+sudo systemctl stop redis-server
+sudo systemctl disable redis-server
+sudo systemctl daemon-reload
 
 REDIS_SOURCE=${TRAVIS_BUILD_DIR}/setup/redis/conf
 
