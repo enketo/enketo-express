@@ -1,10 +1,36 @@
 #!/bin/sh
 
-echo "Setting up a second redis instance on port 6380..."
+echo "Setting up a Redis instances on ports 6379 and 6380..."
 
-# remove first lines from systemd configuration file (the "supervised systemd" directive) and write to a new redis config file
-sudo tail -n +5 ${TRAVIS_BUILD_DIR}/setup/redis/conf/redis-enketo-cache.conf | sudo tee /etc/redis/redis-enketo-cache.conf
-# copy upstart service file
-sudo cp ${TRAVIS_BUILD_DIR}/setup/travis/redis-enketo-cache.conf /etc/init/
-sudo start redis-enketo-cache
+
+# Based on https://learn.jetrails.com/article/multiple-redis-servers-with-systemd
+
+# Disable the default Redis service
+
+sudo systemctl stop redis-server
+sudo systemctl disable redis-server
+sudo mkdir -p /etc/redis/{redis-server.pre-up.d,redis-server.post-down.d,redis-server.post-up.d,redis-server.pre-down.d}
+sudo mkdir -p /var/lib/{redis-cache,redis-sessions}
+
+# Redis config
+
+REDIS_SOURCE=${TRAVIS_BUILD_DIR}/setup/redis/conf
+REDIS_TARGET=/etc/redis
+sudo cp $REDIS_SOURCE/redis-enketo-cache.conf $REDIS_TARGET/redis-enketo-cache.conf
+sudo cp $REDIS_SOURCE/redis-enketo-main.conf $REDIS_TARGET/redis-enketo-main.conf
+
+# Systemd config
+
+SYSTEMD_SOURCE=${TRAVIS_BUILD_DIR}/setup/travis
+SYSTEMD_TARGET=/lib/systemd/system
+sudo cp $SYSTEMD_SOURCE/redis-enketo-cache.service $SYSTEMD_TARGET/redis-enketo-cache.service
+sudo cp $SYSTEMD_SOURCE/redis-enketo-main.service $SYSTEMD_TARGET/redis-enketo-main.service
+
+# Enable and start Redis services
+
+sudo systemctl enable redis-enketo-cache.service redis-enketo-main.service
+sudo systemctl start redis-enketo-cache.service redis-enketo-main.service
+
+# Wait for Redis services to start
+
 sleep 3

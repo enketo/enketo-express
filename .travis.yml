@@ -5,6 +5,8 @@ node_js:
 dist: focal
 before_script:
   - npm install -g grunt-cli
+  - chmod 777 ./setup/travis/travis-redis.sh
+  - ./setup/travis/travis-redis.sh
   - grunt css
 addons:
   chrome: stable
