@@ -10,8 +10,8 @@ sudo systemctl daemon-reload
 
 REDIS_SOURCE=${TRAVIS_BUILD_DIR}/setup/redis/conf
 
-cp -f $REDIS_SOURCE/redis-enketo-main.conf /etc/redis/
-cp -f $REDIS_SOURCE/redis-enketo-cache.conf /etc/redis/
+sudo cp -f $REDIS_SOURCE/redis-enketo-main.conf /etc/redis/
+sudo cp -f $REDIS_SOURCE/redis-enketo-cache.conf /etc/redis/
 
 sudo systemctl enable redis-server@enketo-main.service redis-server@enketo-cache.service
 sudo systemctl start redis-server@enketo-main.service redis-server@enketo-cache.service
