@@ -9,7 +9,6 @@ echo "Setting up Redis instances on ports 6379 and 6380..."
 
 sudo systemctl stop redis-server
 sudo systemctl disable redis-server
-sudo mkdir -p /etc/redis/{redis-server.pre-up.d,redis-server.post-down.d,redis-server.post-up.d,redis-server.pre-down.d}
 
 # Redis config
 

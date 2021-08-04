@@ -15,11 +15,7 @@ Restart=always
 User=redis
 Group=redis
 
-ExecStartPre=-/bin/run-parts --verbose /etc/redis/redis-server.pre-up.d
-ExecStartPost=-/bin/run-parts --verbose /etc/redis/redis-server.post-up.d
-ExecStop=-/bin/run-parts --verbose /etc/redis/redis-server.pre-down.d
 ExecStop=/bin/kill -s TERM $MAINPID
-ExecStopPost=-/bin/run-parts --verbose /etc/redis/redis-server.post-down.d
 
 PrivateTmp=yes
 PrivateDevices=yes
