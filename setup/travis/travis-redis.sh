@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Setting up a Redis instances on ports 6379 and 6380..."
+echo "Setting up Redis instances on ports 6379 and 6380..."
 
 
 # Based on https://learn.jetrails.com/article/multiple-redis-servers-with-systemd

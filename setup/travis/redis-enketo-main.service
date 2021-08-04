@@ -11,8 +11,7 @@ ExecStart=/usr/bin/redis-server /etc/redis/redis-enketo-main.conf
 PIDFile=/var/run/redis/redis-enketo-main.pid
 TimeoutStopSec=0
 Restart=always
-User=redis
-Group=redis
+User=travis
 
 ExecStartPre=-/bin/run-parts --verbose /etc/redis/redis-server.pre-up.d
 ExecStartPost=-/bin/run-parts --verbose /etc/redis/redis-server.post-up.d
