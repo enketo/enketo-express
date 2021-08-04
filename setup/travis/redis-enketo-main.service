@@ -6,7 +6,7 @@ After=network.target
 Documentation=http://redis.io/documentation, man:redis-server(1)
 
 [Service]
-Type=exec
+Type=notify
 ExecStart=/usr/bin/redis-server /etc/redis/redis-enketo-main.conf
 PIDFile=/var/run/redis/redis-enketo-main.pid
 TimeoutStopSec=0
