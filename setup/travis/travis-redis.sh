@@ -42,6 +42,7 @@ then
     echo "Redis is running on port 6379"
 else
     echo "Redis failed to start on port 6379"
+    cat /var/log/redis/redis-enketo-cache.log
     exit 1
 fi
 
@@ -54,5 +55,6 @@ then
     echo "Redis is running on port 6380"
 else
     echo "Redis failed to start on port 6380"
+    cat /var/log/redis/redis-enketo-cache.log
     exit 1
 fi
