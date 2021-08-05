@@ -1,7 +1,5 @@
 [Unit]
-Description=Redis
-After=network.target
-PartOf=redis.target
+Description=Redis main
 
 [Service]
 Type=simple

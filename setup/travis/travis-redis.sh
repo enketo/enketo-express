@@ -41,7 +41,7 @@ if [ "$MAIN_STATUS" = "0" ]
 then
     echo "Redis is running on port 6379"
 else
-    "Redis failed to start on port 6379"
+    echo "Redis failed to start on port 6379"
     exit 1
 fi
 
@@ -53,6 +53,6 @@ if [ "$CACHE_STATUS" = "0" ]
 then
     echo "Redis is running on port 6380"
 else
-    "Redis failed to start on port 6380"
+    echo "Redis failed to start on port 6380"
     exit 1
 fi
