@@ -33,6 +33,25 @@ sudo systemctl start redis-enketo-cache.service redis-enketo-main.service
 sleep 3
 
 redis-cli -p 6379 ping
-echo "Redis is running on port 6379"
+
+MAIN_STATUS=$?
+
+if [ "$MAIN_STATUS" == "0" ]
+then
+    echo "Redis is running on port 6379"
+else
+    "Redis failed to start on port 6379"
+    exit 1
+fi
+
 redis-cli -p 6380 ping
-echo "Redis is running on port 6380"
+
+CACHE_STATUS=$?
+
+if [ "$CACHE_STATUS" == "0" ]
+then
+    echo "Redis is running on port 6380"
+else
+    "Redis failed to start on port 6380"
+    exit 1
+fi
