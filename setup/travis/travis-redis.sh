@@ -37,11 +37,11 @@ sudo cp $SYSTEMD_SOURCE/redis-enketo-main.service $SYSTEMD_TARGET/redis-enketo-m
 sudo systemctl enable redis-enketo-cache.service redis-enketo-main.service
 sudo systemctl start redis-enketo-cache.service redis-enketo-main.service || systemctl status redis-enketo-cache.service && journalctl -xe
 
-echo "/var/log/redis/redis-enketo-cache.log:"
-sudo cat /var/log/redis/redis-enketo-cache.log
+# echo "/var/log/redis/redis-enketo-cache.log:"
+# sudo cat /var/log/redis/redis-enketo-cache.log
 
-echo "/var/log/redis/redis-enketo-main.log:"
-sudo cat /var/log/redis/redis-enketo-main.log
+# echo "/var/log/redis/redis-enketo-main.log:"
+# sudo cat /var/log/redis/redis-enketo-main.log
 
 redis-cli -p 6379 ping
 
