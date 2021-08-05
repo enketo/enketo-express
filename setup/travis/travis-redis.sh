@@ -36,16 +36,19 @@ SYSTEMD_TARGET=/lib/systemd/system
 sudo cp $SYSTEMD_SOURCE/redis-enketo-cache.service $SYSTEMD_TARGET/redis-enketo-cache.service
 sudo cp $SYSTEMD_SOURCE/redis-enketo-main.service $SYSTEMD_TARGET/redis-enketo-main.service
 
-echo "Starting up outside Systemd service"
-sudo /usr/bin/redis-server /etc/redis/enketo-cache.conf --supervised no --daemonize yes
-echo "Ping??"
-redis-cli -p 6380 ping
-redis-cli -p 6380 shutdown
+# echo "Starting up outside Systemd service"
+# sudo /usr/bin/redis-server /etc/redis/enketo-cache.conf --supervised no --daemonize yes
+# echo "Ping??"
+# redis-cli -p 6380 ping
+# redis-cli -p 6380 shutdown
 
 # Enable and start Redis services
 
 sudo systemctl enable redis-enketo-cache.service redis-enketo-main.service
-sudo systemctl start redis-enketo-cache.service redis-enketo-main.service || systemctl status redis-enketo-cache.service && journalctl -xe
+sudo systemctl start redis-enketo-cache.service redis-enketo-main.service
+
+systemctl status redis-enketo-cache.service
+systemctl status redis-enketo-main.service
 
 echo "/var/log/redis/redis-enketo-cache.log:"
 sudo cat /var/log/redis/redis-enketo-cache.log
