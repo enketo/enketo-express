@@ -22,13 +22,17 @@ sudo mkdir -p /var/lib/{redis-cache,redis-sessions}
 REDIS_SOURCE=${TRAVIS_BUILD_DIR}/setup/redis/conf
 REDIS_TARGET=/etc/redis
 
-sudo cat $REDIS_SOURCE/redis-enketo-cache.conf | grep -v "^supervised systemd" > $REDIS_TARGET/enketo-cache.conf
-sudo cat $REDIS_SOURCE/redis-enketo-main.conf | grep -v "^supervised systemd" > $REDIS_TARGET/enketo-main.conf
+sudo cat $REDIS_SOURCE/redis-enketo-cache.conf | grep -v "^supervised systemd" > $REDIS_SOURCE/redis-travis-cache.conf
+sudo cp -f $REDIS_SOURCE/redis-travis-cache.conf $REDIS_TARGET/enketo-cache.conf
+
+sudo cat $REDIS_SOURCE/redis-enketo-main.conf | grep -v "^supervised systemd" > $REDIS_SOURCE/redis-travis-main.conf
+sudo cp -f $REDIS_SOURCE/redis-travis-main.conf $REDIS_TARGET/enketo-main.conf
 
 # Systemd config
 
 SYSTEMD_SOURCE=${TRAVIS_BUILD_DIR}/setup/redis/systemd
 SYSTEMD_TARGET=/lib/systemd/system
+
 sudo cp $SYSTEMD_SOURCE/redis-enketo-cache.service $SYSTEMD_TARGET/redis-enketo-cache.service
 sudo cp $SYSTEMD_SOURCE/redis-enketo-main.service $SYSTEMD_TARGET/redis-enketo-main.service
 
