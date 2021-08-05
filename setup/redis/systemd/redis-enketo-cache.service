@@ -2,14 +2,15 @@
 Description=Redis cache
 
 [Service]
-Type=simple
+Type=notify
 User=redis
 Group=redis
 PrivateTmp=true
 PIDFile=/var/run/redis/enketo-cache.pid
 ExecStartPre=echo "Starting Redis main"
 ExecStart=/usr/bin/redis-server /etc/redis/enketo-cache.conf
-ExecStartPost=redis-cli -p 6379 ping
+ExecStartPost=redis-cli -p 6380 ping
+ExecStop=/usr/bin/redis-cli -p 6380 shutdown
 Restart=on-failure
 
 [Install]
