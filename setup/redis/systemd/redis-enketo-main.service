@@ -7,7 +7,9 @@ User=redis
 Group=redis
 PrivateTmp=true
 PIDFile=/var/run/redis/enketo-main.pid
+ExecStartPre=echo "Starting Redis main"
 ExecStart=/usr/bin/redis-server /etc/redis/enketo-main.conf
+ExecStartPost=redis-cli -p 6379 ping
 Restart=on-failure
 
 [Install]
