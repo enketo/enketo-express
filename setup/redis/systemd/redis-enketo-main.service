@@ -11,4 +11,4 @@ ExecStart=/usr/bin/redis-server /etc/redis/enketo-main.conf
 Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target redis.target
+WantedBy=multi-user.target
