@@ -13,5 +13,7 @@ REDIS_SOURCE=${TRAVIS_BUILD_DIR}/setup/redis/conf
 sudo cp -f $REDIS_SOURCE/redis-enketo-main.conf /etc/redis/
 sudo cp -f $REDIS_SOURCE/redis-enketo-cache.conf /etc/redis/
 
+sudo cp -f ${TRAVIS_BUILD_DIR}/setup/redis/systemd/redis-server@.target /etc/systemd/system/
+
 sudo systemctl enable redis-server@enketo-main.service redis-server@enketo-cache.service
 sudo systemctl start redis-server@enketo-main.service redis-server@enketo-cache.service
