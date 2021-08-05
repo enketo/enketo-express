@@ -29,7 +29,7 @@ sudo cp $SYSTEMD_SOURCE/redis-enketo-main.service $SYSTEMD_TARGET/redis-enketo-m
 # Enable and start Redis services
 
 sudo systemctl enable redis-enketo-cache.service redis-enketo-main.service
-sudo systemctl start redis-enketo-cache.service redis-enketo-main.service || systemctl status redis-enketo-cache.service
+sudo systemctl start redis-enketo-cache.service redis-enketo-main.service || systemctl status redis-enketo-cache.service && journalctl -xe
 
 sleep 3
 
@@ -43,7 +43,6 @@ then
 else
     echo "Redis failed to start on port 6379"
     cat /var/log/redis/redis-enketo-cache.log
-    journalctl -xe
     exit 1
 fi
 
@@ -57,6 +56,5 @@ then
 else
     echo "Redis failed to start on port 6380"
     cat /var/log/redis/redis-enketo-cache.log
-    journalctl -xe
     exit 1
 fi
