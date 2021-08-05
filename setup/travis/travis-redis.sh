@@ -36,14 +36,11 @@ SYSTEMD_TARGET=/lib/systemd/system
 sudo cp $SYSTEMD_SOURCE/redis-enketo-cache.service $SYSTEMD_TARGET/redis-enketo-cache.service
 sudo cp $SYSTEMD_SOURCE/redis-enketo-main.service $SYSTEMD_TARGET/redis-enketo-main.service
 
-# Permissions
-
-sudo chmod 0666 /var/{lib,log,run}/redis
-
 echo "Starting up outside Systemd service"
 sudo /usr/bin/redis-server /etc/redis/enketo-cache.conf --supervised no --daemonize yes
-echo "Did daemonize??"
-
+echo "Ping??"
+redis-cli -p 6380 ping
+redis-cli -p 6380 shutdown
 
 # Enable and start Redis services
 
