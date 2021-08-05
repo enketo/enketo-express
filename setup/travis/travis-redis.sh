@@ -15,6 +15,7 @@ sudo mkdir -p /var/lib/{redis-cache,redis-sessions}
 
 REDIS_SOURCE=${TRAVIS_BUILD_DIR}/setup/redis/conf
 REDIS_TARGET=/etc/redis
+
 sudo cp $REDIS_SOURCE/redis-enketo-cache.conf $REDIS_TARGET/enketo-cache.conf
 sudo cp $REDIS_SOURCE/redis-enketo-main.conf $REDIS_TARGET/enketo-main.conf
 
@@ -36,7 +37,7 @@ redis-cli -p 6379 ping
 
 MAIN_STATUS=$?
 
-if [ "$MAIN_STATUS" == "0" ]
+if [ "$MAIN_STATUS" = "0" ]
 then
     echo "Redis is running on port 6379"
 else
@@ -48,7 +49,7 @@ redis-cli -p 6380 ping
 
 CACHE_STATUS=$?
 
-if [ "$CACHE_STATUS" == "0" ]
+if [ "$CACHE_STATUS" = "0" ]
 then
     echo "Redis is running on port 6380"
 else
