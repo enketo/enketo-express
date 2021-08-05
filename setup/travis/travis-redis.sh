@@ -2,6 +2,12 @@
 
 echo "Setting up Redis instances on ports 6379 and 6380..."
 
+echo "default redis conf"
+cat /etc/redis/redis.conf
+
+echo "\n\ndefault redis service"
+cat /lib/systemd/system/redis-server.service
+
 # Based on https://learn.jetrails.com/article/multiple-redis-servers-with-systemd
 
 # Disable the default Redis service
@@ -32,6 +38,7 @@ sudo systemctl enable redis-enketo-cache.service redis-enketo-main.service
 sudo systemctl start redis-enketo-cache.service redis-enketo-main.service || systemctl status redis-enketo-cache.service && journalctl -xe
 
 sleep 3
+
 
 redis-cli -p 6379 ping
 
