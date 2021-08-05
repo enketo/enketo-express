@@ -15,8 +15,8 @@ sudo mkdir -p /var/lib/{redis-cache,redis-sessions}
 
 REDIS_SOURCE=${TRAVIS_BUILD_DIR}/setup/redis/conf
 REDIS_TARGET=/etc/redis
-sudo cp $REDIS_SOURCE/redis-enketo-cache.conf $REDIS_TARGET/redis-enketo-cache.conf
-sudo cp $REDIS_SOURCE/redis-enketo-main.conf $REDIS_TARGET/redis-enketo-main.conf
+sudo cp $REDIS_SOURCE/redis-enketo-cache.conf $REDIS_TARGET/enketo-cache.conf
+sudo cp $REDIS_SOURCE/redis-enketo-main.conf $REDIS_TARGET/enketo-main.conf
 
 # Systemd config
 
@@ -33,4 +33,6 @@ sudo systemctl start redis-enketo-cache.service redis-enketo-main.service
 sleep 3
 
 redis-cli -p 6379 ping
+echo "Redis is running on port 6379"
 redis-cli -p 6380 ping
+echo "Redis is running on port 6380"
