@@ -2,16 +2,16 @@
 Description=Redis cache
 
 [Service]
-Type=notify
+Type=forking
 User=redis
 Group=redis
 PrivateTmp=true
 PIDFile=/var/run/redis/enketo-cache.pid
 ExecStartPre=echo "Starting Redis main"
-ExecStart=/usr/bin/redis-server /etc/redis/enketo-cache.conf
+ExecStart=/usr/bin/redis-server /etc/redis/enketo-cache.conf --supervised no
 ExecStartPost=redis-cli -p 6380 ping
 ExecStop=/usr/bin/redis-cli -p 6380 shutdown
-Restart=on-failure
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
