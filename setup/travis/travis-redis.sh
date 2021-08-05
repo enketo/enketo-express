@@ -41,7 +41,7 @@ sudo cp $SYSTEMD_SOURCE/redis-enketo-main.service $SYSTEMD_TARGET/redis-enketo-m
 sudo chmod 0666 /var/{lib,log,run}/redis
 
 echo "Starting up outside Systemd service"
-time /usr/bin/redis-server /etc/redis/enketo-cache.conf --supervised no --daemonize yes
+sudo /usr/bin/redis-server /etc/redis/enketo-cache.conf --supervised no --daemonize yes
 echo "Did daemonize??"
 
 
