@@ -29,3 +29,8 @@ sudo cp $SYSTEMD_SOURCE/redis-enketo-main.service $SYSTEMD_TARGET/redis-enketo-m
 
 sudo systemctl enable redis-enketo-cache.service redis-enketo-main.service
 sudo systemctl start redis-enketo-cache.service redis-enketo-main.service
+
+sleep 3
+
+redis-cli -p 6379 ping
+redis-cli -p 6380 ping
