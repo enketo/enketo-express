@@ -2,21 +2,30 @@
 
 echo "Setting up Redis instances on ports 6379 and 6380..."
 
-# Based on setup/vagrant/bootstrap.sh
+# Based on https://learn.jetrails.com/article/multiple-redis-servers-with-systemd
+
+# Disable the default Redis service
 
 sudo systemctl stop redis-server
 sudo systemctl disable redis-server
-sudo systemctl daemon-reload
+sudo mkdir -p /etc/redis/{redis-server.pre-up.d,redis-server.post-down.d,redis-server.post-up.d,redis-server.pre-down.d}
+sudo mkdir -p /var/lib/{redis-cache,redis-sessions}
+
+# Redis config
 
 REDIS_SOURCE=${TRAVIS_BUILD_DIR}/setup/redis/conf
+REDIS_TARGET=/etc/redis
+sudo cp $REDIS_SOURCE/redis-enketo-cache.conf $REDIS_TARGET/redis-enketo-cache.conf
+sudo cp $REDIS_SOURCE/redis-enketo-main.conf $REDIS_TARGET/redis-enketo-main.conf
 
-sudo cp -f $REDIS_SOURCE/redis-enketo-main.conf /etc/redis/enketo-main.conf
-sudo cp -f $REDIS_SOURCE/redis-enketo-cache.conf /etc/redis/enketo-cache.conf
+# Systemd config
 
 SYSTEMD_SOURCE=${TRAVIS_BUILD_DIR}/setup/redis/systemd
+SYSTEMD_TARGET=/lib/systemd/system
+sudo cp $SYSTEMD_SOURCE/redis-enketo-cache.service $SYSTEMD_TARGET/redis-enketo-cache.service
+sudo cp $SYSTEMD_SOURCE/redis-enketo-main.service $SYSTEMD_TARGET/redis-enketo-main.service
 
-sudo cp -f $SYSTEMD_SOURCE/redis-server.unit /lib/systemd/system/
-sudo cp -f $SYSTEMD_SOURCE/redis-server@.target /lib/systemd/system/
+# Enable and start Redis services
 
-sudo systemctl enable redis-server@enketo-main.service redis-server@enketo-cache.service
-sudo systemctl start redis-server@enketo-main.service redis-server@enketo-cache.service
+sudo systemctl enable redis-enketo-cache.service redis-enketo-main.service
+sudo systemctl start redis-enketo-cache.service redis-enketo-main.service
