@@ -3,7 +3,7 @@
 echo "Setting up Redis instances on ports 6379 and 6380..."
 
 echo "default redis conf"
-cat /etc/redis/redis.conf
+sudo cat /etc/redis/redis.conf
 
 echo "\n\ndefault redis service"
 cat /lib/systemd/system/redis-server.service
