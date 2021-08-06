@@ -1,9 +1,5 @@
 /* eslint-env node */
 
-const alias = require( 'esbuild-plugin-alias' );
-const path = require( 'path' );
-const pkg = require( '../../../package.json' );
-
 const cwd = process.cwd();
 
 module.exports = config => {
@@ -35,25 +31,7 @@ module.exports = config => {
             'test/client/**/*.js': [ 'esbuild' ],
         },
 
-        esbuild: {
-            // TODO [2021-08-01]: this fixes an issue with the `Object.fromEntries` polyfill, remove when CI is able to use a newer version
-            define: {
-                global: 'window',
-            },
-            plugins: [
-                alias(
-                    Object.fromEntries(
-                        Object.entries( pkg.browser ).map( ( [ key, value ] ) => (
-                            [ key, path.resolve( cwd, `${value}.js` ) ]
-                        ) )
-                    )
-                ),
-            ],
-            // TODO [2021-08-01]: target more up to date version when CI is able to use a newer verison of Chrome
-            target: [
-                'chrome51',
-            ],
-        },
+        esbuild: require( '../../../config/build.js' ),
 
         browserify: {
             debug: true,
