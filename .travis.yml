@@ -11,7 +11,5 @@ before_script:
   - grunt css
 addons:
   chrome: stable
-services:
-  - redis
 notifications:
     flowdock: 7d2ea551a0757bea5b52c496f3a7ab2e
