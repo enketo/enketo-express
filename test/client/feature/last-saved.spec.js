@@ -627,6 +627,46 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
                 .then( done, done );
         } );
 
+        it( 'does not create the survey\'s last saved record when editing a record', done => {
+            const updates = Object.assign( {}, recordA, {
+                xml: `${recordA.model}<-- Updated -->`,
+            } );
+
+            sandbox.stub( settings, 'type' ).get( () => 'edit' );
+
+            connection.uploadRecord( surveyA, updates )
+                .then( () => getLastSavedRecord( enketoId ) )
+                .then( lastSavedRecord => {
+                    expect( lastSavedRecord ).to.equal( undefined );
+                } )
+                .then( done, done );
+        } );
+
+        it( 'does not update the survey\'s last saved record when editing a record', done => {
+            const originalXml = recordA.xml;
+            const updates = Object.assign( {}, recordA, {
+                xml: `${originalXml}<-- Updated -->`,
+            } );
+
+            let submissionType = 'other';
+
+            sandbox.stub( settings, 'type' ).get( () => submissionType );
+
+            setLastSavedRecord( surveyA, recordA )
+                .then( () => {
+                    submissionType = 'edit';
+                } )
+                .then( () => connection.uploadRecord( surveyA, updates ) )
+                .then( () => {
+                    submissionType = 'other';
+                } )
+                .then( () => getLastSavedRecord( enketoId ) )
+                .then( lastSavedRecord => {
+                    expect( lastSavedRecord.xml ).to.equal( originalXml );
+                } )
+                .then( done, done );
+        } );
+
         it( 'does not create a last-saved record when uploading a queued record', done => {
             connection.uploadQueuedRecord( recordA )
                 .then( () => {

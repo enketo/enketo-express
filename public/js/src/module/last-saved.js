@@ -104,6 +104,12 @@ export const populateLastSavedInstances = ( survey, lastSavedRecord ) => {
  * @return {Promise<SetLastSavedRecordResult>}
  */
 export const setLastSavedRecord = ( survey, record ) => {
+    if ( settings.type !== 'other' ) {
+        return Promise.resolve( {
+            survey: populateLastSavedInstances( survey ),
+        } );
+    }
+
     const lastSavedRecord = isLastSaveEnabled( survey )
         ? Object.assign( {}, record, {
             _enketoId: record.enketoId,

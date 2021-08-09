@@ -199,32 +199,36 @@ function _updateFormData( survey ) {
  *
  * @param {Survey} survey
  * @param {ResetFormOptions} [options]
+ * @return {Promise<void>}
  */
 function _resetForm( survey, options = {} ) {
-    const formEl = form.resetView();
+    return getLastSavedRecord( survey.enketoId )
+        .then( lastSavedRecord => populateLastSavedInstances( survey, lastSavedRecord ) )
+        .then( survey => {
+            const formEl = form.resetView();
 
-    form = new Form( formEl, {
-        modelStr: formData.modelStr,
-        external: survey.externalData,
-        lastSavedRecord: survey.lastSavedRecord,
-    }, formOptions );
+            form = new Form( formEl, {
+                modelStr: formData.modelStr,
+                external: survey.externalData,
+            }, formOptions );
 
-    const loadErrors = form.init();
+            const loadErrors = form.init();
 
-    // formreset event will update the form media:
-    form.view.html.dispatchEvent( events.FormReset() );
+            // formreset event will update the form media:
+            form.view.html.dispatchEvent( events.FormReset() );
 
-    if ( options.isOffline ) {
-        formCache.updateMedia( survey );
-    }
+            if ( options.isOffline ) {
+                formCache.updateMedia( survey );
+            }
 
-    if ( records ) {
-        records.setActive( null );
-    }
+            if ( records ) {
+                records.setActive( null );
+            }
 
-    if ( loadErrors.length > 0 ) {
-        gui.alertLoadErrors( loadErrors );
-    }
+            if ( loadErrors.length > 0 ) {
+                gui.alertLoadErrors( loadErrors );
+            }
+        } );
 }
 
 /**
@@ -347,8 +351,6 @@ function _submitRecord( survey ) {
                 } )}<br/>`;
                 level = 'warning';
             }
-
-            return _updateFormData( survey );
         } )
         .then( () => {
             // this event is used in communicating back to iframe parent window
@@ -500,8 +502,7 @@ function _saveRecord( survey, draft = true, recordName, confirmed, errorMsg ) {
 
             return records.save( saveMethod, record );
         } )
-        .then( () => _updateFormData( survey ) )
-        .then( survey => {
+        .then( () => {
 
             records.removeAutoSavedRecord();
             _resetForm( survey, { isOffline: true } );
