@@ -162,23 +162,6 @@ function _checkAutoSavedRecord() {
 }
 
 /**
- * Updates the runtime state of `formData` with changes made to `survey` in the
- * course of submitting a record. Currently this addresses issues where a survey's
- * `lastSavedRecord` and `externalData` are updated on submission.
- *
- * @param {Survey} survey
- */
-function _updateFormData( survey ) {
-    return getLastSavedRecord( survey.enketoId )
-        .then( lastSavedRecord => populateLastSavedInstances( survey, lastSavedRecord ) )
-        .then( ( { externalData } ) => {
-            formData.external = externalData;
-
-            return survey;
-        } );
-}
-
-/**
  * @typedef ResetFormOptions
  * @property {boolean} [isOffline]
  */
