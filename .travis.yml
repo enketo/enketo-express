@@ -5,6 +5,7 @@ node_js:
   - "16"
 dist: focal
 before_install:
+  - npm install -g npm@^6
   - chmod 777 ./setup/travis/travis-redis.sh
   - ./setup/travis/travis-redis.sh
 before_script:
