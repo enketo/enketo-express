@@ -1,7 +1,8 @@
 language: node_js
 sudo: true
 node_js:
-  - "12"
+  - "14"
+  - "16"
 dist: focal
 before_install:
   - chmod 777 ./setup/travis/travis-redis.sh
