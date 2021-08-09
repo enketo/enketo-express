@@ -161,23 +161,6 @@ function _checkAutoSavedRecord() {
 }
 
 /**
- * Updates the runtime state of `formData` with changes made to `survey` in the
- * course of submitting a record. Currently this addresses issues where a survey's
- * `lastSavedRecord` and `externalData` are updated on submission.
- *
- * @param {string} enketoId
- */
-function _updateFormData( enketoId ) {
-    return formCache.get( { enketoId } )
-        .then( survey => {
-            formData.external = survey.externalData;
-            formData.lastSavedRecord = survey.lastSavedRecord || {};
-
-            return survey;
-        } );
-}
-
-/**
  * Controller function to reset to the initial state of a form.
  *
  * Note: Previously this function accepted a boolean `confirmed` parameter, presumably
@@ -189,28 +172,36 @@ function _updateFormData( enketoId ) {
  * the current state of `survey`. This change is being called out in case the removal
  * of that event listener impacts downstream forks.
  *
- * @param {Survey} survey
+ * @param {string} enketoId
+ * @return {Promise<void>}
  */
-function _resetForm( survey ) {
-    const formEl = form.resetView();
+function _resetForm( enketoId ) {
+    return formCache.get( { enketoId } )
+        .then( ( survey ) => {
+            const formEl = form.resetView();
 
-    form = new Form( formEl, {
-        modelStr: formData.modelStr,
-        external: formData.external
-    }, formOptions );
+            form = new Form( formEl, {
+                modelStr: formData.modelStr,
+                external: survey.externalData,
+                lastSavedRecord: survey.lastSavedRecord,
+            }, formOptions );
 
-    const loadErrors = form.init();
+            const loadErrors = form.init();
 
-    // formreset event will update the form media:
-    form.view.html.dispatchEvent( events.FormReset() );
-    formCache.updateMedia( survey );
+            // formreset event will update the form media:
+            form.view.html.dispatchEvent( events.FormReset() );
 
-    if ( records ) {
-        records.setActive( null );
-    }
-    if ( loadErrors.length > 0 ) {
-        gui.alertLoadErrors( loadErrors );
-    }
+            formCache.updateMedia( survey );
+
+            if ( records ) {
+                records.setActive( null );
+            }
+            if ( loadErrors.length > 0 ) {
+                gui.alertLoadErrors( loadErrors );
+            }
+
+        } );
+
 }
 
 /**
@@ -333,10 +324,8 @@ function _submitRecord( isEditing ) {
                 } )}<br/>`;
                 level = 'warning';
             }
-
-            return _updateFormData( settings.enketoId );
         } )
-        .then( survey => {
+        .then( () => {
             // this event is used in communicating back to iframe parent window
             document.dispatchEvent( events.SubmissionSuccess() );
 
@@ -370,7 +359,7 @@ function _submitRecord( isEditing ) {
             } else {
                 msg = ( msg.length > 0 ) ? msg : t( 'alert.submissionsuccess.msg' );
                 gui.alert( msg, t( 'alert.submissionsuccess.heading' ), level );
-                _resetForm( survey );
+                _resetForm( settings.enketoId );
             }
         } )
         .catch( result => {
@@ -479,11 +468,10 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
 
             return records.save( saveMethod, record );
         } )
-        .then( record => _updateFormData( record.enketoId ) )
-        .then( survey => {
+        .then( record => {
 
             records.removeAutoSavedRecord();
-            _resetForm( survey );
+            _resetForm( record.enketoId );
 
             if ( draft ) {
                 gui.alert( t( 'alert.recordsavesuccess.draftmsg' ), t( 'alert.savedraftinfo.heading' ), 'info', 5 );
