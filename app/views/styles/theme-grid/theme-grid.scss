@@ -46,6 +46,8 @@ $border-color: #eeeeee;
 $border-color-dark: #cccccc;
 $body-bg: #ffffff;
 $text-color: #4e514e;
+$footer-text-color: #333333;
+$footer-link-hover: #e8c410;
 $offline-red: #A30000;
 $offline-red-hover: #AD0000;
 
@@ -617,5 +619,21 @@ i.icon.icon-minus{
 @media print, screen and (min-width: 600px) {
   .or-appearance-w6 .or-appearance-w1.or-appearance-dropdown-matrix {
       width: calc(16.6666666667%);
+  }
+}
+
+.copyright{
+  color: $footer-text-color;
+  font-size: $default-text-size - 1;
+  margin-top: $padding-unit;
+  overflow: hidden;
+  text-align: center;
+  a{
+    color: $secondary-green;
+    text-align: center;
+    text-decoration: none;
+    &:hover{
+      color: $footer-link-hover;
+    }
   }
 }
