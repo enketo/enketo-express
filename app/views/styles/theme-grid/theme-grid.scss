@@ -631,7 +631,7 @@ i.icon.icon-minus{
   a{
     color: $secondary-green;
     text-align: center;
-    text-decoration: none;
+    text-decoration: underline;
     &:hover{
       color: $footer-link-hover;
     }
