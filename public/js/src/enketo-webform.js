@@ -191,29 +191,34 @@ function _swapTheme( survey ) {
     }
 }
 
+/**
+ * @param {string} modelStr
+ * @param {Record<string, any>} defaults
+ * @returns {string | null}
+ */
 function _prepareInstance( modelStr, defaults ) {
-    let model;
-    let init;
-    let existingInstance = null;
+    const entries = Object.entries( defaults || {} );
 
-    for ( const path in defaults ) {
-        if ( Object.prototype.hasOwnProperty.call( defaults, path ) ) {
-            model = model || new FormModel( modelStr, {
-                full: false
-            } );
-            init = init || model.init();
-            if ( Object.prototype.hasOwnProperty.call( defaults, path ) ) {
-                // if this fails, the FormModel will output a console error and ignore the instruction
-                model.node( path ).setVal( defaults[ path ] );
-            }
-            // TODO: would be good to not include nodes that weren't in the defaults parameter
-            // HOWEVER, that would also set number of repeats to 0, which may be undesired
-            // TODO: would be good to just pass model along instead of converting to string first
-            existingInstance = model.getStr();
-        }
+    if ( entries.length === 0 ) {
+        return null;
     }
 
-    return existingInstance;
+    let model = new FormModel( modelStr, {
+        full: false,
+    } );
+
+    model.init();
+
+    for ( const [ path, value ] of Object.entries( defaults ) ) {
+        // if this fails, the FormModel will output a console error and ignore the instruction
+        model.node( path ).setVal( value );
+    }
+
+    // TODO: would be good to not include nodes that weren't in the defaults parameter
+    // HOWEVER, that would also set number of repeats to 0, which may be undesired
+    // TODO: would be good to just pass model along instead of converting to string first
+    // existingInstance = model.getStr();
+    return model.getStr();
 }
 
 function _init( formParts ) {
