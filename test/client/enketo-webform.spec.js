@@ -796,5 +796,36 @@ describe( 'Enketo webform app', () => {
                 expect( caught ).to.equal( null );
             } );
         } );
+
+        describe( 'maximum submission size', () => {
+            it( 'sets the survey\'s maximum submission size on settings', () => {
+                let maxSizeSetting = 4;
+
+                sandbox.stub( settings, 'maxSize' ).get( () => maxSizeSetting );
+                sandbox.stub( settings, 'maxSize' ).set( ( maxSize ) => {
+                    maxSizeSetting = maxSize;
+                } );
+
+                webformPrivate._updateMaxSizeSetting( {
+                    ...baseSurvey,
+                    maxSize: 5,
+                } );
+
+                expect( maxSizeSetting ).to.equal( 5 );
+            } );
+
+            it( 'preserves existing max size setting when survey does not specify a max size', () => {
+                let maxSizeSetting = 4;
+
+                sandbox.stub( settings, 'maxSize' ).get( () => maxSizeSetting );
+                sandbox.stub( settings, 'maxSize' ).set( ( maxSize ) => {
+                    maxSizeSetting = maxSize;
+                } );
+
+                webformPrivate._updateMaxSizeSetting( baseSurvey );
+
+                expect( maxSizeSetting ).to.equal( 4 );
+            } );
+        } );
     } );
 } );
