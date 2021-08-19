@@ -413,7 +413,7 @@ describe( 'Enketo webform app', () => {
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'querySelector',
-                        expectedArgs: [ '.form-header__branding img' ],
+                        expectedArgs: [ webformPrivate.BRAND_IMAGE_SELECTOR ],
                         returnValue: document.createElement( 'img' ),
                     } ),
 
@@ -600,7 +600,7 @@ describe( 'Enketo webform app', () => {
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'querySelector',
-                        expectedArgs: [ '.form-header__branding img' ],
+                        expectedArgs: [ webformPrivate.BRAND_IMAGE_SELECTOR ],
                         returnValue: document.createElement( 'img' ),
                     } ),
 
@@ -678,6 +678,122 @@ describe( 'Enketo webform app', () => {
                 }
 
                 expect( performedSteps.length ).to.equal( steps.length );
+            } );
+        } );
+    } );
+
+    describe( 'initialization behavior', () => {
+        /** @type {Survey} */
+        let baseSurvey;
+
+        beforeEach( () => {
+            enketoId = 'surveyA';
+
+            baseSurvey = {
+                get enketoId() { return enketoId; },
+
+                defaults: {},
+                externalData: [],
+                form: '<form></form>',
+                model: '<a/>',
+                theme: 'kobo',
+                xformUrl: 'https://example.com/form.xml',
+            };
+        } );
+
+        describe( 'branding', () => {
+            /** @see {@link https://stackoverflow.com/a/13139830} */
+            const defaultBrandImageURL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
+            /** @see {@link https://stackoverflow.com/a/12483396} */
+            const brandImageURL = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+
+            /** @type {HTMLImageElement | null} */
+            let brandImage = null;
+
+            /** @type {boolean} */
+            let isOffline;
+
+            /** @type {Survey} */
+            let brandedSurvey;
+
+            beforeEach( () => {
+                brandImage = document.createElement( 'img' );
+                brandImage.setAttribute( 'src', defaultBrandImageURL );
+                brandImage.classList.add( 'hide' );
+
+                isOffline = false;
+
+                brandedSurvey = {
+                    ...baseSurvey,
+
+                    branding: { source: brandImageURL },
+                };
+
+                sandbox.stub( settings, 'offline' ).get( () => isOffline );
+
+                sandbox.stub( document, 'querySelector' ).callsFake( selector => {
+                    if ( selector === webformPrivate.BRAND_IMAGE_SELECTOR ) {
+                        return brandImage;
+                    }
+
+                    throw new Error( `Unexpected selector: ${selector}` );
+                } );
+            } );
+
+            it( 'sets the brand image source to the survey brand source', () => {
+                webformPrivate._addBranding( brandedSurvey );
+
+                expect( brandImage.src ).to.equal( brandImageURL );
+            } );
+
+            it( 'sets the brand image data-offline-source to the offline survey brand source', () => {
+                isOffline = true;
+
+                webformPrivate._addBranding( brandedSurvey );
+
+                expect( brandImage.getAttribute( 'data-offline-src' ) ).to.equal( brandImageURL );
+            } );
+
+            it( 'unsets the brand image src on the offline survey brand source', () => {
+                isOffline = true;
+
+                webformPrivate._addBranding( brandedSurvey );
+
+                expect( brandImage.src ).to.equal( '' );
+            } );
+
+            it( 'does not set the source if a survey does not have branding', () => {
+                webformPrivate._addBranding( baseSurvey );
+
+                expect( brandImage.src ).to.equal( defaultBrandImageURL );
+            } );
+
+            it( 'unhides the brand image for a branded survey', () => {
+                webformPrivate._addBranding( brandedSurvey );
+
+                expect( brandImage.classList.contains( 'hide' ) ).to.equal( false );
+            } );
+
+            it( 'unhides the default brand image for an unbranded survey', () => {
+                webformPrivate._addBranding( baseSurvey );
+
+                expect( brandImage.classList.contains( 'hide' ) ).to.equal( false );
+            } );
+
+            it( 'does not error when a brand image is not found', () => {
+                /** @type {Error | null} */
+                let caught = null;
+
+                brandImage = null;
+
+                try {
+                    webformPrivate._addBranding( brandImage );
+                } catch ( error ) {
+                    caught = error;
+                }
+
+                expect( caught ).to.equal( null );
             } );
         } );
     } );

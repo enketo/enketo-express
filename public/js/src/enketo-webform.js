@@ -154,20 +154,25 @@ function _setEmergencyHandlers() {
     }
 }
 
+const BRAND_IMAGE_SELECTOR = '.form-header__branding img';
+
 /**
  * Adds/replaces branding if necessary, and unhides branding.
  *
  * @param { object } survey - [description]
  */
 function _addBranding( survey ) {
-    const brandImg = document.querySelector( '.form-header__branding img' );
+    const brandImg = document.querySelector( BRAND_IMAGE_SELECTOR );
     const attribute = ( settings.offline ) ? 'data-offline-src' : 'src';
 
-    if ( brandImg && survey.branding && survey.branding.source && brandImg.src !== survey.branding.source ) {
-        brandImg.src = '';
-        brandImg.setAttribute( attribute, survey.branding.source );
+    if ( brandImg != null ) {
+        if ( survey.branding && survey.branding.source && brandImg.src !== survey.branding.source ) {
+            brandImg.removeAttribute( 'src' );
+            brandImg.setAttribute( attribute, survey.branding.source );
+        }
+
+        brandImg.classList.remove( 'hide' );
     }
-    brandImg.classList.remove( 'hide' );
 
     return survey;
 }
