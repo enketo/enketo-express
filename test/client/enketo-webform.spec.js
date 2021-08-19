@@ -827,5 +827,57 @@ describe( 'Enketo webform app', () => {
                 expect( maxSizeSetting ).to.equal( 4 );
             } );
         } );
+
+        describe( 'preparing an existing instance', () => {
+            const model = '<instance><data><el1/><el2>default</el2></data><meta><instanceID/></meta></instance>';
+
+            it( 'populates an instance string with provided defaults', () => {
+                const result = webformPrivate._prepareInstance( model, {
+                    '//instance/data/el1': 'v1',
+                    '//instance/data/el2': 'v2',
+                } );
+                const expected = '<data><el1>v1</el1><el2>v2</el2></data>';
+
+                expect( result ).to.equal( expected );
+            } );
+
+            it( 'preserves the model default when no instance default is provided', () => {
+                const result = webformPrivate._prepareInstance( model, {
+                    '//instance/data/el1': 'v1',
+                } );
+                const expected = '<data><el1>v1</el1><el2>default</el2></data>';
+
+                expect( result ).to.equal( expected );
+            } );
+
+            it( 'does not return an instance string when no defaults are defined', () => {
+                const result = webformPrivate._prepareInstance( model, {} );
+
+                expect( result ).to.equal( null );
+            } );
+
+            it( 'does not return an instance string when no defaults object is provided', () => {
+                const result = webformPrivate._prepareInstance( model );
+
+                expect( result ).to.equal( null );
+            } );
+
+            it( 'does not populate inherited properties from defaults', () => {
+                const proto = {
+                    '//instance/data/el2': 'v2',
+                };
+                const defaults = Object.create( proto, {
+                    '//instance/data/el1': {
+                        enumerable: true,
+                        value: 'v1',
+                    },
+                } );
+
+                const result = webformPrivate._prepareInstance( model, defaults );
+                const expected = '<data><el1>v1</el1><el2>default</el2></data>';
+
+                expect( result ).to.equal( expected );
+            } );
+        } );
     } );
 } );
