@@ -11,7 +11,8 @@ import formCache from './module/form-cache';
 import applicationCache from './module/application-cache';
 
 const loader = document.querySelector( '.main-loader' );
-const formheader = document.querySelector( '.main > .paper > .form-header' );
+const FORM_HEADER_SELECTOR = '.main > .paper > .form-header';
+const formheader = document.querySelector( FORM_HEADER_SELECTOR );
 const survey = {
     enketoId: settings.enketoId,
     xformUrl: settings.xformUrl,
