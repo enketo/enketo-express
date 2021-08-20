@@ -39,14 +39,13 @@ describe( 'Enketo webform app', () => {
     /** @type {import('sinon').SinonFakeTimers} */
     let timers;
 
-    beforeEach( async () => {
-        sandbox = sinon.createSandbox();
-        timers = sinon.useFakeTimers();
+    /** @type {HTMLElement} */
+    let mainElement = null;
 
-        enketoId = 'surveyA';
-        defaults = {};
+    before( async () => {
+        const formHeader = document.querySelector( '.form-header' );
 
-        if ( webformPrivate == null ) {
+        if ( formHeader == null ) {
             const domParser = new DOMParser();
             const formDOM = domParser.parseFromString( `
                 <div class="main">
@@ -56,12 +55,22 @@ describe( 'Enketo webform app', () => {
                 </div>
             `, 'text/html' );
 
-            document.body.appendChild( formDOM.documentElement.querySelector( '.main' ) );
+            mainElement = formDOM.documentElement.querySelector( '.main' );
 
-            const { _PRIVATE_TEST_ONLY_ } = await import( '../../public/js/src/enketo-webform' );
-
-            webformPrivate = _PRIVATE_TEST_ONLY_;
+            document.body.appendChild( mainElement );
         }
+
+        const { _PRIVATE_TEST_ONLY_ } = await import( '../../public/js/src/enketo-webform' );
+
+        webformPrivate = _PRIVATE_TEST_ONLY_;
+    } );
+
+    beforeEach( async () => {
+        sandbox = sinon.createSandbox();
+        timers = sinon.useFakeTimers();
+
+        enketoId = 'surveyA';
+        defaults = {};
     } );
 
     afterEach( () => {
@@ -69,6 +78,12 @@ describe( 'Enketo webform app', () => {
         timers.clearInterval();
         timers.clearTimeout();
         timers.restore();
+    } );
+
+    after( () => {
+        if ( mainElement != null ) {
+            document.body.removeChild( mainElement );
+        }
     } );
 
     describe( 'initialization steps', () => {
