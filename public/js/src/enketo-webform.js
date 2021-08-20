@@ -104,9 +104,11 @@ function _updateMaxSizeSetting( survey ) {
     reload: location.reload.bind( location ),
 };
 
+const LOAD_ERROR_CLASS = 'fail';
+
 function _showErrorOrAuthenticate( error ) {
     error = ( typeof error === 'string' ) ? new Error( error ) : error;
-    loader.classList.add( 'fail' );
+    loader.classList.add( LOAD_ERROR_CLASS );
 
     if ( error.status === 401 ) {
         _location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( _location.href )}`;
