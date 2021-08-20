@@ -91,12 +91,25 @@ function _updateMaxSizeSetting( survey ) {
     return survey;
 }
 
+/**
+ * Wrap location access to detect/prevent navigation in tests.
+ */
+ const _location = {
+    get href() {
+        return location.href;
+    },
+    set href( href ) {
+        location.href = href;
+    },
+    reload: location.reload.bind( location ),
+};
+
 function _showErrorOrAuthenticate( error ) {
     error = ( typeof error === 'string' ) ? new Error( error ) : error;
     loader.classList.add( 'fail' );
 
     if ( error.status === 401 ) {
-        window.location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( window.location.href )}`;
+        _location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( _location.href )}`;
     } else {
         if ( !Array.isArray( error ) ) {
             error = [ error.message  || t( 'error.unknown' ) ];
@@ -133,11 +146,13 @@ function _setFormCacheEventHandlers( survey ) {
     return survey;
 }
 
+const FLUSH_BUTTON_SELECTOR = '.side-slider__advanced__button.flush-db';
+
 /**
  * Advanced/emergency handlers that should always be activated even if form loading fails.
  */
 function _setEmergencyHandlers() {
-    const flushBtn = document.querySelector( '.side-slider__advanced__button.flush-db' );
+    const flushBtn = document.querySelector( FLUSH_BUTTON_SELECTOR );
 
     if ( flushBtn ) {
         flushBtn.addEventListener( 'click', () => {
@@ -155,7 +170,7 @@ function _setEmergencyHandlers() {
                     return store.flush();
                 } )
                 .then( () => {
-                    location.reload();
+                    _location.reload();
                 } )
                 .catch( () => {} );
         } );

@@ -36,8 +36,12 @@ describe( 'Enketo webform app', () => {
     /** @type {Sandbox} */
     let sandbox;
 
+    /** @type {import('sinon').SinonFakeTimers} */
+    let timers;
+
     beforeEach( async () => {
         sandbox = sinon.createSandbox();
+        timers = sinon.useFakeTimers();
 
         enketoId = 'surveyA';
         defaults = {};
@@ -62,6 +66,9 @@ describe( 'Enketo webform app', () => {
 
     afterEach( () => {
         sandbox.restore();
+        timers.clearInterval();
+        timers.clearTimeout();
+        timers.restore();
     } );
 
     describe( 'initialization steps', () => {
@@ -309,19 +316,8 @@ describe( 'Enketo webform app', () => {
         } );
 
         describe( 'offline', () => {
-            /** @type {import('sinon').SinonFakeTimers} */
-            let timers;
-
             beforeEach( () => {
                 sandbox.stub( settings, 'offline' ).get( () => true );
-
-                timers = sinon.useFakeTimers();
-            } );
-
-            afterEach( () => {
-                timers.clearInterval();
-                timers.clearTimeout();
-                timers.restore();
             } );
 
             it( 'initializes offline forms', async () => {
@@ -700,6 +696,168 @@ describe( 'Enketo webform app', () => {
             };
         } );
 
+        describe( 'emergency handlers', () => {
+            /**
+             * @param {number} timeoutMs
+             */
+            const timeoutRejectionPromise = ( timeoutMs ) => {
+                // Defined here to get a reliable stack trace
+                const error = new Error( `Promise not resolved in ${timeoutMs} milliseconds` );
+
+                /** @type {Function} */
+                let resolver;
+
+                const promise = new Promise( ( resolve, reject ) => {
+                    const timeout = setTimeout( () => {
+                        reject( error );
+                    }, timeoutMs );
+
+                    resolver = ( value ) => {
+                        clearTimeout( timeout );
+                        resolve( value );
+                    };
+                } );
+
+                return {
+                    promise,
+                    resolver,
+                };
+            };
+
+            /** @type {HTMLButtonElement} */
+            let flushButton;
+
+            /** @type {boolean} */
+            let isConfirmed;
+
+            /** @type {Promise<boolean> | null} */
+            let confirmPromise;
+
+            /** @type {Stub} */
+            let confirmStub;
+
+            /** @type {Promise<void> | null} */
+            let flushPromise;
+
+            /** @type {Stub} */
+            let flushStub;
+
+            /** @type {Promise<void>} */
+            let reloadPromise;
+
+            /** @type {Stub} */
+            let reloadStub;
+
+            /** @type {Function} */
+            let resolveReload;
+
+            beforeEach( () => {
+                flushButton = document.createElement( 'button' );
+
+                const querySelector = document.querySelector.bind( document );
+
+                sandbox.stub( document, 'querySelector' ).callsFake( selector => {
+                    if ( selector === webformPrivate.FLUSH_BUTTON_SELECTOR ) {
+                        return flushButton;
+                    }
+
+                    return querySelector( selector );
+                } );
+
+                const {
+                    resolver: resolveConfirm,
+                    promise: confirm,
+                } = timeoutRejectionPromise( 100 );
+
+                confirmPromise = confirm;
+
+                confirmStub = sandbox.stub( gui, 'confirm' ).callsFake( () => {
+                    resolveConfirm( isConfirmed );
+
+                    return confirmPromise;
+                } );
+
+                const {
+                    resolver: reloadResolver,
+                    promise: reload,
+                } = timeoutRejectionPromise( 102 );
+
+                resolveReload = reloadResolver;
+                reloadPromise = reload;
+
+                reloadStub = sandbox.stub( webformPrivate._location, 'reload' ).callsFake( () => {
+                    resolveReload( true );
+
+                    return reloadPromise;
+                } );
+
+                const {
+                    resolver: resolveFlush,
+                    promise: flush,
+                } = timeoutRejectionPromise( 101 );
+
+                flushPromise = flush;
+
+                flushStub = sandbox.stub( store, 'flush' ).callsFake( () => {
+                    resolveFlush( true );
+
+                    return flushPromise;
+                } );
+
+                sandbox.stub( i18next, 't' ).returnsArg( 0 );
+
+                webformPrivate._setEmergencyHandlers();
+            } );
+
+            it( 'flushes the store when confirmed', async () => {
+                isConfirmed = true;
+
+                flushButton.dispatchEvent( new Event( 'click' ) );
+
+                expect( confirmStub ).to.have.been.calledWith( {
+                    msg: 'confirm.deleteall.msg',
+                    heading: 'confirm.deleteall.heading',
+                }, {
+                    posButton: 'confirm.deleteall.posButton',
+                } );
+
+                await Promise.all( [ confirmPromise, timers.tickAsync( 100 ) ] );
+
+                expect( flushStub ).to.have.been.called;
+
+                await Promise.all( [ flushPromise, timers.tickAsync( 101 ) ] );
+
+                await Promise.all( [ reloadPromise, timers.tickAsync( 102 ) ] );
+
+                expect( reloadStub ).to.have.been.called;
+            } );
+
+            it( 'does not flush the store when not confirmed', async () => {
+                isConfirmed = false;
+
+                flushButton.dispatchEvent( new Event( 'click' ) );
+
+                expect( confirmStub ).to.have.been.calledWith( {
+                    msg: 'confirm.deleteall.msg',
+                    heading: 'confirm.deleteall.heading',
+                }, {
+                    posButton: 'confirm.deleteall.posButton',
+                } );
+
+                await Promise.all( [ confirmPromise, timers.tickAsync( 100 ) ] );
+
+                expect( flushStub ).not.to.have.been.called;
+
+                await Promise.all( [
+                    flushPromise.catch( () => {} ),
+                    reloadPromise.catch( () => {} ),
+                    timers.tickAsync( 203 ),
+                ] );
+
+                expect( reloadStub ).not.to.have.been.called;
+            } );
+        } );
+
         describe( 'branding', () => {
             /** @see {@link https://stackoverflow.com/a/13139830} */
             const defaultBrandImageURL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
@@ -1004,7 +1162,7 @@ describe( 'Enketo webform app', () => {
                 controllerInitStub.callsFake( async ( formElement ) => {
                     // Tests that `localize` from `translator.js` was called by inference
                     // without testing that entire functionality.
-                    queryStub = sandbox.stub( formElement, 'querySelectorAll' );
+                    queryStub = sandbox.stub( formElement, 'querySelectorAll' ).returns( [] );
 
                     return survey;
                 } );
