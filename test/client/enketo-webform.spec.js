@@ -120,7 +120,16 @@ describe( 'Enketo webform app', () => {
          * @property {any} returnValue
          */
 
-        /** @typedef {MockGetter | ExpectSetter | MockExpectedCall} InitStepOptions */
+        /**
+         * @typedef MockErrorCondition
+         * @property {string} description
+         * @property {'throws'} stubMethod
+         * @property {object} object
+         * @property {PropertyKey} key
+         * @property {Error | Promise<Error>} errorCondition
+         */
+
+        /** @typedef {MockGetter | ExpectSetter | MockExpectedCall | MockErrorCondition} InitStepOptions */
 
         /** @typedef {InitStepOptions['stubMethod']} InitStepStubMethod */
 
@@ -274,6 +283,7 @@ describe( 'Enketo webform app', () => {
                         expectedValue,
                         expectedArgs,
                         returnValue,
+                        errorCondition,
                     } = this.options;
 
                     debugLog( 'Performing:', description );
@@ -286,6 +296,10 @@ describe( 'Enketo webform app', () => {
 
                     if ( stubMethod === 'set' ) {
                         return expect( args ).to.deep.equal( [ expectedValue ] );
+                    }
+
+                    if ( stubMethod === 'throws' ) {
+                        return errorCondition;
                     }
 
                     expect( args.length ).to.equal( expectedArgs.length );
@@ -540,6 +554,151 @@ describe( 'Enketo webform app', () => {
 
                 expect( performedSteps.length ).to.equal( steps.length );
             } );
+
+            it( 'reports offline initialization failure (synchronous)', async () => {
+                enketoId = 'offlineA';
+
+                const xformUrl = 'https://example.com/form.xml';
+                const surveyInit = {
+                    ...surveyInitData,
+
+                    xformUrl,
+                };
+
+                const error = new Error( 'Something failed in the DOM.' );
+                const translatedErrorAdvice = 'Translated error advice';
+
+                const steps = [
+                    prepareInitStep( {
+                        description: 'Offline-capable event listener',
+                        stubMethod: 'throws',
+                        object: document,
+                        key: 'addEventListener',
+                        errorCondition: error,
+                    } ),
+                    prepareInitStep( {
+                        description: 'Set error class',
+                        stubMethod: 'callsFake',
+                        object: loaderElement.classList,
+                        key: 'add',
+                        expectedArgs: [ webformPrivate.LOAD_ERROR_CLASS ],
+                    } ),
+                    prepareInitStep( {
+                        description: 'Translate error advice',
+                        stubMethod: 'callsFake',
+                        object: i18next,
+                        key: 't',
+                        expectedArgs: [ webformPrivate.LOAD_ERROR_ENTRY_ADVICE, undefined ],
+                        returnValue: translatedErrorAdvice,
+                    } ),
+                    prepareInitStep( {
+                        description: 'Alert load errors',
+                        stubMethod: 'callsFake',
+                        object: gui,
+                        key: 'alertLoadErrors',
+                        expectedArgs: [ [ error.message ], translatedErrorAdvice ]
+                    } ),
+                ];
+                /** @type {Promise} */
+                let offlineInitialization = webformPrivate._initOffline( surveyInit );
+
+                expect( 'xformUrl' in surveyInit ).to.equal( false );
+
+                await offlineInitialization;
+
+                for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
+                    const step = performedSteps.find( performedStep => {
+                        return performedStep === expectedStep;
+                    } );
+                    const index = performedSteps.indexOf( expectedStep );
+
+                    expect( step ).to.equal( expectedStep );
+                    expect( index, `Unexpected order of step ${expectedStep.options.description}` )
+                        .to.equal( expectedIndex );
+                }
+
+                expect( performedSteps.length ).to.equal( steps.length );
+            } );
+
+            it( 'reports offline initialization failure (asynchronous)', async () => {
+                enketoId = 'offlineA';
+
+                const xformUrl = 'https://example.com/form.xml';
+                const surveyInit = {
+                    ...surveyInitData,
+
+                    xformUrl,
+                };
+
+                const error = new Error( 'Application cache initialization failed.' );
+                const translatedErrorAdvice = 'Translated error advice';
+
+                const steps = [
+                    prepareInitStep( {
+                        description: 'Offline-capable event listener',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'addEventListener',
+                        expectedArgs: [ events.OfflineLaunchCapable().type, expectFunction ],
+                    } ),
+                    prepareInitStep( {
+                        description: 'Application update event listener',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'addEventListener',
+                        expectedArgs: [ events.ApplicationUpdated().type, expectFunction ],
+                    } ),
+                    prepareInitStep( {
+                        description: 'Initialize application cache',
+                        stubMethod: 'callsFake',
+                        object: applicationCache,
+                        key: 'init',
+                        expectedArgs: [ surveyInit ],
+                        returnValue: Promise.reject( error ),
+                    } ),
+                    prepareInitStep( {
+                        description: 'Set error class',
+                        stubMethod: 'callsFake',
+                        object: loaderElement.classList,
+                        key: 'add',
+                        expectedArgs: [ webformPrivate.LOAD_ERROR_CLASS ],
+                    } ),
+                    prepareInitStep( {
+                        description: 'Translate error advice',
+                        stubMethod: 'callsFake',
+                        object: i18next,
+                        key: 't',
+                        expectedArgs: [ webformPrivate.LOAD_ERROR_ENTRY_ADVICE, undefined ],
+                        returnValue: translatedErrorAdvice,
+                    } ),
+                    prepareInitStep( {
+                        description: 'Alert load errors',
+                        stubMethod: 'callsFake',
+                        object: gui,
+                        key: 'alertLoadErrors',
+                        expectedArgs: [ [ error.message ], translatedErrorAdvice ]
+                    } ),
+                ];
+                /** @type {Promise} */
+                let offlineInitialization = webformPrivate._initOffline( surveyInit );
+
+                expect( 'xformUrl' in surveyInit ).to.equal( false );
+
+                await offlineInitialization;
+
+                for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
+                    const step = performedSteps.find( performedStep => {
+                        return performedStep === expectedStep;
+                    } );
+                    const index = performedSteps.indexOf( expectedStep );
+
+                    expect( step ).to.equal( expectedStep );
+                    expect( index, `Unexpected order of step ${expectedStep.options.description}` )
+                        .to.equal( expectedIndex );
+                }
+
+                expect( performedSteps.length ).to.equal( steps.length );
+            } );
         } );
 
         describe( 'online', () => {
@@ -676,6 +835,70 @@ describe( 'Enketo webform app', () => {
                     } ),
                 ];
 
+                /** @type {Promise} */
+                let onlineInitialization = webformPrivate._initOnline( surveyInit );
+
+                await onlineInitialization;
+
+                for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
+                    const step = performedSteps.find( performedStep => {
+                        return performedStep === expectedStep;
+                    } );
+                    const index = performedSteps.indexOf( expectedStep );
+
+                    expect( step ).to.equal( expectedStep );
+                    expect( index, `Unexpected order of step ${expectedStep.options.description}` )
+                        .to.equal( expectedIndex );
+                }
+
+                expect( performedSteps.length ).to.equal( steps.length );
+            } );
+
+            it( 'reports online initialization failure', async () => {
+                enketoId = 'offlineA';
+
+                const xformUrl = 'https://example.com/form.xml';
+                const surveyInit = {
+                    ...surveyInitData,
+
+                    xformUrl,
+                };
+
+                const error = new Error( 'IndexedDB store initialization failed.' );
+                const translatedErrorAdvice = 'Translated error advice';
+
+                const steps = [
+                    prepareInitStep( {
+                        description: 'Initialize IndexedDB store (used for last-saved instances)',
+                        stubMethod: 'callsFake',
+                        object: store,
+                        key: 'init',
+                        expectedArgs: [],
+                        returnValue: Promise.reject( error ),
+                    } ),
+                    prepareInitStep( {
+                        description: 'Set error class',
+                        stubMethod: 'callsFake',
+                        object: loaderElement.classList,
+                        key: 'add',
+                        expectedArgs: [ webformPrivate.LOAD_ERROR_CLASS ],
+                    } ),
+                    prepareInitStep( {
+                        description: 'Translate error advice',
+                        stubMethod: 'callsFake',
+                        object: i18next,
+                        key: 't',
+                        expectedArgs: [ webformPrivate.LOAD_ERROR_ENTRY_ADVICE, undefined ],
+                        returnValue: translatedErrorAdvice,
+                    } ),
+                    prepareInitStep( {
+                        description: 'Alert load errors',
+                        stubMethod: 'callsFake',
+                        object: gui,
+                        key: 'alertLoadErrors',
+                        expectedArgs: [ [ error.message ], translatedErrorAdvice ]
+                    } ),
+                ];
                 /** @type {Promise} */
                 let onlineInitialization = webformPrivate._initOnline( surveyInit );
 

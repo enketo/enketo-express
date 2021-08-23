@@ -34,7 +34,11 @@ function _initOffline( survey ) {
 
     delete survey.xformUrl;
 
-    _setAppCacheEventHandlers();
+    try {
+        _setAppCacheEventHandlers();
+    } catch ( error ) {
+        return _showErrorOrAuthenticate( error );
+    }
 
     return applicationCache.init( survey )
         .then( initTranslator )
