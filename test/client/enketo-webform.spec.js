@@ -89,6 +89,9 @@ describe( 'Enketo webform app', () => {
         if ( mainElement != null ) {
             document.body.removeChild( mainElement );
         }
+        if ( loaderElement != null ) {
+            document.body.removeChild( loaderElement );
+        }
     } );
 
     describe( 'initialization steps', () => {
