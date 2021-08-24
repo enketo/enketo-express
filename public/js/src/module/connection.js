@@ -414,6 +414,12 @@ function _getData( url, data = {} ){
     return _request( url, 'GET', data );
 }
 
+/**
+ * @param {string} url
+ * @param {'GET' | 'POST'} method
+ * @param {any} data
+ * @return {Promise<Record<string, any>>}
+ */
 function _request( url, method = 'POST', data = {}  ){
     const options = {
         method,
@@ -615,7 +621,7 @@ function getFormPartsHash() {
  * Obtains XML instance that is cached at the server
  *
  * @param { object } props - form properties object
- * @return { Promise<string> } a Promise that resolves with an XML instance as text
+ * @return { Promise<Record<string, any>> } a Promise that resolves with an XML instance as text
  */
 function getExistingInstance( props ) {
     return _getData( INSTANCE_URL, props );

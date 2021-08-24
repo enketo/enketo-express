@@ -23,10 +23,252 @@ import store from '../../public/js/src/module/store';
  * @typedef {import('../../app/models/survey-model').SurveyObject} Survey
  */
 
+/**
+ * @typedef {import('../../app/models/record-model').EnketoRecord} EnketoRecord
+ */
+
 /** @type {Record<string, any> | null} */
 let webformPrivate = null;
 
-describe( 'Enketo webform app', () => {
+describe( 'Enketo webform app entrypoints', () => {
+    /**
+     * @typedef MockGetter
+     * @property {string} description
+     * @property {'get'} stubMethod
+     * @property {object} object
+     * @property {PropertyKey} key
+     * @property {any} propertyValue
+     */
+
+    /**
+     * @typedef ExpectSetter
+     * @property {string} description
+     * @property {'set'} stubMethod
+     * @property {object} object
+     * @property {PropertyKey} key
+     * @property {any} expectedValue
+     */
+
+    /**
+     * @typedef MockExpectedCall
+     * @property {string} description
+     * @property {'callsFake'} stubMethod
+     * @property {object} object
+     * @property {PropertyKey} key
+     * @property {any[]} expectedArgs
+     * @property {any} returnValue
+     */
+
+    /**
+     * @typedef MockErrorCondition
+     * @property {string} description
+     * @property {'throws'} stubMethod
+     * @property {object} object
+     * @property {PropertyKey} key
+     * @property {Error | Promise<Error>} errorCondition
+     */
+
+    /** @typedef {MockGetter | ExpectSetter | MockExpectedCall | MockErrorCondition} InitStepOptions */
+
+    /** @typedef {InitStepOptions['stubMethod']} InitStepStubMethod */
+
+    /**
+     * @typedef Resolvable
+     * @property {() => Promise<void>} resolveStep
+     * @property {(error: Error) => Promise<void>} rejectStep
+     */
+
+    /**
+     * @typedef {InitStepOptions & Resolvable} InitStep
+     */
+
+    /**
+     * @typedef PreparedStepCache
+     * @property {Stub<any, any>} stub
+     * @property {InitStep[]} queue
+     */
+
+    /** @type {Map<object, Record<PropertyKey, PreparedStepCache>>} */
+    let preparedStepsCache;
+
+    /** @type {InitStep[]} */
+    let performedSteps;
+
+    class ParameterPredicate {
+        constructor( predicate ) {
+            this.predicate = predicate;
+        }
+
+        check( actual ) {
+            expect( actual ).to.satisfy( this.predicate );
+        }
+    }
+
+    /**
+     * Creates a predicate to determine whether a value is of the
+     * specified type.
+     *
+     * @param {string} expected
+     */
+    const expectTypeof = ( expected ) => (
+        new ParameterPredicate( ( actual => typeof actual === expected ) )
+    );
+
+    const expectFunction = expectTypeof( 'function' );
+    const expectObject = expectTypeof( 'object' );
+
+    /**
+     * Creates a predicate to determine that a callback was provided,
+     * and call it when provided.
+     */
+    const expectCallback = new ParameterPredicate( ( callback ) => {
+        if ( typeof callback === 'function' ) {
+            callback();
+
+            return true;
+        }
+
+        return false;
+    } );
+
+    /**
+     * Creates a predicate to determine if a translator URL was provided.
+     *
+     * @param {string} expected
+     */
+    const expectLanguage = ( expected ) => (
+        new ParameterPredicate( lang => lang.includes( `/${expected}/` ) )
+    );
+
+    /**
+     * @param {object} object
+     * @param {PropertyKey} key
+     * @return {PreparedStepCache}
+     */
+    const getPreparedStep = ( object, key ) => {
+        let objectCache = preparedStepsCache.get( object );
+
+        if ( objectCache == null ) {
+            objectCache = {};
+
+            preparedStepsCache.set( object, objectCache );
+        }
+
+        let cache = objectCache[key];
+
+        if ( cache == null ) {
+            cache = {
+                queue: [],
+                stub: sandbox.stub( object, key ),
+            };
+
+            Object.assign( objectCache, {
+                [key]: cache,
+            } );
+        }
+
+        return cache;
+    };
+
+    const debugLog = ( ...args ) => {
+        if ( DEBUG ) {
+            console.log( ...args );
+        }
+    };
+
+    /**
+     * Prepares a mocked initialization step which is expected to be performed.
+     * Once performed, the step is appeneded to `performedSteps` so that each
+     * step, and its order, can be verified.
+     *
+     * Behavior based on `options.stubMethod`:
+     *
+     * - 'get': the provided `options.propertyValue` is returned.
+     * - 'set': actual set value is compared to the `options.expectedValue`.
+     * - 'callsFake': actual arguments are compared to `options.expectedArgs`,
+     *   and `options.returnValue` is returned.
+     *
+     * `options.expectedArgs` items may be:
+     *
+     * - an instance of `ParameterPredicate`: its predicate will be performed
+     *   against the corresponding argument.
+     * - any other value: will be compared for deep equality.
+     *
+     * @param {InitStepOptions} options
+     * @return {InitStep}
+     */
+    const prepareInitStep = ( options ) => {
+        const {
+            description,
+            stubMethod,
+            object,
+            key,
+        } = options;
+
+        let { queue, stub } = getPreparedStep( object, key );
+
+        debugLog( 'Initializing:', description );
+
+        const initStep = {
+            options,
+            resolveStep( ...args ) {
+                const {
+                    description,
+                    stubMethod,
+                    propertyValue,
+                    expectedValue,
+                    expectedArgs,
+                    returnValue,
+                    errorCondition,
+                } = this.options;
+
+                debugLog( 'Performing:', description );
+
+                performedSteps.push( this );
+
+                if ( stubMethod === 'get' ) {
+                    return propertyValue;
+                }
+
+                if ( stubMethod === 'set' ) {
+                    return expect( args ).to.deep.equal( [ expectedValue ] );
+                }
+
+                if ( stubMethod === 'throws' ) {
+                    return errorCondition;
+                }
+
+                expect( args.length ).to.equal( expectedArgs.length );
+
+                for ( const [ index, arg ] of args.entries() ) {
+                    const expected = expectedArgs[index];
+
+                    if ( expected instanceof ParameterPredicate ) {
+                        expected.check( arg );
+                    } else {
+                        expect( arg ).to.deep.equal( expected );
+                    }
+                }
+
+                return returnValue;
+            },
+        };
+
+        queue.push( initStep );
+
+        stub[stubMethod]( ( ...args ) => {
+            let step = queue.shift();
+
+            expect( step ).not.to.be.undefined;
+
+            return step.resolveStep( ...args );
+        } );
+
+        debugLog( 'Initialized:', description );
+
+        return initStep;
+    };
+
     /** @type {string} */
     let enketoId;
 
@@ -65,14 +307,17 @@ describe( 'Enketo webform app', () => {
             document.body.append( mainElement, loaderElement );
         }
 
-        const { _PRIVATE_TEST_ONLY_ } = await import( '../../public/js/src/enketo-webform' );
-
-        webformPrivate = _PRIVATE_TEST_ONLY_;
+        webformPrivate = ( await import( '../../public/js/src/enketo-webform' ) )._PRIVATE_TEST_ONLY_;
     } );
 
     beforeEach( async () => {
         sandbox = sinon.createSandbox();
         timers = sinon.useFakeTimers();
+
+        defaults = {};
+
+        performedSteps = [];
+        preparedStepsCache = new Map();
 
         enketoId = 'surveyA';
         defaults = {};
@@ -94,256 +339,11 @@ describe( 'Enketo webform app', () => {
         }
     } );
 
-    describe( 'initialization steps', () => {
-        /**
-         * @typedef MockGetter
-         * @property {string} description
-         * @property {'get'} stubMethod
-         * @property {object} object
-         * @property {PropertyKey} key
-         * @property {any} propertyValue
-         */
-
-        /**
-         * @typedef ExpectSetter
-         * @property {string} description
-         * @property {'set'} stubMethod
-         * @property {object} object
-         * @property {PropertyKey} key
-         * @property {any} expectedValue
-         */
-
-        /**
-         * @typedef MockExpectedCall
-         * @property {string} description
-         * @property {'callsFake'} stubMethod
-         * @property {object} object
-         * @property {PropertyKey} key
-         * @property {any[]} expectedArgs
-         * @property {any} returnValue
-         */
-
-        /**
-         * @typedef MockErrorCondition
-         * @property {string} description
-         * @property {'throws'} stubMethod
-         * @property {object} object
-         * @property {PropertyKey} key
-         * @property {Error | Promise<Error>} errorCondition
-         */
-
-        /** @typedef {MockGetter | ExpectSetter | MockExpectedCall | MockErrorCondition} InitStepOptions */
-
-        /** @typedef {InitStepOptions['stubMethod']} InitStepStubMethod */
-
-        /**
-         * @typedef Resolvable
-         * @property {() => Promise<void>} resolveStep
-         * @property {(error: Error) => Promise<void>} rejectStep
-         */
-
-        /**
-         * @typedef {InitStepOptions & Resolvable} InitStep
-         */
-
-        /**
-         * @typedef PreparedStepCache
-         * @property {Stub<any, any>} stub
-         * @property {InitStep[]} queue
-         */
-
+    describe( 'enketo-webform.js initialization steps', () => {
         /** @type {Partial<Survey>} */
         let surveyInitData;
 
-        /** @type {Map<object, Record<PropertyKey, PreparedStepCache>>} */
-        let preparedStepsCache;
-
-        /** @type {InitStep[]} */
-        let performedSteps;
-
-        class ParameterPredicate {
-            constructor( predicate ) {
-                this.predicate = predicate;
-            }
-
-            check( actual ) {
-                expect( actual ).to.satisfy( this.predicate );
-            }
-        }
-
-        /**
-         * Creates a predicate to determine whether a value is of the
-         * specified type.
-         *
-         * @param {string} expected
-         */
-        const expectTypeof = ( expected ) => (
-            new ParameterPredicate( ( actual => typeof actual === expected ) )
-        );
-
-        const expectFunction = expectTypeof( 'function' );
-        const expectObject = expectTypeof( 'object' );
-
-        /**
-         * Creates a predicate to determine that a callback was provided,
-         * and call it when provided.
-         */
-        const expectCallback = new ParameterPredicate( ( callback ) => {
-            if ( typeof callback === 'function' ) {
-                callback();
-
-                return true;
-            }
-
-            return false;
-        } );
-
-        /**
-         * Creates a predicate to determine if a translator URL was provided.
-         *
-         * @param {string} expected
-         */
-        const expectLanguage = ( expected ) => (
-            new ParameterPredicate( lang => lang.includes( `/${expected}/` ) )
-        );
-
-        /**
-         * @param {object} object
-         * @param {PropertyKey} key
-         * @return {PreparedStepCache}
-         */
-        const getPreparedStep = ( object, key ) => {
-            let objectCache = preparedStepsCache.get( object );
-
-            if ( objectCache == null ) {
-                objectCache = {};
-
-                preparedStepsCache.set( object, objectCache );
-            }
-
-            let cache = objectCache[key];
-
-            if ( cache == null ) {
-                cache = {
-                    queue: [],
-                    stub: sandbox.stub( object, key ),
-                };
-
-                Object.assign( objectCache, {
-                    [key]: cache,
-                } );
-            }
-
-            return cache;
-        };
-
-        const debugLog = ( ...args ) => {
-            if ( DEBUG ) {
-                console.log( ...args );
-            }
-        };
-
-        /**
-         * Prepares a mocked initialization step which is expected to be performed.
-         * Once performed, the step is appeneded to `performedSteps` so that each
-         * step, and its order, can be verified.
-         *
-         * Behavior based on `options.stubMethod`:
-         *
-         * - 'get': the provided `options.propertyValue` is returned.
-         * - 'set': actual set value is compared to the `options.expectedValue`.
-         * - 'callsFake': actual arguments are compared to `options.expectedArgs`,
-         *   and `options.returnValue` is returned.
-         *
-         * `options.expectedArgs` items may be:
-         *
-         * - an instance of `ParameterPredicate`: its predicate will be performed
-         *   against the corresponding argument.
-         * - any other value: will be compared for deep equality.
-         *
-         * @param {InitStepOptions} options
-         * @return {InitStep}
-         */
-        const prepareInitStep = ( options ) => {
-            const {
-                description,
-                stubMethod,
-                object,
-                key,
-            } = options;
-
-            let { queue, stub } = getPreparedStep( object, key );
-
-            debugLog( 'Initializing:', description );
-
-            const initStep = {
-                options,
-                resolveStep( ...args ) {
-                    const {
-                        description,
-                        stubMethod,
-                        propertyValue,
-                        expectedValue,
-                        expectedArgs,
-                        returnValue,
-                        errorCondition,
-                    } = this.options;
-
-                    debugLog( 'Performing:', description );
-
-                    performedSteps.push( this );
-
-                    if ( stubMethod === 'get' ) {
-                        return propertyValue;
-                    }
-
-                    if ( stubMethod === 'set' ) {
-                        return expect( args ).to.deep.equal( [ expectedValue ] );
-                    }
-
-                    if ( stubMethod === 'throws' ) {
-                        return errorCondition;
-                    }
-
-                    expect( args.length ).to.equal( expectedArgs.length );
-
-                    for ( const [ index, arg ] of args.entries() ) {
-                        const expected = expectedArgs[index];
-
-                        if ( expected instanceof ParameterPredicate ) {
-                            expected.check( arg );
-                        } else {
-                            expect( arg ).to.deep.equal( expected );
-                        }
-                    }
-
-                    return returnValue;
-                },
-            };
-
-            queue.push( initStep );
-
-            stub[stubMethod]( ( ...args ) => {
-                let step = queue.shift();
-
-                expect( step ).not.to.be.undefined;
-
-                return step.resolveStep( ...args );
-            } );
-
-            debugLog( 'Initialized:', description );
-
-            return initStep;
-        };
-
-
-        beforeEach( async () => {
-            performedSteps = [];
-            preparedStepsCache = new Map();
-
-            enketoId = 'surveyA';
-            defaults = {};
-
+        beforeEach( () => {
             surveyInitData = {
                 get enketoId() { return enketoId; },
                 get defaults() { return defaults; },
@@ -923,7 +923,7 @@ describe( 'Enketo webform app', () => {
         } );
     } );
 
-    describe( 'initialization behavior', () => {
+    describe( 'enketo-webform.js initialization behavior', () => {
         /** @type {Survey} */
         let baseSurvey;
 
@@ -1763,6 +1763,241 @@ describe( 'Enketo webform app', () => {
                     'alert.loaderror.entryadvice'
                 );
             } );
+        } );
+    } );
+
+    describe( 'enketo-webform-edit.js initialization steps', () => {
+        /** @type {Record<string, any> | null} */
+        let webformEditPrivate = null;
+
+        /** @type {string} */
+        let instanceId;
+
+        /** @type {string | null} */
+        let existingInstance;
+
+        /** @type {Partial<Survey>} */
+        let surveyInitData;
+
+        /** @type {HTMLElement} */
+        let formHeader;
+
+        before( async () => {
+            webformEditPrivate = ( await import( '../../public/js/src/enketo-webform-edit' ) )._PRIVATE_TEST_ONLY_;
+        } );
+
+        beforeEach( () => {
+            sandbox.stub( lodash, 'memoize' ).callsFake( fn => fn );
+
+            instanceId = 'instance1';
+
+            existingInstance = null;
+
+            surveyInitData = {
+                get enketoId() { return enketoId; },
+                get instanceId() { return instanceId; },
+            };
+
+            formHeader = document.querySelector( '.form-header' );
+        } );
+
+        it( 'initializes a form to edit an existing instance/record', async () => {
+            existingInstance = '<a>value</a>';
+
+            const formTitle = 'Title of form';
+            const form = `<form>
+                <h3 id="form-title">${formTitle}</h3>
+            </form>`;
+
+            const formParts = {
+                ...surveyInitData,
+
+                externalData: [],
+                form,
+                languages: [],
+                model: '<a/>',
+                theme: 'kobo',
+            };
+
+            const instanceAttachments = {
+                'a.jpg': 'https://example.com/a.jpg',
+            };
+
+            const instanceResult = {
+                instance: existingInstance,
+                instanceAttachments,
+                ignoreMe: true,
+            };
+
+            const formPartsWithInstanceData = {
+                ...formParts,
+
+                instance: existingInstance,
+                instanceAttachments,
+            };
+
+            const swappedThemeSurvey = {
+                ...formPartsWithInstanceData,
+                theme: 'swapped',
+            };
+
+            const maxSize = 8675309;
+
+            const maxSizeSurvey = {
+                ...formPartsWithInstanceData,
+
+                maxSize,
+            };
+
+            const initializedForm = {
+                languages: [ 'ar', 'fa' ],
+            };
+
+            const formElement = document.createElement( 'form' );
+            const artificialTitleElement = {
+                textContent: 'Not title of form',
+            };
+
+            sandbox.stub( i18next, 'use' ).returns( i18next );
+
+            const steps = [
+                prepareInitStep( {
+                    description: 'Translator: initialize i18next',
+                    stubMethod: 'callsFake',
+                    object: i18next,
+                    key: 'init',
+                    expectedArgs: [ expectObject, expectCallback ],
+                    returnValue: Promise.resolve(),
+                } ),
+                prepareInitStep( {
+                    description: 'Get form parts',
+                    stubMethod: 'callsFake',
+                    object: connection,
+                    key: 'getFormParts',
+                    expectedArgs: [ surveyInitData ],
+                    returnValue: Promise.resolve( formParts ),
+                } ),
+                prepareInitStep( {
+                    description: 'Get existing instance',
+                    stubMethod: 'callsFake',
+                    object: connection,
+                    key: 'getExistingInstance',
+                    expectedArgs: [ surveyInitData ],
+                    returnValue: Promise.resolve( instanceResult ),
+                } ),
+                prepareInitStep( {
+                    description: 'Swap theme',
+                    stubMethod: 'callsFake',
+                    object: gui,
+                    key: 'swapTheme',
+                    expectedArgs: [ formPartsWithInstanceData ],
+                    returnValue: Promise.resolve( swappedThemeSurvey ),
+                } ),
+                prepareInitStep( {
+                    description: 'Get max submission size',
+                    stubMethod: 'callsFake',
+                    object: connection,
+                    key: 'getMaximumSubmissionSize',
+                    expectedArgs: [ swappedThemeSurvey ],
+                    returnValue: Promise.resolve( maxSizeSurvey ),
+                } ),
+                prepareInitStep( {
+                    description: 'Assign max submission size to settings',
+                    stubMethod: 'set',
+                    object: settings,
+                    key: 'maxSize',
+                    expectedValue: maxSize,
+                } ),
+                prepareInitStep( {
+                    description: 'Creating a form element from the form\'s HTML resolves a referenceable DOM element',
+                    stubMethod: 'callsFake',
+                    object: Range.prototype,
+                    key: 'createContextualFragment',
+                    expectedArgs: [ maxSizeSurvey.form ],
+                    returnValue: formElement,
+                } ),
+                prepareInitStep( {
+                    description: 'Append form element after header',
+                    stubMethod: 'callsFake',
+                    object: formHeader,
+                    key: 'after',
+                    expectedArgs: [ formElement ],
+                } ),
+                prepareInitStep( {
+                    description: 'Resolve appended form element',
+                    stubMethod: 'callsFake',
+                    object: document,
+                    key: 'querySelector',
+                    expectedArgs: [ 'form.or' ],
+                    returnValue: formElement,
+                } ),
+                prepareInitStep( {
+                    description: 'Initialize controller-webform',
+                    stubMethod: 'callsFake',
+                    object: controller,
+                    key: 'init',
+                    expectedArgs: [
+                        formElement,
+                        {
+                            modelStr: maxSizeSurvey.model,
+                            instanceStr: existingInstance,
+                            external: maxSizeSurvey.externalData,
+                            instanceAttachments,
+                            isEditing: true,
+                            survey: maxSizeSurvey,
+                        },
+                    ],
+                    returnValue: Promise.resolve( initializedForm ),
+                } ),
+                prepareInitStep( {
+                    description: 'Assign languages',
+                    stubMethod: 'set',
+                    object: maxSizeSurvey,
+                    key: 'languages',
+                    expectedValue: initializedForm.languages,
+                } ),
+                prepareInitStep( {
+                    description: 'Get title element',
+                    stubMethod: 'callsFake',
+                    object: document,
+                    key: 'querySelector',
+                    expectedArgs: [ 'head>title' ],
+                    returnValue: artificialTitleElement,
+                } ),
+                prepareInitStep( {
+                    description: 'Set page title',
+                    stubMethod: 'set',
+                    object: artificialTitleElement,
+                    key: 'textContent',
+                    expectedValue: formTitle,
+                } ),
+                prepareInitStep( {
+                    description: 'Localization',
+                    stubMethod: 'callsFake',
+                    object: i18next,
+                    key: 'dir',
+                    expectedArgs: [],
+                    returnValue: Promise.resolve(),
+                } ),
+            ];
+
+            /** @type {Promise} */
+            let editInitialization = webformEditPrivate._init( surveyInitData );
+
+            await editInitialization;
+
+            for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
+                const performedStep = performedSteps.find( performedStep => {
+                    return performedStep === expectedStep;
+                } );
+                const index = performedSteps.indexOf( expectedStep );
+
+                expect( performedStep ).to.equal( expectedStep );
+                expect( index, `Unexpected order of step ${expectedStep.options.description}` )
+                    .to.equal( expectedIndex );
+            }
+
+            expect( performedSteps.length ).to.equal( steps.length );
         } );
     } );
 } );
