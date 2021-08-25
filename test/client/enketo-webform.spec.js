@@ -902,6 +902,7 @@ describe( 'Enketo webform app entrypoints', () => {
                         expectedArgs: [ [ error.message ], translatedErrorAdvice ]
                     } ),
                 ];
+
                 /** @type {Promise} */
                 let onlineInitialization = webformPrivate._initOnline( surveyInit );
 
@@ -1867,7 +1868,6 @@ describe( 'Enketo webform app entrypoints', () => {
                     object: i18next,
                     key: 'init',
                     expectedArgs: [ expectObject, expectCallback ],
-                    returnValue: Promise.resolve(),
                 } ),
                 prepareInitStep( {
                     description: 'Get form parts',
@@ -1977,7 +1977,6 @@ describe( 'Enketo webform app entrypoints', () => {
                     object: i18next,
                     key: 'dir',
                     expectedArgs: [],
-                    returnValue: Promise.resolve(),
                 } ),
             ];
 
@@ -1998,6 +1997,258 @@ describe( 'Enketo webform app entrypoints', () => {
             }
 
             expect( performedSteps.length ).to.equal( steps.length );
+        } );
+
+        it( 'reports edit initialization failure', async () => {
+            enketoId = 'offlineA';
+
+            const formTitle = 'Title of form';
+            const form = `<form>
+                <h3 id="form-title">${formTitle}</h3>
+            </form>`;
+
+            const formParts = {
+                ...surveyInitData,
+
+                externalData: [],
+                form,
+                languages: [],
+                model: '<a/>',
+                theme: 'kobo',
+            };
+
+            const error = new Error( 'No network connection.' );
+            const translatedErrorAdvice = 'Translated error advice';
+
+            const steps = [
+                prepareInitStep( {
+                    description: 'Translator: initialize i18next',
+                    stubMethod: 'callsFake',
+                    object: i18next,
+                    key: 'init',
+                    expectedArgs: [ expectObject, expectCallback ],
+                } ),
+                prepareInitStep( {
+                    description: 'Get form parts',
+                    stubMethod: 'callsFake',
+                    object: connection,
+                    key: 'getFormParts',
+                    expectedArgs: [ surveyInitData ],
+                    returnValue: Promise.resolve( formParts ),
+                } ),
+                prepareInitStep( {
+                    description: 'Get existing instance',
+                    stubMethod: 'callsFake',
+                    object: connection,
+                    key: 'getExistingInstance',
+                    expectedArgs: [ surveyInitData ],
+                    returnValue: Promise.reject( error ),
+                } ),
+                prepareInitStep( {
+                    description: 'Set error class',
+                    stubMethod: 'callsFake',
+                    object: loaderElement.classList,
+                    key: 'add',
+                    expectedArgs: [ webformEditPrivate.LOAD_ERROR_CLASS ],
+                } ),
+                prepareInitStep( {
+                    description: 'Translate error advice',
+                    stubMethod: 'callsFake',
+                    object: i18next,
+                    key: 't',
+                    expectedArgs: [ 'alert.loaderror.editadvice', undefined ],
+                    returnValue: translatedErrorAdvice,
+                } ),
+                prepareInitStep( {
+                    description: 'Alert load errors',
+                    stubMethod: 'callsFake',
+                    object: gui,
+                    key: 'alertLoadErrors',
+                    expectedArgs: [ [ error.message ], translatedErrorAdvice ]
+                } ),
+            ];
+
+            /** @type {Promise} */
+            let editInitialization = webformEditPrivate._init( surveyInitData );
+
+            await editInitialization;
+
+            for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
+                const step = performedSteps.find( performedStep => {
+                    return performedStep === expectedStep;
+                } );
+                const index = performedSteps.indexOf( expectedStep );
+
+                expect( step ).to.equal( expectedStep );
+                expect( index, `Unexpected order of step ${expectedStep.options.description}` )
+                    .to.equal( expectedIndex );
+            }
+
+            expect( performedSteps.length ).to.equal( steps.length );
+        } );
+    } );
+
+    describe( 'enketo-webform-edit.js initialization behavior', () => {
+        /** @type {Record<string, any> | null} */
+        let webformEditPrivate = null;
+
+        /** @type {Survey} */
+        let baseSurvey;
+
+        before( async () => {
+            webformEditPrivate = ( await import( '../../public/js/src/enketo-webform-edit' ) )._PRIVATE_TEST_ONLY_;
+        } );
+
+        beforeEach( () => {
+            enketoId = 'surveyA';
+
+            baseSurvey = {
+                get enketoId() { return enketoId; },
+
+                defaults: {},
+                externalData: [],
+                form: '<form></form>',
+                model: '<a/>',
+                theme: 'kobo',
+                xformUrl: 'https://example.com/form.xml',
+            };
+
+            sandbox.stub( i18next, 't' ).returnsArg( 0 );
+        } );
+
+        describe( 'maximum submission size', () => {
+            it( 'sets the survey\'s maximum submission size on settings', () => {
+                let maxSizeSetting = 4;
+
+                sandbox.stub( settings, 'maxSize' ).get( () => maxSizeSetting );
+                sandbox.stub( settings, 'maxSize' ).set( ( maxSize ) => {
+                    maxSizeSetting = maxSize;
+                } );
+
+                webformEditPrivate._updateMaxSizeSetting( {
+                    ...baseSurvey,
+                    maxSize: 5,
+                } );
+
+                expect( maxSizeSetting ).to.equal( 5 );
+            } );
+
+            it( 'preserves existing max size setting when survey does not specify a max size', () => {
+                let maxSizeSetting = 4;
+
+                sandbox.stub( settings, 'maxSize' ).get( () => maxSizeSetting );
+                sandbox.stub( settings, 'maxSize' ).set( ( maxSize ) => {
+                    maxSizeSetting = maxSize;
+                } );
+
+                webformEditPrivate._updateMaxSizeSetting( baseSurvey );
+
+                expect( maxSizeSetting ).to.equal( 4 );
+            } );
+        } );
+
+        describe( 'error handling', () => {
+            class StatusError extends Error {
+                /**
+                 * @param {number} status
+                 */
+                constructor( status ) {
+                    super( `HTTP Error: ${status}` );
+
+                    this.status = status;
+                }
+            }
+
+            const loginURL = 'https://example.com/login';
+            const initialURL = 'https://example.com/-/x/f33db33f';
+
+            /** @type {Stub} */
+            let addLoaderClassStub;
+
+            /** @type {string} */
+            let currentURL;
+
+            /** @type {Stub} */
+            let redirectStub;
+
+            /** @type {loadErrorsStub} */
+            let loadErrorsStub;
+
+            beforeEach( () => {
+                sandbox.stub( settings, 'loginUrl' ).get( () => loginURL );
+
+                addLoaderClassStub = sandbox.stub( loaderElement.classList, 'add' ).returns();
+
+                currentURL = 'https://example.com/-/x/f33db33f';
+                redirectStub = sandbox.stub( webformEditPrivate._location, 'href' );
+
+                redirectStub.get( () => currentURL );
+
+                redirectStub.set( redirectLocation => {
+                    currentURL = redirectLocation;
+                } );
+
+
+                loadErrorsStub = sandbox.stub( gui, 'alertLoadErrors' ).returns();
+            } );
+
+            it( 'indicates failure on the loading indicator', () => {
+                const error = new Error( 'bummer' );
+
+                webformEditPrivate._showErrorOrAuthenticate( error );
+
+                expect( addLoaderClassStub ).to.have.been.calledWith( webformEditPrivate.LOAD_ERROR_CLASS );
+            } );
+
+            it( 'redirects to a login page on authorization failure', () => {
+                const error = new StatusError( 401 );
+
+                webformEditPrivate._showErrorOrAuthenticate( error );
+
+                expect( currentURL ).to.equal( `${loginURL}?return_url=${encodeURIComponent( initialURL )}` );
+                expect( loadErrorsStub ).not.to.have.been.called;
+            } );
+
+            it( 'does not redirect to a login page for other network errors', () => {
+                const error = new StatusError( 404 );
+
+                webformEditPrivate._showErrorOrAuthenticate( error );
+
+                expect( currentURL ).to.equal( initialURL );
+            } );
+
+            it( 'alerts a loading error message', () => {
+                const error = new Error( 'oops!' );
+
+                webformEditPrivate._showErrorOrAuthenticate( error );
+
+                expect( loadErrorsStub ).to.have.been.calledWith(
+                    [ error.message ],
+                    'alert.loaderror.editadvice'
+                );
+            } );
+
+            it( 'alerts an unknown error message', () => {
+                const error = new Error();
+
+                webformEditPrivate._showErrorOrAuthenticate( error );
+
+                expect( loadErrorsStub ).to.have.been.calledWith(
+                    [ 'error.unknown' ],
+                    'alert.loaderror.editadvice'
+                );
+            } );
+
+            it( 'alerts multiple loading error messages', () => {
+                const errors = [ 'really', 'not', 'good!' ];
+
+                webformEditPrivate._showErrorOrAuthenticate( errors );
+
+                expect( loadErrorsStub ).to.have.been.calledWith(
+                    errors,
+                    'alert.loaderror.editadvice'
+                );
+            } );
         } );
     } );
 } );
