@@ -48,7 +48,7 @@ Once you have the Enketo webform URL can start development on a feature or bug.
 
 Another convenient way for some subset of development work is to put your XForm on any webserver (local, public), and use a preview url with a query parameter, e.g.:
 
-`http://localhost:8005/preview?http://example.org/myform.xml` (officially, the query parameter should be URL encoded, though for development use this is often fine).
+`http://localhost:8005/preview?xform=http://example.org/myform.xml` (officially, the query parameter should be URL encoded, though for development use this is often fine).
 
 #### Release a new version
 
