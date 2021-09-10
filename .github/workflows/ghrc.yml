@@ -1,19 +1,6 @@
 name: GHCR
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-on:
-  schedule:
-    - cron: '17 5 * * *'
-  push:
-    branches: [ master ]
-    # Publish semver tags as releases.
-    tags: [ '*.*.*' ]
-  pull_request:
-    branches: [ master ]
+on: push
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -34,10 +21,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Login against a Docker registry on PRs
+      # Login against a Docker registry
       # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
-        if: github.repository == 'enketo/enketo-express'
         uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
         with:
           registry: ${{ env.REGISTRY }}
@@ -58,6 +44,5 @@ jobs:
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
-          push: ${{ github.repository == 'enketo/enketo-express' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
