@@ -84,11 +84,13 @@
         "xml2js": "^0.4.23"
     },
     "devDependencies": {
+        "@types/db.js": "^0.14.7",
         "abortcontroller-polyfill": "^1.7.3",
         "chai": "^4.3.4",
         "chai-as-promised": "^7.1.1",
         "docdash": "^1.2.0",
         "esbuild": "^0.12.15",
+        "esbuild-plugin-alias": "^0.1.2",
         "eslint-plugin-jsdoc": "^35.4.3",
         "eslint-plugin-unicorn": "^34.0.1",
         "grunt-concurrent": "^3.0.0",

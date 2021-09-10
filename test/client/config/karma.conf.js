@@ -1,7 +1,10 @@
-// Karma configuration
-// Generated on Wed Nov 26 2014 15:52:30 GMT-0700 (MST)
+/* eslint-env node */
 
+const alias = require( 'esbuild-plugin-alias' );
+const path = require( 'path' );
+const pkg = require( '../../../package.json' );
 
+const cwd = process.cwd();
 
 module.exports = config => {
     config.set( {
@@ -37,6 +40,15 @@ module.exports = config => {
             define: {
                 global: 'window',
             },
+            plugins: [
+                alias(
+                    Object.fromEntries(
+                        Object.entries( pkg.browser ).map( ( [ key, value ] ) => (
+                            [ key, path.resolve( cwd, `${value}.js` ) ]
+                        ) )
+                    )
+                ),
+            ],
             // TODO [2021-08-01]: target more up to date version when CI is able to use a newer verison of Chrome
             target: [
                 'chrome51',

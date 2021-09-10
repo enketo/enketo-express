@@ -45,7 +45,7 @@ if ( settings.offline ) {
     console.log( 'App in online-only mode.' );
     store.init()
         .then( () => initTranslator( survey ) )
-        .then( formCache.init )
+        .then( connection.getFormParts )
         .then( _swapTheme )
         .then( _addBranding )
         .then ( connection.getMaximumSubmissionSize )
@@ -200,6 +200,7 @@ function _init( formParts ) {
         modelStr: formParts.model,
         instanceStr: _prepareInstance( formParts.model, settings.defaults ),
         external: formParts.externalData,
+        survey: formParts,
     } )
         .then( form => {
             formParts.languages = form.languages;
