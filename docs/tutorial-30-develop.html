@@ -65,6 +65,38 @@
 <p>See <a href="./tutorial-00-getting-started.html">Getting Started</a>.</p>
 <h3 id="running-in-development-mode">Running in development mode</h3>
 <p>The easiest way to start the app in development and debugging mode with livereload is with <code>grunt develop</code>.</p>
+<h3 id="testing">Testing</h3>
+<ul>
+<li>
+<p>Testing is done with Mocha and Karma.</p>
+<ul>
+<li>all: <code>npm run test</code></li>
+<li>headless: <code>npm run test-headless</code></li>
+<li>browsers: <code>npm run test-browsers</code></li>
+</ul>
+</li>
+<li>
+<p>Tests can be run in watch mode for <a href="https://en.wikipedia.org/wiki/Test-driven_development">TDD</a> workflows with.</p>
+<ul>
+<li>client: <code>npm run test-watch-client</code></li>
+<li>server: <code>npm run test-watch-server</code></li>
+</ul>
+<p>Support for debugging in <a href="https://code.visualstudio.com/">VSCode</a> is provided. For instructions see [./#debugging-test-watch-mode-in-vscode](Debugging test watch mode in VSCode) below.</p>
+</li>
+</ul>
+<h4 id="debugging-test-watch-mode-in-vscode">Debugging test watch mode in VSCode</h4>
+<p>Basic usage:</p>
+<ol>
+<li>Go to VSCode's &quot;Run and Debug&quot; panel</li>
+<li>Select &quot;Test client (watch + debug)&quot; or &quot;Test server (watch + debug)&quot;</li>
+<li>Click the play button</li>
+</ol>
+<p>Optionally, you can add a keyboard shortcut to select launch tasks:</p>
+<ol>
+<li>Open the keyboard shortcuts settings (cmd+k cmd+s on Mac, ctrl+k ctrl+s on other OSes)</li>
+<li>Search for <code>workbench.action.debug.selectandstart</code></li>
+<li>Click the + button to add your preferred keybinding keybinding</li>
+</ol>
 <h3 id="launch-a-test-form">Launch a test form</h3>
 <p>Enketo Express needs an OpenRosa-compliant server to obtain forms and submit data too. For development you can conveniently use any public or local server for this with the <a href="tutorial-32-api.html">API</a>.
 For example to use your https://kobotoolbox.org or https://ona.io account &quot;ali&quot;, the <em>server_url</em> to use in API calls is <code>&quot;https://kc.kobotoolbox.org/ali&quot;</code> or <code>&quot;https://ona.io/ali&quot;</code>.</p>
@@ -74,7 +106,7 @@ For example to use your https://kobotoolbox.org or https://ona.io account &quot;
 </code></pre>
 <p>Once you have the Enketo webform URL can start development on a feature or bug.</p>
 <p>Another convenient way for some subset of development work is to put your XForm on any webserver (local, public), and use a preview url with a query parameter, e.g.:</p>
-<p><code>http://localhost:8005/preview?http://example.org/myform.xml</code> (officially, the query parameter should be URL encoded, though for development use this is often fine).</p>
+<p><code>http://localhost:8005/preview?xform=http://example.org/myform.xml</code> (officially, the query parameter should be URL encoded, though for development use this is often fine).</p>
 <h4 id="release-a-new-version">Release a new version</h4>
 <p>Documentation is auto-generated and should be re-built for each new release. Do not commit updated documentation in non-release commits. The process to follow for each release that includes various helpful checks is:</p>
 <ol>

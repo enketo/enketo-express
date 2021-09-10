@@ -79,6 +79,7 @@ module.exports = {
     tsUtils: {
         /**
          * We may actually want to enable this, but it was a surprisng default.
+         *
          * @see {@link https://github.com/homer0/jsdoc-ts-utils#configuration}
          */
         typeScriptUtilityTypes: false,
