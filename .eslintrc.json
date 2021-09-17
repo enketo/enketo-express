@@ -56,6 +56,19 @@
         "jsdoc/require-returns-type": 1,
         "jsdoc/valid-types": 1,
         "unicorn/expiring-todo-comments": "error"
-    }
+    },
+    "overrides": [
+        {
+            "files": [
+                "config/build.js",
+                "test/client/config/karma.conf.js",
+                "scripts/build.js"
+            ],
+            "env": {
+                "browser": false,
+                "node": true
+            }
+        }
+    ]
 }
 

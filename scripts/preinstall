@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# Perform a clean install when upgrading from Node 12 to Node 16, to ensure all
+# dependency binaries are built (or reference prebuilt binaries) for Node 16.
+
+# We can determine whether the previous install was run on Node 12 by checking
+# the currently installed version of `libxslt`. While there are other commands
+# that would seem to be able to determine this:
+#
+# - `npm explore libxslt -- ...` loses Volta pinning and falls back to the
+#   system default
+# - `npm info libxslt version` uses the version in `package.json` rather than
+#   the currently installed version
+#
+# ... but `cd` continues to reference the pinned Volta version. The `libxslt`
+# package was chosen, rather than `enketo-transformer`, because we're certain
+# that 0.9.x only supports Node 12.
+cd $PWD/node_modules/libxslt && \
+
+# Check the currently installed `libxlst` version. Weirdly, `npm info .` checks
+# the NPM registry, rather than the local version.
+npm list . | grep 0.9. && \
+
+# Return to project root and clean install, falling back to a `true` no-op if
+# this is not a Node 12-16 upgrade, to ensure `npm install` also completes.
+cd ../.. && npm ci || true

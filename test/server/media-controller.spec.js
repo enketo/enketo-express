@@ -6,7 +6,7 @@ const http = require( 'http' );
  * Tests the request-filtering-agent to block SSRF attacks
  * change testHTMLBody to the body of an html file that
  * you are testing on. For the default, it says <im in.>
- * and is hosted in testHTMLHost. 
+ * and is hosted in testHTMLHost.
  */
 
 const testHTMLBody = 'im in.';
@@ -55,7 +55,7 @@ describe( 'Testing request-filtering-agent', function() {
             .end( done );
     } );
     it( 'for a private IP address WITH a Referer with allowPrivateIPAddress=false and allowMetaIPAddress=true', done => {
- 
+
         // Only change one setting
         const allowMetaIPAddress = true;
 
@@ -64,11 +64,11 @@ describe( 'Testing request-filtering-agent', function() {
         request( app )
             .get( requestMetaURL  )
             .set( 'Referer', 'https://google.com?print=true' )
-            .expect( 500, /Socket is closed/ )
+            .expect( 500, /DNS lookup .* is not allowed. Because, It is private IP address/ )
             .end( done );
     } );
     it( 'for a private IP address WITH a Referer with allowPrivateIPAddress=false but allowIPAddressList=[`127.0.0.1`]', done => {
- 
+
         // Only change one setting
         const allowIPAddressList = [localhost];
 
@@ -82,7 +82,7 @@ describe( 'Testing request-filtering-agent', function() {
     } );
     it( 'for a private IP address WITH a Referer with allowPrivateIPAddress=false and denyIPAddressList=[`127.0.0.1`]', done => {
 
-        // Only change one setting 
+        // Only change one setting
         const denyIPAddressList = [localhost];
 
         app.set( 'ip filtering', { allowPrivateIPAddress, allowMetaIPAddress, allowIPAddressList, denyIPAddressList } );
@@ -165,7 +165,7 @@ describe( 'Testing request-filtering-agent', function() {
             .end( done );
     } );
     it( 'for a private IP address WITHOUT a Referer with allowPrivateIPAddress=false and allowMetaIPAddress=true', done => {
- 
+
         // Only change one setting
         const allowMetaIPAddress = true;
 
@@ -173,11 +173,11 @@ describe( 'Testing request-filtering-agent', function() {
 
         request( app )
             .get( requestMetaURL  )
-            .expect( 500, /Socket is closed/ )
+            .expect( 500, /DNS lookup .* is not allowed. Because, It is private IP address/ )
             .end( done );
     } );
     it( 'for a private IP address WITHOUT a Referer with allowPrivateIPAddress=false but allowIPAddressList=[`127.0.0.1`]', done => {
- 
+
         // Only change one setting
         const allowIPAddressList = [localhost];
 
@@ -190,7 +190,7 @@ describe( 'Testing request-filtering-agent', function() {
     } );
     it( 'for a private IP address WITHOUT a Referer with allowPrivateIPAddress=false and denyIPAddressList=[`127.0.0.1`]', done => {
 
-        // Only change one setting 
+        // Only change one setting
         const denyIPAddressList = [localhost];
 
         app.set( 'ip filtering', { allowPrivateIPAddress, allowMetaIPAddress, allowIPAddressList, denyIPAddressList } );
