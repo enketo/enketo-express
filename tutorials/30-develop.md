@@ -54,9 +54,13 @@ Another convenient way for some subset of development work is to put your XForm 
 
 Documentation is auto-generated and should be re-built for each new release. Do not commit updated documentation in non-release commits. The process to follow for each release that includes various helpful checks is:
 
-1. Change some code.
-2. Make sure tests (`npm run test`) pass with  (run `npm run beautify` to fix style issues).
-2. Build documentation: `npm run build-docs`.
-3. Bump the version tag in `package.json` file (we follow [semantic versioning](https://semver.org/)).
-4. Merge all your changes to `master` (through PR).
-5. Add git tag of new version.
+1. Check [Dependabot alerts](https://github.com/enketo/enketo-express/security/dependabot) for vulnerabilities
+2. Update dependencies: `npm update`
+3. `npm audit fix`
+4. Make sure tests pass: `npm run test`
+5. Beautiful code: `npm run beautify`
+6. Build documentation: `npm run build-docs`
+7. Bump the version tag in `package.json` file (we follow [semantic versioning](https://semver.org/))
+8. Update `CHANGELOG.md` with changes
+9. Merge all your changes to `master` (through PR)
+10. Add git tag of new version
