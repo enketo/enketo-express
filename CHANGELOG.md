@@ -2,10 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[3.0.0] - 2021-09-17
+---------------------
+##### Changed
+- Upgraded node, npm, and other dependencies
+
 [2.8.1] - 2021-09-10
 ---------------------
 ##### Fixed
-- #293 Form's default media references are removed after submission, image labels not rendered for new forms
+- [#293](https://github.com/enketo/enketo-express/pull/293) Form's default media references are removed after submission, image labels not rendered for new forms
 
 [2.8.0] - 2021-07-13
 ---------------------
