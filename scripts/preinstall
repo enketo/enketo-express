@@ -7,7 +7,7 @@
 # the currently installed version of `libxslt`. While there are other commands
 # that would seem to be able to determine this:
 #
-# - `npm expore libxslt -- ...` loses Volta pinning and falls back to the
+# - `npm explore libxslt -- ...` loses Volta pinning and falls back to the
 #   system default
 # - `npm info libxslt version` uses the version in `package.json` rather than
 #   the currently installed version
