@@ -56,7 +56,6 @@ import {
 const parser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
 const CONNECTION_URL = `${settings.basePath}/connection`;
-const TRANSFORM_URL = `${settings.basePath}/transform/xform${settings.enketoId ? `/${settings.enketoId}` : ''}`;
 const TRANSFORM_HASH_URL = `${settings.basePath}/transform/xform/hash/${settings.enketoId}`;
 const INSTANCE_URL = ( settings.enketoId ) ? `${settings.basePath}/submission/${settings.enketoId}` : null;
 const MAX_SIZE_URL = ( settings.enketoId ) ? `${settings.basePath}/submission/max-size/${settings.enketoId}` :
@@ -356,6 +355,17 @@ function getMaximumSubmissionSize( survey ) {
 }
 
 /**
+ * @param {string} basePath
+ * @param {string} [enketoId]
+ * @return {string}
+ */
+const getTransformURL = ( basePath, enketoId ) => {
+    const idPath = enketoId ? `/${enketoId}` : '';
+
+    return `${basePath}/transform/xform${idPath}${_getQuery()}`;
+};
+
+/**
  * Obtains HTML Form, XML Model and External Instances
  *
  * @param { GetFormPartsProps } props - form properties object
@@ -365,7 +375,9 @@ function getFormParts( props ) {
     /** @type {Survey} */
     let survey;
 
-    return _postData( TRANSFORM_URL + _getQuery(), {
+    const transformURL = getTransformURL( settings.basePath, props.enketoId );
+
+    return _postData( transformURL, {
         xformUrl: props.xformUrl
     } )
         .then( data => {
@@ -381,16 +393,6 @@ function getFormParts( props ) {
             if ( encryptedSubmission != null ) {
                 survey = encryptor.setEncryptionEnabled( survey );
             }
-
-            const relativeBinaryDefaults = model.querySelectorAll( 'instance > * > *[src^="/"]' );
-
-            relativeBinaryDefaults.forEach( element => {
-                const src = element.getAttribute( 'src' );
-
-                element.setAttribute( 'src', new URL( src, window.location ) );
-            } );
-
-            survey.model = xmlSerializer.serializeToString( model.documentElement );
 
             return _getExternalData( survey, model );
         } )

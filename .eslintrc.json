@@ -31,7 +31,11 @@
         "no-console": ["warn", { "allow": ["error", "deprecate", "warn"] }],
         "eol-last": ["error", "always"],
         "padding-line-between-statements": ["warn", { "blankLine": "always", "prev": "*", "next": "return" }],
-        "space-before-function-paren": ["error", "never"],
+        "space-before-function-paren": ["error", {
+            "anonymous": "never",
+            "async": "always",
+            "named": "never"
+        }],
         "space-in-parens": ["error", "always"],
         "space-infix-ops": "error",
         "array-bracket-spacing": ["error", "always"],

@@ -7,6 +7,7 @@
 import connection from '../../public/js/src/module/connection';
 import settings from '../../public/js/src/module/settings';
 import store from '../../public/js/src/module/store';
+import utils from 'public/js/src/module/utils';
 
 /**
  * @typedef {import('../../app/models/record-model').EnketoRecord} EnketoRecord
@@ -34,11 +35,22 @@ describe( 'Connection', () => {
     const enketoId = 'surveyA';
     const instanceId = 'recordA';
 
+    /** @type { SinonSandbox } */
+    let sandbox;
+
+    beforeEach( async () => {
+        sandbox = sinon.createSandbox();
+
+        sandbox.stub( settings, 'enketoId' ).get( () => enketoId );
+
+        await store.init();
+    } );
+
+    afterEach( () => {
+        sandbox.restore();
+    } );
+
     describe( 'Uploading records', () => {
-
-        /** @type { SinonSandbox } */
-        let sandbox;
-
         /** @type { EnketoRecord } */
         let record;
 
@@ -61,9 +73,6 @@ describe( 'Connection', () => {
 
             survey = { enketoId };
 
-            sandbox = sinon.createSandbox();
-            sandbox.stub( settings, 'enketoId' ).get( () => enketoId );
-
             sandbox.stub( window, 'fetch' ).callsFake( ( url, init ) => {
                 requests.push( { url, init } );
 
@@ -79,12 +88,6 @@ describe( 'Connection', () => {
                     },
                 } );
             } );
-
-            store.init().then( () => done(), done );
-        } );
-
-        afterEach( done => {
-            sandbox.restore();
 
             store.record.removeAll().then( () => done(), done );
         } );
@@ -109,6 +112,235 @@ describe( 'Connection', () => {
                     expect( submission ).to.equal( record.xml );
                 } )
                 .then( done, done );
+        } );
+    } );
+
+    describe( 'Surveys / getFormParts', () => {
+        // These fixtures were based on a form used to validate transformation of spaces
+        // in `jr:` URLs, and a regression introduced during last-saved work related to
+        // populating binary defaults in online mode. While most of these tests are not
+        // related to that regression, the fixtures were suitable to backfill more
+        // thorough tests for the rest of `getFormParts` functionality.
+
+        const externalInstanceId = 'external-inst';
+        const externalInstanceURL = 'https://example.com/external.xml';
+        const externalInstanceXML = '<a/>';
+
+        const form = /* html */`
+            <form autocomplete="off" novalidate="novalidate" class="or clearfix" dir="ltr" data-form-id="media-spaces">
+                <!--This form was created by transforming an ODK/OpenRosa-flavored (X)Form using an XSL stylesheet created by Enketo LLC.--><section class="form-logo"></section><h3 dir="auto" id="form-title">media-spaces</h3><select id="form-languages" style="display:none;" data-default-lang="default"><option value="default" data-dir="ltr">default</option> </select>
+                <label class="question non-select "><span lang="" class="question-label active">Last saved...: <span class="or-output" data-value="instance('last-saved')/image-default/item"> </span></span><input type="text" name="/image-default/item" data-type-xml="string" data-setvalue="instance('last-saved')/image-default/item" data-event="odk-instance-first-load"></label>
+                <label class="question non-select or-appearance-annotate "><span lang="" class="question-label active">annotate question with default image</span><input type="file" name="/image-default/ann" data-type-xml="binary" accept="image/*"></label>
+                <label class="question non-select or-appearance-annotate "><span lang="" class="question-label active">annotate question with default image</span><input type="file" name="/image-default/dra" data-type-xml="binary" accept="image/*"></label>
+                <label class="question non-select or-appearance-draw "><span lang="" class="question-label active">drawing question with default image</span><input type="file" name="/image-default/dra" data-type-xml="binary" accept="image/*"></label>
+                <label class="question non-select "><span lang="default" class="question-label active" data-itext-id="/image-default/happy:label">label with image</span><img lang="default" class="active" src="/-/media/get/http/localhost:8989/v1/projects/2/forms/media-spaces/attachments/happy2.png" data-itext-id="/image-default/happy:label" alt="image"><input type="text" name="/image-default/happy" data-type-xml="string"></label>
+                <label class="question non-select "><span lang="default" class="question-label active" data-itext-id="/image-default/unhappy:label">label with image</span><img lang="default" class="active" src="jr://images/un%20happy%202%20v2.png" data-itext-id="/image-default/unhappy:label" alt="image"><input type="text" name="/image-default/unhappy" data-type-xml="string"></label>
+                <fieldset id="or-preload-items" style="display:none;"><label class="calculation non-select "><input type="hidden" name="/image-default/meta/instanceID" data-preload="uid" data-preload-params="" data-type-xml="string"></label></fieldset><fieldset id="or-setvalue-items" style="display:none;"></fieldset>
+            </form>
+        `;
+
+        const model = /* xml */`
+            <model>
+                <instance>
+                    <image-default xmlns:jr="http://openrosa.org/javarosa" xmlns:odk="http://www.opendatakit.org/xforms" xmlns:orx="http://openrosa.org/xforms" id="media-spaces" version="8">
+                        <item>initial</item>
+                        <ann src="/-/media/get/http/localhost:8989/v1/projects/2/forms/media-spaces/attachments/un%20happy%20v2.png">jr://images/un happy v2.png</ann>
+                        <dra src="/-/media/get/http/localhost:8989/v1/projects/2/forms/media-spaces/attachments/indifferent.png">jr://images/indifferent.png</dra>
+                        <happy/>
+                        <unhappy/>
+                        <meta>
+                            <instanceID/>
+                        </meta>
+                    </image-default>
+                </instance>
+                <instance id="last-saved" src="jr://instance/last-saved"/>
+                <instance id="${externalInstanceId}" src="${externalInstanceURL}" />
+            </model>
+        `;
+
+        const hash = 'md5:0aef088ebda239d644130e6bf2255bcf-311fab58efa4fa65318450bf93b70214-7b69544085c4c49cbb77be3890a23995---1';
+
+        const basePath = '-';
+
+        /** @type {Survey} */
+        let transformedSurvey;
+
+        /** @type {string} */
+        let expectedPostBody;
+
+        /** @type {string} */
+        let expectedURL;
+
+        /** @type {string} */
+        let theme;
+
+        beforeEach( async () => {
+            if ( !Object.prototype.hasOwnProperty.call( settings, 'basePath' ) ) {
+                settings.basePath = undefined;
+            }
+
+            sandbox.stub( settings, 'basePath' ).get( () => basePath );
+
+            theme = '';
+
+            expectedPostBody = '';
+
+            expectedURL = `${basePath}/transform/xform/${enketoId}`;
+
+            fetchHandlers = {};
+
+            sandbox.stub( window, 'fetch' ).callsFake( async ( url, options ) => {
+                if ( url === externalInstanceURL ) {
+                    expect( options ).to.equal( undefined );
+
+                    return {
+                        ok: true,
+                        status: 200,
+                        headers: {
+                            get( header ) {
+                                if ( header === 'Content-Type' ) {
+                                    return 'text/xml';
+                                }
+                            },
+                        },
+                        text() {
+                            return Promise.resolve( externalInstanceXML );
+                        },
+                    };
+                }
+
+                try {
+                    expect( url ).to.equal( expectedURL );
+                    expect( options ).to.deep.equal( {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: expectedPostBody,
+                    } );
+                } catch ( error ) {
+                    return {
+                        ok: false,
+                        status: 500,
+                        json() {
+                            return Promise.resolve( error.toJSON() );
+                        },
+                    };
+                }
+
+                return {
+                    ok: true,
+                    status: 200,
+                    json() {
+                        return Promise.resolve( {
+                            form,
+                            hash,
+                            languageMap: {},
+                            model,
+                            theme,
+                        } )
+                    }
+                };
+            } );
+        } );
+
+        // Note: last-saved and encryption functionality are tested under ./feature/*,
+        // so are not redundantly tested here
+
+        it( 'requests the provided xformUrl', async () => {
+            const xformUrl = 'https://example.com/form.xml';
+
+            expectedPostBody = String( new URLSearchParams( [ [ 'xformUrl', xformUrl ] ] ) );
+
+            const survey = await connection.getFormParts( {
+                enketoId,
+                xformUrl,
+            } );
+
+            expect( survey.enketoId ).to.equal( enketoId );
+        } );
+
+        it( 'populates the enketoId and theme passed in', async () => {
+            theme = 'any';
+
+            const survey = await connection.getFormParts( {
+                enketoId,
+                theme,
+            } );
+
+            expect( survey.enketoId ).to.equal( enketoId );
+            expect( survey.theme ).to.equal( theme );
+        } );
+
+        it( 'falls back to the theme specified in the form', async () => {
+            theme = 'form';
+
+            sandbox.stub( utils, 'getThemeFromFormStr' ).callsFake( ( formStr ) => {
+                if ( formStr === form ) {
+                    return theme;
+                }
+            } );
+
+            const survey = await connection.getFormParts( {
+                enketoId,
+            } );
+
+            expect( survey.enketoId ).to.equal( enketoId );
+            expect( survey.theme ).to.equal( theme );
+        } );
+
+        it( 'falls back to the configured default theme', async () => {
+            theme = 'configured';
+
+            if ( !Object.prototype.hasOwnProperty.call( settings, 'defaultTheme' ) ) {
+                settings.defaultTheme = undefined;
+            }
+
+            sandbox.stub( settings, 'defaultTheme' ).get( () => theme );
+
+            const survey = await connection.getFormParts( {
+                enketoId,
+            } );
+
+            expect( survey.enketoId ).to.equal( enketoId );
+            expect( survey.theme ).to.equal( theme );
+        } );
+
+        // This tests a fix for a regression between the initial introduction of last-saved
+        // which incorrectly cached forms in online-mode, and the refactor of that feature
+        // which removed that caching. Previously, `getFormParts` was converting binary
+        // defaults with relative paths in `survey.model` to absolute URLs to satisfy
+        // behavior in `form-cache.js`. When caching in online mode was removed, this caused
+        // binary defaults to be broken again.
+        it( 'does not change the model', async () => {
+            const survey = await connection.getFormParts( {
+                enketoId,
+            } );
+
+            expect( survey.model ).to.equal( model );
+        } );
+
+        it( 'populates external data from external secondary instances', async () => {
+            const { externalData } = await connection.getFormParts( {
+                enketoId,
+            } );
+
+            expect( externalData.length ).to.equal( 2 );
+
+            const [ lastSavedInstance, externalInstance ] = externalData;
+
+            // Sanity check
+            expect( lastSavedInstance.src ).to.equal( 'jr://instance/last-saved' );
+
+            expect( externalInstance.id ).to.equal( externalInstanceId );
+            expect( externalInstance.src ).to.equal( externalInstanceURL );
+
+            const { xml } = externalInstance;
+            const xmlString = ( new XMLSerializer ).serializeToString( xml );
+
+            expect( xml instanceof XMLDocument ).to.equal( true );
+            expect( xmlString ).to.equal( externalInstanceXML )
         } );
     } );
 } );
