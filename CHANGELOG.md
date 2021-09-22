@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Changed
+- (Docker only) Remove configuration and commit comparison logic from container start-up script and run `grunt` only when building the image (see #161). Possible now that most configuration changes do not require a rebuild (see #163).
+
 [3.0.2] - 2021-10-20
 ---------------------
 ##### Fixed
