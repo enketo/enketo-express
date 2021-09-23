@@ -8,8 +8,7 @@ RUN npm install -g grunt-cli pm2
 
 COPY . ${ENKETO_SRC_DIR}
 
-RUN npm install
-RUN grunt
+RUN npm install && grunt && npm prune --production
 
 # Persist the `secrets` directory so the encryption key remains consistent.
 RUN mkdir -p ${ENKETO_SRC_DIR}/setup/docker/secrets
