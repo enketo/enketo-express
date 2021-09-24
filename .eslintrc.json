@@ -33,7 +33,7 @@
         "padding-line-between-statements": ["warn", { "blankLine": "always", "prev": "*", "next": "return" }],
         "space-before-function-paren": ["error", {
             "anonymous": "never",
-            "async": "always",
+            "asyncArrow": "always",
             "named": "never"
         }],
         "space-in-parens": ["error", "always"],
