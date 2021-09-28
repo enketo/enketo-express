@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[3.0.1] - 2021-09-28
+---------------------
+##### Fixed
+- [#316](https://github.com/enketo/enketo-express/pull/316) Fix rendering of binary defaults in online-only mode
+
 [3.0.0] - 2021-09-17
 ---------------------
 ##### Changed
