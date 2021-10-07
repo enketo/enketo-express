@@ -32,7 +32,15 @@ let available = false;
 
 const databaseName = 'enketo';
 
-function init() {
+/**
+ * @typedef StoreInitOptions
+ * @property {boolean} [failSilently]
+ */
+
+/**
+ * @param {StoreInitOptions} [options]
+ */
+function init( { failSilently } = {} ) {
     return _checkSupport()
         .then( () => db.open( {
             server: databaseName,
@@ -142,6 +150,10 @@ function init() {
             available = true;
         } )
         .catch( error => {
+            if ( failSilently ) {
+                return;
+            }
+
             console.error( 'store initialization error', error );
             // make error more useful and throw it further down the line
             if ( typeof error === 'string' ) {

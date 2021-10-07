@@ -13,7 +13,14 @@
 import connection from '../../../public/js/src/module/connection';
 import encryptor from '../../../public/js/src/module/encryptor';
 import formCache from '../../../public/js/src/module/form-cache';
-import { getLastSavedRecord, setLastSavedRecord } from '../../../public/js/src/module/last-saved';
+import {
+    getLastSavedRecord,
+    isLastSaveEnabled,
+    LAST_SAVED_VIRTUAL_ENDPOINT,
+    populateLastSavedInstances,
+    removeLastSavedRecord,
+    setLastSavedRecord,
+} from '../../../public/js/src/module/last-saved';
 import records from '../../../public/js/src/module/records-queue';
 import settings from '../../../public/js/src/module/settings';
 import store from '../../../public/js/src/module/store';
@@ -77,6 +84,13 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
     /** @type { EnketoRecord } */
     let recordB;
 
+    /** @type {boolean} */
+    let skipStoreInitForSuite;
+
+    before( () => {
+        skipStoreInitForSuite = false;
+    } );
+
     beforeEach( done => {
         enketoId = enketoIdA;
 
@@ -139,6 +153,12 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
             xml: '<model><something>b</something></model>',
         };
 
+        if ( skipStoreInitForSuite ) {
+            sandbox.stub( store, 'available' ).value( false );
+
+            return done();
+        }
+
         store.init()
             .then( records.init )
             .then( () => store.record.set( {
@@ -160,12 +180,20 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
         timers.restore();
         sandbox.restore();
 
+        if ( skipStoreInitForSuite ) {
+            return done();
+        }
+
         Promise.all( [
             store.property.removeAll(),
             store.record.removeAll(),
             store.survey.removeAll(),
             store.lastSavedRecords.clear(),
         ] ).then( () => done(), done );
+    } );
+
+    after( () => {
+        skipStoreInitForSuite = false;
     } );
 
     describe( 'surveys', () => {
@@ -838,6 +866,94 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
                     expect( xml ).to.equal( recordA.xml );
                 } )
                 .then( done, done );
+        } );
+    } );
+
+    describe( 'IndexedDB initialization failure', () => {
+        /**
+         * @typedef {import('sinon').SinonStub} Stub
+         */
+
+        /** @type {Stub} */
+        let getStub;
+
+        /** @type {Stub} */
+        let removeStub;
+
+        /** @type {Stub} */
+        let updateStub;
+
+        before( () => {
+            skipStoreInitForSuite = true;
+        } );
+
+        beforeEach( () => {
+            sandbox.stub( settings, 'type' ).get( () => 'other' );
+
+            getStub = sandbox.stub().resolves();
+            removeStub = sandbox.stub().resolves();
+            updateStub = sandbox.stub().resolves();
+
+            sandbox.stub( store, 'lastSavedRecords' ).get( () => {
+                return {
+                    get: getStub,
+                    remove: removeStub,
+                    update: updateStub,
+                };
+            } );
+        } );
+
+        it( 'does not enable last-saved', () => {
+            const result = isLastSaveEnabled( surveyA );
+
+            expect( result ).to.equal( false );
+        } );
+
+        it( 'does not get a last saved record', async () => {
+            await getLastSavedRecord( enketoId );
+
+            expect( getStub ).not.to.have.been.called;
+        } );
+
+        it( 'does not attempt to remove a last saved record', async () => {
+            await removeLastSavedRecord( enketoId );
+
+            expect( removeStub ).not.to.have.been.called;
+        } );
+
+        it( 'populates a last saved record with the default model', async () => {
+            const defaultValue = 'default value';
+            const survey = {
+                ...surveyA,
+                externalData: [
+                    {
+                        id: 'last-saved',
+                        src: LAST_SAVED_VIRTUAL_ENDPOINT,
+                    },
+                ],
+                model: `<model>
+                    <instance>
+                        <something>${defaultValue}</something>
+                    </instance>
+                </model>`,
+            };
+            const { externalData } = populateLastSavedInstances( survey, recordA );
+            const [ lastSaved ] = externalData;
+            const { textContent } = lastSaved.xml.querySelector( 'something' );
+
+            expect( textContent ).to.equal( defaultValue );
+        } );
+
+        it( 'does not attempt to set the last saved record', async () => {
+            await setLastSavedRecord( surveyA, recordA );
+
+            expect( updateStub ).not.to.have.been.called;
+        } );
+
+        it( 'does not attempt to remove the last saved record when setting with no last-saved record', async () => {
+            await setLastSavedRecord( surveyA );
+
+            expect( removeStub ).not.to.have.been.called;
         } );
     } );
 } );
