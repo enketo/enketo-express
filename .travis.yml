@@ -1,16 +1,17 @@
 language: node_js
 sudo: true
 node_js:
-  - "12"
-dist: trusty
-before_script:
-  - npm install -g grunt-cli
+  - "14"
+  - "16"
+dist: focal
+before_install:
+  - npm install -g npm@^6
   - chmod 777 ./setup/travis/travis-redis.sh
   - ./setup/travis/travis-redis.sh
+before_script:
+  - npm install -g grunt-cli
   - grunt css
-addons: 
+addons:
   chrome: stable
-services:
-  - redis-server
 notifications:
     flowdock: 7d2ea551a0757bea5b52c496f3a7ab2e

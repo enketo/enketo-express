@@ -11,6 +11,7 @@ const fs = require( 'fs' );
 const url = require( 'url' );
 const themePath = path.join( __dirname, '../../public/css' );
 const languagePath = path.join( __dirname, '../../locales/src' );
+const pkgDir = require( 'pkg-dir' );
 const execSync = require( 'child_process' ).execSync;
 // var debug = require( 'debug' )( 'config-model' );
 
@@ -259,7 +260,8 @@ function getThemesSupported( themeList ) {
 }
 
 try {
-    config[ 'version' ] = execSync( 'git describe --tags', { encoding: 'utf-8' } ).trim();
+    // need to be in the correct directory to run git describe --tags
+    config[ 'version' ] = execSync( `cd ${__dirname}; git describe --tags`, { encoding: 'utf-8' } ).trim();
 } catch ( e ) {
     // Probably not deployed with git, try special .tag.txt file
     try {
@@ -284,6 +286,8 @@ if ( config[ 'base path' ] && config[ 'base path' ].lastIndexOf( '/' ) === confi
     config[ 'base path' ] = config[ 'base path' ].substring( 0, config[ 'base path' ].length - 1 );
 }
 config[ 'offline path' ] = '/x';
+
+config['root'] = pkgDir.sync( __dirname );
 
 // ensure backwards compatibility of old external authentication configurations
 const authentication = config[ 'linked form and data server' ][ 'authentication' ];

@@ -12,7 +12,6 @@ module.exports = grunt => {
     ];
     const path = require( 'path' );
     const nodeSass = require( 'node-sass' );
-    const bundles = require( './buildFiles' ).bundles;
 
     require( 'time-grunt' )( grunt );
     require( 'load-grunt-tasks' )( grunt );
@@ -57,7 +56,7 @@ module.exports = grunt => {
         watch: {
             sass: {
                 files: [ 'app/views/styles/**/*.scss', 'widget/**/*.scss', '!app/views/styles/component/_system_variables.scss' ],
-                tasks: [ 'sass' ],
+                tasks: [ 'shell:clean-css', 'sass' ],
                 options: {
                     spawn: false,
                     livereload: true
@@ -72,16 +71,23 @@ module.exports = grunt => {
             },
             language: {
                 files: [ 'app/views/**/*.pug', 'app/controllers/**/*.js', 'app/models/**/*.js', 'public/js/src/**/*.js' ],
-                tasks: [ 'shell:translation', 'i18next' ]
+                tasks: [ 'shell:clean-locales', 'shell:translation', 'i18next' ]
             },
             js: {
                 files: [ 'public/js/src/**/*.js', 'widget/**/*.js' ],
-                tasks: [ 'js' ],
+                tasks: [ 'shell:clean-js', 'js' ],
                 options: {
                     spawn: false,
                     livereload: true
                 }
-            }
+            },
+            mochaTest: {
+                files: [ 'app/**/*.js', 'test/server/**/*.js' ],
+                tasks: [ 'mochaTest:all' ],
+                options: {
+                    atBegin: true,
+                },
+            },
         },
         shell: {
             buildReadmeBadge: {
@@ -101,8 +107,8 @@ module.exports = grunt => {
                 // Does not work correctly yet for TError() calls and probably not for pug files either.
                 // npx i18next -c ./i18next-parser.config.js
             },
-            rollup: {
-                command: 'npx rollup --config'
+            build: {
+                command: 'node ./scripts/build.js'
             }
         },
         eslint: {
@@ -132,14 +138,33 @@ module.exports = grunt => {
         karma: {
             options: {
                 singleRun: true,
-                configFile: 'test/client/config/karma.conf.js'
+                configFile: 'test/client/config/karma.conf.js',
+                customLaunchers: {
+                    ChromeHeadlessDebug: {
+                        base: 'ChromeHeadless',
+                        flags: [ '--no-sandbox', '--remote-debugging-port=9333' ],
+                    },
+                },
             },
             headless: {
                 browsers: [ 'ChromeHeadless' ]
             },
             browsers: {
                 browsers: [ 'Chrome', 'ChromeCanary', 'Firefox', 'Opera' /*,'Safari'*/ ],
-            }
+            },
+            watch: {
+                browsers: [ 'ChromeHeadlessDebug' ],
+                options: {
+                    autoWatch: true,
+                    client: {
+                        mocha: {
+                            timeout: Number.MAX_SAFE_INTEGER,
+                        },
+                    },
+                    reporters: [ 'dots' ],
+                    singleRun: false,
+                }
+            },
         },
         nyc: {
             cover: {
@@ -155,21 +180,6 @@ module.exports = grunt => {
                 cmd: false,
                 args: [ 'grunt', 'mochaTest:all' ]
             }
-        },
-        terser: {
-            options: {
-                // https://github.com/enketo/enketo-express/issues/72
-                keep_classnames: true,
-            },
-            all: {
-                files: bundles
-                    .map( bundle => [ bundle.replace( '.js', '.min.js' ), [ bundle ] ] )
-                    .reduce( ( o, [ key, value ] ) => {
-                        o[ key ] = value;
-
-                        return o;
-                    }, {} )
-            },
         },
         env: {
             develop: {
@@ -234,12 +244,15 @@ module.exports = grunt => {
         grunt.log.writeln( `File ${WIDGETS_SASS} created` );
     } );
 
-    grunt.registerTask( 'default', [ 'locales', 'widgets', 'css', 'js', 'terser' ] );
-    grunt.registerTask( 'locales', [ 'shell:clean-locales', 'i18next' ] );
-    grunt.registerTask( 'js', [ 'shell:clean-js', 'widgets', 'shell:rollup' ] );
-    grunt.registerTask( 'css', [ 'shell:clean-css', 'system-sass-variables:create', 'sass' ] );
+    grunt.registerTask( 'default', [ 'clean', 'locales', 'widgets', 'css', 'js' ] );
+    grunt.registerTask( 'clean', [ 'shell:clean-js','shell:clean-css' , 'shell:clean-locales' ] );
+    grunt.registerTask( 'locales', [ 'i18next' ] );
+    grunt.registerTask( 'js', [ 'widgets', 'shell:build' ] );
+    grunt.registerTask( 'css', [ 'system-sass-variables:create', 'sass' ] );
     grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'nyc:cover', 'karma:headless', 'shell:buildReadmeBadge', 'eslint:check' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'karma:browsers' ] );
+    grunt.registerTask( 'test-watch-client', [ 'env:test', 'karma:watch' ], );
+    grunt.registerTask( 'test-watch-server', [ 'env:test', 'watch:mochaTest' ], );
     grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js', 'css', 'concurrent:develop' ] );
     grunt.registerTask( 'test-and-build', [ 'env:test', 'mochaTest:all', 'karma:headless', 'env:production', 'default' ] );
 };

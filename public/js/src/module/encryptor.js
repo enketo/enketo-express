@@ -6,6 +6,15 @@
  **********************************************************************************************/
 import forge from 'node-forge';
 import utils from './utils';
+
+/**
+ * @typedef {import('../../../../app/models/record-model').EnketoRecord} EnketoRecord
+ */
+
+/**
+ * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
+ */
+
 const SYMMETRIC_ALGORITHM = 'AES-CFB'; // JAVA: "AES/CFB/PKCS5Padding"
 const ASYMMETRIC_ALGORITHM = 'RSA-OAEP'; // JAVA: "RSA/NONE/OAEPWithSHA256AndMGF1Padding"
 const ASYMMETRIC_OPTIONS = {
@@ -23,6 +32,65 @@ function isSupported() {
         new ArrayBuffer( 8 ).byteLength === 8 &&
         typeof Uint8Array !== 'undefined' &&
         new Uint8Array( 8 ).length === 8;
+}
+
+const isEncryptionEnabledSymbol = Symbol( 'isEncryptionEnabled' );
+
+/**
+ * @param {Survey} survey
+ * @return {boolean}
+ */
+function isEncryptionEnabled( survey ) {
+    return Boolean( survey[isEncryptionEnabledSymbol] );
+}
+
+/**
+ * Converts an encryption-enabled survey's private `isEncryptionEnabledSymbol`
+ * property to a serializable string property.
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm#supported_types}
+ * @param {Survey} survey
+ * @return {Survey}
+ */
+function serializeEncryptedSurvey( survey ) {
+    if ( isEncryptionEnabled( survey ) ) {
+        return Object.assign( {}, survey, {
+            isEncryptionEnabled: true,
+        } );
+    }
+
+    return survey;
+}
+
+/**
+ * Restores a serialized survey's encryption-enabled state by converting its
+ * `isEncryptionEnabled` property to the private `isEncryptionEnabledSymbol`.
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm#supported_types}
+ * @param {Survey} survey
+ * @return {Survey}
+ */
+function deserializeEncryptedSurvey( survey ) {
+    if ( survey.isEncryptionEnabled ) {
+        let result = Object.assign( {}, survey );
+
+        delete result.isEncryptionEnabled;
+
+        return setEncryptionEnabled( result );
+    }
+
+    return survey;
+}
+
+/**
+ * @param {Survey} survey
+ * @return {Survey}
+ */
+function setEncryptionEnabled( survey ) {
+    return Object.defineProperty( survey, isEncryptionEnabledSymbol, {
+        configurable: false,
+        value: true,
+    } );
 }
 
 /**
@@ -237,7 +305,11 @@ function Manifest( formId, formVersion ) {
 }
 
 export default {
+    isEncryptionEnabled,
+    setEncryptionEnabled,
+    serializeEncryptedSurvey,
+    deserializeEncryptedSurvey,
     isSupported,
     encryptRecord,
-    Seed
+    Seed,
 };

@@ -20,10 +20,7 @@ block style
 
 block script
   - var suffix = (type && type !== 'preview' && type !== 'single') ? '-' + type : ''
-  if environment == 'production'
-    script#main-script(defer, module, src=`${basePath}${offlinePath || ''}/js/build/enketo-webform${suffix}-bundle.min.js`)
-  else
-    script#main-script(defer, module, src=`${basePath}${offlinePath || ''}/js/build/enketo-webform${suffix}-bundle.js`)
+    script#main-script(defer, module, src=`${basePath}${offlinePath || ''}/js/build/enketo-webform${suffix}.js`)
 
   script.
     var env = !{JSON.stringify(clientConfig).replace(/<\//g, '<\\/')};

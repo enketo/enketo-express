@@ -14,7 +14,7 @@ function init( survey ) {
                     // Registration was successful
                     console.log( 'Offline application service worker registration successful with scope: ', registration.scope );
                     setInterval( () => {
-                        console.log( 'Checking for offlince application cache service worker update' );
+                        console.log( 'Checking for offline application cache service worker update' );
                         registration.update();
                     }, 60 * 60 * 1000 );
 

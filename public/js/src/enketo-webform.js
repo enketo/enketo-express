@@ -229,6 +229,7 @@ function _init( formParts ) {
         modelStr: formParts.model,
         instanceStr: _prepareInstance( formParts.model, settings.defaults ),
         external: formParts.externalData,
+        survey: formParts,
     } )
         .then( form => {
             formParts.languages = form.languages;
@@ -238,6 +239,7 @@ function _init( formParts ) {
             }
             // after widgets have been initialized, localize all data-i18n elements
             localize( formEl );
-            return  formParts;
+            return formParts;
+
         } );
 }

@@ -222,6 +222,13 @@ describe( 'Client Utilities', () => {
                     '/b/c': 'd and e'
                 }
             }, '?d[%2Fa%2Fb]=c&d[%2Fb%2Fc]=d%20and%20e' ],
+            // handle `%` symbol in value
+            [ {
+                name: 'd',
+                value: {
+                    '/a/b': '10% tax',
+                }
+            }, '?d[%2Fa%2Fb]=10%25%20tax' ],
             // complex combo
             [
                 [ {

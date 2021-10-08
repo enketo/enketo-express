@@ -9,7 +9,8 @@
     },
     "extends": "eslint:recommended",
     "plugins": [
-        "jsdoc"
+        "jsdoc",
+        "unicorn"
     ],
     "parserOptions": {
         "sourceType": "module",
@@ -30,7 +31,11 @@
         "no-console": ["warn", { "allow": ["error", "deprecate", "warn"] }],
         "eol-last": ["error", "always"],
         "padding-line-between-statements": ["warn", { "blankLine": "always", "prev": "*", "next": "return" }],
-        "space-before-function-paren": ["error", "never"],
+        "space-before-function-paren": ["error", {
+            "anonymous": "never",
+            "asyncArrow": "always",
+            "named": "never"
+        }],
         "space-in-parens": ["error", "always"],
         "space-infix-ops": "error",
         "array-bracket-spacing": ["error", "always"],
@@ -53,7 +58,21 @@
         "jsdoc/require-returns-check": 1,
         "jsdoc/require-returns-description": 1,
         "jsdoc/require-returns-type": 1,
-        "jsdoc/valid-types": 1
-    }
+        "jsdoc/valid-types": 1,
+        "unicorn/expiring-todo-comments": "error"
+    },
+    "overrides": [
+        {
+            "files": [
+                "config/build.js",
+                "test/client/config/karma.conf.js",
+                "scripts/build.js"
+            ],
+            "env": {
+                "browser": false,
+                "node": true
+            }
+        }
+    ]
 }
 

@@ -1,3 +1,13 @@
+/**
+ * @module encryptor.spec.js
+ * @description Tests encryption logic.
+ * @see {SurveyEncryptionSpec}
+ */
+
+/**
+ * @typedef {import('./feature/survey-encryption.spec.js')} SurveyEncryptionSpec
+ */
+
 import encryptor from '../../public/js/src/module/encryptor';
 
 describe( 'Encryptor', () => {
@@ -43,7 +53,6 @@ describe( 'Encryptor', () => {
         } );
 
     } );
-
 
     describe( 'submission encryption', () => {
         const form = { id: 'abc', version: '2', encryptionKey: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5s9p+VdyX1ikG8nnoXLCC9hKfivAp/e1sHr3O15UQ+a8CjR/QV29+cO8zjS/KKgXZiOWvX+gDs2+5k9Kn4eQm5KhoZVw5Xla2PZtJESAd7dM9O5QrqVJ5Ukrq+kG/uV0nf6X8dxyIluNeCK1jE55J5trQMWT2SjDcj+OVoTdNGJ1H6FL+Horz2UqkIObW5/elItYF8zUZcO1meCtGwaPHxAxlvODe8JdKs3eMiIo9eTT4WbH1X+7nJ21E/FBd8EmnK/91UGOx2AayNxM0RN7pAcj47a434LzeM+XCnBztd+mtt1PSflF2CFE116ikEgLcXCj4aklfoON9TwDIQSp0wIDAQAB' };

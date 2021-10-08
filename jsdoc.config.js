@@ -17,7 +17,7 @@ module.exports = {
         readme: 'README.md',
         template: 'node_modules/docdash'
     },
-    plugins: [ 'plugins/markdown' ],
+    plugins: [ 'jsdoc-ts-utils', 'plugins/markdown' ],
     source: {
         include: [
             'app/',
@@ -75,5 +75,13 @@ module.exports = {
             'Mixins',
             'Interfaces'
         ]
-    }
+    },
+    tsUtils: {
+        /**
+         * We may actually want to enable this, but it was a surprisng default.
+         *
+         * @see {@link https://github.com/homer0/jsdoc-ts-utils#configuration}
+         */
+        typeScriptUtilityTypes: false,
+    },
 };

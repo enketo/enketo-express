@@ -5,14 +5,14 @@
     "alert": {
         "addtohomescreen": {
             "androidchrome": {
-                "msg": "To add this form to your Home screen, click the browser settings icon __image1__ and select: 'Add to Home screen'."
+                "msg": "Bu formu Ana ekranınıza eklemek için, tarayıcı ayarları simgesine __image1__ tıklayın ve 'Ana ekrana ekle'yi seçin."
             },
             "androidfirefox": {
-                "msg": "To add this form to your Homescreen, long-press the address bar and select 'Add to Home Screen'."
+                "msg": "Bu formu Ana Ekranınıza eklemek için, adres çubuğuna uzun basın ve 'Ana Ekrana Ekle'yi seçin."
             },
             "heading": "Ana Sayfaya Ekle",
             "iossafari": {
-                "msg": "To add this form to your Home screen, click the share icon __image1__ in the top right of your browser, and select: '+ Add to Home Screen'."
+                "msg": "Bu formu Ana ekranınıza eklemek için, tarayıcınızın sağ üst kısmındaki paylaş simgesine __image1__ tıklayın ve \"+ Ana Ekrana Ekle\" yi seçin."
             }
         },
         "appupdated": {
@@ -28,13 +28,13 @@
         },
         "export": {
             "error": {
-                "filecreatedmsg": "Nevertheless, an incomplete export file was still created.",
+                "filecreatedmsg": "Yine de tamamlanmamış bir dışa aktarma dosyası oluşturuldu.",
                 "heading": "Dışa Aktarım Hatası",
-                "msg": "Errors occurred during creating of the record export file for unsubmitted records. Errors: __errors__"
+                "msg": "Gönderilmeyen kayıtlar için kayıt dışa aktarma dosyası oluşturulurken hatalar oluştu. Hatalar: __errors__"
             },
             "success": {
                 "heading": "Dışa Aktarım Oluşturuldu",
-                "msg": "Export file created for all unsubmitted records belonging to this form."
+                "msg": "Bu forma ait tüm gönderilmemiş kayıtlar için oluşturulan dışa aktarım dosyası."
             }
         },
         "formupdated": {
@@ -42,94 +42,94 @@
             "msg": "Bu biçimin yeni bir uyarlaması indirildi. Güncellenmiş uyarlamayı yüklemek için sayfayı yenileyiniz."
         },
         "gotonotfound": {
-            "msg": "Failed to find question \"__path__\" in form. Is the reference to this question correct?"
+            "msg": "\"__path__\" sorusu biçiminde bulunamadı. Bu soruya yapılan atıf doğru mu?"
         },
         "loaderror": {
-            "editadvice": "It is recommended not to edit this record until this is resolved.",
-            "entryadvice": "It is recommended not to use this form for data entry until this is resolved.",
+            "editadvice": "Sorun çözülene kadar bu kaydın düzenlenmemesi önerilir.",
+            "entryadvice": "Sorun çözülene kadar bu formu veri girişi için kullanmamanız önerilir.",
             "heading": "Yükleme Hatası",
-            "msg1": "Error occured during the loading of this form.",
-            "msg2": "Please contact __emailLink__ with the link to this page and the error message below:",
+            "msg1": "Bu formun yüklenmesi sırasında hata oluştu.",
+            "msg2": "Lütfen bu sayfanın bağlantısı ve aşağıdaki hata mesajıyla __emailLink__ ile iletişime geçin:",
             "heading_plural": "Yükleme Hataları",
-            "msg1_plural": "Errors occurred during the loading of this form.",
-            "msg2_plural": "Please contact __emailLink__ with the link to this page and the error messages below:"
+            "msg1_plural": "Bu formun yüklenmesi sırasında hatalar meydana geldi.",
+            "msg2_plural": "Lütfen bu sayfanın bağlantısını ve aşağıdaki hata mesajlarını kullanarak __emailLink__ ile iletişime geçin:"
         },
         "logout": {
             "heading": "Çıkış Yapıldı",
-            "msg": "You have been logged out."
+            "msg": "Çıkış yaptınız."
         },
         "offlinesupported": {
             "heading": "Form çevrimdışı çalışıyor!",
             "msg": [
-                "This form can now be loaded and used without an Internet connection on this device. Bookmark it for easy offline access.",
-                "Records are automatically stored and queued in your browser until an Internet connection is available. When the app is online, records will be automatically submitted - one by one.",
-                "Only after a record has been succesfully submitted, it will be removed from the queue. You can safely close down your browser and device with items in the queue. They will still be there next time you load the form."
+                "Bu form artık bu cihaza İnternet bağlantısı olmadan yüklenebilir ve kullanılabilir. Kolay çevrimdışı erişim için yer imlerine ekleyin.",
+                "Kayıtlar, bir İnternet bağlantısı kurulana kadar tarayıcınızda otomatik olarak depolanır ve sıraya alınır. Uygulama çevrimiçi olduğunda, kayıtlar otomatik olarak teker teker gönderilecektir.",
+                "Bir kayıt ancak başarıyla gönderildikten sonra, kuyruktan kaldırılacaktır. Sıradaki öğelerle tarayıcınızı ve cihazınızı güvenle kapatabilirsiniz. Formu bir dahaki sefere yüklediğinizde hala orada olacaklar."
             ]
         },
         "offlineunsupported": {
-            "heading": "Application cannot launch offline",
-            "msg": "Offline application launch is not supported by your browser. You can use the survey without this feature or see options for resolving this.",
-            "negButton": "Use it",
+            "heading": "Uygulama çevrimdışı başlatılamıyor",
+            "msg": "Çevrimdışı uygulama başlatma, tarayıcınız tarafından desteklenmiyor. Anketi bu özellik olmadan kullanabilir veya bunu çözmek için seçenekleri görebilirsiniz.",
+            "negButton": "Onu kullan",
             "posButton": "Seçenekleri göster",
-            "refresh": "This form can no longer launch offline. Please refresh the page to try to fix this."
+            "refresh": "Bu form artık çevrimdışı başlatılamaz. Bunu düzeltmeyi denemek için lütfen sayfayı yenileyin."
         },
         "queuesubmissionsuccess": {
-            "msg": "__recordNames__ was successfully submitted",
-            "msg_plural": "__recordNames__ were successfully submitted"
+            "msg": "__recordNames__ başarıyla gönderildi",
+            "msg_plural": "__recordNames__ başarıyla gönderildi"
         },
         "recordloadsuccess": {
-            "msg": "__recordName__ has been loaded"
+            "msg": "__recordName__ yüklendi"
         },
         "recordnotfound": {
-            "msg": "Record could not be retrieved or contained no data."
+            "msg": "Kayıt alınamadı veya veri yok."
         },
         "recordsavesuccess": {
-            "draftmsg": "Record stored as draft.",
-            "finalmsg": "Record queued for submission."
+            "draftmsg": "Taslak olarak saklanan kayıt.",
+            "finalmsg": "Kayıt gönderilmek üzere sıraya alındı."
         },
         "savedraftinfo": {
-            "heading": "Finalize record later",
+            "heading": "Kaydı daha sonra tamamlayın",
             "msg": [
-                "The draft record is stored only within the current browser. You can close this browser without losing the stored record.",
-                "Draft records can be accessed by reopening this page and clicking the button on the left of the screen that looks like this: __icon__",
-                "Warning: If you clear your browser cache, all draft and unsubmitted final records will be permanently deleted."
+                "Taslak kayıt yalnızca mevcut tarayıcıda saklanır. Saklanan kaydı kaybetmeden bu tarayıcıyı kapatabilirsiniz.",
+                "Taslak kayıtlara, bu sayfayı yeniden açıp ekranın solundaki şuna benzeyen düğmeyi tıklayarak erişilebilir: __icon__",
+                "Uyarı: Tarayıcınızın önbelleğini temizlerseniz, tüm taslak ve gönderilmemiş son kayıtlar kalıcı olarak silinecektir."
             ]
         },
         "submission": {
-            "msg": "Submitting...",
-            "redirectmsg": "You will be automatically redirected after submission."
+            "msg": "Gönderiliyor...",
+            "redirectmsg": "Gönderdikten sonra otomatik olarak yönlendirileceksiniz."
         },
         "submissionerror": {
-            "authrequiredmsg": "Authentication required. Please authenticate __here__ in a different browser tab and try again.",
+            "authrequiredmsg": "Kimlik doğrulama gerekli. Lütfen farklı bir tarayıcı sekmesinde __here__ kimliğinizi doğrulayın ve tekrar deneyin.",
             "fnfmsg": [
-                "The following media files could not be retrieved: __failedFiles__. The submission went ahead without these files and this succeeded.",
-                "Please contact __supportEmail__ to report a bug and if possible explain how the issue can be reproduced."
+                "Aşağıdaki medya dosyaları alınamadı: __failedFiles__. Gönderim bu dosyalar olmadan devam etti ve bu başarılı oldu.",
+                "Bir hatayı bildirmek için lütfen __supportEmail__ ile iletişime geçin ve mümkünse sorunun nasıl oluştuğunu açıklayın."
             ],
-            "heading": "Submission Failed"
+            "heading": "Gönderim Başarısız"
         },
         "submissionsuccess": {
-            "heading": "Submission Successful",
-            "msg": "Your data was submitted!",
+            "heading": "Gönderim Başarılı",
+            "msg": "Verileriniz gönderildi!",
             "redirectmsg": "Şimdi yönlendirileceksiniz."
         },
         "thanks": {
             "heading": "Katılımınız için teşekkürler.",
-            "msg": "You can close this window now.",
-            "msgTaken": "You have already completed this survey."
+            "msg": "Bu pencereyi şimdi kapatabilirsiniz.",
+            "msgTaken": "Bu anketi zaten tamamladınız."
         },
         "validationerror": {
             "msg": "Formda hatalar bulunuyor. Lütfen kırmızı ile işaretlenen alanları gözden geçiriniz."
         },
         "validationsuccess": {
-            "heading": "OK",
-            "msg": "Form is valid!"
+            "heading": "TAMAM",
+            "msg": "Form geçerlidir!"
         },
         "valuehasspaces": {
             "multiple": "Select multiple question has an illegal value \"__value__\" that contains a space."
         },
         "xpatherror": {
             "heading": "Formül Hatası",
-            "msg": "A formula evaluation error occurred. Please contact __emailLink__ with this error:"
+            "msg": "Bir formül değerlendirme hatası oluştu. Lütfen bu hatayla __emailLink__ ile iletişime geçin:"
         }
     },
     "changelog": "Değişim Günlüğü",
@@ -137,7 +137,7 @@
         "autosaveload": {
             "heading": "Kaydedilmemiş giriş bulundu.",
             "msg": "Enketo kaydedişmemiş bir giriş buldu. Bu kaydı yüklemek ister misiniz veya dikkate alma.",
-            "negButton": "Discard",
+            "negButton": "At",
             "posButton": "Kaydı Yükle"
         },
         "default": {
@@ -147,53 +147,53 @@
             "posButton": "Onayla"
         },
         "deleteall": {
-            "heading": "PANIC!",
+            "heading": "DİKKAT!",
             "msg": [
-                "This will remove all your queued data and all your forms from the browser storage. Data will be lost forever. Use this only as a last resort if the browser storage seems corrupt.",
+                "Bu, sıradaki tüm verilerinizi ve tüm formlarınızı tarayıcı depolama alanından kaldıracaktır. Veriler sonsuza kadar kaybolacak. Tarayıcı depolama alanı bozuk görünüyorsa bunu yalnızca son çare olarak kullanın.",
                 "Önce tüm Enketo tarayıcı bölmelerini kapatın.",
-                "The page will reload. If you see an error you may have to repeat this action.",
+                "Sayfa yeniden yüklenecek. Bir hata görürseniz, bu işlemi tekrarlamanız gerekebilir.",
                 "Bunu yapmak istediğinize emin misiniz?"
             ],
             "posButton": "Tümünü Sil"
         },
         "discardcurrent": {
             "heading": "Kaydedilmeyen düzenleme",
-            "msg": "The current form has unsaved changes. Would you like to load a record without saving changes to the form you were working on?",
+            "msg": "Mevcut formda kaydedilmemiş değişiklikler var. Üzerinde çalıştığınız forma değişiklikleri kaydetmeden bir kayıt yüklemek ister misiniz?",
             "posButton": "Kaydetmeden işleme devam edin"
         },
         "login": {
             "heading": "Kullanıcı Girişi Gerekli",
             "msg": [
-                "In order to submit your queued data, you need to login. If you want to do this now, you will be redirected, and lose unsaved information.",
-                "Would you like to login now or later?"
+                "Sıraya alınmış verilerinizi göndermek için oturum açmanız gerekir. Bunu şimdi yapmak istiyorsanız, yeniden yönlendirileceksiniz ve kaydedilmemiş bilgileri kaybedeceksiniz.",
+                "Şimdi mi yoksa daha sonra mı giriş yapmak istersiniz?"
             ],
             "negButton": "Sonra",
-            "posButton": "Log in now"
+            "posButton": "Şimdi giriş yap"
         },
         "print": {
             "a4": "A4",
             "heading": "Yazdırma Ayarlarını Seçiniz",
-            "landscape": "Landscape",
-            "letter": "Letter",
-            "msg": "To prepare an optimized print, please select the print settings below",
+            "landscape": "Yatay",
+            "letter": "Mektup Biçimi",
+            "msg": "Optimize edilmiş bir baskı hazırlamak için, lütfen aşağıdaki baskı ayarlarını seçin",
             "orientation": "Sayfa Yönlendirmesi",
-            "portrait": "Portrait",
+            "portrait": "Dikey",
             "posButton": "Hazırla",
             "psize": "Kağıt Boyutu",
-            "reminder": "Remember to set these same print settings in the browser's print menu afterwards!"
+            "reminder": "Daha sonra tarayıcının yazdırma menüsünde aynı yazdırma ayarlarını yapmayı unutmayın!"
         },
         "repeatremove": {
-            "heading": "Delete this group of responses?",
-            "msg": "This action is irreversible. Are you sure you want to proceed?"
+            "heading": "Bu yanıt grubu silinsin mi?",
+            "msg": "Bu eylem geri alınamaz. Devam etmek istediğinizden emin misiniz?"
         },
         "save": {
             "existingerror": "Kayıt ismi veya numarası zaten mevcut.",
-            "hint": "This name allows you to easily find your draft record to finish it later.",
-            "msg": "There are unsaved changes, would you like to continue without saving those?",
+            "hint": "Bu ad, daha sonra bitirmek için taslak kaydınızı kolayca bulmanızı sağlar.",
+            "msg": "Kaydedilmemiş değişiklikler var, bunları kaydetmeden devam etmek ister misiniz?",
             "name": "Kayıt İsmi",
             "posButton": "Kaydet ve Kapat",
-            "renamemsg": "Are you sure you want to rename __currentName__ to __newName__?",
-            "unkownerror": "An unknown error occurred when trying to save data."
+            "renamemsg": "__currentName__ adını __newName__ olarak yeniden adlandırmak istediğinizden emin misiniz?",
+            "unkownerror": "Verileri kaydetmeye çalışırken bilinmeyen bir hata oluştu."
         }
     },
     "constraint": {
@@ -205,28 +205,28 @@
         "support": "Contact __supportEmail__ please."
     },
     "drawwidget": {
-        "annotation": "file and drawing",
-        "drawing": "drawing",
+        "annotation": "dosya ve çizim",
+        "drawing": "çizim",
         "signature": "imza"
     },
     "enketo": {
-        "power": "Powered by"
+        "power": "Destekleyen"
     },
     "error": {
-        "code": "Error Code: __code__",
+        "code": "Hata Kodu: __code__",
         "dataloadfailed": "__url__ adresinden veri yükleme başarısız",
-        "econnrefused": "Sunucu ile bağlantı kurulamadı",
-        "encryptionnotsupported": "This form requires local encryption of records. Unfortunately this is not supported by your browser. We recommend switching to a modern browser.",
-        "instancenotfound": "Record not present. It may have expired.",
-        "invalidediturl": "Not a valid edit URL",
-        "loadfailed": "Failed to load __resource__",
+        "econnrefused": "Form Sunucusuna bağlanılamadı",
+        "encryptionnotsupported": "Bu form, kayıtların yerel olarak şifrelenmesini gerektirir. Maalesef bu, tarayıcınız tarafından desteklenmiyor. Modern bir tarayıcıya geçmenizi öneririz.",
+        "instancenotfound": "Kayıt mevcut değil. Süresi dolmuş olabilir.",
+        "invalidediturl": "Geçerli bir düzenleme URL'si değil",
+        "loadfailed": "__resource__ yüklenemedi",
         "notfoundinformlist": [
-            "Oops, this form doesn't exist (anymore). Most likely the owner of the form has deleted it, archived it, or disabled it. Please contact the form's owner to confirm.",
-            "Detailed error: Form with ID __formId__ not found in /formList."
+            "Maalesef bu form (artık) mevcut değil. Büyük olasılıkla formun sahibi onu silmiş, arşivlemiş veya devre dışı bırakmıştır. Lütfen onaylamak için formun sahibiyle iletişime geçin.",
+            "Ayrıntılı hata: __formId__ kimliğine sahip form / formList içinde bulunamadı."
         ],
         "pagenotfound": "Sayfa Bulunamadı",
-        "surveyidnotactive": "Survey with this ID no longer active",
-        "surveyidnotfound": "Survey with this ID not found",
+        "surveyidnotactive": "Bu kimliğe sahip anket artık aktif değil",
+        "surveyidnotfound": "Bu kimliğe sahip anket bulunamadı",
         "unknown": "Bilinmeyen bir hata oluştu"
     },
     "feedback": {
@@ -234,22 +234,22 @@
     },
     "filepicker": {
         "file": "dosya",
-        "notFound": "File __existing__ could not be found (leave unchanged if already submitted and you want to preserve it).",
-        "placeholder": "Click here to upload file. (< __maxSize__)",
-        "resetWarning": "This will remove the __item__. Are you sure you want to do this?",
-        "toolargeerror": "File too large (> __maxSize__)",
+        "notFound": "__existing__ dosyası bulunamadı (zaten gönderilmişse ve korumak istiyorsanız değiştirmeden bırakın).",
+        "placeholder": "Dosya yüklemek için burayı tıklayın. (<__maxSize__)",
+        "resetWarning": "Bu __item__ öğesini kaldıracaktır. Bunu yapmak istediğine emin misin?",
+        "toolargeerror": "Dosya çok büyük (> __maxSize__)",
         "waitingForPermissions": "Kullanıcı izinleri için bekleniyor."
     },
     "form": {
         "chooseLanguage": "Dil Seçiniz",
-        "logout": "log out",
+        "logout": "çıkış yap",
         "pages": {
             "back": "Geri",
-            "end": "Go to End",
+            "end": "Sona Git",
             "next": "İleri",
-            "return": "Return to Beginning"
+            "return": "Başlangıca Dön"
         },
-        "required": "required"
+        "required": "gereklidir"
     },
     "formfooter": {
         "complete": {
@@ -260,10 +260,10 @@
             "label": "Taslak Olarak Kaydet"
         },
         "submit": {
-            "btn": "Submit"
+            "btn": "Gönder"
         },
         "validate": {
-            "btn": "Validate"
+            "btn": "Doğrula"
         }
     },
     "geopicker": {
@@ -273,22 +273,23 @@
         "kmlcoords": "KML koordinatları",
         "kmlpaste": "KML koordinatlarını buraya yapıştırınız",
         "latitude": "Enlem (y)",
-        "longitude": "longitude (x.y °)",
-        "points": "points",
-        "removePoint": "This will completely remove the current geopoint from the list of geopoints and cannot be undone. Are you sure you want to do this?",
-        "searchPlaceholder": "search for place or address"
+        "longitude": "boylam (xy °)",
+        "points": "puan",
+        "removePoint": "Bu, mevcut coğrafi noktayı coğrafi noktalar listesinden tamamen kaldıracak ve geri alınamaz. Bunu yapmak istediğine emin misin?",
+        "searchPlaceholder": "yer veya adres ara",
+        "bordersintersectwarning": "Borders cannot intersect"
     },
-    "here": "here",
+    "here": "burada",
     "hint": {
         "guidance": {
             "details": "dahada ayrıntılar"
         }
     },
     "home": {
-        "msg": "__appTitle__ is running! Please access Enketo forms from your __serverName__ installation."
+        "msg": "__appTitle__ çalışıyor! Lütfen __serverName__ kurulumunuzdan Enketo formlarına erişin."
     },
     "imagemap": {
-        "svgNotFound": "SVG image could not be found"
+        "svgNotFound": "SVG resmi bulunamadı"
     },
     "langs": {
         "ar": "Arapça",
@@ -315,30 +316,31 @@
         "ru": "Rusça",
         "sk": "Slovakça",
         "sq": "Arnavutça",
-        "supported": "Languages supported:",
+        "supported": "Desteklenen diller:",
         "sv": "İsveççe",
         "sw": "Svahilice",
         "th": "Tayca",
+        "tr": "Türkçe",
         "vi": "Vietnamca",
         "zh": "Çince"
     },
     "literacywidget": {
-        "finish": "Finish",
-        "start": "Start"
+        "finish": "Bitir",
+        "start": "Başlat"
     },
     "page": {
         "modernbrowsers": {
-            "heading": "Modern Browsers",
+            "heading": "Modern Tarayıcılar",
             "ie": {
-                "heading": "Why no love for those evil outdated versions of Internet Explorer?",
-                "msg": "We understand that some people, especially those working for large bureaucracies, do not have access to the latest and greatest browsers. Since we know how great the web could be with the right tools, we have great empathy for users in that unfortunate situation. Normally, we would try to provide workarounds to support some populair outdated browsers. However, the reason Enketo exists is the availability of some very fancy cutting-edge technologies. Unfortunately, users of older browsers are therefore out of luck."
+                "heading": "Neden Internet Explorer'ın modası geçmiş sürümlerine ilginiz yok?",
+                "msg": "Bazı kişilerin, özellikle büyük bürokrasilerde çalışanların, en yeni ve en büyük tarayıcılara erişemediğini anlıyoruz. Web'in doğru araçlarla ne kadar harika olabileceğini bildiğimiz için, bu talihsiz durumda kullanıcılar için büyük bir empati kuruyoruz. Normalde, bazı populair modası geçmiş tarayıcıları desteklemek için geçici çözümler sağlamaya çalışırız. Bununla birlikte, Enketo'nun var olmasının nedeni, bazı çok süslü son teknolojilerin mevcudiyetidir. Ne yazık ki, eski tarayıcıların kullanıcıları bu nedenle şanssızdır."
             },
-            "msg1": "Ouch! Sorry, you were probably sent here because your browser is outdated or perhaps it has its key features disabled by using 'private browsing' mode.",
-            "msg2": "If you are using an outdated browser, we recommend upgrading to a recent version of one of the following excellent modern browsers:"
+            "msg1": "Ah! Üzgünüz, muhtemelen tarayıcınız güncel olmadığı için veya belki de temel özellikleri 'özel tarama' modu kullanılarak devre dışı bırakıldığı için buraya gönderildiniz.",
+            "msg2": "Eski bir tarayıcı kullanıyorsanız, aşağıdaki mükemmel modern tarayıcılardan birinin yeni bir sürümüne geçmenizi öneririz:"
         },
         "offline": {
             "heading": "İstenen sayfaya ulaşılamıyor",
-            "msg1": "This page is only accessible when the browser has an Internet connection and the server is accessible (unless the page does not exist)."
+            "msg1": "Bu sayfaya yalnızca tarayıcının İnternet bağlantısı olduğunda ve sunucuya erişilebildiğinde erişilebilir (sayfa yoksa)."
         }
     },
     "prompt": {
@@ -346,53 +348,53 @@
             "heading": "Değerleri giriniz"
         },
         "login": {
-            "heading": "Enter your __server__ credentials",
+            "heading": "__server__ kimlik bilgilerinizi girin",
             "password": "Şifre",
             "remember": "Bu bilgisayarda hatırla",
-            "submit": "Submit",
+            "submit": "Gönder",
             "username": "Kullanıcı Adı"
         }
     },
     "rankwidget": {
-        "clickstart": "Click to start",
-        "tapstart": "Tap to start"
+        "clickstart": "Başlamak için tıklayın",
+        "tapstart": "Başlatmak için dokunun"
     },
     "record-list": {
         "export": "Dışarı Aktar",
         "msg1": "Records are stored inside your browser until they have been uploaded (even if you turn off your computer or go offline).",
-        "msg2": "Queued records, except those marked as draft __icon__, are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
-        "msg2-nodraft": "Queued records are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
-        "msg3": "To force an upload in between automatic attempts, click Upload.",
-        "norecords": "no records queued",
-        "title": "Kuyruk",
-        "upload": "Karşıya yükle"
+        "msg2": "Taslak __icon__ olarak işaretlenenler dışında sıraya alınan kayıtlar, web sayfası açık olduğunda ve bir İnternet bağlantısı mevcut olduğunda her 5 dakikada bir arka planda otomatik olarak yüklenir.",
+        "msg2-nodraft": "Sıraya alınan kayıtlar, web sayfası açıldığında ve İnternet bağlantısı mevcut olduğunda her 5 dakikada bir arka planda otomatik olarak yüklenir.",
+        "msg3": "Otomatik denemeler arasında bir yüklemeyi zorlamak için Yükle'ye tıklayın.",
+        "norecords": "hiçbir kayıt sıraya alınmadı",
+        "title": "Sıra",
+        "upload": "Yükle"
     },
     "selectpicker": {
-        "noneselected": "none selected",
-        "numberselected": "__number__ selected"
+        "noneselected": "seçilmedi",
+        "numberselected": "__number__ seçildi"
     },
     "store": {
         "error": {
-            "iosusesafari": "Your iOS browser is not able to run this form. On iOS, we recommend using Safari.",
-            "notavailable": "Browser storage is required but is not available, is corrupted, or is not writeable. If you are in 'private browsing' mode please switch to regular mode, otherwise switch to another browser. (error: __error__)",
-            "notsupported": "Your browser is not able to run this form. We recommend using a modern browser."
+            "iosusesafari": "İOS tarayıcınız bu formu çalıştıramaz. İOS'ta Safari kullanmanızı öneririz.",
+            "notavailable": "Tarayıcı depolama alanı gerekli, ancak mevcut değil, bozuk veya yazılabilir değil. 'Gizli tarama' modundaysanız, lütfen normal moda geçin, aksi takdirde başka bir tarayıcıya geçin. (hata: __error__)",
+            "notsupported": "Tarayıcınız bu formu çalıştıramaz. Modern bir tarayıcı kullanmanızı öneririz."
         }
     },
     "submission": {
-        "http0": "Failed (Offline?).",
-        "http2xx": "Unexpected response when submitting data.",
-        "http400": "Data server did not accept data.",
-        "http401": "Authentication problem with data server.",
-        "http403": "Not allowed to post data to this data server.",
-        "http404": "Submission service on data server not found.",
+        "http0": "Başarısız (Çevrimdışı mı?).",
+        "http2xx": "Veri gönderirken beklenmeyen yanıt.",
+        "http400": "Veri sunucusu verileri kabul etmedi.",
+        "http401": "Veri sunucusunda kimlik doğrulama sorunu.",
+        "http403": "Bu veri sunucusuna veri gönderilmesine izin verilmiyor.",
+        "http404": "Veri sunucusunda gönderim hizmeti bulunamadı.",
         "http408": "Veri sunucusu zaman aşımına uğradı.",
         "http413": "Veri çok büyük",
-        "http4xx": "Unknown submission problem on data server.",
-        "http500": "The data server for your form or the Enketo server is down. Please try again later or contact __supportEmail__.",
+        "http4xx": "Veri sunucusunda bilinmeyen gönderim sorunu.",
+        "http500": "Formunuzun veya Enketo sunucunuzun veri sunucusu çalışmıyor. Lütfen daha sonra tekrar deneyin veya __supportEmail__ ile iletişime geçin.",
         "http504": "Veri sunucusu ile bağlantı kurulamadı."
     },
     "themes": {
-        "supported": "Themes supported"
+        "supported": "Desteklenen temalar"
     },
     "version": "Sürüm:",
     "widget": {
