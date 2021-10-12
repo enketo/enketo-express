@@ -371,7 +371,7 @@
     },
     "selectpicker": {
         "noneselected": "none selected",
-        "numberselected": "__number__ selected"
+        "numberselected": "+1 selected"
     },
     "store": {
         "error": {
