@@ -13,19 +13,22 @@ import store from './store';
 export const LAST_SAVED_VIRTUAL_ENDPOINT = 'jr://instance/last-saved';
 
 /**
- * @typedef IsLastSaveEnabledOptions
- * @property {boolean} [checkStoreAvailability]
+ * @param {Survey} survey
+ * @return {boolean}
  */
+const hasLastSavedInstance = ( survey ) => (
+    Array.isArray( survey.externalData ) &&
+    survey.externalData.some( item => item.src === LAST_SAVED_VIRTUAL_ENDPOINT )
+);
 
 /**
  * @param {Survey} survey
- * @param {IsLastSaveEnabledOptions} [options]
  */
-export const isLastSaveEnabled = ( survey, options = { checkStoreAvailability: true } ) => {
+export const isLastSaveEnabled = ( survey ) => {
     return (
-        ( options.checkStoreAvailability === false || store.available ) &&
-        Array.isArray( survey.externalData ) &&
-        survey.externalData.some( item => item.src === LAST_SAVED_VIRTUAL_ENDPOINT ) &&
+        settings.type === 'other' &&
+        store.available &&
+        hasLastSavedInstance( survey ) &&
         !encryptor.isEncryptionEnabled( survey )
     );
 };
@@ -62,9 +65,13 @@ export const removeLastSavedRecord = async ( enketoId ) => {
 
 const domParser = new DOMParser();
 
-
+/**
+ * @param {Survey} survey
+ * @param {EnketoRecord} [lastSavedRecord]
+ * @return {XMLDocument}
+ */
 const getLastSavedInstanceDocument = ( survey, lastSavedRecord ) => {
-    if ( !store.available || lastSavedRecord == null || settings.type !== 'other' ) {
+    if ( lastSavedRecord == null || !isLastSaveEnabled( survey ) ) {
         const model = domParser.parseFromString( survey.model, 'text/xml' );
         const modelDefault = model.querySelector( 'model > instance > *' ).cloneNode( true );
 
@@ -84,7 +91,7 @@ const getLastSavedInstanceDocument = ( survey, lastSavedRecord ) => {
  * @return {Survey}
  */
 export const populateLastSavedInstances = ( survey, lastSavedRecord ) => {
-    if ( !isLastSaveEnabled( survey, { checkStoreAvailability: false } ) ) {
+    if ( !hasLastSavedInstance( survey ) ) {
         return survey;
     }
 
