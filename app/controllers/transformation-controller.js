@@ -11,9 +11,10 @@ const user = require( '../models/user-model' );
 const config = require( '../models/config-model' ).server;
 const utils = require( '../lib/utils' );
 const routerUtils = require( '../lib/router-utils' );
-const isArray = require( 'lodash/isArray' );
 const express = require( 'express' );
 const url = require( 'url' );
+const { toMediaMap } = require( '../lib/url' );
+
 const router = express.Router();
 
 // var debug = require( 'debug' )( 'transformation-controller' );
@@ -105,7 +106,14 @@ function getSurveyHash( req, res, next ) {
  */
 function _getFormDirectly( survey ) {
     return communicator.getXForm( survey )
-        .then( transformer.transform );
+        .then( communicator.getManifest )
+        .then( xform => {
+            const survey = Object.assign( {}, xform, {
+                media: toMediaMap( xform.manifest ),
+            } );
+
+            return transformer.transform( survey );
+        } );
 }
 
 /**
@@ -184,56 +192,6 @@ function _addMediaHash( survey ) {
 }
 
 /**
- * Adds a media map, see enketo/enketo-transformer
- *
- * @param {Array|*} manifest - manifest
- * @return {object|null} media map object
- */
-function _getMediaMap( manifest ) {
-    let mediaMap = null;
-
-    if ( isArray( manifest ) ) {
-        manifest.forEach( file => {
-            mediaMap = mediaMap ? mediaMap : {};
-            if ( file.downloadUrl ) {
-                mediaMap[ file.filename ] = utils.toLocalMediaUrl( file.downloadUrl );
-            }
-        } );
-    }
-
-    return mediaMap;
-}
-
-/**
- * @param { module:survey-model~SurveyObject } survey - survey object
- *
- * @return { module:survey-model~SurveyObject } updated survey
- */
-function _replaceMediaSources( survey ) {
-    const media = _getMediaMap( survey.manifest );
-
-    if ( media ) {
-        const JR_URL = /"jr:\/\/[\w-]+\/([^"]+)"/g;
-        const replacer = ( match, filename ) => {
-            if ( media[ filename ] ) {
-                return `"${media[ filename ].replace( '&', '&amp;' )}"`;
-            }
-
-            return match;
-        };
-
-        survey.form = survey.form.replace( JR_URL, replacer );
-        survey.model = survey.model.replace( JR_URL, replacer );
-
-        if ( media[ 'form_logo.png' ] ) {
-            survey.form = survey.form.replace( /(class="form-logo"\s*>)/, `$1<img src="${media['form_logo.png']}" alt="form logo">` );
-        }
-    }
-
-    return survey;
-}
-
-/**
  * @param { module:survey-model~SurveyObject } survey - survey object
  *
  * @return { Promise<module:survey-model~SurveyObject> } a Promise resolving with survey object
@@ -262,8 +220,6 @@ function _checkQuota( survey ) {
  */
 function _respond( res, survey ) {
     delete survey.credentials;
-
-    _replaceMediaSources( survey );
 
     res.status( 200 );
     res.send( {
