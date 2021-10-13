@@ -13,7 +13,14 @@
 import connection from '../../../public/js/src/module/connection';
 import encryptor from '../../../public/js/src/module/encryptor';
 import formCache from '../../../public/js/src/module/form-cache';
-import { getLastSavedRecord, setLastSavedRecord } from '../../../public/js/src/module/last-saved';
+import {
+    getLastSavedRecord,
+    isLastSaveEnabled,
+    LAST_SAVED_VIRTUAL_ENDPOINT,
+    populateLastSavedInstances,
+    removeLastSavedRecord,
+    setLastSavedRecord,
+} from '../../../public/js/src/module/last-saved';
 import records from '../../../public/js/src/module/records-queue';
 import settings from '../../../public/js/src/module/settings';
 import store from '../../../public/js/src/module/store';
@@ -52,6 +59,7 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
     const instanceIdA = 'recordA';
     const enketoIdB = 'surveyB';
     const instanceIdB = 'recordB';
+    const encryptionKey = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5s9p+VdyX1ikG8nnoXLCC9hKfivAp/e1sHr3O15UQ+a8CjR/QV29+cO8zjS/KKgXZiOWvX+gDs2+5k9Kn4eQm5KhoZVw5Xla2PZtJESAd7dM9O5QrqVJ5Ukrq+kG/uV0nf6X8dxyIluNeCK1jE55J5trQMWT2SjDcj+OVoTdNGJ1H6FL+Horz2UqkIObW5/elItYF8zUZcO1meCtGwaPHxAxlvODe8JdKs3eMiIo9eTT4WbH1X+7nJ21E/FBd8EmnK/91UGOx2AayNxM0RN7pAcj47a434LzeM+XCnBztd+mtt1PSflF2CFE116ikEgLcXCj4aklfoON9TwDIQSp0wIDAQAB';
 
     /** @type {string} */
     let autoSavedKey;
@@ -76,6 +84,13 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
 
     /** @type { EnketoRecord } */
     let recordB;
+
+    /** @type {boolean} */
+    let skipStoreInitForSuite;
+
+    before( () => {
+        skipStoreInitForSuite = false;
+    } );
 
     beforeEach( done => {
         enketoId = enketoIdA;
@@ -139,6 +154,12 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
             xml: '<model><something>b</something></model>',
         };
 
+        if ( skipStoreInitForSuite ) {
+            sandbox.stub( store, 'available' ).value( false );
+
+            return done();
+        }
+
         store.init()
             .then( records.init )
             .then( () => store.record.set( {
@@ -160,12 +181,20 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
         timers.restore();
         sandbox.restore();
 
+        if ( skipStoreInitForSuite ) {
+            return done();
+        }
+
         Promise.all( [
             store.property.removeAll(),
             store.record.removeAll(),
             store.survey.removeAll(),
             store.lastSavedRecords.clear(),
         ] ).then( () => done(), done );
+    } );
+
+    after( () => {
+        skipStoreInitForSuite = false;
     } );
 
     describe( 'surveys', () => {
@@ -355,7 +384,7 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
 
             encryptor.setEncryptionEnabled( survey );
 
-            const form = { id: 'abc', version: '2', encryptionKey: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5s9p+VdyX1ikG8nnoXLCC9hKfivAp/e1sHr3O15UQ+a8CjR/QV29+cO8zjS/KKgXZiOWvX+gDs2+5k9Kn4eQm5KhoZVw5Xla2PZtJESAd7dM9O5QrqVJ5Ukrq+kG/uV0nf6X8dxyIluNeCK1jE55J5trQMWT2SjDcj+OVoTdNGJ1H6FL+Horz2UqkIObW5/elItYF8zUZcO1meCtGwaPHxAxlvODe8JdKs3eMiIo9eTT4WbH1X+7nJ21E/FBd8EmnK/91UGOx2AayNxM0RN7pAcj47a434LzeM+XCnBztd+mtt1PSflF2CFE116ikEgLcXCj4aklfoON9TwDIQSp0wIDAQAB' };
+            const form = { id: 'abc', version: '2', encryptionKey };
 
             formCache.init( survey )
                 .then( survey => {
@@ -698,10 +727,23 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
         const defaultInstanceData = '<data id="modelA"><item>initial</item><meta><instanceID/></meta></data>';
         const xmlSerializer = new XMLSerializer();
 
+        /**
+         * @typedef FetchFormResponse
+         * @property {string} form
+         * @property {string} model
+         * @property {string} theme
+         * @property {string} hash
+         * @property {string} languageMap
+         */
+
+        /** @type {boolean} */
+        let isFormEncrypted;
+
         /** @type {string} */
         let settingsType;
 
         beforeEach( () => {
+            isFormEncrypted = false;
             settingsType = 'other';
 
             sandbox.stub( settings, 'type' ).get( () => settingsType );
@@ -713,9 +755,13 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
                     ok: true,
                     status: 201,
                     json() {
+                        const submission = isFormEncrypted
+                            ? `<submission base64RsaPublicKey="${encryptionKey}"/>`
+                            : '';
+
                         return Promise.resolve( {
                             form: '<form autocomplete="off" novalidate="novalidate" class="or clearfix" dir="ltr" id="surveyA"><!--This form was created by transforming an ODK/OpenRosa-flavored (X)Form using an XSL stylesheet created by Enketo LLC.--><section class="form-logo"></section><h3 dir="auto" id="form-title">Form with last-saved instance</h3><label class="question non-select "><span lang="" class="question-label active">Last saved</span><input type="text" name="/data/item" data-type-xml="string" data-setvalue="instance(\'last-saved\')/data/item" data-event="odk-instance-first-load"></label><fieldset id="or-setvalue-items" style="display:none;"></fieldset></form>',
-                            model: `<model><instance>${defaultInstanceData}</instance><instance id="last-saved" src="jr://instance/last-saved"/></model>`,
+                            model: `<model><instance>${defaultInstanceData}</instance><instance id="last-saved" src="jr://instance/last-saved"/>${submission}</model>`,
                             theme: '',
                             hash: 'md5:1fbbe9738efec026b5a14aa3c3152221--2a8178bb883ae91dfe205c168b54c0cf---1',
                             languageMap: {},
@@ -838,6 +884,152 @@ describe( 'Support for jr://instance/last-saved endpoint', () => {
                     expect( xml ).to.equal( recordA.xml );
                 } )
                 .then( done, done );
+        } );
+
+        it( 'populates a last-saved secondary instance with the model\'s defaults when requesting an encrypted form online', async () => {
+            const survey = await connection.getFormParts( { enketoId } );
+            const lastSavedRecord = {
+                enketoId,
+                instanceId,
+                name: 'name A',
+                xml: '<data id="surveyA"><item>populated</item><meta><instanceID>uuid:ea3baa91-74b5-4892-af6f-96267f7fe12e</instanceID></meta></data>',
+                files: [],
+            };
+
+            await setLastSavedRecord( survey, lastSavedRecord );
+
+            isFormEncrypted = true;
+
+            const result = await connection.getFormParts( { enketoId } );
+
+            expect( Array.isArray( result.externalData ) ).to.equal( true );
+            expect( result.externalData.length ).to.equal( 1 );
+
+            const data = result.externalData[0];
+
+            expect( data.id ).to.equal( 'last-saved' );
+            expect( data.src ).to.equal( 'jr://instance/last-saved' );
+
+            const xml = xmlSerializer.serializeToString( data.xml.documentElement, 'text/xml' );
+
+            expect( xml ).not.to.equal( recordA.xml );
+            expect( xml ).to.equal( defaultInstanceData );
+        } );
+
+        it( 'populates a last-saved secondary instance with the model\'s defaults when encryption is enabled on an offline cached survey with a last-saved instance', async () => {
+            const parser = new DOMParser();
+            const model = parser.parseFromString( surveyA.model, 'text/xml' );
+            const defaultInstance = model.documentElement.querySelector( 'instance > *' );
+            const defaultInstanceData = xmlSerializer.serializeToString( defaultInstance, 'text/xml' );
+
+            await setLastSavedRecord( surveyA, recordA );
+
+            const survey = await formCache.init( surveyA );
+            const encryptedSurvey = encryptor.setEncryptionEnabled( survey );
+
+            await store.survey.update( encryptedSurvey );
+            const result = await formCache.get( { enketoId } );
+
+            expect( Array.isArray( result.externalData ) ).to.equal( true );
+            expect( result.externalData.length ).to.equal( 1 );
+
+            const data = result.externalData[0];
+
+            expect( data.id ).to.equal( 'last-saved' );
+            expect( data.src ).to.equal( 'jr://instance/last-saved' );
+
+            const xml = xmlSerializer.serializeToString( data.xml.documentElement, 'text/xml' );
+
+            expect( xml ).not.to.equal( recordA.xml );
+            expect( xml ).to.equal( defaultInstanceData );
+        } );
+    } );
+
+    describe( 'IndexedDB initialization failure', () => {
+        /**
+         * @typedef {import('sinon').SinonStub} Stub
+         */
+
+        /** @type {Stub} */
+        let getStub;
+
+        /** @type {Stub} */
+        let removeStub;
+
+        /** @type {Stub} */
+        let updateStub;
+
+        before( () => {
+            skipStoreInitForSuite = true;
+        } );
+
+        beforeEach( () => {
+            sandbox.stub( settings, 'type' ).get( () => 'other' );
+
+            getStub = sandbox.stub().resolves();
+            removeStub = sandbox.stub().resolves();
+            updateStub = sandbox.stub().resolves();
+
+            sandbox.stub( store, 'lastSavedRecords' ).get( () => {
+                return {
+                    get: getStub,
+                    remove: removeStub,
+                    update: updateStub,
+                };
+            } );
+        } );
+
+        it( 'does not enable last-saved', () => {
+            const result = isLastSaveEnabled( surveyA );
+
+            expect( result ).to.equal( false );
+        } );
+
+        it( 'does not get a last saved record', async () => {
+            await getLastSavedRecord( enketoId );
+
+            expect( getStub ).not.to.have.been.called;
+        } );
+
+        it( 'does not attempt to remove a last saved record', async () => {
+            await removeLastSavedRecord( enketoId );
+
+            expect( removeStub ).not.to.have.been.called;
+        } );
+
+        it( 'populates a last saved record with the default model', async () => {
+            const defaultValue = 'default value';
+            const survey = {
+                ...surveyA,
+                externalData: [
+                    {
+                        id: 'last-saved',
+                        src: LAST_SAVED_VIRTUAL_ENDPOINT,
+                    },
+                ],
+                model: `<model>
+                    <instance>
+                        <something>${defaultValue}</something>
+                    </instance>
+                </model>`,
+            };
+            const { externalData } = populateLastSavedInstances( survey, recordA );
+            const [ lastSaved ] = externalData;
+            const { textContent } = lastSaved.xml.querySelector( 'something' );
+
+            expect( textContent ).to.equal( defaultValue );
+        } );
+
+        it( 'does not attempt to set the last saved record', async () => {
+            await setLastSavedRecord( surveyA, recordA );
+
+            expect( updateStub ).not.to.have.been.called;
+        } );
+
+        it( 'does not attempt to remove the last saved record when setting with no last-saved record', async () => {
+            await setLastSavedRecord( surveyA );
+
+            expect( removeStub ).not.to.have.been.called;
         } );
     } );
 } );

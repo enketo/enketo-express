@@ -14,11 +14,21 @@ export const LAST_SAVED_VIRTUAL_ENDPOINT = 'jr://instance/last-saved';
 
 /**
  * @param {Survey} survey
+ * @return {boolean}
+ */
+const hasLastSavedInstance = ( survey ) => (
+    Array.isArray( survey.externalData ) &&
+    survey.externalData.some( item => item.src === LAST_SAVED_VIRTUAL_ENDPOINT )
+);
+
+/**
+ * @param {Survey} survey
  */
 export const isLastSaveEnabled = ( survey ) => {
     return (
-        Array.isArray( survey.externalData ) &&
-        survey.externalData.some( item => item.src === LAST_SAVED_VIRTUAL_ENDPOINT ) &&
+        settings.type === 'other' &&
+        store.available &&
+        hasLastSavedInstance( survey ) &&
         !encryptor.isEncryptionEnabled( survey )
     );
 };
@@ -28,7 +38,7 @@ export const isLastSaveEnabled = ( survey ) => {
  * @return {Promise<EnketoRecord | void>}
  */
 export const getLastSavedRecord = ( enketoId ) => {
-    if ( settings.type !== 'other' ) {
+    if ( !store.available || settings.type !== 'other' ) {
         return Promise.resolve();
     }
 
@@ -47,15 +57,21 @@ export const getLastSavedRecord = ( enketoId ) => {
  * @param {string} enketoId
  * @return {Promise<void>}
  */
-export const removeLastSavedRecord = ( enketoId ) => (
-    store.lastSavedRecords.remove( enketoId ).then( () => {} )
-);
+export const removeLastSavedRecord = async ( enketoId ) => {
+    if ( store.available ) {
+        await store.lastSavedRecords.remove( enketoId );
+    }
+};
 
 const domParser = new DOMParser();
 
-
+/**
+ * @param {Survey} survey
+ * @param {EnketoRecord} [lastSavedRecord]
+ * @return {XMLDocument}
+ */
 const getLastSavedInstanceDocument = ( survey, lastSavedRecord ) => {
-    if ( lastSavedRecord == null || settings.type !== 'other' ) {
+    if ( lastSavedRecord == null || !isLastSaveEnabled( survey ) ) {
         const model = domParser.parseFromString( survey.model, 'text/xml' );
         const modelDefault = model.querySelector( 'model > instance > *' ).cloneNode( true );
 
@@ -75,8 +91,8 @@ const getLastSavedInstanceDocument = ( survey, lastSavedRecord ) => {
  * @return {Survey}
  */
 export const populateLastSavedInstances = ( survey, lastSavedRecord ) => {
-    if ( !isLastSaveEnabled( survey ) ) {
-        return Promise.resolve( survey );
+    if ( !hasLastSavedInstance( survey ) ) {
+        return survey;
     }
 
     const lastSavedInstance = getLastSavedInstanceDocument( survey, lastSavedRecord );
@@ -104,7 +120,7 @@ export const populateLastSavedInstances = ( survey, lastSavedRecord ) => {
  * @return {Promise<SetLastSavedRecordResult>}
  */
 export const setLastSavedRecord = ( survey, record ) => {
-    if ( settings.type !== 'other' ) {
+    if ( !store.available || settings.type !== 'other' ) {
         return Promise.resolve( {
             survey: populateLastSavedInstances( survey ),
         } );

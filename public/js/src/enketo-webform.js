@@ -43,7 +43,7 @@ if ( settings.offline ) {
         .catch( _showErrorOrAuthenticate );
 } else {
     console.log( 'App in online-only mode.' );
-    store.init()
+    store.init( { failSilently: true } )
         .then( () => initTranslator( survey ) )
         .then( connection.getFormParts )
         .then( _swapTheme )
