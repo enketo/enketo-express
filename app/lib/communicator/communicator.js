@@ -74,8 +74,10 @@ function getXForm( survey ) {
  */
 function getManifest( survey ) {
     if ( survey.info == null || !survey.info.manifestUrl ) {
-        // a manifest is optional
-        return Promise.resolve( survey );
+        return Promise.resolve( {
+            ...survey,
+            manifest: [],
+        } );
     } else {
         return _request( {
             url: survey.info.manifestUrl,

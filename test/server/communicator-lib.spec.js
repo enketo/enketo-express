@@ -250,7 +250,7 @@ describe( 'Communicator Library', () => {
             });
         } );
 
-        it( 'should resolve with survey if no manifest url', (done) => {
+        it( 'should resolve a survey with an empty manifest if no manifest url is specified', (done) => {
             const survey = {
                 openRosaServer: 'https://testserver.com/bob',
                 openRosaId: 'widgets',
@@ -264,12 +264,15 @@ describe( 'Communicator Library', () => {
                 .reply(200, 'abc');
 
             communicator.getManifest( survey ).then((response) => {
-                expect(response).to.deep.equal(survey);
+                expect(response).to.deep.equal({
+                    ...survey,
+                    manifest: [],
+                });
                 // server should not have been called
                 expect(scope.isDone()).to.equal(false);
                 nock.cleanAll();
                 done();
-            });
+            }).catch(done);
         } );
     } );
 
