@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:14
 
 ENV ENKETO_SRC_DIR=/srv/src/enketo_express
 
@@ -9,6 +9,7 @@ RUN npm install -g grunt-cli pm2
 COPY . ${ENKETO_SRC_DIR}
 
 RUN npm install --production
+RUN npm install --only=dev
 
 # Persist the `secrets` directory so the encryption key remains consistent.
 RUN mkdir -p ${ENKETO_SRC_DIR}/setup/docker/secrets
