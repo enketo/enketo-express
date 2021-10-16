@@ -10,6 +10,8 @@ import utils from './utils';
 import { getFilename } from 'enketo-core/src/js/utils';
 import { t } from './translator';
 const URL_RE = /[a-zA-Z0-9+-.]+?:\/\//;
+
+/** @type {Record<string, string>} */
 let instanceAttachments;
 
 /**
@@ -44,15 +46,19 @@ function setInstanceAttachments( attachments ) {
  * as a src attribute.
  *
  * @param  {?string|object} subject - File or filename
- * @return { object }         promise url string or rejection with Error
+ * @return {Promise<string>}         promise url string or rejection with Error
  */
 function getFileUrl( subject ) {
     return new Promise( ( resolve, reject ) => {
         if ( !subject ) {
             resolve( null );
         } else if ( typeof subject === 'string' ) {
+            const escapedSubject = encodeURIComponent( subject );
+
             if ( subject.startsWith( '/' ) ) {
                 resolve( subject );
+            } else if ( instanceAttachments && ( Object.prototype.hasOwnProperty.call( instanceAttachments, escapedSubject ) ) ) {
+                resolve( instanceAttachments[ escapedSubject ] );
             } else if ( instanceAttachments && ( Object.prototype.hasOwnProperty.call( instanceAttachments, subject ) ) ) {
                 resolve( instanceAttachments[ subject ] );
             } else if ( !store.available ) {
