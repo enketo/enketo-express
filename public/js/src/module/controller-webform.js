@@ -60,7 +60,7 @@ function init( formEl, data, loadErrors = [] ) {
                 data.instanceStr = record.xml;
             }
 
-            if ( record && record.draft ) {
+            if ( !record || record.draft ) {
                 // Make sure that Enketo Core won't do the instanceID --> deprecatedID move
                 data.submitted = false;
             }
