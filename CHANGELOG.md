@@ -5,11 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [3.0.2] - 2021-10-20
 ---------------------
 ##### Fixed
-[#324](https://github.com/enketo/enketo-express/pull/324) Loading forms in Firefox private browsing mode
-[#291](https://github.com/enketo/enketo-express/pull/291) Resolve jr: URLs with spaces
-[#332](https://github.com/enketo/enketo-express/pull/332) Form fails to load when no media manifest is provided
-[#335](https://github.com/enketo/enketo-express/pull/335) Ensure uploaded media with spaces load in edit mode
-[#321](https://github.com/enketo/enketo-express/pull/321) Defaults in the url query string will create deprecatedID for new submissions
+- [#324](https://github.com/enketo/enketo-express/pull/324) Loading forms in Firefox private browsing mode
+- [#291](https://github.com/enketo/enketo-express/pull/291) Resolve jr: URLs with spaces
+- [#332](https://github.com/enketo/enketo-express/pull/332) Form fails to load when no media manifest is provided
+- [#335](https://github.com/enketo/enketo-express/pull/335) Ensure uploaded media with spaces load in edit mode
+- [#321](https://github.com/enketo/enketo-express/pull/321) Defaults in the url query string will create deprecatedID for new submissions
 
 [3.0.1] - 2021-09-28
 ---------------------
