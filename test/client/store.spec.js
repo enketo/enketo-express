@@ -6,6 +6,7 @@
 
 // TODO: when chai-as-promised adapter is working, convert these tests using .eventually.
 
+import db from 'db.js';
 import store from '../../public/js/src/module/store';
 
 /**
@@ -873,4 +874,36 @@ describe( 'Client Storage', () => {
 
     } );
 
+    describe( 'initialization failures', () => {
+        /** @type {import('sinon').SinonSandbox} */
+        let sandbox;
+
+        /** @type {Error | Event} */
+        let error;
+
+        beforeEach( () => {
+            sandbox = sinon.createSandbox();
+
+            sandbox.stub( db, 'open' ).callsFake( () => Promise.reject( error ) );
+        } );
+
+        afterEach( () => {
+            sandbox.restore();
+        } );
+
+        it( 'fails silently when specified', async () => {
+            error = new Error();
+
+            /** @type {Error | null} */
+            let caught = null;
+
+            try {
+                await store.init( { failSilently: true } );
+            } catch ( error ) {
+                caught = error;
+            }
+
+            expect( caught ).to.equal( null );
+        } );
+    } );
 } );

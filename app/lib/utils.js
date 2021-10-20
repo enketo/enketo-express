@@ -3,7 +3,6 @@
  */
 
 const crypto = require( 'crypto' );
-const config = require( '../models/config-model' ).server;
 const EVP_BytesToKey = require( 'evp_bytestokey' );
 const validUrl = require( 'valid-url' );
 // var debug = require( 'debug' )( 'utils' );
@@ -220,20 +219,6 @@ function areOwnPropertiesEqual( a, b ) {
     return true;
 }
 
-/**
- * Converts a url to a local (proxied) url.
- *
- * @static
- * @param { string } url - The url to convert
- * @return { string } The converted url
- */
-function toLocalMediaUrl( url ) {
-    const localUrl = `${config[ 'base path' ]}/media/get/${url.replace( /(https?):\/\//, '$1/' )}`;
-
-    return localUrl;
-}
-
-
 module.exports = {
     getOpenRosaKey,
     getXformsManifestHash,
@@ -245,5 +230,4 @@ module.exports = {
     areOwnPropertiesEqual,
     insecureAes192Decrypt,
     insecureAes192Encrypt,
-    toLocalMediaUrl
 };

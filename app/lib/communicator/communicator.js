@@ -33,6 +33,17 @@ function getXFormInfo( survey ) {
 }
 
 /**
+ * @typedef OpenRosaXForm
+ * @property {string} descriptionText
+ * @property {string} downloadUrl
+ * @property {string} formID
+ * @property {string} hash
+ * @property {string} manifestUrl
+ * @property {string} name
+ * @property {string} version
+ */
+
+/**
  * Gets XForm from url
  *
  * @static
@@ -62,9 +73,11 @@ function getXForm( survey ) {
 * @return { Promise<module:survey-model~SurveyObject> } a Promise that resolves with a survey object with added manifest
  */
 function getManifest( survey ) {
-    if ( !survey.info.manifestUrl ) {
-        // a manifest is optional
-        return Promise.resolve( survey );
+    if ( survey.info == null || !survey.info.manifestUrl ) {
+        return Promise.resolve( {
+            ...survey,
+            manifest: [],
+        } );
     } else {
         return _request( {
             url: survey.info.manifestUrl,
