@@ -197,15 +197,21 @@ function getAuthHeader( url, credentials ) {
  * @return { string } url
  */
 function getFormListUrl( server, id, customParam ) {
-    let query = id ? `?formID=${id}` : '';
-    const path = ( server.lastIndexOf( '/' ) === server.length - 1 ) ? 'formList' : '/formList';
+    const baseURL = server.endsWith( '/' ) ? server : `${server}/`;
 
-    if ( customParam ) {
-        query += query ? '&' : '?';
-        query += `${config[ 'query parameter to pass to submission' ]}=${customParam}`;
+    let url = new URL( './formList', baseURL );
+
+    if ( id != null ) {
+        url.searchParams.set( 'formID', id );
     }
 
-    return server + path + query;
+    if ( customParam != null ) {
+        const customParamName = config[ 'query parameter to pass to submission' ];
+
+        url.searchParams.set( customParamName, customParam );
+    }
+
+    return url.toString();
 }
 
 /**
