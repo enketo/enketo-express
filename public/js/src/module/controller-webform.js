@@ -41,6 +41,7 @@ const formOptions = {
  * @property {Document[]} external
  * @property {Survey} survey
  * @property {InstanceAttachment[]} [instanceAttachments]
+ * @property {boolean} [isEditing]
  */
 
 /**
@@ -60,10 +61,7 @@ function init( formEl, data, loadErrors = [] ) {
                 data.instanceStr = record.xml;
             }
 
-            if ( !record || record.draft ) {
-                // Make sure that Enketo Core won't do the instanceID --> deprecatedID move
-                data.submitted = false;
-            }
+            data.submitted = Boolean( data.isEditing );
 
             if ( data.instanceAttachments ) {
                 fileManager.setInstanceAttachments( data.instanceAttachments );
