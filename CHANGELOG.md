@@ -5,7 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [Unreleased]
 ---------------------
 ##### Changed
-- (Docker only) Remove configuration and commit comparison logic from container start-up script and run `grunt` only when building the image (see #161). Possible now that most configuration changes do not require a rebuild (see #163).
+- [#317](https://github.com/enketo/enketo-express/pull/317) Docker: run `grunt` only when building the image; remove configuration and commit comparison logic from container start-up script (see #161, #163); build from Node 14 base image
+
+##### Fixed
+- [#337](https://github.com/enketo/enketo-express/issues/337) Docker: cannot start because `grunt` expects missing `esbuild` dev dependency
 
 [3.0.2] - 2021-10-20
 ---------------------
@@ -33,15 +36,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [2.8.0] - 2021-07-13
 ---------------------
-#### Added
+##### Added
 - Support for odk:setgeopoint for odk-instance-first-load and xforms-value-changed events.
 - Support for [last-saved](https://docs.getodk.org/form-logic/?highlight=last%20saved#values-from-the-last-saved-record) values!
 
-#### Changed
+##### Changed
 - Updated Russian translation.
 - Increased maximum number of columns in Grid Theme from 10 to 13.
 
-#### Fixed
+##### Fixed
 - Range default or loaded value (number) not shown.
 - Distresspicker default or loaded mercury level not shown.
 - Radiobuttons value still shown in view after programmatic clearing (e.g. by a calculation).
