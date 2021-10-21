@@ -1,6 +1,15 @@
 Closes #
 
-#### What has been done to verify that this works as intended?
+#### I have verified this PR works with 
+- [ ] Online form submission
+- [ ] Offline form submission
+- [ ] Saving offline drafts
+- [ ] Submitting offline drafts
+- [ ] Editing submissions
+- [ ] Form preview
+- [ ] None of the above
+
+#### What else has been done to verify that this works as intended?
 
 #### Why is this the best possible solution? Were any other approaches considered?
 
