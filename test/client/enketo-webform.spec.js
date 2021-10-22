@@ -2252,6 +2252,44 @@ describe( 'Enketo webform app entrypoints', () => {
         } );
     } );
 
+    const viewFormTitle = 'Title of form';
+    const viewForm = /* html */`<form class="or">
+        <h3 id="form-title">${viewFormTitle}</h3>
+
+
+        <!-- Outside of .question, will not be marked readonly -->
+        <input id="input-1">
+        <textarea id="textarea-1"></textarea>
+        <select id="select-1">
+            <!-- All options outside of a languages select will be marked readonly -->
+            <option class="writeable" selected></option>
+        </select>
+        <select id="form-languages">
+            <!-- Inside languages select, will not be marked readonly -->
+            <option></option>
+        </select>
+
+        <!-- All repeats will be marked fixed -->
+        <div class="or-repeat-info"></div>
+
+        <div class="question">
+            <!-- Already readonly, will not be marked readonly -->
+            <input id="input-2" readonly="readonly">
+            <textarea id="textarea-2" readonly="readonly"></textarea>
+            <select id="select-2" readonly="readonly">
+                <option class="writeable" selected></option>
+            </select>
+
+            <!-- Will be marked readonly -->
+            <input class="writeable-by-default" id="input-3">
+            <textarea class="writeable-by-default" id="textarea-3"></textarea>
+            <select class="writeable-by-default" id="select-3">
+                <option class="writeable" selected></option>
+            </select>
+            <div class="or-repeat-info"></div>
+        </div>
+    </form>`;
+
     describe( 'enketo-webform-view.js initialization steps', () => {
         /** @type {Sandboox} */
         let preImportSandbox;
@@ -2274,9 +2312,31 @@ describe( 'Enketo webform app entrypoints', () => {
         /** @type {HTMLElement} */
         let formHeader;
 
+        /**
+         * @typedef OverriddenModules
+         * @property {typeof import('enketo-core/src/js/calculate')} calc
+         * @property {typeof import('enketo-core/src/js/form-model').FormModel} FormModel
+         * @property {typeof import('enketo-core/src/js/preload')} preload
+         */
+
+        /** @type {OverriddenModules} */
+        let overriddenModules;
+
         before( async () => {
             documentRange = document.createRange();
             preImportSandbox = sinon.createSandbox();
+
+            const [
+                { default: calc },
+                { FormModel },
+                { default: preload, ...rest },
+            ] = await Promise.all( [
+                import( 'enketo-core/src/js/calculate' ),
+                import( 'enketo-core/src/js/form-model' ),
+                import( 'enketo-core/src/js/preload' ),
+            ] );
+
+            overriddenModules = { calc, FormModel, preload };
 
             preImportSandbox.stub( document, 'createRange' )
                 .callsFake( () => documentRange );
@@ -2289,6 +2349,10 @@ describe( 'Enketo webform app entrypoints', () => {
         } );
 
         beforeEach( () => {
+            sandbox.stub( overriddenModules.calc, 'update' );
+            sandbox.stub( overriddenModules.FormModel.prototype, 'setInstanceIdAndDeprecatedId' );
+            sandbox.stub( overriddenModules.preload, 'init' );
+
             sandbox.stub( lodash, 'memoize' ).callsFake( fn => fn );
 
             if ( !Object.prototype.hasOwnProperty.call( settings, 'print' ) ) {
@@ -2307,6 +2371,19 @@ describe( 'Enketo webform app entrypoints', () => {
             formHeader = document.querySelector( '.form-header' );
         } );
 
+        /*
+         * In view mode:
+         *
+         * - calculations are never run
+         * - instanceID and deprecatedID are never set
+         * - preload metadata is not processed
+         */
+        afterEach( () => {
+            expect( overriddenModules.calc.update ).not.to.have.been.called;
+            expect( overriddenModules.FormModel.prototype.setInstanceIdAndDeprecatedId ).not.to.have.been.called;
+            expect( overriddenModules.preload.init ).not.to.have.been.called;
+        } );
+
         it( 'initializes a form to view an existing instance/record', async () => {
             sandbox.stub( gui, 'alertLoadErrors' )
                 .callsFake( errors => {
@@ -2318,45 +2395,7 @@ describe( 'Enketo webform app entrypoints', () => {
 
             existingInstance = '<a>value</a>';
 
-            const formTitle = 'Title of form';
-            const form = /* html */`<form class="or">
-                <h3 id="form-title">${formTitle}</h3>
-
-
-                <!-- Outside of .question, will not be marked readonly -->
-                <input id="input-1">
-                <textarea id="textarea-1"></textarea>
-                <select id="select-1">
-                    <!-- All options outside of a languages select will be marked readonly -->
-                    <option class="writeable" selected></option>
-                </select>
-                <select id="form-languages">
-                    <!-- Inside languages select, will not be marked readonly -->
-                    <option></option>
-                </select>
-
-                <!-- All repeats will be marked fixed -->
-                <div class="or-repeat-info"></div>
-
-                <div class="question">
-                    <!-- Already readonly, will not be marked readonly -->
-                    <input id="input-2" readonly>
-                    <textarea id="textarea-2" readonly></textarea>
-                    <select id="select-2" readonly>
-                        <option class="writeable" selected></option>
-                    </select>
-
-                    <!-- Will be marked readonly -->
-                    <input id="input-3">
-                    <textarea id="textarea-3"></textarea>
-                    <select id="select-3">
-                        <option class="writeable" selected></option>
-                    </select>
-                    <div class="or-repeat-info"></div>
-                </div>
-            </form>`;
-
-            const formFragment = documentRange.createContextualFragment( form );
+            const formFragment = documentRange.createContextualFragment( viewForm );
 
             const writeableQuestionElements = {
                 input: formFragment.getElementById( 'input-3' ),
@@ -2370,7 +2409,7 @@ describe( 'Enketo webform app entrypoints', () => {
                 ...surveyInitData,
 
                 externalData: [],
-                form,
+                form: viewForm,
                 languages: [],
                 model: '<a/>',
                 theme: 'kobo',
@@ -2449,7 +2488,7 @@ describe( 'Enketo webform app entrypoints', () => {
                     stubMethod: 'callsFake',
                     object: documentRange,
                     key: 'createContextualFragment',
-                    expectedArgs: [ form ],
+                    expectedArgs: [ viewForm ],
                     returnValue: formFragment,
                 } ),
                 prepareInitStep( {
@@ -2582,7 +2621,7 @@ describe( 'Enketo webform app entrypoints', () => {
                     stubMethod: 'set',
                     object: artificialTitleElement,
                     key: 'textContent',
-                    expectedValue: formTitle,
+                    expectedValue: viewFormTitle,
                 } ),
                 prepareInitStep( {
                     description: 'Check if print styles should be applied',
@@ -2625,6 +2664,264 @@ describe( 'Enketo webform app entrypoints', () => {
             }
 
             expect( performedSteps.length ).to.equal( steps.length );
+        } );
+
+        it( 'reports view initialization failure', async () => {
+            enketoId = 'viewA';
+
+            const formTitle = 'Title of form';
+            const form = `<form>
+                <h3 id="form-title">${formTitle}</h3>
+            </form>`;
+
+            const formParts = {
+                ...surveyInitData,
+
+                externalData: [],
+                form,
+                languages: [],
+                model: '<a/>',
+                theme: 'kobo',
+            };
+
+            const error = new Error( 'No network connection.' );
+
+            const steps = [
+                prepareInitStep( {
+                    description: 'Translator: initialize i18next',
+                    stubMethod: 'callsFake',
+                    object: i18next,
+                    key: 'init',
+                    expectedArgs: [ expectObject, expectCallback ],
+                } ),
+                prepareInitStep( {
+                    description: 'Get form parts',
+                    stubMethod: 'callsFake',
+                    object: connection,
+                    key: 'getFormParts',
+                    expectedArgs: [ surveyInitData ],
+                    returnValue: Promise.resolve( formParts ),
+                } ),
+                prepareInitStep( {
+                    description: 'Get existing instance',
+                    stubMethod: 'callsFake',
+                    object: connection,
+                    key: 'getExistingInstance',
+                    expectedArgs: [ surveyInitData ],
+                    returnValue: Promise.reject( error ),
+                } ),
+                prepareInitStep( {
+                    description: 'Set error class',
+                    stubMethod: 'callsFake',
+                    object: loaderElement.classList,
+                    key: 'add',
+                    expectedArgs: [ webformViewPrivate.LOAD_ERROR_CLASS ],
+                } ),
+                prepareInitStep( {
+                    description: 'Alert load errors',
+                    stubMethod: 'callsFake',
+                    object: gui,
+                    key: 'alertLoadErrors',
+                    expectedArgs: [ [ error.message ] ]
+                } ),
+            ];
+
+            /** @type {Promise} */
+            let editInitialization = webformViewPrivate._init( surveyInitData );
+
+            await editInitialization;
+
+            for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
+                const step = performedSteps.find( performedStep => {
+                    return performedStep === expectedStep;
+                } );
+                const index = performedSteps.indexOf( expectedStep );
+
+                expect( step ).to.equal( expectedStep );
+                expect( index, `Unexpected order of step ${expectedStep.options.description}` )
+                    .to.equal( expectedIndex );
+            }
+
+            expect( performedSteps.length ).to.equal( steps.length );
+        } );
+    } );
+
+    describe( 'enketo-webform-view.js initialization behavior', () => {
+        /** @type {DocumentFragment} */
+        let formFragment;
+
+        /** @type {Record<string, any> | null} */
+        let webformViewPrivate = null;
+
+        before( async () => {
+            webformViewPrivate = ( await import( '../../public/js/src/enketo-webform-view' ) )._PRIVATE_TEST_ONLY_;
+
+            formFragment = webformViewPrivate._convertToReadonly( { form: viewForm } ).formFragment;
+        } );
+
+        beforeEach( () => {
+            enketoId = 'surveyA';
+
+            sandbox.stub( i18next, 't' ).returnsArg( 0 );
+        } );
+
+        describe( 'readonly conversion', () => {
+            it( 'creates a document fragment from the provided form HTML', () => {
+                expect( formFragment ).to.be.an.instanceof( DocumentFragment );
+            } );
+
+            const questionFieldTypes = [
+                'input',
+                'textarea',
+                'select',
+            ];
+
+            questionFieldTypes.forEach( questionFieldType => {
+                it( `ensures all ${questionFieldType} within a question are readonly`, () => {
+                    const fields = formFragment.querySelectorAll(
+                        `.question ${questionFieldType}`
+                    );
+
+                    fields.forEach( field => {
+                        expect( field.getAttribute( 'readonly' ) ).to.equal( 'readonly' );
+                    } );
+                } );
+
+                it( `ensures all ${questionFieldType}s within a question which were not previously readonly are forced to be readonly`, () => {
+                    const fields = formFragment.querySelectorAll(
+                        `.question ${questionFieldType}.writeable-by-default`
+                    );
+
+                    fields.forEach( field => {
+                        expect( field.classList.contains( 'readonly-forced' ) ).to.equal( true );
+                    } );
+                } );
+            } );
+
+            it( 'does not disable options within the form languages menu', () => {
+                const options = formFragment.querySelectorAll( '#form-languages option' );
+
+                options.forEach( option => {
+                    expect( option.disabled ).to.equal( false );
+                } );
+            } );
+
+            it( 'disables all other menu options', () => {
+                const options = formFragment.querySelectorAll( 'select:not(#form-languages) option' );
+
+                options.forEach( option => {
+                    expect( option.disabled ).to.equal( true );
+                } );
+            } );
+
+            it( 'prevents adding or removing repeats', () => {
+                const repeats = formFragment.querySelectorAll( '.or-repeat-info' );
+
+                repeats.forEach( repeat => {
+                    expect( repeat.dataset.repeatFixed ).to.equal( 'fixed' );
+
+                    const addRemoveButtons = repeat.querySelectorAll(
+                        '.repeat-buttons, .add-repeat-button'
+                    );
+
+                    expect( addRemoveButtons.length ).to.equal( 0 );
+                } );
+            } );
+        } );
+
+        describe( 'error handling', () => {
+            class StatusError extends Error {
+                /**
+                 * @param {number} status
+                 */
+                constructor( status ) {
+                    super( `HTTP Error: ${status}` );
+
+                    this.status = status;
+                }
+            }
+
+            const loginURL = 'https://example.com/login';
+            const initialURL = 'https://example.com/-/x/f33db33f';
+
+            /** @type {Stub} */
+            let addLoaderClassStub;
+
+            /** @type {string} */
+            let currentURL;
+
+            /** @type {Stub} */
+            let redirectStub;
+
+            /** @type {loadErrorsStub} */
+            let loadErrorsStub;
+
+            beforeEach( () => {
+                sandbox.stub( settings, 'loginUrl' ).get( () => loginURL );
+
+                addLoaderClassStub = sandbox.stub( loaderElement.classList, 'add' ).returns();
+
+                currentURL = 'https://example.com/-/x/f33db33f';
+                redirectStub = sandbox.stub( webformViewPrivate._location, 'href' );
+
+                redirectStub.get( () => currentURL );
+
+                redirectStub.set( redirectLocation => {
+                    currentURL = redirectLocation;
+                } );
+
+
+                loadErrorsStub = sandbox.stub( gui, 'alertLoadErrors' ).returns();
+            } );
+
+            it( 'indicates failure on the loading indicator', () => {
+                const error = new Error( 'bummer' );
+
+                webformViewPrivate._showErrorOrAuthenticate( error );
+
+                expect( addLoaderClassStub ).to.have.been.calledWith( webformViewPrivate.LOAD_ERROR_CLASS );
+            } );
+
+            it( 'redirects to a login page on authorization failure', () => {
+                const error = new StatusError( 401 );
+
+                webformViewPrivate._showErrorOrAuthenticate( error );
+
+                expect( currentURL ).to.equal( `${loginURL}?return_url=${encodeURIComponent( initialURL )}` );
+                expect( loadErrorsStub ).not.to.have.been.called;
+            } );
+
+            it( 'does not redirect to a login page for other network errors', () => {
+                const error = new StatusError( 404 );
+
+                webformViewPrivate._showErrorOrAuthenticate( error );
+
+                expect( currentURL ).to.equal( initialURL );
+            } );
+
+            it( 'alerts a loading error message', () => {
+                const error = new Error( 'oops!' );
+
+                webformViewPrivate._showErrorOrAuthenticate( error );
+
+                expect( loadErrorsStub ).to.have.been.calledWith( [ error.message ] );
+            } );
+
+            it( 'alerts an unknown error message', () => {
+                const error = new Error();
+
+                webformViewPrivate._showErrorOrAuthenticate( error );
+
+                expect( loadErrorsStub ).to.have.been.calledWith( [ 'error.unknown' ] );
+            } );
+
+            it( 'alerts multiple loading error messages', () => {
+                const errors = [ 'really', 'not', 'good!' ];
+
+                webformViewPrivate._showErrorOrAuthenticate( errors );
+
+                expect( loadErrorsStub ).to.have.been.calledWith( errors );
+            } );
         } );
     } );
 } );

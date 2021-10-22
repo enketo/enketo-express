@@ -28,10 +28,25 @@ preloadModule.init = () => {
     console.log( 'Preloaders disabled.' );
 };
 
+const LOAD_ERROR_CLASS = 'fail';
+
+/**
+ * Wrap location access to detect/prevent navigation in tests.
+ */
+ const _location = {
+    get href() {
+        return location.href;
+    },
+    set href( href ) {
+        location.href = href;
+    },
+    reload: location.reload.bind( location ),
+};
+
 function _showErrorOrAuthenticate( error ) {
-    loader.classList.add( 'fail' );
+    loader.classList.add( LOAD_ERROR_CLASS );
     if ( error.status === 401 ) {
-        window.location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( window.location.href )}`;
+        _location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( _location.href )}`;
     } else {
         if ( !Array.isArray( error ) ) {
             error = [ error.message  || t( 'error.unknown' ) ];
