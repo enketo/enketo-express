@@ -28,32 +28,6 @@ preloadModule.init = () => {
     console.log( 'Preloaders disabled.' );
 };
 
-initTranslator( survey )
-    .then( survey => connection.getFormParts( survey ) )
-    .then( formParts => {
-        if ( survey.instanceId ) {
-            return connection.getExistingInstance( survey )
-                .then( response => {
-                    formParts.instance = response.instance;
-                    formParts.instanceAttachments = response.instanceAttachments;
-
-                    return formParts;
-                } );
-        }
-
-        return formParts;
-    } )
-    .then( formParts => {
-        if ( formParts.form && formParts.model ) {
-            return gui.swapTheme( formParts );
-        } else {
-            throw new Error( t( 'error.unknown' ) );
-        }
-    } )
-    .then( _convertToReadonly )
-    .then( _init )
-    .catch( _showErrorOrAuthenticate );
-
 function _showErrorOrAuthenticate( error ) {
     loader.classList.add( 'fail' );
     if ( error.status === 401 ) {
@@ -87,23 +61,54 @@ function _convertToReadonly( formParts ) {
     return formParts;
 }
 
-function _init( formParts ) {
-    formheader.after( formParts.formFragment );
-    const formEl = document.querySelector( 'form.or' );
+function _init( survey ) {
+    return initTranslator( survey )
+        .then( survey => connection.getFormParts( survey ) )
+        .then( formParts => {
+            if ( survey.instanceId ) {
+                return connection.getExistingInstance( survey )
+                    .then( response => {
+                        formParts.instance = response.instance;
+                        formParts.instanceAttachments = response.instanceAttachments;
 
-    return controller.init( formEl, {
-        modelStr: formParts.model,
-        instanceStr: formParts.instance,
-        external: formParts.externalData,
-        instanceAttachments: formParts.instanceAttachments,
-    } )
-        .then( form => {
-            formParts.languages = form.languages;
-            document.querySelector( 'head>title' ).textContent = document.querySelector( '#form-title' ).textContent;
-            if ( settings.print ) {
-                gui.applyPrintStyle();
+                        return formParts;
+                    } );
             }
-            // after widgets have been initialized, localize all data-i18n elements
-            localize( formEl );
-        } );
+
+            return formParts;
+        } )
+        .then( formParts => {
+            if ( formParts.form && formParts.model ) {
+                return gui.swapTheme( formParts );
+            } else {
+                throw new Error( t( 'error.unknown' ) );
+            }
+        } )
+        .then( _convertToReadonly )
+        .then( formParts => {
+            formheader.after( formParts.formFragment );
+            const formEl = document.querySelector( 'form.or' );
+
+            return controller.init( formEl, {
+                modelStr: formParts.model,
+                instanceStr: formParts.instance,
+                external: formParts.externalData,
+                instanceAttachments: formParts.instanceAttachments,
+                survey: formParts,
+            } )
+                .then( form => {
+                    formParts.languages = form.languages;
+                    document.querySelector( 'head>title' ).textContent = document.querySelector( '#form-title' ).textContent;
+                    if ( settings.print ) {
+                        gui.applyPrintStyle();
+                    }
+                    // after widgets have been initialized, localize all data-i18n elements
+                    localize( formEl );
+                } );
+        } )
+        .catch( _showErrorOrAuthenticate );
+}
+
+if ( ENV !== 'test' ) {
+    _init( survey );
 }

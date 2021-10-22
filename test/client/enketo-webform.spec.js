@@ -2251,4 +2251,380 @@ describe( 'Enketo webform app entrypoints', () => {
             } );
         } );
     } );
+
+    describe( 'enketo-webform-view.js initialization steps', () => {
+        /** @type {Sandboox} */
+        let preImportSandbox;
+
+        /** @type {Range} */
+        let documentRange;
+
+        /** @type {Record<string, any> | null} */
+        let webformViewPrivate = null;
+
+        /** @type {string} */
+        let instanceId;
+
+        /** @type {string | null} */
+        let existingInstance;
+
+        /** @type {Partial<Survey>} */
+        let surveyInitData;
+
+        /** @type {HTMLElement} */
+        let formHeader;
+
+        before( async () => {
+            documentRange = document.createRange();
+            preImportSandbox = sinon.createSandbox();
+
+            preImportSandbox.stub( document, 'createRange' )
+                .callsFake( () => documentRange );
+
+            webformViewPrivate = ( await import( '../../public/js/src/enketo-webform-view' ) )._PRIVATE_TEST_ONLY_;
+        } );
+
+        after( () => {
+            preImportSandbox.restore();
+        } );
+
+        beforeEach( () => {
+            sandbox.stub( lodash, 'memoize' ).callsFake( fn => fn );
+
+            if ( !Object.prototype.hasOwnProperty.call( settings, 'print' ) ) {
+                settings.print = undefined;
+            }
+
+            instanceId = 'instance1';
+
+            existingInstance = null;
+
+            surveyInitData = {
+                get enketoId() { return enketoId; },
+                get instanceId() { return instanceId; },
+            };
+
+            formHeader = document.querySelector( '.form-header' );
+        } );
+
+        it( 'initializes a form to view an existing instance/record', async () => {
+            sandbox.stub( gui, 'alertLoadErrors' )
+                .callsFake( errors => {
+                    const item = Array.isArray( errors ) ? errors[0] : errors;
+                    const error = typeof item === 'string' ? new Error( item ) : item;
+
+                    throw error;
+                } );
+
+            existingInstance = '<a>value</a>';
+
+            const formTitle = 'Title of form';
+            const form = /* html */`<form class="or">
+                <h3 id="form-title">${formTitle}</h3>
+
+
+                <!-- Outside of .question, will not be marked readonly -->
+                <input id="input-1">
+                <textarea id="textarea-1"></textarea>
+                <select id="select-1">
+                    <!-- All options outside of a languages select will be marked readonly -->
+                    <option class="writeable" selected></option>
+                </select>
+                <select id="form-languages">
+                    <!-- Inside languages select, will not be marked readonly -->
+                    <option></option>
+                </select>
+
+                <!-- All repeats will be marked fixed -->
+                <div class="or-repeat-info"></div>
+
+                <div class="question">
+                    <!-- Already readonly, will not be marked readonly -->
+                    <input id="input-2" readonly>
+                    <textarea id="textarea-2" readonly></textarea>
+                    <select id="select-2" readonly>
+                        <option class="writeable" selected></option>
+                    </select>
+
+                    <!-- Will be marked readonly -->
+                    <input id="input-3">
+                    <textarea id="textarea-3"></textarea>
+                    <select id="select-3">
+                        <option class="writeable" selected></option>
+                    </select>
+                    <div class="or-repeat-info"></div>
+                </div>
+            </form>`;
+
+            const formFragment = documentRange.createContextualFragment( form );
+
+            const writeableQuestionElements = {
+                input: formFragment.getElementById( 'input-3' ),
+                textarea: formFragment.getElementById( 'textarea-3' ),
+                select: formFragment.getElementById( 'select-3' ),
+                options: [ ...formFragment.querySelectorAll( 'option.writeable' ) ],
+                repeats: [ ...formFragment.querySelectorAll( '.or-repeat-info' ) ],
+            };
+
+            const formParts = {
+                ...surveyInitData,
+
+                externalData: [],
+                form,
+                languages: [],
+                model: '<a/>',
+                theme: 'kobo',
+            };
+
+            const instanceAttachments = {
+                'a.jpg': 'https://example.com/a.jpg',
+            };
+
+            const instanceResult = {
+                instance: existingInstance,
+                instanceAttachments,
+                ignoreMe: true,
+            };
+
+            const formPartsWithInstanceData = {
+                ...formParts,
+
+                instance: existingInstance,
+                instanceAttachments,
+            };
+
+            const swappedThemeSurvey = {
+                ...formPartsWithInstanceData,
+                theme: 'swapped',
+            };
+
+            const initializedForm = {
+                languages: [ 'ar', 'fa' ],
+            };
+
+            const formElement = formFragment.querySelector( 'form' );
+
+            const artificialTitleElement = {
+                textContent: 'Not title of form',
+            };
+
+            const titleHeading = formElement.querySelector( '#form-title' );
+
+            sandbox.stub( i18next, 'use' ).returns( i18next );
+
+            const steps = [
+                prepareInitStep( {
+                    description: 'Translator: initialize i18next',
+                    stubMethod: 'callsFake',
+                    object: i18next,
+                    key: 'init',
+                    expectedArgs: [ expectObject, expectCallback ],
+                } ),
+                prepareInitStep( {
+                    description: 'Get form parts',
+                    stubMethod: 'callsFake',
+                    object: connection,
+                    key: 'getFormParts',
+                    expectedArgs: [ surveyInitData ],
+                    returnValue: Promise.resolve( formParts ),
+                } ),
+                prepareInitStep( {
+                    description: 'Get existing instance',
+                    stubMethod: 'callsFake',
+                    object: connection,
+                    key: 'getExistingInstance',
+                    expectedArgs: [ surveyInitData ],
+                    returnValue: Promise.resolve( instanceResult ),
+                } ),
+                prepareInitStep( {
+                    description: 'Swap theme',
+                    stubMethod: 'callsFake',
+                    object: gui,
+                    key: 'swapTheme',
+                    expectedArgs: [ formPartsWithInstanceData ],
+                    returnValue: Promise.resolve( swappedThemeSurvey ),
+                } ),
+                prepareInitStep( {
+                    description: 'Create DOM representation of form HTML',
+                    stubMethod: 'callsFake',
+                    object: documentRange,
+                    key: 'createContextualFragment',
+                    expectedArgs: [ form ],
+                    returnValue: formFragment,
+                } ),
+                prepareInitStep( {
+                    description: 'Set input readonly',
+                    stubMethod: 'callsFake',
+                    object: writeableQuestionElements.input,
+                    key: 'setAttribute',
+                    expectedArgs: [ 'readonly', 'readonly' ],
+                    returnValue: null,
+                } ),
+                prepareInitStep( {
+                    description: 'Set input readonly-forced class',
+                    stubMethod: 'callsFake',
+                    object: writeableQuestionElements.input.classList,
+                    key: 'add',
+                    expectedArgs: [ 'readonly-forced' ],
+                    returnValue: null,
+                } ),
+                prepareInitStep( {
+                    description: 'Set textarea readonly',
+                    stubMethod: 'callsFake',
+                    object: writeableQuestionElements.textarea,
+                    key: 'setAttribute',
+                    expectedArgs: [ 'readonly', 'readonly' ],
+                    returnValue: null,
+                } ),
+                prepareInitStep( {
+                    description: 'Set textarea readonly-forced class',
+                    stubMethod: 'callsFake',
+                    object: writeableQuestionElements.textarea.classList,
+                    key: 'add',
+                    expectedArgs: [ 'readonly-forced' ],
+                    returnValue: null,
+                } ),
+                prepareInitStep( {
+                    description: 'Set select readonly',
+                    stubMethod: 'callsFake',
+                    object: writeableQuestionElements.select,
+                    key: 'setAttribute',
+                    expectedArgs: [ 'readonly', 'readonly' ],
+                    returnValue: null,
+                } ),
+                prepareInitStep( {
+                    description: 'Set select readonly-forced class',
+                    stubMethod: 'callsFake',
+                    object: writeableQuestionElements.select.classList,
+                    key: 'add',
+                    expectedArgs: [ 'readonly-forced' ],
+                    returnValue: null,
+                } ),
+
+                ...writeableQuestionElements.options.map( ( option, index ) => {
+                    return prepareInitStep( {
+                        description: `Set option ${index} disabled`,
+                        stubMethod: 'set',
+                        object: option,
+                        key: 'disabled',
+                        expectedValue: true,
+                    } );
+                } ),
+
+                ...writeableQuestionElements.repeats.map( ( repeat, index ) => {
+                    return prepareInitStep( {
+                        description: `Set repeat ${index} data-repeat-fixed attribute`,
+                        stubMethod: 'callsFake',
+                        object: repeat,
+                        key: 'setAttribute',
+                        expectedArgs: [ 'data-repeat-fixed', 'fixed' ],
+                        returnValue: null,
+                    } );
+                } ),
+
+                prepareInitStep( {
+                    description: 'Append form element after header',
+                    stubMethod: 'callsFake',
+                    object: formHeader,
+                    key: 'after',
+                    expectedArgs: [ formFragment ],
+                } ),
+                prepareInitStep( {
+                    description: 'Resolve appended form element',
+                    stubMethod: 'callsFake',
+                    object: document,
+                    key: 'querySelector',
+                    expectedArgs: [ 'form.or' ],
+                    returnValue: formElement,
+                } ),
+                prepareInitStep( {
+                    description: 'Initialize controller-webform',
+                    stubMethod: 'callsFake',
+                    object: controller,
+                    key: 'init',
+                    expectedArgs: [
+                        formElement,
+                        {
+                            modelStr: swappedThemeSurvey.model,
+                            instanceStr: existingInstance,
+                            external: swappedThemeSurvey.externalData,
+                            instanceAttachments,
+                            survey: swappedThemeSurvey,
+                        },
+                    ],
+                    returnValue: Promise.resolve( initializedForm ),
+                } ),
+                prepareInitStep( {
+                    description: 'Assign languages',
+                    stubMethod: 'set',
+                    object: swappedThemeSurvey,
+                    key: 'languages',
+                    expectedValue: initializedForm.languages,
+                } ),
+                prepareInitStep( {
+                    description: 'Get title element',
+                    stubMethod: 'callsFake',
+                    object: document,
+                    key: 'querySelector',
+                    expectedArgs: [ 'head>title' ],
+                    returnValue: artificialTitleElement,
+                } ),
+                prepareInitStep( {
+                    description: 'Resolve form title heading element',
+                    stubMethod: 'callsFake',
+                    object: document,
+                    key: 'querySelector',
+                    expectedArgs: [ '#form-title' ],
+                    returnValue: titleHeading,
+                } ),
+                prepareInitStep( {
+                    description: 'Set page title',
+                    stubMethod: 'set',
+                    object: artificialTitleElement,
+                    key: 'textContent',
+                    expectedValue: formTitle,
+                } ),
+                prepareInitStep( {
+                    description: 'Check if print styles should be applied',
+                    stubMethod: 'get',
+                    object: settings,
+                    key: 'print',
+                    propertyValue: true,
+                } ),
+                prepareInitStep( {
+                    description: 'Apply print styles',
+                    stubMethod: 'callsFake',
+                    object: gui,
+                    key: 'applyPrintStyle',
+                    expectedArgs: [],
+                } ),
+                prepareInitStep( {
+                    description: 'Localization',
+                    stubMethod: 'callsFake',
+                    object: i18next,
+                    key: 'dir',
+                    expectedArgs: [],
+                } ),
+            ];
+
+            /** @type {Promise} */
+            let viewInitialization = webformViewPrivate._init( surveyInitData );
+
+            await viewInitialization;
+
+
+            for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
+                const performedStep = performedSteps.find( performedStep => {
+                    return performedStep === expectedStep;
+                } );
+                const index = performedSteps.indexOf( expectedStep );
+
+                expect( performedStep ).to.equal( expectedStep );
+                expect( index, `Unexpected order of step ${expectedStep.options.description}` )
+                    .to.equal( expectedIndex );
+            }
+
+            expect( performedSteps.length ).to.equal( steps.length );
+        } );
+    } );
 } );
