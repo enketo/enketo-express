@@ -10,6 +10,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed
 - [#337](https://github.com/enketo/enketo-express/issues/337) Docker: cannot start because `grunt` expects missing `esbuild` dev dependency
 
+[3.0.3] - 2021-10-21
+---------------------
+##### Fixed
+- [#345](https://github.com/enketo/enketo-express/pull/345) Restore population of deprecatedID in edit mode
+
 [3.0.2] - 2021-10-20
 ---------------------
 ##### Fixed
