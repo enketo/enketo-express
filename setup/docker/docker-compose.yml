@@ -29,10 +29,6 @@ services:
       - ./envfile.txt
     volumes:
       - ../../config/:/srv/src/enketo_express/config
-      - ./.vols/checksum/:/srv/src/enketo_express/checksum
-      - ./.vols/build/css:/srv/src/enketo_express/public/css
-      - ./.vols/build/js:/srv/src/enketo_express/public/js/build
-      - ./.vols/build/locales:/srv/src/enketo_express/locales/build
       - ./secrets/:/srv/src/enketo_express/setup/docker/secrets/
     restart: unless-stopped
 
