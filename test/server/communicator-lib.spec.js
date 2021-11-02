@@ -7,9 +7,23 @@ const expect = chai.expect;
 const Auth = require( 'request/lib/auth' ).Auth;
 const communicator = require( '../../app/lib/communicator/communicator' );
 const config = require( '../../app/models/config-model' ).server;
-config[ 'query parameter to pass to submission' ] = 'foo';
+const sinon = require( 'sinon' );
 
 describe( 'Communicator Library', () => {
+    /** @type {sinon.SinonSandbox} */
+    let sandbox;
+
+    /** @type {string} */
+    let customQueryParameter;
+
+    beforeEach( () => {
+        sandbox = sinon.createSandbox();
+
+        customQueryParameter = 'foo';
+
+        sandbox.stub( config, 'query parameter to pass to submission' )
+            .get( () => customQueryParameter );
+    } );
 
     describe( 'getXFormInfo function', () => {
         it( 'should throw when getting wrong input', () => {
@@ -279,15 +293,45 @@ describe( 'Communicator Library', () => {
     describe( 'getFormListUrl function', () => {
         [
             // server, id, customParam, expected output
-            [ 'ona.io/enketo', '123', undefined, 'ona.io/enketo/formList?formID=123' ],
-            [ 'ona.io/enketo', '123', 'bar', 'ona.io/enketo/formList?formID=123&foo=bar' ],
-            [ 'ona.io/enketo', undefined, 'bar', 'ona.io/enketo/formList?foo=bar' ],
-            [ 'ona.io/enketo', undefined, undefined, 'ona.io/enketo/formList' ],
-            [ 'ona.io/enketo/', undefined, undefined, 'ona.io/enketo/formList' ],
+            [ 'https://ona.io/enketo', '123', undefined, 'https://ona.io/enketo/formList?formID=123' ],
+            [ 'https://ona.io/enketo', '123', 'bar', 'https://ona.io/enketo/formList?formID=123&foo=bar' ],
+            [ 'https://ona.io/enketo', undefined, 'bar', 'https://ona.io/enketo/formList?foo=bar' ],
+            [ 'https://ona.io/enketo', undefined, undefined, 'https://ona.io/enketo/formList' ],
+            [ 'https://ona.io/enketo', '123', undefined, 'https://ona.io/enketo/formList?formID=123' ],
         ].forEach( test => {
             it( 'should return proper formList url', () => {
                 expect( communicator.getFormListUrl( test[ 0 ], test[ 1 ], test[ 2 ] ) ).to.equal( test[ 3 ] );
             } );
+        } );
+
+        it( 'escapes the form id', () => {
+            const serverURL = 'https://example.com/-/';
+            const formId = '123&?%ϕ';
+            const result = communicator.getFormListUrl( serverURL, formId );
+
+            expect( result ).to.equal( 'https://example.com/-/formList?formID=123%26%3F%25%CF%95' );
+        } );
+
+        it( 'escapes a custom query parameter name', () => {
+            customQueryParameter = '456&?%λ';
+
+            const serverURL = 'https://example.com/-/';
+            const formId = '123';
+            const customParam = '789';
+            const result = communicator.getFormListUrl( serverURL, formId, customParam );
+
+            expect( result ).to.equal( 'https://example.com/-/formList?formID=123&456%26%3F%25%CE%BB=789' );
+        } );
+
+        it( 'escapes a custom query parameter value', () => {
+            customQueryParameter = '456';
+
+            const serverURL = 'https://example.com/-/';
+            const formId = '123';
+            const customParam = '789&?%»';
+            const result = communicator.getFormListUrl( serverURL, formId, customParam );
+
+            expect( result ).to.equal( 'https://example.com/-/formList?formID=123&456=789%26%3F%25%C2%BB' );
         } );
     } );
 
