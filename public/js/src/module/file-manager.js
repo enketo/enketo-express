@@ -61,7 +61,7 @@ function getFileUrl( subject ) {
                 resolve( instanceAttachments[ escapedSubject ] );
             } else if ( instanceAttachments && ( Object.prototype.hasOwnProperty.call( instanceAttachments, subject ) ) ) {
                 resolve( instanceAttachments[ subject ] );
-            } else if ( !store.available ) {
+            } else if ( !settings.offline || !store.available ) {
                 // e.g. in an online-only edit view
                 reject( new Error( 'store not available' ) );
             } else if ( URL_RE.test( subject ) ) {

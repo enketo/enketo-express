@@ -72,12 +72,19 @@ describe( 'File manager', () => {
             const recordId = 'record 1';
 
             /** @type {boolean} */
+            let isOffline;
+
+            /** @type {boolean} */
             let isStoreAvailable;
 
             /** @type {number} */
             let maxSize;
 
             beforeEach( async () => {
+                isOffline = true;
+
+                sandbox.stub( settings, 'offline' ).get( () => isOffline );
+
                 sandbox.stub( settings, 'enketoId' ).get( () => enketoId );
 
                 if ( !Object.prototype.hasOwnProperty.call( settings, 'recordId' ) ) {
@@ -176,6 +183,33 @@ describe( 'File manager', () => {
                 const data = await blobResult.text();
 
                 expect( data ).to.equal( fileContents );
+            } );
+
+            it( 'fails if not in offline-capable mode, if the store is available and the resource is cached', async () => {
+                const fileContents = 'file contents';
+                const name = 'the blob.png';
+                const resource = {
+                    item: new Blob( [ fileContents ] ),
+                    name,
+                };
+
+                await store.record.file.update( recordId, resource );
+
+                const resourceGetStub = sandbox.stub( store.survey.resource, 'get' );
+
+                /** @type {Error} */
+                let caught;
+
+                isOffline = false;
+
+                try {
+                    await fileManager.getFileUrl( name );
+                } catch( error ) {
+                    caught = error;
+                }
+
+                expect( caught ).to.be.an.instanceof( Error );
+                expect( resourceGetStub ).not.to.have.been.called;
             } );
 
             it( 'fails if the file is not cached', async () => {
