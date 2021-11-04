@@ -13,7 +13,7 @@ const utils = require( '../lib/utils' );
 const routerUtils = require( '../lib/router-utils' );
 const express = require( 'express' );
 const url = require( 'url' );
-const { toMediaMap } = require( '../lib/url' );
+const { replaceMediaSources } = require( '../lib/url' );
 
 const router = express.Router();
 
@@ -107,13 +107,7 @@ function getSurveyHash( req, res, next ) {
 function _getFormDirectly( survey ) {
     return communicator.getXForm( survey )
         .then( communicator.getManifest )
-        .then( xform => {
-            const survey = Object.assign( {}, xform, {
-                media: toMediaMap( xform.manifest ),
-            } );
-
-            return transformer.transform( survey );
-        } );
+        .then( transformer.transform );
 }
 
 /**
@@ -144,8 +138,8 @@ function _getFormFromCache( survey ) {
 function _updateCache( survey ) {
     return communicator.getXFormInfo( survey )
         .then( communicator.getManifest )
-        .then( cacheModel.check )
-        .then( upToDate => {
+        .then( survey => Promise.all( [ survey, cacheModel.check( survey ) ] ) )
+        .then( ( [ survey, upToDate ] ) => {
             if ( !upToDate ) {
                 delete survey.xform;
                 delete survey.form;
@@ -220,6 +214,8 @@ function _checkQuota( survey ) {
  */
 function _respond( res, survey ) {
     delete survey.credentials;
+
+    survey = replaceMediaSources( survey );
 
     res.status( 200 );
     res.send( {

@@ -66,9 +66,9 @@ describe( 'URL functionality', () => {
             } ) );
 
             expect( toMediaMap( manifest ) ).to.deep.equal( {
-                'an image.jpg':     'http://enke.to/media/get/https/example.com/an%20image.jpg',
-                'beastie boys.mp4': 'http://enke.to/media/get/https/example.com/beastie%20boys.mp4',
-                'cd rip.mp3':       'http://enke.to/media/get/https/example.com/cd%20rip.mp3',
+                'an%20image.jpg':     'http://enke.to/media/get/https/example.com/an%20image.jpg',
+                'beastie%20boys.mp4': 'http://enke.to/media/get/https/example.com/beastie%20boys.mp4',
+                'cd%20rip.mp3':       'http://enke.to/media/get/https/example.com/cd%20rip.mp3',
             } );
         } );
     } );
