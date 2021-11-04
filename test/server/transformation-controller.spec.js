@@ -298,7 +298,7 @@ describe( 'Transformation Controller', () => {
                 } );
 
 
-                it( 'escapes media URLs in markdown linkes', async () => {
+                it( 'escapes media URLs in markdown links', async () => {
                     const result = await getTransormResult( url, body );
 
                     return Promise.all( [
