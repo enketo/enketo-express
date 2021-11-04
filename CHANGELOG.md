@@ -2,13 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[3.0.4] - 2021-11-04
 ---------------------
 ##### Changed
-- [#317](https://github.com/enketo/enketo-express/pull/317) Docker: run `grunt` only when building the image; remove configuration and commit comparison logic from container start-up script (see #161, #163); build from Node 14 base image
+- [#317](https://github.com/enketo/enketo-express/pull/317) Docker: run `grunt` only when building image; remove config and commit logic from start-up script
+- [#331](https://github.com/enketo/enketo-express/issues/331) Docker: Use node 16 base image 
 
 ##### Fixed
 - [#337](https://github.com/enketo/enketo-express/issues/337) Docker: cannot start because `grunt` expects missing `esbuild` dev dependency
+- [#348](https://github.com/enketo/enketo-express/pull/348) Escaped form ID when requesting form list
+- [#360](https://github.com/enketo/enketo-express/pull/360) Ensure dynamic manifest URLs are mapped by
+- [#351](https://github.com/enketo/enketo-express/issues/351) Fix query parameters not passed to form resources
 
 [3.0.3] - 2021-10-21
 ---------------------
