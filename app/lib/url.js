@@ -16,8 +16,8 @@ const markupEntities = {
  * (which is the default behavior of libxmljs). This is probably safe, as transformer
  * will not serialize attribute values to single quotes.
  *
- * @see {https://developer.mozilla.org/en-US/docs/Glossary/Entity}
- * @see {https://developer.mozilla.org/en-US/docs/Web/XML/XML_introduction#entities}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Glossary/Entity}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/XML/XML_introduction#entities}
  * @param {string} value
  * @return {string}
  */
@@ -69,7 +69,7 @@ const toMediaMap = ( manifest ) => Object.fromEntries(
  * @param {Survey} survey
  * @return {Survey}
  */
- const replaceMediaSources = ( survey ) => {
+const replaceMediaSources = ( survey ) => {
     const media = toMediaMap( survey.manifest );
 
     let { form, model } = survey;
