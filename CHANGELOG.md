@@ -5,8 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [3.0.4] - 2021-11-04
 ---------------------
 ##### Changed
-- [#317](https://github.com/enketo/enketo-express/pull/317) Docker: run `grunt` only when building image; remove config and commit logic from start-up script
-- [#331](https://github.com/enketo/enketo-express/issues/331) Docker: Use node 16 base image 
+- [#317](https://github.com/enketo/enketo-express/pull/317) Docker: run `grunt` only when building image; remove config and commit logic from start-up script; update to node 14
 
 ##### Fixed
 - [#337](https://github.com/enketo/enketo-express/issues/337) Docker: cannot start because `grunt` expects missing `esbuild` dev dependency
