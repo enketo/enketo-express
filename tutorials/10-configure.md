@@ -74,7 +74,7 @@ Cookie authentication is vulnerable to Cross-Site Request Forgery (CSRF) attacks
 
 This allows a deeper integration for a custom server. It configures a (required) `url` on your form/data server where Enketo should redirect a user to when the server returns a 401 response. It also configures a (required) `query parameter` name that is used to share the token. The token value will be passed _unchanged_ via `Authorization: Bearer` Header to any requests to the server.
 
-**At the moment this only works for online-only forms.**
+Please note that using authentication tokens in form URLs may pose a security risk. For example, authentication can be unintentionally shared by copying form URLs. Furthermore, URLs (including query parameters) are commonly logged by (web) servers.
 
 ```json
 "authentication" : {
@@ -146,7 +146,7 @@ The `maps` configuration can include an array of Mapbox TileJSON objects (or a s
 For GMaps layers you have the four options as tiles values: `"GOOGLE_SATELLITE"`, `"GOOGLE_ROADMAP"`, `"GOOGLE_HYBRID"`, `"GOOGLE_TERRAIN"`. You can also add other TileJSON properties, such as minZoom, maxZoom, id to all layers.
 
 #### query parameter to pass to submission
-Specifies the name of a query parameter that will be copied from an Enketo URL to the submission and formList requests. The value of this parameter can be used by the data server to e.g. track submission sources, perform form access control, or serve custom external data per user. **Does not apply to offline-capable webforms.**
+Specifies the name of a query parameter that will be copied from an Enketo URL to the submission and formList requests. The value of this parameter can be used by the data server to e.g. track submission sources, perform form access control, or serve custom external data per user.
 
 #### redis
 * main -> host: The IP address of the main redis database instance. If installed on the same server as Enketo Express, the value is `"127.0.0.1"`
