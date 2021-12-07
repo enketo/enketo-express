@@ -45,8 +45,8 @@
             "msg": "Failed to find question \"__path__\" in form. Is the reference to this question correct?"
         },
         "loaderror": {
-            "editadvice": "It is recommended not to edit this record until this is resolved.",
-            "entryadvice": "It is recommended not to use this form for data entry until this is resolved.",
+            "editadvice": "We do not recommend you edit this record until this is resolved.",
+            "entryadvice": "We do not recommend you use this form for data entry until this is resolved.",
             "heading": "Loading Error",
             "msg1": "Error occured during the loading of this form.",
             "msg2": "Please contact __emailLink__ with the link to this page and the error message below:",
