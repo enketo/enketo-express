@@ -447,7 +447,8 @@ function _saveRecord( survey, draft = true, recordName, confirmed, errorMsg ) {
             .catch( () => {} );
     }
 
-    return fileManager.getCurrentFiles()
+    return Promise.resolve( autoSavePromise )
+        .then( () => fileManager.getCurrentFiles() )
         .then( files => {
             // build the record object
             const record = {
@@ -513,14 +514,23 @@ function _saveRecord( survey, draft = true, recordName, confirmed, errorMsg ) {
         } );
 }
 
+/**
+ * @type {Promise<void> | null}
+ */
+let autoSavePromise = null;
+
 function _autoSaveRecord() {
     // Do not auto-save a record if the record was loaded from storage
     // or if the form has enabled encryption
     if ( form.recordName || form.encryptionKey ) {
-        return Promise.resolve();
+        autoSavePromise = Promise.resolve();
+
+        return autoSavePromise.then( () => {
+            autoSavePromise = null;
+        } );
     }
 
-    return fileManager.getCurrentFiles()
+    autoSavePromise = fileManager.getCurrentFiles()
         .then( files => {
             // build the variable portions of the record object
             const record = {
@@ -540,7 +550,12 @@ function _autoSaveRecord() {
         } )
         .catch( error => {
             console.error( 'autosave error', error );
+        } )
+        .finally( () => {
+            autoSavePromise = null;
         } );
+
+    return autoSavePromise;
 }
 
 /**
@@ -704,10 +719,9 @@ function _setEventHandlers( survey ) {
     }
 
     if ( settings.offline ) {
-        document.addEventListener( events.XFormsValueChanged().type, () => {
-            // The delay works around an issue with drawing widgets, where the canvas
-            // capture is an empty image. https://github.com/enketo/enketo-express/issues/174
-            setTimeout( _autoSaveRecord, 500 );
+        document.addEventListener( events.XFormsValueChanged().type, async () => {
+            await autoSavePromise;
+            await _autoSaveRecord();
         } );
     }
 }
