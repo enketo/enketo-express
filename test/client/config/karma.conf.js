@@ -5,8 +5,11 @@
 
 const exportPrivate = require( '../../build-tools/esbuild-plugin-export-private' );
 const esbuildConfig = require( '../../../config/build.js' );
+const istanbulInstrument = require( '../../build-tools/esbuild-plugin-istanbul' );
 
-module.exports = config => {
+module.exports = async ( config ) => {
+    const { default: esbuildPipe } = await import( 'esbuild-plugin-pipe' );
+
     config.set( {
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -45,7 +48,13 @@ module.exports = config => {
             },
             plugins: [
                 ...esbuildConfig.plugins,
-                exportPrivate(),
+                esbuildPipe( {
+                    filter: /(\/public\/js\/src\/|\/fixtures\/)/,
+                    plugins: [
+                        exportPrivate,
+                        istanbulInstrument,
+                    ],
+                } ),
             ],
         },
 

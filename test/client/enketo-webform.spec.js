@@ -591,7 +591,7 @@ describe( 'Enketo webform app', () => {
                         stubMethod: 'callsFake',
                         object: i18next,
                         key: 't',
-                        expectedArgs: [ webformPrivate.LOAD_ERROR_ENTRY_ADVICE, undefined ],
+                        expectedArgs: [ 'alert.loaderror.entryadvice', undefined ],
                         returnValue: translatedErrorAdvice,
                     } ),
                     prepareInitStep( {
@@ -671,7 +671,7 @@ describe( 'Enketo webform app', () => {
                         stubMethod: 'callsFake',
                         object: i18next,
                         key: 't',
-                        expectedArgs: [ webformPrivate.LOAD_ERROR_ENTRY_ADVICE, undefined ],
+                        expectedArgs: [ 'alert.loaderror.entryadvice', undefined ],
                         returnValue: translatedErrorAdvice,
                     } ),
                     prepareInitStep( {
@@ -876,7 +876,7 @@ describe( 'Enketo webform app', () => {
                         stubMethod: 'callsFake',
                         object: store,
                         key: 'init',
-                        expectedArgs: [],
+                        expectedArgs: [ { failSilently: true } ],
                         returnValue: Promise.reject( error ),
                     } ),
                     prepareInitStep( {
@@ -891,7 +891,7 @@ describe( 'Enketo webform app', () => {
                         stubMethod: 'callsFake',
                         object: i18next,
                         key: 't',
-                        expectedArgs: [ webformPrivate.LOAD_ERROR_ENTRY_ADVICE, undefined ],
+                        expectedArgs: [ 'alert.loaderror.entryadvice', undefined ],
                         returnValue: translatedErrorAdvice,
                     } ),
                     prepareInitStep( {
