@@ -4,5 +4,10 @@
             "no-debugger": 1 // Warn rather than error in-editor
         }
     },
-    "javascript.referencesCodeLens.enabled": true
+    "javascript.referencesCodeLens.enabled": true,
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/*.code-search": true
+    }
 }

@@ -1,10 +1,11 @@
 {
     "env": {
-        "es6": true,
+        "es2020": true,
         "browser": true,
         "commonjs": true
     },
     "globals": {
+        "ENV": true,
         "Promise": true
     },
     "extends": "eslint:recommended",

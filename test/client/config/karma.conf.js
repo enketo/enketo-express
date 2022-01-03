@@ -1,6 +1,10 @@
 /* eslint-env node */
 
-const cwd = process.cwd();
+// Karma configuration
+// Generated on Wed Nov 26 2014 15:52:30 GMT-0700 (MST)
+
+const exportPrivate = require( '../../build-tools/esbuild-plugin-export-private' );
+const esbuildConfig = require( '../../../config/build.js' );
 
 module.exports = config => {
     config.set( {
@@ -11,7 +15,7 @@ module.exports = config => {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: [ 'mocha', 'sinon-chai' ],
+        frameworks: [ 'source-map-support', 'mocha', 'sinon-chai' ],
 
 
         // list of files / patterns to load in the browser
@@ -28,10 +32,22 @@ module.exports = config => {
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
             'public/js/**/!(enketo-offline-fallback).js': [ 'esbuild' ],
+            'config/*.json': [ 'esbuild' ],
             'test/client/**/*.js': [ 'esbuild' ],
         },
 
-        esbuild: require( '../../../config/build.js' ),
+        esbuild: {
+            ...esbuildConfig,
+            define: {
+                ...esbuildConfig.define,
+                DEBUG: 'true',
+                ENV: JSON.stringify( 'test' ),
+            },
+            plugins: [
+                ...esbuildConfig.plugins,
+                exportPrivate(),
+            ],
+        },
 
         browserify: {
             debug: true,

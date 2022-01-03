@@ -587,9 +587,11 @@ function getErrorResponseMsg( statusCode ) {
     return msg;
 }
 
-$( document ).ready( () => {
-    init();
-} );
+if ( ENV !== 'test' ) {
+    $( document ).ready( () => {
+        init();
+    } );
+}
 
 export default {
     alert,

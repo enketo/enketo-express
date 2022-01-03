@@ -8,10 +8,15 @@ const entryPoints = pkg.entries.map( entry => (
     path.resolve( cwd, entry )
 ) );
 
+const { NODE_ENV = 'develop' } = process.env;
 const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
     bundle: true,
+    define: {
+        DEBUG: 'false',
+        ENV: JSON.stringify( NODE_ENV ),
+    },
     entryPoints,
     format: 'iife',
     minify: isProduction,

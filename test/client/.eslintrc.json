@@ -1,6 +1,6 @@
 {
     "env": {
-        "es6": true,
+        "es2020": true,
         "browser": true,
         "node": false,
         "commonjs": true,
@@ -8,12 +8,12 @@
     },
     "globals": {
         "expect": true,
-        "sinon": true
+        "sinon": true,
+        "DEBUG": true
     },
-    "extends": "eslint:recommended",
+    "extends": "../../.eslintrc.json",
     "parserOptions": {
-        "sourceType": "module",
-        "ecmaVersion": 2020
+        "sourceType": "module"
     },
     "rules": {
         "indent": [ "warn", 4, {
