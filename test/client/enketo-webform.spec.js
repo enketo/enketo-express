@@ -944,6 +944,20 @@ describe( 'Enketo webform app', () => {
             sandbox.stub( i18next, 't' ).returnsArg( 0 );
         } );
 
+        describe( 'location wrapper', () => {
+            it( 'aliases location.href', () => {
+                expect( webformPrivate._location.href ).to.equal( location.href );
+            } );
+
+            it( 'assigns location.href', () => {
+                const newLocation = `${location.href.replace( /#.*$/, '' )}#new-hash`;
+
+                webformPrivate._location.href = newLocation;
+
+                expect( location.href ).to.equal( newLocation );
+            } );
+        } );
+
         describe( 'emergency handlers', () => {
             /**
              * @param {number} timeoutMs
@@ -1197,6 +1211,62 @@ describe( 'Enketo webform app', () => {
                 }
 
                 expect( caught ).to.equal( null );
+            } );
+        } );
+
+        describe( 'swapping themes', () => {
+            const guiResult = Symbol( 'GUI result' );
+
+            /** @type {Stub} */
+            let swapThemeStub;
+
+            beforeEach( () => {
+                swapThemeStub = sandbox.stub( gui, 'swapTheme' ).callsFake( () => (
+                    Promise.resolve( guiResult )
+                ) );
+            } );
+
+            it( 'swaps themes with a valid form', async () => {
+                const result = await webformPrivate._swapTheme( baseSurvey );
+
+                expect( swapThemeStub ).to.have.been.calledWith( baseSurvey );
+                expect( result ).to.equal( guiResult );
+            } );
+
+            it( 'fails to swap themes when the form is not present on the survey', async () => {
+                const { form, ...invalidSurvey } = baseSurvey;
+
+                /** @type {Error | null} */
+                let caught = null;
+
+                try {
+                    await webformPrivate._swapTheme( invalidSurvey );
+                } catch ( error ) {
+                    caught = error;
+                }
+
+                const expectedMessage = webformPrivate.SWAP_THEME_ERROR_MESSAGE;
+
+                expect( swapThemeStub ).not.to.have.been.called;
+                expect( caught ).to.be.an.instanceof( Error ).and.to.have.property( 'message', expectedMessage );
+            } );
+
+            it( 'fails to swap themes when the model is not present on the survey', async () => {
+                const { model, ...invalidSurvey } = baseSurvey;
+
+                /** @type {Error | null} */
+                let caught = null;
+
+                try {
+                    await webformPrivate._swapTheme( invalidSurvey );
+                } catch ( error ) {
+                    caught = error;
+                }
+
+                const expectedMessage = webformPrivate.SWAP_THEME_ERROR_MESSAGE;
+
+                expect( swapThemeStub ).not.to.have.been.called;
+                expect( caught ).to.be.an.instanceof( Error ).and.to.have.property( 'message', expectedMessage );
             } );
         } );
 
@@ -1657,6 +1727,17 @@ describe( 'Enketo webform app', () => {
 
                 expect( loadErrorsStub ).to.have.been.calledWith(
                     [ error.message ],
+                    'alert.loaderror.entryadvice'
+                );
+            } );
+
+            it( 'alerts a loading error message string', () => {
+                const message = 'oops!';
+
+                webformPrivate._showErrorOrAuthenticate( message );
+
+                expect( loadErrorsStub ).to.have.been.calledWith(
+                    [ message ],
                     'alert.loaderror.entryadvice'
                 );
             } );

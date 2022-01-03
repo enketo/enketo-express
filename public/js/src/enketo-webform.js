@@ -98,14 +98,14 @@ function _updateMaxSizeSetting( survey ) {
 /**
  * Wrap location access to detect/prevent navigation in tests.
  */
- const _location = {
+const _location = {
     get href() {
         return location.href;
     },
     set href( href ) {
         location.href = href;
     },
-    reload: location.reload.bind( location ),
+    reload: () => { location.reload(); },
 };
 
 const LOAD_ERROR_CLASS = 'fail';
@@ -207,6 +207,8 @@ function _addBranding( survey ) {
     return survey;
 }
 
+const SWAP_THEME_ERROR_MESSAGE = 'Received form incomplete';
+
 /**
  * Swaps the theme if necessary.
  *
@@ -217,7 +219,7 @@ function _swapTheme( survey ) {
     if ( survey.form && survey.model ) {
         return gui.swapTheme( survey );
     } else {
-        return Promise.reject( new Error( 'Received form incomplete' ) );
+        return Promise.reject( new Error( SWAP_THEME_ERROR_MESSAGE ) );
     }
 }
 
