@@ -37,7 +37,7 @@
             "asyncArrow": "always",
             "named": "never"
         }],
-        "space-in-parens": ["error", "always"],
+        "space-in-parens": ["error", "never"],
         "space-infix-ops": "error",
         "array-bracket-spacing": ["error", "always"],
         "no-implied-eval": "error",

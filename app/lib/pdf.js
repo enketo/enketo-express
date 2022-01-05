@@ -1,10 +1,10 @@
 /**
  * @module pdf
  */
-const config = require( '../models/config-model' ).server;
+const config = require('../models/config-model').server;
 const timeout = config.headless.timeout;
-const puppeteer = require( 'puppeteer' );
-const { URL } = require( 'url' );
+const puppeteer = require('puppeteer');
+const { URL } = require('url');
 
 /**
  * @typedef PdfGetOptions
@@ -34,9 +34,9 @@ const DEFAULTS = {
  * @param {PdfGetOptions} [options] - PDF options
  * @return { Promise } a promise that returns the PDF
  */
-async function get( url, options = {} ) {
-    if ( !url ) {
-        throw new Error( 'No url provided' );
+async function get(url, options = {}) {
+    if (!url) {
+        throw new Error('No url provided');
     }
 
     options.format = options.format || DEFAULTS.FORMAT;
@@ -44,25 +44,25 @@ async function get( url, options = {} ) {
     options.landscape = options.landscape || DEFAULTS.LANDSCAPE;
     options.scale = options.scale || DEFAULTS.SCALE;
 
-    const urlObj = new URL( url );
-    urlObj.searchParams.append( 'format', options.format );
-    urlObj.searchParams.append( 'margin', options.margin );
-    urlObj.searchParams.append( 'landscape', options.landscape );
-    urlObj.searchParams.append( 'scale', options.scale );
+    const urlObj = new URL(url);
+    urlObj.searchParams.append('format', options.format);
+    urlObj.searchParams.append('margin', options.margin);
+    urlObj.searchParams.append('landscape', options.landscape);
+    urlObj.searchParams.append('scale', options.scale);
 
-    const browser = await puppeteer.launch( { headless: true } );
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
     let pdf;
 
     try {
-        await page.goto( urlObj.href, { waitUntil: 'networkidle0', timeout } )
-            .catch( e => {
-                e.status = /timeout/i.test( e.message ) ? 408 : 400;
+        await page.goto(urlObj.href, { waitUntil: 'networkidle0', timeout })
+            .catch(e => {
+                e.status = /timeout/i.test(e.message) ? 408 : 400;
                 throw e;
-            } );
+            });
 
-        pdf = await page.pdf( {
+        pdf = await page.pdf({
             landscape: options.landscape,
             format: options.format,
             margin: {
@@ -73,8 +73,8 @@ async function get( url, options = {} ) {
             },
             scale: options.scale,
             printBackground: true
-        } );
-    } catch ( e ) {
+        });
+    } catch (e) {
         e.status = e.status || 400;
         await page.close();
         throw e;

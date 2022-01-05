@@ -1,19 +1,19 @@
-const expect = require( 'chai' ).expect;
-const transformer = require( 'enketo-transformer' );
-const request = require( 'supertest' );
-const sinon = require( 'sinon' );
-const communicator = require( '../../app/lib/communicator' );
-const accountModel = require( '../../app/models/account-model' );
-const config = require( '../../app/models/config-model' ).server;
-const cacheModel = require( '../../app/models/cache-model' );
-const surveyModel = require( '../../app/models/survey-model' );
-const userModel = require( '../../app/models/user-model' );
+const expect = require('chai').expect;
+const transformer = require('enketo-transformer');
+const request = require('supertest');
+const sinon = require('sinon');
+const communicator = require('../../app/lib/communicator');
+const accountModel = require('../../app/models/account-model');
+const config = require('../../app/models/config-model').server;
+const cacheModel = require('../../app/models/cache-model');
+const surveyModel = require('../../app/models/survey-model');
+const userModel = require('../../app/models/user-model');
 
 /**
  * @typedef {import('../../app/models/survey-model').SurveyObject} Survey
  */
 
-describe( 'Transformation Controller', () => {
+describe('Transformation Controller', () => {
     const basePath = '';
     const bearer = 'fozzie';
     const enketoId = 'surveyZ';
@@ -40,10 +40,10 @@ describe( 'Transformation Controller', () => {
     /** @type {string} */
     let hash;
 
-    beforeEach( done => {
+    beforeEach(done => {
         sandbox = sinon.createSandbox();
 
-        sandbox.stub( config, 'base path' ).get( () => basePath );
+        sandbox.stub(config, 'base path').get(() => basePath);
 
         // Stub `_getSurveyParams`
         survey = {
@@ -53,41 +53,41 @@ describe( 'Transformation Controller', () => {
 
         hash = 'md5:b4dd34d';
 
-        sandbox.stub( surveyModel, 'get' ).callsFake( () => (
-            Promise.resolve( { ...survey } )
-        ) );
+        sandbox.stub(surveyModel, 'get').callsFake(() => (
+            Promise.resolve({ ...survey })
+        ));
 
         account = {};
 
-        sandbox.stub( accountModel, 'check' ).callsFake( survey => (
-            Promise.resolve( {
+        sandbox.stub(accountModel, 'check').callsFake(survey => (
+            Promise.resolve({
                 ...survey,
                 account,
-            } )
-        ) );
+            })
+        ));
 
         // No-op `_checkQuota`
-        sandbox.stub( config, 'account lib' ).get( () => null );
+        sandbox.stub(config, 'account lib').get(() => null);
 
-        sandbox.stub( userModel, 'getCredentials' ).callsFake( async () => (
+        sandbox.stub(userModel, 'getCredentials').callsFake(async () => (
             { bearer }
-        ) );
+        ));
 
-        app = require( '../../config/express' );
+        app = require('../../config/express');
 
-        server = app.listen( () => done() );
-    } );
+        server = app.listen(() => done());
+    });
 
-    afterEach( async () => {
+    afterEach(async () => {
         sandbox.restore();
 
-        await Promise.all( [
+        await Promise.all([
             cacheModel.flushAll(),
-            new Promise( ( resolve, reject ) => (
-                server.close( error => error ? reject( error ) : resolve() )
-            ) ),
-        ] );
-    } );
+            new Promise((resolve, reject) => (
+                server.close(error => error ? reject(error) : resolve())
+            )),
+        ]);
+    });
 
     const requests = [
         {
@@ -113,30 +113,30 @@ describe( 'Transformation Controller', () => {
      * @param {object} payload
      * @return {import('enketo-transformer/src/transformer').TransformedSurvey}
      */
-    const getTransormResult = async ( url, payload ) => {
-        const { body } = await request( app )
-            .post( url )
-            .send( payload )
-            .expect( 200 );
+    const getTransormResult = async (url, payload) => {
+        const { body } = await request(app)
+            .post(url)
+            .send(payload)
+            .expect(200);
 
         return body;
     };
 
-    describe( 'jr: media URLs', () => {
-        beforeEach( async () => {
-            sandbox.stub( communicator, 'authenticate' ).callsFake( survey => (
-                Promise.resolve( survey )
-            ) );
+    describe('jr: media URLs', () => {
+        beforeEach(async () => {
+            sandbox.stub(communicator, 'authenticate').callsFake(survey => (
+                Promise.resolve(survey)
+            ));
 
-            sandbox.stub( communicator, 'getXFormInfo' ).callsFake( survey => (
-                Promise.resolve( {
+            sandbox.stub(communicator, 'getXFormInfo').callsFake(survey => (
+                Promise.resolve({
                     ...survey,
                     info: {
                         hash,
                         manifestUrl,
                     },
-                } )
-            ) );
+                })
+            ));
 
             // Stub getXForm
             const xform = `
@@ -205,12 +205,12 @@ describe( 'Transformation Controller', () => {
                 </h:html>
             `.trim();
 
-            sandbox.stub( communicator, 'getXForm' ).callsFake( survey => (
-                Promise.resolve( {
+            sandbox.stub(communicator, 'getXForm').callsFake(survey => (
+                Promise.resolve({
                     ...survey,
                     xform,
-                } )
-            ) );
+                })
+            ));
 
             // Stub getManifest
             manifest = [
@@ -251,64 +251,64 @@ describe( 'Transformation Controller', () => {
                 },
             ];
 
-            sandbox.stub( communicator, 'getManifest' ).callsFake( survey => (
-                Promise.resolve( {
+            sandbox.stub(communicator, 'getManifest').callsFake(survey => (
+                Promise.resolve({
                     ...survey,
                     manifest,
-                } )
-            ) );
-        } );
+                })
+            ));
+        });
 
-        requests.forEach( ( { description, url, body } ) => {
-            describe( description, () => {
-                it( 'escapes media in labels', async () => {
-                    const result = await getTransormResult( url, body );
+        requests.forEach(({ description, url, body }) => {
+            describe(description, () => {
+                it('escapes media in labels', async () => {
+                    const result = await getTransormResult(url, body);
 
-                    return Promise.all( [
-                        expect( result ).to.have.property( 'form' ).and.to.not.contain( 'jr://images/first image.jpg' ),
-                        expect( result ).to.have.property( 'form' ).and.to.not.contain( 'jr://audio/a song.mp3' ),
-                        expect( result ).to.have.property( 'form' ).and.to.not.contain( 'jr://video/some video.mp4' ),
+                    return Promise.all([
+                        expect(result).to.have.property('form').and.to.not.contain('jr://images/first image.jpg'),
+                        expect(result).to.have.property('form').and.to.not.contain('jr://audio/a song.mp3'),
+                        expect(result).to.have.property('form').and.to.not.contain('jr://video/some video.mp4'),
 
-                        expect( result ).to.have.property( 'form' ).and.to.contain( 'hallo%20spaceboy/spiders%20from%20mars.jpg' ),
-                        expect( result ).to.have.property( 'form' ).and.to.contain( 'hallo%20spaceboy/space%20oddity.mp3' ),
-                        expect( result ).to.have.property( 'form' ).and.to.contain( 'hallo%20spaceboy/a%20small%20plot%20of%20land.mp4' ),
-                    ] );
-                } );
+                        expect(result).to.have.property('form').and.to.contain('hallo%20spaceboy/spiders%20from%20mars.jpg'),
+                        expect(result).to.have.property('form').and.to.contain('hallo%20spaceboy/space%20oddity.mp3'),
+                        expect(result).to.have.property('form').and.to.contain('hallo%20spaceboy/a%20small%20plot%20of%20land.mp4'),
+                    ]);
+                });
 
-                it( 'escapes binary defaults', async () => {
-                    const result = await getTransormResult( url, body );
+                it('escapes binary defaults', async () => {
+                    const result = await getTransormResult(url, body);
 
-                    return Promise.all( [
-                        expect( result ).to.have.property( 'model' ).and.to.not.contain( 'jr://images/another image.png' ),
+                    return Promise.all([
+                        expect(result).to.have.property('model').and.to.not.contain('jr://images/another image.png'),
 
-                        expect( result ).to.have.property( 'model' ).and.to.contain( 'hallo%20spaceboy/under%20pressure.png' ),
-                    ] );
-                } );
+                        expect(result).to.have.property('model').and.to.contain('hallo%20spaceboy/under%20pressure.png'),
+                    ]);
+                });
 
-                it( 'escapes external instance URLs', async () => {
-                    const result = await getTransormResult( url, body );
+                it('escapes external instance URLs', async () => {
+                    const result = await getTransormResult(url, body);
 
-                    return Promise.all( [
-                        expect( result ).to.have.property( 'model' ).and.to.not.contain( 'jr://file/an instance.xml' ),
-                        expect( result ).to.have.property( 'model' ).and.to.not.contain( 'jr://file-csv/a spreadsheet.csv' ),
+                    return Promise.all([
+                        expect(result).to.have.property('model').and.to.not.contain('jr://file/an instance.xml'),
+                        expect(result).to.have.property('model').and.to.not.contain('jr://file-csv/a spreadsheet.csv'),
 
-                        expect( result ).to.have.property( 'model' ).and.to.contain( 'hallo%20spaceboy/golden%20years.xml' ),
-                        expect( result ).to.have.property( 'model' ).and.to.contain( 'hallo%20spaceboy/little%20wonder.csv' ),
-                    ] );
-                } );
+                        expect(result).to.have.property('model').and.to.contain('hallo%20spaceboy/golden%20years.xml'),
+                        expect(result).to.have.property('model').and.to.contain('hallo%20spaceboy/little%20wonder.csv'),
+                    ]);
+                });
 
 
-                it( 'escapes media URLs in markdown links', async () => {
-                    const result = await getTransormResult( url, body );
+                it('escapes media URLs in markdown links', async () => {
+                    const result = await getTransormResult(url, body);
 
-                    return Promise.all( [
-                        expect( result ).to.have.property( 'form' ).and.to.not.contain( 'jr://file/a link.xml' ),
+                    return Promise.all([
+                        expect(result).to.have.property('form').and.to.not.contain('jr://file/a link.xml'),
 
-                        expect( result ).to.have.property( 'form' ).and.to.contain( 'hallo%20spaceboy/wishful%20beginnings.xml' ),
-                    ] );
-                } );
+                        expect(result).to.have.property('form').and.to.contain('hallo%20spaceboy/wishful%20beginnings.xml'),
+                    ]);
+                });
 
-                it( 'escapes html entities in mapped URLs', async () => {
+                it('escapes html entities in mapped URLs', async () => {
                     // Stub getManifest
                     manifest = [
                         {
@@ -333,21 +333,21 @@ describe( 'Transformation Controller', () => {
                         },
                     ];
 
-                    const result = await getTransormResult( url, body );
+                    const result = await getTransormResult(url, body);
 
-                    expect( result.form ).not.to.contain( '<.jpg' );
-                    expect( result.form ).not.to.contain( '>.mp3' );
-                    expect( result.form ).not.to.contain( '&.mp4' );
-                    expect( result.model ).not.to.contain( '".png' );
+                    expect(result.form).not.to.contain('<.jpg');
+                    expect(result.form).not.to.contain('>.mp3');
+                    expect(result.form).not.to.contain('&.mp4');
+                    expect(result.model).not.to.contain('".png');
 
-                    expect( result.form ).to.contain( 'hallo%20spaceboy/%3C.jpg' );
-                    expect( result.form ).to.contain( 'hallo%20spaceboy/%3E.mp3' );
-                    expect( result.form ).to.contain( 'hallo%20spaceboy/&amp;.mp4' );
-                    expect( result.model ).to.contain( 'hallo%20spaceboy/%22.png' );
-                } );
+                    expect(result.form).to.contain('hallo%20spaceboy/%3C.jpg');
+                    expect(result.form).to.contain('hallo%20spaceboy/%3E.mp3');
+                    expect(result.form).to.contain('hallo%20spaceboy/&amp;.mp4');
+                    expect(result.model).to.contain('hallo%20spaceboy/%22.png');
+                });
 
                 // This *shouldn't* happen but better safe than sorry
-                it( 'escapes html entities which were not escaped as entities', async () => {
+                it('escapes html entities which were not escaped as entities', async () => {
                     // Stub getManifest
                     manifest = [
                         {
@@ -374,8 +374,8 @@ describe( 'Transformation Controller', () => {
 
                     const escapeURLPath = transformer.escapeURLPath;
 
-                    sandbox.stub( transformer, 'escapeURLPath' ).callsFake( ( str ) => {
-                        const escaped = escapeURLPath( str );
+                    sandbox.stub(transformer, 'escapeURLPath').callsFake((str) => {
+                        const escaped = escapeURLPath(str);
 
                         const unescapedEntities = {
                             '%3C': '<',
@@ -386,54 +386,54 @@ describe( 'Transformation Controller', () => {
                         /**
                          * @param {string} str
                          */
-                        const unescapeEntities = ( str ) => (
-                            str.replace( /(%3C|%3E|%22)/g, escaped => unescapedEntities[ escaped ]
+                        const unescapeEntities = (str) => (
+                            str.replace(/(%3C|%3E|%22)/g, escaped => unescapedEntities[ escaped ]
                             )
                         );
 
-                        return unescapeEntities( escaped );
-                    } );
+                        return unescapeEntities(escaped);
+                    });
 
-                    const result = await getTransormResult( url, body );
+                    const result = await getTransormResult(url, body);
 
-                    expect( result.form ).not.to.contain( '<.jpg' );
-                    expect( result.form ).not.to.contain( '>.mp3' );
-                    expect( result.form ).not.to.contain( '&.mp4' );
-                    expect( result.model ).not.to.contain( '".png' );
+                    expect(result.form).not.to.contain('<.jpg');
+                    expect(result.form).not.to.contain('>.mp3');
+                    expect(result.form).not.to.contain('&.mp4');
+                    expect(result.model).not.to.contain('".png');
 
-                    expect( result.form ).to.contain( 'hallo%20spaceboy/&lt;.jpg' );
-                    expect( result.form ).to.contain( 'hallo%20spaceboy/&gt;.mp3' );
-                    expect( result.form ).to.contain( 'hallo%20spaceboy/&amp;.mp4' );
-                    expect( result.model ).to.contain( 'hallo%20spaceboy/&quot;.png' );
-                } );
-            } );
-        } );
+                    expect(result.form).to.contain('hallo%20spaceboy/&lt;.jpg');
+                    expect(result.form).to.contain('hallo%20spaceboy/&gt;.mp3');
+                    expect(result.form).to.contain('hallo%20spaceboy/&amp;.mp4');
+                    expect(result.model).to.contain('hallo%20spaceboy/&quot;.png');
+                });
+            });
+        });
 
-        it( 'maps media with a new manifest without re-transforming the cached survey', async () => {
-            const initialCache = await cacheModel.get( {
+        it('maps media with a new manifest without re-transforming the cached survey', async () => {
+            const initialCache = await cacheModel.get({
                 openRosaServer,
                 openRosaId,
-            } );
+            });
 
-            expect( initialCache ).to.be.null;
+            expect(initialCache).to.be.null;
 
             const { url, body } = requests[1];
-            const transformSpy = sandbox.spy( transformer, 'transform' );
-            const cacheSetSpy = sandbox.spy( cacheModel, 'set' );
+            const transformSpy = sandbox.spy(transformer, 'transform');
+            const cacheSetSpy = sandbox.spy(cacheModel, 'set');
 
-            const initialResult = await getTransormResult( url, body );
+            const initialResult = await getTransormResult(url, body);
 
-            expect( initialResult.model ).to.contain( 'hallo%20spaceboy/under%20pressure.png' );
+            expect(initialResult.model).to.contain('hallo%20spaceboy/under%20pressure.png');
 
-            expect( transformSpy.calledOnce ).to.be.true;
-            expect( cacheSetSpy.calledOnce ).to.be.true;
+            expect(transformSpy.calledOnce).to.be.true;
+            expect(cacheSetSpy.calledOnce).to.be.true;
 
-            const firstCache = await cacheModel.get( {
+            const firstCache = await cacheModel.get({
                 openRosaServer,
                 openRosaId,
-            } );
+            });
 
-            expect( firstCache.model ).to.contain( 'another%20image.png' );
+            expect(firstCache.model).to.contain('another%20image.png');
 
             // Stub getManifest
             manifest = [
@@ -444,20 +444,20 @@ describe( 'Transformation Controller', () => {
                 },
             ];
 
-            const result = await getTransormResult( url, body );
+            const result = await getTransormResult(url, body);
 
-            expect( result.model ).not.to.contain( 'hallo%20spaceboy/under%20pressure.png' );
-            expect( result.model ).to.contain( 'hallo%20spaceboy/the%20jean%20genie.png' );
+            expect(result.model).not.to.contain('hallo%20spaceboy/under%20pressure.png');
+            expect(result.model).to.contain('hallo%20spaceboy/the%20jean%20genie.png');
 
-            const finalCache = await cacheModel.get( {
+            const finalCache = await cacheModel.get({
                 openRosaServer,
                 openRosaId,
-            } );
+            });
 
-            expect( finalCache ).to.deep.equal( firstCache );
+            expect(finalCache).to.deep.equal(firstCache);
 
-            expect( transformSpy.calledOnce ).to.be.true;
-            expect( cacheSetSpy.calledOnce ).to.be.true;
-        } );
-    } );
-} );
+            expect(transformSpy.calledOnce).to.be.true;
+            expect(cacheSetSpy.calledOnce).to.be.true;
+        });
+    });
+});

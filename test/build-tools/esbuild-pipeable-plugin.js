@@ -1,6 +1,6 @@
 // @ts-check
 
-const { readFile } = require( 'fs' ).promises;
+const { readFile } = require('fs').promises;
 
 /**
  * @typedef {import('esbuild').PluginBuild} PluginBuild
@@ -62,21 +62,22 @@ const { readFile } = require( 'fs' ).promises;
 
 /**
  * Helper function to create a pipeable esbuild plugin.
+ *
  * @see {@link https://github.com/nativew/esbuild-plugin-pipe#support}
  * @param {string} name
  * @param {PipeableTransform} transform
  * @param {PipeablePluginOptions} [options]
  * @return {PipeableESBuildPlugin}
  */
-const createPipeablePlugin = ( name, transform, options = {} ) => ( {
+const createPipeablePlugin = (name, transform, options = {}) => ({
     name,
     /**
      * @param {PluginBuild} build
      * @param {PipeableSetupOptions} [setupOptions]
      */
-    setup( build, setupOptions ) {
-        if ( setupOptions != null ) {
-            return transform( setupOptions.transform );
+    setup(build, setupOptions) {
+        if (setupOptions != null) {
+            return transform(setupOptions.transform);
         }
 
         const { filter, namespace, setup } = {
@@ -87,24 +88,24 @@ const createPipeablePlugin = ( name, transform, options = {} ) => ( {
             ...options,
         };
 
-        if ( setup != null ) {
+        if (setup != null) {
             const pipeableSetupBuild = {
                 initialOptions: build.initialOptions,
-                onEnd: build.onEnd.bind( build ),
+                onEnd: build.onEnd.bind(build),
                 onLoad: () => {},
-                onResolve: build.onResolve.bind( build ),
-                onStart: build.onStart.bind( build ),
+                onResolve: build.onResolve.bind(build),
+                onStart: build.onStart.bind(build),
             };
 
-            setup( pipeableSetupBuild );
+            setup(pipeableSetupBuild);
         }
 
-        build.onLoad( { filter, namespace }, async ( args ) => {
-            const contents = await readFile( args.path );
+        build.onLoad({ filter, namespace }, async (args) => {
+            const contents = await readFile(args.path);
 
-            return transform( { args, contents } );
-        } );
+            return transform({ args, contents });
+        });
     }
-} );
+});
 
 module.exports = createPipeablePlugin;

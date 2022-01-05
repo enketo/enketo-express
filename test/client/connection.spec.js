@@ -31,26 +31,26 @@ import utils from 'public/js/src/module/utils';
  * @property { window.RequestInit } init
  */
 
-describe( 'Connection', () => {
+describe('Connection', () => {
     const enketoId = 'surveyA';
     const instanceId = 'recordA';
 
     /** @type { SinonSandbox } */
     let sandbox;
 
-    beforeEach( async () => {
+    beforeEach(async () => {
         sandbox = sinon.createSandbox();
 
-        sandbox.stub( settings, 'enketoId' ).get( () => enketoId );
+        sandbox.stub(settings, 'enketoId').get(() => enketoId);
 
         await store.init();
-    } );
+    });
 
-    afterEach( () => {
+    afterEach(() => {
         sandbox.restore();
-    } );
+    });
 
-    describe( 'Uploading records', () => {
+    describe('Uploading records', () => {
         /** @type { EnketoRecord } */
         let record;
 
@@ -60,7 +60,7 @@ describe( 'Connection', () => {
         /** @type { StubbedRequest[] } */
         let requests;
 
-        beforeEach( done => {
+        beforeEach(done => {
             requests = [];
 
             record = {
@@ -73,49 +73,49 @@ describe( 'Connection', () => {
 
             survey = { enketoId };
 
-            sandbox.stub( window, 'fetch' ).callsFake( ( url, init ) => {
-                requests.push( { url, init } );
+            sandbox.stub(window, 'fetch').callsFake((url, init) => {
+                requests.push({ url, init });
 
-                return Promise.resolve( {
+                return Promise.resolve({
                     ok: true,
                     status: 201,
                     text() {
-                        return Promise.resolve( `
+                        return Promise.resolve(`
                             <OpenRosaResponse xmlns="http://openrosa.org/http/response">
                                 <message nature="submit_success">Success</message>
                             </OpenRosaResponse>
-                        ` );
+                        `);
                     },
-                } );
-            } );
+                });
+            });
 
-            store.record.removeAll().then( () => done(), done );
-        } );
+            store.record.removeAll().then(() => done(), done);
+        });
 
-        it( 'uploads a record', done => {
-            connection.uploadRecord( survey, record )
-                .then( result => {
-                    expect( result.status ).to.equal( 201 );
-                    expect( requests.length ).to.equal( 1 );
+        it('uploads a record', done => {
+            connection.uploadRecord(survey, record)
+                .then(result => {
+                    expect(result.status).to.equal(201);
+                    expect(requests.length).to.equal(1);
 
                     const request = requests[0];
-                    const body = Object.fromEntries( request.init.body.entries() );
+                    const body = Object.fromEntries(request.init.body.entries());
                     const instanceId = request.init.headers['X-OpenRosa-Instance-Id'];
                     const submission = body.xml_submission_file;
 
-                    expect( instanceId ).to.equal( record.instanceId );
-                    expect( submission instanceof File ).to.equal( true );
+                    expect(instanceId).to.equal(record.instanceId);
+                    expect(submission instanceof File).to.equal(true);
 
-                    return ( new Response( submission ) ).text();
-                } )
-                .then( submission => {
-                    expect( submission ).to.equal( record.xml );
-                } )
-                .then( done, done );
-        } );
-    } );
+                    return (new Response(submission)).text();
+                })
+                .then(submission => {
+                    expect(submission).to.equal(record.xml);
+                })
+                .then(done, done);
+        });
+    });
 
-    describe( 'Surveys / getFormParts', () => {
+    describe('Surveys / getFormParts', () => {
         // These fixtures were based on a form used to validate transformation of spaces
         // in `jr:` URLs, and a regression introduced during last-saved work related to
         // populating binary defaults in online mode. While most of these tests are not
@@ -174,12 +174,12 @@ describe( 'Connection', () => {
         /** @type {string} */
         let theme;
 
-        beforeEach( async () => {
-            if ( !Object.prototype.hasOwnProperty.call( settings, 'basePath' ) ) {
+        beforeEach(async () => {
+            if (!Object.prototype.hasOwnProperty.call(settings, 'basePath')) {
                 settings.basePath = undefined;
             }
 
-            sandbox.stub( settings, 'basePath' ).get( () => basePath );
+            sandbox.stub(settings, 'basePath').get(() => basePath);
 
             theme = '';
 
@@ -189,42 +189,42 @@ describe( 'Connection', () => {
 
             fetchHandlers = {};
 
-            sandbox.stub( window, 'fetch' ).callsFake( async ( url, options ) => {
-                if ( url === externalInstanceURL ) {
-                    expect( options ).to.equal( undefined );
+            sandbox.stub(window, 'fetch').callsFake(async (url, options) => {
+                if (url === externalInstanceURL) {
+                    expect(options).to.equal(undefined);
 
                     return {
                         ok: true,
                         status: 200,
                         headers: {
-                            get( header ) {
-                                if ( header === 'Content-Type' ) {
+                            get(header) {
+                                if (header === 'Content-Type') {
                                     return 'text/xml';
                                 }
                             },
                         },
                         text() {
-                            return Promise.resolve( externalInstanceXML );
+                            return Promise.resolve(externalInstanceXML);
                         },
                     };
                 }
 
                 try {
-                    expect( url ).to.equal( expectedURL );
-                    expect( options ).to.deep.equal( {
+                    expect(url).to.equal(expectedURL);
+                    expect(options).to.deep.equal({
                         method: 'POST',
                         headers: {
                             Accept: 'application/json',
                             'Content-Type': 'application/x-www-form-urlencoded',
                         },
                         body: expectedPostBody,
-                    } );
-                } catch ( error ) {
+                    });
+                } catch (error) {
                     return {
                         ok: false,
                         status: 500,
                         json() {
-                            return Promise.resolve( error.toJSON() );
+                            return Promise.resolve(error.toJSON());
                         },
                     };
                 }
@@ -233,79 +233,79 @@ describe( 'Connection', () => {
                     ok: true,
                     status: 200,
                     json() {
-                        return Promise.resolve( {
+                        return Promise.resolve({
                             form,
                             hash,
                             languageMap: {},
                             model,
                             theme,
-                        } )
+                        });
                     }
                 };
-            } );
-        } );
+            });
+        });
 
         // Note: last-saved and encryption functionality are tested under ./feature/*,
         // so are not redundantly tested here
 
-        it( 'requests the provided xformUrl', async () => {
+        it('requests the provided xformUrl', async () => {
             const xformUrl = 'https://example.com/form.xml';
 
-            expectedPostBody = String( new URLSearchParams( [ [ 'xformUrl', xformUrl ] ] ) );
+            expectedPostBody = String(new URLSearchParams([ [ 'xformUrl', xformUrl ] ]));
 
-            const survey = await connection.getFormParts( {
+            const survey = await connection.getFormParts({
                 enketoId,
                 xformUrl,
-            } );
+            });
 
-            expect( survey.enketoId ).to.equal( enketoId );
-        } );
+            expect(survey.enketoId).to.equal(enketoId);
+        });
 
-        it( 'populates the enketoId and theme passed in', async () => {
+        it('populates the enketoId and theme passed in', async () => {
             theme = 'any';
 
-            const survey = await connection.getFormParts( {
+            const survey = await connection.getFormParts({
                 enketoId,
                 theme,
-            } );
+            });
 
-            expect( survey.enketoId ).to.equal( enketoId );
-            expect( survey.theme ).to.equal( theme );
-        } );
+            expect(survey.enketoId).to.equal(enketoId);
+            expect(survey.theme).to.equal(theme);
+        });
 
-        it( 'falls back to the theme specified in the form', async () => {
+        it('falls back to the theme specified in the form', async () => {
             theme = 'form';
 
-            sandbox.stub( utils, 'getThemeFromFormStr' ).callsFake( ( formStr ) => {
-                if ( formStr === form ) {
+            sandbox.stub(utils, 'getThemeFromFormStr').callsFake((formStr) => {
+                if (formStr === form) {
                     return theme;
                 }
-            } );
+            });
 
-            const survey = await connection.getFormParts( {
+            const survey = await connection.getFormParts({
                 enketoId,
-            } );
+            });
 
-            expect( survey.enketoId ).to.equal( enketoId );
-            expect( survey.theme ).to.equal( theme );
-        } );
+            expect(survey.enketoId).to.equal(enketoId);
+            expect(survey.theme).to.equal(theme);
+        });
 
-        it( 'falls back to the configured default theme', async () => {
+        it('falls back to the configured default theme', async () => {
             theme = 'configured';
 
-            if ( !Object.prototype.hasOwnProperty.call( settings, 'defaultTheme' ) ) {
+            if (!Object.prototype.hasOwnProperty.call(settings, 'defaultTheme')) {
                 settings.defaultTheme = undefined;
             }
 
-            sandbox.stub( settings, 'defaultTheme' ).get( () => theme );
+            sandbox.stub(settings, 'defaultTheme').get(() => theme);
 
-            const survey = await connection.getFormParts( {
+            const survey = await connection.getFormParts({
                 enketoId,
-            } );
+            });
 
-            expect( survey.enketoId ).to.equal( enketoId );
-            expect( survey.theme ).to.equal( theme );
-        } );
+            expect(survey.enketoId).to.equal(enketoId);
+            expect(survey.theme).to.equal(theme);
+        });
 
         // This tests a fix for a regression between the initial introduction of last-saved
         // which incorrectly cached forms in online-mode, and the refactor of that feature
@@ -313,34 +313,34 @@ describe( 'Connection', () => {
         // defaults with relative paths in `survey.model` to absolute URLs to satisfy
         // behavior in `form-cache.js`. When caching in online mode was removed, this caused
         // binary defaults to be broken again.
-        it( 'does not change the model', async () => {
-            const survey = await connection.getFormParts( {
+        it('does not change the model', async () => {
+            const survey = await connection.getFormParts({
                 enketoId,
-            } );
+            });
 
-            expect( survey.model ).to.equal( model );
-        } );
+            expect(survey.model).to.equal(model);
+        });
 
-        it( 'populates external data from external secondary instances', async () => {
-            const { externalData } = await connection.getFormParts( {
+        it('populates external data from external secondary instances', async () => {
+            const { externalData } = await connection.getFormParts({
                 enketoId,
-            } );
+            });
 
-            expect( externalData.length ).to.equal( 2 );
+            expect(externalData.length).to.equal(2);
 
             const [ lastSavedInstance, externalInstance ] = externalData;
 
             // Sanity check
-            expect( lastSavedInstance.src ).to.equal( 'jr://instance/last-saved' );
+            expect(lastSavedInstance.src).to.equal('jr://instance/last-saved');
 
-            expect( externalInstance.id ).to.equal( externalInstanceId );
-            expect( externalInstance.src ).to.equal( externalInstanceURL );
+            expect(externalInstance.id).to.equal(externalInstanceId);
+            expect(externalInstance.src).to.equal(externalInstanceURL);
 
             const { xml } = externalInstance;
-            const xmlString = ( new XMLSerializer ).serializeToString( xml );
+            const xmlString = (new XMLSerializer).serializeToString(xml);
 
-            expect( xml instanceof XMLDocument ).to.equal( true );
-            expect( xmlString ).to.equal( externalInstanceXML )
-        } );
-    } );
-} );
+            expect(xml instanceof XMLDocument).to.equal(true);
+            expect(xmlString).to.equal(externalInstanceXML);
+        });
+    });
+});

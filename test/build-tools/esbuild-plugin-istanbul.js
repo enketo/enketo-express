@@ -1,5 +1,5 @@
-const { createInstrumenter } = require( 'istanbul-lib-instrument' );
-const createPipeablePlugin = require( './esbuild-pipeable-plugin' );
+const { createInstrumenter } = require('istanbul-lib-instrument');
+const createPipeablePlugin = require('./esbuild-pipeable-plugin');
 
 /**
  * @typedef {import('istanbul-lib-instrument').InstrumenterOptions} InstrumenterOptions
@@ -9,10 +9,10 @@ const createPipeablePlugin = require( './esbuild-pipeable-plugin' );
  * @typedef {import('source-map').RawSourceMap} RawSourceMap
  */
 
-const instrumenter = createInstrumenter( {
+const instrumenter = createInstrumenter({
     compact: false,
     esModules: true,
-} );
+});
 
 /**
  * @param {string} source
@@ -20,16 +20,16 @@ const instrumenter = createInstrumenter( {
  * @param {RawSourceMap} [inputSourceMap]
  * @return {Promise<string>}
  */
-const instrument = ( source, path, inputSourceMap ) => (
-    new Promise( ( resolve, reject ) => {
-        instrumenter.instrument( source, path, ( error, code ) => {
-            if ( error == null ) {
-                resolve( code );
+const instrument = (source, path, inputSourceMap) => (
+    new Promise((resolve, reject) => {
+        instrumenter.instrument(source, path, (error, code) => {
+            if (error == null) {
+                resolve(code);
             } else {
-                reject( error );
+                reject(error);
             }
-        }, inputSourceMap );
-    } )
+        }, inputSourceMap);
+    })
 );
 
 /**
@@ -69,14 +69,14 @@ const instrument = ( source, path, inputSourceMap ) => (
 
 const instanbulInstrument = createPipeablePlugin(
     'esbuild-plugin-istanbul',
-    async ( { args, contents } ) => {
+    async ({ args, contents }) => {
         const { path } = args;
 
-        if ( !path.includes( '/public/js/src/' ) ) {
+        if (!path.includes('/public/js/src/')) {
             return { contents };
         }
 
-        const instrumented = await instrument( contents, path );
+        const instrumented = await instrument(contents, path);
 
         return { contents: instrumented };
     }

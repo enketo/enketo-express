@@ -3,19 +3,19 @@
  * @module cache-model
  */
 
-const utils = require( '../lib/utils' );
-const transformer = require( 'enketo-transformer' );
+const utils = require('../lib/utils');
+const transformer = require('enketo-transformer');
 const prefix = 'ca:';
 const expiry = 30 * 24 * 60 * 60;
-const config = require( './config-model' ).server;
-const client = require( 'redis' ).createClient( config.redis.cache.port, config.redis.cache.host, {
+const config = require('./config-model').server;
+const client = require('redis').createClient(config.redis.cache.port, config.redis.cache.host, {
     auth_pass: config.redis.cache.password
-} );
-const debug = require( 'debug' )( 'cache-model' );
+});
+const debug = require('debug')('cache-model');
 
 // in test environment, switch to different db
-if ( process.env.NODE_ENV === 'test' ) {
-    client.select( 15 );
+if (process.env.NODE_ENV === 'test') {
+    client.select(15);
 }
 
 /**
@@ -27,34 +27,34 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @param {module:survey-model~SurveyObject} survey - survey object
  * @return {Promise<Error|null|module:survey-model~SurveyObject>} Promise that resolves with cached {@link module:survey-model~SurveyObject|SurveyObject} or `null`
  */
-function getSurvey( survey ) {
-    return new Promise( ( resolve, reject ) => {
-        if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
-            const error = new Error( 'Bad Request. Survey information to perform cache lookup is not complete.' );
+function getSurvey(survey) {
+    return new Promise((resolve, reject) => {
+        if (!survey || !survey.openRosaServer || !survey.openRosaId) {
+            const error = new Error('Bad Request. Survey information to perform cache lookup is not complete.');
             error.status = 400;
-            reject( error );
+            reject(error);
         } else {
-            const key = _getKey( survey );
+            const key = _getKey(survey);
 
-            client.hgetall( key, ( error, cacheObj ) => {
-                if ( error ) {
-                    reject( error );
-                } else if ( !cacheObj ) {
-                    resolve( null );
+            client.hgetall(key, (error, cacheObj) => {
+                if (error) {
+                    reject(error);
+                } else if (!cacheObj) {
+                    resolve(null);
                 } else {
                     // form is 'actively used' so we're resetting the cache expiry
-                    debug( 'cache is up to date and used, resetting expiry' );
-                    client.expire( key, expiry );
+                    debug('cache is up to date and used, resetting expiry');
+                    client.expire(key, expiry);
                     survey.form = cacheObj.form;
                     survey.model = cacheObj.model;
                     survey.formHash = cacheObj.formHash;
                     survey.xslHash = cacheObj.xslHash;
-                    survey.languageMap = JSON.parse( cacheObj.languageMap || '{}' );
-                    resolve( survey );
+                    survey.languageMap = JSON.parse(cacheObj.languageMap || '{}');
+                    resolve(survey);
                 }
-            } );
+            });
         }
-    } );
+    });
 }
 
 /**
@@ -66,28 +66,28 @@ function getSurvey( survey ) {
  * @param {module:survey-model~SurveyObject} survey - survey object
  * @return {Promise<Error|module:survey-model~SurveyObject>} Promise that resolves with {@link module:survey-model~SurveyObject|SurveyObject} (updated with hash array if such exist)
  */
-function getSurveyHashes( survey ) {
-    return new Promise( ( resolve, reject ) => {
-        if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
-            const error = new Error( 'Bad Request. Survey information to perform cache lookup is not complete.' );
+function getSurveyHashes(survey) {
+    return new Promise((resolve, reject) => {
+        if (!survey || !survey.openRosaServer || !survey.openRosaId) {
+            const error = new Error('Bad Request. Survey information to perform cache lookup is not complete.');
             error.status = 400;
-            reject( error );
+            reject(error);
         } else {
-            const key = _getKey( survey );
+            const key = _getKey(survey);
 
-            client.hmget( key, [ 'formHash', 'xslHash' ], ( error, hashArr ) => {
-                if ( error ) {
-                    reject( error );
-                } else if ( !hashArr || !hashArr[ 0 ] || !hashArr[ 1 ] ) {
-                    resolve( survey );
+            client.hmget(key, [ 'formHash', 'xslHash' ], (error, hashArr) => {
+                if (error) {
+                    reject(error);
+                } else if (!hashArr || !hashArr[ 0 ] || !hashArr[ 1 ]) {
+                    resolve(survey);
                 } else {
                     survey.formHash = hashArr[ 0 ];
                     survey.xslHash = hashArr[ 1 ];
-                    resolve( survey );
+                    resolve(survey);
                 }
-            } );
+            });
         }
-    } );
+    });
 }
 
 /**
@@ -99,12 +99,12 @@ function getSurveyHashes( survey ) {
  * @param {module:survey-model~SurveyObject} survey - survey object
  * @return {Promise<Error|null|boolean>} a Promise that resolves with a boolean
  */
-function isCacheUpToDate( survey ) {
-    return new Promise( ( resolve, reject ) => {
-        if ( !survey || !survey.openRosaServer || !survey.openRosaId || !survey.info.hash ) {
-            const error = new Error( 'Bad Request. Survey information to perform cache check is not complete.' );
+function isCacheUpToDate(survey) {
+    return new Promise((resolve, reject) => {
+        if (!survey || !survey.openRosaServer || !survey.openRosaId || !survey.info.hash) {
+            const error = new Error('Bad Request. Survey information to perform cache check is not complete.');
             error.status = 400;
-            reject( error );
+            reject(error);
         } else {
             // clean up the survey object to make sure no artefacts of cached survey are present
             survey = {
@@ -116,14 +116,14 @@ function isCacheUpToDate( survey ) {
                 manifest: survey.manifest
             };
 
-            const key = _getKey( survey );
+            const key = _getKey(survey);
 
-            client.hgetall( key, ( error, cacheObj ) => {
-                if ( error ) {
-                    reject( error );
-                } else if ( !cacheObj ) {
-                    debug( 'cache is missing' );
-                    resolve( null );
+            client.hgetall(key, (error, cacheObj) => {
+                if (error) {
+                    reject(error);
+                } else if (!cacheObj) {
+                    debug('cache is missing');
+                    resolve(null);
                 } else {
                     // Adding the hashes to the referenced survey object can be efficient, since this object
                     // is passed around. The hashes may therefore already have been calculated
@@ -131,18 +131,18 @@ function isCacheUpToDate( survey ) {
                     // Note that this server cache only cares about media URLs, not media content.
                     // This allows the same cache to be used for a form for the OpenRosa server serves different media content,
                     // e.g. based on the user credentials.
-                    _addHashes( survey );
-                    if ( cacheObj.formHash !== survey.formHash || cacheObj.xslHash !== survey.xslHash || cacheObj.mediaUrlHash ) {
-                        debug( 'cache is obsolete' );
-                        resolve( false );
+                    _addHashes(survey);
+                    if (cacheObj.formHash !== survey.formHash || cacheObj.xslHash !== survey.xslHash || cacheObj.mediaUrlHash) {
+                        debug('cache is obsolete');
+                        resolve(false);
                     } else {
-                        debug( 'cache is up to date' );
-                        resolve( true );
+                        debug('cache is up to date');
+                        resolve(true);
                     }
                 }
-            } );
+            });
         }
-    } );
+    });
 }
 
 /**
@@ -155,14 +155,14 @@ function isCacheUpToDate( survey ) {
  * @param {module:survey-model~SurveyObject} survey - survey object
  * @return {Promise<Error|module:survey-model~SurveyObject>} a Promise that resolves with the survey object
  */
-function setSurvey( survey ) {
-    return new Promise( ( resolve, reject ) => {
-        if ( !survey || !survey.openRosaServer || !survey.openRosaId || !survey.info.hash || !survey.form || !survey.model ) {
-            const error = new Error( 'Bad Request. Survey information to cache is not complete.' );
+function setSurvey(survey) {
+    return new Promise((resolve, reject) => {
+        if (!survey || !survey.openRosaServer || !survey.openRosaId || !survey.info.hash || !survey.form || !survey.model) {
+            const error = new Error('Bad Request. Survey information to cache is not complete.');
             error.status = 400;
-            reject( error );
+            reject(error);
         } else {
-            _addHashes( survey );
+            _addHashes(survey);
             const obj = {
                 formHash: survey.formHash,
                 xslHash: survey.xslHash,
@@ -171,23 +171,23 @@ function setSurvey( survey ) {
                 // The mediaUrlHash property is an artefact and no longer used.
                 // When hmset updates the database it would keep it in place, so we explicitly set it to empty.s
                 mediaUrlHash: '',
-                languageMap: JSON.stringify( survey.languageMap || {} )
+                languageMap: JSON.stringify(survey.languageMap || {})
             };
 
-            const key = _getKey( survey );
+            const key = _getKey(survey);
 
-            client.hmset( key, obj, error => {
-                if ( error ) {
-                    reject( error );
+            client.hmset(key, obj, error => {
+                if (error) {
+                    reject(error);
                 } else {
-                    debug( 'cache has been updated' );
+                    debug('cache has been updated');
                     // expire in 30 days
-                    client.expire( key, expiry );
-                    resolve( survey );
+                    client.expire(key, expiry);
+                    resolve(survey);
                 }
-            } );
+            });
         }
-    } );
+    });
 }
 
 /**
@@ -199,26 +199,26 @@ function setSurvey( survey ) {
  * @param {module:survey-model~SurveyObject} survey - survey object
  * @return {Promise<Error|module:survey-model~SurveyObject>} Flushed {@link module:survey-model~SurveyObject|SurveyObject}
  */
-function flushSurvey( survey ) {
-    return new Promise( ( resolve, reject ) => {
-        if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
-            const error = new Error( 'Bad Request. Survey information to cache is not complete.' );
+function flushSurvey(survey) {
+    return new Promise((resolve, reject) => {
+        if (!survey || !survey.openRosaServer || !survey.openRosaId) {
+            const error = new Error('Bad Request. Survey information to cache is not complete.');
             error.status = 400;
-            reject( error );
+            reject(error);
         } else {
-            const key = _getKey( survey );
+            const key = _getKey(survey);
 
-            client.hgetall( key, ( error, cacheObj ) => {
-                if ( error ) {
-                    reject( error );
-                } else if ( !cacheObj ) {
-                    error = new Error( 'Survey cache not found.' );
+            client.hgetall(key, (error, cacheObj) => {
+                if (error) {
+                    reject(error);
+                } else if (!cacheObj) {
+                    error = new Error('Survey cache not found.');
                     error.status = 404;
-                    reject( error );
+                    reject(error);
                 } else {
-                    client.del( key, error => {
-                        if ( error ) {
-                            reject( error );
+                    client.del(key, error => {
+                        if (error) {
+                            reject(error);
                         } else {
                             delete survey.form;
                             delete survey.model;
@@ -227,13 +227,13 @@ function flushSurvey( survey ) {
                             delete survey.mediaHash;
                             delete survey.mediaUrlHash;
                             delete survey.languageMap;
-                            resolve( survey );
+                            resolve(survey);
                         }
-                    } );
+                    });
                 }
-            } );
+            });
         }
-    } );
+    });
 }
 
 /**
@@ -243,24 +243,24 @@ function flushSurvey( survey ) {
  * @return {Promise<Error|boolean>} Promise that resolves `true` after all cache is flushed
  */
 function flushAll() {
-    return new Promise( ( resolve, reject ) => {
+    return new Promise((resolve, reject) => {
         // TODO: "Don't use KEYS in your regular application code"
         // (https://redis.io/commands/keys)
-        client.keys( `${prefix}*`, ( error, keys ) => {
-            if ( error ) {
-                reject( error );
+        client.keys(`${prefix}*`, (error, keys) => {
+            if (error) {
+                reject(error);
             }
-            keys.forEach( key => {
-                client.del( key, error => {
-                    if ( error ) {
-                        console.error( error );
+            keys.forEach(key => {
+                client.del(key, error => {
+                    if (error) {
+                        console.error(error);
                     }
-                } );
-            } );
+                });
+            });
             // TODO: use Promise.All to resolve when all deletes have completed.
-            resolve( true );
-        } );
-    } );
+            resolve(true);
+        });
+    });
 }
 
 /**
@@ -270,10 +270,10 @@ function flushAll() {
  * @return {string|null} openRosaKey or `null`
  *
  */
-function _getKey( survey ) {
-    const openRosaKey = utils.getOpenRosaKey( survey, prefix );
+function _getKey(survey) {
+    const openRosaKey = utils.getOpenRosaKey(survey, prefix);
 
-    return ( openRosaKey ) ? openRosaKey : null;
+    return (openRosaKey) ? openRosaKey : null;
 }
 
 /**
@@ -282,7 +282,7 @@ function _getKey( survey ) {
  * @param {module:survey-model~SurveyObject} survey - survey object
  *
  */
-function _addHashes( survey ) {
+function _addHashes(survey) {
     survey.formHash = survey.formHash || survey.info.hash;
     survey.xslHash = survey.xslHash || transformer.version;
 }

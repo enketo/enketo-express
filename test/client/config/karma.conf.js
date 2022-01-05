@@ -3,14 +3,14 @@
 // Karma configuration
 // Generated on Wed Nov 26 2014 15:52:30 GMT-0700 (MST)
 
-const exportPrivate = require( '../../build-tools/esbuild-plugin-export-private' );
-const esbuildConfig = require( '../../../config/build.js' );
-const istanbulInstrument = require( '../../build-tools/esbuild-plugin-istanbul' );
+const exportPrivate = require('../../build-tools/esbuild-plugin-export-private');
+const esbuildConfig = require('../../../config/build.js');
+const istanbulInstrument = require('../../build-tools/esbuild-plugin-istanbul');
 
-module.exports = async ( config ) => {
-    const { default: esbuildPipe } = await import( 'esbuild-plugin-pipe' );
+module.exports = async (config) => {
+    const { default: esbuildPipe } = await import('esbuild-plugin-pipe');
 
-    config.set( {
+    config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '../../..',
@@ -44,17 +44,17 @@ module.exports = async ( config ) => {
             define: {
                 ...esbuildConfig.define,
                 DEBUG: 'true',
-                ENV: JSON.stringify( 'test' ),
+                ENV: JSON.stringify('test'),
             },
             plugins: [
                 ...esbuildConfig.plugins,
-                esbuildPipe( {
+                esbuildPipe({
                     filter: /(\/public\/js\/src\/|\/fixtures\/)/,
                     plugins: [
                         exportPrivate,
                         istanbulInstrument,
                     ],
-                } ),
+                }),
             ],
         },
 
@@ -117,5 +117,5 @@ module.exports = async ( config ) => {
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: false
-    } );
+    });
 };

@@ -31,18 +31,18 @@ let hash;
  * @param {Survey} survey
  * @return {Promise<Survey>}
  */
-function init( survey ) {
+function init(survey) {
     return store.init()
-        .then( () => get( survey ) )
-        .then( result => {
-            if ( result ) {
+        .then(() => get(survey))
+        .then(result => {
+            if (result) {
                 return result;
             } else {
-                return set( survey );
+                return set(survey);
             }
-        } )
-        .then( _processDynamicData )
-        .then( _setUpdateIntervals );
+        })
+        .then(_processDynamicData)
+        .then(_setUpdateIntervals);
 }
 
 /**
@@ -54,87 +54,87 @@ function init( survey ) {
  * @param {Survey} survey
  * @return Survey
  */
-function get( { enketoId } ) {
-    return store.survey.get( enketoId )
-        .then( survey => Promise.all( [
+function get({ enketoId }) {
+    return store.survey.get(enketoId)
+        .then(survey => Promise.all([
             survey,
-            getLastSavedRecord( enketoId ),
-        ] ) )
-        .then( ( [ survey, lastSavedRecord ] ) => (
+            getLastSavedRecord(enketoId),
+        ]))
+        .then(([ survey, lastSavedRecord ]) => (
             survey == null
                 ? survey
-                : populateLastSavedInstances( survey, lastSavedRecord )
-        ) );
+                : populateLastSavedInstances(survey, lastSavedRecord)
+        ));
 }
 
 /**
  * @param {Survey} survey
  * @return {Promise<Survey>}
  */
-function prepareOfflineSurvey( survey ) {
-    return Promise.resolve( _swapMediaSrc( survey ) )
-        .then( _addBinaryDefaultsAndUpdateModel );
+function prepareOfflineSurvey(survey) {
+    return Promise.resolve(_swapMediaSrc(survey))
+        .then(_addBinaryDefaultsAndUpdateModel);
 }
 
 /**
  * @param {Survey} survey
  * @return {Promise<Survey>}
  */
-const updateSurveyCache = ( survey ) => {
+const updateSurveyCache = (survey) => {
     return (
-        isLastSaveEnabled( survey )
-            ? Promise.resolve( survey )
-            : removeLastSavedRecord( survey.enketoId )
-    ).then( () => store.survey.update( survey ) );
+        isLastSaveEnabled(survey)
+            ? Promise.resolve(survey)
+            : removeLastSavedRecord(survey.enketoId)
+    ).then(() => store.survey.update(survey));
 };
 
 /**
  * @param {Survey} survey
  * @return {Promise<Survey>}
  */
-function set( survey ) {
-    return connection.getFormParts( survey )
-        .then( prepareOfflineSurvey )
-        .then( store.survey.set );
+function set(survey) {
+    return connection.getFormParts(survey)
+        .then(prepareOfflineSurvey)
+        .then(store.survey.set);
 }
 
 /**
  * @param {Survey} survey
  * @return {Promise<void>}
  */
-function remove( survey ) {
-    return store.survey.remove( survey.enketoId );
+function remove(survey) {
+    return store.survey.remove(survey.enketoId);
 }
 
 /**
  * @param {Survey} survey
  * @return {Promise<Survey>}
  */
-function _processDynamicData( survey ) {
+function _processDynamicData(survey) {
     // TODO: In the future this method could perhaps be used to also store
     // dynamic defaults. However, the issue would be to figure out how to clear
     // those defaults.
-    if ( !survey ) {
+    if (!survey) {
         return survey;
     }
 
-    return store.dynamicData.get( survey.enketoId )
-        .then( data => {
+    return store.dynamicData.get(survey.enketoId)
+        .then(data => {
             const newData = {
                 enketoId: survey.enketoId
             };
-            assign( newData, data );
+            assign(newData, data);
             // Carefully compare settings data with stored data to determine what to update.
 
             // submissionParameter
-            if ( settings.submissionParameter && settings.submissionParameter.name ) {
-                if ( settings.submissionParameter.value ) {
+            if (settings.submissionParameter && settings.submissionParameter.name) {
+                if (settings.submissionParameter.value) {
                     // use the settings value
                     newData.submissionParameter = settings.submissionParameter;
-                } else if ( settings.submissionParameter.value === '' ) {
+                } else if (settings.submissionParameter.value === '') {
                     // delete value
                     delete newData.submissionParameter;
-                } else if ( data && data.submissionParameter && data.submissionParameter.value ) {
+                } else if (data && data.submissionParameter && data.submissionParameter.value) {
                     // use the stored value
                     settings.submissionParameter.value = data.submissionParameter.value;
                 }
@@ -143,14 +143,14 @@ function _processDynamicData( survey ) {
             }
 
             // parentWindowOrigin
-            if ( typeof settings.parentWindowOrigin !== 'undefined' ) {
-                if ( settings.parentWindowOrigin ) {
+            if (typeof settings.parentWindowOrigin !== 'undefined') {
+                if (settings.parentWindowOrigin) {
                     // use the settings value
                     newData.parentWindowOrigin = settings.parentWindowOrigin;
-                } else if ( settings.parentWindowOrigin === '' ) {
+                } else if (settings.parentWindowOrigin === '') {
                     // delete value
                     delete newData.parentWindowOrigin;
-                } else if ( data && data.parentWindowOrigin ) {
+                } else if (data && data.parentWindowOrigin) {
                     // use the stored value
                     settings.parentWindowOrigin = data.parentWindowOrigin;
                 }
@@ -158,31 +158,31 @@ function _processDynamicData( survey ) {
                 delete newData.parentWindowOrigin;
             }
 
-            return store.dynamicData.update( newData );
-        } )
-        .then( () => survey );
+            return store.dynamicData.update(newData);
+        })
+        .then(() => survey);
 }
 
 /**
  * @param {Survey} survey
  * @return {Promise<Survey>}
  */
-function _setUpdateIntervals( survey ) {
+function _setUpdateIntervals(survey) {
     hash = survey.hash;
 
     // Check for form update upon loading.
     // Note that for large Xforms where the XSL transformation takes more than 30 seconds,
     // the first update make take 20 minutes to propagate to the browser of the very first user(s)
     // that open the form right after the XForm update.
-    setTimeout( () => {
-        _updateCache( survey );
-    }, CACHE_UPDATE_INITIAL_DELAY );
+    setTimeout(() => {
+        _updateCache(survey);
+    }, CACHE_UPDATE_INITIAL_DELAY);
     // check for form update every 20 minutes
-    setInterval( () => {
-        _updateCache( survey );
-    }, CACHE_UPDATE_INTERVAL );
+    setInterval(() => {
+        _updateCache(survey);
+    }, CACHE_UPDATE_INTERVAL);
 
-    return Promise.resolve( survey );
+    return Promise.resolve(survey);
 }
 
 /**
@@ -191,13 +191,13 @@ function _setUpdateIntervals( survey ) {
  * @param { Survey } survey - survey object
  * @return { Promise<Survey> }
  */
-function _setRepeatListener( survey ) {
+function _setRepeatListener(survey) {
     //Instantiate only once, after loadMedia has been completed (once)
-    document.querySelector( 'form.or' ).addEventListener( events.AddRepeat().type, event => {
-        _loadMedia( survey, [ event.target ] );
-    } );
+    document.querySelector('form.or').addEventListener(events.AddRepeat().type, event => {
+        _loadMedia(survey, [ event.target ]);
+    });
 
-    return Promise.resolve( survey );
+    return Promise.resolve(survey);
 }
 
 /**
@@ -207,8 +207,8 @@ function _setRepeatListener( survey ) {
  * @param { Survey } survey - survey object
  * @return { Survey }
  */
-function _swapMediaSrc( survey ) {
-    survey.form = survey.form.replace( /(src="[^"]*")/g, 'data-offline-$1 src=""' );
+function _swapMediaSrc(survey) {
+    survey.form = survey.form.replace(/(src="[^"]*")/g, 'data-offline-$1 src=""');
 
     return survey;
 }
@@ -221,39 +221,39 @@ function _swapMediaSrc( survey ) {
  * @param { Survey } survey - survey object
  * @return { Promise<Survey> }
  */
-function _addBinaryDefaultsAndUpdateModel( survey ) {
+function _addBinaryDefaultsAndUpdateModel(survey) {
     // The mechanism for default binary files is as follows:
     // 1. They are stored as binaryDefaults in the resources table with the key being comprised of the VALUE (i.e. jr:// url)
     // 2. Filemanager.getFileUrl will determine whether to load from (survey) resources of (record) files
 
-    const model = new DOMParser().parseFromString( survey.model, 'text/xml' );
-    const binaryDefaultElements = [ ...model.querySelectorAll( 'instance:first-child > * *[src]' ) ];
+    const model = new DOMParser().parseFromString(survey.model, 'text/xml');
+    const binaryDefaultElements = [ ...model.querySelectorAll('instance:first-child > * *[src]') ];
     const tasks = [];
     survey.binaryDefaults = [];
 
-    binaryDefaultElements.forEach( el => {
-        tasks.push( connection.getMediaFile( el.getAttribute( 'src' ) )
-            .then( result => {
+    binaryDefaultElements.forEach(el => {
+        tasks.push(connection.getMediaFile(el.getAttribute('src'))
+            .then(result => {
                 // Overwrite the url to use the jr://images/img.png value. This makes the magic happen.
                 // It causes a jr:// value to be treated the same as a filename.ext value.
                 result.url = el.textContent;
-                survey.binaryDefaults.push( result );
+                survey.binaryDefaults.push(result);
                 // Now the src attribute should be removed because the filemanager.js can return the blob for
                 // the jr://images/... key (as if it is a file).
-                el.removeAttribute( 'src' );
-            } )
-            .catch( e => {
+                el.removeAttribute('src');
+            })
+            .catch(e => {
                 // let files fail quietly. Rely on Enketo Core to show error.
-                console.error( e );
-            } ) );
-    } );
+                console.error(e);
+            }));
+    });
 
-    return Promise.all( tasks )
-        .then( () => {
-            survey.model = new XMLSerializer().serializeToString( model );
+    return Promise.all(tasks)
+        .then(() => {
+            survey.model = new XMLSerializer().serializeToString(model);
 
             return survey;
-        } );
+        });
 }
 
 /**
@@ -265,22 +265,22 @@ function _addBinaryDefaultsAndUpdateModel( survey ) {
  * @param { Survey } survey - survey object
  * @return { Promise<Survey> }
  */
-function updateMaxSubmissionSize( survey ) {
+function updateMaxSubmissionSize(survey) {
 
-    if ( !survey.maxSize ) {
-        return connection.getMaximumSubmissionSize( survey )
-            .then( survey => {
-                if ( survey.maxSize ) {
+    if (!survey.maxSize) {
+        return connection.getMaximumSubmissionSize(survey)
+            .then(survey => {
+                if (survey.maxSize) {
                     // Ignore resources. These should not be updated.
                     delete survey.binaryDefaults;
 
-                    return updateSurveyCache( survey );
+                    return updateSurveyCache(survey);
                 }
 
                 return survey;
-            } );
+            });
     } else {
-        return Promise.resolve( survey );
+        return Promise.resolve(survey);
     }
 }
 
@@ -290,44 +290,44 @@ function updateMaxSubmissionSize( survey ) {
  * @param { Survey } survey - survey object
  * @return { Promise<Survey> }
  */
-function updateMedia( survey ) {
+function updateMedia(survey) {
     const requests = [];
     // if survey.resources exists, the resources are available in the store
-    if ( survey.resources ) {
-        return _loadMedia( survey )
-            .then( _setRepeatListener );
+    if (survey.resources) {
+        return _loadMedia(survey)
+            .then(_setRepeatListener);
     }
-    const containers = [ document.querySelector( 'form.or' ) ];
-    const formHeader = document.querySelector( '.form-header' );
-    if ( formHeader ) {
-        containers.push( formHeader );
+    const containers = [ document.querySelector('form.or') ];
+    const formHeader = document.querySelector('.form-header');
+    if (formHeader) {
+        containers.push(formHeader);
     }
 
     survey.resources = [];
 
-    _getElementsGroupedBySrc( containers ).forEach( elements => {
+    _getElementsGroupedBySrc(containers).forEach(elements => {
         const src = elements[ 0 ].dataset.offlineSrc;
-        requests.push( connection.getMediaFile( src ) );
-    } );
+        requests.push(connection.getMediaFile(src));
+    });
 
-    return Promise.all( requests.map( _reflect ) )
-        .then( resources => {
+    return Promise.all(requests.map(_reflect))
+        .then(resources => {
             // Filter out the failed requests (undefined)
-            resources = resources.filter( resource => !!resource );
+            resources = resources.filter(resource => !!resource);
             survey.resources = resources;
 
             return survey;
-        } )
+        })
         // Store any resources that were successful
-        .then( updateSurveyCache )
-        .then( _loadMedia )
-        .then( _setRepeatListener )
-        .catch( error => {
-            console.error( 'loadMedia failed', error );
+        .then(updateSurveyCache)
+        .then(_loadMedia)
+        .then(_setRepeatListener)
+        .catch(error => {
+            console.error('loadMedia failed', error);
 
             // Let the flow continue.
             return survey;
-        } );
+        });
 }
 
 /**
@@ -337,78 +337,78 @@ function updateMedia( survey ) {
  * @param  { Promise } task - [description]
  * @return { object }         [description]
  */
-function _reflect( task ) {
+function _reflect(task) {
     return task
-        .then( response => response,
+        .then(response => response,
             error => {
-                console.error( error );
+                console.error(error);
 
                 return;
-            } );
+            });
 }
 
-function _loadMedia( survey, targetContainers ) {
+function _loadMedia(survey, targetContainers) {
     let resourceUrl;
     const URL = window.URL || window.webkitURL;
 
-    if ( !targetContainers ) {
-        targetContainers = [ document.querySelector( 'form.or' ) ];
-        const formHeader = document.querySelector( '.form-header' );
-        if ( formHeader ) {
-            targetContainers.push( formHeader );
+    if (!targetContainers) {
+        targetContainers = [ document.querySelector('form.or') ];
+        const formHeader = document.querySelector('.form-header');
+        if (formHeader) {
+            targetContainers.push(formHeader);
         }
     }
 
-    _getElementsGroupedBySrc( targetContainers ).forEach( elements => {
+    _getElementsGroupedBySrc(targetContainers).forEach(elements => {
         const src = elements[ 0 ].dataset.offlineSrc;
 
-        store.survey.resource.get( survey.enketoId, src )
-            .then( resource => {
-                if ( !resource || !resource.item ) {
-                    console.error( 'resource not found or not complete', src );
+        store.survey.resource.get(survey.enketoId, src)
+            .then(resource => {
+                if (!resource || !resource.item) {
+                    console.error('resource not found or not complete', src);
 
                     return;
                 }
                 // create a resourceURL
-                resourceUrl = URL.createObjectURL( resource.item );
+                resourceUrl = URL.createObjectURL(resource.item);
                 // add this resourceURL as the src for all elements in the group
-                elements.forEach( element => {
+                elements.forEach(element => {
                     element.src = resourceUrl;
-                } );
-            } );
-    } );
+                });
+            });
+    });
 
     // TODO: revoke objectURL if not inside a repeat
     // add eventhandler to last element in a group?
-    // $( element ).one( 'load', function() {
-    //    console.log( 'revoking object URL to free up memory' );
-    //    URL.revokeObjectURL( resourceUrl );
-    // } );
-    return Promise.resolve( survey );
+    // $(element).one('load', function() {
+    //    console.log('revoking object URL to free up memory');
+    //    URL.revokeObjectURL(resourceUrl);
+    // });
+    return Promise.resolve(survey);
 }
 
-function _getElementsGroupedBySrc( containers ) {
+function _getElementsGroupedBySrc(containers) {
     const groupedElements = [];
     const urls = {};
     let els = [];
 
-    containers.forEach( container => els = els.concat( [ ...container.querySelectorAll( '[data-offline-src]' ) ] ) );
+    containers.forEach(container => els = els.concat([ ...container.querySelectorAll('[data-offline-src]') ]));
 
-    els.forEach( el => {
-        if ( !urls[ el.dataset.offlineSrc ] ) {
+    els.forEach(el => {
+        if (!urls[ el.dataset.offlineSrc ]) {
             const src = el.dataset.offlineSrc;
-            const group = els.filter( e => {
-                if ( e.dataset.offlineSrc === src ) {
+            const group = els.filter(e => {
+                if (e.dataset.offlineSrc === src) {
                     // remove from $els to improve performance
-                    // els = els.filter( es => !es.matches( `[data-offline-src="${src}"]` ) );
+                    // els = els.filter(es => !es.matches(`[data-offline-src="${src}"]`));
                     return true;
                 }
-            } );
+            });
 
             urls[ src ] = true;
-            groupedElements.push( group );
+            groupedElements.push(group);
         }
-    } );
+    });
 
     return groupedElements;
 }
@@ -417,56 +417,56 @@ function _getElementsGroupedBySrc( containers ) {
  * @param {Survey} survey
  * @return {Promise<void>}
  */
-function _updateCache( survey ) {
+function _updateCache(survey) {
 
-    console.log( 'Checking for survey update...' );
+    console.log('Checking for survey update...');
 
-    return connection.getFormPartsHash( survey )
-        .then( version => {
-            if ( hash === version ) {
-                console.log( 'Cached survey is up to date!', hash );
+    return connection.getFormPartsHash(survey)
+        .then(version => {
+            if (hash === version) {
+                console.log('Cached survey is up to date!', hash);
             } else {
-                console.log( 'Cached survey is outdated! old:', hash, 'new:', version );
+                console.log('Cached survey is outdated! old:', hash, 'new:', version);
 
-                return connection.getFormParts( survey )
-                    .then( formParts => {
+                return connection.getFormParts(survey)
+                    .then(formParts => {
                         // media will be updated next time the form is loaded if resources is undefined
                         formParts.resources = undefined;
 
                         return formParts;
-                    } )
-                    .then( prepareOfflineSurvey )
-                    .then( updateSurveyCache )
-                    .then( result => {
+                    })
+                    .then(prepareOfflineSurvey)
+                    .then(updateSurveyCache)
+                    .then(result => {
                         // set the hash so that subsequent update checks won't redownload the form
                         hash = result.hash;
 
-                        if ( !isLastSaveEnabled( result ) ) {
-                            return removeLastSavedRecord( result.enketoId );
+                        if (!isLastSaveEnabled(result)) {
+                            return removeLastSavedRecord(result.enketoId);
                         }
-                    } )
-                    .then( () => {
-                        console.log( 'Survey is now updated in the store. Need to refresh.' );
-                        document.dispatchEvent( events.FormUpdated() );
-                    } );
+                    })
+                    .then(() => {
+                        console.log('Survey is now updated in the store. Need to refresh.');
+                        document.dispatchEvent(events.FormUpdated());
+                    });
             }
-        } )
-        .catch( error => {
+        })
+        .catch(error => {
             // if the form has been de-activated or removed from the server
-            if ( error.status === 404 || error.status === 401 ) {
+            if (error.status === 404 || error.status === 401) {
                 // remove it from the store
-                remove( survey )
-                    .then( () => {
+                remove(survey)
+                    .then(() => {
                         // TODO notify user to refresh or trigger event on form
-                        console.log( `survey ${survey.enketoId} removed from storage`, error.status );
-                    } )
-                    .catch( e => {
-                        console.error( 'an error occurred when attempting to remove the survey from storage', e );
-                    } );
+                        console.log(`survey ${survey.enketoId} removed from storage`, error.status);
+                    })
+                    .catch(e => {
+                        console.error('an error occurred when attempting to remove the survey from storage', e);
+                    });
             } else {
-                console.log( 'Could not obtain latest survey or hash from server or failed to save it. Probably offline.', error.stack );
+                console.log('Could not obtain latest survey or hash from server or failed to save it. Probably offline.', error.stack);
             }
-        } );
+        });
 }
 
 /**
@@ -476,11 +476,11 @@ function _updateCache( survey ) {
  */
 function flush() {
     return store.survey.removeAll()
-        .then( () => {
-            console.log( 'Done! The form cache is empty now. (Records have not been removed)' );
+        .then(() => {
+            console.log('Done! The form cache is empty now. (Records have not been removed)');
 
             return;
-        } );
+        });
 }
 
 export default {

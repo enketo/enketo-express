@@ -4,18 +4,18 @@
  * @module survey-model
  */
 
-const utils = require( '../lib/utils' );
-const TError = require( '../lib/custom-error' ).TranslatedError;
-const config = require( './config-model' ).server;
-const client = require( 'redis' ).createClient( config.redis.main.port, config.redis.main.host, {
+const utils = require('../lib/utils');
+const TError = require('../lib/custom-error').TranslatedError;
+const config = require('./config-model').server;
+const client = require('redis').createClient(config.redis.main.port, config.redis.main.host, {
     auth_pass: config.redis.main.password
-} );
+});
 const pending = {};
-const debug = require( 'debug' )( 'survey-model' );
+const debug = require('debug')('survey-model');
 
 // in test environment, switch to different db
-if ( process.env.NODE_ENV === 'test' ) {
-    client.select( 15 );
+if (process.env.NODE_ENV === 'test') {
+    client.select(15);
 }
 
 /**
@@ -102,37 +102,37 @@ if ( process.env.NODE_ENV === 'test' ) {
  * @param { string } id - Survey ID
  * @return {Promise<SurveyObject>} Promise that resolves with a survey object
  */
-function getSurvey( id ) {
-    return new Promise( ( resolve, reject ) => {
-        if ( !id ) {
-            const error = new Error( new Error( 'Bad request. Form ID required' ) );
+function getSurvey(id) {
+    return new Promise((resolve, reject) => {
+        if (!id) {
+            const error = new Error(new Error('Bad request. Form ID required'));
             error.status = 400;
-            reject( error );
+            reject(error);
         } else {
             // get from db the record with key: "id:"+id
-            client.hgetall( `id:${id}`, ( error, obj ) => {
-                if ( error ) {
-                    reject( error );
-                } else if ( !obj || obj.active === 'false' || obj.active === false ) {
+            client.hgetall(`id:${id}`, (error, obj) => {
+                if (error) {
+                    reject(error);
+                } else if (!obj || obj.active === 'false' || obj.active === false) {
                     // currently false is stored as 'false' but in the future node_redis might convert back to false
                     // https://github.com/mranney/node_redis/issues/449
-                    error = ( !obj ) ? new TError( 'error.surveyidnotfound' ) : new TError( 'error.surveyidnotactive' );
+                    error = (!obj) ? new TError('error.surveyidnotfound') : new TError('error.surveyidnotactive');
                     error.status = 404;
-                    reject( error );
-                } else if ( !obj.openRosaId || !obj.openRosaServer ) {
-                    error = new Error( 'Survey information for this id is incomplete.' );
+                    reject(error);
+                } else if (!obj.openRosaId || !obj.openRosaServer) {
+                    error = new Error('Survey information for this id is incomplete.');
                     error.status = 406;
-                    reject( error );
+                    reject(error);
                 } else {
-                    // debug( 'object retrieved from database for id "' + id + '"', obj );
+                    // debug('object retrieved from database for id "' + id + '"', obj);
                     obj.enketoId = id;
                     // no need to wait for result of updating lastAccessed
-                    client.hset( `id:${id}`, 'lastAccessed', new Date().toISOString() );
-                    resolve( obj );
+                    client.hset(`id:${id}`, 'lastAccessed', new Date().toISOString());
+                    resolve(obj);
                 }
-            } );
+            });
         }
-    } );
+    });
 }
 
 /**
@@ -144,41 +144,41 @@ function getSurvey( id ) {
  * @param {SurveyObject} survey - survey object
  * @return {Promise<Error|string>} Promise that eventually resolves with Survey ID
  */
-function setSurvey( survey ) {
-    return new Promise( ( resolve, reject ) => {
+function setSurvey(survey) {
+    return new Promise((resolve, reject) => {
         // Set in db:
         // a) a record with key "id:"+ _createEnketoId(client.incr('surveys:counter')) and all survey info
         // b) a record with key "or:"+ _createOpenRosaKey(survey.openRosaUrl, survey.openRosaId) and the enketo_id
         let error;
-        const openRosaKey = utils.getOpenRosaKey( survey );
-        if ( !openRosaKey ) {
-            error = new Error( 'Bad request. Survey information not complete or invalid' );
+        const openRosaKey = utils.getOpenRosaKey(survey);
+        if (!openRosaKey) {
+            error = new Error('Bad request. Survey information not complete or invalid');
             error.status = 400;
-            reject( error );
-        } else if ( pending[ openRosaKey ] ) {
-            error = new Error( 'Conflict. Busy handling pending request for same survey' );
+            reject(error);
+        } else if (pending[ openRosaKey ]) {
+            error = new Error('Conflict. Busy handling pending request for same survey');
             error.status = 409;
-            reject( error );
+            reject(error);
         } else {
             // to avoid issues with fast consecutive requests
             pending[ openRosaKey ] = true;
 
-            _getEnketoId( openRosaKey )
-                .then( id => {
-                    if ( id ) {
+            _getEnketoId(openRosaKey)
+                .then(id => {
+                    if (id) {
                         survey.active = true;
                         delete pending[ openRosaKey ];
-                        resolve( _updateProperties( id, survey ) );
+                        resolve(_updateProperties(id, survey));
                     } else {
-                        resolve( _addSurvey( openRosaKey, survey ) );
+                        resolve(_addSurvey(openRosaKey, survey));
                     }
-                } )
-                .catch( error => {
+                })
+                .catch(error => {
                     delete pending[ openRosaKey ];
-                    reject( error );
-                } );
+                    reject(error);
+                });
         }
-    } );
+    });
 }
 
 /**
@@ -188,30 +188,30 @@ function setSurvey( survey ) {
 * @param {module:survey-model~SurveyObject} survey - survey object
 * @return {Promise<Error|string>} Promise that resolves with survey ID
  */
-function updateSurvey( survey ) {
-    return new Promise( ( resolve, reject ) => {
-        const openRosaKey = utils.getOpenRosaKey( survey );
+function updateSurvey(survey) {
+    return new Promise((resolve, reject) => {
+        const openRosaKey = utils.getOpenRosaKey(survey);
         let error;
-        if ( !openRosaKey ) {
-            error = new Error( 'Bad request. Survey information not complete or invalid' );
+        if (!openRosaKey) {
+            error = new Error('Bad request. Survey information not complete or invalid');
             error.status = 400;
-            reject( error );
+            reject(error);
         } else {
-            _getEnketoId( openRosaKey )
-                .then( id => {
-                    if ( id ) {
-                        resolve( _updateProperties( id, survey ) );
+            _getEnketoId(openRosaKey)
+                .then(id => {
+                    if (id) {
+                        resolve(_updateProperties(id, survey));
                     } else {
-                        error = new Error( 'Survey not found.' );
+                        error = new Error('Survey not found.');
                         error.status = 404;
-                        reject( error );
+                        reject(error);
                     }
-                } )
-                .catch( error => {
-                    reject( error );
-                } );
+                })
+                .catch(error => {
+                    reject(error);
+                });
         }
-    } );
+    });
 }
 
 /**
@@ -219,28 +219,28 @@ function updateSurvey( survey ) {
  * @param {module:survey-model~SurveyObject} survey - New survey
  * @return {Promise<Error|string>} Promise that resolves with survey ID
  */
-function _updateProperties( id, survey ) {
-    return new Promise( ( resolve, reject ) => {
+function _updateProperties(id, survey) {
+    return new Promise((resolve, reject) => {
         const update = {};
         // create new object only including the updateable properties
-        if ( typeof survey.openRosaServer !== 'undefined' ) {
+        if (typeof survey.openRosaServer !== 'undefined') {
             update.openRosaServer = survey.openRosaServer;
         }
-        if ( typeof survey.active !== 'undefined' ) {
+        if (typeof survey.active !== 'undefined') {
             update.active = survey.active;
         }
         // always update the theme, which will delete it if the theme parameter is missing
         // avoid storing undefined as string 'undefined'
         update.theme = survey.theme || '';
 
-        client.hmset( `id:${id}`, update, error => {
-            if ( error ) {
-                reject( error );
+        client.hmset(`id:${id}`, update, error => {
+            if (error) {
+                reject(error);
             } else {
-                resolve( id );
+                resolve(id);
             }
-        } );
-    } );
+        });
+    });
 }
 
 /**
@@ -248,13 +248,13 @@ function _updateProperties( id, survey ) {
  * @param {module:survey-model~SurveyObject} survey - survey object
  * @return {Promise<Error|string>} Promise that eventually resolves with survey ID
  */
-function _addSurvey( openRosaKey, survey ) {
+function _addSurvey(openRosaKey, survey) {
     // survey:counter no longer serves any purpose, after https://github.com/kobotoolbox/enketo-express/issues/481
     return _createNewEnketoId()
-        .then( id => {
-            return new Promise( function( resolve, reject ) {
+        .then(id => {
+            return new Promise(function(resolve, reject) {
                 client.multi()
-                    .hmset( `id:${id}`, {
+                    .hmset(`id:${id}`, {
                         // explicitly set the properties that need to be saved
                         // this will avoid accidentally saving e.g. transformation results and cookies
                         openRosaServer: survey.openRosaServer,
@@ -264,18 +264,18 @@ function _addSurvey( openRosaKey, survey ) {
                         active: true,
                         // avoid storing string 'undefined'
                         theme: survey.theme || ''
-                    } )
-                    .set( openRosaKey, id )
-                    .exec( error => {
+                    })
+                    .set(openRosaKey, id)
+                    .exec(error => {
                         delete pending[ openRosaKey ];
-                        if ( error ) {
-                            reject( error );
+                        if (error) {
+                            reject(error);
                         } else {
-                            resolve( id );
+                            resolve(id);
                         }
-                    } );
-            } );
-        } );
+                    });
+            });
+        });
 }
 
 /**
@@ -285,19 +285,19 @@ function _addSurvey( openRosaKey, survey ) {
  * @param { string } id - Survey ID
  * @return {Promise<Error|string>} Promise that eventually resolves with survey ID
  */
-function incrSubmissions( id ) {
-    return new Promise( ( resolve, reject ) => {
+function incrSubmissions(id) {
+    return new Promise((resolve, reject) => {
         client.multi()
-            .incr( 'submission:counter' )
-            .hincrby( `id:${id}`, 'submissions', 1 )
-            .exec( error => {
-                if ( error ) {
-                    reject( error );
+            .incr('submission:counter')
+            .hincrby(`id:${id}`, 'submissions', 1)
+            .exec(error => {
+                if (error) {
+                    reject(error);
                 } else {
-                    resolve( id );
+                    resolve(id);
                 }
-            } );
-    } );
+            });
+    });
 }
 
 /**
@@ -307,33 +307,33 @@ function incrSubmissions( id ) {
  * @param { string } server - Server URL
  * @return {Promise<Error|string|number>} Promise that resolves with number of surveys
  */
-function getNumberOfSurveys( server ) {
-    return new Promise( ( resolve, reject ) => {
+function getNumberOfSurveys(server) {
+    return new Promise((resolve, reject) => {
         let error;
-        const cleanServerUrl = ( server === '' ) ? '' : utils.cleanUrl( server );
-        if ( !cleanServerUrl && cleanServerUrl !== '' ) {
-            error = new Error( 'Survey information not complete or invalid' );
+        const cleanServerUrl = (server === '') ? '' : utils.cleanUrl(server);
+        if (!cleanServerUrl && cleanServerUrl !== '') {
+            error = new Error('Survey information not complete or invalid');
             error.status = 400;
-            reject( error );
+            reject(error);
         } else {
             // TODO: "Don't use KEYS in your regular application code"
             // (https://redis.io/commands/keys)
-            client.keys( `or:${cleanServerUrl}[/,]*`, ( err, keys ) => {
-                if ( error ) {
-                    reject( error );
-                } else if ( keys ) {
-                    _getActiveSurveys( keys )
-                        .then( surveys => {
-                            resolve( surveys.length );
-                        } )
-                        .catch( reject );
+            client.keys(`or:${cleanServerUrl}[/,]*`, (err, keys) => {
+                if (error) {
+                    reject(error);
+                } else if (keys) {
+                    _getActiveSurveys(keys)
+                        .then(surveys => {
+                            resolve(surveys.length);
+                        })
+                        .catch(reject);
                 } else {
-                    debug( 'no replies when obtaining list of surveys' );
-                    reject( 'no surveys' );
+                    debug('no replies when obtaining list of surveys');
+                    reject('no surveys');
                 }
-            } );
+            });
         }
-    } );
+    });
 }
 
 /**
@@ -343,70 +343,70 @@ function getNumberOfSurveys( server ) {
  * @param { string } server - Server URL
  * @return {Promise<Error|Array<SurveyObject>>} Promise that resolves with a list of SurveyObjects
  */
-function getListOfSurveys( server ) {
-    return new Promise( ( resolve, reject ) => {
+function getListOfSurveys(server) {
+    return new Promise((resolve, reject) => {
         let error;
-        const cleanServerUrl = ( server === '' ) ? '' : utils.cleanUrl( server );
-        if ( !cleanServerUrl && cleanServerUrl !== '' ) {
-            error = new Error( 'Survey information not complete or invalid' );
+        const cleanServerUrl = (server === '') ? '' : utils.cleanUrl(server);
+        if (!cleanServerUrl && cleanServerUrl !== '') {
+            error = new Error('Survey information not complete or invalid');
             error.status = 400;
-            reject( error );
+            reject(error);
         } else {
             // TODO: "Don't use KEYS in your regular application code"
             // (https://redis.io/commands/keys)
-            client.keys( `or:${cleanServerUrl}[/,]*`, ( err, keys ) => {
-                if ( error ) {
-                    reject( error );
-                } else if ( keys ) {
-                    _getActiveSurveys( keys )
-                        .then( surveys => {
-                            surveys.sort( _ascendingLaunchDate );
-                            const list = surveys.map( survey => ( {
+            client.keys(`or:${cleanServerUrl}[/,]*`, (err, keys) => {
+                if (error) {
+                    reject(error);
+                } else if (keys) {
+                    _getActiveSurveys(keys)
+                        .then(surveys => {
+                            surveys.sort(_ascendingLaunchDate);
+                            const list = surveys.map(survey => ({
                                 openRosaServer: survey.openRosaServer,
                                 openRosaId: survey.openRosaId,
                                 enketoId: survey.enketoId
-                            } ) );
+                            }));
 
-                            resolve( list );
-                        } )
-                        .catch( reject );
+                            resolve(list);
+                        })
+                        .catch(reject);
                 } else {
-                    debug( 'no replies when obtaining list of surveys' );
-                    reject( 'no surveys' );
+                    debug('no replies when obtaining list of surveys');
+                    reject('no surveys');
                 }
-            } );
+            });
         }
-    } );
+    });
 }
 
 /**
  * @param { string } openRosaKey - database key of survey
  * @return {Promise<Error|null|string>} Promise that resolves with survey ID
  */
-function _getEnketoId( openRosaKey ) {
-    return new Promise( ( resolve, reject ) => {
-        if ( !openRosaKey ) {
-            const error = new Error( 'Survey information not complete or invalid' );
+function _getEnketoId(openRosaKey) {
+    return new Promise((resolve, reject) => {
+        if (!openRosaKey) {
+            const error = new Error('Survey information not complete or invalid');
             error.status = 400;
-            reject( error );
+            reject(error);
         } else {
-            // debug( 'getting id for : ' + openRosaKey );
-            client.get( openRosaKey, ( error, id ) => {
-                // debug( 'result', error, id );
-                if ( error ) {
-                    reject( error );
-                } else if ( id === '' ) {
-                    error = new Error( 'ID for this survey is missing' );
+            // debug('getting id for : ' + openRosaKey);
+            client.get(openRosaKey, (error, id) => {
+                // debug('result', error, id);
+                if (error) {
+                    reject(error);
+                } else if (id === '') {
+                    error = new Error('ID for this survey is missing');
                     error.status = 406;
-                    reject( error );
-                } else if ( id ) {
-                    resolve( id );
+                    reject(error);
+                } else if (id) {
+                    resolve(id);
                 } else {
-                    resolve( null );
+                    resolve(null);
                 }
-            } );
+            });
         }
-    } );
+    });
 }
 
 /**
@@ -416,24 +416,24 @@ function _getEnketoId( openRosaKey ) {
  * @param {module:survey-model~SurveyObject} survey - survey object
  * @return {Promise<Error|null|string>} Promise that resolves with survey ID
  */
-function getEnketoIdFromSurveyObject( survey ) {
-    const openRosaKey = utils.getOpenRosaKey( survey );
+function getEnketoIdFromSurveyObject(survey) {
+    const openRosaKey = utils.getOpenRosaKey(survey);
 
-    return _getEnketoId( openRosaKey );
+    return _getEnketoId(openRosaKey);
 }
 
 /**
  * @param { Array<string> } openRosaIds - A list of `openRosaId`s
  * @return { Promise<SurveyObject> } a Promise that resolves with a list of survey objects
  */
-function _getActiveSurveys( openRosaIds ) {
-    const tasks = openRosaIds.map( openRosaId => _getEnketoId( openRosaId ) );
+function _getActiveSurveys(openRosaIds) {
+    const tasks = openRosaIds.map(openRosaId => _getEnketoId(openRosaId));
 
-    return Promise.all( tasks )
-        .then( ids => ids.map( id => // getSurvey rejects with 404 status if survey is not active
-            getSurvey( id ).catch( _404Empty ) ) )
-        .then( tasks => Promise.all( tasks ) )
-        .then( surveys => surveys.filter( _nonEmpty ) );
+    return Promise.all(tasks)
+        .then(ids => ids.map(id => // getSurvey rejects with 404 status if survey is not active
+            getSurvey(id).catch(_404Empty)))
+        .then(tasks => Promise.all(tasks))
+        .then(surveys => surveys.filter(_nonEmpty));
 }
 
 /**
@@ -447,24 +447,24 @@ function _getActiveSurveys( openRosaIds ) {
  * @param { number } [triesRemaining] - Avoid infinite loops when collissions become the norm.
  * @return {Promise<Error|string|Promise>} a Promise that resolves with a new unique Enketo ID
  */
-function _createNewEnketoId( id = utils.randomString( config[ 'id length' ] ), triesRemaining = 10 ) {
-    return new Promise( ( resolve, reject ) => {
-        client.hgetall( `id:${id}`, ( error, obj ) => {
-            if ( error ) {
-                reject( error );
-            } else if ( obj ) {
-                if ( triesRemaining-- ) {
-                    resolve( _createNewEnketoId( undefined, triesRemaining ) );
+function _createNewEnketoId(id = utils.randomString(config[ 'id length' ]), triesRemaining = 10) {
+    return new Promise((resolve, reject) => {
+        client.hgetall(`id:${id}`, (error, obj) => {
+            if (error) {
+                reject(error);
+            } else if (obj) {
+                if (triesRemaining--) {
+                    resolve(_createNewEnketoId(undefined, triesRemaining));
                 } else {
-                    const error = new Error( 'Failed to create unique Enketo ID.' );
+                    const error = new Error('Failed to create unique Enketo ID.');
                     error.status = 500;
-                    reject( error );
+                    reject(error);
                 }
             } else {
-                resolve( id );
+                resolve(id);
             }
-        } );
-    } );
+        });
+    });
 }
 
 /**
@@ -474,15 +474,15 @@ function _createNewEnketoId( id = utils.randomString( config[ 'id length' ] ), t
  * @param {module:survey-model~SurveyObject} b - a survey object
  * @return {number} difference in launch date as a number
  */
-function _ascendingLaunchDate( a, b ) {
-    return new Date( a.launchDate ) - new Date( b.launchDate );
+function _ascendingLaunchDate(a, b) {
+    return new Date(a.launchDate) - new Date(b.launchDate);
 }
 
 /**
  * @param {module:survey-model~SurveyObject} survey - survey object
  * @return { boolean } Whether survey has openRosaId
  */
-function _nonEmpty( survey ) {
+function _nonEmpty(survey) {
     return !!survey.openRosaId;
 }
 
@@ -490,8 +490,8 @@ function _nonEmpty( survey ) {
  * @param {Error} error - error object
  * @return { object } Empty object for `404` errors; throws normally for other
  */
-function _404Empty( error ) {
-    if ( error && error.status && error.status === 404 ) {
+function _404Empty(error) {
+    if (error && error.status && error.status === 404) {
         return {};
     } else {
         throw error;

@@ -5,128 +5,128 @@ process.env.NODE_ENV = 'test';
  * Some of these tests use the special test Api Token and Server URLs defined in the API spec
  * at http://apidocs.enketo.org.
  */
-const request = require( 'supertest' );
-const config = require( '../../app/models/config-model' ).server;
+const request = require('supertest');
+const config = require('../../app/models/config-model').server;
 config[ 'base path' ] = '';
-const app = require( '../../config/express' );
-const surveyModel = require( '../../app/models/survey-model' );
-const instanceModel = require( '../../app/models/instance-model' );
-const cacheModel = require( '../../app/models/cache-model' );
-const redis = require( 'redis' );
-const client = redis.createClient( config.redis.main.port, config.redis.main.host, {
+const app = require('../../config/express');
+const surveyModel = require('../../app/models/survey-model');
+const instanceModel = require('../../app/models/instance-model');
+const cacheModel = require('../../app/models/cache-model');
+const redis = require('redis');
+const client = redis.createClient(config.redis.main.port, config.redis.main.host, {
     auth_pass: config.redis.main.password
-} );
+});
 let v1Survey;
 let v1Instance;
 let v1Surveys;
 
-describe( 'api', () => {
+describe('api', () => {
     const validApiKey = 'abc';
     const validAuth = {
-        'Authorization': `Basic ${Buffer.from( `${validApiKey}:` ).toString( 'base64' )}`
+        'Authorization': `Basic ${Buffer.from(`${validApiKey}:`).toString('base64')}`
     };
     const invalidApiKey = 'def';
     const invalidAuth = {
-        'Authorization': `Basic ${Buffer.from( `${invalidApiKey}:` ).toString( 'base64' )}`
+        'Authorization': `Basic ${Buffer.from(`${invalidApiKey}:`).toString('base64')}`
     };
     const beingEdited = 'beingEdited';
     const validServer = 'https://testserver.com/bob';
     const validFormId = 'something';
     const invalidServer = 'https://someotherserver.com/john';
 
-    beforeEach( done => {
+    beforeEach(done => {
         const s = {
             openRosaServer: validServer,
             openRosaId: validFormId,
         };
         // add survey if it doesn't exist in the db
-        surveyModel.set( s )
-            .then( () => {
+        surveyModel.set(s)
+            .then(() => {
                 s.info = {
                     hash: 'a'
                 };
                 s.form = '<form/>';
                 s.model = '<model/>';
 
-                return cacheModel.set( s );
-            } )
-            .then( () => {
+                return cacheModel.set(s);
+            })
+            .then(() => {
                 done();
-            } );
+            });
 
-    } );
+    });
 
-    afterEach( done => {
+    afterEach(done => {
         /// select test database and flush it
-        client.select( 15, err => {
-            if ( err ) {
-                return done( err );
+        client.select(15, err => {
+            if (err) {
+                return done(err);
             }
-            client.flushdb( err => {
-                if ( err ) {
-                    return done( err );
+            client.flushdb(err => {
+                if (err) {
+                    return done(err);
                 }
 
-                return instanceModel.set( {
+                return instanceModel.set({
                     openRosaServer: validServer,
                     openRosaId: validFormId,
                     instanceId: beingEdited,
                     returnUrl: 'https://enketo.org',
                     instance: '<data></data>'
-                } ).then( () => {
+                }).then(() => {
                     done();
-                } );
-            } );
-        } );
+                });
+            });
+        });
 
-    } );
+    });
 
     // return error if it fails
-    function responseCheck( value, expected ) {
-        if ( typeof expected === 'string' || typeof expected === 'number' ) {
-            if ( value !== expected ) {
-                return new Error( `Response ${value} not equal to ${expected}` );
+    function responseCheck(value, expected) {
+        if (typeof expected === 'string' || typeof expected === 'number') {
+            if (value !== expected) {
+                return new Error(`Response ${value} not equal to ${expected}`);
             }
-        } else if ( expected instanceof RegExp && typeof value === 'object' ) {
-            if ( !expected.test( JSON.stringify( value ) ) ) {
-                return new Error( `Response ${JSON.stringify( value )} not matching ${expected}` );
+        } else if (expected instanceof RegExp && typeof value === 'object') {
+            if (!expected.test(JSON.stringify(value))) {
+                return new Error(`Response ${JSON.stringify(value)} not matching ${expected}`);
             }
-        } else if ( expected instanceof RegExp ) {
-            if ( !expected.test( value ) ) {
-                return new Error( `Response ${value} not matching ${expected}` );
+        } else if (expected instanceof RegExp) {
+            if (!expected.test(value)) {
+                return new Error(`Response ${value} not matching ${expected}`);
             }
-        } else if ( expected instanceof Object ) {
+        } else if (expected instanceof Object) {
             // This is where it gets ugly. Strip the port number from URLs...
-            const v = JSON.stringify( value ).replace( /:[0-9]{5}\//g, '/' );
-            const e = JSON.stringify( expected ).replace( /:[0-9]{5}\//g, '/' );
-            if ( v !== e ) {
-                return new Error( `Response ${v} not matching ${e}` );
+            const v = JSON.stringify(value).replace(/:[0-9]{5}\//g, '/');
+            const e = JSON.stringify(expected).replace(/:[0-9]{5}\//g, '/');
+            if (v !== e) {
+                return new Error(`Response ${v} not matching ${e}`);
             }
         } else {
-            return new Error( 'This is not a valid expected value' );
+            return new Error('This is not a valid expected value');
         }
     }
 
-    function testResponse( test ) {
-        const authDesc = test.auth === true ? 'valid' : ( test.auth === false ? 'invalid' : 'empty' );
-        const auth = test.auth === true ? validAuth : ( test.auth === false ? invalidAuth : {} );
+    function testResponse(test) {
+        const authDesc = test.auth === true ? 'valid' : (test.auth === false ? 'invalid' : 'empty');
+        const auth = test.auth === true ? validAuth : (test.auth === false ? invalidAuth : {});
         const version = test.version;
-        const server = ( typeof test.server !== 'undefined' ) ? test.server : validServer;
-        const id = typeof test.id !== 'undefined' ? ( test.id !== '{{random}}' ? test.id : Math.floor( Math.random() * 10000 ).toString() ) : validFormId;
+        const server = (typeof test.server !== 'undefined') ? test.server : validServer;
+        const id = typeof test.id !== 'undefined' ? (test.id !== '{{random}}' ? test.id : Math.floor(Math.random() * 10000).toString()) : validFormId;
         const ret = test.ret === true ? 'http://example.com' : test.ret;
         const instance = test.instance === true ? '<data/>' : test.instance;
         const instanceId = test.instanceId === true ? `UUID:${Math.random()}` : test.instanceId;
         const goTo = typeof test.goTo !== 'undefined' ? test.goTo : '';
         const endpoint = test.endpoint;
         const offlineEnabled = !!test.offline;
-        const dataSendMethod = ( test.method === 'get' ) ? 'query' : 'send';
+        const dataSendMethod = (test.method === 'get') ? 'query' : 'send';
 
-        it( `${test.method.toUpperCase()} /api/v${version}${endpoint} with ${authDesc} authentication and ${server}, ${id}, ${ret}, ${instance}, ${instanceId}, ${test.theme}, parentWindowOrigin: ${test.parentWindowOrigin}, defaults: ${JSON.stringify( test.defaults )} responds with ${test.status} when offline enabled: ${offlineEnabled}`,
+        it(`${test.method.toUpperCase()} /api/v${version}${endpoint} with ${authDesc} authentication and ${server}, ${id}, ${ret}, ${instance}, ${instanceId}, ${test.theme}, parentWindowOrigin: ${test.parentWindowOrigin}, defaults: ${JSON.stringify(test.defaults)} responds with ${test.status} when offline enabled: ${offlineEnabled}`,
             done => {
-                app.set( 'offline enabled', offlineEnabled );
+                app.set('offline enabled', offlineEnabled);
 
-                request( app )[ test.method ]( `/api/v${version}${endpoint}` )
-                    .set( auth )[ dataSendMethod ]( {
+                request(app)[ test.method ](`/api/v${version}${endpoint}`)
+                    .set(auth)[ dataSendMethod ]({
                         server_url: server,
                         form_id: id,
                         instance,
@@ -138,23 +138,23 @@ describe( 'api', () => {
                         landscape: test.landscape,
                         defaults: test.defaults,
                         parent_window_origin: test.parentWindowOrigin
-                    } )
-                    .expect( test.status )
-                    .expect( resp => {
-                        if ( test.res && test.res.expected ) {
-                            const valueToTest = ( test.res.property ) ? resp.body[ test.res.property ] : resp.body;
+                    })
+                    .expect(test.status)
+                    .expect(resp => {
+                        if (test.res && test.res.expected) {
+                            const valueToTest = (test.res.property) ? resp.body[ test.res.property ] : resp.body;
 
-                            return responseCheck( valueToTest, test.res.expected );
+                            return responseCheck(valueToTest, test.res.expected);
                         }
-                    } )
-                    .end( done );
-            } );
+                    })
+                    .end(done);
+            });
     }
 
-    describe( 'v1', () => {
+    describe('v1', () => {
         const version = 1;
 
-        describe( '', () => {
+        describe('', () => {
             v1Survey = [
                 //valid token
                 {
@@ -256,17 +256,17 @@ describe( 'api', () => {
                 }
             ];
 
-            v1Survey.map( obj => {
+            v1Survey.map(obj => {
                 obj.version = version;
                 obj.endpoint = '/survey';
 
                 return obj;
-            } ).forEach( testResponse );
-        } );
+            }).forEach(testResponse);
+        });
 
-        describe( '/survey endpoint offline-enabled and online-only responses (incompatible with v2)', () => {
+        describe('/survey endpoint offline-enabled and online-only responses (incompatible with v2)', () => {
             // test online responses for /survey endpoint (differs in v2)
-            testResponse( {
+            testResponse({
                 version,
                 endpoint: '/survey',
                 method: 'post',
@@ -277,10 +277,10 @@ describe( 'api', () => {
                     expected: /\/[A-z0-9]{4,31}/
                 },
                 offline: false
-            } );
+            });
 
             // test online responses for /survey/iframe endpoint (differs in v2)
-            testResponse( {
+            testResponse({
                 version,
                 endpoint: '/survey/iframe',
                 method: 'post',
@@ -292,10 +292,10 @@ describe( 'api', () => {
                     expected: /\/i\/[A-z0-9]{4,31}/
                 },
                 offline: false
-            } );
+            });
 
             // test offline responses for /survey endpoint (differs in v2)
-            testResponse( {
+            testResponse({
                 version,
                 endpoint: '/survey',
                 method: 'post',
@@ -306,10 +306,10 @@ describe( 'api', () => {
                     expected: /\/x\/[A-z0-9]{4,31}/
                 },
                 offline: true
-            } );
+            });
 
             // test offline responses for /survey/iframe endpoint (differs in v2)
-            testResponse( {
+            testResponse({
                 version,
                 endpoint: '/survey/iframe',
                 method: 'post',
@@ -321,23 +321,23 @@ describe( 'api', () => {
                     expected: /\/x\/[A-z0-9]{4,31}/
                 },
                 offline: true
-            } );
+            });
 
             // test offline responses for /survey/offline endpoint (differs in v2)
-            testResponse( {
+            testResponse({
                 version,
                 endpoint: '/survey/offline',
                 method: 'post',
                 auth: true,
                 status: 405,
                 offline: true
-            } );
-        } );
+            });
+        });
 
         // TODO: add some tests for other /survey/* endpoints
 
         // /surveys/* endpoints
-        describe( '', () => {
+        describe('', () => {
             v1Surveys = [
                 // GET /surveys/number
                 {
@@ -406,10 +406,10 @@ describe( 'api', () => {
                 },
             ];
 
-            v1Surveys.forEach( testResponse );
-        } );
+            v1Surveys.forEach(testResponse);
+        });
 
-        describe( '', () => {
+        describe('', () => {
             v1Instance = [
                 // valid token
                 {
@@ -521,48 +521,48 @@ describe( 'api', () => {
                 }
             ];
 
-            v1Instance.map( obj => {
+            v1Instance.map(obj => {
                 obj.version = version;
                 obj.endpoint = '/instance';
 
                 return obj;
-            } ).forEach( testResponse );
-        } );
-    } );
+            }).forEach(testResponse);
+        });
+    });
 
 
-    describe( 'v2', () => {
+    describe('v2', () => {
         const version = 2;
 
-        describe( 'v1-compatible ', () => {
+        describe('v1-compatible ', () => {
             // make sure v2 is backwards-compatible with v1
-            v1Survey.map( obj => {
+            v1Survey.map(obj => {
                 obj.version = version;
 
                 return obj;
-            } ).forEach( testResponse );
-        } );
+            }).forEach(testResponse);
+        });
 
-        describe( 'v1-compatible ', () => {
+        describe('v1-compatible ', () => {
             // make sure v2 is backwards-compatible with v1
-            v1Instance.map( obj => {
+            v1Instance.map(obj => {
                 obj.version = version;
-                if ( obj.instanceId === 'AAA' ) {
+                if (obj.instanceId === 'AAA') {
                     obj.instanceId = 'BBB';
                 }
 
                 return obj;
-            } ).forEach( testResponse );
-        } );
+            }).forEach(testResponse);
+        });
 
-        describe( 'v1-compatible ', () => {
+        describe('v1-compatible ', () => {
             // make sure v2 is backwards-compatible with v1
-            v1Surveys.map( obj => {
+            v1Surveys.map(obj => {
                 obj.version = version;
 
                 return obj;
-            } ).forEach( testResponse );
-        } );
+            }).forEach(testResponse);
+        });
 
         [ {
             endpoint: '/version',
@@ -1314,85 +1314,85 @@ describe( 'api', () => {
             },
             offline: true
         }
-        ].map( obj => {
+        ].map(obj => {
             obj.auth = typeof obj.auth === 'undefined' ? true : obj.auth;
             obj.version = version;
 
             return obj;
-        } ).forEach( testResponse );
+        }).forEach(testResponse);
 
-    } );
+    });
 
 
-    describe( 're-activating forms', () => {
+    describe('re-activating forms', () => {
 
-        function test( version ) {
+        function test(version) {
 
-            it( 'works if the quota allows it but returns 403 if quota is insufficient', () => {
-                const app = require( '../../config/express' );
+            it('works if the quota allows it but returns 403 if quota is insufficient', () => {
+                const app = require('../../config/express');
                 const endpoint = `/api/v${version}/survey`;
                 const server = 'https://example.org/enketo';
-                const linkedServer = app.get( 'linked form and data server' );
+                const linkedServer = app.get('linked form and data server');
                 linkedServer[ 'server url' ] = 'example.org/enketo';
                 linkedServer[ 'api key' ] = 'abc';
                 linkedServer.quota = 1;
-                app.set( 'linked form and data server', linkedServer );
-                app.set( 'account lib', '../path/to/something' );
+                app.set('linked form and data server', linkedServer);
+                app.set('account lib', '../path/to/something');
                 // TODO: teardown?
 
-                return request( app )
-                    .post( endpoint )
-                    .set( validAuth )
-                    .send( {
+                return request(app)
+                    .post(endpoint)
+                    .set(validAuth)
+                    .send({
                         server_url: server,
                         form_id: validFormId
-                    } )
-                    .expect( 201 )
-                    .then( () => {
-                        return request( app )
-                            .delete( endpoint )
-                            .set( validAuth )
-                            .send( {
+                    })
+                    .expect(201)
+                    .then(() => {
+                        return request(app)
+                            .delete(endpoint)
+                            .set(validAuth)
+                            .send({
                                 server_url: server,
                                 form_id: validFormId
-                            } )
-                            .expect( 204 );
-                    } )
-                    .then( () => {
-                        return request( app )
-                            .post( endpoint )
-                            .set( validAuth )
-                            .send( {
+                            })
+                            .expect(204);
+                    })
+                    .then(() => {
+                        return request(app)
+                            .post(endpoint)
+                            .set(validAuth)
+                            .send({
                                 server_url: server,
                                 form_id: validFormId + 'a'
-                            } )
-                            .expect( 201 );
-                    } )
-                    .then( () => {
-                        return request( app )
-                            .post( endpoint )
-                            .set( validAuth )
-                            .send( {
+                            })
+                            .expect(201);
+                    })
+                    .then(() => {
+                        return request(app)
+                            .post(endpoint)
+                            .set(validAuth)
+                            .send({
                                 server_url: server,
                                 form_id: validFormId
-                            } )
-                            .expect( 403 );
-                    } )
-                    .then( () => {
-                        return request( app )
-                            .post( endpoint )
-                            .set( validAuth )
-                            .send( {
+                            })
+                            .expect(403);
+                    })
+                    .then(() => {
+                        return request(app)
+                            .post(endpoint)
+                            .set(validAuth)
+                            .send({
                                 server_url: server,
                                 form_id: validFormId + 'b'
-                            } )
-                            .expect( 403 );
-                    } );
-            } );
+                            })
+                            .expect(403);
+                    });
+            });
         }
 
-        test( '1' );
-        test( '2' );
-    } );
+        test('1');
+        test('2');
+    });
 
-} );
+});

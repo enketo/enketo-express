@@ -1,3 +1,3 @@
-const config = window.env ? Object.assign( {}, window.env ) : {};
+const config = window.env ? Object.assign({}, window.env) : {};
 
 export default config;

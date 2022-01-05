@@ -30,7 +30,7 @@ import store from '../../public/js/src/module/store';
 /** @type {Record<string, any> | null} */
 let webformPrivate = null;
 
-describe( 'Enketo webform app entrypoints', () => {
+describe('Enketo webform app entrypoints', () => {
     /**
      * @typedef MockGetter
      * @property {string} description
@@ -95,12 +95,12 @@ describe( 'Enketo webform app entrypoints', () => {
     let performedSteps;
 
     class ParameterPredicate {
-        constructor( predicate ) {
+        constructor(predicate) {
             this.predicate = predicate;
         }
 
-        check( actual ) {
-            expect( actual ).to.satisfy( this.predicate );
+        check(actual) {
+            expect(actual).to.satisfy(this.predicate);
         }
     }
 
@@ -110,34 +110,34 @@ describe( 'Enketo webform app entrypoints', () => {
      *
      * @param {string} expected
      */
-    const expectTypeof = ( expected ) => (
-        new ParameterPredicate( ( actual => typeof actual === expected ) )
+    const expectTypeof = (expected) => (
+        new ParameterPredicate((actual => typeof actual === expected))
     );
 
-    const expectFunction = expectTypeof( 'function' );
-    const expectObject = expectTypeof( 'object' );
+    const expectFunction = expectTypeof('function');
+    const expectObject = expectTypeof('object');
 
     /**
      * Creates a predicate to determine that a callback was provided,
      * and call it when provided.
      */
-    const expectCallback = new ParameterPredicate( ( callback ) => {
-        if ( typeof callback === 'function' ) {
+    const expectCallback = new ParameterPredicate((callback) => {
+        if (typeof callback === 'function') {
             callback();
 
             return true;
         }
 
         return false;
-    } );
+    });
 
     /**
      * Creates a predicate to determine if a translator URL was provided.
      *
      * @param {string} expected
      */
-    const expectLanguage = ( expected ) => (
-        new ParameterPredicate( lang => lang.includes( `/${expected}/` ) )
+    const expectLanguage = (expected) => (
+        new ParameterPredicate(lang => lang.includes(`/${expected}/`))
     );
 
     /**
@@ -145,34 +145,34 @@ describe( 'Enketo webform app entrypoints', () => {
      * @param {PropertyKey} key
      * @return {PreparedStepCache}
      */
-    const getPreparedStep = ( object, key ) => {
-        let objectCache = preparedStepsCache.get( object );
+    const getPreparedStep = (object, key) => {
+        let objectCache = preparedStepsCache.get(object);
 
-        if ( objectCache == null ) {
+        if (objectCache == null) {
             objectCache = {};
 
-            preparedStepsCache.set( object, objectCache );
+            preparedStepsCache.set(object, objectCache);
         }
 
         let cache = objectCache[key];
 
-        if ( cache == null ) {
+        if (cache == null) {
             cache = {
                 queue: [],
-                stub: sandbox.stub( object, key ),
+                stub: sandbox.stub(object, key),
             };
 
-            Object.assign( objectCache, {
+            Object.assign(objectCache, {
                 [key]: cache,
-            } );
+            });
         }
 
         return cache;
     };
 
-    const debugLog = ( ...args ) => {
-        if ( DEBUG ) {
-            console.log( ...args );
+    const debugLog = (...args) => {
+        if (DEBUG) {
+            console.log(...args);
         }
     };
 
@@ -197,7 +197,7 @@ describe( 'Enketo webform app entrypoints', () => {
      * @param {InitStepOptions} options
      * @return {InitStep}
      */
-    const prepareInitStep = ( options ) => {
+    const prepareInitStep = (options) => {
         const {
             description,
             stubMethod,
@@ -205,13 +205,13 @@ describe( 'Enketo webform app entrypoints', () => {
             key,
         } = options;
 
-        let { queue, stub } = getPreparedStep( object, key );
+        let { queue, stub } = getPreparedStep(object, key);
 
-        debugLog( 'Initializing:', description );
+        debugLog('Initializing:', description);
 
         const initStep = {
             options,
-            resolveStep( ...args ) {
+            resolveStep(...args) {
                 const {
                     description,
                     stubMethod,
@@ -222,31 +222,31 @@ describe( 'Enketo webform app entrypoints', () => {
                     errorCondition,
                 } = this.options;
 
-                debugLog( 'Performing:', description );
+                debugLog('Performing:', description);
 
-                performedSteps.push( this );
+                performedSteps.push(this);
 
-                if ( stubMethod === 'get' ) {
+                if (stubMethod === 'get') {
                     return propertyValue;
                 }
 
-                if ( stubMethod === 'set' ) {
-                    return expect( args ).to.deep.equal( [ expectedValue ] );
+                if (stubMethod === 'set') {
+                    return expect(args).to.deep.equal([ expectedValue ]);
                 }
 
-                if ( stubMethod === 'throws' ) {
+                if (stubMethod === 'throws') {
                     return errorCondition;
                 }
 
-                expect( args.length ).to.equal( expectedArgs.length );
+                expect(args.length).to.equal(expectedArgs.length);
 
-                for ( const [ index, arg ] of args.entries() ) {
+                for (const [ index, arg ] of args.entries()) {
                     const expected = expectedArgs[index];
 
-                    if ( expected instanceof ParameterPredicate ) {
-                        expected.check( arg );
+                    if (expected instanceof ParameterPredicate) {
+                        expected.check(arg);
                     } else {
-                        expect( arg ).to.deep.equal( expected );
+                        expect(arg).to.deep.equal(expected);
                     }
                 }
 
@@ -254,17 +254,17 @@ describe( 'Enketo webform app entrypoints', () => {
             },
         };
 
-        queue.push( initStep );
+        queue.push(initStep);
 
-        stub[stubMethod]( ( ...args ) => {
+        stub[stubMethod]((...args) => {
             let step = queue.shift();
 
-            expect( step ).not.to.be.undefined;
+            expect(step).not.to.be.undefined;
 
-            return step.resolveStep( ...args );
-        } );
+            return step.resolveStep(...args);
+        });
 
-        debugLog( 'Initialized:', description );
+        debugLog('Initialized:', description);
 
         return initStep;
     };
@@ -287,30 +287,30 @@ describe( 'Enketo webform app entrypoints', () => {
     /** @type {HTMLElement} */
     let loaderElement = null;
 
-    before( async () => {
-        const formHeader = document.querySelector( '.form-header' );
+    before(async () => {
+        const formHeader = document.querySelector('.form-header');
 
-        if ( formHeader == null ) {
+        if (formHeader == null) {
             const domParser = new DOMParser();
-            const formDOM = domParser.parseFromString( `
+            const formDOM = domParser.parseFromString(`
                 <div class="main">
                     <div class="paper">
                         <div class="form-header"></div>
                     </div>
                 </div>
                 <div class="main-loader"></div>
-            `, 'text/html' );
+            `, 'text/html');
 
-            mainElement = formDOM.documentElement.querySelector( '.main' );
-            loaderElement = formDOM.documentElement.querySelector( '.main-loader' );
+            mainElement = formDOM.documentElement.querySelector('.main');
+            loaderElement = formDOM.documentElement.querySelector('.main-loader');
 
-            document.body.append( mainElement, loaderElement );
+            document.body.append(mainElement, loaderElement);
         }
 
-        webformPrivate = ( await import( '../../public/js/src/enketo-webform' ) )._PRIVATE_TEST_ONLY_;
-    } );
+        webformPrivate = (await import('../../public/js/src/enketo-webform'))._PRIVATE_TEST_ONLY_;
+    });
 
-    beforeEach( async () => {
+    beforeEach(async () => {
         sandbox = sinon.createSandbox();
         timers = sinon.useFakeTimers();
 
@@ -321,43 +321,43 @@ describe( 'Enketo webform app entrypoints', () => {
 
         enketoId = 'surveyA';
         defaults = {};
-    } );
+    });
 
-    afterEach( () => {
+    afterEach(() => {
         sandbox.restore();
         timers.clearInterval();
         timers.clearTimeout();
         timers.restore();
-    } );
+    });
 
-    after( () => {
-        if ( mainElement != null ) {
-            document.body.removeChild( mainElement );
+    after(() => {
+        if (mainElement != null) {
+            document.body.removeChild(mainElement);
         }
-        if ( loaderElement != null ) {
-            document.body.removeChild( loaderElement );
+        if (loaderElement != null) {
+            document.body.removeChild(loaderElement);
         }
-    } );
+    });
 
-    describe( 'enketo-webform.js initialization steps', () => {
+    describe('enketo-webform.js initialization steps', () => {
         /** @type {Partial<Survey>} */
         let surveyInitData;
 
-        beforeEach( () => {
+        beforeEach(() => {
             surveyInitData = {
                 get enketoId() { return enketoId; },
                 get defaults() { return defaults; },
             };
 
-            sandbox.stub( lodash, 'memoize' ).callsFake( fn => fn );
-        } );
+            sandbox.stub(lodash, 'memoize').callsFake(fn => fn);
+        });
 
-        describe( 'offline', () => {
-            beforeEach( () => {
-                sandbox.stub( settings, 'offline' ).get( () => true );
-            } );
+        describe('offline', () => {
+            beforeEach(() => {
+                sandbox.stub(settings, 'offline').get(() => true);
+            });
 
-            it( 'initializes offline forms', async () => {
+            it('initializes offline forms', async () => {
                 enketoId = 'offlineA';
 
                 const xformUrl = 'https://example.com/form.xml';
@@ -395,92 +395,92 @@ describe( 'Enketo webform app entrypoints', () => {
                     media: [],
                 };
 
-                const formElement = document.createElement( 'form' );
+                const formElement = document.createElement('form');
 
-                sandbox.stub( i18next, 'use' ).returns( i18next );
+                sandbox.stub(i18next, 'use').returns(i18next);
 
                 const steps = [
-                    prepareInitStep( {
+                    prepareInitStep({
                         description: 'Offline-capable event listener',
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'addEventListener',
                         expectedArgs: [ events.OfflineLaunchCapable().type, expectFunction ],
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Application update event listener',
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'addEventListener',
                         expectedArgs: [ events.ApplicationUpdated().type, expectFunction ],
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Initialize application cache',
                         stubMethod: 'callsFake',
                         object: applicationCache,
                         key: 'init',
                         expectedArgs: [ surveyInit ],
-                        returnValue: Promise.resolve( surveyInit ),
-                    } ),
-                    prepareInitStep( {
+                        returnValue: Promise.resolve(surveyInit),
+                    }),
+                    prepareInitStep({
                         description: 'Translator: initialize i18next',
                         stubMethod: 'callsFake',
                         object: i18next,
                         key: 'init',
                         expectedArgs: [ expectObject, expectCallback ],
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Initialize form cache',
                         stubMethod: 'callsFake',
                         object: formCache,
                         key: 'init',
                         expectedArgs: [ surveyInit ],
-                        returnValue: Promise.resolve( offlineSurvey ),
-                    } ),
+                        returnValue: Promise.resolve(offlineSurvey),
+                    }),
 
                     // While there is currently a truthiness check on the query result,
                     // there is a subsequent access outside that check.
-                    prepareInitStep( {
+                    prepareInitStep({
                         description: 'Add branding: Ensure a brand image query resolves to an element',
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'querySelector',
                         expectedArgs: [ webformPrivate.BRAND_IMAGE_SELECTOR ],
-                        returnValue: document.createElement( 'img' ),
-                    } ),
+                        returnValue: document.createElement('img'),
+                    }),
 
-                    prepareInitStep( {
+                    prepareInitStep({
                         description: 'Swap theme',
                         stubMethod: 'callsFake',
                         object: gui,
                         key: 'swapTheme',
                         expectedArgs: [ offlineSurvey ],
-                        returnValue: Promise.resolve( offlineSurvey ),
-                    } ),
-                    prepareInitStep( {
+                        returnValue: Promise.resolve(offlineSurvey),
+                    }),
+                    prepareInitStep({
                         description: 'Get/update max submission size',
                         stubMethod: 'callsFake',
                         object: formCache,
                         key: 'updateMaxSubmissionSize',
                         expectedArgs: [ offlineSurvey ],
-                        returnValue: Promise.resolve( maxSizeSurvey ),
-                    } ),
-                    prepareInitStep( {
+                        returnValue: Promise.resolve(maxSizeSurvey),
+                    }),
+                    prepareInitStep({
                         description: 'Assign max submission size to settings',
                         stubMethod: 'set',
                         object: settings,
                         key: 'maxSize',
                         expectedValue: maxSize,
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Ensure a query for the page\'s form resolves to an element',
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'querySelector',
                         expectedArgs: [ 'form.or' ],
                         returnValue: formElement,
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Initialize controller-webform',
                         stubMethod: 'callsFake',
                         object: controller,
@@ -494,71 +494,71 @@ describe( 'Enketo webform app entrypoints', () => {
                                 survey: maxSizeSurvey,
                             },
                         ],
-                        returnValue: Promise.resolve( webformInitializedSurvey ),
-                    } ),
-                    prepareInitStep( {
+                        returnValue: Promise.resolve(webformInitializedSurvey),
+                    }),
+                    prepareInitStep({
                         description: 'Get page title',
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'querySelector',
                         expectedArgs: [ 'head>title' ],
-                        returnValue: document.createElement( 'title' ),
-                    } ),
-                    prepareInitStep( {
+                        returnValue: document.createElement('title'),
+                    }),
+                    prepareInitStep({
                         description: 'Load Arabic translation',
                         stubMethod: 'callsFake',
                         object: globalThis,
                         key: 'fetch',
-                        expectedArgs: [ expectLanguage( 'ar' ) ],
+                        expectedArgs: [ expectLanguage('ar') ],
                         returnValue: Promise.resolve(),
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Load Farsi translation',
                         stubMethod: 'callsFake',
                         object: globalThis,
                         key: 'fetch',
-                        expectedArgs: [ expectLanguage( 'fa' ) ],
+                        expectedArgs: [ expectLanguage('fa') ],
                         returnValue: Promise.resolve(),
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Update form cache media',
                         stubMethod: 'callsFake',
                         object: formCache,
                         key: 'updateMedia',
                         expectedArgs: [ webformInitializedSurvey ],
-                        returnValue: Promise.resolve( updatedMediaSurvey ),
-                    } ),
-                    prepareInitStep( {
+                        returnValue: Promise.resolve(updatedMediaSurvey),
+                    }),
+                    prepareInitStep({
                         description: 'Set cache event handlers',
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'addEventListener',
-                        expectedArgs: [ events.FormUpdated().type, expectTypeof( 'function' ) ],
-                    } ),
+                        expectedArgs: [ events.FormUpdated().type, expectTypeof('function') ],
+                    }),
                 ];
 
                 /** @type {Promise} */
-                let offlineInitialization = webformPrivate._initOffline( surveyInit );
+                let offlineInitialization = webformPrivate._initOffline(surveyInit);
 
-                expect( 'xformUrl' in surveyInit ).to.equal( false );
+                expect('xformUrl' in surveyInit).to.equal(false);
 
                 await offlineInitialization;
 
-                for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
-                    const step = performedSteps.find( performedStep => {
+                for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                    const step = performedSteps.find(performedStep => {
                         return performedStep === expectedStep;
-                    } );
-                    const index = performedSteps.indexOf( expectedStep );
+                    });
+                    const index = performedSteps.indexOf(expectedStep);
 
-                    expect( step ).to.equal( expectedStep );
-                    expect( index, `Unexpected order of step ${expectedStep.options.description}` )
-                        .to.equal( expectedIndex );
+                    expect(step).to.equal(expectedStep);
+                    expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                        .to.equal(expectedIndex);
                 }
 
-                expect( performedSteps.length ).to.equal( steps.length );
-            } );
+                expect(performedSteps.length).to.equal(steps.length);
+            });
 
-            it( 'reports offline initialization failure (synchronous)', async () => {
+            it('reports offline initialization failure (synchronous)', async () => {
                 enketoId = 'offlineA';
 
                 const xformUrl = 'https://example.com/form.xml';
@@ -568,62 +568,62 @@ describe( 'Enketo webform app entrypoints', () => {
                     xformUrl,
                 };
 
-                const error = new Error( 'Something failed in the DOM.' );
+                const error = new Error('Something failed in the DOM.');
                 const translatedErrorAdvice = 'Translated error advice';
 
                 const steps = [
-                    prepareInitStep( {
+                    prepareInitStep({
                         description: 'Offline-capable event listener',
                         stubMethod: 'throws',
                         object: document,
                         key: 'addEventListener',
                         errorCondition: error,
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Set error class',
                         stubMethod: 'callsFake',
                         object: loaderElement.classList,
                         key: 'add',
                         expectedArgs: [ webformPrivate.LOAD_ERROR_CLASS ],
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Translate error advice',
                         stubMethod: 'callsFake',
                         object: i18next,
                         key: 't',
                         expectedArgs: [ 'alert.loaderror.entryadvice', undefined ],
                         returnValue: translatedErrorAdvice,
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Alert load errors',
                         stubMethod: 'callsFake',
                         object: gui,
                         key: 'alertLoadErrors',
                         expectedArgs: [ [ error.message ], translatedErrorAdvice ]
-                    } ),
+                    }),
                 ];
                 /** @type {Promise} */
-                let offlineInitialization = webformPrivate._initOffline( surveyInit );
+                let offlineInitialization = webformPrivate._initOffline(surveyInit);
 
-                expect( 'xformUrl' in surveyInit ).to.equal( false );
+                expect('xformUrl' in surveyInit).to.equal(false);
 
                 await offlineInitialization;
 
-                for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
-                    const step = performedSteps.find( performedStep => {
+                for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                    const step = performedSteps.find(performedStep => {
                         return performedStep === expectedStep;
-                    } );
-                    const index = performedSteps.indexOf( expectedStep );
+                    });
+                    const index = performedSteps.indexOf(expectedStep);
 
-                    expect( step ).to.equal( expectedStep );
-                    expect( index, `Unexpected order of step ${expectedStep.options.description}` )
-                        .to.equal( expectedIndex );
+                    expect(step).to.equal(expectedStep);
+                    expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                        .to.equal(expectedIndex);
                 }
 
-                expect( performedSteps.length ).to.equal( steps.length );
-            } );
+                expect(performedSteps.length).to.equal(steps.length);
+            });
 
-            it( 'reports offline initialization failure (asynchronous)', async () => {
+            it('reports offline initialization failure (asynchronous)', async () => {
                 enketoId = 'offlineA';
 
                 const xformUrl = 'https://example.com/form.xml';
@@ -633,83 +633,83 @@ describe( 'Enketo webform app entrypoints', () => {
                     xformUrl,
                 };
 
-                const error = new Error( 'Application cache initialization failed.' );
+                const error = new Error('Application cache initialization failed.');
                 const translatedErrorAdvice = 'Translated error advice';
 
                 const steps = [
-                    prepareInitStep( {
+                    prepareInitStep({
                         description: 'Offline-capable event listener',
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'addEventListener',
                         expectedArgs: [ events.OfflineLaunchCapable().type, expectFunction ],
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Application update event listener',
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'addEventListener',
                         expectedArgs: [ events.ApplicationUpdated().type, expectFunction ],
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Initialize application cache',
                         stubMethod: 'callsFake',
                         object: applicationCache,
                         key: 'init',
                         expectedArgs: [ surveyInit ],
-                        returnValue: Promise.reject( error ),
-                    } ),
-                    prepareInitStep( {
+                        returnValue: Promise.reject(error),
+                    }),
+                    prepareInitStep({
                         description: 'Set error class',
                         stubMethod: 'callsFake',
                         object: loaderElement.classList,
                         key: 'add',
                         expectedArgs: [ webformPrivate.LOAD_ERROR_CLASS ],
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Translate error advice',
                         stubMethod: 'callsFake',
                         object: i18next,
                         key: 't',
                         expectedArgs: [ 'alert.loaderror.entryadvice', undefined ],
                         returnValue: translatedErrorAdvice,
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Alert load errors',
                         stubMethod: 'callsFake',
                         object: gui,
                         key: 'alertLoadErrors',
                         expectedArgs: [ [ error.message ], translatedErrorAdvice ]
-                    } ),
+                    }),
                 ];
                 /** @type {Promise} */
-                let offlineInitialization = webformPrivate._initOffline( surveyInit );
+                let offlineInitialization = webformPrivate._initOffline(surveyInit);
 
-                expect( 'xformUrl' in surveyInit ).to.equal( false );
+                expect('xformUrl' in surveyInit).to.equal(false);
 
                 await offlineInitialization;
 
-                for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
-                    const step = performedSteps.find( performedStep => {
+                for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                    const step = performedSteps.find(performedStep => {
                         return performedStep === expectedStep;
-                    } );
-                    const index = performedSteps.indexOf( expectedStep );
+                    });
+                    const index = performedSteps.indexOf(expectedStep);
 
-                    expect( step ).to.equal( expectedStep );
-                    expect( index, `Unexpected order of step ${expectedStep.options.description}` )
-                        .to.equal( expectedIndex );
+                    expect(step).to.equal(expectedStep);
+                    expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                        .to.equal(expectedIndex);
                 }
 
-                expect( performedSteps.length ).to.equal( steps.length );
-            } );
-        } );
+                expect(performedSteps.length).to.equal(steps.length);
+            });
+        });
 
-        describe( 'online', () => {
-            beforeEach( () => {
-                sandbox.stub( settings, 'offline' ).get( () => false );
-            } );
+        describe('online', () => {
+            beforeEach(() => {
+                sandbox.stub(settings, 'offline').get(() => false);
+            });
 
-            it( 'initializes online forms', async () => {
+            it('initializes online forms', async () => {
                 enketoId = 'onlineA';
 
                 const xformUrl = 'https://example.com/form.xml';
@@ -742,18 +742,18 @@ describe( 'Enketo webform app entrypoints', () => {
                     languages: [ 'ar', 'fa' ],
                 };
 
-                const formElement = document.createElement( 'form' );
+                const formElement = document.createElement('form');
 
                 const steps = [
-                    prepareInitStep( {
+                    prepareInitStep({
                         description: 'Initialize IndexedDB store (used for last-saved instances)',
                         stubMethod: 'callsFake',
                         object: store,
                         key: 'init',
                         expectedArgs: [ { failSilently: true } ],
                         returnValue: Promise.resolve(),
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Translator: initialize i18next',
                         stubMethod: 'callsFake',
                         object: i18next,
@@ -761,58 +761,58 @@ describe( 'Enketo webform app entrypoints', () => {
                         expectedArgs: [ expectObject, expectCallback ],
                     } ),
 
-                    prepareInitStep( {
+                    prepareInitStep({
                         description: 'Get form parts',
                         stubMethod: 'callsFake',
                         object: connection,
                         key: 'getFormParts',
                         expectedArgs: [ surveyInit ],
-                        returnValue: Promise.resolve( onlineSurvey ),
-                    } ),
+                        returnValue: Promise.resolve(onlineSurvey),
+                    }),
 
                     // While there is currently a truthiness check on the query result,
                     // there is a subsequent access outside that check.
-                    prepareInitStep( {
+                    prepareInitStep({
                         description: 'Add branding: Ensure a brand image query resolves to an element',
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'querySelector',
                         expectedArgs: [ webformPrivate.BRAND_IMAGE_SELECTOR ],
-                        returnValue: document.createElement( 'img' ),
-                    } ),
+                        returnValue: document.createElement('img'),
+                    }),
 
-                    prepareInitStep( {
+                    prepareInitStep({
                         description: 'Swap theme',
                         stubMethod: 'callsFake',
                         object: gui,
                         key: 'swapTheme',
                         expectedArgs: [ onlineSurvey ],
-                        returnValue: Promise.resolve( onlineSurvey ),
-                    } ),
-                    prepareInitStep( {
+                        returnValue: Promise.resolve(onlineSurvey),
+                    }),
+                    prepareInitStep({
                         description: 'Get max submission size',
                         stubMethod: 'callsFake',
                         object: connection,
                         key: 'getMaximumSubmissionSize',
                         expectedArgs: [ onlineSurvey ],
-                        returnValue: Promise.resolve( maxSizeSurvey ),
-                    } ),
-                    prepareInitStep( {
+                        returnValue: Promise.resolve(maxSizeSurvey),
+                    }),
+                    prepareInitStep({
                         description: 'Assign max submission size to settings',
                         stubMethod: 'set',
                         object: settings,
                         key: 'maxSize',
                         expectedValue: maxSize,
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Ensure a query for the page\'s form resolves to an element',
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'querySelector',
                         expectedArgs: [ 'form.or' ],
                         returnValue: formElement,
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Initialize controller-webform',
                         stubMethod: 'callsFake',
                         object: controller,
@@ -826,38 +826,38 @@ describe( 'Enketo webform app entrypoints', () => {
                                 survey: maxSizeSurvey,
                             },
                         ],
-                        returnValue: Promise.resolve( webformInitializedSurvey ),
-                    } ),
-                    prepareInitStep( {
+                        returnValue: Promise.resolve(webformInitializedSurvey),
+                    }),
+                    prepareInitStep({
                         description: 'Get page title',
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'querySelector',
                         expectedArgs: [ 'head>title' ],
-                        returnValue: document.createElement( 'title' ),
-                    } ),
+                        returnValue: document.createElement('title'),
+                    }),
                 ];
 
                 /** @type {Promise} */
-                let onlineInitialization = webformPrivate._initOnline( surveyInit );
+                let onlineInitialization = webformPrivate._initOnline(surveyInit);
 
                 await onlineInitialization;
 
-                for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
-                    const step = performedSteps.find( performedStep => {
+                for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                    const step = performedSteps.find(performedStep => {
                         return performedStep === expectedStep;
-                    } );
-                    const index = performedSteps.indexOf( expectedStep );
+                    });
+                    const index = performedSteps.indexOf(expectedStep);
 
-                    expect( step ).to.equal( expectedStep );
-                    expect( index, `Unexpected order of step ${expectedStep.options.description}` )
-                        .to.equal( expectedIndex );
+                    expect(step).to.equal(expectedStep);
+                    expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                        .to.equal(expectedIndex);
                 }
 
-                expect( performedSteps.length ).to.equal( steps.length );
-            } );
+                expect(performedSteps.length).to.equal(steps.length);
+            });
 
-            it( 'reports online initialization failure', async () => {
+            it('reports online initialization failure', async () => {
                 enketoId = 'offlineA';
 
                 const xformUrl = 'https://example.com/form.xml';
@@ -867,68 +867,68 @@ describe( 'Enketo webform app entrypoints', () => {
                     xformUrl,
                 };
 
-                const error = new Error( 'IndexedDB store initialization failed.' );
+                const error = new Error('IndexedDB store initialization failed.');
                 const translatedErrorAdvice = 'Translated error advice';
 
                 const steps = [
-                    prepareInitStep( {
+                    prepareInitStep({
                         description: 'Initialize IndexedDB store (used for last-saved instances)',
                         stubMethod: 'callsFake',
                         object: store,
                         key: 'init',
                         expectedArgs: [ { failSilently: true } ],
-                        returnValue: Promise.reject( error ),
-                    } ),
-                    prepareInitStep( {
+                        returnValue: Promise.reject(error),
+                    }),
+                    prepareInitStep({
                         description: 'Set error class',
                         stubMethod: 'callsFake',
                         object: loaderElement.classList,
                         key: 'add',
                         expectedArgs: [ webformPrivate.LOAD_ERROR_CLASS ],
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Translate error advice',
                         stubMethod: 'callsFake',
                         object: i18next,
                         key: 't',
                         expectedArgs: [ 'alert.loaderror.entryadvice', undefined ],
                         returnValue: translatedErrorAdvice,
-                    } ),
-                    prepareInitStep( {
+                    }),
+                    prepareInitStep({
                         description: 'Alert load errors',
                         stubMethod: 'callsFake',
                         object: gui,
                         key: 'alertLoadErrors',
                         expectedArgs: [ [ error.message ], translatedErrorAdvice ]
-                    } ),
+                    }),
                 ];
 
                 /** @type {Promise} */
-                let onlineInitialization = webformPrivate._initOnline( surveyInit );
+                let onlineInitialization = webformPrivate._initOnline(surveyInit);
 
                 await onlineInitialization;
 
-                for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
-                    const step = performedSteps.find( performedStep => {
+                for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                    const step = performedSteps.find(performedStep => {
                         return performedStep === expectedStep;
-                    } );
-                    const index = performedSteps.indexOf( expectedStep );
+                    });
+                    const index = performedSteps.indexOf(expectedStep);
 
-                    expect( step ).to.equal( expectedStep );
-                    expect( index, `Unexpected order of step ${expectedStep.options.description}` )
-                        .to.equal( expectedIndex );
+                    expect(step).to.equal(expectedStep);
+                    expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                        .to.equal(expectedIndex);
                 }
 
-                expect( performedSteps.length ).to.equal( steps.length );
-            } );
-        } );
-    } );
+                expect(performedSteps.length).to.equal(steps.length);
+            });
+        });
+    });
 
-    describe( 'enketo-webform.js initialization behavior', () => {
+    describe('enketo-webform.js initialization behavior', () => {
         /** @type {Survey} */
         let baseSurvey;
 
-        beforeEach( () => {
+        beforeEach(() => {
             enketoId = 'surveyA';
 
             baseSurvey = {
@@ -942,44 +942,44 @@ describe( 'Enketo webform app entrypoints', () => {
                 xformUrl: 'https://example.com/form.xml',
             };
 
-            sandbox.stub( i18next, 't' ).returnsArg( 0 );
-        } );
+            sandbox.stub(i18next, 't').returnsArg(0);
+        });
 
-        describe( 'location wrapper', () => {
-            it( 'aliases location.href', () => {
-                expect( webformPrivate._location.href ).to.equal( location.href );
-            } );
+        describe('location wrapper', () => {
+            it('aliases location.href', () => {
+                expect(webformPrivate._location.href).to.equal(location.href);
+            });
 
-            it( 'assigns location.href', () => {
-                const newLocation = `${location.href.replace( /#.*$/, '' )}#new-hash`;
+            it('assigns location.href', () => {
+                const newLocation = `${location.href.replace(/#.*$/, '')}#new-hash`;
 
                 webformPrivate._location.href = newLocation;
 
-                expect( location.href ).to.equal( newLocation );
-            } );
-        } );
+                expect(location.href).to.equal(newLocation);
+            });
+        });
 
-        describe( 'emergency handlers', () => {
+        describe('emergency handlers', () => {
             /**
              * @param {number} timeoutMs
              */
-            const timeoutRejectionPromise = ( timeoutMs ) => {
+            const timeoutRejectionPromise = (timeoutMs) => {
                 // Defined here to get a reliable stack trace
-                const error = new Error( `Promise not resolved in ${timeoutMs} milliseconds` );
+                const error = new Error(`Promise not resolved in ${timeoutMs} milliseconds`);
 
                 /** @type {Function} */
                 let resolver;
 
-                const promise = new Promise( ( resolve, reject ) => {
-                    const timeout = setTimeout( () => {
-                        reject( error );
-                    }, timeoutMs );
+                const promise = new Promise((resolve, reject) => {
+                    const timeout = setTimeout(() => {
+                        reject(error);
+                    }, timeoutMs);
 
-                    resolver = ( value ) => {
-                        clearTimeout( timeout );
-                        resolve( value );
+                    resolver = (value) => {
+                        clearTimeout(timeout);
+                        resolve(value);
                     };
-                } );
+                });
 
                 return {
                     promise,
@@ -1014,112 +1014,112 @@ describe( 'Enketo webform app entrypoints', () => {
             /** @type {Function} */
             let resolveReload;
 
-            beforeEach( () => {
-                flushButton = document.createElement( 'button' );
+            beforeEach(() => {
+                flushButton = document.createElement('button');
 
-                const querySelector = document.querySelector.bind( document );
+                const querySelector = document.querySelector.bind(document);
 
-                sandbox.stub( document, 'querySelector' ).callsFake( selector => {
-                    if ( selector === webformPrivate.FLUSH_BUTTON_SELECTOR ) {
+                sandbox.stub(document, 'querySelector').callsFake(selector => {
+                    if (selector === webformPrivate.FLUSH_BUTTON_SELECTOR) {
                         return flushButton;
                     }
 
-                    return querySelector( selector );
-                } );
+                    return querySelector(selector);
+                });
 
                 const {
                     resolver: resolveConfirm,
                     promise: confirm,
-                } = timeoutRejectionPromise( 100 );
+                } = timeoutRejectionPromise(100);
 
                 confirmPromise = confirm;
 
-                confirmStub = sandbox.stub( gui, 'confirm' ).callsFake( () => {
-                    resolveConfirm( isConfirmed );
+                confirmStub = sandbox.stub(gui, 'confirm').callsFake(() => {
+                    resolveConfirm(isConfirmed);
 
                     return confirmPromise;
-                } );
+                });
 
                 const {
                     resolver: reloadResolver,
                     promise: reload,
-                } = timeoutRejectionPromise( 102 );
+                } = timeoutRejectionPromise(102);
 
                 resolveReload = reloadResolver;
                 reloadPromise = reload;
 
-                reloadStub = sandbox.stub( webformPrivate._location, 'reload' ).callsFake( () => {
-                    resolveReload( true );
+                reloadStub = sandbox.stub(webformPrivate._location, 'reload').callsFake(() => {
+                    resolveReload(true);
 
                     return reloadPromise;
-                } );
+                });
 
                 const {
                     resolver: resolveFlush,
                     promise: flush,
-                } = timeoutRejectionPromise( 101 );
+                } = timeoutRejectionPromise(101);
 
                 flushPromise = flush;
 
-                flushStub = sandbox.stub( store, 'flush' ).callsFake( () => {
-                    resolveFlush( true );
+                flushStub = sandbox.stub(store, 'flush').callsFake(() => {
+                    resolveFlush(true);
 
                     return flushPromise;
-                } );
+                });
 
                 webformPrivate._setEmergencyHandlers();
-            } );
+            });
 
-            it( 'flushes the store when confirmed', async () => {
+            it('flushes the store when confirmed', async () => {
                 isConfirmed = true;
 
-                flushButton.dispatchEvent( new Event( 'click' ) );
+                flushButton.dispatchEvent(new Event('click'));
 
-                expect( confirmStub ).to.have.been.calledWith( {
+                expect(confirmStub).to.have.been.calledWith({
                     msg: 'confirm.deleteall.msg',
                     heading: 'confirm.deleteall.heading',
                 }, {
                     posButton: 'confirm.deleteall.posButton',
-                } );
+                });
 
-                await Promise.all( [ confirmPromise, timers.tickAsync( 100 ) ] );
+                await Promise.all([ confirmPromise, timers.tickAsync(100) ]);
 
-                expect( flushStub ).to.have.been.called;
+                expect(flushStub).to.have.been.called;
 
-                await Promise.all( [ flushPromise, timers.tickAsync( 101 ) ] );
+                await Promise.all([ flushPromise, timers.tickAsync(101) ]);
 
-                await Promise.all( [ reloadPromise, timers.tickAsync( 102 ) ] );
+                await Promise.all([ reloadPromise, timers.tickAsync(102) ]);
 
-                expect( reloadStub ).to.have.been.called;
-            } );
+                expect(reloadStub).to.have.been.called;
+            });
 
-            it( 'does not flush the store when not confirmed', async () => {
+            it('does not flush the store when not confirmed', async () => {
                 isConfirmed = false;
 
-                flushButton.dispatchEvent( new Event( 'click' ) );
+                flushButton.dispatchEvent(new Event('click'));
 
-                expect( confirmStub ).to.have.been.calledWith( {
+                expect(confirmStub).to.have.been.calledWith({
                     msg: 'confirm.deleteall.msg',
                     heading: 'confirm.deleteall.heading',
                 }, {
                     posButton: 'confirm.deleteall.posButton',
-                } );
+                });
 
-                await Promise.all( [ confirmPromise, timers.tickAsync( 100 ) ] );
+                await Promise.all([ confirmPromise, timers.tickAsync(100) ]);
 
-                expect( flushStub ).not.to.have.been.called;
+                expect(flushStub).not.to.have.been.called;
 
-                await Promise.all( [
-                    flushPromise.catch( () => {} ),
-                    reloadPromise.catch( () => {} ),
-                    timers.tickAsync( 203 ),
-                ] );
+                await Promise.all([
+                    flushPromise.catch(() => {}),
+                    reloadPromise.catch(() => {}),
+                    timers.tickAsync(203),
+                ]);
 
-                expect( reloadStub ).not.to.have.been.called;
-            } );
-        } );
+                expect(reloadStub).not.to.have.been.called;
+            });
+        });
 
-        describe( 'branding', () => {
+        describe('branding', () => {
             /** @see {@link https://stackoverflow.com/a/13139830} */
             const defaultBrandImageURL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
@@ -1135,10 +1135,10 @@ describe( 'Enketo webform app entrypoints', () => {
             /** @type {Survey} */
             let brandedSurvey;
 
-            beforeEach( () => {
-                brandImage = document.createElement( 'img' );
-                brandImage.setAttribute( 'src', defaultBrandImageURL );
-                brandImage.classList.add( 'hide' );
+            beforeEach(() => {
+                brandImage = document.createElement('img');
+                brandImage.setAttribute('src', defaultBrandImageURL);
+                brandImage.classList.add('hide');
 
                 isOffline = false;
 
@@ -1148,213 +1148,213 @@ describe( 'Enketo webform app entrypoints', () => {
                     branding: { source: brandImageURL },
                 };
 
-                sandbox.stub( settings, 'offline' ).get( () => isOffline );
+                sandbox.stub(settings, 'offline').get(() => isOffline);
 
-                sandbox.stub( document, 'querySelector' ).callsFake( selector => {
-                    if ( selector === webformPrivate.BRAND_IMAGE_SELECTOR ) {
+                sandbox.stub(document, 'querySelector').callsFake(selector => {
+                    if (selector === webformPrivate.BRAND_IMAGE_SELECTOR) {
                         return brandImage;
                     }
 
-                    throw new Error( `Unexpected selector: ${selector}` );
-                } );
-            } );
+                    throw new Error(`Unexpected selector: ${selector}`);
+                });
+            });
 
-            it( 'sets the brand image source to the survey brand source', () => {
-                webformPrivate._addBranding( brandedSurvey );
+            it('sets the brand image source to the survey brand source', () => {
+                webformPrivate._addBranding(brandedSurvey);
 
-                expect( brandImage.src ).to.equal( brandImageURL );
-            } );
+                expect(brandImage.src).to.equal(brandImageURL);
+            });
 
-            it( 'sets the brand image data-offline-source to the offline survey brand source', () => {
+            it('sets the brand image data-offline-source to the offline survey brand source', () => {
                 isOffline = true;
 
-                webformPrivate._addBranding( brandedSurvey );
+                webformPrivate._addBranding(brandedSurvey);
 
-                expect( brandImage.getAttribute( 'data-offline-src' ) ).to.equal( brandImageURL );
-            } );
+                expect(brandImage.getAttribute('data-offline-src')).to.equal(brandImageURL);
+            });
 
-            it( 'unsets the brand image src on the offline survey brand source', () => {
+            it('unsets the brand image src on the offline survey brand source', () => {
                 isOffline = true;
 
-                webformPrivate._addBranding( brandedSurvey );
+                webformPrivate._addBranding(brandedSurvey);
 
-                expect( brandImage.src ).to.equal( '' );
-            } );
+                expect(brandImage.src).to.equal('');
+            });
 
-            it( 'does not set the source if a survey does not have branding', () => {
-                webformPrivate._addBranding( baseSurvey );
+            it('does not set the source if a survey does not have branding', () => {
+                webformPrivate._addBranding(baseSurvey);
 
-                expect( brandImage.src ).to.equal( defaultBrandImageURL );
-            } );
+                expect(brandImage.src).to.equal(defaultBrandImageURL);
+            });
 
-            it( 'unhides the brand image for a branded survey', () => {
-                webformPrivate._addBranding( brandedSurvey );
+            it('unhides the brand image for a branded survey', () => {
+                webformPrivate._addBranding(brandedSurvey);
 
-                expect( brandImage.classList.contains( 'hide' ) ).to.equal( false );
-            } );
+                expect(brandImage.classList.contains('hide')).to.equal(false);
+            });
 
-            it( 'unhides the default brand image for an unbranded survey', () => {
-                webformPrivate._addBranding( baseSurvey );
+            it('unhides the default brand image for an unbranded survey', () => {
+                webformPrivate._addBranding(baseSurvey);
 
-                expect( brandImage.classList.contains( 'hide' ) ).to.equal( false );
-            } );
+                expect(brandImage.classList.contains('hide')).to.equal(false);
+            });
 
-            it( 'does not error when a brand image is not found', () => {
+            it('does not error when a brand image is not found', () => {
                 /** @type {Error | null} */
                 let caught = null;
 
                 brandImage = null;
 
                 try {
-                    webformPrivate._addBranding( brandImage );
-                } catch ( error ) {
+                    webformPrivate._addBranding(brandImage);
+                } catch (error) {
                     caught = error;
                 }
 
-                expect( caught ).to.equal( null );
-            } );
-        } );
+                expect(caught).to.equal(null);
+            });
+        });
 
-        describe( 'swapping themes', () => {
-            const guiResult = Symbol( 'GUI result' );
+        describe('swapping themes', () => {
+            const guiResult = Symbol('GUI result');
 
             /** @type {Stub} */
             let swapThemeStub;
 
-            beforeEach( () => {
-                swapThemeStub = sandbox.stub( gui, 'swapTheme' ).callsFake( () => (
-                    Promise.resolve( guiResult )
-                ) );
-            } );
+            beforeEach(() => {
+                swapThemeStub = sandbox.stub(gui, 'swapTheme').callsFake(() => (
+                    Promise.resolve(guiResult)
+                ));
+            });
 
-            it( 'swaps themes with a valid form', async () => {
-                const result = await webformPrivate._swapTheme( baseSurvey );
+            it('swaps themes with a valid form', async () => {
+                const result = await webformPrivate._swapTheme(baseSurvey);
 
-                expect( swapThemeStub ).to.have.been.calledWith( baseSurvey );
-                expect( result ).to.equal( guiResult );
-            } );
+                expect(swapThemeStub).to.have.been.calledWith(baseSurvey);
+                expect(result).to.equal(guiResult);
+            });
 
-            it( 'fails to swap themes when the form is not present on the survey', async () => {
+            it('fails to swap themes when the form is not present on the survey', async () => {
                 const { form, ...invalidSurvey } = baseSurvey;
 
                 /** @type {Error | null} */
                 let caught = null;
 
                 try {
-                    await webformPrivate._swapTheme( invalidSurvey );
-                } catch ( error ) {
+                    await webformPrivate._swapTheme(invalidSurvey);
+                } catch (error) {
                     caught = error;
                 }
 
                 const expectedMessage = webformPrivate.SWAP_THEME_ERROR_MESSAGE;
 
-                expect( swapThemeStub ).not.to.have.been.called;
-                expect( caught ).to.be.an.instanceof( Error ).and.to.have.property( 'message', expectedMessage );
-            } );
+                expect(swapThemeStub).not.to.have.been.called;
+                expect(caught).to.be.an.instanceof(Error).and.to.have.property('message', expectedMessage);
+            });
 
-            it( 'fails to swap themes when the model is not present on the survey', async () => {
+            it('fails to swap themes when the model is not present on the survey', async () => {
                 const { model, ...invalidSurvey } = baseSurvey;
 
                 /** @type {Error | null} */
                 let caught = null;
 
                 try {
-                    await webformPrivate._swapTheme( invalidSurvey );
-                } catch ( error ) {
+                    await webformPrivate._swapTheme(invalidSurvey);
+                } catch (error) {
                     caught = error;
                 }
 
                 const expectedMessage = webformPrivate.SWAP_THEME_ERROR_MESSAGE;
 
-                expect( swapThemeStub ).not.to.have.been.called;
-                expect( caught ).to.be.an.instanceof( Error ).and.to.have.property( 'message', expectedMessage );
-            } );
-        } );
+                expect(swapThemeStub).not.to.have.been.called;
+                expect(caught).to.be.an.instanceof(Error).and.to.have.property('message', expectedMessage);
+            });
+        });
 
-        describe( 'maximum submission size', () => {
-            it( 'sets the survey\'s maximum submission size on settings', () => {
+        describe('maximum submission size', () => {
+            it('sets the survey\'s maximum submission size on settings', () => {
                 let maxSizeSetting = 4;
 
-                sandbox.stub( settings, 'maxSize' ).get( () => maxSizeSetting );
-                sandbox.stub( settings, 'maxSize' ).set( ( maxSize ) => {
+                sandbox.stub(settings, 'maxSize').get(() => maxSizeSetting);
+                sandbox.stub(settings, 'maxSize').set((maxSize) => {
                     maxSizeSetting = maxSize;
-                } );
+                });
 
-                webformPrivate._updateMaxSizeSetting( {
+                webformPrivate._updateMaxSizeSetting({
                     ...baseSurvey,
                     maxSize: 5,
-                } );
+                });
 
-                expect( maxSizeSetting ).to.equal( 5 );
-            } );
+                expect(maxSizeSetting).to.equal(5);
+            });
 
-            it( 'preserves existing max size setting when survey does not specify a max size', () => {
+            it('preserves existing max size setting when survey does not specify a max size', () => {
                 let maxSizeSetting = 4;
 
-                sandbox.stub( settings, 'maxSize' ).get( () => maxSizeSetting );
-                sandbox.stub( settings, 'maxSize' ).set( ( maxSize ) => {
+                sandbox.stub(settings, 'maxSize').get(() => maxSizeSetting);
+                sandbox.stub(settings, 'maxSize').set((maxSize) => {
                     maxSizeSetting = maxSize;
-                } );
+                });
 
-                webformPrivate._updateMaxSizeSetting( baseSurvey );
+                webformPrivate._updateMaxSizeSetting(baseSurvey);
 
-                expect( maxSizeSetting ).to.equal( 4 );
-            } );
-        } );
+                expect(maxSizeSetting).to.equal(4);
+            });
+        });
 
-        describe( 'preparing an existing instance', () => {
+        describe('preparing an existing instance', () => {
             const model = '<instance><data><el1/><el2>default</el2></data><meta><instanceID/></meta></instance>';
 
-            it( 'populates an instance string with provided defaults', () => {
-                const result = webformPrivate._prepareInstance( model, {
+            it('populates an instance string with provided defaults', () => {
+                const result = webformPrivate._prepareInstance(model, {
                     '//instance/data/el1': 'v1',
                     '//instance/data/el2': 'v2',
-                } );
+                });
                 const expected = '<data><el1>v1</el1><el2>v2</el2></data>';
 
-                expect( result ).to.equal( expected );
-            } );
+                expect(result).to.equal(expected);
+            });
 
-            it( 'preserves the model default when no instance default is provided', () => {
-                const result = webformPrivate._prepareInstance( model, {
+            it('preserves the model default when no instance default is provided', () => {
+                const result = webformPrivate._prepareInstance(model, {
                     '//instance/data/el1': 'v1',
-                } );
+                });
                 const expected = '<data><el1>v1</el1><el2>default</el2></data>';
 
-                expect( result ).to.equal( expected );
-            } );
+                expect(result).to.equal(expected);
+            });
 
-            it( 'does not return an instance string when no defaults are defined', () => {
-                const result = webformPrivate._prepareInstance( model, {} );
+            it('does not return an instance string when no defaults are defined', () => {
+                const result = webformPrivate._prepareInstance(model, {});
 
-                expect( result ).to.equal( null );
-            } );
+                expect(result).to.equal(null);
+            });
 
-            it( 'does not return an instance string when no defaults object is provided', () => {
-                const result = webformPrivate._prepareInstance( model );
+            it('does not return an instance string when no defaults object is provided', () => {
+                const result = webformPrivate._prepareInstance(model);
 
-                expect( result ).to.equal( null );
-            } );
+                expect(result).to.equal(null);
+            });
 
-            it( 'does not populate inherited properties from defaults', () => {
+            it('does not populate inherited properties from defaults', () => {
                 const proto = {
                     '//instance/data/el2': 'v2',
                 };
-                const defaults = Object.create( proto, {
+                const defaults = Object.create(proto, {
                     '//instance/data/el1': {
                         enumerable: true,
                         value: 'v1',
                     },
-                } );
+                });
 
-                const result = webformPrivate._prepareInstance( model, defaults );
+                const result = webformPrivate._prepareInstance(model, defaults);
                 const expected = '<data><el1>v1</el1><el2>default</el2></data>';
 
-                expect( result ).to.equal( expected );
-            } );
-        } );
+                expect(result).to.equal(expected);
+            });
+        });
 
-        describe( 'controller initialization', () => {
+        describe('controller initialization', () => {
             const formTitle = 'Controller init form';
             const form = `<form autocomplete="off" novalidate="novalidate" class="or clearfix" dir="ltr" data-form-id="last-saved">\n<!--This form was created by transforming an ODK/OpenRosa-flavored (X)Form using an XSL stylesheet created by Enketo LLC.--><section class="form-logo"></section><h3 dir="auto" id="form-title">${formTitle}</h3>\n  \n\n  \n    <label class="question non-select "><span lang="" class="question-label active">Last saved...: <span class="or-output" data-value="instance('last-saved')/data/item"> </span></span><input type="text" name="/data/item" data-type-xml="string" data-setvalue="instance('last-saved')/data/item" data-event="odk-instance-first-load"></label>\n  \n<fieldset id="or-setvalue-items" style="display:none;"></fieldset></form>`;
             const model = '<instance><data><el1/><el2>default</el2></data><meta><instanceID/></meta></instance>';
@@ -1374,12 +1374,12 @@ describe( 'Enketo webform app entrypoints', () => {
             /** @type {HTMLElement} */
             let formHeader;
 
-            beforeEach( () => {
+            beforeEach(() => {
                 controllerFormLanguages = [];
 
-                controllerInitStub = sandbox.stub( controller, 'init' ).callsFake( () => Promise.resolve( {
+                controllerInitStub = sandbox.stub(controller, 'init').callsFake(() => Promise.resolve({
                     languages: controllerFormLanguages,
-                } ) );
+                }));
 
                 formHeader = document.querySelector(
                     webformPrivate.FORM_HEADER_SELECTOR
@@ -1401,110 +1401,110 @@ describe( 'Enketo webform app entrypoints', () => {
                 };
 
                 // Sinon cannot stub nonexistent properties
-                if ( !( 'print' in settings ) ) {
+                if (!('print' in settings)) {
                     settings['print'] = false;
                 }
-            } );
+            });
 
-            it( 'appends the DOM representation of the survey\'s form after the page\'s form header', async () => {
-                await webformPrivate._init( survey );
-
-                const formElement = formHeader.nextSibling;
-
-                expect( formElement.outerHTML ).to.deep.equal( form );
-            } );
-
-            it( 'initializes the controller with the form element and survey data', async () => {
-                await webformPrivate._init( survey );
+            it('appends the DOM representation of the survey\'s form after the page\'s form header', async () => {
+                await webformPrivate._init(survey);
 
                 const formElement = formHeader.nextSibling;
 
-                expect( controllerInitStub ).to.have.been.calledWith( formElement, {
+                expect(formElement.outerHTML).to.deep.equal(form);
+            });
+
+            it('initializes the controller with the form element and survey data', async () => {
+                await webformPrivate._init(survey);
+
+                const formElement = formHeader.nextSibling;
+
+                expect(controllerInitStub).to.have.been.calledWith(formElement, {
                     modelStr: model,
                     instanceStr: null,
                     external: externalData,
                     survey,
-                } );
-            } );
+                });
+            });
 
-            it( 'initializes the controller with instance data with defaults from settings', async () => {
-                sandbox.stub( settings, 'defaults' ).get( () => ( {
+            it('initializes the controller with instance data with defaults from settings', async () => {
+                sandbox.stub(settings, 'defaults').get(() => ({
                     '//instance/data/el1': 'v1',
-                } ) );
+                }));
 
-                await webformPrivate._init( survey );
+                await webformPrivate._init(survey);
 
                 const formElement = formHeader.nextSibling;
 
-                expect( controllerInitStub ).to.have.been.calledWith( formElement, {
+                expect(controllerInitStub).to.have.been.calledWith(formElement, {
                     modelStr: model,
                     instanceStr: '<data><el1>v1</el1><el2>default</el2></data>',
                     external: externalData,
                     survey,
-                } );
-            } );
+                });
+            });
 
-            it( 'sets the page title with the title from the form', async () => {
-                await webformPrivate._init( survey );
+            it('sets the page title with the title from the form', async () => {
+                await webformPrivate._init(survey);
 
-                const title = document.querySelector( 'title' );
+                const title = document.querySelector('title');
 
-                expect( title.textContent ).to.equal( formTitle );
-            } );
+                expect(title.textContent).to.equal(formTitle);
+            });
 
-            it( 'applies print styles if print is enabled in settings', async () => {
-                sandbox.stub( settings, 'print' ).get( () => true );
+            it('applies print styles if print is enabled in settings', async () => {
+                sandbox.stub(settings, 'print').get(() => true);
 
-                const applyPrintStyleStub = sandbox.stub( gui, 'applyPrintStyle' ).returns();
+                const applyPrintStyleStub = sandbox.stub(gui, 'applyPrintStyle').returns();
 
-                await webformPrivate._init( survey );
+                await webformPrivate._init(survey);
 
-                expect( applyPrintStyleStub ).to.have.been.called;
-            } );
+                expect(applyPrintStyleStub).to.have.been.called;
+            });
 
-            it( 'does not apply print styles if print is not enabled in settings', async () => {
-                sandbox.stub( settings, 'print' ).get( () => false );
+            it('does not apply print styles if print is not enabled in settings', async () => {
+                sandbox.stub(settings, 'print').get(() => false);
 
-                const applyPrintStyleStub = sandbox.stub( gui, 'applyPrintStyle' ).returns();
+                const applyPrintStyleStub = sandbox.stub(gui, 'applyPrintStyle').returns();
 
-                await webformPrivate._init( survey );
+                await webformPrivate._init(survey);
 
-                expect( applyPrintStyleStub ).not.to.have.been.called;
-            } );
+                expect(applyPrintStyleStub).not.to.have.been.called;
+            });
 
-            it( 'localizes the form element', async () => {
+            it('localizes the form element', async () => {
                 /** @type {Stub} */
                 let queryStub;
 
-                controllerInitStub.callsFake( async ( formElement ) => {
+                controllerInitStub.callsFake(async (formElement) => {
                     // Tests that `localize` from `translator.js` was called by inference
                     // without testing that entire functionality.
-                    queryStub = sandbox.stub( formElement, 'querySelectorAll' ).returns( [] );
+                    queryStub = sandbox.stub(formElement, 'querySelectorAll').returns([]);
 
                     return survey;
-                } );
+                });
 
 
-                await webformPrivate._init( survey );
+                await webformPrivate._init(survey);
 
-                expect( queryStub ).to.have.been.calledWith( '[data-i18n]' );
-            } );
+                expect(queryStub).to.have.been.calledWith('[data-i18n]');
+            });
 
-            it( 'returns a survey with ', async () => {
+            it('returns a survey with ', async () => {
                 controllerFormLanguages = [ 'ar', 'fa' ];
 
-                const result = await webformPrivate._init( survey );
+                const result = await webformPrivate._init(survey);
 
-                expect( result ).to.deep.equal( {
+                expect(result).to.deep.equal({
                     ...survey,
 
                     languages: controllerFormLanguages,
-                } );
-            } );
-        } );
+                });
+            });
+        });
 
-        describe( 'application cache event handlers', () => {
-            describe( 'offline launch capable events', () => {
+        describe('application cache event handlers', () => {
+            describe('offline launch capable events', () => {
                 const serviceWorkerVersion = '1.2.3-d34db33-b4dfac3';
 
                 /** @type {string | null} */
@@ -1525,139 +1525,139 @@ describe( 'Enketo webform app entrypoints', () => {
                 /** @type {Promise<any> | null} */
                 let updateApplicationVersionPromise;
 
-                beforeEach( () => {
+                beforeEach(() => {
                     serviceWorkerScriptUrl = null;
 
-                    updateOfflineCapableStub = sandbox.stub( gui.updateStatus, 'offlineCapable' ).returns( null );
+                    updateOfflineCapableStub = sandbox.stub(gui.updateStatus, 'offlineCapable').returns(null);
 
-                    sandbox.stub( applicationCache, 'serviceWorkerScriptUrl' ).get( () => {
+                    sandbox.stub(applicationCache, 'serviceWorkerScriptUrl').get(() => {
                         return serviceWorkerScriptUrl;
-                    } );
+                    });
 
                     getServiceWorkerVersionPromise = null;
 
-                    getServiceWorkerVersionStub = sandbox.stub( connection, 'getServiceWorkerVersion' )
-                        .callsFake( () => {
+                    getServiceWorkerVersionStub = sandbox.stub(connection, 'getServiceWorkerVersion')
+                        .callsFake(() => {
                             getServiceWorkerVersionPromise = Promise.resolve(
                                 serviceWorkerVersion
                             );
 
                             return getServiceWorkerVersionPromise;
-                        } );
+                        });
 
                     updateApplicationVersionPromise = null;
 
-                    updateApplicationVersionStub = sandbox.stub( gui.updateStatus, 'applicationVersion' )
-                        .callsFake( () => {
+                    updateApplicationVersionStub = sandbox.stub(gui.updateStatus, 'applicationVersion')
+                        .callsFake(() => {
                             updateApplicationVersionPromise = Promise.resolve();
-                        } );
-                } );
+                        });
+                });
 
-                afterEach( async () => {
+                afterEach(async () => {
                     await getServiceWorkerVersionPromise;
                     await updateApplicationVersionPromise;
-                } );
+                });
 
-                it( 'updates the GUI to reflect that offline launch is available', async () => {
+                it('updates the GUI to reflect that offline launch is available', async () => {
                     webformPrivate._setAppCacheEventHandlers();
 
-                    const event = events.OfflineLaunchCapable( {
+                    const event = events.OfflineLaunchCapable({
                         capable: true,
-                    } );
+                    });
 
-                    document.dispatchEvent( event );
+                    document.dispatchEvent(event);
 
-                    expect( updateOfflineCapableStub ).to.have.been.calledWith( true );
-                } );
+                    expect(updateOfflineCapableStub).to.have.been.calledWith(true);
+                });
 
-                it( 'updates the GUI to reflect that offline launch is not available', async () => {
+                it('updates the GUI to reflect that offline launch is not available', async () => {
                     webformPrivate._setAppCacheEventHandlers();
 
-                    const event = events.OfflineLaunchCapable( {
+                    const event = events.OfflineLaunchCapable({
                         capable: false,
-                    } );
+                    });
 
-                    document.dispatchEvent( event );
+                    document.dispatchEvent(event);
 
-                    expect( updateOfflineCapableStub ).to.have.been.calledWith( false );
-                } );
+                    expect(updateOfflineCapableStub).to.have.been.calledWith(false);
+                });
 
-                it( 'updates the GUI to reflect the service worker version', async () => {
+                it('updates the GUI to reflect the service worker version', async () => {
                     serviceWorkerScriptUrl = 'https://example.com/worker.js';
 
                     webformPrivate._setAppCacheEventHandlers();
 
-                    const event = events.OfflineLaunchCapable( {
+                    const event = events.OfflineLaunchCapable({
                         capable: false,
-                    } );
+                    });
 
-                    document.dispatchEvent( event );
+                    document.dispatchEvent(event);
 
                     await getServiceWorkerVersionPromise;
                     await updateApplicationVersionPromise;
 
-                    expect( updateApplicationVersionStub ).to.have.been.calledWith( serviceWorkerVersion );
-                } );
+                    expect(updateApplicationVersionStub).to.have.been.calledWith(serviceWorkerVersion);
+                });
 
-                it( 'does not updates the GUI to reflect the service worker version if no service worker script is available', async () => {
+                it('does not updates the GUI to reflect the service worker version if no service worker script is available', async () => {
                     webformPrivate._setAppCacheEventHandlers();
 
-                    const event = events.OfflineLaunchCapable( {
+                    const event = events.OfflineLaunchCapable({
                         capable: false,
-                    } );
+                    });
 
-                    document.dispatchEvent( event );
+                    document.dispatchEvent(event);
 
                     await getServiceWorkerVersionPromise;
                     await updateApplicationVersionPromise;
 
-                    expect( getServiceWorkerVersionStub ).not.to.have.been.called;
-                    expect( updateApplicationVersionStub ).not.to.have.been.called;
-                } );
-            } );
+                    expect(getServiceWorkerVersionStub).not.to.have.been.called;
+                    expect(updateApplicationVersionStub).not.to.have.been.called;
+                });
+            });
 
-            describe( 'application updated events', () => {
-                it( 'provides GUI feedback when the application has been updated', () => {
-                    const feedbackStub = sandbox.stub( gui, 'feedback' ).returns();
+            describe('application updated events', () => {
+                it('provides GUI feedback when the application has been updated', () => {
+                    const feedbackStub = sandbox.stub(gui, 'feedback').returns();
 
                     const event = events.ApplicationUpdated();
 
-                    document.dispatchEvent( event );
+                    document.dispatchEvent(event);
 
-                    expect( feedbackStub ).to.have.been.calledWith(
+                    expect(feedbackStub).to.have.been.calledWith(
                         'alert.appupdated.msg',
                         20,
                         'alert.appupdated.heading'
                     );
-                } );
-            } );
-        } );
+                });
+            });
+        });
 
-        describe( 'form cache event handlers', () => {
-            it( 'provides GUI feedback when the form has been updated', () => {
-                const feedbackStub = sandbox.stub( gui, 'feedback' ).returns();
+        describe('form cache event handlers', () => {
+            it('provides GUI feedback when the form has been updated', () => {
+                const feedbackStub = sandbox.stub(gui, 'feedback').returns();
 
                 webformPrivate._setFormCacheEventHandlers();
 
                 const event = events.FormUpdated();
 
-                document.dispatchEvent( event );
+                document.dispatchEvent(event);
 
-                expect( feedbackStub ).to.have.been.calledWith(
+                expect(feedbackStub).to.have.been.calledWith(
                     'alert.formupdated.msg',
                     20,
                     'alert.formupdated.heading'
                 );
-            } );
-        } );
+            });
+        });
 
-        describe( 'error handling', () => {
+        describe('error handling', () => {
             class StatusError extends Error {
                 /**
                  * @param {number} status
                  */
-                constructor( status ) {
-                    super( `HTTP Error: ${status}` );
+                constructor(status) {
+                    super(`HTTP Error: ${status}`);
 
                     this.status = status;
                 }
@@ -1678,96 +1678,96 @@ describe( 'Enketo webform app entrypoints', () => {
             /** @type {loadErrorsStub} */
             let loadErrorsStub;
 
-            beforeEach( () => {
-                sandbox.stub( settings, 'loginUrl' ).get( () => loginURL );
+            beforeEach(() => {
+                sandbox.stub(settings, 'loginUrl').get(() => loginURL);
 
-                addLoaderClassStub = sandbox.stub( loaderElement.classList, 'add' ).returns();
+                addLoaderClassStub = sandbox.stub(loaderElement.classList, 'add').returns();
 
                 currentURL = 'https://example.com/-/x/f33db33f';
-                redirectStub = sandbox.stub( webformPrivate._location, 'href' );
+                redirectStub = sandbox.stub(webformPrivate._location, 'href');
 
-                redirectStub.get( () => currentURL );
+                redirectStub.get(() => currentURL);
 
-                redirectStub.set( redirectLocation => {
+                redirectStub.set(redirectLocation => {
                     currentURL = redirectLocation;
-                } );
+                });
 
 
-                loadErrorsStub = sandbox.stub( gui, 'alertLoadErrors' ).returns();
-            } );
+                loadErrorsStub = sandbox.stub(gui, 'alertLoadErrors').returns();
+            });
 
-            it( 'indicates failure on the loading indicator', () => {
-                const error = new Error( 'bummer' );
+            it('indicates failure on the loading indicator', () => {
+                const error = new Error('bummer');
 
-                webformPrivate._showErrorOrAuthenticate( error );
+                webformPrivate._showErrorOrAuthenticate(error);
 
-                expect( addLoaderClassStub ).to.have.been.calledWith( webformPrivate.LOAD_ERROR_CLASS );
-            } );
+                expect(addLoaderClassStub).to.have.been.calledWith(webformPrivate.LOAD_ERROR_CLASS);
+            });
 
-            it( 'redirects to a login page on authorization failure', () => {
-                const error = new StatusError( 401 );
+            it('redirects to a login page on authorization failure', () => {
+                const error = new StatusError(401);
 
-                webformPrivate._showErrorOrAuthenticate( error );
+                webformPrivate._showErrorOrAuthenticate(error);
 
-                expect( currentURL ).to.equal( `${loginURL}?return_url=${encodeURIComponent( initialURL )}` );
-                expect( loadErrorsStub ).not.to.have.been.called;
-            } );
+                expect(currentURL).to.equal(`${loginURL}?return_url=${encodeURIComponent(initialURL)}`);
+                expect(loadErrorsStub).not.to.have.been.called;
+            });
 
-            it( 'does not redirect to a login page for other network errors', () => {
-                const error = new StatusError( 404 );
+            it('does not redirect to a login page for other network errors', () => {
+                const error = new StatusError(404);
 
-                webformPrivate._showErrorOrAuthenticate( error );
+                webformPrivate._showErrorOrAuthenticate(error);
 
-                expect( currentURL ).to.equal( initialURL );
-            } );
+                expect(currentURL).to.equal(initialURL);
+            });
 
-            it( 'alerts a loading error message', () => {
-                const error = new Error( 'oops!' );
+            it('alerts a loading error message', () => {
+                const error = new Error('oops!');
 
-                webformPrivate._showErrorOrAuthenticate( error );
+                webformPrivate._showErrorOrAuthenticate(error);
 
-                expect( loadErrorsStub ).to.have.been.calledWith(
+                expect(loadErrorsStub).to.have.been.calledWith(
                     [ error.message ],
                     'alert.loaderror.entryadvice'
                 );
-            } );
+            });
 
-            it( 'alerts a loading error message string', () => {
+            it('alerts a loading error message string', () => {
                 const message = 'oops!';
 
-                webformPrivate._showErrorOrAuthenticate( message );
+                webformPrivate._showErrorOrAuthenticate(message);
 
-                expect( loadErrorsStub ).to.have.been.calledWith(
+                expect(loadErrorsStub).to.have.been.calledWith(
                     [ message ],
                     'alert.loaderror.entryadvice'
                 );
-            } );
+            });
 
-            it( 'alerts an unknown error message', () => {
+            it('alerts an unknown error message', () => {
                 const error = new Error();
 
-                webformPrivate._showErrorOrAuthenticate( error );
+                webformPrivate._showErrorOrAuthenticate(error);
 
-                expect( loadErrorsStub ).to.have.been.calledWith(
+                expect(loadErrorsStub).to.have.been.calledWith(
                     [ 'error.unknown' ],
                     'alert.loaderror.entryadvice'
                 );
-            } );
+            });
 
-            it( 'alerts multiple loading error messages', () => {
+            it('alerts multiple loading error messages', () => {
                 const errors = [ 'really', 'not', 'good!' ];
 
-                webformPrivate._showErrorOrAuthenticate( errors );
+                webformPrivate._showErrorOrAuthenticate(errors);
 
-                expect( loadErrorsStub ).to.have.been.calledWith(
+                expect(loadErrorsStub).to.have.been.calledWith(
                     errors,
                     'alert.loaderror.entryadvice'
                 );
-            } );
-        } );
-    } );
+            });
+        });
+    });
 
-    describe( 'enketo-webform-edit.js initialization steps', () => {
+    describe('enketo-webform-edit.js initialization steps', () => {
         /** @type {Record<string, any> | null} */
         let webformEditPrivate = null;
 
@@ -1783,12 +1783,12 @@ describe( 'Enketo webform app entrypoints', () => {
         /** @type {HTMLElement} */
         let formHeader;
 
-        before( async () => {
-            webformEditPrivate = ( await import( '../../public/js/src/enketo-webform-edit' ) )._PRIVATE_TEST_ONLY_;
-        } );
+        before(async () => {
+            webformEditPrivate = (await import('../../public/js/src/enketo-webform-edit'))._PRIVATE_TEST_ONLY_;
+        });
 
-        beforeEach( () => {
-            sandbox.stub( lodash, 'memoize' ).callsFake( fn => fn );
+        beforeEach(() => {
+            sandbox.stub(lodash, 'memoize').callsFake(fn => fn);
 
             instanceId = 'instance1';
 
@@ -1799,10 +1799,10 @@ describe( 'Enketo webform app entrypoints', () => {
                 get instanceId() { return instanceId; },
             };
 
-            formHeader = document.querySelector( '.form-header' );
-        } );
+            formHeader = document.querySelector('.form-header');
+        });
 
-        it( 'initializes a form to edit an existing instance/record', async () => {
+        it('initializes a form to edit an existing instance/record', async () => {
             existingInstance = '<a>value</a>';
 
             const formTitle = 'Title of form';
@@ -1854,84 +1854,84 @@ describe( 'Enketo webform app entrypoints', () => {
                 languages: [ 'ar', 'fa' ],
             };
 
-            const formElement = document.createElement( 'form' );
+            const formElement = document.createElement('form');
             const artificialTitleElement = {
                 textContent: 'Not title of form',
             };
 
-            sandbox.stub( i18next, 'use' ).returns( i18next );
+            sandbox.stub(i18next, 'use').returns(i18next);
 
             const steps = [
-                prepareInitStep( {
+                prepareInitStep({
                     description: 'Translator: initialize i18next',
                     stubMethod: 'callsFake',
                     object: i18next,
                     key: 'init',
                     expectedArgs: [ expectObject, expectCallback ],
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Get form parts',
                     stubMethod: 'callsFake',
                     object: connection,
                     key: 'getFormParts',
                     expectedArgs: [ surveyInitData ],
-                    returnValue: Promise.resolve( formParts ),
-                } ),
-                prepareInitStep( {
+                    returnValue: Promise.resolve(formParts),
+                }),
+                prepareInitStep({
                     description: 'Get existing instance',
                     stubMethod: 'callsFake',
                     object: connection,
                     key: 'getExistingInstance',
                     expectedArgs: [ surveyInitData ],
-                    returnValue: Promise.resolve( instanceResult ),
-                } ),
-                prepareInitStep( {
+                    returnValue: Promise.resolve(instanceResult),
+                }),
+                prepareInitStep({
                     description: 'Swap theme',
                     stubMethod: 'callsFake',
                     object: gui,
                     key: 'swapTheme',
                     expectedArgs: [ formPartsWithInstanceData ],
-                    returnValue: Promise.resolve( swappedThemeSurvey ),
-                } ),
-                prepareInitStep( {
+                    returnValue: Promise.resolve(swappedThemeSurvey),
+                }),
+                prepareInitStep({
                     description: 'Get max submission size',
                     stubMethod: 'callsFake',
                     object: connection,
                     key: 'getMaximumSubmissionSize',
                     expectedArgs: [ swappedThemeSurvey ],
-                    returnValue: Promise.resolve( maxSizeSurvey ),
-                } ),
-                prepareInitStep( {
+                    returnValue: Promise.resolve(maxSizeSurvey),
+                }),
+                prepareInitStep({
                     description: 'Assign max submission size to settings',
                     stubMethod: 'set',
                     object: settings,
                     key: 'maxSize',
                     expectedValue: maxSize,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Creating a form element from the form\'s HTML resolves a referenceable DOM element',
                     stubMethod: 'callsFake',
                     object: Range.prototype,
                     key: 'createContextualFragment',
                     expectedArgs: [ maxSizeSurvey.form ],
                     returnValue: formElement,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Append form element after header',
                     stubMethod: 'callsFake',
                     object: formHeader,
                     key: 'after',
                     expectedArgs: [ formElement ],
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Resolve appended form element',
                     stubMethod: 'callsFake',
                     object: document,
                     key: 'querySelector',
                     expectedArgs: [ 'form.or' ],
                     returnValue: formElement,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Initialize controller-webform',
                     stubMethod: 'callsFake',
                     object: controller,
@@ -1947,59 +1947,59 @@ describe( 'Enketo webform app entrypoints', () => {
                             survey: maxSizeSurvey,
                         },
                     ],
-                    returnValue: Promise.resolve( initializedForm ),
-                } ),
-                prepareInitStep( {
+                    returnValue: Promise.resolve(initializedForm),
+                }),
+                prepareInitStep({
                     description: 'Assign languages',
                     stubMethod: 'set',
                     object: maxSizeSurvey,
                     key: 'languages',
                     expectedValue: initializedForm.languages,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Get title element',
                     stubMethod: 'callsFake',
                     object: document,
                     key: 'querySelector',
                     expectedArgs: [ 'head>title' ],
                     returnValue: artificialTitleElement,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Set page title',
                     stubMethod: 'set',
                     object: artificialTitleElement,
                     key: 'textContent',
                     expectedValue: formTitle,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Localization',
                     stubMethod: 'callsFake',
                     object: i18next,
                     key: 'dir',
                     expectedArgs: [],
-                } ),
+                }),
             ];
 
             /** @type {Promise} */
-            let editInitialization = webformEditPrivate._init( surveyInitData );
+            let editInitialization = webformEditPrivate._init(surveyInitData);
 
             await editInitialization;
 
-            for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
-                const performedStep = performedSteps.find( performedStep => {
+            for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                const performedStep = performedSteps.find(performedStep => {
                     return performedStep === expectedStep;
-                } );
-                const index = performedSteps.indexOf( expectedStep );
+                });
+                const index = performedSteps.indexOf(expectedStep);
 
-                expect( performedStep ).to.equal( expectedStep );
-                expect( index, `Unexpected order of step ${expectedStep.options.description}` )
-                    .to.equal( expectedIndex );
+                expect(performedStep).to.equal(expectedStep);
+                expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                    .to.equal(expectedIndex);
             }
 
-            expect( performedSteps.length ).to.equal( steps.length );
-        } );
+            expect(performedSteps.length).to.equal(steps.length);
+        });
 
-        it( 'reports edit initialization failure', async () => {
+        it('reports edit initialization failure', async () => {
             enketoId = 'offlineA';
 
             const formTitle = 'Title of form';
@@ -2017,89 +2017,89 @@ describe( 'Enketo webform app entrypoints', () => {
                 theme: 'kobo',
             };
 
-            const error = new Error( 'No network connection.' );
+            const error = new Error('No network connection.');
             const translatedErrorAdvice = 'Translated error advice';
 
             const steps = [
-                prepareInitStep( {
+                prepareInitStep({
                     description: 'Translator: initialize i18next',
                     stubMethod: 'callsFake',
                     object: i18next,
                     key: 'init',
                     expectedArgs: [ expectObject, expectCallback ],
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Get form parts',
                     stubMethod: 'callsFake',
                     object: connection,
                     key: 'getFormParts',
                     expectedArgs: [ surveyInitData ],
-                    returnValue: Promise.resolve( formParts ),
-                } ),
-                prepareInitStep( {
+                    returnValue: Promise.resolve(formParts),
+                }),
+                prepareInitStep({
                     description: 'Get existing instance',
                     stubMethod: 'callsFake',
                     object: connection,
                     key: 'getExistingInstance',
                     expectedArgs: [ surveyInitData ],
-                    returnValue: Promise.reject( error ),
-                } ),
-                prepareInitStep( {
+                    returnValue: Promise.reject(error),
+                }),
+                prepareInitStep({
                     description: 'Set error class',
                     stubMethod: 'callsFake',
                     object: loaderElement.classList,
                     key: 'add',
                     expectedArgs: [ webformEditPrivate.LOAD_ERROR_CLASS ],
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Translate error advice',
                     stubMethod: 'callsFake',
                     object: i18next,
                     key: 't',
                     expectedArgs: [ 'alert.loaderror.editadvice', undefined ],
                     returnValue: translatedErrorAdvice,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Alert load errors',
                     stubMethod: 'callsFake',
                     object: gui,
                     key: 'alertLoadErrors',
                     expectedArgs: [ [ error.message ], translatedErrorAdvice ]
-                } ),
+                }),
             ];
 
             /** @type {Promise} */
-            let editInitialization = webformEditPrivate._init( surveyInitData );
+            let editInitialization = webformEditPrivate._init(surveyInitData);
 
             await editInitialization;
 
-            for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
-                const step = performedSteps.find( performedStep => {
+            for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                const step = performedSteps.find(performedStep => {
                     return performedStep === expectedStep;
-                } );
-                const index = performedSteps.indexOf( expectedStep );
+                });
+                const index = performedSteps.indexOf(expectedStep);
 
-                expect( step ).to.equal( expectedStep );
-                expect( index, `Unexpected order of step ${expectedStep.options.description}` )
-                    .to.equal( expectedIndex );
+                expect(step).to.equal(expectedStep);
+                expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                    .to.equal(expectedIndex);
             }
 
-            expect( performedSteps.length ).to.equal( steps.length );
-        } );
-    } );
+            expect(performedSteps.length).to.equal(steps.length);
+        });
+    });
 
-    describe( 'enketo-webform-edit.js initialization behavior', () => {
+    describe('enketo-webform-edit.js initialization behavior', () => {
         /** @type {Record<string, any> | null} */
         let webformEditPrivate = null;
 
         /** @type {Survey} */
         let baseSurvey;
 
-        before( async () => {
-            webformEditPrivate = ( await import( '../../public/js/src/enketo-webform-edit' ) )._PRIVATE_TEST_ONLY_;
-        } );
+        before(async () => {
+            webformEditPrivate = (await import('../../public/js/src/enketo-webform-edit'))._PRIVATE_TEST_ONLY_;
+        });
 
-        beforeEach( () => {
+        beforeEach(() => {
             enketoId = 'surveyA';
 
             baseSurvey = {
@@ -2113,47 +2113,47 @@ describe( 'Enketo webform app entrypoints', () => {
                 xformUrl: 'https://example.com/form.xml',
             };
 
-            sandbox.stub( i18next, 't' ).returnsArg( 0 );
-        } );
+            sandbox.stub(i18next, 't').returnsArg(0);
+        });
 
-        describe( 'maximum submission size', () => {
-            it( 'sets the survey\'s maximum submission size on settings', () => {
+        describe('maximum submission size', () => {
+            it('sets the survey\'s maximum submission size on settings', () => {
                 let maxSizeSetting = 4;
 
-                sandbox.stub( settings, 'maxSize' ).get( () => maxSizeSetting );
-                sandbox.stub( settings, 'maxSize' ).set( ( maxSize ) => {
+                sandbox.stub(settings, 'maxSize').get(() => maxSizeSetting);
+                sandbox.stub(settings, 'maxSize').set((maxSize) => {
                     maxSizeSetting = maxSize;
-                } );
+                });
 
-                webformEditPrivate._updateMaxSizeSetting( {
+                webformEditPrivate._updateMaxSizeSetting({
                     ...baseSurvey,
                     maxSize: 5,
-                } );
+                });
 
-                expect( maxSizeSetting ).to.equal( 5 );
-            } );
+                expect(maxSizeSetting).to.equal(5);
+            });
 
-            it( 'preserves existing max size setting when survey does not specify a max size', () => {
+            it('preserves existing max size setting when survey does not specify a max size', () => {
                 let maxSizeSetting = 4;
 
-                sandbox.stub( settings, 'maxSize' ).get( () => maxSizeSetting );
-                sandbox.stub( settings, 'maxSize' ).set( ( maxSize ) => {
+                sandbox.stub(settings, 'maxSize').get(() => maxSizeSetting);
+                sandbox.stub(settings, 'maxSize').set((maxSize) => {
                     maxSizeSetting = maxSize;
-                } );
+                });
 
-                webformEditPrivate._updateMaxSizeSetting( baseSurvey );
+                webformEditPrivate._updateMaxSizeSetting(baseSurvey);
 
-                expect( maxSizeSetting ).to.equal( 4 );
-            } );
-        } );
+                expect(maxSizeSetting).to.equal(4);
+            });
+        });
 
-        describe( 'error handling', () => {
+        describe('error handling', () => {
             class StatusError extends Error {
                 /**
                  * @param {number} status
                  */
-                constructor( status ) {
-                    super( `HTTP Error: ${status}` );
+                constructor(status) {
+                    super(`HTTP Error: ${status}`);
 
                     this.status = status;
                 }
@@ -2174,83 +2174,83 @@ describe( 'Enketo webform app entrypoints', () => {
             /** @type {loadErrorsStub} */
             let loadErrorsStub;
 
-            beforeEach( () => {
-                sandbox.stub( settings, 'loginUrl' ).get( () => loginURL );
+            beforeEach(() => {
+                sandbox.stub(settings, 'loginUrl').get(() => loginURL);
 
-                addLoaderClassStub = sandbox.stub( loaderElement.classList, 'add' ).returns();
+                addLoaderClassStub = sandbox.stub(loaderElement.classList, 'add').returns();
 
                 currentURL = 'https://example.com/-/x/f33db33f';
-                redirectStub = sandbox.stub( webformEditPrivate._location, 'href' );
+                redirectStub = sandbox.stub(webformEditPrivate._location, 'href');
 
-                redirectStub.get( () => currentURL );
+                redirectStub.get(() => currentURL);
 
-                redirectStub.set( redirectLocation => {
+                redirectStub.set(redirectLocation => {
                     currentURL = redirectLocation;
-                } );
+                });
 
 
-                loadErrorsStub = sandbox.stub( gui, 'alertLoadErrors' ).returns();
-            } );
+                loadErrorsStub = sandbox.stub(gui, 'alertLoadErrors').returns();
+            });
 
-            it( 'indicates failure on the loading indicator', () => {
-                const error = new Error( 'bummer' );
+            it('indicates failure on the loading indicator', () => {
+                const error = new Error('bummer');
 
-                webformEditPrivate._showErrorOrAuthenticate( error );
+                webformEditPrivate._showErrorOrAuthenticate(error);
 
-                expect( addLoaderClassStub ).to.have.been.calledWith( webformEditPrivate.LOAD_ERROR_CLASS );
-            } );
+                expect(addLoaderClassStub).to.have.been.calledWith(webformEditPrivate.LOAD_ERROR_CLASS);
+            });
 
-            it( 'redirects to a login page on authorization failure', () => {
-                const error = new StatusError( 401 );
+            it('redirects to a login page on authorization failure', () => {
+                const error = new StatusError(401);
 
-                webformEditPrivate._showErrorOrAuthenticate( error );
+                webformEditPrivate._showErrorOrAuthenticate(error);
 
-                expect( currentURL ).to.equal( `${loginURL}?return_url=${encodeURIComponent( initialURL )}` );
-                expect( loadErrorsStub ).not.to.have.been.called;
-            } );
+                expect(currentURL).to.equal(`${loginURL}?return_url=${encodeURIComponent(initialURL)}`);
+                expect(loadErrorsStub).not.to.have.been.called;
+            });
 
-            it( 'does not redirect to a login page for other network errors', () => {
-                const error = new StatusError( 404 );
+            it('does not redirect to a login page for other network errors', () => {
+                const error = new StatusError(404);
 
-                webformEditPrivate._showErrorOrAuthenticate( error );
+                webformEditPrivate._showErrorOrAuthenticate(error);
 
-                expect( currentURL ).to.equal( initialURL );
-            } );
+                expect(currentURL).to.equal(initialURL);
+            });
 
-            it( 'alerts a loading error message', () => {
-                const error = new Error( 'oops!' );
+            it('alerts a loading error message', () => {
+                const error = new Error('oops!');
 
-                webformEditPrivate._showErrorOrAuthenticate( error );
+                webformEditPrivate._showErrorOrAuthenticate(error);
 
-                expect( loadErrorsStub ).to.have.been.calledWith(
+                expect(loadErrorsStub).to.have.been.calledWith(
                     [ error.message ],
                     'alert.loaderror.editadvice'
                 );
-            } );
+            });
 
-            it( 'alerts an unknown error message', () => {
+            it('alerts an unknown error message', () => {
                 const error = new Error();
 
-                webformEditPrivate._showErrorOrAuthenticate( error );
+                webformEditPrivate._showErrorOrAuthenticate(error);
 
-                expect( loadErrorsStub ).to.have.been.calledWith(
+                expect(loadErrorsStub).to.have.been.calledWith(
                     [ 'error.unknown' ],
                     'alert.loaderror.editadvice'
                 );
-            } );
+            });
 
-            it( 'alerts multiple loading error messages', () => {
+            it('alerts multiple loading error messages', () => {
                 const errors = [ 'really', 'not', 'good!' ];
 
-                webformEditPrivate._showErrorOrAuthenticate( errors );
+                webformEditPrivate._showErrorOrAuthenticate(errors);
 
-                expect( loadErrorsStub ).to.have.been.calledWith(
+                expect(loadErrorsStub).to.have.been.calledWith(
                     errors,
                     'alert.loaderror.editadvice'
                 );
-            } );
-        } );
-    } );
+            });
+        });
+    });
 
     const viewFormTitle = 'Title of form';
     const viewForm = /* html */`<form class="or">
@@ -2290,7 +2290,7 @@ describe( 'Enketo webform app entrypoints', () => {
         </div>
     </form>`;
 
-    describe( 'enketo-webform-view.js initialization steps', () => {
+    describe('enketo-webform-view.js initialization steps', () => {
         /** @type {Sandboox} */
         let preImportSandbox;
 
@@ -2322,40 +2322,40 @@ describe( 'Enketo webform app entrypoints', () => {
         /** @type {OverriddenModules} */
         let overriddenModules;
 
-        before( async () => {
+        before(async () => {
             documentRange = document.createRange();
             preImportSandbox = sinon.createSandbox();
 
             const [
                 { default: calc },
                 { FormModel },
-                { default: preload, ...rest },
-            ] = await Promise.all( [
-                import( 'enketo-core/src/js/calculate' ),
-                import( 'enketo-core/src/js/form-model' ),
-                import( 'enketo-core/src/js/preload' ),
-            ] );
+                { default: preload },
+            ] = await Promise.all([
+                import('enketo-core/src/js/calculate'),
+                import('enketo-core/src/js/form-model'),
+                import('enketo-core/src/js/preload'),
+            ]);
 
             overriddenModules = { calc, FormModel, preload };
 
-            preImportSandbox.stub( document, 'createRange' )
-                .callsFake( () => documentRange );
+            preImportSandbox.stub(document, 'createRange')
+                .callsFake(() => documentRange);
 
-            webformViewPrivate = ( await import( '../../public/js/src/enketo-webform-view' ) )._PRIVATE_TEST_ONLY_;
-        } );
+            webformViewPrivate = (await import('../../public/js/src/enketo-webform-view'))._PRIVATE_TEST_ONLY_;
+        });
 
-        after( () => {
+        after(() => {
             preImportSandbox.restore();
-        } );
+        });
 
-        beforeEach( () => {
-            sandbox.stub( overriddenModules.calc, 'update' );
-            sandbox.stub( overriddenModules.FormModel.prototype, 'setInstanceIdAndDeprecatedId' );
-            sandbox.stub( overriddenModules.preload, 'init' );
+        beforeEach(() => {
+            sandbox.stub(overriddenModules.calc, 'update');
+            sandbox.stub(overriddenModules.FormModel.prototype, 'setInstanceIdAndDeprecatedId');
+            sandbox.stub(overriddenModules.preload, 'init');
 
-            sandbox.stub( lodash, 'memoize' ).callsFake( fn => fn );
+            sandbox.stub(lodash, 'memoize').callsFake(fn => fn);
 
-            if ( !Object.prototype.hasOwnProperty.call( settings, 'print' ) ) {
+            if (!Object.prototype.hasOwnProperty.call(settings, 'print')) {
                 settings.print = undefined;
             }
 
@@ -2368,8 +2368,8 @@ describe( 'Enketo webform app entrypoints', () => {
                 get instanceId() { return instanceId; },
             };
 
-            formHeader = document.querySelector( '.form-header' );
-        } );
+            formHeader = document.querySelector('.form-header');
+        });
 
         /*
          * In view mode:
@@ -2378,31 +2378,31 @@ describe( 'Enketo webform app entrypoints', () => {
          * - instanceID and deprecatedID are never set
          * - preload metadata is not processed
          */
-        afterEach( () => {
-            expect( overriddenModules.calc.update ).not.to.have.been.called;
-            expect( overriddenModules.FormModel.prototype.setInstanceIdAndDeprecatedId ).not.to.have.been.called;
-            expect( overriddenModules.preload.init ).not.to.have.been.called;
-        } );
+        afterEach(() => {
+            expect(overriddenModules.calc.update).not.to.have.been.called;
+            expect(overriddenModules.FormModel.prototype.setInstanceIdAndDeprecatedId).not.to.have.been.called;
+            expect(overriddenModules.preload.init).not.to.have.been.called;
+        });
 
-        it( 'initializes a form to view an existing instance/record', async () => {
-            sandbox.stub( gui, 'alertLoadErrors' )
-                .callsFake( errors => {
-                    const item = Array.isArray( errors ) ? errors[0] : errors;
-                    const error = typeof item === 'string' ? new Error( item ) : item;
+        it('initializes a form to view an existing instance/record', async () => {
+            sandbox.stub(gui, 'alertLoadErrors')
+                .callsFake(errors => {
+                    const item = Array.isArray(errors) ? errors[0] : errors;
+                    const error = typeof item === 'string' ? new Error(item) : item;
 
                     throw error;
-                } );
+                });
 
             existingInstance = '<a>value</a>';
 
-            const formFragment = documentRange.createContextualFragment( viewForm );
+            const formFragment = documentRange.createContextualFragment(viewForm);
 
             const writeableQuestionElements = {
-                input: formFragment.getElementById( 'input-3' ),
-                textarea: formFragment.getElementById( 'textarea-3' ),
-                select: formFragment.getElementById( 'select-3' ),
-                options: [ ...formFragment.querySelectorAll( 'option.writeable' ) ],
-                repeats: [ ...formFragment.querySelectorAll( '.or-repeat-info' ) ],
+                input: formFragment.getElementById('input-3'),
+                textarea: formFragment.getElementById('textarea-3'),
+                select: formFragment.getElementById('select-3'),
+                options: [ ...formFragment.querySelectorAll('option.writeable') ],
+                repeats: [ ...formFragment.querySelectorAll('.or-repeat-info') ],
             };
 
             const formParts = {
@@ -2441,142 +2441,142 @@ describe( 'Enketo webform app entrypoints', () => {
                 languages: [ 'ar', 'fa' ],
             };
 
-            const formElement = formFragment.querySelector( 'form' );
+            const formElement = formFragment.querySelector('form');
 
             const artificialTitleElement = {
                 textContent: 'Not title of form',
             };
 
-            const titleHeading = formElement.querySelector( '#form-title' );
+            const titleHeading = formElement.querySelector('#form-title');
 
-            sandbox.stub( i18next, 'use' ).returns( i18next );
+            sandbox.stub(i18next, 'use').returns(i18next);
 
             const steps = [
-                prepareInitStep( {
+                prepareInitStep({
                     description: 'Translator: initialize i18next',
                     stubMethod: 'callsFake',
                     object: i18next,
                     key: 'init',
                     expectedArgs: [ expectObject, expectCallback ],
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Get form parts',
                     stubMethod: 'callsFake',
                     object: connection,
                     key: 'getFormParts',
                     expectedArgs: [ surveyInitData ],
-                    returnValue: Promise.resolve( formParts ),
-                } ),
-                prepareInitStep( {
+                    returnValue: Promise.resolve(formParts),
+                }),
+                prepareInitStep({
                     description: 'Get existing instance',
                     stubMethod: 'callsFake',
                     object: connection,
                     key: 'getExistingInstance',
                     expectedArgs: [ surveyInitData ],
-                    returnValue: Promise.resolve( instanceResult ),
-                } ),
-                prepareInitStep( {
+                    returnValue: Promise.resolve(instanceResult),
+                }),
+                prepareInitStep({
                     description: 'Swap theme',
                     stubMethod: 'callsFake',
                     object: gui,
                     key: 'swapTheme',
                     expectedArgs: [ formPartsWithInstanceData ],
-                    returnValue: Promise.resolve( swappedThemeSurvey ),
-                } ),
-                prepareInitStep( {
+                    returnValue: Promise.resolve(swappedThemeSurvey),
+                }),
+                prepareInitStep({
                     description: 'Create DOM representation of form HTML',
                     stubMethod: 'callsFake',
                     object: documentRange,
                     key: 'createContextualFragment',
                     expectedArgs: [ viewForm ],
                     returnValue: formFragment,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Set input readonly',
                     stubMethod: 'callsFake',
                     object: writeableQuestionElements.input,
                     key: 'setAttribute',
                     expectedArgs: [ 'readonly', 'readonly' ],
                     returnValue: null,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Set input readonly-forced class',
                     stubMethod: 'callsFake',
                     object: writeableQuestionElements.input.classList,
                     key: 'add',
                     expectedArgs: [ 'readonly-forced' ],
                     returnValue: null,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Set textarea readonly',
                     stubMethod: 'callsFake',
                     object: writeableQuestionElements.textarea,
                     key: 'setAttribute',
                     expectedArgs: [ 'readonly', 'readonly' ],
                     returnValue: null,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Set textarea readonly-forced class',
                     stubMethod: 'callsFake',
                     object: writeableQuestionElements.textarea.classList,
                     key: 'add',
                     expectedArgs: [ 'readonly-forced' ],
                     returnValue: null,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Set select readonly',
                     stubMethod: 'callsFake',
                     object: writeableQuestionElements.select,
                     key: 'setAttribute',
                     expectedArgs: [ 'readonly', 'readonly' ],
                     returnValue: null,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Set select readonly-forced class',
                     stubMethod: 'callsFake',
                     object: writeableQuestionElements.select.classList,
                     key: 'add',
                     expectedArgs: [ 'readonly-forced' ],
                     returnValue: null,
-                } ),
+                }),
 
-                ...writeableQuestionElements.options.map( ( option, index ) => {
-                    return prepareInitStep( {
+                ...writeableQuestionElements.options.map((option, index) => {
+                    return prepareInitStep({
                         description: `Set option ${index} disabled`,
                         stubMethod: 'set',
                         object: option,
                         key: 'disabled',
                         expectedValue: true,
-                    } );
-                } ),
+                    });
+                }),
 
-                ...writeableQuestionElements.repeats.map( ( repeat, index ) => {
-                    return prepareInitStep( {
+                ...writeableQuestionElements.repeats.map((repeat, index) => {
+                    return prepareInitStep({
                         description: `Set repeat ${index} data-repeat-fixed attribute`,
                         stubMethod: 'callsFake',
                         object: repeat,
                         key: 'setAttribute',
                         expectedArgs: [ 'data-repeat-fixed', 'fixed' ],
                         returnValue: null,
-                    } );
-                } ),
+                    });
+                }),
 
-                prepareInitStep( {
+                prepareInitStep({
                     description: 'Append form element after header',
                     stubMethod: 'callsFake',
                     object: formHeader,
                     key: 'after',
                     expectedArgs: [ formFragment ],
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Resolve appended form element',
                     stubMethod: 'callsFake',
                     object: document,
                     key: 'querySelector',
                     expectedArgs: [ 'form.or' ],
                     returnValue: formElement,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Initialize controller-webform',
                     stubMethod: 'callsFake',
                     object: controller,
@@ -2591,82 +2591,82 @@ describe( 'Enketo webform app entrypoints', () => {
                             survey: swappedThemeSurvey,
                         },
                     ],
-                    returnValue: Promise.resolve( initializedForm ),
-                } ),
-                prepareInitStep( {
+                    returnValue: Promise.resolve(initializedForm),
+                }),
+                prepareInitStep({
                     description: 'Assign languages',
                     stubMethod: 'set',
                     object: swappedThemeSurvey,
                     key: 'languages',
                     expectedValue: initializedForm.languages,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Get title element',
                     stubMethod: 'callsFake',
                     object: document,
                     key: 'querySelector',
                     expectedArgs: [ 'head>title' ],
                     returnValue: artificialTitleElement,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Resolve form title heading element',
                     stubMethod: 'callsFake',
                     object: document,
                     key: 'querySelector',
                     expectedArgs: [ '#form-title' ],
                     returnValue: titleHeading,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Set page title',
                     stubMethod: 'set',
                     object: artificialTitleElement,
                     key: 'textContent',
                     expectedValue: viewFormTitle,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Check if print styles should be applied',
                     stubMethod: 'get',
                     object: settings,
                     key: 'print',
                     propertyValue: true,
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Apply print styles',
                     stubMethod: 'callsFake',
                     object: gui,
                     key: 'applyPrintStyle',
                     expectedArgs: [],
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Localization',
                     stubMethod: 'callsFake',
                     object: i18next,
                     key: 'dir',
                     expectedArgs: [],
-                } ),
+                }),
             ];
 
             /** @type {Promise} */
-            let viewInitialization = webformViewPrivate._init( surveyInitData );
+            let viewInitialization = webformViewPrivate._init(surveyInitData);
 
             await viewInitialization;
 
 
-            for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
-                const performedStep = performedSteps.find( performedStep => {
+            for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                const performedStep = performedSteps.find(performedStep => {
                     return performedStep === expectedStep;
-                } );
-                const index = performedSteps.indexOf( expectedStep );
+                });
+                const index = performedSteps.indexOf(expectedStep);
 
-                expect( performedStep ).to.equal( expectedStep );
-                expect( index, `Unexpected order of step ${expectedStep.options.description}` )
-                    .to.equal( expectedIndex );
+                expect(performedStep).to.equal(expectedStep);
+                expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                    .to.equal(expectedIndex);
             }
 
-            expect( performedSteps.length ).to.equal( steps.length );
-        } );
+            expect(performedSteps.length).to.equal(steps.length);
+        });
 
-        it( 'reports view initialization failure', async () => {
+        it('reports view initialization failure', async () => {
             enketoId = 'viewA';
 
             const formTitle = 'Title of form';
@@ -2684,91 +2684,91 @@ describe( 'Enketo webform app entrypoints', () => {
                 theme: 'kobo',
             };
 
-            const error = new Error( 'No network connection.' );
+            const error = new Error('No network connection.');
 
             const steps = [
-                prepareInitStep( {
+                prepareInitStep({
                     description: 'Translator: initialize i18next',
                     stubMethod: 'callsFake',
                     object: i18next,
                     key: 'init',
                     expectedArgs: [ expectObject, expectCallback ],
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Get form parts',
                     stubMethod: 'callsFake',
                     object: connection,
                     key: 'getFormParts',
                     expectedArgs: [ surveyInitData ],
-                    returnValue: Promise.resolve( formParts ),
-                } ),
-                prepareInitStep( {
+                    returnValue: Promise.resolve(formParts),
+                }),
+                prepareInitStep({
                     description: 'Get existing instance',
                     stubMethod: 'callsFake',
                     object: connection,
                     key: 'getExistingInstance',
                     expectedArgs: [ surveyInitData ],
-                    returnValue: Promise.reject( error ),
-                } ),
-                prepareInitStep( {
+                    returnValue: Promise.reject(error),
+                }),
+                prepareInitStep({
                     description: 'Set error class',
                     stubMethod: 'callsFake',
                     object: loaderElement.classList,
                     key: 'add',
                     expectedArgs: [ webformViewPrivate.LOAD_ERROR_CLASS ],
-                } ),
-                prepareInitStep( {
+                }),
+                prepareInitStep({
                     description: 'Alert load errors',
                     stubMethod: 'callsFake',
                     object: gui,
                     key: 'alertLoadErrors',
                     expectedArgs: [ [ error.message ] ]
-                } ),
+                }),
             ];
 
             /** @type {Promise} */
-            let editInitialization = webformViewPrivate._init( surveyInitData );
+            let editInitialization = webformViewPrivate._init(surveyInitData);
 
             await editInitialization;
 
-            for ( const [ expectedIndex, expectedStep ] of steps.entries() ) {
-                const step = performedSteps.find( performedStep => {
+            for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                const step = performedSteps.find(performedStep => {
                     return performedStep === expectedStep;
-                } );
-                const index = performedSteps.indexOf( expectedStep );
+                });
+                const index = performedSteps.indexOf(expectedStep);
 
-                expect( step ).to.equal( expectedStep );
-                expect( index, `Unexpected order of step ${expectedStep.options.description}` )
-                    .to.equal( expectedIndex );
+                expect(step).to.equal(expectedStep);
+                expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                    .to.equal(expectedIndex);
             }
 
-            expect( performedSteps.length ).to.equal( steps.length );
-        } );
-    } );
+            expect(performedSteps.length).to.equal(steps.length);
+        });
+    });
 
-    describe( 'enketo-webform-view.js initialization behavior', () => {
+    describe('enketo-webform-view.js initialization behavior', () => {
         /** @type {DocumentFragment} */
         let formFragment;
 
         /** @type {Record<string, any> | null} */
         let webformViewPrivate = null;
 
-        before( async () => {
-            webformViewPrivate = ( await import( '../../public/js/src/enketo-webform-view' ) )._PRIVATE_TEST_ONLY_;
+        before(async () => {
+            webformViewPrivate = (await import('../../public/js/src/enketo-webform-view'))._PRIVATE_TEST_ONLY_;
 
-            formFragment = webformViewPrivate._convertToReadonly( { form: viewForm } ).formFragment;
-        } );
+            formFragment = webformViewPrivate._convertToReadonly({ form: viewForm }).formFragment;
+        });
 
-        beforeEach( () => {
+        beforeEach(() => {
             enketoId = 'surveyA';
 
-            sandbox.stub( i18next, 't' ).returnsArg( 0 );
-        } );
+            sandbox.stub(i18next, 't').returnsArg(0);
+        });
 
-        describe( 'readonly conversion', () => {
-            it( 'creates a document fragment from the provided form HTML', () => {
-                expect( formFragment ).to.be.an.instanceof( DocumentFragment );
-            } );
+        describe('readonly conversion', () => {
+            it('creates a document fragment from the provided form HTML', () => {
+                expect(formFragment).to.be.an.instanceof(DocumentFragment);
+            });
 
             const questionFieldTypes = [
                 'input',
@@ -2776,66 +2776,66 @@ describe( 'Enketo webform app entrypoints', () => {
                 'select',
             ];
 
-            questionFieldTypes.forEach( questionFieldType => {
-                it( `ensures all ${questionFieldType} within a question are readonly`, () => {
+            questionFieldTypes.forEach(questionFieldType => {
+                it(`ensures all ${questionFieldType} within a question are readonly`, () => {
                     const fields = formFragment.querySelectorAll(
                         `.question ${questionFieldType}`
                     );
 
-                    fields.forEach( field => {
-                        expect( field.getAttribute( 'readonly' ) ).to.equal( 'readonly' );
-                    } );
-                } );
+                    fields.forEach(field => {
+                        expect(field.getAttribute('readonly')).to.equal('readonly');
+                    });
+                });
 
-                it( `ensures all ${questionFieldType}s within a question which were not previously readonly are forced to be readonly`, () => {
+                it(`ensures all ${questionFieldType}s within a question which were not previously readonly are forced to be readonly`, () => {
                     const fields = formFragment.querySelectorAll(
                         `.question ${questionFieldType}.writeable-by-default`
                     );
 
-                    fields.forEach( field => {
-                        expect( field.classList.contains( 'readonly-forced' ) ).to.equal( true );
-                    } );
-                } );
-            } );
+                    fields.forEach(field => {
+                        expect(field.classList.contains('readonly-forced')).to.equal(true);
+                    });
+                });
+            });
 
-            it( 'does not disable options within the form languages menu', () => {
-                const options = formFragment.querySelectorAll( '#form-languages option' );
+            it('does not disable options within the form languages menu', () => {
+                const options = formFragment.querySelectorAll('#form-languages option');
 
-                options.forEach( option => {
-                    expect( option.disabled ).to.equal( false );
-                } );
-            } );
+                options.forEach(option => {
+                    expect(option.disabled).to.equal(false);
+                });
+            });
 
-            it( 'disables all other menu options', () => {
-                const options = formFragment.querySelectorAll( 'select:not(#form-languages) option' );
+            it('disables all other menu options', () => {
+                const options = formFragment.querySelectorAll('select:not(#form-languages) option');
 
-                options.forEach( option => {
-                    expect( option.disabled ).to.equal( true );
-                } );
-            } );
+                options.forEach(option => {
+                    expect(option.disabled).to.equal(true);
+                });
+            });
 
-            it( 'prevents adding or removing repeats', () => {
-                const repeats = formFragment.querySelectorAll( '.or-repeat-info' );
+            it('prevents adding or removing repeats', () => {
+                const repeats = formFragment.querySelectorAll('.or-repeat-info');
 
-                repeats.forEach( repeat => {
-                    expect( repeat.dataset.repeatFixed ).to.equal( 'fixed' );
+                repeats.forEach(repeat => {
+                    expect(repeat.dataset.repeatFixed).to.equal('fixed');
 
                     const addRemoveButtons = repeat.querySelectorAll(
                         '.repeat-buttons, .add-repeat-button'
                     );
 
-                    expect( addRemoveButtons.length ).to.equal( 0 );
-                } );
-            } );
-        } );
+                    expect(addRemoveButtons.length).to.equal(0);
+                });
+            });
+        });
 
-        describe( 'error handling', () => {
+        describe('error handling', () => {
             class StatusError extends Error {
                 /**
                  * @param {number} status
                  */
-                constructor( status ) {
-                    super( `HTTP Error: ${status}` );
+                constructor(status) {
+                    super(`HTTP Error: ${status}`);
 
                     this.status = status;
                 }
@@ -2856,72 +2856,72 @@ describe( 'Enketo webform app entrypoints', () => {
             /** @type {loadErrorsStub} */
             let loadErrorsStub;
 
-            beforeEach( () => {
-                sandbox.stub( settings, 'loginUrl' ).get( () => loginURL );
+            beforeEach(() => {
+                sandbox.stub(settings, 'loginUrl').get(() => loginURL);
 
-                addLoaderClassStub = sandbox.stub( loaderElement.classList, 'add' ).returns();
+                addLoaderClassStub = sandbox.stub(loaderElement.classList, 'add').returns();
 
                 currentURL = 'https://example.com/-/x/f33db33f';
-                redirectStub = sandbox.stub( webformViewPrivate._location, 'href' );
+                redirectStub = sandbox.stub(webformViewPrivate._location, 'href');
 
-                redirectStub.get( () => currentURL );
+                redirectStub.get(() => currentURL);
 
-                redirectStub.set( redirectLocation => {
+                redirectStub.set(redirectLocation => {
                     currentURL = redirectLocation;
-                } );
+                });
 
 
-                loadErrorsStub = sandbox.stub( gui, 'alertLoadErrors' ).returns();
-            } );
+                loadErrorsStub = sandbox.stub(gui, 'alertLoadErrors').returns();
+            });
 
-            it( 'indicates failure on the loading indicator', () => {
-                const error = new Error( 'bummer' );
+            it('indicates failure on the loading indicator', () => {
+                const error = new Error('bummer');
 
-                webformViewPrivate._showErrorOrAuthenticate( error );
+                webformViewPrivate._showErrorOrAuthenticate(error);
 
-                expect( addLoaderClassStub ).to.have.been.calledWith( webformViewPrivate.LOAD_ERROR_CLASS );
-            } );
+                expect(addLoaderClassStub).to.have.been.calledWith(webformViewPrivate.LOAD_ERROR_CLASS);
+            });
 
-            it( 'redirects to a login page on authorization failure', () => {
-                const error = new StatusError( 401 );
+            it('redirects to a login page on authorization failure', () => {
+                const error = new StatusError(401);
 
-                webformViewPrivate._showErrorOrAuthenticate( error );
+                webformViewPrivate._showErrorOrAuthenticate(error);
 
-                expect( currentURL ).to.equal( `${loginURL}?return_url=${encodeURIComponent( initialURL )}` );
-                expect( loadErrorsStub ).not.to.have.been.called;
-            } );
+                expect(currentURL).to.equal(`${loginURL}?return_url=${encodeURIComponent(initialURL)}`);
+                expect(loadErrorsStub).not.to.have.been.called;
+            });
 
-            it( 'does not redirect to a login page for other network errors', () => {
-                const error = new StatusError( 404 );
+            it('does not redirect to a login page for other network errors', () => {
+                const error = new StatusError(404);
 
-                webformViewPrivate._showErrorOrAuthenticate( error );
+                webformViewPrivate._showErrorOrAuthenticate(error);
 
-                expect( currentURL ).to.equal( initialURL );
-            } );
+                expect(currentURL).to.equal(initialURL);
+            });
 
-            it( 'alerts a loading error message', () => {
-                const error = new Error( 'oops!' );
+            it('alerts a loading error message', () => {
+                const error = new Error('oops!');
 
-                webformViewPrivate._showErrorOrAuthenticate( error );
+                webformViewPrivate._showErrorOrAuthenticate(error);
 
-                expect( loadErrorsStub ).to.have.been.calledWith( [ error.message ] );
-            } );
+                expect(loadErrorsStub).to.have.been.calledWith([ error.message ]);
+            });
 
-            it( 'alerts an unknown error message', () => {
+            it('alerts an unknown error message', () => {
                 const error = new Error();
 
-                webformViewPrivate._showErrorOrAuthenticate( error );
+                webformViewPrivate._showErrorOrAuthenticate(error);
 
-                expect( loadErrorsStub ).to.have.been.calledWith( [ 'error.unknown' ] );
-            } );
+                expect(loadErrorsStub).to.have.been.calledWith([ 'error.unknown' ]);
+            });
 
-            it( 'alerts multiple loading error messages', () => {
+            it('alerts multiple loading error messages', () => {
                 const errors = [ 'really', 'not', 'good!' ];
 
-                webformViewPrivate._showErrorOrAuthenticate( errors );
+                webformViewPrivate._showErrorOrAuthenticate(errors);
 
-                expect( loadErrorsStub ).to.have.been.calledWith( errors );
-            } );
-        } );
-    } );
-} );
+                expect(loadErrorsStub).to.have.been.calledWith(errors);
+            });
+        });
+    });
+});

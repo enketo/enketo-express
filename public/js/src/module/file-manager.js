@@ -20,7 +20,7 @@ let instanceAttachments;
  * @return { object } promise boolean or rejection with Error
  */
 function init() {
-    return Promise.resolve( true );
+    return Promise.resolve(true);
 }
 
 /**
@@ -38,7 +38,7 @@ function isWaitingForPermissions() {
  *
  * @param {{filename: string}} attachments - attachments sent with record to be loaded
  */
-function setInstanceAttachments( attachments ) {
+function setInstanceAttachments(attachments) {
     instanceAttachments = attachments;
 }
 /**
@@ -48,61 +48,61 @@ function setInstanceAttachments( attachments ) {
  * @param  {?string|object} subject - File or filename
  * @return {Promise<string>}         promise url string or rejection with Error
  */
-function getFileUrl( subject ) {
-    return new Promise( ( resolve, reject ) => {
-        if ( !subject ) {
-            resolve( null );
-        } else if ( typeof subject === 'string' ) {
-            const escapedSubject = encodeURIComponent( subject );
+function getFileUrl(subject) {
+    return new Promise((resolve, reject) => {
+        if (!subject) {
+            resolve(null);
+        } else if (typeof subject === 'string') {
+            const escapedSubject = encodeURIComponent(subject);
 
-            if ( subject.startsWith( '/' ) ) {
-                resolve( subject );
-            } else if ( instanceAttachments && ( Object.prototype.hasOwnProperty.call( instanceAttachments, escapedSubject ) ) ) {
-                resolve( instanceAttachments[ escapedSubject ] );
-            } else if ( instanceAttachments && ( Object.prototype.hasOwnProperty.call( instanceAttachments, subject ) ) ) {
-                resolve( instanceAttachments[ subject ] );
-            } else if ( !settings.offline || !store.available ) {
+            if (subject.startsWith('/')) {
+                resolve(subject);
+            } else if (instanceAttachments && (Object.prototype.hasOwnProperty.call(instanceAttachments, escapedSubject))) {
+                resolve(instanceAttachments[ escapedSubject ]);
+            } else if (instanceAttachments && (Object.prototype.hasOwnProperty.call(instanceAttachments, subject))) {
+                resolve(instanceAttachments[ subject ]);
+            } else if (!settings.offline || !store.available) {
                 // e.g. in an online-only edit view
-                reject( new Error( 'store not available' ) );
-            } else if ( URL_RE.test( subject ) ) {
+                reject(new Error('store not available'));
+            } else if (URL_RE.test(subject)) {
                 // Any URL values are default binary values. These should only occur in offline-capable views,
                 // because the form cache module removed the src attributes
                 // (which are /urls/like/this/http:// and are caught above this statement)
-                store.survey.resource.get( settings.enketoId, subject )
-                    .then( file => {
-                        if ( file.item ) {
-                            resolve( URL.createObjectURL( file.item ) );
+                store.survey.resource.get(settings.enketoId, subject)
+                    .then(file => {
+                        if (file.item) {
+                            resolve(URL.createObjectURL(file.item));
                         } else {
-                            reject( new Error( 'File Retrieval Error' ) );
+                            reject(new Error('File Retrieval Error'));
                         }
-                    } )
-                    .catch( reject );
+                    })
+                    .catch(reject);
             } else {
                 // obtain file from storage
-                store.record.file.get( _getInstanceId(), subject )
-                    .then( file => {
-                        if ( file.item ) {
-                            if ( isTooLarge( file.item ) ) {
-                                reject( _getMaxSizeError() );
+                store.record.file.get(_getInstanceId(), subject)
+                    .then(file => {
+                        if (file.item) {
+                            if (isTooLarge(file.item)) {
+                                reject(_getMaxSizeError());
                             } else {
-                                resolve( URL.createObjectURL( file.item ) );
+                                resolve(URL.createObjectURL(file.item));
                             }
                         } else {
-                            reject( new Error( 'File Retrieval Error' ) );
+                            reject(new Error('File Retrieval Error'));
                         }
-                    } )
-                    .catch( reject );
+                    })
+                    .catch(reject);
             }
-        } else if ( typeof subject === 'object' ) {
-            if ( isTooLarge( subject ) ) {
-                reject( _getMaxSizeError() );
+        } else if (typeof subject === 'object') {
+            if (isTooLarge(subject)) {
+                reject(_getMaxSizeError());
             } else {
-                resolve( URL.createObjectURL( subject ) );
+                resolve(URL.createObjectURL(subject));
             }
         } else {
-            reject( new Error( 'Unknown error occurred' ) );
+            reject(new Error('Unknown error occurred'));
         }
-    } );
+    });
 }
 
 /**
@@ -113,15 +113,15 @@ function getFileUrl( subject ) {
  * @param  {?string|object} subject - File or filename in local storage
  * @return { object }         promise url string or rejection with Error
  */
-function getObjectUrl( subject ) {
-    return getFileUrl( subject )
-        .then( url => {
-            if ( /https?:\/\//.test( url ) ) {
-                return connection.getMediaFile( url ).then( obj => URL.createObjectURL( obj.item ) );
+function getObjectUrl(subject) {
+    return getFileUrl(subject)
+        .then(url => {
+            if (/https?:\/\//.test(url)) {
+                return connection.getMediaFile(url).then(obj => URL.createObjectURL(obj.item));
             }
 
             return url;
-        } );
+        });
 }
 
 /**
@@ -130,57 +130,57 @@ function getObjectUrl( subject ) {
  * @return { Promise } A promise that resolves with an array of files
  */
 function getCurrentFiles() {
-    const fileInputs = [ ...document.querySelectorAll( 'form.or input[type="file"], form.or input[type="text"][data-drawing="true"]' ) ];
+    const fileInputs = [ ...document.querySelectorAll('form.or input[type="file"], form.or input[type="text"][data-drawing="true"]') ];
     const fileTasks = [];
 
-    const _processNameAndSize = function( input, file ){
-        if ( file && file.name ) {
+    const _processNameAndSize = function(input, file){
+        if (file && file.name) {
             // Correct file names by adding a unique-ish postfix
             // First create a clone, because the name property is immutable
             // TODO: in the future, when browser support increase we can invoke
             // the File constructor to do this.
-            const newFilename = getFilename( file, input.dataset.filenamePostfix );
+            const newFilename = getFilename(file, input.dataset.filenamePostfix);
             // If file is resized, get Blob representation of data URI
-            if ( input.dataset.resized && input.dataset.resizedDataURI ) {
-                file = utils.dataUriToBlobSync( input.dataset.resizedDataURI );
+            if (input.dataset.resized && input.dataset.resizedDataURI) {
+                file = utils.dataUriToBlobSync(input.dataset.resizedDataURI);
             }
-            file = new Blob( [ file ], {
+            file = new Blob([ file ], {
                 type: file.type
-            } );
+            });
             file.name = newFilename;
         }
 
         return file;
     };
 
-    fileInputs.forEach( input => {
-        if ( input.type === 'file' ) {
+    fileInputs.forEach(input => {
+        if (input.type === 'file') {
             // first get any files inside file input elements
-            if ( input.files[0] ){
-                fileTasks.push( Promise.resolve( _processNameAndSize( input, input.files[ 0 ] ) ) );
+            if (input.files[0]){
+                fileTasks.push(Promise.resolve(_processNameAndSize(input, input.files[ 0 ])));
             }
-        } else if ( input.value ) {
+        } else if (input.value) {
             // then from canvases
-            const canvas = input.closest( '.question' ).querySelector( '.draw-widget canvas' );
-            if ( canvas && !URL_RE.test( input.value ) ) {
-                fileTasks.push( new Promise( resolve => canvas.toBlob( blob => {
+            const canvas = input.closest('.question').querySelector('.draw-widget canvas');
+            if (canvas && !URL_RE.test(input.value)) {
+                fileTasks.push(new Promise(resolve => canvas.toBlob(blob => {
                     blob.name = input.value;
-                    resolve( _processNameAndSize( input, blob ) );
-                } ) ) );
+                    resolve(_processNameAndSize(input, blob));
+                })));
             }
         }
 
-    } );
+    });
 
-    return Promise.all( fileTasks )
-        .then( files => {
+    return Promise.all(fileTasks)
+        .then(files => {
             // get any file names of files that were loaded as DataURI and have remained unchanged (i.e. loaded from Storage)
             fileInputs
-                .filter( input => input.matches( '[data-loaded-file-name]' ) )
-                .forEach( input => files.push( input.getAttribute( 'data-loaded-file-name' ) ) );
+                .filter(input => input.matches('[data-loaded-file-name]'))
+                .forEach(input => files.push(input.getAttribute('data-loaded-file-name')));
 
             return files;
-        } );
+        });
 }
 
 /**
@@ -189,10 +189,10 @@ function getCurrentFiles() {
  * @param { string } filename - filename
  * @return { Promise } array of files
  */
-function getCurrentFile( filename ) {
+function getCurrentFile(filename) {
     // relies on all file names to be unique (which they are)
     return getCurrentFiles()
-        .then( files => files.find( file => file.name === filename )  );
+        .then(files => files.find(file => file.name === filename));
 }
 
 /**
@@ -210,14 +210,14 @@ function _getInstanceId() {
  * @param  { object }  file - the File
  * @return { boolean } whether file is too large
  */
-function isTooLarge( file ) {
+function isTooLarge(file) {
     return file && file.size > _getMaxSize();
 }
 
 function _getMaxSizeError() {
-    return new Error( t( 'filepicker.toolargeerror', {
+    return new Error(t('filepicker.toolargeerror', {
         maxSize: getMaxSizeReadable()
-    } ) );
+    }));
 }
 
 /**
@@ -230,7 +230,7 @@ function _getMaxSize() {
 }
 
 function getMaxSizeReadable() {
-    return `${Math.round( _getMaxSize() * 100 / ( 1000 * 1000 * 100 ) )}MB`;
+    return `${Math.round(_getMaxSize() * 100 / (1000 * 1000 * 100))}MB`;
 }
 
 export default {

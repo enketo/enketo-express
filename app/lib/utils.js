@@ -2,10 +2,10 @@
  * @module utils
  */
 
-const crypto = require( 'crypto' );
-const EVP_BytesToKey = require( 'evp_bytestokey' );
-const validUrl = require( 'valid-url' );
-// var debug = require( 'debug' )( 'utils' );
+const crypto = require('crypto');
+const EVP_BytesToKey = require('evp_bytestokey');
+const validUrl = require('valid-url');
+// var debug = require('debug')('utils');
 
 /**
  * Returns a unique, predictable openRosaKey from a survey oject
@@ -15,14 +15,14 @@ const validUrl = require( 'valid-url' );
  * @param { string } [prefix] - prefix
  * @return {string|null} openRosaKey
  */
-function getOpenRosaKey( survey, prefix ) {
-    if ( !survey || !survey.openRosaServer || !survey.openRosaId ) {
+function getOpenRosaKey(survey, prefix) {
+    if (!survey || !survey.openRosaServer || !survey.openRosaId) {
         return null;
     }
     prefix = prefix || 'or:';
 
     // Server URL is not case sensitive, form ID is case-sensitive
-    return `${prefix + cleanUrl( survey.openRosaServer )},${survey.openRosaId.trim()}`;
+    return `${prefix + cleanUrl(survey.openRosaServer)},${survey.openRosaId.trim()}`;
 }
 
 /**
@@ -33,19 +33,19 @@ function getOpenRosaKey( survey, prefix ) {
  * @param { string } type - Webform type
  * @return { string } Hash
  */
-function getXformsManifestHash( manifest, type ) {
+function getXformsManifestHash(manifest, type) {
     const hash = '';
 
-    if ( !manifest || manifest.length === 0 ) {
+    if (!manifest || manifest.length === 0) {
         return hash;
     }
-    if ( type === 'all' ) {
-        return md5( JSON.stringify( manifest ) );
+    if (type === 'all') {
+        return md5(JSON.stringify(manifest));
     }
-    if ( type ) {
-        const filtered = manifest.map( mediaFile => mediaFile[ type ] );
+    if (type) {
+        const filtered = manifest.map(mediaFile => mediaFile[ type ]);
 
-        return md5( JSON.stringify( filtered ) );
+        return md5(JSON.stringify(filtered));
     }
 
     return hash;
@@ -59,13 +59,13 @@ function getXformsManifestHash( manifest, type ) {
  * @param { string } url - Url to be cleaned up
  * @return { string } Cleaned up url
  */
-function cleanUrl( url ) {
+function cleanUrl(url) {
     url = url.trim();
-    if ( url.lastIndexOf( '/' ) === url.length - 1 ) {
-        url = url.substring( 0, url.length - 1 );
+    if (url.lastIndexOf('/') === url.length - 1) {
+        url = url.substring(0, url.length - 1);
     }
-    const matches = url.match( /https?:\/\/(www\.)?(.+)/ );
-    if ( matches && matches.length > 2 ) {
+    const matches = url.match(/https?:\/\/(www\.)?(.+)/);
+    if (matches && matches.length > 2) {
         return matches[ 2 ].toLowerCase();
     }
 
@@ -81,8 +81,8 @@ function cleanUrl( url ) {
  * @param { string } url - Url to be validated
  * @return { boolean } Whether the url is valid
  */
-function isValidUrl( url ) {
-    return !!validUrl.isWebUri( url ) && !( /\?/.test( url ) ) && !( /#/.test( url ) );
+function isValidUrl(url) {
+    return !!validUrl.isWebUri(url) && !(/\?/.test(url)) && !(/#/.test(url));
 }
 
 /**
@@ -92,11 +92,11 @@ function isValidUrl( url ) {
  * @param { string } message - Message to be hashed
  * @return { string } Hash string
  */
-function md5( message ) {
-    const hash = crypto.createHash( 'md5' );
-    hash.update( message );
+function md5(message) {
+    const hash = crypto.createHash('md5');
+    hash.update(message);
 
-    return hash.digest( 'hex' );
+    return hash.digest('hex');
 }
 
 /**
@@ -110,12 +110,12 @@ function md5( message ) {
  * @param { string } pw - The password to use for encryption
  * @return { string } The encrypted result
  */
-function insecureAes192Encrypt( text, pw ) {
+function insecureAes192Encrypt(text, pw) {
     let encrypted;
-    const stuff = _getKeyIv( pw );
-    const cipher = crypto.createCipheriv( 'aes192', stuff.key, stuff.iv );
-    encrypted = cipher.update( text, 'utf8', 'hex' );
-    encrypted += cipher.final( 'hex' );
+    const stuff = _getKeyIv(pw);
+    const cipher = crypto.createCipheriv('aes192', stuff.key, stuff.iv);
+    encrypted = cipher.update(text, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
 
     return encrypted;
 }
@@ -128,12 +128,12 @@ function insecureAes192Encrypt( text, pw ) {
  * @param { object } pw - The password to use for decryption
  * @return { string } The decrypted result
  */
-function insecureAes192Decrypt( encrypted, pw ) {
+function insecureAes192Decrypt(encrypted, pw) {
     let decrypted;
-    const stuff = _getKeyIv( pw );
-    const decipher = crypto.createDecipheriv( 'aes192', stuff.key, stuff.iv );
-    decrypted = decipher.update( encrypted, 'hex', 'utf8' );
-    decrypted += decipher.final( 'utf8' );
+    const stuff = _getKeyIv(pw);
+    const decipher = crypto.createDecipheriv('aes192', stuff.key, stuff.iv);
+    decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
 
     return decrypted;
 }
@@ -146,13 +146,13 @@ function insecureAes192Decrypt( encrypted, pw ) {
  * @param { string } [chars] - Characters to use
  * @return { string } Random string
  */
-function randomString( howMany = 8, chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' ) {
-    const rnd = crypto.randomBytes( howMany );
+function randomString(howMany = 8, chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
+    const rnd = crypto.randomBytes(howMany);
 
-    return new Array( howMany )
+    return new Array(howMany)
         .fill() // create indices, so map can iterate
-        .map( ( val, i ) => chars[ rnd[ i ] % chars.length ] )
-        .join( '' );
+        .map((val, i) => chars[ rnd[ i ] % chars.length ])
+        .join('');
 }
 
 /**
@@ -161,8 +161,8 @@ function randomString( howMany = 8, chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHI
  *
  * @param { string } pw - password
  */
-function _getKeyIv( pw ) {
-    return EVP_BytesToKey( pw, null, 192, 16 );
+function _getKeyIv(pw) {
+    return EVP_BytesToKey(pw, null, 192, 16);
 }
 
 /**
@@ -172,12 +172,12 @@ function _getKeyIv( pw ) {
  * @param {Array} array - Target array
  * @return {*|null} Random array item
  */
-function pickRandomItemFromArray( array ) {
-    if ( !Array.isArray( array ) || array.length === 0 ) {
+function pickRandomItemFromArray(array) {
+    if (!Array.isArray(array) || array.length === 0) {
         return null;
     }
-    const random = Math.floor( Math.random() * array.length );
-    if ( !array[ random ] ) {
+    const random = Math.floor(Math.random() * array.length);
+    if (!array[ random ]) {
         return null;
     }
 
@@ -192,25 +192,25 @@ function pickRandomItemFromArray( array ) {
  * @param { object } b - Second object to be compared
  * @return {null|boolean} Whether objects are equal (`null` for invalid arguments)
  */
-function areOwnPropertiesEqual( a, b ) {
+function areOwnPropertiesEqual(a, b) {
     let prop;
     const results = [];
 
-    if ( typeof a !== 'object' || typeof b !== 'object' ) {
+    if (typeof a !== 'object' || typeof b !== 'object') {
         return null;
     }
 
-    for ( prop in a ) {
-        if ( Object.prototype.hasOwnProperty.call( a, prop ) ) {
-            if ( a[ prop ] !== b[ prop ] ) {
+    for (prop in a) {
+        if (Object.prototype.hasOwnProperty.call(a, prop)) {
+            if (a[ prop ] !== b[ prop ]) {
                 return false;
             }
             results[ prop ] = true;
         }
     }
-    for ( prop in b ) {
-        if ( !results[ prop ] && Object.prototype.hasOwnProperty.call( b, prop ) ) {
-            if ( b[ prop ] !== a[ prop ] ) {
+    for (prop in b) {
+        if (!results[ prop ] && Object.prototype.hasOwnProperty.call(b, prop)) {
+            if (b[ prop ] !== a[ prop ]) {
                 return false;
             }
         }
