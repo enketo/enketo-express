@@ -2000,7 +2000,7 @@ describe('Enketo webform app entrypoints', () => {
         });
 
         it('reports edit initialization failure', async () => {
-            enketoId = 'offlineA';
+            enketoId = 'editA';
 
             const formTitle = 'Title of form';
             const form = `<form>
@@ -2065,6 +2065,217 @@ describe('Enketo webform app entrypoints', () => {
                     object: gui,
                     key: 'alertLoadErrors',
                     expectedArgs: [ [ error.message ], translatedErrorAdvice ]
+                }),
+            ];
+
+            /** @type {Promise} */
+            let editInitialization = webformEditPrivate._init(surveyInitData);
+
+            await editInitialization;
+
+            for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                const step = performedSteps.find(performedStep => {
+                    return performedStep === expectedStep;
+                });
+                const index = performedSteps.indexOf(expectedStep);
+
+                expect(step).to.equal(expectedStep);
+                expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                    .to.equal(expectedIndex);
+            }
+
+            expect(performedSteps.length).to.equal(steps.length);
+        });
+
+        const invalidForms = [
+            { form: '<form></form>' },
+            { model: '<any />' },
+        ];
+
+        invalidForms.forEach((formData) => {
+            it('reports edit initialization failure when fetched form data is invalid', async () => {
+                enketoId = 'editA';
+
+                const formParts = {
+                    ...surveyInitData,
+                    ...formData,
+
+                    externalData: [],
+                    languages: [],
+                    theme: 'kobo',
+                };
+
+                existingInstance = '<a>value</a>';
+
+                const instanceAttachments = {
+                    'a.jpg': 'https://example.com/a.jpg',
+                };
+
+                const instanceResult = {
+                    instance: existingInstance,
+                    instanceAttachments,
+                    ignoreMe: true,
+                };
+
+                const translatedErrorMessage = 'Translated error advice';
+                const translatedErrorAdvice = 'Translated error advice';
+
+                const steps = [
+                    prepareInitStep({
+                        description: 'Translator: initialize i18next',
+                        stubMethod: 'callsFake',
+                        object: i18next,
+                        key: 'init',
+                        expectedArgs: [ expectObject, expectCallback ],
+                    }),
+                    prepareInitStep({
+                        description: 'Get form parts',
+                        stubMethod: 'callsFake',
+                        object: connection,
+                        key: 'getFormParts',
+                        expectedArgs: [ surveyInitData ],
+                        returnValue: Promise.resolve(formParts),
+                    }),
+                    prepareInitStep({
+                        description: 'Get existing instance',
+                        stubMethod: 'callsFake',
+                        object: connection,
+                        key: 'getExistingInstance',
+                        expectedArgs: [ surveyInitData ],
+                        returnValue: Promise.resolve(instanceResult),
+                    }),
+                    prepareInitStep({
+                        description: 'Translate error message',
+                        stubMethod: 'callsFake',
+                        object: i18next,
+                        key: 't',
+                        expectedArgs: [ 'error.unknown', undefined ],
+                        returnValue: translatedErrorMessage,
+                    }),
+                    prepareInitStep({
+                        description: 'Set error class',
+                        stubMethod: 'callsFake',
+                        object: loaderElement.classList,
+                        key: 'add',
+                        expectedArgs: [ webformEditPrivate.LOAD_ERROR_CLASS ],
+                    }),
+                    prepareInitStep({
+                        description: 'Translate error advice',
+                        stubMethod: 'callsFake',
+                        object: i18next,
+                        key: 't',
+                        expectedArgs: [ 'alert.loaderror.editadvice', undefined ],
+                        returnValue: translatedErrorAdvice,
+                    }),
+                    prepareInitStep({
+                        description: 'Alert load errors',
+                        stubMethod: 'callsFake',
+                        object: gui,
+                        key: 'alertLoadErrors',
+                        expectedArgs: [ [ translatedErrorMessage ], translatedErrorAdvice ]
+                    }),
+                ];
+
+                /** @type {Promise} */
+                let editInitialization = webformEditPrivate._init(surveyInitData);
+
+                await editInitialization;
+
+                for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                    const step = performedSteps.find(performedStep => {
+                        return performedStep === expectedStep;
+                    });
+                    const index = performedSteps.indexOf(expectedStep);
+
+                    expect(step).to.equal(expectedStep);
+                    expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                        .to.equal(expectedIndex);
+                }
+
+                expect(performedSteps.length).to.equal(steps.length);
+            });
+        });
+
+        it('reports edit initialization failure when fetched instance data is invalid', async () => {
+            enketoId = 'editA';
+
+            const formParts = {
+                ...surveyInitData,
+
+                form: '<form></form>',
+                model: '<any />',
+                externalData: [],
+                languages: [],
+                theme: 'kobo',
+            };
+
+            existingInstance = '<a>value</a>';
+
+            const instanceAttachments = {
+                'a.jpg': 'https://example.com/a.jpg',
+            };
+
+            const instanceResult = {
+                instanceAttachments,
+                ignoreMe: true,
+            };
+
+            const translatedErrorMessage = 'Translated error advice';
+            const translatedErrorAdvice = 'Translated error advice';
+
+            const steps = [
+                prepareInitStep({
+                    description: 'Translator: initialize i18next',
+                    stubMethod: 'callsFake',
+                    object: i18next,
+                    key: 'init',
+                    expectedArgs: [ expectObject, expectCallback ],
+                }),
+                prepareInitStep({
+                    description: 'Get form parts',
+                    stubMethod: 'callsFake',
+                    object: connection,
+                    key: 'getFormParts',
+                    expectedArgs: [ surveyInitData ],
+                    returnValue: Promise.resolve(formParts),
+                }),
+                prepareInitStep({
+                    description: 'Get existing instance',
+                    stubMethod: 'callsFake',
+                    object: connection,
+                    key: 'getExistingInstance',
+                    expectedArgs: [ surveyInitData ],
+                    returnValue: Promise.resolve(instanceResult),
+                }),
+                prepareInitStep({
+                    description: 'Translate error message',
+                    stubMethod: 'callsFake',
+                    object: i18next,
+                    key: 't',
+                    expectedArgs: [ 'error.unknown', undefined ],
+                    returnValue: translatedErrorMessage,
+                }),
+                prepareInitStep({
+                    description: 'Set error class',
+                    stubMethod: 'callsFake',
+                    object: loaderElement.classList,
+                    key: 'add',
+                    expectedArgs: [ webformEditPrivate.LOAD_ERROR_CLASS ],
+                }),
+                prepareInitStep({
+                    description: 'Translate error advice',
+                    stubMethod: 'callsFake',
+                    object: i18next,
+                    key: 't',
+                    expectedArgs: [ 'alert.loaderror.editadvice', undefined ],
+                    returnValue: translatedErrorAdvice,
+                }),
+                prepareInitStep({
+                    description: 'Alert load errors',
+                    stubMethod: 'callsFake',
+                    object: gui,
+                    key: 'alertLoadErrors',
+                    expectedArgs: [ [ translatedErrorMessage ], translatedErrorAdvice ]
                 }),
             ];
 
@@ -2727,9 +2938,9 @@ describe('Enketo webform app entrypoints', () => {
             ];
 
             /** @type {Promise} */
-            let editInitialization = webformViewPrivate._init(surveyInitData);
+            let viewInitialization = webformViewPrivate._init(surveyInitData);
 
-            await editInitialization;
+            await viewInitialization;
 
             for (const [ expectedIndex, expectedStep ] of steps.entries()) {
                 const step = performedSteps.find(performedStep => {
@@ -2743,6 +2954,106 @@ describe('Enketo webform app entrypoints', () => {
             }
 
             expect(performedSteps.length).to.equal(steps.length);
+        });
+
+        const invalidForms = [
+            { form: '<form></form>' },
+            { model: '<any />' },
+        ];
+
+        invalidForms.forEach((formData) => {
+            it('reports view initialization failure when fetched form data is invalid', async () => {
+                enketoId = 'viewA';
+
+                const formParts = {
+                    ...surveyInitData,
+                    ...formData,
+
+                    externalData: [],
+                    languages: [],
+                    theme: 'kobo',
+                };
+
+                existingInstance = '<a>value</a>';
+
+                const instanceAttachments = {
+                    'a.jpg': 'https://example.com/a.jpg',
+                };
+
+                const instanceResult = {
+                    instance: existingInstance,
+                    instanceAttachments,
+                    ignoreMe: true,
+                };
+
+                const translatedErrorMessage = 'Unknown error';
+
+                const steps = [
+                    prepareInitStep({
+                        description: 'Translator: initialize i18next',
+                        stubMethod: 'callsFake',
+                        object: i18next,
+                        key: 'init',
+                        expectedArgs: [ expectObject, expectCallback ],
+                    }),
+                    prepareInitStep({
+                        description: 'Get form parts',
+                        stubMethod: 'callsFake',
+                        object: connection,
+                        key: 'getFormParts',
+                        expectedArgs: [ surveyInitData ],
+                        returnValue: Promise.resolve(formParts),
+                    }),
+                    prepareInitStep({
+                        description: 'Get existing instance',
+                        stubMethod: 'callsFake',
+                        object: connection,
+                        key: 'getExistingInstance',
+                        expectedArgs: [ surveyInitData ],
+                        returnValue: Promise.resolve(instanceResult),
+                    }),
+                    prepareInitStep({
+                        description: 'Translate error message',
+                        stubMethod: 'callsFake',
+                        object: i18next,
+                        key: 't',
+                        expectedArgs: [ 'error.unknown', undefined ],
+                        returnValue: translatedErrorMessage,
+                    }),
+                    prepareInitStep({
+                        description: 'Set error class',
+                        stubMethod: 'callsFake',
+                        object: loaderElement.classList,
+                        key: 'add',
+                        expectedArgs: [ webformViewPrivate.LOAD_ERROR_CLASS ],
+                    }),
+                    prepareInitStep({
+                        description: 'Alert load errors',
+                        stubMethod: 'callsFake',
+                        object: gui,
+                        key: 'alertLoadErrors',
+                        expectedArgs: [ [ translatedErrorMessage ] ]
+                    }),
+                ];
+
+                /** @type {Promise} */
+                let viewInitialization = webformViewPrivate._init(surveyInitData);
+
+                await viewInitialization;
+
+                for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                    const step = performedSteps.find(performedStep => {
+                        return performedStep === expectedStep;
+                    });
+                    const index = performedSteps.indexOf(expectedStep);
+
+                    expect(step).to.equal(expectedStep);
+                    expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                        .to.equal(expectedIndex);
+                }
+
+                expect(performedSteps.length).to.equal(steps.length);
+            });
         });
     });
 
