@@ -172,7 +172,8 @@ module.exports = grunt => {
                     reporter: [
                         'html',
                         'text-summary',
-                        'json'
+                        'json',
+                        'lcov',
                     ],
                     reportDir: './test-coverage/server',
                     include: [ 'app/**/*.js' ],

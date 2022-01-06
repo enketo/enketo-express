@@ -1,0 +1,28 @@
+codecov:
+  require_ci_to_pass: yes
+
+coverage:
+  range: 0..100
+  round: down
+  precision: 2
+  threshold: 100%
+
+flag_management:
+  default_rules:
+    carryforward: yes
+
+parsers:
+  javascript:
+    enable_partials: yes
+  gcov:
+    branch_detection:
+      conditional: yes
+      loop: yes
+      method: yes
+      macro: yes
+
+comment:
+  layout: "reach,diff,flags,files,footer"
+  behavior: default
+  require_changes: no
+  show_carryforward_flags: true
