@@ -1702,64 +1702,6 @@ describe('Enketo webform app entrypoints', () => {
                 loadErrorsStub = sandbox.stub(gui, 'alertLoadErrors').returns();
             });
 
-            it('indicates failure on the loading indicator', () => {
-                const error = new Error('bummer');
-
-                webformPrivate._showErrorOrAuthenticate(error);
-
-                expect(addLoaderClassStub).to.have.been.calledWith(webformPrivate.LOAD_ERROR_CLASS);
-            });
-
-            it('redirects to a login page on authorization failure', () => {
-                const error = new StatusError(401);
-
-                webformPrivate._showErrorOrAuthenticate(error);
-
-                expect(currentURL).to.equal(`${loginURL}?return_url=${encodeURIComponent(initialURL)}`);
-                expect(loadErrorsStub).not.to.have.been.called;
-            });
-
-            it('does not redirect to a login page for other network errors', () => {
-                const error = new StatusError(404);
-
-                webformPrivate._showErrorOrAuthenticate(error);
-
-                expect(currentURL).to.equal(initialURL);
-            });
-
-            it('alerts a loading error message', () => {
-                const error = new Error('oops!');
-
-                webformPrivate._showErrorOrAuthenticate(error);
-
-                expect(loadErrorsStub).to.have.been.calledWith(
-                    [ error.message ],
-                    'alert.loaderror.entryadvice'
-                );
-            });
-
-            it('alerts a loading error message string', () => {
-                const message = 'oops!';
-
-                webformPrivate._showErrorOrAuthenticate(message);
-
-                expect(loadErrorsStub).to.have.been.calledWith(
-                    [ message ],
-                    'alert.loaderror.entryadvice'
-                );
-            });
-
-            it('alerts an unknown error message', () => {
-                const error = new Error();
-
-                webformPrivate._showErrorOrAuthenticate(error);
-
-                expect(loadErrorsStub).to.have.been.calledWith(
-                    [ 'error.unknown' ],
-                    'alert.loaderror.entryadvice'
-                );
-            });
-
             it('alerts multiple loading error messages', () => {
                 const errors = [ 'really', 'not', 'good!' ];
 

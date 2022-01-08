@@ -14,7 +14,6 @@ import applicationCache from './module/application-cache';
  * @typedef {import('../../../app/models/survey-model').SurveyObject} Survey
  */
 
-const loader = document.querySelector('.main-loader');
 const FORM_HEADER_SELECTOR = '.main > .paper > .form-header';
 const formheader = document.querySelector(FORM_HEADER_SELECTOR);
 const survey = {
@@ -37,7 +36,7 @@ function _initOffline(survey) {
     try {
         _setAppCacheEventHandlers();
     } catch (error) {
-        return _showErrorOrAuthenticate(error);
+        return showErrorOrAuthenticate(document.querySelector('.main-loader'), error);
     }
 
     return applicationCache.init(survey)
@@ -55,7 +54,9 @@ function _initOffline(survey) {
         })
         .then(formCache.updateMedia)
         .then(_setFormCacheEventHandlers)
-        .catch(_showErrorOrAuthenticate);
+        .catch(reason => {
+            return showErrorOrAuthenticate(document.querySelector('.main-loader'), reason);
+        });
 }
 
 /**
@@ -72,7 +73,9 @@ function _initOnline(survey) {
         .then (connection.getMaximumSubmissionSize)
         .then(_updateMaxSizeSetting)
         .then(_init)
-        .catch(_showErrorOrAuthenticate);
+        .catch(reason => {
+            return showErrorOrAuthenticate(document.querySelector('.main-loader'), reason);
+        });
 }
 
 if (ENV !== 'test') {
@@ -109,21 +112,6 @@ const _location = {
 };
 
 const LOAD_ERROR_CLASS = 'fail';
-
-function _showErrorOrAuthenticate(error) {
-    error = (typeof error === 'string') ? new Error(error) : error;
-    loader.classList.add(LOAD_ERROR_CLASS);
-
-    if (error.status === 401) {
-        _location.href = `${settings.loginUrl}?return_url=${encodeURIComponent(_location.href)}`;
-    } else {
-        if (!Array.isArray(error)) {
-            error = [ error.message  || t('error.unknown') ];
-        }
-
-        gui.alertLoadErrors(error,  t('alert.loaderror.entryadvice'));
-    }
-}
 
 /**
  * @private
