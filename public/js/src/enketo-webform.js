@@ -125,6 +125,26 @@ function _showErrorOrAuthenticate(error) {
     }
 }
 
+/**
+ * @private
+ * @param {HTMLElement} loader
+ * @param {unknown} error
+ */
+export const showErrorOrAuthenticate = (loader, error) => {
+    error = (typeof error === 'string') ? new Error(error) : error;
+    loader.classList.add(LOAD_ERROR_CLASS);
+
+    if (error.status === 401) {
+        _location.href = `${settings.loginUrl}?return_url=${encodeURIComponent(_location.href)}`;
+    } else {
+        if (!Array.isArray(error)) {
+            error = [ error.message  || t('error.unknown') ];
+        }
+
+        gui.alertLoadErrors(error,  t('alert.loaderror.entryadvice'));
+    }
+};
+
 function _setAppCacheEventHandlers() {
 
     document.addEventListener(events.OfflineLaunchCapable().type, event => {

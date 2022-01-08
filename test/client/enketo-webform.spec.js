@@ -27,6 +27,11 @@ import store from '../../public/js/src/module/store';
  * @typedef {import('../../app/models/record-model').EnketoRecord} EnketoRecord
  */
 
+/**
+ * @typedef {import('../../public/js/src/enketo-webform') | null} EnketoWebform
+ */
+let webformExports = null;
+
 /** @type {Record<string, any> | null} */
 let webformPrivate = null;
 
@@ -307,7 +312,8 @@ describe('Enketo webform app entrypoints', () => {
             document.body.append(mainElement, loaderElement);
         }
 
-        webformPrivate = (await import('../../public/js/src/enketo-webform'))._PRIVATE_TEST_ONLY_;
+        webformExports = await import('../../public/js/src/enketo-webform');
+        webformPrivate = webformExports._PRIVATE_TEST_ONLY_;
     });
 
     beforeEach(async () => {
@@ -1757,7 +1763,76 @@ describe('Enketo webform app entrypoints', () => {
             it('alerts multiple loading error messages', () => {
                 const errors = [ 'really', 'not', 'good!' ];
 
-                webformPrivate._showErrorOrAuthenticate(errors);
+                webformExports.showErrorOrAuthenticate(loaderElement, errors);
+
+                expect(loadErrorsStub).to.have.been.calledWith(
+                    errors,
+                    'alert.loaderror.entryadvice'
+                );
+            });
+
+            it('indicates failure on the loading indicator', () => {
+                const error = new Error('bummer');
+
+                webformExports.showErrorOrAuthenticate(loaderElement, error);
+
+                expect(addLoaderClassStub).to.have.been.calledWith(webformPrivate.LOAD_ERROR_CLASS);
+            });
+
+            it('redirects to a login page on authorization failure', () => {
+                const error = new StatusError(401);
+
+                webformExports.showErrorOrAuthenticate(loaderElement, error);
+
+                expect(currentURL).to.equal(`${loginURL}?return_url=${encodeURIComponent(initialURL)}`);
+                expect(loadErrorsStub).not.to.have.been.called;
+            });
+
+            it('does not redirect to a login page for other network errors', () => {
+                const error = new StatusError(404);
+
+                webformExports.showErrorOrAuthenticate(loaderElement, error);
+
+                expect(currentURL).to.equal(initialURL);
+            });
+
+            it('alerts a loading error message', () => {
+                const error = new Error('oops!');
+
+                webformExports.showErrorOrAuthenticate(loaderElement, error);
+
+                expect(loadErrorsStub).to.have.been.calledWith(
+                    [ error.message ],
+                    'alert.loaderror.entryadvice'
+                );
+            });
+
+            it('alerts a loading error message string', () => {
+                const message = 'oops!';
+
+                webformExports.showErrorOrAuthenticate(loaderElement, message);
+
+                expect(loadErrorsStub).to.have.been.calledWith(
+                    [ message ],
+                    'alert.loaderror.entryadvice'
+                );
+            });
+
+            it('alerts an unknown error message', () => {
+                const error = new Error();
+
+                webformExports.showErrorOrAuthenticate(loaderElement, error);
+
+                expect(loadErrorsStub).to.have.been.calledWith(
+                    [ 'error.unknown' ],
+                    'alert.loaderror.entryadvice'
+                );
+            });
+
+            it('alerts multiple loading error messages', () => {
+                const errors = [ 'really', 'not', 'good!' ];
+
+                webformExports.showErrorOrAuthenticate(loaderElement, errors);
 
                 expect(loadErrorsStub).to.have.been.calledWith(
                     errors,
