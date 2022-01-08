@@ -1383,9 +1383,14 @@ describe('Enketo webform app entrypoints', () => {
             beforeEach(() => {
                 controllerFormLanguages = [];
 
-                controllerInitStub = sandbox.stub(controller, 'init').callsFake(() => Promise.resolve({
-                    languages: controllerFormLanguages,
-                }));
+                controllerInitStub = sandbox.stub(controller, 'init').callsFake((formElement) => {
+                    return Promise.resolve({
+                        languages: controllerFormLanguages,
+                        view: {
+                            html: formElement,
+                        },
+                    });
+                });
 
                 formHeader = document.querySelector(
                     webformPrivate.FORM_HEADER_SELECTOR
@@ -1506,6 +1511,94 @@ describe('Enketo webform app entrypoints', () => {
 
                     languages: controllerFormLanguages,
                 });
+            });
+
+            it('appends the DOM representation of the survey\'s form after the page\'s form header', async () => {
+                const result = await webformExports.initSurveyController(survey);
+                const { html: formElement } = result.form.view;
+
+                expect(formHeader.nextSibling).to.equal(formElement);
+                expect(formElement.outerHTML).to.deep.equal(form);
+            });
+
+            it('initializes the controller with the form element and survey data', async () => {
+                await webformExports.initSurveyController(survey);
+
+                const formElement = formHeader.nextSibling;
+
+                expect(controllerInitStub).to.have.been.calledWith(formElement, {
+                    modelStr: model,
+                    instanceStr: null,
+                    external: externalData,
+                    survey,
+                });
+            });
+
+            it('initializes the controller with instance data with defaults from settings', async () => {
+                const defaults = {
+                    '//instance/data/el1': 'v1',
+                };
+
+                await webformExports.initSurveyController(survey, { defaults });
+
+                const formElement = formHeader.nextSibling;
+
+                expect(controllerInitStub).to.have.been.calledWith(formElement, {
+                    modelStr: model,
+                    instanceStr: '<data><el1>v1</el1><el2>default</el2></data>',
+                    external: externalData,
+                    survey,
+                });
+            });
+
+            it('sets the page title with the title from the form', async () => {
+                await webformExports.initSurveyController(survey);
+
+                const title = document.querySelector('title');
+
+                expect(title.textContent).to.equal(formTitle);
+            });
+
+            it('applies print styles if print is enabled in settings', async () => {
+                const applyPrintStyleStub = sandbox.stub(gui, 'applyPrintStyle').returns();
+
+                await webformExports.initSurveyController(survey, { print: true });
+
+                expect(applyPrintStyleStub).to.have.been.called;
+            });
+
+            it('does not apply print styles if print is not enabled in settings', async () => {
+                const applyPrintStyleStub = sandbox.stub(gui, 'applyPrintStyle').returns();
+
+                await webformExports.initSurveyController(survey, { print: false });
+
+                expect(applyPrintStyleStub).not.to.have.been.called;
+            });
+
+            it('localizes the form element', async () => {
+                /** @type {Stub} */
+                let queryStub;
+
+                controllerInitStub.callsFake(async (formElement) => {
+                    // Tests that `localize` from `translator.js` was called by inference
+                    // without testing that entire functionality.
+                    queryStub = sandbox.stub(formElement, 'querySelectorAll').returns([]);
+
+                    return survey;
+                });
+
+
+                await webformExports.initSurveyController(survey);
+
+                expect(queryStub).to.have.been.calledWith('[data-i18n]');
+            });
+
+            it('returns a survey with ', async () => {
+                controllerFormLanguages = [ 'ar', 'fa' ];
+
+                const result = await webformExports.initSurveyController(survey);
+
+                expect(result.form.languages).to.deep.equal(controllerFormLanguages);
             });
         });
 

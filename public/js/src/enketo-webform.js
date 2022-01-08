@@ -233,7 +233,7 @@ function _swapTheme(survey) {
 
 /**
  * @param {string} modelStr
- * @param {Record<string, any>} defaults
+ * @param {Record<string, any>} [defaults]
  * @return {string | null}
  */
 function _prepareInstance(modelStr, defaults) {
@@ -289,3 +289,60 @@ function _init(formParts) {
             return formParts;
         });
 }
+
+/**
+ * @typedef InitSurveyControllerOptions
+ * @property {Record<string, any>} [defaults]
+ * @property {boolean} [print]
+ */
+
+/**
+ * @typedef {import('enketo-core').Form} EnketoForm
+ */
+
+/**
+ * @typedef InitSurveyControllerResult
+ * @property {EnketoForm} form
+ * @property {Survey} survey
+ */
+
+/**
+ * @private
+ * @param {Survey} survey
+ * @param {InitSurveyControllerOptions} [options]
+ * @return {Promise<InitSurveyControllerResult>}
+ */
+export const initSurveyController = async (survey, options = {}) => {
+    const range = document.createRange();
+    const formFragment = range.createContextualFragment(survey.form);
+    const formHeader = document.querySelector('.main > .paper > .form-header');
+
+    formHeader.after(formFragment);
+
+    const formElement = document.querySelector('form.or');
+    const instanceStr = _prepareInstance(survey.model, options.defaults);
+
+    const form = await controller.init(formElement, {
+        modelStr: survey.model,
+        instanceStr,
+        external: survey.externalData,
+        survey,
+    });
+
+    const formTitle = utils.getTitleFromFormStr(survey.form);
+
+    let pageTitle = document.querySelector('head > title');
+
+    pageTitle.textContent = formTitle;
+
+    if (options.print) {
+        gui.applyPrintStyle();
+    }
+
+    localize(formElement);
+
+    return {
+        form,
+        survey,
+    };
+};
