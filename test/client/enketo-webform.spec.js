@@ -366,11 +366,8 @@ describe('Enketo webform app entrypoints', () => {
             it('initializes offline forms', async () => {
                 enketoId = 'offlineA';
 
-                const xformUrl = 'https://example.com/form.xml';
                 const surveyInit = {
                     ...surveyInitData,
-
-                    xformUrl,
                 };
 
                 const offlineSurvey = {
@@ -423,8 +420,8 @@ describe('Enketo webform app entrypoints', () => {
                         stubMethod: 'callsFake',
                         object: applicationCache,
                         key: 'init',
-                        expectedArgs: [ surveyInit ],
-                        returnValue: Promise.resolve(surveyInit),
+                        expectedArgs: [ { enketoId } ],
+                        returnValue: Promise.resolve({ enketoId }),
                     }),
                     prepareInitStep({
                         description: 'Translator: initialize i18next',
@@ -438,7 +435,7 @@ describe('Enketo webform app entrypoints', () => {
                         stubMethod: 'callsFake',
                         object: formCache,
                         key: 'init',
-                        expectedArgs: [ surveyInit ],
+                        expectedArgs: [ { enketoId } ],
                         returnValue: Promise.resolve(offlineSurvey),
                     }),
 
@@ -552,8 +549,6 @@ describe('Enketo webform app entrypoints', () => {
                 /** @type {Promise} */
                 let offlineInitialization = webformPrivate._initOffline(surveyInit);
 
-                expect('xformUrl' in surveyInit).to.equal(false);
-
                 await offlineInitialization;
 
                 for (const [ expectedIndex, expectedStep ] of steps.entries()) {
@@ -573,11 +568,8 @@ describe('Enketo webform app entrypoints', () => {
             it('reports offline initialization failure (synchronous)', async () => {
                 enketoId = 'offlineA';
 
-                const xformUrl = 'https://example.com/form.xml';
                 const surveyInit = {
                     ...surveyInitData,
-
-                    xformUrl,
                 };
 
                 const error = new Error('Something failed in the DOM.');
@@ -617,8 +609,6 @@ describe('Enketo webform app entrypoints', () => {
                 /** @type {Promise} */
                 let offlineInitialization = webformPrivate._initOffline(surveyInit);
 
-                expect('xformUrl' in surveyInit).to.equal(false);
-
                 await offlineInitialization;
 
                 for (const [ expectedIndex, expectedStep ] of steps.entries()) {
@@ -638,11 +628,8 @@ describe('Enketo webform app entrypoints', () => {
             it('reports offline initialization failure (asynchronous)', async () => {
                 enketoId = 'offlineA';
 
-                const xformUrl = 'https://example.com/form.xml';
                 const surveyInit = {
                     ...surveyInitData,
-
-                    xformUrl,
                 };
 
                 const error = new Error('Application cache initialization failed.');
@@ -668,7 +655,7 @@ describe('Enketo webform app entrypoints', () => {
                         stubMethod: 'callsFake',
                         object: applicationCache,
                         key: 'init',
-                        expectedArgs: [ surveyInit ],
+                        expectedArgs: [ { enketoId } ],
                         returnValue: Promise.reject(error),
                     }),
                     prepareInitStep({
@@ -696,8 +683,6 @@ describe('Enketo webform app entrypoints', () => {
                 ];
                 /** @type {Promise} */
                 let offlineInitialization = webformPrivate._initOffline(surveyInit);
-
-                expect('xformUrl' in surveyInit).to.equal(false);
 
                 await offlineInitialization;
 
@@ -776,7 +761,7 @@ describe('Enketo webform app entrypoints', () => {
                         stubMethod: 'callsFake',
                         object: connection,
                         key: 'getFormParts',
-                        expectedArgs: [ surveyInit ],
+                        expectedArgs: [ { enketoId, xformUrl } ],
                         returnValue: Promise.resolve(onlineSurvey),
                     }),
 

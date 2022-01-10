@@ -14,28 +14,27 @@ import applicationCache from './module/application-cache';
  * @typedef {import('../../../app/models/survey-model').SurveyObject} Survey
  */
 
-const survey = {
-    enketoId: settings.enketoId,
-    xformUrl: settings.xformUrl,
-};
-
 _setEmergencyHandlers();
 
 /**
- * @typedef InitOptions
+ * @typedef InitOfflineOptions
  * @property {Record<string, any>} [defaults]
+ * @property {string} enketoId
  * @property {boolean} [print]
  */
 
 /**
- * @param {Survey} survey
- * @param {InitOptions} [options]
+ * @param {InitOfflineOptions} options
  * @returns {Promise<Survey>}
  */
-function _initOffline(survey, options = settings) {
+function _initOffline(options) {
     console.log('App in offline-capable mode.');
 
-    delete survey.xformUrl;
+    const {
+        enketoId,
+        defaults,
+        print,
+    } = options;
 
     try {
         _setAppCacheEventHandlers();
@@ -43,14 +42,14 @@ function _initOffline(survey, options = settings) {
         return showErrorOrAuthenticate(document.querySelector('.main-loader'), error);
     }
 
-    return applicationCache.init(survey)
+    return applicationCache.init({ enketoId })
         .then(initTranslator)
         .then(formCache.init)
         .then(_addBranding)
         .then(_swapTheme)
         .then(formCache.updateMaxSubmissionSize)
         .then (_updateMaxSizeSetting)
-        .then(survey => initSurveyController(survey, options))
+        .then(survey => initSurveyController(survey, { defaults, print }))
         .then(({ form, survey }) => {
             return Promise.all([ survey, ...form.languages.map(loadTranslation) ]);
         })
@@ -62,21 +61,38 @@ function _initOffline(survey, options = settings) {
 }
 
 /**
- * @param {Survey} survey
- * @param {InitOptions} [options]
+ * @typedef InitOnlineOptions
+ * @property {Record<string, any>} [defaults]
+ * @property {string} enketoId
+ * @property {boolean} [print]
+ * @property {string} [xformUrl]
+ */
+
+/**
+ * @param {InitOnlineOptions} options
  * @returns {Promise<Survey>}
  */
-function _initOnline(survey, options = settings) {
+function _initOnline(options) {
     console.log('App in online-only mode.');
 
+    const {
+        enketoId,
+        defaults,
+        print,
+        xformUrl,
+    } = options;
+
     return store.init({ failSilently: true })
-        .then(() => initTranslator(survey))
+        .then(() => initTranslator({
+            enketoId,
+            xformUrl,
+        }))
         .then(connection.getFormParts)
         .then(_addBranding)
         .then(_swapTheme)
         .then (connection.getMaximumSubmissionSize)
         .then(_updateMaxSizeSetting)
-        .then(survey => initSurveyController(survey, options))
+        .then(survey => initSurveyController(survey, { defaults, print }))
         .then(({ survey }) => survey)
         .catch(reason => {
             return showErrorOrAuthenticate(document.querySelector('.main-loader'), reason);
@@ -85,9 +101,18 @@ function _initOnline(survey, options = settings) {
 
 if (ENV !== 'test') {
     if (settings.offline) {
-        _initOffline(survey);
+        _initOffline({
+            enketoId: settings.enketoId,
+            defaults: settings.defaults,
+            print: settings.print,
+        });
     } else {
-        _initOnline(survey);
+        _initOnline({
+            enketoId: settings.enketoId,
+            defaults: settings.defaults,
+            print: settings.print,
+            xformUrl: settings.xformUrl,
+        });
     }
 }
 
