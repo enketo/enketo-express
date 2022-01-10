@@ -292,25 +292,25 @@ describe('Enketo webform app entrypoints', () => {
     /** @type {HTMLElement} */
     let loaderElement = null;
 
+    /** @type {HTMLElement} */
+    let formHeaderElement;
+
     before(async () => {
-        const formHeader = document.querySelector('.form-header');
-
-        if (formHeader == null) {
-            const domParser = new DOMParser();
-            const formDOM = domParser.parseFromString(`
-                <div class="main">
-                    <div class="paper">
-                        <div class="form-header"></div>
-                    </div>
+        const domParser = new DOMParser();
+        const formDOM = domParser.parseFromString(`
+            <div class="main">
+                <div class="paper">
+                    <div class="form-header"></div>
                 </div>
-                <div class="main-loader"></div>
-            `, 'text/html');
+            </div>
+            <div class="main-loader"></div>
+        `, 'text/html');
 
-            mainElement = formDOM.documentElement.querySelector('.main');
-            loaderElement = formDOM.documentElement.querySelector('.main-loader');
+        mainElement = formDOM.documentElement.querySelector('.main');
+        loaderElement = formDOM.documentElement.querySelector('.main-loader');
+        formHeaderElement = formDOM.documentElement.querySelector('.form-header');
 
-            document.body.append(mainElement, loaderElement);
-        }
+        document.body.append(mainElement, loaderElement);
 
         webformExports = await import('../../public/js/src/enketo-webform');
         webformPrivate = webformExports._PRIVATE_TEST_ONLY_;
@@ -390,14 +390,12 @@ describe('Enketo webform app entrypoints', () => {
                     maxSize,
                 };
 
-                const webformInitializedSurvey = {
-                    ...maxSizeSurvey,
-
+                const controllerInitResult = {
                     languages: [ 'ar', 'fa' ],
                 };
 
                 const updatedMediaSurvey = {
-                    ...webformInitializedSurvey,
+                    ...maxSizeSurvey,
                     media: [],
                 };
 
@@ -479,6 +477,14 @@ describe('Enketo webform app entrypoints', () => {
                         expectedValue: maxSize,
                     }),
                     prepareInitStep({
+                        description: 'Ensure a query for the form\'s header resolves to an element',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ '.main > .paper > .form-header' ],
+                        returnValue: formHeaderElement,
+                    }),
+                    prepareInitStep({
                         description: 'Ensure a query for the page\'s form resolves to an element',
                         stubMethod: 'callsFake',
                         object: document,
@@ -500,14 +506,14 @@ describe('Enketo webform app entrypoints', () => {
                                 survey: maxSizeSurvey,
                             },
                         ],
-                        returnValue: Promise.resolve(webformInitializedSurvey),
+                        returnValue: Promise.resolve(controllerInitResult),
                     }),
                     prepareInitStep({
                         description: 'Get page title',
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'querySelector',
-                        expectedArgs: [ 'head>title' ],
+                        expectedArgs: [ 'head > title' ],
                         returnValue: document.createElement('title'),
                     }),
                     prepareInitStep({
@@ -531,7 +537,7 @@ describe('Enketo webform app entrypoints', () => {
                         stubMethod: 'callsFake',
                         object: formCache,
                         key: 'updateMedia',
-                        expectedArgs: [ webformInitializedSurvey ],
+                        expectedArgs: [ maxSizeSurvey ],
                         returnValue: Promise.resolve(updatedMediaSurvey),
                     }),
                     prepareInitStep({
@@ -742,9 +748,7 @@ describe('Enketo webform app entrypoints', () => {
                     maxSize,
                 };
 
-                const webformInitializedSurvey = {
-                    ...maxSize,
-
+                const controllerInitResult = {
                     languages: [ 'ar', 'fa' ],
                 };
 
@@ -811,6 +815,14 @@ describe('Enketo webform app entrypoints', () => {
                         expectedValue: maxSize,
                     }),
                     prepareInitStep({
+                        description: 'Ensure a query for the form\'s header resolves to an element',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ '.main > .paper > .form-header' ],
+                        returnValue: formHeaderElement,
+                    }),
+                    prepareInitStep({
                         description: 'Ensure a query for the page\'s form resolves to an element',
                         stubMethod: 'callsFake',
                         object: document,
@@ -832,14 +844,14 @@ describe('Enketo webform app entrypoints', () => {
                                 survey: maxSizeSurvey,
                             },
                         ],
-                        returnValue: Promise.resolve(webformInitializedSurvey),
+                        returnValue: Promise.resolve(controllerInitResult),
                     }),
                     prepareInitStep({
                         description: 'Get page title',
                         stubMethod: 'callsFake',
                         object: document,
                         key: 'querySelector',
-                        expectedArgs: [ 'head>title' ],
+                        expectedArgs: [ 'head > title' ],
                         returnValue: document.createElement('title'),
                     }),
                 ];
@@ -1377,9 +1389,6 @@ describe('Enketo webform app entrypoints', () => {
             /** @type {Stub} */
             let controllerInitStub;
 
-            /** @type {HTMLElement} */
-            let formHeader;
-
             beforeEach(() => {
                 controllerFormLanguages = [];
 
@@ -1391,10 +1400,6 @@ describe('Enketo webform app entrypoints', () => {
                         },
                     });
                 });
-
-                formHeader = document.querySelector(
-                    webformPrivate.FORM_HEADER_SELECTOR
-                );
 
                 externalData = [
                     {
@@ -1418,113 +1423,17 @@ describe('Enketo webform app entrypoints', () => {
             });
 
             it('appends the DOM representation of the survey\'s form after the page\'s form header', async () => {
-                await webformPrivate._init(survey);
-
-                const formElement = formHeader.nextSibling;
-
-                expect(formElement.outerHTML).to.deep.equal(form);
-            });
-
-            it('initializes the controller with the form element and survey data', async () => {
-                await webformPrivate._init(survey);
-
-                const formElement = formHeader.nextSibling;
-
-                expect(controllerInitStub).to.have.been.calledWith(formElement, {
-                    modelStr: model,
-                    instanceStr: null,
-                    external: externalData,
-                    survey,
-                });
-            });
-
-            it('initializes the controller with instance data with defaults from settings', async () => {
-                sandbox.stub(settings, 'defaults').get(() => ({
-                    '//instance/data/el1': 'v1',
-                }));
-
-                await webformPrivate._init(survey);
-
-                const formElement = formHeader.nextSibling;
-
-                expect(controllerInitStub).to.have.been.calledWith(formElement, {
-                    modelStr: model,
-                    instanceStr: '<data><el1>v1</el1><el2>default</el2></data>',
-                    external: externalData,
-                    survey,
-                });
-            });
-
-            it('sets the page title with the title from the form', async () => {
-                await webformPrivate._init(survey);
-
-                const title = document.querySelector('title');
-
-                expect(title.textContent).to.equal(formTitle);
-            });
-
-            it('applies print styles if print is enabled in settings', async () => {
-                sandbox.stub(settings, 'print').get(() => true);
-
-                const applyPrintStyleStub = sandbox.stub(gui, 'applyPrintStyle').returns();
-
-                await webformPrivate._init(survey);
-
-                expect(applyPrintStyleStub).to.have.been.called;
-            });
-
-            it('does not apply print styles if print is not enabled in settings', async () => {
-                sandbox.stub(settings, 'print').get(() => false);
-
-                const applyPrintStyleStub = sandbox.stub(gui, 'applyPrintStyle').returns();
-
-                await webformPrivate._init(survey);
-
-                expect(applyPrintStyleStub).not.to.have.been.called;
-            });
-
-            it('localizes the form element', async () => {
-                /** @type {Stub} */
-                let queryStub;
-
-                controllerInitStub.callsFake(async (formElement) => {
-                    // Tests that `localize` from `translator.js` was called by inference
-                    // without testing that entire functionality.
-                    queryStub = sandbox.stub(formElement, 'querySelectorAll').returns([]);
-
-                    return survey;
-                });
-
-
-                await webformPrivate._init(survey);
-
-                expect(queryStub).to.have.been.calledWith('[data-i18n]');
-            });
-
-            it('returns a survey with ', async () => {
-                controllerFormLanguages = [ 'ar', 'fa' ];
-
-                const result = await webformPrivate._init(survey);
-
-                expect(result).to.deep.equal({
-                    ...survey,
-
-                    languages: controllerFormLanguages,
-                });
-            });
-
-            it('appends the DOM representation of the survey\'s form after the page\'s form header', async () => {
                 const result = await webformExports.initSurveyController(survey);
                 const { html: formElement } = result.form.view;
 
-                expect(formHeader.nextSibling).to.equal(formElement);
+                expect(formHeaderElement.nextSibling).to.equal(formElement);
                 expect(formElement.outerHTML).to.deep.equal(form);
             });
 
             it('initializes the controller with the form element and survey data', async () => {
                 await webformExports.initSurveyController(survey);
 
-                const formElement = formHeader.nextSibling;
+                const formElement = formHeaderElement.nextSibling;
 
                 expect(controllerInitStub).to.have.been.calledWith(formElement, {
                     modelStr: model,
@@ -1541,7 +1450,7 @@ describe('Enketo webform app entrypoints', () => {
 
                 await webformExports.initSurveyController(survey, { defaults });
 
-                const formElement = formHeader.nextSibling;
+                const formElement = formHeaderElement.nextSibling;
 
                 expect(controllerInitStub).to.have.been.calledWith(formElement, {
                     modelStr: model,

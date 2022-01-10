@@ -14,21 +14,25 @@ import applicationCache from './module/application-cache';
  * @typedef {import('../../../app/models/survey-model').SurveyObject} Survey
  */
 
-const FORM_HEADER_SELECTOR = '.main > .paper > .form-header';
-const formheader = document.querySelector(FORM_HEADER_SELECTOR);
 const survey = {
     enketoId: settings.enketoId,
     xformUrl: settings.xformUrl,
-    defaults: settings.defaults
 };
-const range = document.createRange();
 
 _setEmergencyHandlers();
 
 /**
- * @param {Survey} survey
+ * @typedef InitOptions
+ * @property {Record<string, any>} [defaults]
+ * @property {boolean} [print]
  */
-function _initOffline(survey) {
+
+/**
+ * @param {Survey} survey
+ * @param {InitOptions} [options]
+ * @returns {Promise<Survey>}
+ */
+function _initOffline(survey, options = settings) {
     console.log('App in offline-capable mode.');
 
     delete survey.xformUrl;
@@ -46,13 +50,11 @@ function _initOffline(survey) {
         .then(_swapTheme)
         .then(formCache.updateMaxSubmissionSize)
         .then (_updateMaxSizeSetting)
-        .then(_init)
-        .then(formParts => {
-            formParts.languages.forEach(loadTranslation);
-
-            return formParts;
+        .then(survey => initSurveyController(survey, options))
+        .then(({ form, survey }) => {
+            return Promise.all([ survey, ...form.languages.map(loadTranslation) ]);
         })
-        .then(formCache.updateMedia)
+        .then(([ survey ]) => formCache.updateMedia(survey))
         .then(_setFormCacheEventHandlers)
         .catch(reason => {
             return showErrorOrAuthenticate(document.querySelector('.main-loader'), reason);
@@ -61,8 +63,10 @@ function _initOffline(survey) {
 
 /**
  * @param {Survey} survey
+ * @param {InitOptions} [options]
+ * @returns {Promise<Survey>}
  */
-function _initOnline(survey) {
+function _initOnline(survey, options = settings) {
     console.log('App in online-only mode.');
 
     return store.init({ failSilently: true })
@@ -72,7 +76,8 @@ function _initOnline(survey) {
         .then(_swapTheme)
         .then (connection.getMaximumSubmissionSize)
         .then(_updateMaxSizeSetting)
-        .then(_init)
+        .then(survey => initSurveyController(survey, options))
+        .then(({ survey }) => survey)
         .catch(reason => {
             return showErrorOrAuthenticate(document.querySelector('.main-loader'), reason);
         });
@@ -259,35 +264,6 @@ function _prepareInstance(modelStr, defaults) {
     // TODO: would be good to just pass model along instead of converting to string first
     // existingInstance = model.getStr();
     return model.getStr();
-}
-
-/**
- * @param {Survey} formParts
- * @return {Promise<Survey>}
- */
-function _init(formParts) {
-    const formFragment = range.createContextualFragment(formParts.form);
-    formheader.after(formFragment);
-    const formEl = document.querySelector('form.or');
-
-    return controller.init(formEl, {
-        modelStr: formParts.model,
-        instanceStr: _prepareInstance(formParts.model, settings.defaults),
-        external: formParts.externalData,
-        survey: formParts,
-    })
-        .then(form => {
-            formParts.languages = form.languages;
-
-            document.querySelector('head>title').textContent = utils.getTitleFromFormStr(formParts.form);
-            if (settings.print) {
-                gui.applyPrintStyle();
-            }
-            // after widgets have been initialized, localize all data-i18n elements
-            localize(formEl);
-
-            return formParts;
-        });
 }
 
 /**

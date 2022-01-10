@@ -48,7 +48,6 @@ import {
 /**
  * @typedef GetFormPartsProps
  * @property { string } enketoId
- * @property { Record<string, string> } [defaults]
  * @property { string } [instanceId]
  * @property { string } [xformUrl]
  */
