@@ -99,6 +99,36 @@ function _initOnline(options) {
         });
 }
 
+/**
+ * @typedef InitAppOptions
+ * @property {Record<string, any>} [defaults]
+ * @property {string} enketoId
+ * @property {boolean} isOffline
+ * @property {boolean} [print]
+ * @property {string} [xformUrl]
+ */
+
+/**
+ * @private
+ * @param {InitAppOptions} options
+ */
+export const initApp = async (options) => {
+    if (options.isOffline) {
+        return await _initOffline({
+            enketoId: options.enketoId,
+            defaults: options.defaults,
+            print: options.print,
+        });
+    }
+
+    return await _initOnline({
+        enketoId: options.enketoId,
+        defaults: options.defaults,
+        print: options.print,
+        xformUrl: options.xformUrl,
+    });
+};
+
 if (ENV !== 'test') {
     if (settings.offline) {
         _initOffline({

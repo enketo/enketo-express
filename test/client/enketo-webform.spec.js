@@ -699,6 +699,346 @@ describe('Enketo webform app entrypoints', () => {
 
                 expect(performedSteps.length).to.equal(steps.length);
             });
+
+            it('initializes offline forms', async () => {
+                enketoId = 'offlineA';
+
+                const initOptions = {
+                    ...surveyInitData,
+                    isOffline: true,
+                };
+
+                const offlineSurvey = {
+                    ...surveyInitData,
+
+                    externalData: [],
+                    form: '<form></form>',
+                    model: '<a/>',
+                    theme: 'kobo',
+                };
+
+                const maxSize = 8675309;
+
+                const maxSizeSurvey = {
+                    ...offlineSurvey,
+
+                    maxSize,
+                };
+
+                const controllerInitResult = {
+                    languages: [ 'ar', 'fa' ],
+                };
+
+                const updatedMediaSurvey = {
+                    ...maxSizeSurvey,
+                    media: [],
+                };
+
+                const formElement = document.createElement('form');
+
+                sandbox.stub(i18next, 'use').returns(i18next);
+
+                const steps = [
+                    prepareInitStep({
+                        description: 'Offline-capable event listener',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'addEventListener',
+                        expectedArgs: [ events.OfflineLaunchCapable().type, expectFunction ],
+                    }),
+                    prepareInitStep({
+                        description: 'Application update event listener',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'addEventListener',
+                        expectedArgs: [ events.ApplicationUpdated().type, expectFunction ],
+                    }),
+                    prepareInitStep({
+                        description: 'Initialize application cache',
+                        stubMethod: 'callsFake',
+                        object: applicationCache,
+                        key: 'init',
+                        expectedArgs: [ { enketoId } ],
+                        returnValue: Promise.resolve({ enketoId }),
+                    }),
+                    prepareInitStep({
+                        description: 'Translator: initialize i18next',
+                        stubMethod: 'callsFake',
+                        object: i18next,
+                        key: 'init',
+                        expectedArgs: [ expectObject, expectCallback ],
+                    }),
+                    prepareInitStep({
+                        description: 'Initialize form cache',
+                        stubMethod: 'callsFake',
+                        object: formCache,
+                        key: 'init',
+                        expectedArgs: [ { enketoId } ],
+                        returnValue: Promise.resolve(offlineSurvey),
+                    }),
+
+                    // While there is currently a truthiness check on the query result,
+                    // there is a subsequent access outside that check.
+                    prepareInitStep({
+                        description: 'Add branding: Ensure a brand image query resolves to an element',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ webformPrivate.BRAND_IMAGE_SELECTOR ],
+                        returnValue: document.createElement('img'),
+                    }),
+
+                    prepareInitStep({
+                        description: 'Swap theme',
+                        stubMethod: 'callsFake',
+                        object: gui,
+                        key: 'swapTheme',
+                        expectedArgs: [ offlineSurvey ],
+                        returnValue: Promise.resolve(offlineSurvey),
+                    }),
+                    prepareInitStep({
+                        description: 'Get/update max submission size',
+                        stubMethod: 'callsFake',
+                        object: formCache,
+                        key: 'updateMaxSubmissionSize',
+                        expectedArgs: [ offlineSurvey ],
+                        returnValue: Promise.resolve(maxSizeSurvey),
+                    }),
+                    prepareInitStep({
+                        description: 'Assign max submission size to settings',
+                        stubMethod: 'set',
+                        object: settings,
+                        key: 'maxSize',
+                        expectedValue: maxSize,
+                    }),
+                    prepareInitStep({
+                        description: 'Ensure a query for the form\'s header resolves to an element',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ '.main > .paper > .form-header' ],
+                        returnValue: formHeaderElement,
+                    }),
+                    prepareInitStep({
+                        description: 'Ensure a query for the page\'s form resolves to an element',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ 'form.or' ],
+                        returnValue: formElement,
+                    }),
+                    prepareInitStep({
+                        description: 'Initialize controller-webform',
+                        stubMethod: 'callsFake',
+                        object: controller,
+                        key: 'init',
+                        expectedArgs: [
+                            formElement,
+                            {
+                                modelStr: maxSizeSurvey.model,
+                                instanceStr: null,
+                                external: maxSizeSurvey.externalData,
+                                survey: maxSizeSurvey,
+                            },
+                        ],
+                        returnValue: Promise.resolve(controllerInitResult),
+                    }),
+                    prepareInitStep({
+                        description: 'Get page title',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ 'head > title' ],
+                        returnValue: document.createElement('title'),
+                    }),
+                    prepareInitStep({
+                        description: 'Load Arabic translation',
+                        stubMethod: 'callsFake',
+                        object: globalThis,
+                        key: 'fetch',
+                        expectedArgs: [ expectLanguage('ar') ],
+                        returnValue: Promise.resolve(),
+                    }),
+                    prepareInitStep({
+                        description: 'Load Farsi translation',
+                        stubMethod: 'callsFake',
+                        object: globalThis,
+                        key: 'fetch',
+                        expectedArgs: [ expectLanguage('fa') ],
+                        returnValue: Promise.resolve(),
+                    }),
+                    prepareInitStep({
+                        description: 'Update form cache media',
+                        stubMethod: 'callsFake',
+                        object: formCache,
+                        key: 'updateMedia',
+                        expectedArgs: [ maxSizeSurvey ],
+                        returnValue: Promise.resolve(updatedMediaSurvey),
+                    }),
+                    prepareInitStep({
+                        description: 'Set cache event handlers',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'addEventListener',
+                        expectedArgs: [ events.FormUpdated().type, expectTypeof('function') ],
+                    }),
+                ];
+
+                /** @type {Promise} */
+                let offlineInitialization = webformExports.initApp(initOptions);
+
+                await offlineInitialization;
+
+                for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                    const step = performedSteps.find(performedStep => {
+                        return performedStep === expectedStep;
+                    });
+                    const index = performedSteps.indexOf(expectedStep);
+
+                    expect(step).to.equal(expectedStep);
+                    expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                        .to.equal(expectedIndex);
+                }
+
+                expect(performedSteps.length).to.equal(steps.length);
+            });
+
+            it('reports offline initialization failure (synchronous)', async () => {
+                enketoId = 'offlineA';
+
+                const initOptions = {
+                    ...surveyInitData,
+                    isOffline: true,
+                };
+
+                const error = new Error('Something failed in the DOM.');
+                const translatedErrorAdvice = 'Translated error advice';
+
+                const steps = [
+                    prepareInitStep({
+                        description: 'Offline-capable event listener',
+                        stubMethod: 'throws',
+                        object: document,
+                        key: 'addEventListener',
+                        errorCondition: error,
+                    }),
+                    prepareInitStep({
+                        description: 'Set error class',
+                        stubMethod: 'callsFake',
+                        object: loaderElement.classList,
+                        key: 'add',
+                        expectedArgs: [ webformPrivate.LOAD_ERROR_CLASS ],
+                    }),
+                    prepareInitStep({
+                        description: 'Translate error advice',
+                        stubMethod: 'callsFake',
+                        object: i18next,
+                        key: 't',
+                        expectedArgs: [ 'alert.loaderror.entryadvice', undefined ],
+                        returnValue: translatedErrorAdvice,
+                    }),
+                    prepareInitStep({
+                        description: 'Alert load errors',
+                        stubMethod: 'callsFake',
+                        object: gui,
+                        key: 'alertLoadErrors',
+                        expectedArgs: [ [ error.message ], translatedErrorAdvice ]
+                    }),
+                ];
+                /** @type {Promise} */
+                let offlineInitialization = webformExports.initApp(initOptions);
+
+                await offlineInitialization;
+
+                for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                    const step = performedSteps.find(performedStep => {
+                        return performedStep === expectedStep;
+                    });
+                    const index = performedSteps.indexOf(expectedStep);
+
+                    expect(step).to.equal(expectedStep);
+                    expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                        .to.equal(expectedIndex);
+                }
+
+                expect(performedSteps.length).to.equal(steps.length);
+            });
+
+            it('reports offline initialization failure (asynchronous)', async () => {
+                enketoId = 'offlineA';
+
+                const initOptions = {
+                    ...surveyInitData,
+                    isOffline: true,
+                };
+
+                const error = new Error('Application cache initialization failed.');
+                const translatedErrorAdvice = 'Translated error advice';
+
+                const steps = [
+                    prepareInitStep({
+                        description: 'Offline-capable event listener',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'addEventListener',
+                        expectedArgs: [ events.OfflineLaunchCapable().type, expectFunction ],
+                    }),
+                    prepareInitStep({
+                        description: 'Application update event listener',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'addEventListener',
+                        expectedArgs: [ events.ApplicationUpdated().type, expectFunction ],
+                    }),
+                    prepareInitStep({
+                        description: 'Initialize application cache',
+                        stubMethod: 'callsFake',
+                        object: applicationCache,
+                        key: 'init',
+                        expectedArgs: [ { enketoId } ],
+                        returnValue: Promise.reject(error),
+                    }),
+                    prepareInitStep({
+                        description: 'Set error class',
+                        stubMethod: 'callsFake',
+                        object: loaderElement.classList,
+                        key: 'add',
+                        expectedArgs: [ webformPrivate.LOAD_ERROR_CLASS ],
+                    }),
+                    prepareInitStep({
+                        description: 'Translate error advice',
+                        stubMethod: 'callsFake',
+                        object: i18next,
+                        key: 't',
+                        expectedArgs: [ 'alert.loaderror.entryadvice', undefined ],
+                        returnValue: translatedErrorAdvice,
+                    }),
+                    prepareInitStep({
+                        description: 'Alert load errors',
+                        stubMethod: 'callsFake',
+                        object: gui,
+                        key: 'alertLoadErrors',
+                        expectedArgs: [ [ error.message ], translatedErrorAdvice ]
+                    }),
+                ];
+                /** @type {Promise} */
+                let offlineInitialization = webformExports.initApp(initOptions);
+
+                await offlineInitialization;
+
+                for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                    const step = performedSteps.find(performedStep => {
+                        return performedStep === expectedStep;
+                    });
+                    const index = performedSteps.indexOf(expectedStep);
+
+                    expect(step).to.equal(expectedStep);
+                    expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                        .to.equal(expectedIndex);
+                }
+
+                expect(performedSteps.length).to.equal(steps.length);
+            });
         });
 
         describe('online', () => {
@@ -908,6 +1248,225 @@ describe('Enketo webform app entrypoints', () => {
 
                 /** @type {Promise} */
                 let onlineInitialization = webformPrivate._initOnline(surveyInit);
+
+                await onlineInitialization;
+
+                for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                    const step = performedSteps.find(performedStep => {
+                        return performedStep === expectedStep;
+                    });
+                    const index = performedSteps.indexOf(expectedStep);
+
+                    expect(step).to.equal(expectedStep);
+                    expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                        .to.equal(expectedIndex);
+                }
+
+                expect(performedSteps.length).to.equal(steps.length);
+            });
+
+            it('initializes online forms', async () => {
+                enketoId = 'onlineA';
+
+                const xformUrl = 'https://example.com/form.xml';
+
+                const surveyInit = {
+                    ...surveyInitData,
+                    xformUrl,
+                };
+
+                const onlineSurvey = {
+                    ...surveyInitData,
+
+                    externalData: [],
+                    form: '<form></form>',
+                    model: '<a/>',
+                    theme: 'kobo',
+                };
+
+                const maxSize = 90120;
+
+                const maxSizeSurvey = {
+                    ...onlineSurvey,
+
+                    maxSize,
+                };
+
+                const controllerInitResult = {
+                    languages: [ 'ar', 'fa' ],
+                };
+
+                const formElement = document.createElement('form');
+
+                const steps = [
+                    prepareInitStep({
+                        description: 'Initialize IndexedDB store (used for last-saved instances)',
+                        stubMethod: 'callsFake',
+                        object: store,
+                        key: 'init',
+                        expectedArgs: [ { failSilently: true } ],
+                        returnValue: Promise.resolve(),
+                    }),
+                    prepareInitStep({
+                        description: 'Translator: initialize i18next',
+                        stubMethod: 'callsFake',
+                        object: i18next,
+                        key: 'init',
+                        expectedArgs: [ expectObject, expectCallback ],
+                    } ),
+
+                    prepareInitStep({
+                        description: 'Get form parts',
+                        stubMethod: 'callsFake',
+                        object: connection,
+                        key: 'getFormParts',
+                        expectedArgs: [ { enketoId, xformUrl } ],
+                        returnValue: Promise.resolve(onlineSurvey),
+                    }),
+
+                    // While there is currently a truthiness check on the query result,
+                    // there is a subsequent access outside that check.
+                    prepareInitStep({
+                        description: 'Add branding: Ensure a brand image query resolves to an element',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ webformPrivate.BRAND_IMAGE_SELECTOR ],
+                        returnValue: document.createElement('img'),
+                    }),
+
+                    prepareInitStep({
+                        description: 'Swap theme',
+                        stubMethod: 'callsFake',
+                        object: gui,
+                        key: 'swapTheme',
+                        expectedArgs: [ onlineSurvey ],
+                        returnValue: Promise.resolve(onlineSurvey),
+                    }),
+                    prepareInitStep({
+                        description: 'Get max submission size',
+                        stubMethod: 'callsFake',
+                        object: connection,
+                        key: 'getMaximumSubmissionSize',
+                        expectedArgs: [ onlineSurvey ],
+                        returnValue: Promise.resolve(maxSizeSurvey),
+                    }),
+                    prepareInitStep({
+                        description: 'Assign max submission size to settings',
+                        stubMethod: 'set',
+                        object: settings,
+                        key: 'maxSize',
+                        expectedValue: maxSize,
+                    }),
+                    prepareInitStep({
+                        description: 'Ensure a query for the form\'s header resolves to an element',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ '.main > .paper > .form-header' ],
+                        returnValue: formHeaderElement,
+                    }),
+                    prepareInitStep({
+                        description: 'Ensure a query for the page\'s form resolves to an element',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ 'form.or' ],
+                        returnValue: formElement,
+                    }),
+                    prepareInitStep({
+                        description: 'Initialize controller-webform',
+                        stubMethod: 'callsFake',
+                        object: controller,
+                        key: 'init',
+                        expectedArgs: [
+                            formElement,
+                            {
+                                modelStr: maxSizeSurvey.model,
+                                instanceStr: null,
+                                external: maxSizeSurvey.externalData,
+                                survey: maxSizeSurvey,
+                            },
+                        ],
+                        returnValue: Promise.resolve(controllerInitResult),
+                    }),
+                    prepareInitStep({
+                        description: 'Get page title',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ 'head > title' ],
+                        returnValue: document.createElement('title'),
+                    }),
+                ];
+
+                /** @type {Promise} */
+                let onlineInitialization = webformExports.initApp(surveyInit);
+
+                await onlineInitialization;
+
+                for (const [ expectedIndex, expectedStep ] of steps.entries()) {
+                    const step = performedSteps.find(performedStep => {
+                        return performedStep === expectedStep;
+                    });
+                    const index = performedSteps.indexOf(expectedStep);
+
+                    expect(step).to.equal(expectedStep);
+                    expect(index, `Unexpected order of step ${expectedStep.options.description}`)
+                        .to.equal(expectedIndex);
+                }
+
+                expect(performedSteps.length).to.equal(steps.length);
+            });
+
+            it('reports online initialization failure', async () => {
+                enketoId = 'offlineA';
+
+                const xformUrl = 'https://example.com/form.xml';
+                const surveyInit = {
+                    ...surveyInitData,
+
+                    xformUrl,
+                };
+
+                const error = new Error('IndexedDB store initialization failed.');
+                const translatedErrorAdvice = 'Translated error advice';
+
+                const steps = [
+                    prepareInitStep({
+                        description: 'Initialize IndexedDB store (used for last-saved instances)',
+                        stubMethod: 'callsFake',
+                        object: store,
+                        key: 'init',
+                        expectedArgs: [ { failSilently: true } ],
+                        returnValue: Promise.reject(error),
+                    }),
+                    prepareInitStep({
+                        description: 'Set error class',
+                        stubMethod: 'callsFake',
+                        object: loaderElement.classList,
+                        key: 'add',
+                        expectedArgs: [ webformPrivate.LOAD_ERROR_CLASS ],
+                    }),
+                    prepareInitStep({
+                        description: 'Translate error advice',
+                        stubMethod: 'callsFake',
+                        object: i18next,
+                        key: 't',
+                        expectedArgs: [ 'alert.loaderror.entryadvice', undefined ],
+                        returnValue: translatedErrorAdvice,
+                    }),
+                    prepareInitStep({
+                        description: 'Alert load errors',
+                        stubMethod: 'callsFake',
+                        object: gui,
+                        key: 'alertLoadErrors',
+                        expectedArgs: [ [ error.message ], translatedErrorAdvice ]
+                    }),
+                ];
+
+                /** @type {Promise} */
+                let onlineInitialization = webformExports.initApp(surveyInit);
 
                 await onlineInitialization;
 
