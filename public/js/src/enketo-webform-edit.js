@@ -51,6 +51,26 @@ function _showErrorOrAuthenticate(error){
     }
 }
 
+/**
+ * @private
+ * @param {unknown} error
+ */
+export const showErrorOrAuthenticate = (error) => {
+    const loader = document.querySelector('.main-loader');
+
+    loader.classList.add('fail');
+
+    if (error.status === 401) {
+        _location.href = `${settings.loginUrl}?return_url=${encodeURIComponent(_location.href)}`;
+    } else {
+        if (!Array.isArray(error)) {
+            error = [ error.message  || t('error.unknown') ];
+        }
+
+        gui.alertLoadErrors(error, t('alert.loaderror.editadvice'));
+    }
+};
+
 function _init(survey) {
     return initTranslator(survey)
         .then(survey => Promise.all([

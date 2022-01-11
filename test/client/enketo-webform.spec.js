@@ -1834,6 +1834,9 @@ describe('Enketo webform app entrypoints', () => {
     });
 
     describe('enketo-webform-edit.js initialization steps', () => {
+        /** @type {typeof import('../../public/js/src/enketo-webform-edit') | null} */
+        let webformEditExports = null;
+
         /** @type {Record<string, any> | null} */
         let webformEditPrivate = null;
 
@@ -1850,7 +1853,8 @@ describe('Enketo webform app entrypoints', () => {
         let formHeader;
 
         before(async () => {
-            webformEditPrivate = (await import('../../public/js/src/enketo-webform-edit'))._PRIVATE_TEST_ONLY_;
+            webformEditExports = await import('../../public/js/src/enketo-webform-edit');
+            webformEditPrivate = webformEditExports._PRIVATE_TEST_ONLY_;
         });
 
         beforeEach(() => {
@@ -2366,6 +2370,9 @@ describe('Enketo webform app entrypoints', () => {
     });
 
     describe('enketo-webform-edit.js initialization behavior', () => {
+        /** @type {typeof import('../../public/js/src/enketo-webform-edit') | null} */
+        let webformEditExports = null;
+
         /** @type {Record<string, any> | null} */
         let webformEditPrivate = null;
 
@@ -2373,7 +2380,8 @@ describe('Enketo webform app entrypoints', () => {
         let baseSurvey;
 
         before(async () => {
-            webformEditPrivate = (await import('../../public/js/src/enketo-webform-edit'))._PRIVATE_TEST_ONLY_;
+            webformEditExports = await import('../../public/js/src/enketo-webform-edit');
+            webformEditPrivate = webformEditExports._PRIVATE_TEST_ONLY_;
         });
 
         beforeEach(() => {
@@ -2520,6 +2528,64 @@ describe('Enketo webform app entrypoints', () => {
                 const errors = [ 'really', 'not', 'good!' ];
 
                 webformEditPrivate._showErrorOrAuthenticate(errors);
+
+                expect(loadErrorsStub).to.have.been.calledWith(
+                    errors,
+                    'alert.loaderror.editadvice'
+                );
+            });
+
+            it('indicates failure on the loading indicator', () => {
+                const error = new Error('bummer');
+
+                webformEditExports.showErrorOrAuthenticate(error);
+
+                expect(addLoaderClassStub).to.have.been.calledWith('fail');
+            });
+
+            it('redirects to a login page on authorization failure', () => {
+                const error = new StatusError(401);
+
+                webformEditExports.showErrorOrAuthenticate(error);
+
+                expect(currentURL).to.equal(`${loginURL}?return_url=${encodeURIComponent(initialURL)}`);
+                expect(loadErrorsStub).not.to.have.been.called;
+            });
+
+            it('does not redirect to a login page for other network errors', () => {
+                const error = new StatusError(404);
+
+                webformEditExports.showErrorOrAuthenticate(error);
+
+                expect(currentURL).to.equal(initialURL);
+            });
+
+            it('alerts a loading error message', () => {
+                const error = new Error('oops!');
+
+                webformEditExports.showErrorOrAuthenticate(error);
+
+                expect(loadErrorsStub).to.have.been.calledWith(
+                    [ error.message ],
+                    'alert.loaderror.editadvice'
+                );
+            });
+
+            it('alerts an unknown error message', () => {
+                const error = new Error();
+
+                webformEditExports.showErrorOrAuthenticate(error);
+
+                expect(loadErrorsStub).to.have.been.calledWith(
+                    [ 'error.unknown' ],
+                    'alert.loaderror.editadvice'
+                );
+            });
+
+            it('alerts multiple loading error messages', () => {
+                const errors = [ 'really', 'not', 'good!' ];
+
+                webformEditExports.showErrorOrAuthenticate(errors);
 
                 expect(loadErrorsStub).to.have.been.calledWith(
                     errors,
