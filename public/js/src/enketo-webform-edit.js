@@ -5,8 +5,6 @@ import connection from './module/connection';
 import { init as initTranslator, t, localize } from './module/translator';
 import utils from './module/utils';
 
-const range = document.createRange();
-
 function _updateMaxSizeSetting(survey) {
     if (survey.maxSize) {
         // overwrite default max size
@@ -78,6 +76,7 @@ function _init(options) {
         .then(connection.getMaximumSubmissionSize)
         .then(_updateMaxSizeSetting)
         .then((formParts) => {
+            const range = document.createRange();
             const formFragment = range.createContextualFragment(formParts.form);
             const formHeader = document.querySelector('.main > .paper > .form-header');
 
