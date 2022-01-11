@@ -3001,7 +3001,7 @@ describe('Enketo webform app entrypoints', () => {
                     stubMethod: 'callsFake',
                     object: loaderElement.classList,
                     key: 'add',
-                    expectedArgs: [ webformViewPrivate.LOAD_ERROR_CLASS ],
+                    expectedArgs: [ 'fail' ],
                 }),
                 prepareInitStep({
                     description: 'Alert load errors',
@@ -3100,7 +3100,7 @@ describe('Enketo webform app entrypoints', () => {
                         stubMethod: 'callsFake',
                         object: loaderElement.classList,
                         key: 'add',
-                        expectedArgs: [ webformViewPrivate.LOAD_ERROR_CLASS ],
+                        expectedArgs: [ 'fail' ],
                     }),
                     prepareInitStep({
                         description: 'Alert load errors',
@@ -3267,58 +3267,9 @@ describe('Enketo webform app entrypoints', () => {
             it('indicates failure on the loading indicator', () => {
                 const error = new Error('bummer');
 
-                webformViewPrivate._showErrorOrAuthenticate(error);
-
-                expect(addLoaderClassStub).to.have.been.calledWith(webformViewPrivate.LOAD_ERROR_CLASS);
-            });
-
-            it('redirects to a login page on authorization failure', () => {
-                const error = new StatusError(401);
-
-                webformViewPrivate._showErrorOrAuthenticate(error);
-
-                expect(currentURL).to.equal(`${loginURL}?return_url=${encodeURIComponent(initialURL)}`);
-                expect(loadErrorsStub).not.to.have.been.called;
-            });
-
-            it('does not redirect to a login page for other network errors', () => {
-                const error = new StatusError(404);
-
-                webformViewPrivate._showErrorOrAuthenticate(error);
-
-                expect(currentURL).to.equal(initialURL);
-            });
-
-            it('alerts a loading error message', () => {
-                const error = new Error('oops!');
-
-                webformViewPrivate._showErrorOrAuthenticate(error);
-
-                expect(loadErrorsStub).to.have.been.calledWith([ error.message ]);
-            });
-
-            it('alerts an unknown error message', () => {
-                const error = new Error();
-
-                webformViewPrivate._showErrorOrAuthenticate(error);
-
-                expect(loadErrorsStub).to.have.been.calledWith([ 'error.unknown' ]);
-            });
-
-            it('alerts multiple loading error messages', () => {
-                const errors = [ 'really', 'not', 'good!' ];
-
-                webformViewPrivate._showErrorOrAuthenticate(errors);
-
-                expect(loadErrorsStub).to.have.been.calledWith(errors);
-            });
-
-            it('indicates failure on the loading indicator', () => {
-                const error = new Error('bummer');
-
                 webformViewExports.showErrorOrAuthenticate(error);
 
-                expect(addLoaderClassStub).to.have.been.calledWith(webformViewPrivate.LOAD_ERROR_CLASS);
+                expect(addLoaderClassStub).to.have.been.calledWith('fail');
             });
 
             it('redirects to a login page on authorization failure', () => {

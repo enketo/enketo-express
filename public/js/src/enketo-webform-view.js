@@ -4,7 +4,6 @@ import settings from './module/settings';
 import connection from './module/connection';
 import { init as initTranslator, t, localize } from './module/translator';
 
-const loader = document.querySelector('.main-loader');
 const formheader = document.querySelector('.main > .paper > .form-header');
 const survey = {
     enketoId: settings.enketoId,
@@ -28,8 +27,6 @@ preloadModule.init = () => {
     console.log('Preloaders disabled.');
 };
 
-const LOAD_ERROR_CLASS = 'fail';
-
 /**
  * Wrap location access to detect/prevent navigation in tests.
  */
@@ -42,19 +39,6 @@ const _location = {
     },
     reload: location.reload.bind(location),
 };
-
-function _showErrorOrAuthenticate(error) {
-    loader.classList.add(LOAD_ERROR_CLASS);
-    if (error.status === 401) {
-        _location.href = `${settings.loginUrl}?return_url=${encodeURIComponent(_location.href)}`;
-    } else {
-        if (!Array.isArray(error)) {
-            error = [ error.message  || t('error.unknown') ];
-        }
-
-        gui.alertLoadErrors(error);
-    }
-}
 
 /**
  * @private
@@ -141,7 +125,7 @@ function _init(survey) {
                     localize(formEl);
                 });
         })
-        .catch(_showErrorOrAuthenticate);
+        .catch(showErrorOrAuthenticate);
 }
 
 if (ENV !== 'test') {
