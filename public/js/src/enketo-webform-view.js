@@ -1,23 +1,31 @@
+import calcModule from 'enketo-core/src/js/calculate';
+import { FormModel } from 'enketo-core/src/js/form-model';
+import preloadModule from 'enketo-core/src/js/preload';
 import gui from './module/gui';
 import controller from './module/controller-webform';
 import settings from './module/settings';
 import connection from './module/connection';
 import { init as initTranslator, t, localize } from './module/translator';
 
-// Completely disable calculations in Enketo Core
-import calcModule from 'enketo-core/src/js/calculate';
-calcModule.update = () => {
-    console.log('Calculations disabled.');
-};
-// Completely disable instanceID and deprecatedID population in Enketo Core
-import { FormModel } from 'enketo-core/src/js/form-model';
-FormModel.prototype.setInstanceIdAndDeprecatedId = () => {
-    console.log('InstanceID and deprecatedID population disabled.');
-};
-// Completely disable preload items
-import preloadModule from 'enketo-core/src/js/preload';
-preloadModule.init = () => {
-    console.log('Preloaders disabled.');
+/**
+ * - Completely disable calculations in Enketo Core
+ * - Completely disable instanceID and deprecatedID population in Enketo Core
+ * - Completely disable preload items
+ *
+ * @private
+ */
+export const overrideEnketoCoreStateManagement = () => {
+    calcModule.update = () => {
+        console.log('Calculations disabled.');
+    };
+
+    FormModel.prototype.setInstanceIdAndDeprecatedId = () => {
+        console.log('InstanceID and deprecatedID population disabled.');
+    };
+
+    preloadModule.init = () => {
+        console.log('Preloaders disabled.');
+    };
 };
 
 /**
@@ -87,6 +95,8 @@ function _convertToReadonly(formParts) {
  * @param {InitViewOptions} options
  */
 function _init(options) {
+    overrideEnketoCoreStateManagement();
+
     return initTranslator(options)
         .then(survey => connection.getFormParts(survey))
         .then(formParts => {

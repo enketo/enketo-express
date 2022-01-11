@@ -1,5 +1,8 @@
 import i18next from 'i18next';
 import lodash from 'lodash';
+import calcModule from 'enketo-core/src/js/calculate';
+import { FormModel } from 'enketo-core/src/js/form-model';
+import preloadModule from 'enketo-core/src/js/preload';
 import applicationCache from '../../public/js/src/module/application-cache';
 import connection from '../../public/js/src/module/connection';
 import controller from '../../public/js/src/module/controller-webform';
@@ -233,7 +236,14 @@ describe('Enketo webform app entrypoints', () => {
                 }
 
                 if (stubMethod === 'set') {
-                    return expect(args).to.deep.equal([ expectedValue ]);
+                    expect(args.length).to.equal(1);
+
+                    if (expectedValue instanceof ParameterPredicate) {
+                        return expectedValue.check(args[0]);
+                    }
+                    else {
+                        return expect(args[0]).to.deep.equal(expectedValue);
+                    }
                 }
 
                 if (stubMethod === 'throws') {
@@ -2576,12 +2586,17 @@ describe('Enketo webform app entrypoints', () => {
         </div>
     </form>`;
 
+    const calcModuleUpdate = calcModule.update.bind(calcModule);
+    const formModelPrototypeSetInstanceIdAndDeprecatedId = FormModel.prototype.setInstanceIdAndDeprecatedId.bind(FormModel.prototype);
+    const preloadModuleInit = preloadModule.init.bind(preloadModule);
+
     describe('enketo-webform-view.js initialization steps', () => {
-        /** @type {Sandboox} */
-        let preImportSandbox;
 
         /** @type {Range} */
         let documentRange;
+
+        /** @type {typeof import('../../public/js/src/enketo-webform-view')} */
+        let webformViewExports;
 
         /** @type {Record<string, any> | null} */
         let webformViewPrivate = null;
@@ -2598,46 +2613,15 @@ describe('Enketo webform app entrypoints', () => {
         /** @type {HTMLElement} */
         let formHeader;
 
-        /**
-         * @typedef OverriddenModules
-         * @property {typeof import('enketo-core/src/js/calculate')} calc
-         * @property {typeof import('enketo-core/src/js/form-model').FormModel} FormModel
-         * @property {typeof import('enketo-core/src/js/preload')} preload
-         */
-
-        /** @type {OverriddenModules} */
-        let overriddenModules;
-
         before(async () => {
-            documentRange = document.createRange();
-            preImportSandbox = sinon.createSandbox();
-
-            const [
-                { default: calc },
-                { FormModel },
-                { default: preload },
-            ] = await Promise.all([
-                import('enketo-core/src/js/calculate'),
-                import('enketo-core/src/js/form-model'),
-                import('enketo-core/src/js/preload'),
-            ]);
-
-            overriddenModules = { calc, FormModel, preload };
-
-            preImportSandbox.stub(document, 'createRange')
-                .callsFake(() => documentRange);
-
-            webformViewPrivate = (await import('../../public/js/src/enketo-webform-view'))._PRIVATE_TEST_ONLY_;
-        });
-
-        after(() => {
-            preImportSandbox.restore();
+            webformViewExports = await import('../../public/js/src/enketo-webform-view');
+            webformViewPrivate = webformViewExports._PRIVATE_TEST_ONLY_;
         });
 
         beforeEach(() => {
-            sandbox.stub(overriddenModules.calc, 'update');
-            sandbox.stub(overriddenModules.FormModel.prototype, 'setInstanceIdAndDeprecatedId');
-            sandbox.stub(overriddenModules.preload, 'init');
+            documentRange = document.createRange();
+
+            sandbox.stub(document, 'createRange').returns(documentRange);
 
             sandbox.stub(lodash, 'memoize').callsFake(fn => fn);
 
@@ -2657,17 +2641,12 @@ describe('Enketo webform app entrypoints', () => {
             formHeader = document.querySelector('.form-header');
         });
 
-        /*
-         * In view mode:
-         *
-         * - calculations are never run
-         * - instanceID and deprecatedID are never set
-         * - preload metadata is not processed
-         */
         afterEach(() => {
-            expect(overriddenModules.calc.update).not.to.have.been.called;
-            expect(overriddenModules.FormModel.prototype.setInstanceIdAndDeprecatedId).not.to.have.been.called;
-            expect(overriddenModules.preload.init).not.to.have.been.called;
+            sandbox.restore();
+
+            calcModule.update = calcModuleUpdate;
+            FormModel.prototype.setInstanceIdAndDeprecatedId = formModelPrototypeSetInstanceIdAndDeprecatedId;
+            preloadModule.init = preloadModuleInit;
         });
 
         it('initializes a form to view an existing instance/record', async () => {
@@ -2738,6 +2717,27 @@ describe('Enketo webform app entrypoints', () => {
             sandbox.stub(i18next, 'use').returns(i18next);
 
             const steps = [
+                prepareInitStep({
+                    description: 'Overriding enketo-core state management',
+                    stubMethod: 'set',
+                    object: calcModule,
+                    key: 'update',
+                    expectedValue: expectFunction,
+                }),
+                prepareInitStep({
+                    description: 'Overriding enketo-core state management',
+                    stubMethod: 'set',
+                    object: FormModel.prototype,
+                    key: 'setInstanceIdAndDeprecatedId',
+                    expectedValue: expectFunction,
+                }),
+                prepareInitStep({
+                    description: 'Overriding enketo-core state management',
+                    stubMethod: 'set',
+                    object: preloadModule,
+                    key: 'init',
+                    expectedValue: expectFunction,
+                }),
                 prepareInitStep({
                     description: 'Translator: initialize i18next',
                     stubMethod: 'callsFake',
@@ -2848,7 +2848,7 @@ describe('Enketo webform app entrypoints', () => {
                 }),
 
                 prepareInitStep({
-                    description: 'Resolve appended form element',
+                    description: 'Resolve form-header',
                     stubMethod: 'callsFake',
                     object: document,
                     key: 'querySelector',
@@ -2982,6 +2982,27 @@ describe('Enketo webform app entrypoints', () => {
 
             const steps = [
                 prepareInitStep({
+                    description: 'Overriding enketo-core state management',
+                    stubMethod: 'set',
+                    object: calcModule,
+                    key: 'update',
+                    expectedValue: expectFunction,
+                }),
+                prepareInitStep({
+                    description: 'Overriding enketo-core state management',
+                    stubMethod: 'set',
+                    object: FormModel.prototype,
+                    key: 'setInstanceIdAndDeprecatedId',
+                    expectedValue: expectFunction,
+                }),
+                prepareInitStep({
+                    description: 'Overriding enketo-core state management',
+                    stubMethod: 'set',
+                    object: preloadModule,
+                    key: 'init',
+                    expectedValue: expectFunction,
+                }),
+                prepareInitStep({
                     description: 'Translator: initialize i18next',
                     stubMethod: 'callsFake',
                     object: i18next,
@@ -3073,6 +3094,27 @@ describe('Enketo webform app entrypoints', () => {
 
                 const steps = [
                     prepareInitStep({
+                        description: 'Overriding enketo-core state management',
+                        stubMethod: 'set',
+                        object: calcModule,
+                        key: 'update',
+                        expectedValue: expectFunction,
+                    }),
+                    prepareInitStep({
+                        description: 'Overriding enketo-core state management',
+                        stubMethod: 'set',
+                        object: FormModel.prototype,
+                        key: 'setInstanceIdAndDeprecatedId',
+                        expectedValue: expectFunction,
+                    }),
+                    prepareInitStep({
+                        description: 'Overriding enketo-core state management',
+                        stubMethod: 'set',
+                        object: preloadModule,
+                        key: 'init',
+                        expectedValue: expectFunction,
+                    }),
+                    prepareInitStep({
                         description: 'Translator: initialize i18next',
                         stubMethod: 'callsFake',
                         object: i18next,
@@ -3150,17 +3192,64 @@ describe('Enketo webform app entrypoints', () => {
         /** @type {Record<string, any> | null} */
         let webformViewPrivate = null;
 
+        /** @type {Stub} */
+        let calcModuleUpdateStub;
+
+        /** @type {Function | null} */
+        let calcModuleUpdate;
+
+        /** @type {Stub} */
+        let formModelPrototypeSetInstanceIdAndDeprecatedIdStub;
+
+        /** @type {Function | null} */
+        let formModelPrototypeSetInstanceIdAndDeprecatedId;
+
+        /** @type {Stub} */
+        let preloadModuleInitStub;
+
+        /** @type {Function | null} */
+        let preloadModuleInit;
+
         before(async () => {
             webformViewExports = await import('../../public/js/src/enketo-webform-view');
             webformViewPrivate = webformViewExports._PRIVATE_TEST_ONLY_;
 
             formFragment = webformViewPrivate._convertToReadonly({ form: viewForm }).formFragment;
+
+
+            calcModuleUpdate = null;
+            formModelPrototypeSetInstanceIdAndDeprecatedId = null;
+            preloadModuleInit = null;
+
+            calcModuleUpdateStub = sandbox.stub(calcModule, 'update').set((value) => {
+                calcModuleUpdate = value;
+            }).callsFake(() => {});
+
+            formModelPrototypeSetInstanceIdAndDeprecatedIdStub = sandbox.stub(FormModel.prototype, 'setInstanceIdAndDeprecatedId').set((value) => {
+                formModelPrototypeSetInstanceIdAndDeprecatedId = value;
+            }).callsFake(() => {});
+
+            preloadModuleInitStub = sandbox.stub(preloadModule, 'init').set((value) => {
+                preloadModuleInit = value;
+            }).callsFake(() => {});
         });
 
         beforeEach(() => {
             enketoId = 'surveyA';
 
             sandbox.stub(i18next, 't').returnsArg(0);
+        });
+
+        afterEach(() => {
+            expect(calcModuleUpdateStub).not.to.have.been.called;
+            expect(formModelPrototypeSetInstanceIdAndDeprecatedIdStub).not.to.have.been.called;
+            expect(preloadModuleInitStub).not.to.have.been.called;
+
+            sandbox.restore();
+
+            calcModule.update = calcModuleUpdate;
+            FormModel.prototype.setInstanceIdAndDeprecatedId = formModelPrototypeSetInstanceIdAndDeprecatedId;
+            preloadModule.init = preloadModuleInit;
         });
 
         describe('readonly conversion', () => {
@@ -3319,6 +3408,42 @@ describe('Enketo webform app entrypoints', () => {
                 webformViewExports.showErrorOrAuthenticate(errors);
 
                 expect(loadErrorsStub).to.have.been.calledWith(errors);
+            });
+        });
+
+        describe('preventing writes in enketo-core', () => {
+            beforeEach(() => {
+                sandbox.stub(console, 'log');
+            });
+
+            it('prevents calculations', () => {
+                webformViewExports.overrideEnketoCoreStateManagement();
+
+                expect(typeof calcModuleUpdate).to.equal('function');
+
+                calcModuleUpdate();
+
+                expect(console.log).to.have.been.called;
+            });
+
+            it('prevents populating formID and instanceID', () => {
+                webformViewExports.overrideEnketoCoreStateManagement();
+
+                expect(typeof formModelPrototypeSetInstanceIdAndDeprecatedId).to.equal('function');
+
+                formModelPrototypeSetInstanceIdAndDeprecatedId();
+
+                expect(console.log).to.have.been.called;
+            });
+
+            it('prevents preloading items', () => {
+                webformViewExports.overrideEnketoCoreStateManagement();
+
+                expect(typeof preloadModuleInit).to.equal('function');
+
+                preloadModuleInit();
+
+                expect(console.log).to.have.been.called;
             });
         });
     });
