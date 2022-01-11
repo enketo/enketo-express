@@ -1987,6 +1987,14 @@ describe('Enketo webform app entrypoints', () => {
                     returnValue: formElement,
                 }),
                 prepareInitStep({
+                    description: 'Resolve appended form element',
+                    stubMethod: 'callsFake',
+                    object: document,
+                    key: 'querySelector',
+                    expectedArgs: [ '.main > .paper > .form-header' ],
+                    returnValue: formHeaderElement,
+                }),
+                prepareInitStep({
                     description: 'Append form element after header',
                     stubMethod: 'callsFake',
                     object: formHeader,

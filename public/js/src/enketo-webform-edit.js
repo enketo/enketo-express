@@ -5,7 +5,6 @@ import connection from './module/connection';
 import { init as initTranslator, t, localize } from './module/translator';
 import utils from './module/utils';
 
-const formheader = document.querySelector('.main > .paper > .form-header');
 const survey = {
     enketoId: settings.enketoId,
     instanceId: settings.instanceId,
@@ -75,7 +74,10 @@ function _init(survey) {
         .then(_updateMaxSizeSetting)
         .then((formParts) => {
             const formFragment = range.createContextualFragment(formParts.form);
-            formheader.after(formFragment);
+            const formHeader = document.querySelector('.main > .paper > .form-header');
+
+            formHeader.after(formFragment);
+
             const formEl = document.querySelector('form.or');
 
             return controller.init(formEl, {
