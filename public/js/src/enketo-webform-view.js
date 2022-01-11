@@ -4,8 +4,6 @@ import settings from './module/settings';
 import connection from './module/connection';
 import { init as initTranslator, t, localize } from './module/translator';
 
-const range = document.createRange();
-
 // Completely disable calculations in Enketo Core
 import calcModule from 'enketo-core/src/js/calculate';
 calcModule.update = () => {
@@ -56,7 +54,10 @@ export const showErrorOrAuthenticate = (error) => {
 };
 
 function _convertToReadonly(formParts) {
+    const range = document.createRange();
+
     formParts.formFragment = range.createContextualFragment(formParts.form);
+
     // mark form controls as read only
     // Note: Enketo made a syntax error by adding the readonly attribute on a <select>
     // Hence, we cannot use .prop('readonly', true). We'll continue the syntax error.
