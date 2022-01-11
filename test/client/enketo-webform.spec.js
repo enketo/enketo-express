@@ -9,6 +9,7 @@ import gui from '../../public/js/src/module/gui';
 import settings from '../../public/js/src/module/settings';
 import store from '../../public/js/src/module/store';
 import * as enketoWebform from '../../public/js/src/enketo-webform';
+import * as enketoWebformEdit from '../../public/js/src/enketo-webform-edit';
 
 /**
  * @typedef {import('sinon').SinonStub<Args, Return>} Stub
@@ -1834,9 +1835,6 @@ describe('Enketo webform app entrypoints', () => {
     });
 
     describe('enketo-webform-edit.js initialization steps', () => {
-        /** @type {typeof import('../../public/js/src/enketo-webform-edit') | null} */
-        let webformEditExports = null;
-
         /** @type {Record<string, any> | null} */
         let webformEditPrivate = null;
 
@@ -1853,8 +1851,7 @@ describe('Enketo webform app entrypoints', () => {
         let formHeader;
 
         before(async () => {
-            webformEditExports = await import('../../public/js/src/enketo-webform-edit');
-            webformEditPrivate = webformEditExports._PRIVATE_TEST_ONLY_;
+            webformEditPrivate = enketoWebformEdit._PRIVATE_TEST_ONLY_;
         });
 
         beforeEach(() => {
@@ -2378,9 +2375,6 @@ describe('Enketo webform app entrypoints', () => {
     });
 
     describe('enketo-webform-edit.js initialization behavior', () => {
-        /** @type {typeof import('../../public/js/src/enketo-webform-edit') | null} */
-        let webformEditExports = null;
-
         /** @type {Record<string, any> | null} */
         let webformEditPrivate = null;
 
@@ -2388,8 +2382,7 @@ describe('Enketo webform app entrypoints', () => {
         let baseSurvey;
 
         before(async () => {
-            webformEditExports = await import('../../public/js/src/enketo-webform-edit');
-            webformEditPrivate = webformEditExports._PRIVATE_TEST_ONLY_;
+            webformEditPrivate = enketoWebformEdit._PRIVATE_TEST_ONLY_;
         });
 
         beforeEach(() => {
@@ -2488,7 +2481,7 @@ describe('Enketo webform app entrypoints', () => {
             it('indicates failure on the loading indicator', () => {
                 const error = new Error('bummer');
 
-                webformEditExports.showErrorOrAuthenticate(error);
+                enketoWebformEdit.showErrorOrAuthenticate(error);
 
                 expect(addLoaderClassStub).to.have.been.calledWith('fail');
             });
@@ -2496,7 +2489,7 @@ describe('Enketo webform app entrypoints', () => {
             it('redirects to a login page on authorization failure', () => {
                 const error = new StatusError(401);
 
-                webformEditExports.showErrorOrAuthenticate(error);
+                enketoWebformEdit.showErrorOrAuthenticate(error);
 
                 expect(currentURL).to.equal(`${loginURL}?return_url=${encodeURIComponent(initialURL)}`);
                 expect(loadErrorsStub).not.to.have.been.called;
@@ -2505,7 +2498,7 @@ describe('Enketo webform app entrypoints', () => {
             it('does not redirect to a login page for other network errors', () => {
                 const error = new StatusError(404);
 
-                webformEditExports.showErrorOrAuthenticate(error);
+                enketoWebformEdit.showErrorOrAuthenticate(error);
 
                 expect(currentURL).to.equal(initialURL);
             });
@@ -2513,7 +2506,7 @@ describe('Enketo webform app entrypoints', () => {
             it('alerts a loading error message', () => {
                 const error = new Error('oops!');
 
-                webformEditExports.showErrorOrAuthenticate(error);
+                enketoWebformEdit.showErrorOrAuthenticate(error);
 
                 expect(loadErrorsStub).to.have.been.calledWith(
                     [ error.message ],
@@ -2524,7 +2517,7 @@ describe('Enketo webform app entrypoints', () => {
             it('alerts an unknown error message', () => {
                 const error = new Error();
 
-                webformEditExports.showErrorOrAuthenticate(error);
+                enketoWebformEdit.showErrorOrAuthenticate(error);
 
                 expect(loadErrorsStub).to.have.been.calledWith(
                     [ 'error.unknown' ],
@@ -2535,7 +2528,7 @@ describe('Enketo webform app entrypoints', () => {
             it('alerts multiple loading error messages', () => {
                 const errors = [ 'really', 'not', 'good!' ];
 
-                webformEditExports.showErrorOrAuthenticate(errors);
+                enketoWebformEdit.showErrorOrAuthenticate(errors);
 
                 expect(loadErrorsStub).to.have.been.calledWith(
                     errors,
