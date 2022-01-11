@@ -5,7 +5,6 @@ import connection from './module/connection';
 import { init as initTranslator, t, localize } from './module/translator';
 import utils from './module/utils';
 
-const loader = document.querySelector('.main-loader');
 const formheader = document.querySelector('.main > .paper > .form-header');
 const survey = {
     enketoId: settings.enketoId,
@@ -34,22 +33,6 @@ function _updateMaxSizeSetting(survey) {
     },
     reload: location.reload.bind(location),
 };
-
-const LOAD_ERROR_CLASS = 'fail';
-
-function _showErrorOrAuthenticate(error){
-    loader.classList.add(LOAD_ERROR_CLASS);
-
-    if (error.status === 401) {
-        _location.href = `${settings.loginUrl}?return_url=${encodeURIComponent(_location.href)}`;
-    } else {
-        if (!Array.isArray(error)) {
-            error = [ error.message  || t('error.unknown') ];
-        }
-
-        gui.alertLoadErrors(error, t('alert.loaderror.editadvice'));
-    }
-}
 
 /**
  * @private
@@ -110,7 +93,7 @@ function _init(survey) {
                     localize(formEl);
                 });
         })
-        .catch(_showErrorOrAuthenticate);
+        .catch(showErrorOrAuthenticate);
 }
 
 if (ENV !== 'test') {

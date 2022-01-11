@@ -2119,7 +2119,7 @@ describe('Enketo webform app entrypoints', () => {
                     stubMethod: 'callsFake',
                     object: loaderElement.classList,
                     key: 'add',
-                    expectedArgs: [ webformEditPrivate.LOAD_ERROR_CLASS ],
+                    expectedArgs: [ 'fail' ],
                 }),
                 prepareInitStep({
                     description: 'Translate error advice',
@@ -2227,7 +2227,7 @@ describe('Enketo webform app entrypoints', () => {
                         stubMethod: 'callsFake',
                         object: loaderElement.classList,
                         key: 'add',
-                        expectedArgs: [ webformEditPrivate.LOAD_ERROR_CLASS ],
+                        expectedArgs: [ 'fail' ],
                     }),
                     prepareInitStep({
                         description: 'Translate error advice',
@@ -2330,7 +2330,7 @@ describe('Enketo webform app entrypoints', () => {
                     stubMethod: 'callsFake',
                     object: loaderElement.classList,
                     key: 'add',
-                    expectedArgs: [ webformEditPrivate.LOAD_ERROR_CLASS ],
+                    expectedArgs: [ 'fail' ],
                 }),
                 prepareInitStep({
                     description: 'Translate error advice',
@@ -2475,64 +2475,6 @@ describe('Enketo webform app entrypoints', () => {
 
 
                 loadErrorsStub = sandbox.stub(gui, 'alertLoadErrors').returns();
-            });
-
-            it('indicates failure on the loading indicator', () => {
-                const error = new Error('bummer');
-
-                webformEditPrivate._showErrorOrAuthenticate(error);
-
-                expect(addLoaderClassStub).to.have.been.calledWith(webformEditPrivate.LOAD_ERROR_CLASS);
-            });
-
-            it('redirects to a login page on authorization failure', () => {
-                const error = new StatusError(401);
-
-                webformEditPrivate._showErrorOrAuthenticate(error);
-
-                expect(currentURL).to.equal(`${loginURL}?return_url=${encodeURIComponent(initialURL)}`);
-                expect(loadErrorsStub).not.to.have.been.called;
-            });
-
-            it('does not redirect to a login page for other network errors', () => {
-                const error = new StatusError(404);
-
-                webformEditPrivate._showErrorOrAuthenticate(error);
-
-                expect(currentURL).to.equal(initialURL);
-            });
-
-            it('alerts a loading error message', () => {
-                const error = new Error('oops!');
-
-                webformEditPrivate._showErrorOrAuthenticate(error);
-
-                expect(loadErrorsStub).to.have.been.calledWith(
-                    [ error.message ],
-                    'alert.loaderror.editadvice'
-                );
-            });
-
-            it('alerts an unknown error message', () => {
-                const error = new Error();
-
-                webformEditPrivate._showErrorOrAuthenticate(error);
-
-                expect(loadErrorsStub).to.have.been.calledWith(
-                    [ 'error.unknown' ],
-                    'alert.loaderror.editadvice'
-                );
-            });
-
-            it('alerts multiple loading error messages', () => {
-                const errors = [ 'really', 'not', 'good!' ];
-
-                webformEditPrivate._showErrorOrAuthenticate(errors);
-
-                expect(loadErrorsStub).to.have.been.calledWith(
-                    errors,
-                    'alert.loaderror.editadvice'
-                );
             });
 
             it('indicates failure on the loading indicator', () => {
