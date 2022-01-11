@@ -3136,11 +3136,15 @@ describe('Enketo webform app entrypoints', () => {
         /** @type {DocumentFragment} */
         let formFragment;
 
+        /** @type {typeof import('../../public/js/src/enketo-webform-view')} */
+        let webformViewExports;
+
         /** @type {Record<string, any> | null} */
         let webformViewPrivate = null;
 
         before(async () => {
-            webformViewPrivate = (await import('../../public/js/src/enketo-webform-view'))._PRIVATE_TEST_ONLY_;
+            webformViewExports = await import('../../public/js/src/enketo-webform-view');
+            webformViewPrivate = webformViewExports._PRIVATE_TEST_ONLY_;
 
             formFragment = webformViewPrivate._convertToReadonly({ form: viewForm }).formFragment;
         });
@@ -3305,6 +3309,55 @@ describe('Enketo webform app entrypoints', () => {
                 const errors = [ 'really', 'not', 'good!' ];
 
                 webformViewPrivate._showErrorOrAuthenticate(errors);
+
+                expect(loadErrorsStub).to.have.been.calledWith(errors);
+            });
+
+            it('indicates failure on the loading indicator', () => {
+                const error = new Error('bummer');
+
+                webformViewExports.showErrorOrAuthenticate(error);
+
+                expect(addLoaderClassStub).to.have.been.calledWith(webformViewPrivate.LOAD_ERROR_CLASS);
+            });
+
+            it('redirects to a login page on authorization failure', () => {
+                const error = new StatusError(401);
+
+                webformViewExports.showErrorOrAuthenticate(error);
+
+                expect(currentURL).to.equal(`${loginURL}?return_url=${encodeURIComponent(initialURL)}`);
+                expect(loadErrorsStub).not.to.have.been.called;
+            });
+
+            it('does not redirect to a login page for other network errors', () => {
+                const error = new StatusError(404);
+
+                webformViewExports.showErrorOrAuthenticate(error);
+
+                expect(currentURL).to.equal(initialURL);
+            });
+
+            it('alerts a loading error message', () => {
+                const error = new Error('oops!');
+
+                webformViewExports.showErrorOrAuthenticate(error);
+
+                expect(loadErrorsStub).to.have.been.calledWith([ error.message ]);
+            });
+
+            it('alerts an unknown error message', () => {
+                const error = new Error();
+
+                webformViewExports.showErrorOrAuthenticate(error);
+
+                expect(loadErrorsStub).to.have.been.calledWith([ 'error.unknown' ]);
+            });
+
+            it('alerts multiple loading error messages', () => {
+                const errors = [ 'really', 'not', 'good!' ];
+
+                webformViewExports.showErrorOrAuthenticate(errors);
 
                 expect(loadErrorsStub).to.have.been.calledWith(errors);
             });
