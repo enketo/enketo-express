@@ -4,10 +4,6 @@ import settings from './module/settings';
 import connection from './module/connection';
 import { init as initTranslator, t, localize } from './module/translator';
 
-const survey = {
-    enketoId: settings.enketoId,
-    instanceId: settings.instanceId
-};
 const range = document.createRange();
 
 // Completely disable calculations in Enketo Core
@@ -79,12 +75,22 @@ function _convertToReadonly(formParts) {
     return formParts;
 }
 
-function _init(survey) {
-    return initTranslator(survey)
+/**
+ * @typedef InitViewOptions
+ * @property {string} enketoId
+ * @property {string} [instanceId]
+ */
+
+/**
+ *
+ * @param {InitViewOptions} options
+ */
+function _init(options) {
+    return initTranslator(options)
         .then(survey => connection.getFormParts(survey))
         .then(formParts => {
-            if (survey.instanceId) {
-                return connection.getExistingInstance(survey)
+            if (options.instanceId) {
+                return connection.getExistingInstance(options)
                     .then(response => {
                         formParts.instance = response.instance;
                         formParts.instanceAttachments = response.instanceAttachments;
@@ -131,5 +137,8 @@ function _init(survey) {
 }
 
 if (ENV !== 'test') {
-    _init(survey);
+    _init({
+        enketoId: settings.enketoId,
+        instanceId: settings.instanceId
+    });
 }
