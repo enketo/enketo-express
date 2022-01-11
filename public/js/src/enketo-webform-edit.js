@@ -5,10 +5,6 @@ import connection from './module/connection';
 import { init as initTranslator, t, localize } from './module/translator';
 import utils from './module/utils';
 
-const survey = {
-    enketoId: settings.enketoId,
-    instanceId: settings.instanceId,
-};
 const range = document.createRange();
 
 function _updateMaxSizeSetting(survey) {
@@ -53,8 +49,17 @@ export const showErrorOrAuthenticate = (error) => {
     }
 };
 
-function _init(survey) {
-    return initTranslator(survey)
+/**
+ * @typedef InitEditOptions
+ * @property {string} enketoId
+ * @property {string} instanceId
+ */
+
+/**
+ * @param {InitEditOptions} options
+ */
+function _init(options) {
+    return initTranslator(options)
         .then(survey => Promise.all([
             connection.getFormParts(survey),
             connection.getExistingInstance(survey)
@@ -99,5 +104,8 @@ function _init(survey) {
 }
 
 if (ENV !== 'test') {
-    _init(survey);
+    _init({
+        enketoId: settings.enketoId,
+        instanceId: settings.instanceId,
+    });
 }
