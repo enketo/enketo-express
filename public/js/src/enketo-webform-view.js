@@ -4,7 +4,6 @@ import settings from './module/settings';
 import connection from './module/connection';
 import { init as initTranslator, t, localize } from './module/translator';
 
-const formheader = document.querySelector('.main > .paper > .form-header');
 const survey = {
     enketoId: settings.enketoId,
     instanceId: settings.instanceId
@@ -105,7 +104,10 @@ function _init(survey) {
         })
         .then(_convertToReadonly)
         .then(formParts => {
-            formheader.after(formParts.formFragment);
+            const formHeader = document.querySelector('.main > .paper > .form-header');
+
+            formHeader.after(formParts.formFragment);
+
             const formEl = document.querySelector('form.or');
 
             return controller.init(formEl, {
