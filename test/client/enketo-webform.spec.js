@@ -8,6 +8,7 @@ import formCache from '../../public/js/src/module/form-cache';
 import gui from '../../public/js/src/module/gui';
 import settings from '../../public/js/src/module/settings';
 import store from '../../public/js/src/module/store';
+import * as enketoWebform from '../../public/js/src/enketo-webform';
 
 /**
  * @typedef {import('sinon').SinonStub<Args, Return>} Stub
@@ -26,11 +27,6 @@ import store from '../../public/js/src/module/store';
 /**
  * @typedef {import('../../app/models/record-model').EnketoRecord} EnketoRecord
  */
-
-/**
- * @typedef {import('../../public/js/src/enketo-webform') | null} EnketoWebform
- */
-let webformExports = null;
 
 /** @type {Record<string, any> | null} */
 let webformPrivate = null;
@@ -315,8 +311,7 @@ describe('Enketo webform app entrypoints', () => {
 
         document.body.append(mainElement, loaderElement);
 
-        webformExports = await import('../../public/js/src/enketo-webform');
-        webformPrivate = webformExports._PRIVATE_TEST_ONLY_;
+        webformPrivate = enketoWebform._PRIVATE_TEST_ONLY_;
     });
 
     beforeEach(async () => {
@@ -561,7 +556,7 @@ describe('Enketo webform app entrypoints', () => {
                 ];
 
                 /** @type {Promise} */
-                let offlineInitialization = webformExports.initApp(initOptions);
+                let offlineInitialization = enketoWebform.initApp(initOptions);
 
                 await offlineInitialization;
 
@@ -638,7 +633,7 @@ describe('Enketo webform app entrypoints', () => {
                     }),
                 ];
                 /** @type {Promise} */
-                let offlineInitialization = webformExports.initApp(initOptions);
+                let offlineInitialization = enketoWebform.initApp(initOptions);
 
                 await offlineInitialization;
 
@@ -730,7 +725,7 @@ describe('Enketo webform app entrypoints', () => {
                     }),
                 ];
                 /** @type {Promise} */
-                let offlineInitialization = webformExports.initApp(initOptions);
+                let offlineInitialization = enketoWebform.initApp(initOptions);
 
                 await offlineInitialization;
 
@@ -898,7 +893,7 @@ describe('Enketo webform app entrypoints', () => {
                 ];
 
                 /** @type {Promise} */
-                let onlineInitialization = webformExports.initApp(surveyInit);
+                let onlineInitialization = enketoWebform.initApp(surveyInit);
 
                 await onlineInitialization;
 
@@ -979,7 +974,7 @@ describe('Enketo webform app entrypoints', () => {
                 ];
 
                 /** @type {Promise} */
-                let onlineInitialization = webformExports.initApp(surveyInit);
+                let onlineInitialization = enketoWebform.initApp(surveyInit);
 
                 await onlineInitialization;
 
@@ -1475,7 +1470,7 @@ describe('Enketo webform app entrypoints', () => {
             });
 
             it('appends the DOM representation of the survey\'s form after the page\'s form header', async () => {
-                const result = await webformExports.initSurveyController(survey);
+                const result = await enketoWebform.initSurveyController(survey);
                 const { html: formElement } = result.form.view;
 
                 expect(formHeaderElement.nextSibling).to.equal(formElement);
@@ -1483,7 +1478,7 @@ describe('Enketo webform app entrypoints', () => {
             });
 
             it('initializes the controller with the form element and survey data', async () => {
-                await webformExports.initSurveyController(survey);
+                await enketoWebform.initSurveyController(survey);
 
                 const formElement = formHeaderElement.nextSibling;
 
@@ -1500,7 +1495,7 @@ describe('Enketo webform app entrypoints', () => {
                     '//instance/data/el1': 'v1',
                 };
 
-                await webformExports.initSurveyController(survey, { defaults });
+                await enketoWebform.initSurveyController(survey, { defaults });
 
                 const formElement = formHeaderElement.nextSibling;
 
@@ -1513,7 +1508,7 @@ describe('Enketo webform app entrypoints', () => {
             });
 
             it('sets the page title with the title from the form', async () => {
-                await webformExports.initSurveyController(survey);
+                await enketoWebform.initSurveyController(survey);
 
                 const title = document.querySelector('title');
 
@@ -1523,7 +1518,7 @@ describe('Enketo webform app entrypoints', () => {
             it('applies print styles if print is enabled in settings', async () => {
                 const applyPrintStyleStub = sandbox.stub(gui, 'applyPrintStyle').returns();
 
-                await webformExports.initSurveyController(survey, { print: true });
+                await enketoWebform.initSurveyController(survey, { print: true });
 
                 expect(applyPrintStyleStub).to.have.been.called;
             });
@@ -1531,7 +1526,7 @@ describe('Enketo webform app entrypoints', () => {
             it('does not apply print styles if print is not enabled in settings', async () => {
                 const applyPrintStyleStub = sandbox.stub(gui, 'applyPrintStyle').returns();
 
-                await webformExports.initSurveyController(survey, { print: false });
+                await enketoWebform.initSurveyController(survey, { print: false });
 
                 expect(applyPrintStyleStub).not.to.have.been.called;
             });
@@ -1549,7 +1544,7 @@ describe('Enketo webform app entrypoints', () => {
                 });
 
 
-                await webformExports.initSurveyController(survey);
+                await enketoWebform.initSurveyController(survey);
 
                 expect(queryStub).to.have.been.calledWith('[data-i18n]');
             });
@@ -1557,7 +1552,7 @@ describe('Enketo webform app entrypoints', () => {
             it('returns a survey with ', async () => {
                 controllerFormLanguages = [ 'ar', 'fa' ];
 
-                const result = await webformExports.initSurveyController(survey);
+                const result = await enketoWebform.initSurveyController(survey);
 
                 expect(result.form.languages).to.deep.equal(controllerFormLanguages);
             });
@@ -1759,7 +1754,7 @@ describe('Enketo webform app entrypoints', () => {
             it('alerts multiple loading error messages', () => {
                 const errors = [ 'really', 'not', 'good!' ];
 
-                webformExports.showErrorOrAuthenticate(loaderElement, errors);
+                enketoWebform.showErrorOrAuthenticate(loaderElement, errors);
 
                 expect(loadErrorsStub).to.have.been.calledWith(
                     errors,
@@ -1770,7 +1765,7 @@ describe('Enketo webform app entrypoints', () => {
             it('indicates failure on the loading indicator', () => {
                 const error = new Error('bummer');
 
-                webformExports.showErrorOrAuthenticate(loaderElement, error);
+                enketoWebform.showErrorOrAuthenticate(loaderElement, error);
 
                 expect(addLoaderClassStub).to.have.been.calledWith(webformPrivate.LOAD_ERROR_CLASS);
             });
@@ -1778,7 +1773,7 @@ describe('Enketo webform app entrypoints', () => {
             it('redirects to a login page on authorization failure', () => {
                 const error = new StatusError(401);
 
-                webformExports.showErrorOrAuthenticate(loaderElement, error);
+                enketoWebform.showErrorOrAuthenticate(loaderElement, error);
 
                 expect(currentURL).to.equal(`${loginURL}?return_url=${encodeURIComponent(initialURL)}`);
                 expect(loadErrorsStub).not.to.have.been.called;
@@ -1787,7 +1782,7 @@ describe('Enketo webform app entrypoints', () => {
             it('does not redirect to a login page for other network errors', () => {
                 const error = new StatusError(404);
 
-                webformExports.showErrorOrAuthenticate(loaderElement, error);
+                enketoWebform.showErrorOrAuthenticate(loaderElement, error);
 
                 expect(currentURL).to.equal(initialURL);
             });
@@ -1795,7 +1790,7 @@ describe('Enketo webform app entrypoints', () => {
             it('alerts a loading error message', () => {
                 const error = new Error('oops!');
 
-                webformExports.showErrorOrAuthenticate(loaderElement, error);
+                enketoWebform.showErrorOrAuthenticate(loaderElement, error);
 
                 expect(loadErrorsStub).to.have.been.calledWith(
                     [ error.message ],
@@ -1806,7 +1801,7 @@ describe('Enketo webform app entrypoints', () => {
             it('alerts a loading error message string', () => {
                 const message = 'oops!';
 
-                webformExports.showErrorOrAuthenticate(loaderElement, message);
+                enketoWebform.showErrorOrAuthenticate(loaderElement, message);
 
                 expect(loadErrorsStub).to.have.been.calledWith(
                     [ message ],
@@ -1817,7 +1812,7 @@ describe('Enketo webform app entrypoints', () => {
             it('alerts an unknown error message', () => {
                 const error = new Error();
 
-                webformExports.showErrorOrAuthenticate(loaderElement, error);
+                enketoWebform.showErrorOrAuthenticate(loaderElement, error);
 
                 expect(loadErrorsStub).to.have.been.calledWith(
                     [ 'error.unknown' ],
@@ -1828,7 +1823,7 @@ describe('Enketo webform app entrypoints', () => {
             it('alerts multiple loading error messages', () => {
                 const errors = [ 'really', 'not', 'good!' ];
 
-                webformExports.showErrorOrAuthenticate(loaderElement, errors);
+                enketoWebform.showErrorOrAuthenticate(loaderElement, errors);
 
                 expect(loadErrorsStub).to.have.been.calledWith(
                     errors,
