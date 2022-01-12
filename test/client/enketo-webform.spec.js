@@ -13,6 +13,7 @@ import settings from '../../public/js/src/module/settings';
 import store from '../../public/js/src/module/store';
 import * as enketoWebform from '../../public/js/src/enketo-webform';
 import * as enketoWebformEdit from '../../public/js/src/enketo-webform-edit';
+import * as enketoWebformView from '../../public/js/src/enketo-webform-view';
 
 /**
  * @typedef {import('sinon').SinonStub<Args, Return>} Stub
@@ -2595,9 +2596,6 @@ describe('Enketo webform app entrypoints', () => {
         /** @type {Range} */
         let documentRange;
 
-        /** @type {typeof import('../../public/js/src/enketo-webform-view')} */
-        let webformViewExports;
-
         /** @type {Record<string, any> | null} */
         let webformViewPrivate = null;
 
@@ -2614,8 +2612,7 @@ describe('Enketo webform app entrypoints', () => {
         let formHeader;
 
         before(async () => {
-            webformViewExports = await import('../../public/js/src/enketo-webform-view');
-            webformViewPrivate = webformViewExports._PRIVATE_TEST_ONLY_;
+            webformViewPrivate = enketoWebformView._PRIVATE_TEST_ONLY_;
         });
 
         beforeEach(() => {
@@ -3186,9 +3183,6 @@ describe('Enketo webform app entrypoints', () => {
         /** @type {DocumentFragment} */
         let formFragment;
 
-        /** @type {typeof import('../../public/js/src/enketo-webform-view')} */
-        let webformViewExports;
-
         /** @type {Record<string, any> | null} */
         let webformViewPrivate = null;
 
@@ -3211,8 +3205,7 @@ describe('Enketo webform app entrypoints', () => {
         let preloadModuleInit;
 
         before(async () => {
-            webformViewExports = await import('../../public/js/src/enketo-webform-view');
-            webformViewPrivate = webformViewExports._PRIVATE_TEST_ONLY_;
+            webformViewPrivate = enketoWebformView._PRIVATE_TEST_ONLY_;
 
             formFragment = webformViewPrivate._convertToReadonly({ form: viewForm }).formFragment;
 
@@ -3364,7 +3357,7 @@ describe('Enketo webform app entrypoints', () => {
             it('indicates failure on the loading indicator', () => {
                 const error = new Error('bummer');
 
-                webformViewExports.showErrorOrAuthenticate(error);
+                enketoWebformView.showErrorOrAuthenticate(error);
 
                 expect(addLoaderClassStub).to.have.been.calledWith('fail');
             });
@@ -3372,7 +3365,7 @@ describe('Enketo webform app entrypoints', () => {
             it('redirects to a login page on authorization failure', () => {
                 const error = new StatusError(401);
 
-                webformViewExports.showErrorOrAuthenticate(error);
+                enketoWebformView.showErrorOrAuthenticate(error);
 
                 expect(currentURL).to.equal(`${loginURL}?return_url=${encodeURIComponent(initialURL)}`);
                 expect(loadErrorsStub).not.to.have.been.called;
@@ -3381,7 +3374,7 @@ describe('Enketo webform app entrypoints', () => {
             it('does not redirect to a login page for other network errors', () => {
                 const error = new StatusError(404);
 
-                webformViewExports.showErrorOrAuthenticate(error);
+                enketoWebformView.showErrorOrAuthenticate(error);
 
                 expect(currentURL).to.equal(initialURL);
             });
@@ -3389,7 +3382,7 @@ describe('Enketo webform app entrypoints', () => {
             it('alerts a loading error message', () => {
                 const error = new Error('oops!');
 
-                webformViewExports.showErrorOrAuthenticate(error);
+                enketoWebformView.showErrorOrAuthenticate(error);
 
                 expect(loadErrorsStub).to.have.been.calledWith([ error.message ]);
             });
@@ -3397,7 +3390,7 @@ describe('Enketo webform app entrypoints', () => {
             it('alerts an unknown error message', () => {
                 const error = new Error();
 
-                webformViewExports.showErrorOrAuthenticate(error);
+                enketoWebformView.showErrorOrAuthenticate(error);
 
                 expect(loadErrorsStub).to.have.been.calledWith([ 'error.unknown' ]);
             });
@@ -3405,7 +3398,7 @@ describe('Enketo webform app entrypoints', () => {
             it('alerts multiple loading error messages', () => {
                 const errors = [ 'really', 'not', 'good!' ];
 
-                webformViewExports.showErrorOrAuthenticate(errors);
+                enketoWebformView.showErrorOrAuthenticate(errors);
 
                 expect(loadErrorsStub).to.have.been.calledWith(errors);
             });
@@ -3417,7 +3410,7 @@ describe('Enketo webform app entrypoints', () => {
             });
 
             it('prevents calculations', () => {
-                webformViewExports.overrideEnketoCoreStateManagement();
+                enketoWebformView.overrideEnketoCoreStateManagement();
 
                 expect(typeof calcModuleUpdate).to.equal('function');
 
@@ -3427,7 +3420,7 @@ describe('Enketo webform app entrypoints', () => {
             });
 
             it('prevents populating formID and instanceID', () => {
-                webformViewExports.overrideEnketoCoreStateManagement();
+                enketoWebformView.overrideEnketoCoreStateManagement();
 
                 expect(typeof formModelPrototypeSetInstanceIdAndDeprecatedId).to.equal('function');
 
@@ -3437,7 +3430,7 @@ describe('Enketo webform app entrypoints', () => {
             });
 
             it('prevents preloading items', () => {
-                webformViewExports.overrideEnketoCoreStateManagement();
+                enketoWebformView.overrideEnketoCoreStateManagement();
 
                 expect(typeof preloadModuleInit).to.equal('function');
 
