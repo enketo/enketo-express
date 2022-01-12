@@ -295,6 +295,9 @@ describe('Enketo webform app entrypoints', () => {
     /** @type {HTMLElement} */
     let formHeaderElement;
 
+    /** @type {HTMLButtonElement} */
+    let flushButton;
+
     before(async () => {
         const domParser = new DOMParser();
         const formDOM = domParser.parseFromString(`
@@ -327,6 +330,8 @@ describe('Enketo webform app entrypoints', () => {
 
         enketoId = 'surveyA';
         defaults = {};
+
+        flushButton = document.createElement('button');
     });
 
     afterEach(() => {
@@ -402,6 +407,14 @@ describe('Enketo webform app entrypoints', () => {
                 sandbox.stub(i18next, 'use').returns(i18next);
 
                 const steps = [
+                    prepareInitStep({
+                        description: 'Setting emergency handlers: ensure an element is returned for flushBtn',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ '.side-slider__advanced__button.flush-db' ],
+                        returnValue: flushButton,
+                    }),
                     prepareInitStep({
                         description: 'Offline-capable event listener',
                         stubMethod: 'callsFake',
@@ -579,11 +592,27 @@ describe('Enketo webform app entrypoints', () => {
 
                 const steps = [
                     prepareInitStep({
+                        description: 'Setting emergency handlers: ensure an element is returned for flushBtn',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ '.side-slider__advanced__button.flush-db' ],
+                        returnValue: flushButton,
+                    }),
+                    prepareInitStep({
                         description: 'Offline-capable event listener',
                         stubMethod: 'throws',
                         object: document,
                         key: 'addEventListener',
                         errorCondition: error,
+                    }),
+                    prepareInitStep({
+                        description: 'Reporting failure: ensure query for loader returns element',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ '.main-loader' ],
+                        returnValue: loaderElement,
                     }),
                     prepareInitStep({
                         description: 'Set error class',
@@ -640,6 +669,14 @@ describe('Enketo webform app entrypoints', () => {
 
                 const steps = [
                     prepareInitStep({
+                        description: 'Setting emergency handlers: ensure an element is returned for flushBtn',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ '.side-slider__advanced__button.flush-db' ],
+                        returnValue: flushButton,
+                    }),
+                    prepareInitStep({
                         description: 'Offline-capable event listener',
                         stubMethod: 'callsFake',
                         object: document,
@@ -660,6 +697,14 @@ describe('Enketo webform app entrypoints', () => {
                         key: 'init',
                         expectedArgs: [ { enketoId } ],
                         returnValue: Promise.reject(error),
+                    }),
+                    prepareInitStep({
+                        description: 'Reporting failure: ensure query for loader returns element',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ '.main-loader' ],
+                        returnValue: loaderElement,
                     }),
                     prepareInitStep({
                         description: 'Set error class',
@@ -743,6 +788,14 @@ describe('Enketo webform app entrypoints', () => {
                 const formElement = document.createElement('form');
 
                 const steps = [
+                    prepareInitStep({
+                        description: 'Setting emergency handlers: ensure an element is returned for flushBtn',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ '.side-slider__advanced__button.flush-db' ],
+                        returnValue: flushButton,
+                    }),
                     prepareInitStep({
                         description: 'Initialize IndexedDB store (used for last-saved instances)',
                         stubMethod: 'callsFake',
@@ -878,12 +931,28 @@ describe('Enketo webform app entrypoints', () => {
 
                 const steps = [
                     prepareInitStep({
+                        description: 'Setting emergency handlers: ensure an element is returned for flushBtn',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ '.side-slider__advanced__button.flush-db' ],
+                        returnValue: flushButton,
+                    }),
+                    prepareInitStep({
                         description: 'Initialize IndexedDB store (used for last-saved instances)',
                         stubMethod: 'callsFake',
                         object: store,
                         key: 'init',
                         expectedArgs: [ { failSilently: true } ],
                         returnValue: Promise.reject(error),
+                    }),
+                    prepareInitStep({
+                        description: 'Reporting failure: ensure query for loader returns element',
+                        stubMethod: 'callsFake',
+                        object: document,
+                        key: 'querySelector',
+                        expectedArgs: [ '.main-loader' ],
+                        returnValue: loaderElement,
                     }),
                     prepareInitStep({
                         description: 'Set error class',
@@ -993,9 +1062,6 @@ describe('Enketo webform app entrypoints', () => {
                 };
             };
 
-            /** @type {HTMLButtonElement} */
-            let flushButton;
-
             /** @type {boolean} */
             let isConfirmed;
 
@@ -1021,8 +1087,6 @@ describe('Enketo webform app entrypoints', () => {
             let resolveReload;
 
             beforeEach(() => {
-                flushButton = document.createElement('button');
-
                 const querySelector = document.querySelector.bind(document);
 
                 sandbox.stub(document, 'querySelector').callsFake(selector => {

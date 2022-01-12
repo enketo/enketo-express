@@ -14,8 +14,6 @@ import applicationCache from './module/application-cache';
  * @typedef {import('../../../app/models/survey-model').SurveyObject} Survey
  */
 
-_setEmergencyHandlers();
-
 /**
  * @typedef InitOfflineOptions
  * @property {Record<string, any>} [defaults]
@@ -113,6 +111,8 @@ function _initOnline(options) {
  * @param {InitAppOptions} options
  */
 export const initApp = async (options) => {
+    _setEmergencyHandlers();
+
     if (options.isOffline) {
         return await _initOffline({
             enketoId: options.enketoId,
