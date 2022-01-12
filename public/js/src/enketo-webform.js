@@ -130,20 +130,13 @@ export const initApp = async (options) => {
 };
 
 if (ENV !== 'test') {
-    if (settings.offline) {
-        _initOffline({
-            enketoId: settings.enketoId,
-            defaults: settings.defaults,
-            print: settings.print,
-        });
-    } else {
-        _initOnline({
-            enketoId: settings.enketoId,
-            defaults: settings.defaults,
-            print: settings.print,
-            xformUrl: settings.xformUrl,
-        });
-    }
+    initApp({
+        enketoId: settings.enketoId,
+        defaults: settings.defaults,
+        isOffline: settings.offline,
+        print: settings.print,
+        xformUrl: settings.xformUrl,
+    });
 }
 
 /**
