@@ -1,6 +1,7 @@
 /* eslint-env node */
 
-const cwd = process.cwd();
+const baseESBuildConfig = require( '../../../config/build.js' );
+const esbuildPluginIstanbul = require( '../../../tools/esbuild-plugin-istanbul.js' );
 
 module.exports = config => {
     config.set( {
@@ -16,6 +17,11 @@ module.exports = config => {
 
         // list of files / patterns to load in the browser
         files: [
+            {
+                pattern: 'public/js/src/**/*.js',
+                included: false,
+                served: false,
+            },
             'test/client/**/*.spec.js'
         ],
 
@@ -27,11 +33,20 @@ module.exports = config => {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'public/js/**/!(enketo-offline-fallback).js': [ 'esbuild' ],
+            'public/js/**/*.js': [ 'esbuild' ],
             'test/client/**/*.js': [ 'esbuild' ],
         },
 
-        esbuild: require( '../../../config/build.js' ),
+        esbuild: {
+            ...baseESBuildConfig,
+            define: {
+                version: 'undefined',
+            },
+            plugins: [
+                ...baseESBuildConfig.plugins,
+                esbuildPluginIstanbul(),
+            ],
+        },
 
         browserify: {
             debug: true,
@@ -47,6 +62,9 @@ module.exports = config => {
 
         coverageReporter: {
             dir: 'test-coverage/client',
+            subdir: ( browser ) => {
+                return browser.toLowerCase().split( /[ /-]/ )[0];
+            },
             reporters: [
                 // for in-depth analysis in your browser
                 {
@@ -62,7 +80,11 @@ module.exports = config => {
                 {
                     type: 'text-summary',
                     includeAllSources: true
-                }
+                },
+                {
+                    type: 'lcov',
+                    includeAllSources: true,
+                },
             ]
         },
 

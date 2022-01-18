@@ -104,6 +104,7 @@
         "grunt-sass": "^3.1.0",
         "grunt-simple-nyc": "^3.0.1",
         "istanbul": "^0.4.5",
+        "istanbul-lib-instrument": "^5.1.0",
         "istanbul-reporter-shield-badge": "^1.2.1",
         "jsdoc": "^3.6.7",
         "jsdoc-ts-utils": "^2.0.1",
