@@ -406,6 +406,38 @@ describe( 'Transformation Controller', () => {
                     expect( result.form ).to.contain( 'hallo%20spaceboy/&amp;.mp4' );
                     expect( result.model ).to.contain( 'hallo%20spaceboy/&quot;.png' );
                 } );
+
+                it( 'includes form_logo.png when present in the media mapping', async () => {
+                    manifest = [
+                        {
+                            filename: 'form_logo.png',
+                            hash: 'irrelevant',
+                            downloadUrl: 'form_logo.png',
+                        },
+                    ];
+
+                    const result = await getTransormResult( url, body );
+
+                    expect( result.form ).to.contain(
+                        `<section class="form-logo"><img src="${basePath}/media/get/form_logo.png" alt="form logo"></section>`
+                    );
+                } );
+
+                it( 'escapes the form_logo.png downloadUrl base bath', async () => {
+                    manifest = [
+                        {
+                            filename: 'form_logo.png',
+                            hash: 'irrelevant',
+                            downloadUrl: 'hallo spaceboy/form_logo.png',
+                        },
+                    ];
+
+                    const result = await getTransormResult( url, body );
+
+                    expect( result.form ).to.contain(
+                        `<section class="form-logo"><img src="${basePath}/media/get/hallo%20spaceboy/form_logo.png" alt="form logo"></section>`
+                    );
+                } );
             } );
         } );
 
