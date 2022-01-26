@@ -72,6 +72,15 @@
                 "browser": false,
                 "node": true
             }
+        },
+        {
+            "files": [
+                "public/js/src/module/offline-app-worker.js"
+            ],
+            "globals": {
+                "OFFLINE_APP_WORKER_RESOURCES": true,
+                "OFFLINE_APP_WORKER_VERSION": true
+            }
         }
     ]
 }

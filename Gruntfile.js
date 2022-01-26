@@ -1,10 +1,9 @@
 module.exports = grunt => {
     const JS_INCLUDE = [
         '**/*.js',
-        '!**/offline-app-worker-partial.js',
         '!**/node_modules/**',
         '!test/**/*.spec.js',
-        '!public/js/build/*',
+        '!public/js/build/**/*',
         '!test/client/config/karma.conf.js',
         '!docs/**',
         '!test-coverage/**',
@@ -100,7 +99,7 @@ module.exports = grunt => {
                 command: 'find locales -name "translation-combined.json" -delete && rm -fr locales/??'
             },
             'clean-js': {
-                command: 'rm -f public/js/build/* && rm -f public/js/*.js'
+                command: 'rm -f public/js/build/**/* && rm -f public/js/*.js'
             },
             translation: {
                 command: 'echo "No automatic translation key generation at the moment."'

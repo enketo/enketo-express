@@ -1,6 +1,9 @@
 /**
- * The version, resources variables above are dynamically prepended by the offline-controller.
+ * The `OFFLINE_APP_WORKER_*` variables are dynamically injected at build time.
  */
+
+const resources = OFFLINE_APP_WORKER_RESOURCES;
+const version = OFFLINE_APP_WORKER_VERSION;
 
 const CACHES = [ `enketo-common_${version}` ];
 
