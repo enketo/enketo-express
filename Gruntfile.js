@@ -109,7 +109,10 @@ module.exports = grunt => {
             },
             build: {
                 command: 'node ./scripts/build.js'
-            }
+            },
+            nyc: {
+                command: 'nyc --reporter html --reporter text-summary --reporter json --reporter lcov --report-dir ./test-coverage/server --include "app/**/*.js" grunt mochaTest:all'
+            },
         },
         eslint: {
             check: {
@@ -165,22 +168,6 @@ module.exports = grunt => {
                     singleRun: false,
                 }
             },
-        },
-        nyc: {
-            cover: {
-                options: {
-                    reporter: [
-                        'html',
-                        'text-summary',
-                        'json',
-                        'lcov',
-                    ],
-                    reportDir: './test-coverage/server',
-                    include: [ 'app/**/*.js' ],
-                },
-                cmd: false,
-                args: [ 'grunt', 'mochaTest:all' ]
-            }
         },
         env: {
             develop: {
@@ -250,7 +237,7 @@ module.exports = grunt => {
     grunt.registerTask( 'locales', [ 'i18next' ] );
     grunt.registerTask( 'js', [ 'widgets', 'shell:build' ] );
     grunt.registerTask( 'css', [ 'system-sass-variables:create', 'sass' ] );
-    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'nyc:cover', 'karma:headless', 'shell:buildReadmeBadge', 'eslint:check' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'shell:nyc', 'karma:headless', 'shell:buildReadmeBadge', 'eslint:check' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'karma:browsers' ] );
     grunt.registerTask( 'test-watch-client', [ 'env:test', 'karma:watch' ], );
     grunt.registerTask( 'test-watch-server', [ 'env:test', 'watch:mochaTest' ], );
