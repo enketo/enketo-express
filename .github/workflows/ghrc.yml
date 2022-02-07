@@ -21,6 +21,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Store version information
+        run: git describe --tags || git rev-parse --short HEAD > .tag.txt
+
       # Login against a Docker registry
       # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
