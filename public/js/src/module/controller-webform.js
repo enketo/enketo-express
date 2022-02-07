@@ -447,7 +447,7 @@ function _saveRecord( survey, draft = true, recordName, confirmed, errorMsg ) {
             .catch( () => {} );
     }
 
-    return Promise.resolve( autoSavePromise )
+    return autoSavePromise
         .then( () => fileManager.getCurrentFiles() )
         .then( files => {
             // build the record object
@@ -515,22 +515,18 @@ function _saveRecord( survey, draft = true, recordName, confirmed, errorMsg ) {
 }
 
 /**
- * @type {Promise<void> | null}
+ * @type {Promise<void>}
  */
-let autoSavePromise = null;
+let autoSavePromise = Promise.resolve();
 
 function _autoSaveRecord() {
     // Do not auto-save a record if the record was loaded from storage
     // or if the form has enabled encryption
     if ( form.recordName || form.encryptionKey ) {
-        autoSavePromise = Promise.resolve();
-
-        return autoSavePromise.then( () => {
-            autoSavePromise = null;
-        } );
+        return autoSavePromise;
     }
 
-    autoSavePromise = fileManager.getCurrentFiles()
+    autoSavePromise = autoSavePromise.then( () => fileManager.getCurrentFiles() )
         .then( files => {
             // build the variable portions of the record object
             const record = {
@@ -550,9 +546,6 @@ function _autoSaveRecord() {
         } )
         .catch( error => {
             console.error( 'autosave error', error );
-        } )
-        .finally( () => {
-            autoSavePromise = null;
         } );
 
     return autoSavePromise;
@@ -720,7 +713,6 @@ function _setEventHandlers( survey ) {
 
     if ( settings.offline ) {
         document.addEventListener( events.XFormsValueChanged().type, async () => {
-            await autoSavePromise;
             await _autoSaveRecord();
         } );
     }
