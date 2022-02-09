@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Tutorial: Deployment on Heroku - Enketo Express</title>
+    <title>tools/esbuild-plugin-istanbul.js - Enketo Express</title>
     
     <meta name="description" content="The full-fledged Enketo web application for the ODK ecosystem" />
     
@@ -37,57 +37,79 @@
 
 <div id="main">
     
-    <h1 class="page-title">Tutorial: Deployment on Heroku</h1>
+    <h1 class="page-title">tools/esbuild-plugin-istanbul.js</h1>
     
 
+    
+
+
+
+    
     <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const fs = require( 'fs' );
+const { createInstrumenter } = require( 'istanbul-lib-instrument' );
 
-<header>
-    
+/**
+ * @typedef {import('istanbul-lib-instrument').InstrumenterOptions} InstrumenterOptions
+ */
 
-    <h2>Deployment on Heroku</h2>
-</header>
+/**
+ * @typedef {import('source-map').RawSourceMap} RawSourceMap
+ */
 
-<article>
-    <h1 id="heroku-deployment">Heroku deployment</h1>
-<h3 id="first-time">First time</h3>
-<ol>
-<li>Install and configure the Heroku Toolbelt.</li>
-<li>Clone Enketo Express.</li>
-<li>Create your Heroku application from your Enketo Express folder with <code>heroku create</code>.</li>
-<li>Configure Enketo (see next section). The absolute minimum is setting <code>ENKETO_LINKED_FORM_AND_DATA_SERVER_SERVER_URL=</code>. This could be an empty value.</li>
-<li>Create main database with <code>heroku addons:create heroku-redis:premium-0 --as enketo_redis_main</code>.</li>
-<li>Create cache database with <code>heroku addons:create heroku-redis:premium-0 --as enketo_redis_cache</code>. Note that <em>heroku-redis:premium-0</em> is persistent which is actually not necessary, but won't hurt either.</li>
-<li>Start web server with <code>heroku ps:scale web=1</code>. For multiple dynos upgrade to Standard or Performance first. You'll likely have to upgrade your heroku redis addons as well, at least the one containing the main database (e.g. with <code>heroku addons:upgrade enketo_redis_main:premium-1</code> - this takes several minutes to complete).</li>
-<li>Push code to Heroku with <code>git push heroku master</code>.</li>
-<li>Check the logs while it's running. You may have to upgrade the redis addons (error: too many connections) or memory (error: memory quota exceeded)!</li>
-</ol>
-<h3 id="heroku-configuration">Heroku configuration</h3>
-<p>On Heroku, the regular config.json configuration should not be used (and not be created). Instead Enketo is configured with environment variables using <code>heroku config:set</code>. See <a href="https://github.com/enketo/enketo-express/blob/master/tutorials/00-getting-started.md#how-to-configure">this document</a></p>
-<p>Enketo's JS and CSS <strong>build process</strong> uses configuration variables. This means that every time an environment variable (that is used in browser scripts) is changed, <strong>Enketo needs to rebuild</strong>. In Heroku rebuilds are always triggered with a git push. If there is nothing to push you'll therefore have to trick Heroku into rebuilding by pushing an empty commit like this: <code>git commit --allow-empty -m &quot;empty commit&quot;</code>.</p>
-<h3 id="redis-connections">Redis connections</h3>
-<p>The key sizing criterion for redis addons seems to be <em>the number of simultaneous database connections</em>. It seems Enketo on Heroku is using about 26 connections for <em>enketo_redis_main</em> and 18 for <em>enketo_redis_cache</em> <strong>per dyno</strong> (8 threads). Make sure to check your logs to see if the app is exceeding the amount of allowed redis connections. You'll want to <strong>immediately address this critical error state</strong> by either reducing the number of dynos or upgrading your redis addon.</p>
-<h3 id="warning%3A-before-upgrading-or-downgrading-heroku-redis">Warning: before upgrading or downgrading heroku-redis</h3>
-<p>Before upgrading or downgrading your heroku-redis addon, shut down your server with <code>heroku ps:scale web=0</code>. This avoids 2 potential issues:</p>
-<ol>
-<li>Any data written to redis during the upgrade/downgrade might get lost forever.</li>
-<li>In the past there have been issues with permanent loss of data when upgrading the addon when the app was in a 'maximum allowed connections exceeded' state. This was fixed by Heroku on June 30th 2016, but the experience means it is wise to take extra care.</li>
-</ol>
-<h3 id="advantages-of-using-heroku">Advantages of using Heroku</h3>
-<ol>
-<li>Fastest possible deployment of your own Enketo server.</li>
-<li>Easy scaling.</li>
-<li>Reliable, presumably.</li>
-</ol>
-<h3 id="disadvantages-of-using-heroku">Disadvantages of using Heroku</h3>
-<ol>
-<li>Expensive.</li>
-<li>Initial Enketo configuration is more cumbersome (editing a structured json file is just much easier).</li>
-<li>Little control. Requires trust (e.g. for database backups) and relying on support (e.g. for database restoration).</li>
-</ol>
-</article>
+ const instrumenter = createInstrumenter( {
+    compact: false,
+    esModules: true,
+} );
 
-</section>
+/**
+ * @param {string} source
+ * @param {string} path
+ * @param {RawSourceMap} [inputSourceMap]
+ * @return {Promise&lt;string>}
+ */
+const instrument = ( source, path, inputSourceMap ) => (
+    new Promise( ( resolve, reject ) => {
+        instrumenter.instrument( source, path, ( error, code ) => {
+            if ( error == null ) {
+                resolve( code );
+            } else {
+                reject( error );
+            }
+        }, inputSourceMap );
+    } )
+);
+
+/**
+ * @return {import('esbuild').Plugin}
+ */
+const esbuildPluginIstanbul = () => ( {
+    name: 'istanbul',
+    setup( build ) {
+        build.onLoad( {
+            filter: /\/public\/js\/src\//,
+        }, async ( { path } ) => {
+            const contents = String( fs.readFileSync( path ) );
+
+            if ( !path.includes( '/public/js/src/' ) ) {
+                return { contents };
+            }
+
+            const instrumented = await instrument( contents, path );
+
+            return { contents: instrumented };
+        } );
+    },
+} );
+
+module.exports = esbuildPluginIstanbul;
+</code></pre>
+        </article>
+    </section>
+
+
+
 
     
     

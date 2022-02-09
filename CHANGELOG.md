@@ -2,6 +2,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[3.0.5] - 2022-02-08
+---------------------
+
+##### Changed
+
+- [#373](https://github.com/enketo/enketo-express/pull/373) Fix: not all signature images are uploaded in offline-capable forms
+- [#380](https://github.com/enketo/enketo-express/pull/380) Fix: ensure form_logo.png is included when present in media mapping
+- [#230](https://github.com/enketo/enketo-express/pull/230) Clearer recommendation phrasing in English translation for loading errors
+- [#382](https://github.com/enketo/enketo-express/pulls/382) Update offline script version at build time
+- Upgraded to [enketo-core 6.0.4](https://github.com/enketo/enketo-core/blob/master/CHANGELOG.md#604---2022-02-04)
+- Upgraded to [enketo-transformer 2.1.2](https://github.com/enketo/enketo-transformer/blob/master/CHANGELOG.md#212---2022-02-01)
+- Upgraded to [openrosa-xpath-evaluator 2.0.10](https://github.com/enketo/openrosa-xpath-evaluator/blob/master/CHANGELOG.md#2010---2022-02-01)
+- [#379](https://github.com/enketo/enketo-express/pull/379) Switch from Travis CI to GitHub Actions CI
+- [#375](https://github.com/enketo/enketo-express/pull/375) Add codecov reporting
+
 [3.0.4] - 2021-11-04
 ---------------------
 ##### Changed
