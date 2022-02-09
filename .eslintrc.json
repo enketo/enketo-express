@@ -64,13 +64,61 @@
     "overrides": [
         {
             "files": [
+                "Gruntfile.js",
                 "config/build.js",
                 "test/client/config/karma.conf.js",
-                "scripts/build.js"
+                "scripts/build.js",
+                "test/server/**/*.js"
             ],
             "env": {
                 "browser": false,
                 "node": true
+            },
+            "ecmaFeatures": {
+                "modules": false
+            }
+        },
+
+        {
+            "files": [
+                "public/js/src/module/offline-app-worker-partial.js"
+            ],
+            "globals": {
+                "version": true,
+                "resources": true
+            }
+        },
+
+        {
+            "files": [
+                "test/client/**/*.js"
+            ],
+            "env": {
+                "node": false,
+                "mocha": true
+            },
+            "globals": {
+                "expect": true,
+                "sinon": true
+            },
+            "rules": {
+                "no-console": 0
+            }
+        },
+
+        {
+            "files": [
+                "test/server/**/*.js"
+            ],
+            "env": {
+                "mocha": true
+            },
+            "globals": {
+                "expect": true,
+                "sinon": true
+            },
+            "rules": {
+                "no-console": 0
             }
         }
     ]
