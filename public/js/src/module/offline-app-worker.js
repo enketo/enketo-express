@@ -2,8 +2,22 @@
  * The `OFFLINE_APP_WORKER_*` variables are dynamically injected at build time.
  */
 
-const resources = OFFLINE_APP_WORKER_RESOURCES;
-const version = OFFLINE_APP_WORKER_VERSION;
+const {
+    basePath,
+    version,
+    themesSupported,
+} = OFFLINE_APP_WORKER_CONFIG;
+
+const resources = themesSupported
+    .reduce( ( accumulator, theme ) => {
+        accumulator.push( `${basePath}/css/theme-${theme}.css` );
+        accumulator.push( `${basePath}/css/theme-${theme}.print.css` );
+
+        return accumulator;
+    }, [] )
+    .concat( [
+        `${basePath}/images/icon_180x180.png`
+    ] );
 
 const CACHES = [ `enketo-common_${version}` ];
 

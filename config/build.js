@@ -11,24 +11,16 @@ const entryPoints = pkg.entries.map( entry => (
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const offlineResources = config['themes supported']
-    .reduce( ( accumulator, theme ) => {
-        accumulator.push( `${config['base path']}${config['offline path']}/css/theme-${theme}.css` );
-        accumulator.push( `${config['base path']}${config['offline path']}/css/theme-${theme}.print.css` );
-
-        return accumulator;
-    }, [] )
-    .concat( [
-        `${config['base path']}${config['offline path']}/images/icon_180x180.png`
-    ] );
-
-const offlineVersion = `${pkg.version}-${Date.now()}`;
+const offlineConfig = {
+    basePath: `${config['base path']}${config['offline path']}`,
+    themesSupported: config['themes supported'],
+    version: `${pkg.version}-${Date.now()}`,
+};
 
 module.exports = {
     bundle: true,
     define: {
-        OFFLINE_APP_WORKER_RESOURCES: JSON.stringify( offlineResources ),
-        OFFLINE_APP_WORKER_VERSION: JSON.stringify( offlineVersion ),
+        OFFLINE_APP_WORKER_CONFIG: JSON.stringify( offlineConfig ),
     },
     entryPoints: [
         ...entryPoints,

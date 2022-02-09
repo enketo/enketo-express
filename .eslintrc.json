@@ -78,8 +78,7 @@
                 "public/js/src/module/offline-app-worker.js"
             ],
             "globals": {
-                "OFFLINE_APP_WORKER_RESOURCES": true,
-                "OFFLINE_APP_WORKER_VERSION": true
+                "OFFLINE_APP_WORKER_CONFIG": true
             }
         }
     ]
