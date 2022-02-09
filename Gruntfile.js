@@ -1,14 +1,19 @@
 module.exports = grunt => {
     const JS_INCLUDE = [
+        // Cover all JS files in the project, by default
         '**/*.js',
-        '!**/offline-app-worker-partial.js',
+
+        // I assume this is only necessary to override the blanket glob for **/*.js
         '!**/node_modules/**',
-        '!test/**/*.spec.js',
-        '!public/js/build/*',
-        '!test/client/config/karma.conf.js',
+
+        // Exclude frontend build
+        '!public/js/build/**',
+
+        // Exclude generated documentation
         '!docs/**',
+
+        // Exclude vendor-provided JS generated for test coverage HTML output
         '!test-coverage/**',
-        '!**/redirect-IE.js'
     ];
     const path = require( 'path' );
     const nodeSass = require( 'node-sass' );
