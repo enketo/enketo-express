@@ -43,7 +43,7 @@ const defaultInstanceData = '<data id="modelA"><item>initial</item><meta><instan
 const model1 = `<model><instance>${defaultInstanceData}</instance><instance id="last-saved" src="jr://instance/last-saved"/></model>`;
 const hash1 = '12345';
 
-describe( 'Client Form Cache', () => {
+describe('Client Form Cache', () => {
     /** @type {Survey} */
     let survey;
 
@@ -65,11 +65,11 @@ describe( 'Client Form Cache', () => {
     /** @type {SinonFakeTimers} */
     let timers;
 
-    beforeEach( done => {
-        const formElement = document.createElement( 'form' );
+    beforeEach(done => {
+        const formElement = document.createElement('form');
 
         formElement.className = 'or';
-        document.body.appendChild( formElement );
+        document.body.appendChild(formElement);
 
         survey = {};
         sandbox = sinon.createSandbox();
@@ -80,7 +80,7 @@ describe( 'Client Form Cache', () => {
         lastSavedExternalData = {
             id: 'last-saved',
             src: 'jr://instance/last-saved',
-            xml: parser.parseFromString( defaultInstanceData, 'text/xml' ),
+            xml: parser.parseFromString(defaultInstanceData, 'text/xml'),
         };
 
         getFormPartsStubResult = {
@@ -92,171 +92,171 @@ describe( 'Client Form Cache', () => {
             hash: hash1
         };
 
-        getFormPartsSpy = sandbox.stub( connection, 'getFormParts' ).callsFake( survey => {
-            return Promise.resolve( survey.enketoId )
-                .then( enketoId => {
-                    if ( enketoId != null ) {
-                        return getLastSavedRecord( survey.enketoId );
+        getFormPartsSpy = sandbox.stub(connection, 'getFormParts').callsFake(survey => {
+            return Promise.resolve(survey.enketoId)
+                .then(enketoId => {
+                    if (enketoId != null) {
+                        return getLastSavedRecord(survey.enketoId);
                     }
-                } )
-                .then( lastSavedRecord => {
-                    if ( lastSavedRecord != null ) {
+                })
+                .then(lastSavedRecord => {
+                    if (lastSavedRecord != null) {
                         return { lastSavedRecord };
                     }
 
                     return {};
-                } )
-                .then( lastSavedData => {
-                    const formParts = Object.assign( {
+                })
+                .then(lastSavedData => {
+                    const formParts = Object.assign({
                         enketoId: survey.enketoId,
-                    }, getFormPartsStubResult, lastSavedData );
+                    }, getFormPartsStubResult, lastSavedData);
 
                     return formParts;
-                } );
-        } );
+                });
+        });
 
-        getFileSpy = sandbox.stub( connection, 'getMediaFile' ).callsFake( url => Promise.resolve( {
+        getFileSpy = sandbox.stub(connection, 'getMediaFile').callsFake(url => Promise.resolve({
             url,
-            item: new Blob( [ 'babdf' ], {
+            item: new Blob([ 'babdf' ], {
                 type: 'image/png'
-            } )
-        } ) );
+            })
+        }));
 
-        store.init().then( done, done );
-    } );
+        store.init().then(done, done);
+    });
 
-    afterEach( done => {
+    afterEach(done => {
         timers.clearTimeout();
         timers.clearInterval();
         timers.restore();
         sandbox.restore();
 
-        document.body.removeChild( document.querySelector( 'form.or' ) );
+        document.body.removeChild(document.querySelector('form.or'));
 
-        store.survey.removeAll().then( done, done );
-    } );
+        store.survey.removeAll().then(done, done);
+    });
 
-    it( 'is loaded', () => {
-        expect( formCache ).to.be.an( 'object' );
-    } );
+    it('is loaded', () => {
+        expect(formCache).to.be.an('object');
+    });
 
-    describe( 'in empty state', () => {
-        it( 'will call connection.getFormParts to obtain the form parts', done => {
+    describe('in empty state', () => {
+        it('will call connection.getFormParts to obtain the form parts', done => {
             survey.enketoId = '10';
-            formCache.init( survey )
-                .then( () => {
-                    expect( getFormPartsSpy ).to.have.been.calledWith( survey );
-                } )
-                .then( done, done );
-        } );
+            formCache.init(survey)
+                .then(() => {
+                    expect(getFormPartsSpy).to.have.been.calledWith(survey);
+                })
+                .then(done, done);
+        });
 
-        it( 'will call connection.getMediaFile to obtain form resources', done => {
+        it('will call connection.getMediaFile to obtain form resources', done => {
             survey.enketoId = '20';
-            formCache.init( survey )
-                .then( result => {
-                    const currentForm = document.querySelector( 'form.or' );
-                    const form = document.createRange().createContextualFragment( result.form );
+            formCache.init(survey)
+                .then(result => {
+                    const currentForm = document.querySelector('form.or');
+                    const form = document.createRange().createContextualFragment(result.form);
 
-                    currentForm.parentNode.replaceChild( form, currentForm );
+                    currentForm.parentNode.replaceChild(form, currentForm);
 
-                    return formCache.updateMedia( result );
-                } )
-                .then( () => {
-                    expect( getFileSpy ).to.have.been.calledWith( url1 );
-                } )
-                .then( done, done );
-        } );
+                    return formCache.updateMedia(result);
+                })
+                .then(() => {
+                    expect(getFileSpy).to.have.been.calledWith(url1);
+                })
+                .then(done, done);
+        });
 
-        it( 'will populate the cache upon initialization', done => {
+        it('will populate the cache upon initialization', done => {
             survey.enketoId = '30';
-            formCache.get( survey )
-                .then( result => {
-                    expect( result ).to.equal( undefined );
+            formCache.get(survey)
+                .then(result => {
+                    expect(result).to.equal(undefined);
 
-                    return formCache.init( survey );
-                } )
-                .then( () => // we could also leave this out as formCache.init will return the survey object
-                    formCache.get( survey ) )
-                .then( result => {
-                    expect( result.model ).to.equal( model1 );
-                    expect( result.hash ).to.equal( hash1 );
-                    expect( result.enketoId ).to.equal( survey.enketoId );
-                } )
-                .then( done, done );
-        } );
+                    return formCache.init(survey);
+                })
+                .then(() => // we could also leave this out as formCache.init will return the survey object
+                    formCache.get(survey))
+                .then(result => {
+                    expect(result.model).to.equal(model1);
+                    expect(result.hash).to.equal(hash1);
+                    expect(result.enketoId).to.equal(survey.enketoId);
+                })
+                .then(done, done);
+        });
 
-        it( 'will empty src attributes and copy the original value to a data-offline-src attribute ', done => {
+        it('will empty src attributes and copy the original value to a data-offline-src attribute ', done => {
             survey.enketoId = '40';
-            formCache.init( survey )
-                .then( result => {
-                    expect( result.form ).to.contain( 'src=""' ).and.to.contain( `data-offline-src="${url1}"` );
-                } )
-                .then( done, done );
-        } );
-    } );
+            formCache.init(survey)
+                .then(result => {
+                    expect(result.form).to.contain('src=""').and.to.contain(`data-offline-src="${url1}"`);
+                })
+                .then(done, done);
+        });
+    });
 
-    describe( 'form cache updates', () => {
+    describe('form cache updates', () => {
         /**
          * @param {Partial<GetFormPartsStubResult>} updates
          */
-        const updateSurvey = ( updates ) => {
+        const updateSurvey = (updates) => {
             // Ensure `_updateCache` receives a new hash indicating it should perform an update
-            sandbox.stub( connection, 'getFormPartsHash' ).callsFake( () => {
-                return Promise.resolve( updates.hash );
-            } );
+            sandbox.stub(connection, 'getFormPartsHash').callsFake(() => {
+                return Promise.resolve(updates.hash);
+            });
 
-            let updatePromise = new Promise( resolve => {
-                setTimeout( resolve, formCache.CACHE_UPDATE_INITIAL_DELAY + 1 );
-            } );
+            let updatePromise = new Promise(resolve => {
+                setTimeout(resolve, formCache.CACHE_UPDATE_INITIAL_DELAY + 1);
+            });
 
-            const originalStoreUpdate = store.survey.update.bind( store.survey );
+            const originalStoreUpdate = store.survey.update.bind(store.survey);
 
-            sandbox.stub( store.survey, 'update' ).callsFake( update => {
-                return originalStoreUpdate( update ).then( result => {
-                    if ( update.model === updates.model ) {
-                        timers.tick( 1 );
+            sandbox.stub(store.survey, 'update').callsFake(update => {
+                return originalStoreUpdate(update).then(result => {
+                    if (update.model === updates.model) {
+                        timers.tick(1);
                     }
 
                     return result;
-                } );
-            } );
+                });
+            });
 
-            timers.tick( formCache.CACHE_UPDATE_INITIAL_DELAY );
+            timers.tick(formCache.CACHE_UPDATE_INITIAL_DELAY);
 
-            getFormPartsStubResult = Object.assign( {}, getFormPartsStubResult, updates );
+            getFormPartsStubResult = Object.assign({}, getFormPartsStubResult, updates);
 
             // Wait for `_updateCache` to resolve
-            return updatePromise.then( () => formCache.get( survey ) );
+            return updatePromise.then(() => formCache.get(survey));
         };
 
-        it( 'updates the survey when the form cache is out of date', done => {
-            Object.assign( survey, {
+        it('updates the survey when the form cache is out of date', done => {
+            Object.assign(survey, {
                 enketoId: '60',
                 hash: '1234',
                 model: model1,
-            } );
+            });
 
-            const originalSurvey = Object.assign( {}, survey );
-            const update = Object.assign( {}, survey, {
+            const originalSurvey = Object.assign({}, survey);
+            const update = Object.assign({}, survey, {
                 hash: '123456',
                 model: `${model1}<!-- updated -->`,
-            } );
+            });
 
-            formCache.init( survey )
-                .then( () => updateSurvey( update ) )
-                .then( result => {
-                    Object.entries( originalSurvey ).forEach( ( [ key, value ] ) => {
-                        if ( key in update ) {
-                            expect( result[ key ] ).to.equal( update[ key ] );
+            formCache.init(survey)
+                .then(() => updateSurvey(update))
+                .then(result => {
+                    Object.entries(originalSurvey).forEach(([ key, value ]) => {
+                        if (key in update) {
+                            expect(result[ key ]).to.equal(update[ key ]);
                         } else {
-                            expect( result[ key ] ).to.equal ( value );
+                            expect(result[ key ]).to.equal (value);
                         }
-                    } );
+                    });
 
-                    expect( result.hash ).to.equal( update.hash );
-                    expect( result.model ).to.equal( update.model );
-                } )
-                .then( done, done );
-        } );
-    } );
-} );
+                    expect(result.hash).to.equal(update.hash);
+                    expect(result.model).to.equal(update.model);
+                })
+                .then(done, done);
+        });
+    });
+});

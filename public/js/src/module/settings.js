@@ -14,13 +14,13 @@ const settingsMap = [
 ];
 
 // rename query string parameters to settings, but only if they do not exist already
-settingsMap.forEach( obj => {
-    if ( typeof obj === 'string' && typeof queryParams[ obj ] !== 'undefined' && typeof settings[ obj ] === 'undefined' ) {
+settingsMap.forEach(obj => {
+    if (typeof obj === 'string' && typeof queryParams[ obj ] !== 'undefined' && typeof settings[ obj ] === 'undefined') {
         settings[ obj ] = queryParams[ obj ];
-    } else if ( typeof queryParams[ obj.q ] !== 'undefined' && typeof settings[ obj.s ] === 'undefined' ) {
+    } else if (typeof queryParams[ obj.q ] !== 'undefined' && typeof settings[ obj.s ] === 'undefined') {
         settings[ obj.s ] = queryParams[ obj.q ];
     }
-} );
+});
 
 //add default login Url
 settings.loginUrl = config[ 'basePath' ] + DEFAULT_LOGIN_URL;
@@ -30,25 +30,25 @@ settings.defaultReturnUrl = config[ 'basePath' ] + DEFAULT_THANKS_URL;
 
 // add defaults object
 settings.defaults = {};
-for ( const p in queryParams ) {
-    if ( Object.prototype.hasOwnProperty.call( queryParams, p ) ) {
+for (const p in queryParams) {
+    if (Object.prototype.hasOwnProperty.call(queryParams, p)) {
         // URLs with encoded brackets as well as not-encoded brackets will work.
-        const matches = decodeURIComponent( p ).match( /d\[(.*)\]/ );
-        if ( matches && matches[ 1 ] ) {
+        const matches = decodeURIComponent(p).match(/d\[(.*)\]/);
+        if (matches && matches[ 1 ]) {
             settings.defaults[ matches[ 1 ] ] = queryParams[ p ];
         }
     }
 }
 
 // add common app configuration constants
-for ( const prop in config ) {
-    if ( Object.prototype.hasOwnProperty.call( config, prop ) ) {
+for (const prop in config) {
+    if (Object.prototype.hasOwnProperty.call(config, prop)) {
         settings[ prop ] = config[ prop ];
     }
 }
 
 // add submission parameter value
-if ( settings.submissionParameter && settings.submissionParameter.name ) {
+if (settings.submissionParameter && settings.submissionParameter.name) {
     // sets to undefined when necessary
     settings.submissionParameter.value = queryParams[ settings.submissionParameter.name ];
 }
@@ -63,27 +63,27 @@ settings.languageOverrideParameter = queryParams.lang ? {
 settings.maxSize = DEFAULT_MAX_SIZE;
 
 // add type
-if ( window.location.pathname.includes( '/preview/' ) || window.location.pathname.endsWith( '/preview' ) ) {
+if (window.location.pathname.includes('/preview/') || window.location.pathname.endsWith('/preview')) {
     settings.type = 'preview';
-} else if ( window.location.pathname.includes( '/single/' ) ) {
+} else if (window.location.pathname.includes('/single/')) {
     settings.type = 'single';
-} else if ( window.location.pathname.includes( '/edit/' ) ) {
+} else if (window.location.pathname.includes('/edit/')) {
     settings.type = 'edit';
-} else if ( window.location.pathname.includes( '/view/' ) ) {
+} else if (window.location.pathname.includes('/view/')) {
     settings.type = 'view';
 } else {
     settings.type = 'other';
 }
 
 // Determine whether view is offline-capable
-settings.offline = window.location.pathname.includes( '/x/' );
+settings.offline = window.location.pathname.includes('/x/');
 settings.offlinePath = settings.offline ? '/x' : '';
 
 // Extract Enketo ID
-settings.enketoId = utils.getEnketoId( window.location.pathname );
+settings.enketoId = utils.getEnketoId(window.location.pathname);
 
 // Set multipleAllowed for single webform views
-if ( settings.type === 'single' && settings.enketoId.length < 32 ) {
+if (settings.type === 'single' && settings.enketoId.length < 32) {
     settings.multipleAllowed = true;
 }
 
@@ -97,15 +97,15 @@ settings.printRelevantOnly = !!settings.instanceId;
 function _getAllQueryParams() {
     let val;
     let processedVal;
-    const query = window.location.search.substring( 1 );
-    const vars = query.split( '&' );
+    const query = window.location.search.substring(1);
+    const vars = query.split('&');
     const params = {};
 
-    for ( let i = 0; i < vars.length; i++ ) {
-        const pair = vars[ i ].split( '=' );
-        if ( pair[ 0 ].length > 0 ) {
-            val = decodeURIComponent( pair[ 1 ] );
-            processedVal = ( val === 'true' ) ? true : ( val === 'false' ) ? false : val;
+    for (let i = 0; i < vars.length; i++) {
+        const pair = vars[ i ].split('=');
+        if (pair[ 0 ].length > 0) {
+            val = decodeURIComponent(pair[ 1 ]);
+            processedVal = (val === 'true') ? true : (val === 'false') ? false : val;
             params[ pair[ 0 ] ] = processedVal;
         }
     }

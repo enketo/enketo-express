@@ -1,10 +1,10 @@
 /* eslint-env node */
 
-const baseESBuildConfig = require( '../../../config/build.js' );
-const esbuildPluginIstanbul = require( '../../../tools/esbuild-plugin-istanbul.js' );
+const baseESBuildConfig = require('../../../config/build.js');
+const esbuildPluginIstanbul = require('../../../tools/esbuild-plugin-istanbul.js');
 
 module.exports = config => {
-    config.set( {
+    config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '../../..',
@@ -62,8 +62,8 @@ module.exports = config => {
 
         coverageReporter: {
             dir: 'test-coverage/client',
-            subdir: ( browser ) => {
-                return browser.toLowerCase().split( /[ /-]/ )[0];
+            subdir: (browser) => {
+                return browser.toLowerCase().split(/[ /-]/)[0];
             },
             reporters: [
                 // for in-depth analysis in your browser
@@ -114,5 +114,5 @@ module.exports = config => {
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: false
-    } );
+    });
 };
