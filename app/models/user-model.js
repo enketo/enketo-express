@@ -19,7 +19,7 @@ function getCredentials( req ) {
     const authType = auth.type.toLowerCase();
     let creds = null;
 
-    if ( authType === 'basic' ) {
+    if ( authType === 'basic' || authType === 'cookie' ) {
         const jwToken = req.signedCookies[ req.app.get( 'authentication cookie name' ) ];
         creds = ( jwToken ) ? jwt.decode( jwToken, req.app.get( 'encryption key' ) ) : null;
     } else if ( authType === 'token' ) {
