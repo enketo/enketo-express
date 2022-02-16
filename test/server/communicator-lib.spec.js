@@ -350,12 +350,19 @@ describe( 'Communicator Library', () => {
     } );
 
     describe( 'getUpdatedRequestOptions function', () => {
+        const version = '8.6.7';
+
+        beforeEach( () => {
+            sandbox.stub( config, 'version' ).get( () => version );
+        } );
+
         it( 'should fill up missing properties', () => {
             expect( communicator.getUpdatedRequestOptions( {} ) ).to.deep.equal( {
                 method: 'get',
                 headers: {
                     'X-OpenRosa-Version': '1.0',
-                    Date: new Date().toUTCString()
+                    Date: new Date().toUTCString(),
+                    'User-Agent': `Enketo ${version}`,
                 },
                 timeout: config.timeout
             } );
@@ -370,7 +377,8 @@ describe( 'Communicator Library', () => {
                 method: 'get',
                 headers: {
                     'X-OpenRosa-Version': '1.0',
-                    Date: new Date().toUTCString()
+                    Date: new Date().toUTCString(),
+                    'User-Agent': `Enketo ${version}`,
                 },
                 timeout: config.timeout
             } );
@@ -383,7 +391,8 @@ describe( 'Communicator Library', () => {
                 method: 'get',
                 headers: {
                     'X-OpenRosa-Version': '1.0',
-                    Date: new Date().toUTCString()
+                    Date: new Date().toUTCString(),
+                    'User-Agent': `Enketo ${version}`,
                 },
                 timeout: config.timeout
             } );
@@ -396,7 +405,8 @@ describe( 'Communicator Library', () => {
                 method: 'get',
                 headers: {
                     'X-OpenRosa-Version': '1.0',
-                    Date: new Date().toUTCString()
+                    Date: new Date().toUTCString(),
+                    'User-Agent': `Enketo ${version}`,
                 },
                 auth: {
                     sendImmediately: false

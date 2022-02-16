@@ -236,6 +236,7 @@ function getUpdatedRequestOptions( options ) {
     options.headers = options.headers || {};
     options.headers[ 'X-OpenRosa-Version' ] = '1.0';
     options.headers[ 'Date' ] = new Date().toUTCString();
+    options.headers[ 'User-Agent' ] = `Enketo ${config.version}`;
     options.timeout = TIMEOUT;
 
     if ( !options.headers.cookie ) {
