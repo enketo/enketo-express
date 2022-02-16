@@ -3,13 +3,18 @@ process.env.NODE_ENV = 'test';
 
 const nock = require( 'nock' );
 const chai = require( 'chai' );
+const express = require( 'express' );
+const request = require( 'supertest' );
 const expect = chai.expect;
 const Auth = require( 'request/lib/auth' ).Auth;
 const communicator = require( '../../app/lib/communicator/communicator' );
 const config = require( '../../app/models/config-model' ).server;
 const sinon = require( 'sinon' );
+const { requestContextMiddleware } = require( '../../app/lib/context' );
 
 describe( 'Communicator Library', () => {
+    const version = '8.6.7';
+
     /** @type {sinon.SinonSandbox} */
     let sandbox;
 
@@ -23,6 +28,7 @@ describe( 'Communicator Library', () => {
 
         sandbox.stub( config, 'query parameter to pass to submission' )
             .get( () => customQueryParameter );
+        sandbox.stub( config, 'version' ).get( () => version );
     } );
 
     describe( 'getXFormInfo function', () => {
@@ -350,12 +356,6 @@ describe( 'Communicator Library', () => {
     } );
 
     describe( 'getUpdatedRequestOptions function', () => {
-        const version = '8.6.7';
-
-        beforeEach( () => {
-            sandbox.stub( config, 'version' ).get( () => version );
-        } );
-
         it( 'should fill up missing properties', () => {
             expect( communicator.getUpdatedRequestOptions( {} ) ).to.deep.equal( {
                 method: 'get',
@@ -416,4 +416,28 @@ describe( 'Communicator Library', () => {
         } );
     } );
 
+    describe( 'User-agent headers', () => {
+        const clientUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36 Lolium/1.0 (The rest is real, this is made up, I kid you not)';
+
+        it( 'includes the client and server user-agent strings in headers when present in a request context', async () => {
+            const testApp = express();
+            const handler = ( req, res ) => {
+                res.send( {
+                    result: communicator.getUpdatedRequestHeaders(),
+                } );
+            };
+
+            const route = '/does-not-matter';
+
+            testApp.use( requestContextMiddleware );
+            testApp.get( route, handler );
+
+            const { body } = await request( testApp )
+                .get( route )
+                .set( 'User-Agent', clientUserAgent )
+                .expect( 200 );
+
+            expect( body.result['User-Agent'] ).to.equal( `Enketo/${version} ${clientUserAgent}` );
+        } );
+    } );
 } );
