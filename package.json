@@ -96,6 +96,7 @@
         "esbuild-plugin-alias": "^0.1.2",
         "eslint-plugin-jsdoc": "^36.1.1",
         "eslint-plugin-unicorn": "^36.0.0",
+        "express-cls-hooked": "^0.3.8",
         "grunt-concurrent": "^3.0.0",
         "grunt-contrib-watch": "^1.1.0",
         "grunt-eslint": "^23.0.0",

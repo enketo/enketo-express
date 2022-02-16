@@ -1,5 +1,6 @@
 /* global process, __dirname */
 
+const { requestContextMiddleware } = require( '../app/lib/context' );
 const express = require( 'express' );
 const path = require( 'path' );
 const bodyParser = require( 'body-parser' );
@@ -60,6 +61,8 @@ i18next
     } );
 
 // middleware
+
+app.use( requestContextMiddleware );
 app.use( compression() );
 app.use( bodyParser.json( {
     limit: config.server[ 'payload limit' ]

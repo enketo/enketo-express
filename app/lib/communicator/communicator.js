@@ -8,6 +8,8 @@ const TError = require( '../custom-error' ).TranslatedError;
 const config = require( '../../models/config-model' ).server;
 const debug = require( 'debug' )( 'openrosa-communicator' );
 const parser = new require( 'xml2js' ).Parser();
+const { getCurrentRequest } = require( '../context' );
+
 const TIMEOUT = config.timeout;
 
 /**
@@ -224,6 +226,28 @@ function getSubmissionUrl( server ) {
 }
 
 /**
+ * @param {Record<string, string | string[]>} [headers]
+ * @param {import('express').Request} [currentRequest]
+ */
+const getUpdatedRequestHeaders = ( headers = {}, currentRequest = getCurrentRequest() ) => {
+    const clientUserAgent = currentRequest?.headers['user-agent'];
+    const serverUserAgent = `Enketo/${config.version}`;
+    const userAgent = clientUserAgent == null
+        ? serverUserAgent
+        : `${serverUserAgent} ${clientUserAgent}`;
+
+    return {
+        ...headers,
+
+        // The Date header is forbidden to set programmatically client-side
+        // so we set it here to comply with OpenRosa
+        ['Date']: new Date().toUTCString(),
+        ['User-Agent']: userAgent,
+        ['X-OpenRosa-Version']: '1.0',
+    };
+};
+
+/**
  * Updates request options.
  *
  * @static
@@ -233,10 +257,7 @@ function getUpdatedRequestOptions( options ) {
     options.method = options.method || 'get';
 
     // set headers
-    options.headers = options.headers || {};
-    options.headers[ 'X-OpenRosa-Version' ] = '1.0';
-    options.headers[ 'Date' ] = new Date().toUTCString();
-    options.headers[ 'User-Agent' ] = `Enketo ${config.version}`;
+    options.headers = getUpdatedRequestHeaders( options.headers );
     options.timeout = TIMEOUT;
 
     if ( !options.headers.cookie ) {
@@ -388,5 +409,6 @@ module.exports = {
     getAuthHeader,
     getFormListUrl,
     getSubmissionUrl,
-    getUpdatedRequestOptions
+    getUpdatedRequestOptions,
+    getUpdatedRequestHeaders,
 };

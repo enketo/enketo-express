@@ -362,7 +362,7 @@ describe( 'Communicator Library', () => {
                 headers: {
                     'X-OpenRosa-Version': '1.0',
                     Date: new Date().toUTCString(),
-                    'User-Agent': `Enketo ${version}`,
+                    'User-Agent': `Enketo/${version}`,
                 },
                 timeout: config.timeout
             } );
@@ -378,7 +378,7 @@ describe( 'Communicator Library', () => {
                 headers: {
                     'X-OpenRosa-Version': '1.0',
                     Date: new Date().toUTCString(),
-                    'User-Agent': `Enketo ${version}`,
+                    'User-Agent': `Enketo/${version}`,
                 },
                 timeout: config.timeout
             } );
@@ -392,7 +392,7 @@ describe( 'Communicator Library', () => {
                 headers: {
                     'X-OpenRosa-Version': '1.0',
                     Date: new Date().toUTCString(),
-                    'User-Agent': `Enketo ${version}`,
+                    'User-Agent': `Enketo/${version}`,
                 },
                 timeout: config.timeout
             } );
@@ -406,7 +406,7 @@ describe( 'Communicator Library', () => {
                 headers: {
                     'X-OpenRosa-Version': '1.0',
                     Date: new Date().toUTCString(),
-                    'User-Agent': `Enketo ${version}`,
+                    'User-Agent': `Enketo/${version}`,
                 },
                 auth: {
                     sendImmediately: false

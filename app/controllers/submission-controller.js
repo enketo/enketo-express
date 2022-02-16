@@ -49,61 +49,62 @@ router
  * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
-function submit( req, res, next ) {
-    let submissionUrl;
-    const paramName = req.app.get( 'query parameter to pass to submission' );
-    const paramValue = req.query[ paramName ];
-    const query = paramValue ? `?${paramName}=${paramValue}` : '';
-    const instanceId = req.headers[ 'x-openrosa-instance-id' ];
-    const deprecatedId = req.headers[ 'x-openrosa-deprecated-id' ];
-    const id = req.enketoId;
+async function submit( req, res, next ) {
+    try {
+        const paramName = req.app.get( 'query parameter to pass to submission' );
+        const paramValue = req.query[ paramName ];
+        const query = paramValue ? `?${paramName}=${paramValue}` : '';
+        const instanceId = req.headers[ 'x-openrosa-instance-id' ];
+        const deprecatedId = req.headers[ 'x-openrosa-deprecated-id' ];
+        const id = req.enketoId;
+        const survey = await surveyModel.get( id );
+        const submissionUrl = communicator.getSubmissionUrl( survey.openRosaServer ) + query;
+        const credentials = userModel.getCredentials( req );
+        const authHeader = await communicator.getAuthHeader( submissionUrl, credentials );
+        const baseHeaders = authHeader
+            ? { 'Authorization': authHeader }
+            : {};
 
-    surveyModel.get( id )
-        .then( survey => {
-            submissionUrl = communicator.getSubmissionUrl( survey.openRosaServer ) + query;
-            const credentials = userModel.getCredentials( req );
+        // Note even though headers is part of these options, it does not overwrite the headers set on the client!
+        const options = {
+            method: 'POST',
+            url: submissionUrl,
+            headers: communicator.getUpdatedRequestHeaders( baseHeaders, req ),
+            timeout: req.app.get( 'timeout' ) + 500
+        };
 
-            return communicator.getAuthHeader( submissionUrl, credentials );
-        } )
-        .then( authHeader => {
-            // Note even though headers is part of these options, it does not overwrite the headers set on the client!
-            const options = {
-                method: 'POST',
-                url: submissionUrl,
-                headers: authHeader ? {
-                    'Authorization': authHeader
-                } : {},
-                timeout: req.app.get( 'timeout' ) + 500
-            };
-
-            // The Date header is actually forbidden to set programmatically, but we do it anyway to comply with OpenRosa
-            options.headers[ 'Date' ] = new Date().toUTCString();
-
-            // pipe the request
-            req.pipe( request( options ) )
-                .on( 'response', orResponse => {
-                    if ( orResponse.statusCode === 201 ) {
-                        _logSubmission( id, instanceId, deprecatedId );
-                    } else if ( orResponse.statusCode === 401 ) {
-                        // replace the www-authenticate header to avoid browser built-in authentication dialog
-                        orResponse.headers[ 'WWW-Authenticate' ] = `enketo${orResponse.headers[ 'WWW-Authenticate' ]}`;
+        /**
+         * TODO: When we've replaced request with a non-deprecated library,
+         * and as we continue to move toward async/await, we should also:
+         *
+         * - Eliminate this `pipe` awkwardness with e.g. `await fetch`
+         * - Introduce a more idiomatic request async handler interface, e.g. wrapping
+         *   handlers to automatically try + res.send or catch + next(error)
+         */
+        req.pipe( request( options ) )
+            .on( 'response', orResponse => {
+                if ( orResponse.statusCode === 201 ) {
+                    _logSubmission( id, instanceId, deprecatedId );
+                } else if ( orResponse.statusCode === 401 ) {
+                    // replace the www-authenticate header to avoid browser built-in authentication dialog
+                    orResponse.headers[ 'WWW-Authenticate' ] = `enketo${orResponse.headers[ 'WWW-Authenticate' ]}`;
+                }
+            } )
+            .on( 'error', error => {
+                if ( error && ( error.code === 'ETIMEDOUT' || error.code === 'ECONNRESET' ) ) {
+                    if ( error.connect === true ) {
+                        error.status = 504;
+                    } else {
+                        error.status = 408;
                     }
-                } )
-                .on( 'error', error => {
-                    if ( error && ( error.code === 'ETIMEDOUT' || error.code === 'ECONNRESET' ) ) {
-                        if ( error.connect === true ) {
-                            error.status = 504;
-                        } else {
-                            error.status = 408;
-                        }
-                    }
+                }
 
-                    next( error );
-                } )
-                .pipe( res );
-
-        } )
-        .catch( next );
+                next( error );
+            } )
+            .pipe( res );
+    } catch ( error ) {
+        next( error );
+    }
 }
 
 /**
