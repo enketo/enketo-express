@@ -265,11 +265,15 @@ function getThemesSupported( themeList ) {
 
 try {
     // need to be in the correct directory to run git describe --tags
-    config.version = execSync( `cd ${__dirname}; git describe --tags`, { encoding: 'utf-8' } ).trim();
+    config.version = String(
+        execSync( `cd ${__dirname}; git describe --tags`, {
+            encoding: 'utf-8',
+        } )
+    ).trim();
 } catch ( e ) {
     // Probably not deployed with git, try special .tag.txt file
     try {
-        config.version = `${execSync( 'head -1 .tag.txt' ).trim()}-r`;
+        config.version = `${String( execSync( 'head -1 .tag.txt' ) ).trim()}-r`;
     } catch ( e ) {
         // no .tag.txt present, use package.json version
         config.version = `${pkg.version}-p`;

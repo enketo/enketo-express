@@ -216,11 +216,30 @@ describe( 'Config Model', () => {
             expect( config.server.version ).to.equal( '1.2.3' );
         } );
 
+        it( 'populates the version from the latest git tag (Buffer)', () => {
+            execSyncCallbacks[tagsCommand] = () => Buffer.from( '1.2.3\n' );
+
+            config = loadConfig();
+
+            expect( config.server.version ).to.equal( '1.2.3' );
+        } );
+
         it( 'populates the version from .tag.txt', () => {
             execSyncCallbacks[tagsCommand] = () => {
                 throw new Error( 'No current tags' );
             };
             execSyncCallbacks[tagFileCommand] = () => '1a27e89';
+
+            config = loadConfig();
+
+            expect( config.server.version ).to.equal( '1a27e89-r' );
+        } );
+
+        it( 'populates the version from .tag.txt (Buffer)', () => {
+            execSyncCallbacks[tagsCommand] = () => {
+                throw new Error( 'No current tags' );
+            };
+            execSyncCallbacks[tagFileCommand] = () => Buffer.from( '1a27e89' );
 
             config = loadConfig();
 
