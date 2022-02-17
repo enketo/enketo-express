@@ -227,6 +227,17 @@ describe( 'Config Model', () => {
             expect( config.server.version ).to.equal( '1a27e89-r' );
         } );
 
+        it( 'removes a trailing newline from .tag.txt', () => {
+            execSyncCallbacks[tagsCommand] = () => {
+                throw new Error( 'No current tags' );
+            };
+            execSyncCallbacks[tagFileCommand] = () => '1a27e89\n';
+
+            config = loadConfig();
+
+            expect( config.server.version ).to.equal( '1a27e89-r' );
+        } );
+
         it( 'populates the version from package.json', () => {
             execSyncCallbacks[tagsCommand] = () => {
                 throw new Error( 'No current tags' );
