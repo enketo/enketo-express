@@ -226,6 +226,19 @@ function getSubmissionUrl( server ) {
 }
 
 /**
+ * @param {string} value
+ */
+const sanitizeHeader = ( value ) => {
+    return value
+        .trim()
+        .replace( /\s+/g, ' ' )
+        // See https://github.com/nodejs/node/blob/3d53ff8ff0e721f908d8aff7a3709bc6dbb07ebb/lib/_http_common.js#L232
+        .replace( /[^\t\x20-\x7e\x80-\xff]+/g, ( match ) => {
+            return encodeURI( match );
+        } );
+};
+
+/**
  * @param {Record<string, string | string[]>} [headers]
  * @param {import('express').Request} [currentRequest]
  */
@@ -242,7 +255,7 @@ const getUpdatedRequestHeaders = ( headers = {}, currentRequest = getCurrentRequ
         // The Date header is forbidden to set programmatically client-side
         // so we set it here to comply with OpenRosa
         ['Date']: new Date().toUTCString(),
-        ['User-Agent']: userAgent,
+        ['User-Agent']: sanitizeHeader( userAgent ),
         ['X-OpenRosa-Version']: '1.0',
     };
 };

@@ -263,18 +263,23 @@ function getThemesSupported( themeList ) {
     return themes;
 }
 
+/** @type {string} */
+let version;
+
 try {
     // need to be in the correct directory to run git describe --tags
-    config[ 'version' ] = execSync( `cd ${__dirname}; git describe --tags`, { encoding: 'utf-8' } ).trim();
+    version = execSync( `cd ${__dirname}; git describe --tags`, { encoding: 'utf-8' } );
 } catch ( e ) {
     // Probably not deployed with git, try special .tag.txt file
     try {
-        config[ 'version' ] = `${execSync( 'head -1 .tag.txt' )}-r`;
+        version = `${execSync( 'head -1 .tag.txt' )}-r`;
     } catch ( e ) {
         // no .tag.txt present, use package.json version
-        config[ 'version' ] = `${pkg.version}-p`;
+        version = `${pkg.version}-p`;
     }
 }
+
+config.version = version.trim();
 
 // detect supported themes
 config[ 'themes supported' ] = getThemesSupported( config[ 'themes supported' ] );
