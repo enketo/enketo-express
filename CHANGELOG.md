@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[3.1.0] - 2022-02-18
+---------------------
+
+##### Changed
+
+- [#391](https://github.com/enketo/enketo-express/pull/391) Add Enketo version (release tag, or git commit hash, or package.json version) to User-Agent header to server-sent requests
+
 [3.0.5] - 2022-02-08
 ---------------------
 
