@@ -3,13 +3,19 @@ process.env.NODE_ENV = 'test';
 
 const nock = require( 'nock' );
 const chai = require( 'chai' );
+const express = require( 'express' );
+const request = require( 'supertest' );
 const expect = chai.expect;
 const Auth = require( 'request/lib/auth' ).Auth;
 const communicator = require( '../../app/lib/communicator/communicator' );
 const config = require( '../../app/models/config-model' ).server;
 const sinon = require( 'sinon' );
+const { requestContextMiddleware } = require( '../../app/lib/context' );
 
 describe( 'Communicator Library', () => {
+    /** @type {string} */
+    let version;
+
     /** @type {sinon.SinonSandbox} */
     let sandbox;
 
@@ -17,12 +23,15 @@ describe( 'Communicator Library', () => {
     let customQueryParameter;
 
     beforeEach( () => {
+        version = '8.6.7-r';
+
         sandbox = sinon.createSandbox();
 
         customQueryParameter = 'foo';
 
         sandbox.stub( config, 'query parameter to pass to submission' )
             .get( () => customQueryParameter );
+        sandbox.stub( config, 'version' ).get( () => version );
     } );
 
     describe( 'getXFormInfo function', () => {
@@ -355,7 +364,8 @@ describe( 'Communicator Library', () => {
                 method: 'get',
                 headers: {
                     'X-OpenRosa-Version': '1.0',
-                    Date: new Date().toUTCString()
+                    Date: new Date().toUTCString(),
+                    'User-Agent': `Enketo/${version}`,
                 },
                 timeout: config.timeout
             } );
@@ -370,7 +380,8 @@ describe( 'Communicator Library', () => {
                 method: 'get',
                 headers: {
                     'X-OpenRosa-Version': '1.0',
-                    Date: new Date().toUTCString()
+                    Date: new Date().toUTCString(),
+                    'User-Agent': `Enketo/${version}`,
                 },
                 timeout: config.timeout
             } );
@@ -383,7 +394,8 @@ describe( 'Communicator Library', () => {
                 method: 'get',
                 headers: {
                     'X-OpenRosa-Version': '1.0',
-                    Date: new Date().toUTCString()
+                    Date: new Date().toUTCString(),
+                    'User-Agent': `Enketo/${version}`,
                 },
                 timeout: config.timeout
             } );
@@ -396,7 +408,8 @@ describe( 'Communicator Library', () => {
                 method: 'get',
                 headers: {
                     'X-OpenRosa-Version': '1.0',
-                    Date: new Date().toUTCString()
+                    Date: new Date().toUTCString(),
+                    'User-Agent': `Enketo/${version}`,
                 },
                 auth: {
                     sendImmediately: false
@@ -406,4 +419,77 @@ describe( 'Communicator Library', () => {
         } );
     } );
 
+    describe( 'User-agent headers', () => {
+        const clientUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36 Lolium/1.0 (The rest is real, this is made up, I kid you not)';
+
+        it( 'includes the client and server user-agent strings in headers when present in a request context', async () => {
+            const testApp = express();
+            const handler = ( req, res ) => {
+                res.send( {
+                    result: communicator.getUpdatedRequestHeaders(),
+                } );
+            };
+
+            const route = '/does-not-matter';
+
+            testApp.use( requestContextMiddleware );
+            testApp.get( route, handler );
+
+            const { body } = await request( testApp )
+                .get( route )
+                .set( 'User-Agent', clientUserAgent )
+                .expect( 200 );
+
+            expect( body.result['User-Agent'] ).to.equal( `Enketo/${version} ${clientUserAgent}` );
+        } );
+
+        describe( 'sanitization', () => {
+            const sanitizationFixtures = [
+                {
+                    description: 'trims whitespace',
+                    unescapedVersion: '8.6.7-r\n ',
+                    expectedVersion: '8.6.7-r',
+                },
+                {
+                    description: 'escapes multiple whitespace characters with a single space',
+                    unescapedVersion: '8\n\t .6.7\n\t -r',
+                    expectedVersion: '8 .6.7 -r',
+                },
+                {
+                    description: 'escapes invalid HTTP header characters in URL encoding',
+                    unescapedVersion: 'مطهر',
+                    expectedVersion: '%D9%85%D8%B7%D9%87%D8%B1',
+                },
+            ];
+
+            sanitizationFixtures.forEach( ( {
+                description,
+                unescapedVersion,
+                expectedVersion,
+            } ) => {
+                it( description, async () => {
+                    version = unescapedVersion;
+
+                    const testApp = express();
+                    const handler = ( req, res ) => {
+                        res.send( {
+                            result: communicator.getUpdatedRequestHeaders(),
+                        } );
+                    };
+
+                    const route = '/does-not-matter';
+
+                    testApp.use( requestContextMiddleware );
+                    testApp.get( route, handler );
+
+                    const { body } = await request( testApp )
+                        .get( route )
+                        .set( 'User-Agent', clientUserAgent )
+                        .expect( 200 );
+
+                    expect( body.result['User-Agent'] ).to.equal( `Enketo/${expectedVersion} ${clientUserAgent}` );
+                } );
+            } );
+        } );
+    } );
 } );

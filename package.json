@@ -51,6 +51,7 @@
         "enketo-transformer": "2.1.2",
         "evp_bytestokey": "^1.0.3",
         "express": "^4.17.2",
+        "express-cls-hooked": "^0.3.8",
         "grunt": "^1.4.1",
         "grunt-env": "^1.0.1",
         "grunt-i18next": "^0.2.0",

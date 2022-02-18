@@ -4,7 +4,7 @@
  */
 
 const config = require( '../../config/default-config' );
-const pkg = require( '../../package' );
+const pkg = require( '../../package.json' );
 const mergeWith = require( 'lodash/mergeWith' );
 const path = require( 'path' );
 const fs = require( 'fs' );
@@ -17,7 +17,11 @@ const execSync = require( 'child_process' ).execSync;
 
 // Merge default and local config files if a local config.json file exists
 try {
-    const localConfig = require( '../../config/config' );
+    const localConfigJSON = String(
+        fs.readFileSync( path.resolve( process.cwd(), './config/config.json' ) )
+    );
+    const localConfig = JSON.parse( localConfigJSON );
+
     mergeWith( config, localConfig, ( objValue, srcValue ) => {
         if ( Array.isArray( srcValue ) ) {
             // Overwrite completely if value in localConfig is an array (do not merge arrays)
@@ -261,14 +265,18 @@ function getThemesSupported( themeList ) {
 
 try {
     // need to be in the correct directory to run git describe --tags
-    config[ 'version' ] = execSync( `cd ${__dirname}; git describe --tags`, { encoding: 'utf-8' } ).trim();
+    config.version = String(
+        execSync( `cd ${__dirname}; git describe --tags`, {
+            encoding: 'utf-8',
+        } )
+    ).trim();
 } catch ( e ) {
     // Probably not deployed with git, try special .tag.txt file
     try {
-        config[ 'version' ] = `${execSync( 'head -1 .tag.txt' )}-r`;
+        config.version = `${String( execSync( 'head -1 .tag.txt' ) ).trim()}-r`;
     } catch ( e ) {
         // no .tag.txt present, use package.json version
-        config[ 'version' ] = `${pkg.version}-p`;
+        config.version = `${pkg.version}-p`;
     }
 }
 
