@@ -11,10 +11,7 @@
         "experimentalDecorators": true,
         "forceConsistentCasingInFileNames": true,
         "inlineSourceMap": true,
-        "lib": [
-            "dom",
-            "ES2018"
-        ],
+        "lib": ["dom", "ES2018"],
         "module": "amd",
         "moduleResolution": "node",
         "noEmit": true,
@@ -26,14 +23,6 @@
         "strict": true,
         "target": "es2018"
     },
-    "exclude": [
-        "node_modules"
-    ],
-    "include": [
-        "app",
-        "public/js/src",
-        "test/client",
-        "test/server",
-        "typings"
-    ]
+    "exclude": ["node_modules"],
+    "include": ["app", "public/js/src", "test/client", "test/server", "typings"]
 }

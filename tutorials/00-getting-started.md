@@ -19,7 +19,7 @@ This takes several shortcuts. Do not use for production!
 3. Log in to the VM with `vagrant ssh` and run `cd /vagrant && npm start`
 
 The app should now be running on [localhost:8006](http://localhost:8006). You can test the API in a different console window with:
-```curl --user enketorules: -d "server_url=https://ona.io/enketo&form_id=widgets" http://localhost:8006/api/v2/survey```.
+`curl --user enketorules: -d "server_url=https://ona.io/enketo&form_id=widgets" http://localhost:8006/api/v2/survey`.
 
 _\* sometimes `vagrant up` fails for reasons beyond our control - e.g. if external resources are temporarily unavailable. Try running `vagrant reload --provision` to resolve this._
 
@@ -58,4 +58,3 @@ To configure your own custom external authentication also see [this document](ht
 Run with `npm start` from project root.
 
 You can now check that the app is running by going to e.g. http://localhost:8005 (depending on your server and port set in config/config.json or the port forwarding set up in Vagrant (default is 8006))
-

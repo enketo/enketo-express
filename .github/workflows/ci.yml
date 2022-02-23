@@ -1,65 +1,65 @@
 name: npmjs
 
 on:
-  push:
-  release:
-    types:
-      - published
+    push:
+    release:
+        types:
+            - published
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [ '14', '16' ]
-    services:
-      redis-6379:
-        image: redis
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - '6379:6379'
-      redis-6380:
-        image: redis
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - '6380:6379'
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        id: cache
-        with:
-          path: node_modules
-          key: ${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
-          registry-url: https://registry.npmjs.org/
-      - run: npm install -g npm@^6
-      - run: npm install -g grunt-cli
-      - if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
-      - run: npm test
-      - uses: codecov/codecov-action@v2
-        with:
-          token: ${{secrets.CODECOV_TOKEN}}
-          files: ./test-coverage/server/lcov.info
-          flags: server
-          name: codecov-server
-          fail_ci_if_error: true
-          verbose: true
-      - uses: codecov/codecov-action@v2
-        with:
-          token: ${{secrets.CODECOV_TOKEN}}
-          files: ./test-coverage/client/chrome/lcov.info
-          flags: client,chrome
-          name: codecov-client-chrome
-          fail_ci_if_error: true
-          verbose: true
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node: ['14', '16']
+        services:
+            redis-6379:
+                image: redis
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - '6379:6379'
+            redis-6380:
+                image: redis
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - '6380:6379'
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/cache@v2
+              id: cache
+              with:
+                  path: node_modules
+                  key: ${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node }}
+                  registry-url: https://registry.npmjs.org/
+            - run: npm install -g npm@^6
+            - run: npm install -g grunt-cli
+            - if: steps.cache.outputs.cache-hit != 'true'
+              run: npm ci
+            - run: npm test
+            - uses: codecov/codecov-action@v2
+              with:
+                  token: ${{secrets.CODECOV_TOKEN}}
+                  files: ./test-coverage/server/lcov.info
+                  flags: server
+                  name: codecov-server
+                  fail_ci_if_error: true
+                  verbose: true
+            - uses: codecov/codecov-action@v2
+              with:
+                  token: ${{secrets.CODECOV_TOKEN}}
+                  files: ./test-coverage/client/chrome/lcov.info
+                  flags: client,chrome
+                  name: codecov-client-chrome
+                  fail_ci_if_error: true
+                  verbose: true

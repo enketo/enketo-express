@@ -1,5 +1,4 @@
-Heroku deployment
-=======================
+# Heroku deployment
 
 ### First time
 
@@ -21,7 +20,7 @@ Enketo's JS and CSS **build process** uses configuration variables. This means t
 
 ### Redis connections
 
-The key sizing criterion for redis addons seems to be _the number of simultaneous database connections_. It seems Enketo on Heroku is using about 26 connections for _enketo\_redis\_main_ and 18 for _enketo\_redis\_cache_ **per dyno** (8 threads). Make sure to check your logs to see if the app is exceeding the amount of allowed redis connections. You'll want to **immediately address this critical error state** by either reducing the number of dynos or upgrading your redis addon.
+The key sizing criterion for redis addons seems to be _the number of simultaneous database connections_. It seems Enketo on Heroku is using about 26 connections for _enketo_redis_main_ and 18 for _enketo_redis_cache_ **per dyno** (8 threads). Make sure to check your logs to see if the app is exceeding the amount of allowed redis connections. You'll want to **immediately address this critical error state** by either reducing the number of dynos or upgrading your redis addon.
 
 ### Warning: before upgrading or downgrading heroku-redis
 

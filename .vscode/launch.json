@@ -15,14 +15,9 @@
         {
             "name": "Test server (watch + debug)",
             "request": "launch",
-            "runtimeArgs": [
-                "run-script",
-                "test-watch-server"
-            ],
+            "runtimeArgs": ["run-script", "test-watch-server"],
             "runtimeExecutable": "npm",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
+            "skipFiles": ["<node_internals>/**"],
             "type": "pwa-node",
             "sourceMaps": true,
             "console": "integratedTerminal"

@@ -1,4 +1,4 @@
-const baseContext = require( 'express-cls-hooked' );
+const baseContext = require('express-cls-hooked');
 
 /**
  * Creates an asynchronous context providing access to the currently active request.
@@ -8,24 +8,22 @@ const baseContext = require( 'express-cls-hooked' );
  *
  * @type {import('express').Handler}
  */
-const requestContextMiddleware = ( req, res, next ) => {
-    baseContext.middleware( req, res, ( error ) => {
-        if ( error != null ) {
-            return next( error );
+const requestContextMiddleware = (req, res, next) => {
+    baseContext.middleware(req, res, (error) => {
+        if (error != null) {
+            return next(error);
         }
 
-        baseContext.set( 'request', req );
+        baseContext.set('request', req);
 
         next();
-    } );
+    });
 };
 
 /**
  * @return {import('express').Request | void}
  */
-const getCurrentRequest = () => (
-    baseContext.get( 'request' )
-);
+const getCurrentRequest = () => baseContext.get('request');
 
 module.exports = {
     getCurrentRequest,

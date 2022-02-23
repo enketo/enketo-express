@@ -13,11 +13,11 @@
             "allow insecure transport": "false"
         }
     },
-    "ip filtering" : {
-	    "allowPrivateIPAddress": false,
-	    "allowMetaIPAddress": false,
-	    "allowIPAddressList": [],
-	    "denyIPAddressList": []
+    "ip filtering": {
+        "allowPrivateIPAddress": false,
+        "allowMetaIPAddress": false,
+        "allowIPAddressList": [],
+        "denyIPAddressList": []
     },
     "timeout": 300000,
     "expiry for record cache": 30000,
@@ -33,10 +33,35 @@
         "email": "support@example.org"
     },
     "widgets": [
-        "note", "select-desktop", "select-mobile", "autocomplete", "geo", "textarea", "url",
-        "table", "radio", "date", "time", "datetime", "select-media", "file", "draw", "rank",
-        "likert", "range", "columns", "image-view", "comment", "image-map", "date-native", "date-native-ios",
-        "date-mobile", "text-max", "text-print", "rating", "thousands-sep"
+        "note",
+        "select-desktop",
+        "select-mobile",
+        "autocomplete",
+        "geo",
+        "textarea",
+        "url",
+        "table",
+        "radio",
+        "date",
+        "time",
+        "datetime",
+        "select-media",
+        "file",
+        "draw",
+        "rank",
+        "likert",
+        "range",
+        "columns",
+        "image-view",
+        "comment",
+        "image-map",
+        "date-native",
+        "date-native-ios",
+        "date-mobile",
+        "text-max",
+        "text-print",
+        "rating",
+        "thousands-sep"
     ],
     "analytics": "google",
     "google": {
@@ -55,11 +80,13 @@
     "headless": {
         "timeout": 60000
     },
-    "maps": [ {
-        "name": "streets",
-        "tiles": [ "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" ],
-        "attribution": "© <a href=\"http://openstreetmap.org\">OpenStreetMap</a> | <a href=\"www.openstreetmap.org/copyright\">Terms</a>"
-    } ],
+    "maps": [
+        {
+            "name": "streets",
+            "tiles": ["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            "attribution": "© <a href=\"http://openstreetmap.org\">OpenStreetMap</a> | <a href=\"www.openstreetmap.org/copyright\">Terms</a>"
+        }
+    ],
     "query parameter to pass to submission": "",
     "redis": {
         "main": {

@@ -16,14 +16,14 @@
  * @see {@link http://expressjs.com/en/4x/api.html#res|Express Response object documentation}
  */
 
-const express = require( 'express' );
+const express = require('express');
+
 const router = express.Router();
 
-module.exports = app => {
-    app.use( `${app.get( 'base path' )}/api`, router );
+module.exports = (app) => {
+    app.use(`${app.get('base path')}/api`, router);
 };
 
-router
-    .get( '/', ( req, res ) => {
-        res.redirect( 'http://apidocs.enketo.org' );
-    } );
+router.get('/', (req, res) => {
+    res.redirect('http://apidocs.enketo.org');
+});

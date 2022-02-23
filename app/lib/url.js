@@ -1,5 +1,5 @@
-const config = require( '../models/config-model' ).server;
-const transformer = require( 'enketo-transformer' );
+const config = require('../models/config-model').server;
+const transformer = require('enketo-transformer');
 
 const markupEntities = {
     '<': '&lt;',
@@ -21,15 +21,11 @@ const markupEntities = {
  * @param {string} value
  * @return {string}
  */
-const escapeMarkupEntities = ( value ) => (
-    value.replace( /[&<>"]/g, character => markupEntities[character] )
-);
+const escapeMarkupEntities = (value) =>
+    value.replace(/[&<>"]/g, (character) => markupEntities[character]);
 
-const escapeMarkupURLPath = ( value ) => {
-    return escapeMarkupEntities(
-        transformer.escapeURLPath( value )
-    );
-};
+const escapeMarkupURLPath = (value) =>
+    escapeMarkupEntities(transformer.escapeURLPath(value));
 
 /**
  * Converts a url to a local (proxied) url.
@@ -38,10 +34,13 @@ const escapeMarkupURLPath = ( value ) => {
  * @param { string } url - The url to convert
  * @return { string } The converted url
  */
-function toLocalMediaUrl( url ) {
-    const localUrl = `${config[ 'base path' ]}/media/get/${url.replace( /(https?):\/\//, '$1/' )}`;
+function toLocalMediaUrl(url) {
+    const localUrl = `${config['base path']}/media/get/${url.replace(
+        /(https?):\/\//,
+        '$1/'
+    )}`;
 
-    return escapeMarkupURLPath( localUrl );
+    return escapeMarkupURLPath(localUrl);
 }
 
 /**
@@ -55,11 +54,13 @@ function toLocalMediaUrl( url ) {
  * @param {ManifestItem[]} manifest
  * @return {Record<string, string>}
  */
-const toMediaMap = ( manifest ) => Object.fromEntries(
-    manifest.map( ( { filename, downloadUrl } ) => (
-        [ escapeMarkupURLPath( filename ), toLocalMediaUrl( downloadUrl ) ]
-    ) )
-);
+const toMediaMap = (manifest) =>
+    Object.fromEntries(
+        manifest.map(({ filename, downloadUrl }) => [
+            escapeMarkupURLPath(filename),
+            toLocalMediaUrl(downloadUrl),
+        ])
+    );
 
 /**
  * @typedef {import('../models/survey-model').SurveyObject} Survey
@@ -69,26 +70,25 @@ const toMediaMap = ( manifest ) => Object.fromEntries(
  * @param {Survey} survey
  * @return {Survey}
  */
-const replaceMediaSources = ( survey ) => {
-    const media = toMediaMap( survey.manifest );
+const replaceMediaSources = (survey) => {
+    const media = toMediaMap(survey.manifest);
 
     let { form, model } = survey;
 
-    if ( media ) {
+    if (media) {
         const JR_URL = /"jr:\/\/[\w-]+\/([^"]+)"/g;
-        const replacer = ( match, filename ) => {
-            if ( media[ filename ] ) {
-
-                return `"${media[ filename ]}"`;
+        const replacer = (match, filename) => {
+            if (media[filename]) {
+                return `"${media[filename]}"`;
             }
 
             return match;
         };
 
-        form = form.replace( JR_URL, replacer );
-        model = model.replace( JR_URL, replacer );
+        form = form.replace(JR_URL, replacer);
+        model = model.replace(JR_URL, replacer);
 
-        if ( media[ 'form_logo.png' ] ) {
+        if (media['form_logo.png']) {
             form = form.replace(
                 /(class="form-logo"\s*>)/,
                 `$1<img src="${media['form_logo.png']}" alt="form logo">`
@@ -96,14 +96,11 @@ const replaceMediaSources = ( survey ) => {
         }
     }
 
-    const manifest = survey.manifest.map( item => {
-        return {
-            ...item,
-            filename: escapeMarkupURLPath( item.filename ),
-            downloadUrl: escapeMarkupURLPath( item.downloadUrl )
-        };
-    } );
-
+    const manifest = survey.manifest.map((item) => ({
+        ...item,
+        filename: escapeMarkupURLPath(item.filename),
+        downloadUrl: escapeMarkupURLPath(item.downloadUrl),
+    }));
 
     return {
         ...survey,

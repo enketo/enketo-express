@@ -1,47 +1,47 @@
-version: "3"
+version: '3'
 
 services:
-  nginx:
-    image: nginx
-    # Define `ports` ONLY for public services, not for internal communication
-    # between containers
-    ports:
-      - "80:80"
-      - "443:443"
-    env_file:
-      - ./envfile.txt
-    volumes:
-      - ./nginx/:/tmp/enketo_express_nginx/:ro
-      - ./secrets/:/tmp/enketo_express_secrets/:ro
-      - ../../config/:/srv/src/enketo_express/config/
-    command: bash /tmp/enketo_express_nginx/nginx_command.bash
-    restart: unless-stopped
-    depends_on:
-      # This won't guarantee that Enketo is actually ready to service requests
-      # before starting NGINX, but it will ensure that the hostname
-      # `enketo_express` resolves within the NGINX container
-      - enketo_express
+    nginx:
+        image: nginx
+        # Define `ports` ONLY for public services, not for internal communication
+        # between containers
+        ports:
+            - '80:80'
+            - '443:443'
+        env_file:
+            - ./envfile.txt
+        volumes:
+            - ./nginx/:/tmp/enketo_express_nginx/:ro
+            - ./secrets/:/tmp/enketo_express_secrets/:ro
+            - ../../config/:/srv/src/enketo_express/config/
+        command: bash /tmp/enketo_express_nginx/nginx_command.bash
+        restart: unless-stopped
+        depends_on:
+            # This won't guarantee that Enketo is actually ready to service requests
+            # before starting NGINX, but it will ensure that the hostname
+            # `enketo_express` resolves within the NGINX container
+            - enketo_express
 
-  enketo_express:
-    # image: kobotoolbox/enketo_express
-    build: ../..
-    env_file:
-      - ./envfile.txt
-    volumes:
-      - ../../config/:/srv/src/enketo_express/config
-      - ./secrets/:/srv/src/enketo_express/setup/docker/secrets/
-    restart: unless-stopped
+    enketo_express:
+        # image: kobotoolbox/enketo_express
+        build: ../..
+        env_file:
+            - ./envfile.txt
+        volumes:
+            - ../../config/:/srv/src/enketo_express/config
+            - ./secrets/:/srv/src/enketo_express/setup/docker/secrets/
+        restart: unless-stopped
 
-  redis_main:
-    image: redis:5
-    volumes:
-      - ../redis/conf/redis-enketo-main.conf:/etc/redis/redis.conf:ro
-      - ./redis_main_data/:/data/
-    restart: unless-stopped
+    redis_main:
+        image: redis:5
+        volumes:
+            - ../redis/conf/redis-enketo-main.conf:/etc/redis/redis.conf:ro
+            - ./redis_main_data/:/data/
+        restart: unless-stopped
 
-  redis_cache:
-    image: redis:5
-    volumes:
-      - ../redis/conf/redis-enketo-cache.conf:/etc/redis/redis.conf:ro
-      - ./redis_cache_data/:/data/
-    restart: unless-stopped
+    redis_cache:
+        image: redis:5
+        volumes:
+            - ../redis/conf/redis-enketo-cache.conf:/etc/redis/redis.conf:ro
+            - ./redis_cache_data/:/data/
+        restart: unless-stopped

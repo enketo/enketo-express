@@ -8,13 +8,14 @@ The easiest way to start the app in development and debugging mode with liverelo
 
 ### Testing
 
-* Testing is done with Mocha and Karma.
-    * all: `npm run test`
-    * headless: `npm run test-headless`
-    * browsers: `npm run test-browsers`
-* Tests can be run in watch mode for [TDD](https://en.wikipedia.org/wiki/Test-driven_development) workflows with.
-    * client: `npm run test-watch-client`
-    * server: `npm run test-watch-server`
+-   Testing is done with Mocha and Karma.
+    -   all: `npm run test`
+    -   headless: `npm run test-headless`
+    -   browsers: `npm run test-browsers`
+-   Tests can be run in watch mode for [TDD](https://en.wikipedia.org/wiki/Test-driven_development) workflows with.
+
+    -   client: `npm run test-watch-client`
+    -   server: `npm run test-watch-server`
 
     Support for debugging in [VSCode](https://code.visualstudio.com/) is provided. For instructions see [./#debugging-test-watch-mode-in-vscode](Debugging test watch mode in VSCode) below.
 
@@ -35,7 +36,7 @@ Optionally, you can add a keyboard shortcut to select launch tasks:
 ### Launch a test form
 
 Enketo Express needs an OpenRosa-compliant server to obtain forms and submit data too. For development you can conveniently use any public or local server for this with the {@tutorial 32-api}.
-For example to use your https://kobotoolbox.org or https://ona.io account "ali", the _server\_url_ to use in API calls is `"https://kc.kobotoolbox.org/ali"` or `"https://ona.io/ali"`.
+For example to use your https://kobotoolbox.org or https://ona.io account "ali", the _server_url_ to use in API calls is `"https://kc.kobotoolbox.org/ali"` or `"https://ona.io/ali"`.
 
 An API call to get the Enketo webform url for a form called "TestForm" can thus be made like this:
 
