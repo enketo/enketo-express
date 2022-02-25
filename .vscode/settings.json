@@ -1,8 +1,28 @@
 {
+    // Formatting
+    "eslint.enable": true,
     "eslint.options": {
-        "rules": {
-            "no-debugger": 1 // Warn rather than error in-editor
-        }
+        "extends": ["../.eslintrc.json"]
     },
+    "eslint.nodePath": "../node_modules/.bin",
+    "eslint.validate": ["markdown", "md"],
+    "prettier.configPath": ".prettierrc.json",
+    "prettier.ignorePath": ".prettierignore",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": [
+        "source.formatDocument",
+        "source.fixAll.eslint"
+    ],
+    "editor.formatOnSave": true,
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+
+    // Code navigation
     "javascript.referencesCodeLens.enabled": true
 }

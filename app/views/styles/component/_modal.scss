@@ -1,5 +1,5 @@
-@import "../../../../node_modules/vex-js/sass/vex";
-@import "../../../../node_modules/vex-js/sass/vex-theme-plain";
+@import '../../../../node_modules/vex-js/sass/vex';
+@import '../../../../node_modules/vex-js/sass/vex-theme-plain';
 
 .vex.vex-theme-plain {
     h3 {
@@ -27,12 +27,12 @@
         color: $text-muted;
     }
 
-    .vex-dialog-input input[type=text] {
+    .vex-dialog-input input[type='text'] {
         //@include form-control;
     }
 
-    .vex-dialog-input input[type=checkbox],
-    .vex-dialog-input input[type=radio] {
+    .vex-dialog-input input[type='checkbox'],
+    .vex-dialog-input input[type='radio'] {
         margin-right: 10px;
     }
 
@@ -63,12 +63,12 @@
         font-size: 16px;
         margin-bottom: 10px;
 
-        ~label {
+        ~ label {
             display: inline-block;
             width: auto;
             font-weight: normal;
 
-            input[type=radio] {
+            input[type='radio'] {
                 width: auto;
                 display: inline-block;
                 height: auto;
@@ -79,7 +79,7 @@
                 background: none;
             }
 
-            +label {
+            + label {
                 margin-left: 20px;
             }
         }

@@ -1,4 +1,4 @@
-@import "component/mixins";
+@import 'component/mixins';
 
 // These styles are theme-independent (or should become so) and are loaded separately to avoid flickering during theme-switching.
 html {
@@ -49,8 +49,8 @@ progress {
 
 // avoid flickering during loading
 .main-loader {
-    ~.main,
-    ~.side-slider {
+    ~ .main,
+    ~ .side-slider {
         display: none;
     }
 }

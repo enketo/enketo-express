@@ -2,6 +2,7 @@
  * Deals with browser storage
  */
 
+import $ from 'jquery';
 import store from './store';
 
 import connection from './connection';
@@ -10,7 +11,6 @@ import events from './event';
 import settings from './settings';
 import exporter from './exporter';
 import { t } from './translator';
-import $ from 'jquery';
 import formCache from './form-cache';
 import { setLastSavedRecord } from './last-saved';
 
@@ -31,9 +31,9 @@ function init() {
 
     // TODO: Add export feature
 
-    $exportButton = $( '.record-list__button-bar__button.export' );
-    $uploadButton = $( '.record-list__button-bar__button.upload' );
-    $queueNumber = $( '.offline-enabled__queue-length' );
+    $exportButton = $('.record-list__button-bar__button.export');
+    $uploadButton = $('.record-list__button-bar__button.upload');
+    $queueNumber = $('.offline-enabled__queue-length');
 
     return _updateRecordList();
 }
@@ -44,8 +44,8 @@ function init() {
  * @param  { string } instanceId - instanceID of record
  * @return {Promise<EnketoRecord|undefined>} a Promise that resolves with a record object or undefined
  */
-function get( instanceId ) {
-    return store.record.get( instanceId );
+function get(instanceId) {
+    return store.record.get(instanceId);
 }
 
 /**
@@ -54,18 +54,17 @@ function get( instanceId ) {
  * @param { EnketoRecord } record - a record object
  * @return {Promise<undefined>} a promise that resolves with undefined
  */
-function set( record ) {
-    return getAutoSavedRecord()
-        .then( autoSavedRecord => {
-            // Add files from autoSavedRecord in case this record was recovered.
-            // A more intelligent way to do is to maintain and check a recovered flag
-            // first, and only then replace the files.
-            if ( autoSavedRecord ) {
-                record.files = autoSavedRecord.files;
-            }
+function set(record) {
+    return getAutoSavedRecord().then((autoSavedRecord) => {
+        // Add files from autoSavedRecord in case this record was recovered.
+        // A more intelligent way to do is to maintain and check a recovered flag
+        // first, and only then replace the files.
+        if (autoSavedRecord) {
+            record.files = autoSavedRecord.files;
+        }
 
-            return store.record.set( record );
-        } );
+        return store.record.set(record);
+    });
 }
 
 /**
@@ -76,29 +75,29 @@ function set( record ) {
  *
  * @return { Promise<EnketoRecord> }
  */
-function save( action, record ) {
+function save(action, record) {
     /** @type { Promise<EnketoRecord> } */
     let promise;
 
     /** @type { EnketoRecord } */
     let result;
 
-    if ( action === 'set' ) {
-        promise = set( record );
+    if (action === 'set') {
+        promise = set(record);
     } else {
-        promise = store.record.update( record );
+        promise = store.record.update(record);
     }
 
     return promise
-        .then( record => {
+        .then((record) => {
             result = record;
 
             return result;
-        } )
-        .then( ( { enketoId } ) => formCache.get( { enketoId } ) )
-        .then( survey => setLastSavedRecord( survey, record ) )
-        .then( _updateRecordList )
-        .then( () => result );
+        })
+        .then(({ enketoId }) => formCache.get({ enketoId }))
+        .then((survey) => setLastSavedRecord(survey, record))
+        .then(_updateRecordList)
+        .then(() => result);
 }
 
 /**
@@ -107,9 +106,8 @@ function save( action, record ) {
  * @param { string } instanceId - instanceID of record
  * @return { Promise<undefined> } a promise that resolves with undefined
  */
-function remove( instanceId ) {
-    return store.record.remove( instanceId )
-        .then( _updateRecordList );
+function remove(instanceId) {
+    return store.record.remove(instanceId).then(_updateRecordList);
 }
 
 /**
@@ -123,7 +121,7 @@ function getAutoSavedKey() {
  * Obtains auto-saved record.
  */
 function getAutoSavedRecord() {
-    return get( getAutoSavedKey() );
+    return get(getAutoSavedKey());
 }
 
 /**
@@ -132,7 +130,7 @@ function getAutoSavedRecord() {
  * @param { EnketoRecord } record - record object created from the current state of the form
  * @return { Promise<Record> }
  */
-function updateAutoSavedRecord( record ) {
+function updateAutoSavedRecord(record) {
     // prevent this record from accidentally being submitted
     record.draft = true;
     // give an internal name
@@ -142,7 +140,7 @@ function updateAutoSavedRecord( record ) {
     // make the record valid
     record.enketoId = settings.enketoId;
 
-    return store.record.update( record );
+    return store.record.update(record);
     // do not update recordList
 }
 
@@ -150,7 +148,7 @@ function updateAutoSavedRecord( record ) {
  * Removes auto-saved record
  */
 function removeAutoSavedRecord() {
-    return store.record.remove( getAutoSavedKey() );
+    return store.record.remove(getAutoSavedKey());
     // do not update recordList
 }
 
@@ -160,9 +158,12 @@ function removeAutoSavedRecord() {
  * @param  { string } enketoId - Enketo ID
  * @return {Promise<undefined>} Promise that resolves with undefined
  */
-function getCounterValue( enketoId ) {
-    return store.property.getSurveyStats( enketoId )
-        .then( stats => !stats || isNaN( stats.recordCount ) ? 1 : stats.recordCount + 1 );
+function getCounterValue(enketoId) {
+    return store.property
+        .getSurveyStats(enketoId)
+        .then((stats) =>
+            !stats || isNaN(stats.recordCount) ? 1 : stats.recordCount + 1
+        );
 }
 
 /**
@@ -170,11 +171,14 @@ function getCounterValue( enketoId ) {
  *
  * @param { string } instanceId - instanceID of a record
  */
-function setActive( instanceId ) {
+function setActive(instanceId) {
     settings.recordId = instanceId;
-    $( '.record-list__records' )
-        .find( '.active' ).removeClass( 'active' )
-        .addBack().find( `[data-id="${instanceId}"]` ).addClass( 'active' );
+    $('.record-list__records')
+        .find('.active')
+        .removeClass('active')
+        .addBack()
+        .find(`[data-id="${instanceId}"]`)
+        .addClass('active');
 }
 
 /**
@@ -182,13 +186,13 @@ function setActive( instanceId ) {
  */
 function _setUploadIntervals() {
     // one quick upload attempt soon after page load
-    setTimeout( () => {
+    setTimeout(() => {
         uploadQueue();
-    }, 30 * 1000 );
+    }, 30 * 1000);
     // interval to check upload queued records
-    setInterval( () => {
+    setInterval(() => {
         uploadQueue();
-    }, 5 * 60 * 1000 );
+    }, 5 * 60 * 1000);
 }
 
 /**
@@ -202,77 +206,121 @@ function uploadQueue() {
     const fails = [];
     let authRequired;
 
-    if ( uploadOngoing || !finalRecordPresent ) {
+    if (uploadOngoing || !finalRecordPresent) {
         return;
     }
 
     uploadOngoing = true;
-    $uploadButton.prop( 'disabled', true );
+    $uploadButton.prop('disabled', true);
 
-    return connection.getOnlineStatus()
-        .then( appearsOnline => {
-            if ( !appearsOnline ) {
+    return connection
+        .getOnlineStatus()
+        .then((appearsOnline) => {
+            if (!appearsOnline) {
                 return;
             }
 
-            return getDisplayableRecordList( settings.enketoId, { finalOnly: true } );
-        } )
-        .then( records => {
-            if ( !records || records.length === 0 ) {
+            return getDisplayableRecordList(settings.enketoId, {
+                finalOnly: true,
+            });
+        })
+        .then((records) => {
+            if (!records || records.length === 0) {
                 uploadOngoing = false;
 
                 return;
             }
-            console.debug( `Uploading queue of ${records.length} records.` );
+            console.debug(`Uploading queue of ${records.length} records.`);
 
             // Perform record uploads sequentially for nicer feedback and to avoid issues when connections are very poor
-            return records.reduce( ( prevPromise, record ) => prevPromise.then( () => // get the whole record including files
-                store.record.get( record.instanceId )
-                    .then( record => {
-                    // convert record.files to a simple <File> array
-                        record.files = record.files.map( object => {
-                        // do not add name property if already has one (a File will throw exception)
-                            if ( typeof object.item.name === 'undefined' ) {
-                                object.item.name = object.name;
-                            }
+            return records.reduce(
+                (prevPromise, record) =>
+                    prevPromise.then(() =>
+                        // get the whole record including files
+                        store.record
+                            .get(record.instanceId)
+                            .then((record) => {
+                                // convert record.files to a simple <File> array
+                                record.files = record.files.map((object) => {
+                                    // do not add name property if already has one (a File will throw exception)
+                                    if (
+                                        typeof object.item.name === 'undefined'
+                                    ) {
+                                        object.item.name = object.name;
+                                    }
 
-                            return object.item;
-                        } );
-                        uploadProgress.update( record.instanceId, 'ongoing', '', successes.length + fails.length, records.length );
+                                    return object.item;
+                                });
+                                uploadProgress.update(
+                                    record.instanceId,
+                                    'ongoing',
+                                    '',
+                                    successes.length + fails.length,
+                                    records.length
+                                );
 
-                        return connection.uploadQueuedRecord( record );
-                    } )
-                    .then( () => {
-                        successes.push( record.name );
-                        uploadProgress.update( record.instanceId, 'success', '', successes.length + fails.length, records.length );
+                                return connection.uploadQueuedRecord(record);
+                            })
+                            .then(() => {
+                                successes.push(record.name);
+                                uploadProgress.update(
+                                    record.instanceId,
+                                    'success',
+                                    '',
+                                    successes.length + fails.length,
+                                    records.length
+                                );
 
-                        return store.record.remove( record.instanceId )
-                            .then( () => store.property.addSubmittedInstanceId( record ) );
-                    } )
-                    .catch( result => {
-                    // catch 401 responses (1 of them)
-                        if ( result.status === 401 ) {
-                            authRequired = true;
-                        }
-                        // if any non HTTP error occurs, output the error.message
-                        errorMsg = result.message || gui.getErrorResponseMsg( result.status );
-                        fails.push( record.name );
-                        uploadProgress.update( record.instanceId, 'error', errorMsg, successes.length + fails.length, records.length );
-                    } )
-                    .then( () => {
-                        if ( successes.length + fails.length === records.length ) {
-                            uploadOngoing = false;
-                            if ( authRequired ) {
-                                gui.confirmLogin();
-                            } else if ( successes.length > 0 ) {
-                            // let gui send a feedback message
-                                document.dispatchEvent( events.QueueSubmissionSuccess( successes ) );
-                            }
-                            // update the list by properly removing obsolete records, reactivating button(s)
-                            _updateRecordList();
-                        }
-                    } ) ), Promise.resolve() );
-        } );
+                                return store.record
+                                    .remove(record.instanceId)
+                                    .then(() =>
+                                        store.property.addSubmittedInstanceId(
+                                            record
+                                        )
+                                    );
+                            })
+                            .catch((result) => {
+                                // catch 401 responses (1 of them)
+                                if (result.status === 401) {
+                                    authRequired = true;
+                                }
+                                // if any non HTTP error occurs, output the error.message
+                                errorMsg =
+                                    result.message ||
+                                    gui.getErrorResponseMsg(result.status);
+                                fails.push(record.name);
+                                uploadProgress.update(
+                                    record.instanceId,
+                                    'error',
+                                    errorMsg,
+                                    successes.length + fails.length,
+                                    records.length
+                                );
+                            })
+                            .then(() => {
+                                if (
+                                    successes.length + fails.length ===
+                                    records.length
+                                ) {
+                                    uploadOngoing = false;
+                                    if (authRequired) {
+                                        gui.confirmLogin();
+                                    } else if (successes.length > 0) {
+                                        // let gui send a feedback message
+                                        document.dispatchEvent(
+                                            events.QueueSubmissionSuccess(
+                                                successes
+                                            )
+                                        );
+                                    }
+                                    // update the list by properly removing obsolete records, reactivating button(s)
+                                    _updateRecordList();
+                                }
+                            })
+                    ),
+                Promise.resolve()
+            );
+        });
 }
 
 /**
@@ -281,20 +329,20 @@ function uploadQueue() {
  * @param { string } formTitle - the title of the form
  * @return {Promise<Blob>} a Promise that resolves with a zip file as Blob
  */
-function exportToZip( formTitle ) {
+function exportToZip(formTitle) {
+    $exportButton.prop('disabled', true);
 
-    $exportButton.prop( 'disabled', true );
-
-    return exporter.recordsToZip( settings.enketoId, formTitle )
-        .then( blob => {
-            $exportButton.prop( 'disabled', false );
+    return exporter
+        .recordsToZip(settings.enketoId, formTitle)
+        .then((blob) => {
+            $exportButton.prop('disabled', false);
 
             return blob;
-        } )
-        .catch( error => {
-            $exportButton.prop( 'disabled', false );
+        })
+        .catch((error) => {
+            $exportButton.prop('disabled', false);
             throw error;
-        } );
+        });
 }
 
 /**
@@ -303,67 +351,72 @@ function exportToZip( formTitle ) {
  * @type { object }
  */
 uploadProgress = {
-    _getLi( instanceId ) {
-        return $( `.record-list__records__record[data-id="${instanceId}"]` );
+    _getLi(instanceId) {
+        return $(`.record-list__records__record[data-id="${instanceId}"]`);
     },
-    _reset( instanceId ) {
-        const $allLis = $( '.record-list__records' ).find( 'li' );
-        //if the current record, is the first in the list, reset the list
-        if ( $allLis.first().attr( 'data-id' ) === instanceId ) {
-            $allLis.removeClass( 'ongoing success error' ).filter( function() {
-                return !$( this ).hasClass( 'record-list__records__record' );
-            } ).remove();
+    _reset(instanceId) {
+        const $allLis = $('.record-list__records').find('li');
+        // if the current record, is the first in the list, reset the list
+        if ($allLis.first().attr('data-id') === instanceId) {
+            $allLis
+                .removeClass('ongoing success error')
+                .filter(function () {
+                    return !$(this).hasClass('record-list__records__record');
+                })
+                .remove();
         }
     },
-    _updateClass( $el, status ) {
-        $el.removeClass( 'ongoing success error' ).addClass( status );
+    _updateClass($el, status) {
+        $el.removeClass('ongoing success error').addClass(status);
     },
-    _updateProgressBar( index, total ) {
+    _updateProgressBar(index, total) {
         let $progress;
 
-        $progress = $( '.record-list__upload-progress' ).attr( {
-            'max': total,
-            'value': index
-        } );
+        $progress = $('.record-list__upload-progress').attr({
+            max: total,
+            value: index,
+        });
 
-        if ( index === total || total === 1 ) {
-            $progress.css( 'visibility', 'hidden' );
+        if (index === total || total === 1) {
+            $progress.css('visibility', 'hidden');
         } else {
-            $progress.css( 'visibility', 'visible' );
+            $progress.css('visibility', 'visible');
         }
     },
-    _getMsg( status, msg ) {
-        return ( status === 'error' ) ? msg : '';
+    _getMsg(status, msg) {
+        return status === 'error' ? msg : '';
     },
-    update( instanceId, status, msg, index, total ) {
+    update(instanceId, status, msg, index, total) {
         let $result;
-        const $li = this._getLi( instanceId );
-        const displayMsg = this._getMsg( status, msg );
+        const $li = this._getLi(instanceId);
+        const displayMsg = this._getMsg(status, msg);
 
-        this._reset( instanceId );
+        this._reset(instanceId);
 
         // add display messages (always showing end status)
-        if ( displayMsg ) {
-            $result = $( `<li data-id="${instanceId}" class="record-list__records__msg ${status}">${displayMsg}</li>` ).insertAfter( $li );
-            window.setTimeout( () => {
-                $result.hide( 600 );
-            }, 3000 );
+        if (displayMsg) {
+            $result = $(
+                `<li data-id="${instanceId}" class="record-list__records__msg ${status}">${displayMsg}</li>`
+            ).insertAfter($li);
+            window.setTimeout(() => {
+                $result.hide(600);
+            }, 3000);
         }
 
         // update the status class
-        this._updateClass( $li, status );
+        this._updateClass($li, status);
 
         // hide succesful submissions from record list in side bar
         // they will be properly removed later in _updateRecordList
-        if ( status === 'success' ) {
-            $li.hide( 1500 );
+        if (status === 'success') {
+            $li.hide(1500);
         }
 
         // update the submissions progress bar
-        if ( index && total ) {
-            this._updateProgressBar( index, total );
+        if (index && total) {
+            this._updateProgressBar(index, total);
         }
-    }
+    },
 };
 
 /**
@@ -375,12 +428,13 @@ uploadProgress = {
  * @param { { finalOnly?: boolean } } [options] - Only included records that are 'final' (i.e. not 'draft')
  * @return { Promise<Record[]> } - records to be displayed in the UI
  */
-function getDisplayableRecordList( enketoId, { finalOnly = false } = {} ) {
+function getDisplayableRecordList(enketoId, { finalOnly = false } = {}) {
     const autoSavedKey = getAutoSavedKey();
-    const records = store.record.getAll( enketoId, finalOnly )
-        .then( records => {
-            return records.filter( record => record.instanceId !== autoSavedKey );
-        } );
+    const records = store.record
+        .getAll(enketoId, finalOnly)
+        .then((records) =>
+            records.filter((record) => record.instanceId !== autoSavedKey)
+        );
 
     return records;
 }
@@ -394,52 +448,58 @@ function _updateRecordList() {
     let $li;
 
     // reset the list
-    $exportButton.prop( 'disabled', true );
-    $uploadButton.prop( 'disabled', true );
-    $recordList = $( '.record-list__records' );
+    $exportButton.prop('disabled', true);
+    $uploadButton.prop('disabled', true);
+    $recordList = $('.record-list__records');
     finalRecordPresent = false;
 
     // rebuild the list
-    return getDisplayableRecordList( settings.enketoId )
-        .then( records => {
-            // update queue number
-            $queueNumber.text( records.length );
+    return getDisplayableRecordList(settings.enketoId).then((records) => {
+        // update queue number
+        $queueNumber.text(records.length);
 
-            // add 'no records' message
-            if ( records.length === 0 ) {
-                $recordList.empty().append( `<li class="record-list__records--none" data-i18n="record-list.norecords">${t( 'record-list.norecords' )}</li>` );
-            } else {
-                $recordList.find( '.record-list__records--none' ).remove();
-                $exportButton.prop( 'disabled', false );
+        // add 'no records' message
+        if (records.length === 0) {
+            $recordList
+                .empty()
+                .append(
+                    `<li class="record-list__records--none" data-i18n="record-list.norecords">${t(
+                        'record-list.norecords'
+                    )}</li>`
+                );
+        } else {
+            $recordList.find('.record-list__records--none').remove();
+            $exportButton.prop('disabled', false);
+        }
+
+        // remove records that no longer exist
+        $recordList.find('.record-list__records__record').each(function () {
+            const $rec = $(this);
+            if (
+                !records.some((rec) => $rec.attr('data-id') === rec.instanceId)
+            ) {
+                $rec.next('.msg').addBack().remove();
             }
+        });
 
-            // remove records that no longer exist
-            $recordList.find( '.record-list__records__record' ).each( function() {
-                const $rec = $( this );
-                if ( !records.some( rec => $rec.attr( 'data-id' ) === rec.instanceId ) ) {
-                    $rec.next( '.msg' ).addBack().remove();
-                }
-            } );
-
-            records.forEach( record => {
-                // if there is at least one record not marked as draft
-                if ( !record.draft ) {
-                    finalRecordPresent = true;
-                    $uploadButton.prop( 'disabled', false );
-                }
-                $li = uploadProgress._getLi( record.instanceId );
-                // Add the record to the list if it doesn't exist already
-                // Any submission error messages and class will remain present for existing records.
-                if ( $li.length === 0 ) {
-                    $li = $( '<li class="record-list__records__record" />' )
-                        .attr( 'data-id', record.instanceId )
-                        .appendTo( $recordList );
-                }
-                // add or update properties
-                $li.text( record.name )
-                    .attr( 'data-draft', !!record.draft );
-            } );
-        } );
+        records.forEach((record) => {
+            // if there is at least one record not marked as draft
+            if (!record.draft) {
+                finalRecordPresent = true;
+                $uploadButton.prop('disabled', false);
+            }
+            $li = uploadProgress._getLi(record.instanceId);
+            // Add the record to the list if it doesn't exist already
+            // Any submission error messages and class will remain present for existing records.
+            if ($li.length === 0) {
+                $li = $('<li class="record-list__records__record" />')
+                    .attr('data-id', record.instanceId)
+                    .appendTo($recordList);
+            }
+            // add or update properties
+            $li.text(record.name).attr('data-draft', !!record.draft);
+        });
+    });
 }
 
 /**
@@ -448,13 +508,12 @@ function _updateRecordList() {
  * @return {Promise<undefined>} a Promise that resolves with undefined
  */
 function flush() {
-    return store.flushTable( 'records' )
-        .then( () => store.flushTable( 'files' ) )
-        .then( () => {
-            console.log( 'Done! The record store is empty now.' );
-
-            return;
-        } );
+    return store
+        .flushTable('records')
+        .then(() => store.flushTable('files'))
+        .then(() => {
+            console.log('Done! The record store is empty now.');
+        });
 }
 
 export default {
@@ -471,5 +530,5 @@ export default {
     getCounterValue,
     setActive,
     uploadQueue,
-    exportToZip
+    exportToZip,
 };

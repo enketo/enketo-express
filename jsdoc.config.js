@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
     opts: {
         encoding: 'utf8',
@@ -15,16 +13,11 @@ module.exports = {
         */
         // package: 'package.json',
         readme: 'README.md',
-        template: 'node_modules/docdash'
+        template: 'node_modules/docdash',
     },
-    plugins: [ 'jsdoc-ts-utils', 'plugins/markdown' ],
+    plugins: ['jsdoc-ts-utils', 'plugins/markdown'],
     source: {
-        include: [
-            'app/',
-            'config/',
-            'tools/',
-            './README.md'
-        ]
+        include: ['app/', 'config/', 'tools/', './README.md'],
     },
     templates: {
         cleverLinks: true,
@@ -32,18 +25,19 @@ module.exports = {
         default: {
             outputSourceFiles: true,
             includeDate: false,
-            useLongnameInNav: true
-        }
+            useLongnameInNav: true,
+        },
     },
     markdown: {
-        idInHeadings: true
+        idInHeadings: true,
     },
     docdash: {
         static: true,
         sort: true,
         meta: {
             title: 'Enketo Express',
-            description: 'The full-fledged Enketo web application for the ODK ecosystem'
+            description:
+                'The full-fledged Enketo web application for the ODK ecosystem',
         },
         search: true,
         collapse: false,
@@ -56,14 +50,14 @@ module.exports = {
                 href: 'https://github.com/enketo/enketo-express',
                 target: '_blank',
                 class: 'menu-item',
-                id: 'repository'
+                id: 'repository',
             },
             'Change log': {
                 href: 'https://github.com/enketo/enketo-express/blob/master/CHANGELOG.md',
                 target: '_blank',
                 class: 'menu-item',
-                id: 'change-log'
-            }
+                id: 'change-log',
+            },
         },
         sectionOrder: [
             'Tutorials',
@@ -73,8 +67,8 @@ module.exports = {
             'Events',
             'Namespaces',
             'Mixins',
-            'Interfaces'
-        ]
+            'Interfaces',
+        ],
     },
     tsUtils: {
         /**

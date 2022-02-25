@@ -1,6 +1,5 @@
 ### Requirements
 
-
 ### 1. Update translation keys from code
 
 The translation keys in [/locales/src/en/translation.json](https://github.com/enketo/enketo-express/blob/master/locales/src/en/translation.json) will be continuously updated with `grunt develop`. You can also do this manually by running [BROKEN TBC].
@@ -19,4 +18,4 @@ For missing keys the English translation will be used as a fallback, which makes
 
 ### 5. Update translations in repo
 
-When the translations are ready, download each from Transifex and update /locales/src/**/translation.json
+When the translations are ready, download each from Transifex and update /locales/src/\*\*/translation.json

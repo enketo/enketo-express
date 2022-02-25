@@ -140,7 +140,7 @@
     }
 }
 
-.pages~.form-footer {
+.pages ~ .form-footer {
     .form-footer__content {
         &__main-controls {
             margin-bottom: 0;
@@ -163,12 +163,12 @@
         width: auto;
     }
 
-    .pages~.form-footer .enketo-power {
+    .pages ~ .form-footer .enketo-power {
         bottom: -95px;
     }
 }
 
-.touch .form-footer .draft .option-wrapper>label {
+.touch .form-footer .draft .option-wrapper > label {
     border: none !important;
     width: 100% !important;
 }

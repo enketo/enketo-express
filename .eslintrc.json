@@ -2,16 +2,13 @@
     "env": {
         "es6": true,
         "browser": true,
-        "commonjs": true
+        "node": false
     },
     "globals": {
         "Promise": true
     },
-    "extends": "eslint:recommended",
-    "plugins": [
-        "jsdoc",
-        "unicorn"
-    ],
+    "extends": ["airbnb", "prettier"],
+    "plugins": ["chai-friendly", "jsdoc", "prettier", "unicorn"],
     "parserOptions": {
         "sourceType": "module",
         "ecmaVersion": 2020
@@ -24,55 +21,139 @@
         }
     },
     "rules": {
-        "indent": ["warn", 4, { "SwitchCase": 1 }],
-        "linebreak-style": ["error", "unix"],
-        "quotes": ["error", "single"],
-        "semi": ["error", "always"],
-        "no-console": ["warn", { "allow": ["error", "deprecate", "warn"] }],
-        "eol-last": ["error", "always"],
-        "padding-line-between-statements": ["warn", { "blankLine": "always", "prev": "*", "next": "return" }],
-        "space-before-function-paren": ["error", {
-            "anonymous": "never",
-            "asyncArrow": "always",
-            "named": "never"
-        }],
-        "space-in-parens": ["error", "always"],
-        "space-infix-ops": "error",
-        "array-bracket-spacing": ["error", "always"],
-        "no-implied-eval": "error",
-        "object-curly-spacing": ["error", "always"],
-        "jsdoc/check-examples": 1,
-        "jsdoc/check-param-names": 1,
-        "jsdoc/check-tag-names": 1,
-        "jsdoc/check-types": 1,
-        "jsdoc/newline-after-description": ["warn", "always"],
-        "jsdoc/no-undefined-types": 1,
-        "jsdoc/require-description": 0,
-        "jsdoc/require-description-complete-sentence": 0,
-        "jsdoc/require-example": 0,
-        "jsdoc/require-hyphen-before-param-description": 1,
-        "jsdoc/require-param": 1,
-        "jsdoc/require-param-description": 1,
-        "jsdoc/require-param-name": 1,
-        "jsdoc/require-param-type": 1,
-        "jsdoc/require-returns-check": 1,
-        "jsdoc/require-returns-description": 1,
-        "jsdoc/require-returns-type": 1,
-        "jsdoc/valid-types": 1,
-        "unicorn/expiring-todo-comments": "error"
+        "prettier/prettier": "error",
+        "import/no-unresolved": [
+            "error",
+            {
+                "ignore": [
+                    "enketo/config",
+                    "enketo/widgets",
+                    "enketo/translator",
+                    "enketo/dialog",
+                    "enketo/file-manager"
+                ]
+            }
+        ],
+
+        "react/destructuring-assignment": "off",
+
+        "array-callback-return": "warn",
+        "consistent-return": "warn",
+        "global-require": "warn",
+        "import/order": "warn",
+        "import/extensions": "warn",
+        "no-param-reassign": "warn",
+        "no-plusplus": "warn",
+        "no-promise-executor-return": "warn",
+        "no-restricted-globals": "warn",
+        "no-restricted-syntax": "warn",
+        "no-return-assign": "warn",
+        "no-shadow": "warn",
+        "no-underscore-dangle": "warn",
+        "no-unused-expressions": "warn",
+        "no-use-before-define": "warn",
+        "prefer-const": "warn",
+        "no-cond-assign": "warn",
+        "no-nested-ternary": "warn",
+        "prefer-destructuring": "warn",
+        "import/no-dynamic-require": "warn",
+        "prefer-promise-reject-errors": "warn"
     },
     "overrides": [
         {
+            "files": ["**/*.md"],
+            "parser": "markdown-eslint-parser",
+            "rules": {
+                "prettier/prettier": ["error", { "parser": "markdown" }]
+            }
+        },
+
+        {
+            "files": ["app.js", "app/**/*.js", "!app/views/**/*.js"],
+            "env": {
+                "browser": false,
+                "node": true
+            },
+            "ecmaFeatures": {
+                "modules": false
+            }
+        },
+
+        {
             "files": [
+                "Gruntfile.js",
                 "config/build.js",
+                "scripts/build.js",
                 "test/client/config/karma.conf.js",
-                "scripts/build.js"
+                "test/server/**/*.js",
+                "tools/**/*.js"
             ],
             "env": {
                 "browser": false,
                 "node": true
+            },
+            "ecmaFeatures": {
+                "modules": false
+            },
+            "rules": {
+                "import/no-extraneous-dependencies": [
+                    "error",
+                    { "devDependencies": true }
+                ]
+            }
+        },
+
+        {
+            "files": [
+                "app/views/**/*.js",
+                "public/js/src/**/*.js",
+                "test/client/**/*.js"
+            ],
+            "env": {
+                "browser": true,
+                "node": false
+            }
+        },
+
+        {
+            "files": ["public/js/src/module/offline-app-worker-partial.js"],
+            "globals": {
+                "self": true,
+                "version": true,
+                "resources": true
+            }
+        },
+
+        {
+            "files": ["test/client/**/*.js"],
+            "env": {
+                "mocha": true
+            },
+            "globals": {
+                "expect": true,
+                "sinon": true
+            },
+            "rules": {
+                "no-console": 0,
+                "import/no-extraneous-dependencies": [
+                    "error",
+                    { "devDependencies": true }
+                ]
+            }
+        },
+
+        {
+            "files": ["test/server/**/*.js"],
+            "env": {
+                "mocha": true
+            },
+            "globals": {
+                "expect": true,
+                "sinon": true
+            },
+            "rules": {
+                "no-console": 0
             }
         }
     ]
 }
-

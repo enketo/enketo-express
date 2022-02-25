@@ -77,13 +77,16 @@ $offline-color: #d15200;
     .pages-toc {
         order: 70;
 
-        label[for="toc-toggle"] {
-            background: repeating-linear-gradient(black 2px, black 5px, transparent 5px, transparent 12px);
+        label[for='toc-toggle'] {
+            background: repeating-linear-gradient(
+                black 2px,
+                black 5px,
+                transparent 5px,
+                transparent 12px
+            );
         }
     }
 }
-
-
 
 .form-progress {
     position: fixed;
@@ -101,7 +104,7 @@ $offline-color: #d15200;
     @include transition-slow;
 }
 
-[dir="rtl"] {
+[dir='rtl'] {
     .form-header {
         flex-direction: row-reverse;
     }
@@ -126,7 +129,7 @@ $offline-color: #d15200;
         width: 34px;
         height: 34px;
         background-color: $offline-color;
-        background-image: url($base-path + "/x/images/offline-enabled.png");
+        background-image: url($base-path + '/x/images/offline-enabled.png');
         background-repeat: no-repeat;
         opacity: 1;
 
@@ -213,7 +216,9 @@ $offline-color: #d15200;
 
 @media screen and (max-width: $main-breakpoint) {
     .form-header {
-        @include flex-wrap(wrap); // only content of header has top and bottom padding/margin
+        @include flex-wrap(
+            wrap
+        ); // only content of header has top and bottom padding/margin
         // This ensures that no space is taking up when the header is completely empty,
         // i.e. no brand/languages/reason-for-change/fs-feedback
         padding: 0 16px 0 16px;

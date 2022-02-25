@@ -22,7 +22,7 @@
                     "background": {
                         "activeOnStart": true,
                         "beginsPattern": "karma:watch",
-                        "endsPattern": "karma:watch",
+                        "endsPattern": "karma:watch"
                     }
                 }
             ]

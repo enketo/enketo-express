@@ -3,7 +3,8 @@
 
 @font-face {
     font-family: 'FontAwesome';
-    src: url("#{$fa-font-path}/fontawesome-webfont.woff?v=#{$fa-version}") format("woff");
+    src: url('#{$fa-font-path}/fontawesome-webfont.woff?v=#{$fa-version}')
+        format('woff');
     font-weight: normal;
     font-style: normal;
 }

@@ -13,7 +13,7 @@ It is recommended to **immediately upgrade** to version 1.29.2 to avoid creating
 
 If you have user reports of forms that were affected by this bug, it is not easy to recover functionality for these forms without re-uploading the form to KoBo/Ona/Aggregate with a new FormID.
 
-For this reason, we developed a tool that could be used to remove duplicates from Enketo's database. After this is done, the next time the user **clicks the Enketo/Webform button** (i.e. a new API call is made), a new non-duplicate webform URL will be created or the old webform URL will be automatically 'healed'. 
+For this reason, we developed a tool that could be used to remove duplicates from Enketo's database. After this is done, the next time the user **clicks the Enketo/Webform button** (i.e. a new API call is made), a new non-duplicate webform URL will be created or the old webform URL will be automatically 'healed'.
 
 If no user reported problems on your server, you could decide to skip these steps. Nevertheless, it would probably be interesting to run at least step #3.
 

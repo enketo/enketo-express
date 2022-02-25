@@ -2,7 +2,7 @@ When setting the following in config.json, Enketo will add 2 new attributes to r
 
 ```json
 {
-    "repeat ordinals" : true
+    "repeat ordinals": true
 }
 ```
 

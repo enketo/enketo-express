@@ -1,61 +1,68 @@
+import { FormModel } from 'enketo-core/src/js/form-model';
 import gui from './module/gui';
 import controller from './module/controller-webform';
 import settings from './module/settings';
 import connection from './module/connection';
-import { FormModel } from 'enketo-core/src/js/form-model';
-import { init as initTranslator, t, localize, loadTranslation } from './module/translator';
+import {
+    init as initTranslator,
+    t,
+    localize,
+    loadTranslation,
+} from './module/translator';
 import store from './module/store';
 import utils from './module/utils';
 import events from './module/event';
 import formCache from './module/form-cache';
 import applicationCache from './module/application-cache';
 
-const loader = document.querySelector( '.main-loader' );
-const formheader = document.querySelector( '.main > .paper > .form-header' );
+const loader = document.querySelector('.main-loader');
+const formheader = document.querySelector('.main > .paper > .form-header');
 const survey = {
     enketoId: settings.enketoId,
     xformUrl: settings.xformUrl,
-    defaults: settings.defaults
+    defaults: settings.defaults,
 };
 const range = document.createRange();
 
 _setEmergencyHandlers();
 
-if ( settings.offline ) {
-    console.log( 'App in offline-capable mode.' );
+if (settings.offline) {
+    console.log('App in offline-capable mode.');
     delete survey.xformUrl;
     _setAppCacheEventHandlers();
-    applicationCache.init( survey )
-        .then( initTranslator )
-        .then( formCache.init )
-        .then( _addBranding )
-        .then( _swapTheme )
-        .then( formCache.updateMaxSubmissionSize )
-        .then ( _updateMaxSizeSetting )
-        .then( _init )
-        .then( formParts => {
-            formParts.languages.forEach( loadTranslation );
+    applicationCache
+        .init(survey)
+        .then(initTranslator)
+        .then(formCache.init)
+        .then(_addBranding)
+        .then(_swapTheme)
+        .then(formCache.updateMaxSubmissionSize)
+        .then(_updateMaxSizeSetting)
+        .then(_init)
+        .then((formParts) => {
+            formParts.languages.forEach(loadTranslation);
 
             return formParts;
-        } )
-        .then( formCache.updateMedia )
-        .then( _setFormCacheEventHandlers )
-        .catch( _showErrorOrAuthenticate );
+        })
+        .then(formCache.updateMedia)
+        .then(_setFormCacheEventHandlers)
+        .catch(_showErrorOrAuthenticate);
 } else {
-    console.log( 'App in online-only mode.' );
-    store.init( { failSilently: true } )
-        .then( () => initTranslator( survey ) )
-        .then( connection.getFormParts )
-        .then( _swapTheme )
-        .then( _addBranding )
-        .then ( connection.getMaximumSubmissionSize )
-        .then( _updateMaxSizeSetting )
-        .then( _init )
-        .catch( _showErrorOrAuthenticate );
+    console.log('App in online-only mode.');
+    store
+        .init({ failSilently: true })
+        .then(() => initTranslator(survey))
+        .then(connection.getFormParts)
+        .then(_swapTheme)
+        .then(_addBranding)
+        .then(connection.getMaximumSubmissionSize)
+        .then(_updateMaxSizeSetting)
+        .then(_init)
+        .catch(_showErrorOrAuthenticate);
 }
 
-function _updateMaxSizeSetting( survey ) {
-    if ( survey.maxSize ) {
+function _updateMaxSizeSetting(survey) {
+    if (survey.maxSize) {
         // overwrite default max size
         settings.maxSize = survey.maxSize;
     }
@@ -63,44 +70,53 @@ function _updateMaxSizeSetting( survey ) {
     return survey;
 }
 
-function _showErrorOrAuthenticate( error ) {
-    error = ( typeof error === 'string' ) ? new Error( error ) : error;
-    loader.classList.add( 'fail' );
+function _showErrorOrAuthenticate(error) {
+    error = typeof error === 'string' ? new Error(error) : error;
+    loader.classList.add('fail');
 
-    if ( error.status === 401 ) {
-        window.location.href = `${settings.loginUrl}?return_url=${encodeURIComponent( window.location.href )}`;
+    if (error.status === 401) {
+        window.location.href = `${
+            settings.loginUrl
+        }?return_url=${encodeURIComponent(window.location.href)}`;
     } else {
-        if ( !Array.isArray( error ) ) {
-            error = [ error.message  || t( 'error.unknown' ) ];
+        if (!Array.isArray(error)) {
+            error = [error.message || t('error.unknown')];
         }
 
-        gui.alertLoadErrors( error,  t( 'alert.loaderror.entryadvice' ) );
+        gui.alertLoadErrors(error, t('alert.loaderror.entryadvice'));
     }
 }
 
 function _setAppCacheEventHandlers() {
-
-    document.addEventListener( events.OfflineLaunchCapable().type, event => {
-        const capable = event.detail.capable;
-        gui.updateStatus.offlineCapable( capable );
+    document.addEventListener(events.OfflineLaunchCapable().type, (event) => {
+        const { capable } = event.detail;
+        gui.updateStatus.offlineCapable(capable);
 
         const scriptUrl = applicationCache.serviceWorkerScriptUrl;
-        if ( scriptUrl ) {
-            connection.getServiceWorkerVersion( scriptUrl )
-                .then( gui.updateStatus.applicationVersion );
+        if (scriptUrl) {
+            connection
+                .getServiceWorkerVersion(scriptUrl)
+                .then(gui.updateStatus.applicationVersion);
         }
+    });
 
-    } );
-
-    document.addEventListener( events.ApplicationUpdated().type, () => {
-        gui.feedback( t( 'alert.appupdated.msg' ), 20, t( 'alert.appupdated.heading' ) );
-    } );
+    document.addEventListener(events.ApplicationUpdated().type, () => {
+        gui.feedback(
+            t('alert.appupdated.msg'),
+            20,
+            t('alert.appupdated.heading')
+        );
+    });
 }
 
-function _setFormCacheEventHandlers( survey ) {
-    document.addEventListener( events.FormUpdated().type, () => {
-        gui.feedback( t( 'alert.formupdated.msg' ), 20, t( 'alert.formupdated.heading' ) );
-    } );
+function _setFormCacheEventHandlers(survey) {
+    document.addEventListener(events.FormUpdated().type, () => {
+        gui.feedback(
+            t('alert.formupdated.msg'),
+            20,
+            t('alert.formupdated.heading')
+        );
+    });
 
     return survey;
 }
@@ -109,28 +125,33 @@ function _setFormCacheEventHandlers( survey ) {
  * Advanced/emergency handlers that should always be activated even if form loading fails.
  */
 function _setEmergencyHandlers() {
-    const flushBtn = document.querySelector( '.side-slider__advanced__button.flush-db' );
+    const flushBtn = document.querySelector(
+        '.side-slider__advanced__button.flush-db'
+    );
 
-    if ( flushBtn ) {
-        flushBtn.addEventListener( 'click', () => {
-            gui.confirm( {
-                msg: t( 'confirm.deleteall.msg' ),
-                heading: t( 'confirm.deleteall.heading' )
-            }, {
-                posButton: t( 'confirm.deleteall.posButton' ),
-            } )
-                .then( confirmed => {
-                    if ( !confirmed ) {
-                        throw new Error( 'Cancelled by user' );
+    if (flushBtn) {
+        flushBtn.addEventListener('click', () => {
+            gui.confirm(
+                {
+                    msg: t('confirm.deleteall.msg'),
+                    heading: t('confirm.deleteall.heading'),
+                },
+                {
+                    posButton: t('confirm.deleteall.posButton'),
+                }
+            )
+                .then((confirmed) => {
+                    if (!confirmed) {
+                        throw new Error('Cancelled by user');
                     }
 
                     return store.flush();
-                } )
-                .then( () => {
+                })
+                .then(() => {
                     location.reload();
-                } )
-                .catch( () => {} );
-        } );
+                })
+                .catch(() => {});
+        });
     }
 }
 
@@ -139,15 +160,20 @@ function _setEmergencyHandlers() {
  *
  * @param { object } survey - [description]
  */
-function _addBranding( survey ) {
-    const brandImg = document.querySelector( '.form-header__branding img' );
-    const attribute = ( settings.offline ) ? 'data-offline-src' : 'src';
+function _addBranding(survey) {
+    const brandImg = document.querySelector('.form-header__branding img');
+    const attribute = settings.offline ? 'data-offline-src' : 'src';
 
-    if ( brandImg && survey.branding && survey.branding.source && brandImg.src !== survey.branding.source ) {
+    if (
+        brandImg &&
+        survey.branding &&
+        survey.branding.source &&
+        brandImg.src !== survey.branding.source
+    ) {
         brandImg.src = '';
-        brandImg.setAttribute( attribute, survey.branding.source );
+        brandImg.setAttribute(attribute, survey.branding.source);
     }
-    brandImg.classList.remove( 'hide' );
+    brandImg.classList.remove('hide');
 
     return survey;
 }
@@ -158,28 +184,29 @@ function _addBranding( survey ) {
  * @param  { object } survey - [description]
  * @return { object }        [description]
  */
-function _swapTheme( survey ) {
-    if ( survey.form && survey.model ) {
-        return gui.swapTheme( survey );
-    } else {
-        return Promise.reject( new Error( 'Received form incomplete' ) );
+function _swapTheme(survey) {
+    if (survey.form && survey.model) {
+        return gui.swapTheme(survey);
     }
+    return Promise.reject(new Error('Received form incomplete'));
 }
 
-function _prepareInstance( modelStr, defaults ) {
+function _prepareInstance(modelStr, defaults) {
     let model;
     let init;
     let existingInstance = null;
 
-    for ( const path in defaults ) {
-        if ( Object.prototype.hasOwnProperty.call( defaults, path ) ) {
-            model = model || new FormModel( modelStr, {
-                full: false
-            } );
+    for (const path in defaults) {
+        if (Object.prototype.hasOwnProperty.call(defaults, path)) {
+            model =
+                model ||
+                new FormModel(modelStr, {
+                    full: false,
+                });
             init = init || model.init();
-            if ( Object.prototype.hasOwnProperty.call( defaults, path ) ) {
+            if (Object.prototype.hasOwnProperty.call(defaults, path)) {
                 // if this fails, the FormModel will output a console error and ignore the instruction
-                model.node( path ).setVal( defaults[ path ] );
+                model.node(path).setVal(defaults[path]);
             }
             // TODO: would be good to not include nodes that weren't in the defaults parameter
             // HOWEVER, that would also set number of repeats to 0, which may be undesired
@@ -191,27 +218,29 @@ function _prepareInstance( modelStr, defaults ) {
     return existingInstance;
 }
 
-function _init( formParts ) {
-    const formFragment = range.createContextualFragment( formParts.form );
-    formheader.after( formFragment );
-    const formEl = document.querySelector( 'form.or' );
+function _init(formParts) {
+    const formFragment = range.createContextualFragment(formParts.form);
+    formheader.after(formFragment);
+    const formEl = document.querySelector('form.or');
 
-    return controller.init( formEl, {
-        modelStr: formParts.model,
-        instanceStr: _prepareInstance( formParts.model, settings.defaults ),
-        external: formParts.externalData,
-        survey: formParts,
-    } )
-        .then( form => {
+    return controller
+        .init(formEl, {
+            modelStr: formParts.model,
+            instanceStr: _prepareInstance(formParts.model, settings.defaults),
+            external: formParts.externalData,
+            survey: formParts,
+        })
+        .then((form) => {
             formParts.languages = form.languages;
 
-            document.querySelector( 'head>title' ).textContent = utils.getTitleFromFormStr( formParts.form );
-            if ( settings.print ) {
+            document.querySelector('head>title').textContent =
+                utils.getTitleFromFormStr(formParts.form);
+            if (settings.print) {
                 gui.applyPrintStyle();
             }
             // after widgets have been initialized, localize all data-i18n elements
-            localize( formEl );
+            localize(formEl);
 
             return formParts;
-        } );
+        });
 }

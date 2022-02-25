@@ -1,0 +1,9 @@
+# Ignore artifacts:
+
+.nyc*
+public/js/build/*
+*/offline-app-worker-partial.js
+*/node_modules/*
+docs/*
+test-coverage/*
+coverage.shield.badge.md

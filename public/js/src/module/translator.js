@@ -1,7 +1,8 @@
-import settings from './settings';
 import i18next from 'i18next';
 import HttpApi from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import settings from './settings';
+
 const LOADPATH = `${settings.basePath}${settings.offlinePath}/locales/build/__lng__/translation-combined.json`;
 const LANGEXTRACT = /^[a-z]{2,3}/;
 const range = document.createRange();
@@ -10,11 +11,13 @@ const range = document.createRange();
 const htmlParagraphsPostProcessor = {
     type: 'postProcessor',
     name: 'htmlParagraphsPostProcessor',
-    process( value ) {
-        const paragraphs = value.split( '\n' );
+    process(value) {
+        const paragraphs = value.split('\n');
 
-        return ( paragraphs.length > 1 ) ? `<p>${paragraphs.join( '</p><p>' )}</p>` : value;
-    }
+        return paragraphs.length > 1
+            ? `<p>${paragraphs.join('</p><p>')}</p>`
+            : value;
+    },
 };
 
 /**
@@ -23,43 +26,45 @@ const htmlParagraphsPostProcessor = {
  * @param  {=*?} something - can be anything
  * @return { Promise }       promise resolving the original something argument
  */
-const init = something => initialize
-    .then( () => something );
+const init = (something) => initialize.then(() => something);
 
-const initialize = new Promise( ( resolve, reject ) => {
+const initialize = new Promise((resolve, reject) => {
     i18next
-        .use( HttpApi )
-        .use( LanguageDetector )
-        .use( htmlParagraphsPostProcessor )
-        .init( {
-            whitelist: settings.languagesSupported,
-            fallbackLng: 'en',
-            joinArrays: '\n',
-            backend: {
-                loadPath: LOADPATH,
+        .use(HttpApi)
+        .use(LanguageDetector)
+        .use(htmlParagraphsPostProcessor)
+        .init(
+            {
+                whitelist: settings.languagesSupported,
+                fallbackLng: 'en',
+                joinArrays: '\n',
+                backend: {
+                    loadPath: LOADPATH,
+                },
+                load: 'languageOnly',
+                lowerCaseLng: true,
+                detection: {
+                    order: ['querystring', 'navigator'],
+                    lookupQuerystring: 'lang',
+                    caches: false,
+                },
+                interpolation: {
+                    prefix: '__',
+                    suffix: '__',
+                },
+                postProcess: ['htmlParagraphsPostProcessor'],
             },
-            load: 'languageOnly',
-            lowerCaseLng: true,
-            detection: {
-                order: [ 'querystring', 'navigator' ],
-                lookupQuerystring: 'lang',
-                caches: false
-            },
-            interpolation: {
-                prefix: '__',
-                suffix: '__'
-            },
-            postProcess: [ 'htmlParagraphsPostProcessor' ]
-        }, error => {
-            if ( error ) {
-                reject( error );
-            } else {
-                resolve();
+            (error) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
             }
-        } );
-} );
+        );
+});
 
-const t = ( key, options ) => i18next.t( key, options );
+const t = (key, options) => i18next.t(key, options);
 
 /**
  * Localizes the descendents of an element based on the data-i18n attribute.
@@ -70,54 +75,53 @@ const t = ( key, options ) => i18next.t( key, options );
  * @param {Element} container - The element to localize.
  * @param { string } [lng] - The 2-or-3-character IANA subtag.
  */
-const localize = ( container, lng ) => {
+const localize = (container, lng) => {
     const cache = {};
-    const list = container.querySelectorAll( '[data-i18n]' );
+    const list = container.querySelectorAll('[data-i18n]');
 
     return Promise.resolve()
-        .then( () => {
-            if ( lng ) {
-                return i18next.changeLanguage( lng );
+        .then(() => {
+            if (lng) {
+                return i18next.changeLanguage(lng);
             }
-        } )
-        .then( () => {
-            list.forEach( el => {
+        })
+        .then(() => {
+            list.forEach((el) => {
                 const key = el.dataset.i18n;
-                if ( key ) {
-                    if ( !cache[ key ] ) {
+                if (key) {
+                    if (!cache[key]) {
                         let options = {};
                         // quick hack for __icon__ replacement
-                        if ( el.dataset.i18nIcon ) {
+                        if (el.dataset.i18nIcon) {
                             options = {
                                 icon: `<span class="icon ${el.dataset.i18nIcon}"> </span>`,
-                                interpolation: { escapeValue: false }
+                                interpolation: { escapeValue: false },
                             };
                         }
-                        if ( el.dataset.i18nNumber ){
+                        if (el.dataset.i18nNumber) {
                             options = {
-                                number: el.dataset.i18nNumber
+                                number: el.dataset.i18nNumber,
                             };
                         }
-                        cache[ key ] = t( key, options );
+                        cache[key] = t(key, options);
                     }
                     // This assumes that if the element has a placeholder, that's the thing that
                     // needs to be localized, since placeholders are only used on form controls,
                     // and the textContent of a form control is never translatable.
-                    if ( el.placeholder ) {
-                        el.placeholder = cache[ key ];
-                    } else if ( el.dataset.i18nIcon ) {
+                    if (el.placeholder) {
+                        el.placeholder = cache[key];
+                    } else if (el.dataset.i18nIcon) {
                         el.textContent = '';
-                        el.append( range.createContextualFragment( cache[ key ] ) );
+                        el.append(range.createContextualFragment(cache[key]));
                     } else {
-                        el.textContent = cache[ key ];
+                        el.textContent = cache[key];
                     }
-
                 }
-            } );
+            });
 
             // return current language directionality
             return i18next.dir();
-        } );
+        });
 };
 
 /**
@@ -125,24 +129,24 @@ const localize = ( container, lng ) => {
  *
  * @param  { string } lang - 2-character IANA language subtag
  */
-const loadTranslation = lang => {
-    if ( lang ) {
-        console.log( `loading translations for ${lang}` );
-        fetch( LOADPATH.replace( '__lng__', lang ) );
+const loadTranslation = (lang) => {
+    if (lang) {
+        console.log(`loading translations for ${lang}`);
+        fetch(LOADPATH.replace('__lng__', lang));
         // Do nothing. It is now cached. Wonderful.
     }
 };
 
 const getCurrentUiLanguage = () => {
-    const matches = i18next.language.match( LANGEXTRACT );
+    const matches = i18next.language.match(LANGEXTRACT);
 
-    return matches.length ? matches[ 0 ] : null;
+    return matches.length ? matches[0] : null;
 };
 
-const getBrowserLanguage = ( ) => {
-    const matches = navigator.language.match( LANGEXTRACT );
+const getBrowserLanguage = () => {
+    const matches = navigator.language.match(LANGEXTRACT);
 
-    return matches.length ? matches[ 0 ] : null;
+    return matches.length ? matches[0] : null;
 };
 
 export {
@@ -151,7 +155,7 @@ export {
     localize,
     loadTranslation,
     getCurrentUiLanguage,
-    getBrowserLanguage
+    getBrowserLanguage,
 };
 
 /**
