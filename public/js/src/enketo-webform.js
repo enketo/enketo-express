@@ -52,7 +52,12 @@ if (settings.offline) {
     store
         .init({ failSilently: true })
         .then(() => initTranslator(survey))
-        .then(connection.getFormParts)
+        .then((props) =>
+            connection.getFormParts({
+                ...props,
+                isPreview: settings.type === 'preview',
+            })
+        )
         .then(_swapTheme)
         .then(_addBranding)
         .then(connection.getMaximumSubmissionSize)

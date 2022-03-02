@@ -19,7 +19,7 @@ export const LAST_SAVED_VIRTUAL_ENDPOINT = 'jr://instance/last-saved';
 const hasLastSavedInstance = (survey) =>
     Array.isArray(survey.externalData) &&
     survey.externalData.some(
-        (item) => item.src === LAST_SAVED_VIRTUAL_ENDPOINT
+        (item) => item?.src === LAST_SAVED_VIRTUAL_ENDPOINT
     );
 
 /**
@@ -98,7 +98,7 @@ export const populateLastSavedInstances = (survey, lastSavedRecord) => {
     );
 
     const externalData = survey.externalData.map((item) => {
-        if (item.src === LAST_SAVED_VIRTUAL_ENDPOINT) {
+        if (item?.src === LAST_SAVED_VIRTUAL_ENDPOINT) {
             return { ...item, xml: lastSavedInstance };
         }
 

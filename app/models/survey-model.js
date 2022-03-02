@@ -73,7 +73,7 @@ if (process.env.NODE_ENV === 'test') {
  * @property { string } [cookie]
  * @property { SurveyCredentials } [credentials]
  * @property { string } [customParam]
- * @property { SurveyExternalData[] } [externalData]
+ * @property { Array<SurveyExternalData | undefined> } [externalData]
  * @property { string } [form]
  * @property { string } [formHash]
  * @property { EnketoRecord } [instance]

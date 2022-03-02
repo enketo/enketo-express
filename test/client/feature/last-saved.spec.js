@@ -1045,6 +1045,34 @@ describe('Support for jr://instance/last-saved endpoint', () => {
             expect(textContent).to.equal(defaultValue);
         });
 
+        it('ignores missing external data', async () => {
+            const defaultValue = 'default value';
+            const survey = {
+                ...surveyA,
+                externalData: [
+                    {
+                        id: 'last-saved',
+                        src: LAST_SAVED_VIRTUAL_ENDPOINT,
+                    },
+                    undefined,
+                    null,
+                ],
+                model: `<model>
+                    <instance>
+                        <something>${defaultValue}</something>
+                    </instance>
+                </model>`,
+            };
+            const { externalData } = populateLastSavedInstances(
+                survey,
+                recordA
+            );
+            const [lastSaved] = externalData;
+            const { textContent } = lastSaved.xml.querySelector('something');
+
+            expect(textContent).to.equal(defaultValue);
+        });
+
         it('does not attempt to set the last saved record', async () => {
             await setLastSavedRecord(surveyA, recordA);
 
