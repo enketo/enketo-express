@@ -125,6 +125,23 @@ app.use((req, res, next) => {
     next();
 });
 
+// set security headers
+app.use((req, res, next) => {
+    const hsts = req.app.get('hsts');
+    if (hsts) {
+        const directives = [hsts.seconds];
+        if (hsts.preload) {
+            directives.push("preload");
+        }
+        if (hsts["include subdomains"]) {
+            directives.push("includeSubDomains");
+        }
+        res.append('Strict-Transport-Security', directives.join('; '));
+    }
+    next();
+});
+
+
 // load controllers (including their routers)
 fs.readdirSync(controllersPath).forEach((file) => {
     if (file.indexOf('-controller.js') >= 0) {
