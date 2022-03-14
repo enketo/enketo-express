@@ -109,5 +109,6 @@
     "validate continuously": false,
     "validate page": true,
     "payload limit": "100kb",
-    "text field character limit": 2000
+    "text field character limit": 2000,
+    "excludeNonRelevant": false
 }
