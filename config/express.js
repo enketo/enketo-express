@@ -127,16 +127,24 @@ app.use((req, res, next) => {
 
 // set security headers
 app.use((req, res, next) => {
+    res.append('X-Frame-Options', 'DENY');
+    res.append('X-Content-Type-Options', 'nosniff');
     const hsts = req.app.get('hsts');
     if (hsts) {
         const directives = [hsts.seconds];
         if (hsts.preload) {
-            directives.push("preload");
+            directives.push('preload');
         }
-        if (hsts["include subdomains"]) {
-            directives.push("includeSubDomains");
+        if (hsts['include subdomains']) {
+            directives.push('includeSubDomains');
         }
         res.append('Strict-Transport-Security', directives.join('; '));
+    }
+    const defaultCSP = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+    const csp = req.app.get('csp')
+    if (csp) {
+        const cspHeader = csp['report only'] ? 'Content-Security-Policy-Report-Only' : 'Content-Security-Policy';
+        res.append(cspHeader, csp.value || defaultCSP);
     }
     next();
 });
