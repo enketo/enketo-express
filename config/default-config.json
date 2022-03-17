@@ -114,5 +114,10 @@
         "seconds": 0,
         "preload": false,
         "include subdomains": false
+    },
+    "csp": {
+        "enabled": false,
+        "report only": false,
+        "value": null
     }
 }
