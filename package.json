@@ -47,7 +47,7 @@
         "csurf": "^1.11.0",
         "db.js": "^0.15.0",
         "debug": "^4.3.3",
-        "enketo-core": "github:eyelidlessness/enketo-core#feature/849-non-relevant-exclude-from-calc",
+        "enketo-core": "github:eyelidlessness/enketo-core#c361fd399401071ecd3d4e767ca889d77dd67e8f",
         "enketo-transformer": "2.1.2",
         "evp_bytestokey": "^1.0.3",
         "express": "^4.17.3",
