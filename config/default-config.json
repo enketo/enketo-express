@@ -110,6 +110,8 @@
     "validate page": true,
     "payload limit": "100kb",
     "text field character limit": 2000,
+    "frameguard deny": false,
+    "no sniff": false,
     "hsts": {
         "seconds": 0,
         "preload": false,

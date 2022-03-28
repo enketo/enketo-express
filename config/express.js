@@ -126,28 +126,40 @@ app.use((req, res, next) => {
 });
 
 // set security headers
-app.use((req, res, next) => {
-    res.append('X-Frame-Options', 'DENY');
-    res.append('X-Content-Type-Options', 'nosniff');
-    const hsts = req.app.get('hsts');
-    if (hsts && hsts.seconds !== 0) {
-        const directives = [hsts.seconds];
-        if (hsts.preload) {
-            directives.push('preload');
-        }
-        if (hsts['include subdomains']) {
-            directives.push('includeSubDomains');
-        }
-        res.append('Strict-Transport-Security', directives.join('; '));
+const securityHeaders = {};
+if (app.get('frameguard deny') === true) {
+    securityHeaders['X-Frame-Options'] = 'DENY';
+}
+if (app.get('no sniff') === true) {
+    securityHeaders['X-Content-Type-Options'] = 'nosniff';
+}
+const hsts = app.get('hsts');
+const hstsDirectives = [];
+if (hsts && hsts.seconds !== 0) {
+    hstsDirectives.push('max-age=' + hsts.seconds);
+    if (hsts.preload) {
+        hstsDirectives.push('preload');
     }
-    const defaultCSP = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
-    const csp = req.app.get('csp')
-    if (csp && csp.enabled) {
-        const cspHeader = csp['report only'] ? 'Content-Security-Policy-Report-Only' : 'Content-Security-Policy';
-        res.append(cspHeader, csp.value || defaultCSP);
+    if (hsts['include subdomains']) {
+        hstsDirectives.push('includeSubDomains');
     }
-    next();
-});
+    securityHeaders['Strict-Transport-Security'] = hstsDirectives.join('; ');
+}
+const defaultCSP = "default-src 'self'; script-src 'self' 'unsafe-inline' data:; style-src 'self' 'unsafe-inline' data:; img-src 'self' data:"
+const csp = app.get('csp')
+if (csp && csp.enabled) {
+    const cspHeader = csp['report only'] ? 'Content-Security-Policy-Report-Only' : 'Content-Security-Policy';
+    securityHeaders[cspHeader] = csp.value || defaultCSP;
+}
+// If any security headers are set, apply middleware
+if (Object.keys(securityHeaders).length > 0) {
+    app.use((req, res, next) => {
+        for (const [header, value] of Object.entries(securityHeaders)) {
+            res.append(header, value);
+        }
+        next();
+    });
+}
 
 
 // load controllers (including their routers)

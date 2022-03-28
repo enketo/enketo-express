@@ -220,6 +220,15 @@ Sets which IPs should be filtered out to prevent SSRF attacks. See more here: ht
 -   `allowIPAddressList`: Default is `[]`. The list of allowed IP addresses. These are preferred over `denyAddressList`.
 -   `denyAddressList`: Default is `[]`. The list of denied IP addresses.
 
+
+### frameguard deny
+
+Set to `true` to set the X-Frame-Options header to DENY to help you mitigate clickjacking attacks. Default is `false`. See more here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
+
+### no sniff
+
+Set to `true` to set the X-Content-Type-Options header to nosniff. This mitigates MIME type sniffing which can cause security vulnerabilities. Default is `false`. See more here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
+
 #### hsts
 
 Set HTTP Strict Transport Security (HSTS) headers in express. Default is disabled. See more here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
