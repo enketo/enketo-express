@@ -15,8 +15,8 @@ export default {
         return this.feedbackBar.querySelectorAll('p');
     },
     setCloseHandler() {
-        document
-            .querySelector('#feedback-bar .close, .touch #feedback-bar')
+        this.feedbackBar
+            .querySelector('.close')
             .addEventListener('click', () => {
                 this.hide();
             });
