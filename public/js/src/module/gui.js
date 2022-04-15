@@ -185,12 +185,13 @@ function swapTheme(formParts) {
  *
  * @param { string }  message - message to show
  * @param {number=} duration - duration in seconds for the message to show
+ * @param {string=} duration - heading to show (on mobile only)
  */
-function feedback(message, duration) {
+function feedback(message, duration, heading = t('feedback.header')) {
     if (!support.touch) {
         feedbackBar.show(message, duration);
     } else {
-        alert(message, t('feedback.header'), 'info', duration);
+        alert(message, heading, 'info', duration);
     }
 }
 
