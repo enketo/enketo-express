@@ -1,4 +1,4 @@
-import gui from '../../public/js/src/module/gui';
+import feedbackBar from '../../public/js/src/module/feedback-bar';
 
 const parser = new DOMParser();
 
@@ -26,9 +26,7 @@ describe('Feedback bar', () => {
     });
 
     afterEach(() => {
-        // TODO: much better to call feedbackBar.remove() here (needs to be exposed)
-        feedbackBarEl.querySelectorAll('p').forEach((p) => p.remove());
-        feedbackBarEl.classList.remove(showClass);
+        feedbackBar.hide();
     });
 
     describe('in its original state', () => {
@@ -36,7 +34,7 @@ describe('Feedback bar', () => {
             expect(feedbackBarEl.classList.contains(showClass)).to.equal(false);
         });
         it('is revealed when adding a message', () => {
-            gui.feedback(message1);
+            feedbackBar.show(message1);
             const messageEls = feedbackBarEl.querySelectorAll('p');
 
             expect(feedbackBarEl.classList.contains(showClass)).to.equal(true);
@@ -47,8 +45,8 @@ describe('Feedback bar', () => {
 
     describe('when messages are already shown', () => {
         it('adds a new message before an already added message', () => {
-            gui.feedback(message1);
-            gui.feedback(message2);
+            feedbackBar.show(message1);
+            feedbackBar.show(message2);
             const messageEls = feedbackBarEl.querySelectorAll('p');
 
             expect(feedbackBarEl.classList.contains(showClass)).to.equal(true);
@@ -58,9 +56,9 @@ describe('Feedback bar', () => {
         });
 
         it('removes the oldest message when needed to never show more than 2', () => {
-            gui.feedback(message1);
-            gui.feedback(message2);
-            gui.feedback(message3);
+            feedbackBar.show(message1);
+            feedbackBar.show(message2);
+            feedbackBar.show(message3);
             const messageEls = feedbackBarEl.querySelectorAll('p');
 
             expect(feedbackBarEl.classList.contains(showClass)).to.equal(true);
@@ -73,7 +71,7 @@ describe('Feedback bar', () => {
     describe('hides messages', () => {
         it('with an optional timeout in seconds (simple)', (done) => {
             const time = 1;
-            gui.feedback(message1, time);
+            feedbackBar.show(message1, time);
 
             expect(feedbackBarEl.querySelectorAll('p').length).to.equal(1);
             expect(feedbackBarEl.classList.contains(showClass)).to.equal(true);
@@ -88,8 +86,8 @@ describe('Feedback bar', () => {
         it('with an optional individual timeout per message in seconds', (done) => {
             const time1 = 1;
             const time2 = 0.5;
-            gui.feedback(message1, time1);
-            gui.feedback(message2, time2);
+            feedbackBar.show(message1, time1);
+            feedbackBar.show(message2, time2);
 
             expect(feedbackBarEl.querySelectorAll('p').length).to.equal(2);
             expect(feedbackBarEl.classList.contains(showClass)).to.equal(true);
