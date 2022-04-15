@@ -17,8 +17,8 @@ import vexEnketoDialog from 'vex-dialog-enketo';
 let pages;
 let homeScreenGuidance;
 let updateStatus;
-let feedbackBar;
 let formTheme;
+let feedbackBar;
 
 // Customize vex
 vex.registerPlugin(vexEnketoDialog);
@@ -56,11 +56,7 @@ function init() {
 function setEventHandlers() {
     const $doc = $(document);
 
-    $doc.on('click', '#feedback-bar .close, .touch #feedback-bar', () => {
-        feedbackBar.hide();
-
-        return false;
-    });
+    feedbackBar.setCloseHandler();
 
     $doc.on('click', '.side-slider .close, .slider-overlay', () => {
         $('body').removeClass('show-side-slider');
@@ -185,6 +181,22 @@ function swapTheme(formParts) {
 }
 
 feedbackBar = {
+    get feedbackBar() {
+        if (!this._fbBar) {
+            this._fbBar = document.querySelector('#feedback-bar');
+        }
+        return this._fbBar;
+    },
+    get messages() {
+        return this.feedbackBar.querySelectorAll('p');
+    },
+    setCloseHandler() {
+        document
+            .querySelector('#feedback-bar .close, .touch #feedback-bar')
+            .addEventListener('click', () => {
+                this.hide();
+            });
+    },
     /**
      * Shows an unobtrusive feedback bar to the user.
      *
@@ -192,34 +204,33 @@ feedbackBar = {
      * @param {number=} duration - duration in seconds for the message to show
      */
     show(message, duration) {
-        let $msg;
-        const $fbBar = $('#feedback-bar');
-
-        duration = duration ? duration * 1000 : 10 * 1000;
-
-        // max 2 messages displayed
-        $fbBar.addClass('feedback-bar--show').find('p').eq(1).remove();
-
-        // if an already shown message isn't exactly the same
-        if ($fbBar.find('p').html() !== message) {
-            $msg = $('<p></p>').append(message);
-            $fbBar.prepend($msg);
+        // Max 2 messages displayed
+        this.feedbackBar.classList.add('feedback-bar--show');
+        const { messages } = this;
+        if (messages.length > 1) {
+            messages[1].remove();
         }
 
-        // automatically remove feedback after a period
-        setTimeout(() => {
-            let siblings;
-            if (typeof $msg !== 'undefined') {
-                siblings = $msg.siblings('p').length;
-                $msg.remove();
-                if (siblings === 0) {
-                    feedbackBar.hide();
-                }
+        // If an already shown message isn't exactly the same
+        if (!messages[0] || messages[0].innerHTML !== message.trim()) {
+            const newMessage = document.createElement('p');
+            newMessage.innerHTML = message.trim();
+            this.feedbackBar.prepend(newMessage);
+
+            // Automatically remove newly added feedback after a period
+            if (duration) {
+                setTimeout(() => {
+                    newMessage.remove();
+                    if (this.messages.length === 0) {
+                        this.hide();
+                    }
+                }, duration * 1000);
             }
-        }, duration);
+        }
     },
     hide() {
-        $('#feedback-bar').removeClass('feedback-bar--show').find('p').remove();
+        this.feedbackBar.classList.remove('feedback-bar--show');
+        this.messages.forEach((p) => p.remove());
     },
 };
 
