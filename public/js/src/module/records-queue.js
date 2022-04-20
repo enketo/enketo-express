@@ -15,7 +15,6 @@ import formCache from './form-cache';
 import { setLastSavedRecord } from './last-saved';
 
 let $exportButton;
-let $uploadButton;
 let $recordList;
 let $queueNumber;
 let uploadProgress;
@@ -32,7 +31,6 @@ function init() {
     // TODO: Add export feature
 
     $exportButton = $('.record-list__button-bar__button.export');
-    $uploadButton = $('.record-list__button-bar__button.upload');
     $queueNumber = $('.offline-enabled__queue-length');
 
     return _updateRecordList();
@@ -125,6 +123,27 @@ function getAutoSavedRecord() {
 }
 
 /**
+ * Updates the disabled/enabled state of the upload button.
+ */
+function _updateUploadButtonState() {
+    const uploadButtonEl = document.querySelector(
+        '.record-list__button-bar__button.upload'
+    );
+    if (!uploadButtonEl) {
+        return;
+    }
+    if (!finalRecordPresent || uploadOngoing) {
+        uploadButtonEl.disabled = true;
+    } else {
+        connection.getOnlineStatus().then((appearsOnline) => {
+            const state =
+                !appearsOnline || !finalRecordPresent || uploadOngoing;
+            uploadButtonEl.disabled = state;
+        });
+    }
+}
+
+/**
  * Updates auto-saved record
  *
  * @param { EnketoRecord } record - record object created from the current state of the form
@@ -189,10 +208,12 @@ function _setUploadIntervals() {
     setTimeout(() => {
         uploadQueue();
     }, 30 * 1000);
-    // interval to check upload queued records
+    // interval to upload queued records
     setInterval(() => {
         uploadQueue();
     }, 5 * 60 * 1000);
+    // interval to disable/enable upload button
+    setInterval(_updateUploadButtonState, 0.5 * 60 * 1000);
 }
 
 /**
@@ -211,7 +232,7 @@ function uploadQueue() {
     }
 
     uploadOngoing = true;
-    $uploadButton.prop('disabled', true);
+    _updateUploadButtonState();
 
     return connection
         .getOnlineStatus()
@@ -449,7 +470,6 @@ function _updateRecordList() {
 
     // reset the list
     $exportButton.prop('disabled', true);
-    $uploadButton.prop('disabled', true);
     $recordList = $('.record-list__records');
     finalRecordPresent = false;
 
@@ -486,7 +506,6 @@ function _updateRecordList() {
             // if there is at least one record not marked as draft
             if (!record.draft) {
                 finalRecordPresent = true;
-                $uploadButton.prop('disabled', false);
             }
             $li = uploadProgress._getLi(record.instanceId);
             // Add the record to the list if it doesn't exist already
@@ -499,6 +518,7 @@ function _updateRecordList() {
             // add or update properties
             $li.text(record.name).attr('data-draft', !!record.draft);
         });
+        _updateUploadButtonState();
     });
 }
 
