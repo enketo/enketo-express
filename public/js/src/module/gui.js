@@ -7,6 +7,7 @@ import support from 'enketo-core/src/js/support';
 import * as printHelper from 'enketo-core/src/js/print';
 import vex from 'vex-js';
 import $ from 'jquery';
+import feedbackBar from './feedback-bar';
 import settings from './settings';
 import { init as initTranslator, t } from './translator';
 import sniffer from './sniffer';
@@ -17,7 +18,6 @@ import vexEnketoDialog from 'vex-dialog-enketo';
 let pages;
 let homeScreenGuidance;
 let updateStatus;
-let feedbackBar;
 let formTheme;
 
 // Customize vex
@@ -56,11 +56,7 @@ function init() {
 function setEventHandlers() {
     const $doc = $(document);
 
-    $doc.on('click', '#feedback-bar .close, .touch #feedback-bar', () => {
-        feedbackBar.hide();
-
-        return false;
-    });
+    feedbackBar.setCloseHandler();
 
     $doc.on('click', '.side-slider .close, .slider-overlay', () => {
         $('body').removeClass('show-side-slider');
@@ -184,56 +180,18 @@ function swapTheme(formParts) {
     });
 }
 
-feedbackBar = {
-    /**
-     * Shows an unobtrusive feedback bar to the user.
-     *
-     * @param { string } message - message to show
-     * @param {number=} duration - duration in seconds for the message to show
-     */
-    show(message, duration) {
-        let $msg;
-        const $fbBar = $('#feedback-bar');
-
-        duration = duration ? duration * 1000 : 10 * 1000;
-
-        // max 2 messages displayed
-        $fbBar.addClass('feedback-bar--show').find('p').eq(1).remove();
-
-        // if an already shown message isn't exactly the same
-        if ($fbBar.find('p').html() !== message) {
-            $msg = $('<p></p>').append(message);
-            $fbBar.prepend($msg);
-        }
-
-        // automatically remove feedback after a period
-        setTimeout(() => {
-            let siblings;
-            if (typeof $msg !== 'undefined') {
-                siblings = $msg.siblings('p').length;
-                $msg.remove();
-                if (siblings === 0) {
-                    feedbackBar.hide();
-                }
-            }
-        }, duration);
-    },
-    hide() {
-        $('#feedback-bar').removeClass('feedback-bar--show').find('p').remove();
-    },
-};
-
 /**
  * Select what type of unobtrusive feedback message to show to the user.
  *
  * @param { string }  message - message to show
  * @param {number=} duration - duration in seconds for the message to show
+ * @param {string=} heading - heading to show (on mobile only)
  */
-function feedback(message, duration) {
+function feedback(message, duration, heading = t('feedback.header')) {
     if (!support.touch) {
         feedbackBar.show(message, duration);
     } else {
-        alert(message, t('feedback.header'), 'info', duration);
+        alert(message, heading, 'info', duration);
     }
 }
 
