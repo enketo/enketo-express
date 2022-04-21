@@ -51,7 +51,12 @@
         "no-shadow": "warn",
         "no-underscore-dangle": "warn",
         "no-unused-expressions": "warn",
-        "no-use-before-define": "warn",
+        "no-use-before-define": [
+            "warn",
+            {
+                "functions": false
+            }
+        ],
         "prefer-const": "warn",
         "no-cond-assign": "warn",
         "no-nested-ternary": "warn",

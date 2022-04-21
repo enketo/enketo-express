@@ -45,14 +45,6 @@ import {
  * @property { string } [message]
  */
 
-/**
- * @typedef GetFormPartsProps
- * @property { string } enketoId
- * @property { Record<string, string> } [defaults]
- * @property { string } [instanceId]
- * @property { string } [xformUrl]
- */
-
 const parser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
 const CONNECTION_URL = `${settings.basePath}/connection`;
@@ -405,6 +397,70 @@ const getTransformURL = (basePath, enketoId) => {
 };
 
 /**
+ * @typedef GetExternalDataOptions
+ * @property {boolean} [isPreview]
+ */
+
+/**
+ * @param {Survey} survey
+ * @param {Document} model
+ * @param {GetExternalDataOptions} [options]
+ * @return {Promise<SurveyExternalData[]>}
+ */
+const getExternalData = async (survey, model, options = {}) => {
+    /** @type {Array<Promise<SurveyExternalData>>} */
+    const tasks = [];
+    const externalInstances = [
+        ...model.querySelectorAll('instance[id][src]'),
+    ].map((instance) => ({
+        id: instance.id,
+        src: instance.getAttribute('src'),
+    }));
+
+    externalInstances.forEach((instance, index) => {
+        const { src } = instance;
+
+        if (src === LAST_SAVED_VIRTUAL_ENDPOINT) {
+            tasks.push(Promise.resolve(instance));
+
+            return;
+        }
+
+        const task = async () => {
+            try {
+                const xml = await getDataFile(src, survey.languageMap);
+
+                return {
+                    ...instance,
+                    xml,
+                };
+            } catch (error) {
+                tasks.splice(index, 1);
+
+                if (options.isPreview) {
+                    return;
+                }
+
+                throw error;
+            }
+        };
+
+        tasks.push(task());
+    });
+
+    return Promise.all(tasks);
+};
+
+/**
+ * @typedef GetFormPartsProps
+ * @property {string} enketoId
+ * @property {Record<string, string>} [defaults]
+ * @property {string} [instanceId]
+ * @property {boolean} [isPreview]
+ * @property {string} [xformUrl]
+ */
+
+/**
  * Obtains HTML Form, XML Model and External Instances
  *
  * @param { GetFormPartsProps } props - form properties object
@@ -439,7 +495,9 @@ function getFormParts(props) {
                 survey = encryptor.setEncryptionEnabled(survey);
             }
 
-            return _getExternalData(survey, model);
+            return getExternalData(survey, model, {
+                isPreview: props.isPreview,
+            });
         })
         .then((externalData) => Object.assign(survey, { externalData }))
         .then((survey) =>
@@ -520,50 +578,6 @@ function _encodeFormData(data) {
 }
 
 /**
- * @param {Survey} survey
- * @param {Document} model
- * @return {Promise<SurveyExternalData[]>}
- */
-function _getExternalData(survey, model) {
-    /** @type {Array<Promise<SurveyExternalData>>} */
-    const tasks = [];
-
-    try {
-        const externalInstances = [
-            ...model.querySelectorAll('instance[id][src]'),
-        ].map((instance) => ({
-            id: instance.id,
-            src: instance.getAttribute('src'),
-        }));
-
-        externalInstances.forEach((instance, index) => {
-            if (instance.src === LAST_SAVED_VIRTUAL_ENDPOINT) {
-                tasks.push(Promise.resolve(instance));
-
-                return;
-            }
-
-            tasks.push(
-                _getDataFile(instance.src, survey.languageMap)
-                    .then((xmlData) => ({ ...instance, xml: xmlData }))
-                    .catch((e) => {
-                        tasks.splice(index, 1);
-                        // let external data files fail quietly in previews with ?form= parameter
-                        if (!survey.enketoId) {
-                            return;
-                        }
-                        throw e;
-                    })
-            );
-        });
-    } catch (e) {
-        return Promise.reject(e);
-    }
-
-    return Promise.all(tasks);
-}
-
-/**
  * Obtains a media file
  *
  * @param { string } url - a URL to a media file
@@ -597,7 +611,7 @@ function getMediaFile(url) {
  * @param {object } languageMap - language map object with language name properties and IANA subtag values
  * @return {Promise<XMLDocument>} a Promise that resolves with an XML Document
  */
-function _getDataFile(url, languageMap) {
+function getDataFile(url, languageMap) {
     let contentType;
 
     return fetch(url)

@@ -176,6 +176,9 @@ describe('Connection', () => {
         /** @type {string} */
         let theme;
 
+        /** @type {boolean} */
+        let resolveExternalInstance;
+
         beforeEach(async () => {
             if (!Object.prototype.hasOwnProperty.call(settings, 'basePath')) {
                 settings.basePath = undefined;
@@ -189,23 +192,31 @@ describe('Connection', () => {
 
             expectedURL = `${basePath}/transform/xform/${enketoId}`;
 
+            resolveExternalInstance = true;
+
             sandbox.stub(window, 'fetch').callsFake(async (url, options) => {
                 if (url === externalInstanceURL) {
                     expect(options).to.equal(undefined);
 
-                    return {
-                        ok: true,
-                        status: 200,
-                        headers: {
-                            get(header) {
-                                if (header === 'Content-Type') {
-                                    return 'text/xml';
-                                }
+                    if (resolveExternalInstance) {
+                        return {
+                            ok: true,
+                            status: 200,
+                            headers: {
+                                get(header) {
+                                    if (header === 'Content-Type') {
+                                        return 'text/xml';
+                                    }
+                                },
                             },
-                        },
-                        text() {
-                            return Promise.resolve(externalInstanceXML);
-                        },
+                            text() {
+                                return Promise.resolve(externalInstanceXML);
+                            },
+                        };
+                    }
+                    return {
+                        ok: false,
+                        status: 404,
                     };
                 }
 
@@ -345,6 +356,34 @@ describe('Connection', () => {
 
             expect(xml instanceof XMLDocument).to.equal(true);
             expect(xmlString).to.equal(externalInstanceXML);
+        });
+
+        it('fails to load when external data is missing', async () => {
+            resolveExternalInstance = false;
+
+            /** @type {Error | null} */
+            let caught = null;
+
+            try {
+                await connection.getFormParts({
+                    enketoId,
+                });
+            } catch (error) {
+                caught = error;
+            }
+
+            expect(caught instanceof Error).to.equal(true);
+        });
+
+        it('loads in preview mode when external data is missing', async () => {
+            resolveExternalInstance = false;
+
+            const survey = await connection.getFormParts({
+                enketoId,
+                isPreview: true,
+            });
+
+            expect(survey.externalData[1]).to.deep.equal(undefined);
         });
     });
 });
