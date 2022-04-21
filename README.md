@@ -1,3 +1,5 @@
+![coverage-shield-badge-1](https://img.shields.io/badge/coverage-79.1%25-yellow.svg)
+
 [![Build Status](https://travis-ci.com/enketo/enketo-express.svg?branch=master)](https://travis-ci.org/enketo/enketo-express)
 
 # Enketo Express
