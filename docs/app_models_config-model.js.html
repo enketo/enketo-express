@@ -47,41 +47,42 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/* global process, __dirname */
-/**
+            <pre class="prettyprint source linenums"><code>/**
  * @module config-model
  */
 
-const config = require( '../../config/default-config' );
-const pkg = require( '../../package.json' );
-const mergeWith = require( 'lodash/mergeWith' );
-const path = require( 'path' );
-const fs = require( 'fs' );
-const url = require( 'url' );
-const themePath = path.join( __dirname, '../../public/css' );
-const languagePath = path.join( __dirname, '../../locales/src' );
-const pkgDir = require( 'pkg-dir' );
-const execSync = require( 'child_process' ).execSync;
+const config = require('../../config/default-config');
+const pkg = require('../../package.json');
+const mergeWith = require('lodash/mergeWith');
+const path = require('path');
+const fs = require('fs');
+const url = require('url');
+
+const themePath = path.join(__dirname, '../../public/css');
+const languagePath = path.join(__dirname, '../../locales/src');
+const pkgDir = require('pkg-dir');
+const { execSync } = require('child_process');
 // var debug = require( 'debug' )( 'config-model' );
 
 // Merge default and local config files if a local config.json file exists
 try {
     const localConfigJSON = String(
-        fs.readFileSync( path.resolve( process.cwd(), './config/config.json' ) )
+        fs.readFileSync(path.resolve(process.cwd(), './config/config.json'))
     );
-    const localConfig = JSON.parse( localConfigJSON );
+    const localConfig = JSON.parse(localConfigJSON);
 
-    mergeWith( config, localConfig, ( objValue, srcValue ) => {
-        if ( Array.isArray( srcValue ) ) {
+    mergeWith(config, localConfig, (objValue, srcValue) => {
+        if (Array.isArray(srcValue)) {
             // Overwrite completely if value in localConfig is an array (do not merge arrays)
             return srcValue;
         }
-    } );
-}
-// Override default config with environment variables if a local config.json does not exist
-catch ( err ) {
-    console.warn( 'No local config.json found. Will check environment variables instead.' );
-    _updateConfigFromEnv( config );
+    });
+} catch (err) {
+    // Override default config with environment variables if a local config.json does not exist
+    console.warn(
+        'No local config.json found. Will check environment variables instead.'
+    );
+    _updateConfigFromEnv(config);
     _setRedisConfigFromEnv();
 }
 
@@ -91,13 +92,16 @@ catch ( err ) {
 function _updateConfigFromEnv() {
     const envVarNames = [];
 
-    for ( const envVarName in process.env ) {
-        if ( Object.prototype.hasOwnProperty.call( process.env, envVarName ) &amp;&amp; envVarName.indexOf( 'ENKETO_' ) === 0 ) {
-            envVarNames.push( envVarName );
+    for (const envVarName in process.env) {
+        if (
+            Object.prototype.hasOwnProperty.call(process.env, envVarName) &amp;&amp;
+            envVarName.indexOf('ENKETO_') === 0
+        ) {
+            envVarNames.push(envVarName);
         }
     }
 
-    envVarNames.sort().forEach( _updateConfigItemFromEnv );
+    envVarNames.sort().forEach(_updateConfigItemFromEnv);
 }
 
 /**
@@ -105,37 +109,40 @@ function _updateConfigFromEnv() {
  *
  * @param { string } envVarName - environment variable name
  */
-function _updateConfigItemFromEnv( envVarName ) {
-    const parts = envVarName.split( '_' ).slice( 1 ).map( _convertNumbers );
-    let nextNumberIndex = _findNumberIndex( parts );
+function _updateConfigItemFromEnv(envVarName) {
+    const parts = envVarName.split('_').slice(1).map(_convertNumbers);
+    let nextNumberIndex = _findNumberIndex(parts);
     let proceed = true;
     let part;
     let settingArr;
     let setting;
     let propName;
 
-    while ( proceed ) {
+    while (proceed) {
         proceed = false;
-        part = parts.slice( 0, nextNumberIndex ).join( '_' );
-        settingArr = _findSetting( config, part );
-        if ( settingArr ) {
-            setting = settingArr[ 0 ];
-            propName = settingArr[ 1 ];
-            if ( !Array.isArray( setting[ propName ] ) ) {
-                setting[ propName ] = _convertType( process.env[ envVarName ] );
+        part = parts.slice(0, nextNumberIndex).join('_');
+        settingArr = _findSetting(config, part);
+        if (settingArr) {
+            setting = settingArr[0];
+            propName = settingArr[1];
+            if (!Array.isArray(setting[propName])) {
+                setting[propName] = _convertType(process.env[envVarName]);
+            } else if (nextNumberIndex === parts.length - 1) {
+                // simple populate array item (simple value)
+                setting[propName][parts[nextNumberIndex]] =
+                    process.env[envVarName];
+            } else if (
+                typeof setting[propName][parts[nextNumberIndex]] !== 'undefined'
+            ) {
+                // this array item (object) already exists
+                nextNumberIndex = _findNumberIndex(parts, nextNumberIndex + 1);
+                proceed = true;
             } else {
-                if ( nextNumberIndex === parts.length - 1 ) {
-                    // simple populate array item (simple value)
-                    setting[ propName ][ parts[ nextNumberIndex ] ] = process.env[ envVarName ];
-                } else if ( typeof setting[ propName ][ parts[ nextNumberIndex ] ] !== 'undefined' ) {
-                    // this array item (object) already exists
-                    nextNumberIndex = _findNumberIndex( parts, nextNumberIndex + 1 );
-                    proceed = true;
-                } else {
-                    // clone previous array item (object) and empty all property values
-                    setting[ propName ][ parts[ nextNumberIndex ] ] = _getEmptyClone( setting[ propName ][ parts[ nextNumberIndex ] - 1 ] );
-                    proceed = true;
-                }
+                // clone previous array item (object) and empty all property values
+                setting[propName][parts[nextNumberIndex]] = _getEmptyClone(
+                    setting[propName][parts[nextNumberIndex] - 1]
+                );
+                proceed = true;
             }
         }
     }
@@ -147,8 +154,8 @@ function _updateConfigItemFromEnv( envVarName ) {
  * @param { string } str - A thing to be converted.
  * @return {string|boolean|null} an un-stringified value or input value itself
  */
-function _convertType( str ) {
-    switch ( str ) {
+function _convertType(str) {
+    switch (str) {
         case 'true':
             return true;
         case 'false':
@@ -169,15 +176,20 @@ function _convertType( str ) {
  * @param { string } prefix - Prefix to use (for nested objects)
  * @return {{0: object, 1: string}} 2-item array of object and property name
  */
-function _findSetting( obj, envName, prefix = '' ) {
-    for ( const prop in obj ) {
-        if ( Object.prototype.hasOwnProperty.call( obj, prop ) ) {
-            const propEnvStyle = prefix + prop.replace( / /g, '_' ).toUpperCase();
-            if ( propEnvStyle === envName ) {
-                return [ obj, prop ];
-            } else if ( typeof obj[ prop ] === 'object' &amp;&amp; obj[ prop ] !== null ) {
-                const found = _findSetting( obj[ prop ], envName, `${propEnvStyle}_` );
-                if ( found ) {
+function _findSetting(obj, envName, prefix = '') {
+    for (const prop in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+            const propEnvStyle = prefix + prop.replace(/ /g, '_').toUpperCase();
+            if (propEnvStyle === envName) {
+                return [obj, prop];
+            }
+            if (typeof obj[prop] === 'object' &amp;&amp; obj[prop] !== null) {
+                const found = _findSetting(
+                    obj[prop],
+                    envName,
+                    `${propEnvStyle}_`
+                );
+                if (found) {
                     return found;
                 }
             }
@@ -191,13 +203,13 @@ function _findSetting( obj, envName, prefix = '' ) {
  * @param { string } str - A stringified number
  * @return {string|number} an input value or unstrigified number
  */
-function _convertNumbers( str ) {
-    if ( !str ) {
+function _convertNumbers(str) {
+    if (!str) {
         return str;
     }
-    const converted = Number( str );
+    const converted = Number(str);
 
-    return !isNaN( converted ) ? converted : str;
+    return !isNaN(converted) ? converted : str;
 }
 
 /**
@@ -207,15 +219,15 @@ function _convertNumbers( str ) {
  * @param { number } [start] - Start index
  * @return {number|undefined} The found index
  */
-function _findNumberIndex( arr, start = 0 ) {
+function _findNumberIndex(arr, start = 0) {
     let i;
-    arr.some( ( val, index ) => {
-        if ( typeof val === 'number' &amp;&amp; index >= start ) {
+    arr.some((val, index) => {
+        if (typeof val === 'number' &amp;&amp; index >= start) {
             i = index;
 
             return true;
         }
-    } );
+    });
 
     return i;
 }
@@ -226,9 +238,9 @@ function _findNumberIndex( arr, start = 0 ) {
  * @param { object } obj - A simple object
  * @return { object } Clone of input object with emptied properties
  */
-function _getEmptyClone( obj ) {
-    const clone = JSON.parse( JSON.stringify( obj ) );
-    _emptyObjectProperties( clone );
+function _getEmptyClone(obj) {
+    const clone = JSON.parse(JSON.stringify(obj));
+    _emptyObjectProperties(clone);
 
     return clone;
 }
@@ -238,15 +250,15 @@ function _getEmptyClone( obj ) {
  *
  * @param { object } obj - A simple object
  */
-function _emptyObjectProperties( obj ) {
-    for ( const prop in obj ) {
+function _emptyObjectProperties(obj) {
+    for (const prop in obj) {
         // if a simple array of string values
-        if ( Array.isArray( obj[ prop ] ) &amp;&amp; typeof obj[ prop ][ 0 ] === 'string' ) {
-            obj[ prop ] = [];
-        } else if ( typeof obj[ prop ] === 'object' &amp;&amp; obj[ prop ] !== null ) {
-            _emptyObjectProperties( obj[ prop ] );
-        } else if ( obj[ prop ] ) {
-            obj[ prop ] = ''; // let's hope this has no side-effects
+        if (Array.isArray(obj[prop]) &amp;&amp; typeof obj[prop][0] === 'string') {
+            obj[prop] = [];
+        } else if (typeof obj[prop] === 'object' &amp;&amp; obj[prop] !== null) {
+            _emptyObjectProperties(obj[prop]);
+        } else if (obj[prop]) {
+            obj[prop] = ''; // let's hope this has no side-effects
         }
     }
 }
@@ -258,11 +270,11 @@ function _setRedisConfigFromEnv() {
     const redisMainUrl = process.env.ENKETO_REDIS_MAIN_URL;
     const redisCacheUrl = process.env.ENKETO_REDIS_CACHE_URL;
 
-    if ( redisMainUrl ) {
-        config.redis.main = _extractRedisConfigFromUrl( redisMainUrl );
+    if (redisMainUrl) {
+        config.redis.main = _extractRedisConfigFromUrl(redisMainUrl);
     }
-    if ( redisCacheUrl ) {
-        config.redis.cache = _extractRedisConfigFromUrl( redisCacheUrl );
+    if (redisCacheUrl) {
+        config.redis.cache = _extractRedisConfigFromUrl(redisCacheUrl);
     }
 }
 
@@ -272,14 +284,17 @@ function _setRedisConfigFromEnv() {
  * @param { string } redisUrl - A compliant redis url
  * @return {{host: string, port: string, password: string|null}} config object
  */
-function _extractRedisConfigFromUrl( redisUrl ) {
-    const parsedUrl = url.parse( redisUrl );
-    const password = parsedUrl.auth &amp;&amp; parsedUrl.auth.split( ':' )[ 1 ] ? parsedUrl.auth.split( ':' )[ 1 ] : null;
+function _extractRedisConfigFromUrl(redisUrl) {
+    const parsedUrl = url.parse(redisUrl);
+    const password =
+        parsedUrl.auth &amp;&amp; parsedUrl.auth.split(':')[1]
+            ? parsedUrl.auth.split(':')[1]
+            : null;
 
     return {
         host: parsedUrl.hostname,
         port: parsedUrl.port,
-        password
+        password,
     };
 }
 
@@ -291,22 +306,22 @@ function _extractRedisConfigFromUrl( redisUrl ) {
  * @param {Array&lt;string>} themeList - A list of themes e.g `['formhub', 'grid']`
  * @return {Array&lt;string>} An list of supported theme names
  */
-function getThemesSupported( themeList ) {
+function getThemesSupported(themeList) {
     const themes = [];
 
-    if ( fs.existsSync( themePath ) ) {
-        fs.readdirSync( themePath ).forEach( file => {
-            const matches = file.match( /^theme-([A-z-]+)\.css$/ );
-            if ( matches &amp;&amp; matches.length > 1 ) {
-                if ( themeList !== undefined &amp;&amp; themeList.length ) {
-                    if ( themeList.indexOf( matches[ 1 ] ) !== -1 ) {
-                        themes.push( matches[ 1 ] );
+    if (fs.existsSync(themePath)) {
+        fs.readdirSync(themePath).forEach((file) => {
+            const matches = file.match(/^theme-([A-z-]+)\.css$/);
+            if (matches &amp;&amp; matches.length > 1) {
+                if (themeList !== undefined &amp;&amp; themeList.length) {
+                    if (themeList.indexOf(matches[1]) !== -1) {
+                        themes.push(matches[1]);
                     }
                 } else {
-                    themes.push( matches[ 1 ] );
+                    themes.push(matches[1]);
                 }
             }
-        } );
+        });
     }
 
     return themes;
@@ -315,50 +330,65 @@ function getThemesSupported( themeList ) {
 try {
     // need to be in the correct directory to run git describe --tags
     config.version = String(
-        execSync( `cd ${__dirname}; git describe --tags`, {
+        execSync(`cd ${__dirname}; git describe --tags`, {
             encoding: 'utf-8',
-        } )
+        })
     ).trim();
-} catch ( e ) {
+} catch (e) {
     // Probably not deployed with git, try special .tag.txt file
     try {
-        config.version = `${String( execSync( 'head -1 .tag.txt' ) ).trim()}-r`;
-    } catch ( e ) {
+        config.version = `${String(execSync('head -1 .tag.txt')).trim()}-r`;
+    } catch (e) {
         // no .tag.txt present, use package.json version
         config.version = `${pkg.version}-p`;
     }
 }
 
 // detect supported themes
-config[ 'themes supported' ] = getThemesSupported( config[ 'themes supported' ] );
+config['themes supported'] = getThemesSupported(config['themes supported']);
 
 // detect supported languages
-config[ 'languages supported' ] = fs.readdirSync( languagePath ).filter( file => file.indexOf( '.' ) !== 0 &amp;&amp; fs.statSync( path.join( languagePath, file ) ).isDirectory() );
+config['languages supported'] = fs
+    .readdirSync(languagePath)
+    .filter(
+        (file) =>
+            file.indexOf('.') !== 0 &amp;&amp;
+            fs.statSync(path.join(languagePath, file)).isDirectory()
+    );
 
 // if necessary, correct the base path to use for all routing
-if ( config[ 'base path' ] &amp;&amp; config[ 'base path' ].indexOf( '/' ) !== 0 ) {
-    config[ 'base path' ] = `/${config[ 'base path' ]}`;
+if (config['base path'] &amp;&amp; config['base path'].indexOf('/') !== 0) {
+    config['base path'] = `/${config['base path']}`;
 }
-if ( config[ 'base path' ] &amp;&amp; config[ 'base path' ].lastIndexOf( '/' ) === config[ 'base path' ].length - 1 ) {
-    config[ 'base path' ] = config[ 'base path' ].substring( 0, config[ 'base path' ].length - 1 );
+if (
+    config['base path'] &amp;&amp;
+    config['base path'].lastIndexOf('/') === config['base path'].length - 1
+) {
+    config['base path'] = config['base path'].substring(
+        0,
+        config['base path'].length - 1
+    );
 }
-config[ 'offline path' ] = '/x';
+config['offline path'] = '/x';
 
-config['root'] = pkgDir.sync( __dirname );
+config.root = pkgDir.sync(__dirname);
 
 // ensure backwards compatibility of old external authentication configurations
-const authentication = config[ 'linked form and data server' ][ 'authentication' ];
-if ( authentication[ 'managed by enketo' ] === false &amp;&amp; authentication[ 'external login url that sets cookie' ] ) {
+const { authentication } = config['linked form and data server'];
+if (
+    authentication['managed by enketo'] === false &amp;&amp;
+    authentication['external login url that sets cookie']
+) {
     authentication.type = 'cookie';
-    authentication.url = authentication[ 'external login url that sets cookie' ];
+    authentication.url = authentication['external login url that sets cookie'];
 }
-delete authentication[ 'external login url that sets cookie' ];
-delete authentication[ 'managed by enketo' ];
+delete authentication['external login url that sets cookie'];
+delete authentication['managed by enketo'];
 
-if ( config[ 'id length' ] &lt; 4 ) {
-    config[ 'id length' ] = 4;
-} else if ( config[ 'id length' ] > 31 ) {
-    config[ 'id length' ] = 31;
+if (config['id length'] &lt; 4) {
+    config['id length'] = 4;
+} else if (config['id length'] > 31) {
+    config['id length'] = 31;
 }
 
 module.exports = {
@@ -370,25 +400,25 @@ module.exports = {
      * @type { object }
      */
     client: {
-        googleApiKey: config.google[ 'api key' ],
+        googleApiKey: config.google['api key'],
         maps: config.maps,
         modernBrowsersURL: 'modern-browsers',
         supportEmail: config.support.email,
-        themesSupported: config[ 'themes supported' ],
-        defaultTheme: config[ 'default theme' ],
-        languagesSupported: config[ 'languages supported' ],
-        timeout: config[ 'timeout' ],
+        themesSupported: config['themes supported'],
+        defaultTheme: config['default theme'],
+        languagesSupported: config['languages supported'],
+        timeout: config.timeout,
         submissionParameter: {
-            name: config[ 'query parameter to pass to submission' ]
+            name: config['query parameter to pass to submission'],
         },
-        basePath: config[ 'base path' ],
-        repeatOrdinals: config[ 'repeat ordinals' ],
-        validateContinuously: config[ 'validate continuously' ],
-        validatePage: config[ 'validate page' ],
-        swipePage: config[ 'swipe page' ],
-        textMaxChars: config[ 'text field character limit' ]
+        basePath: config['base path'],
+        repeatOrdinals: config['repeat ordinals'],
+        validateContinuously: config['validate continuously'],
+        validatePage: config['validate page'],
+        swipePage: config['swipe page'],
+        textMaxChars: config['text field character limit'],
     },
-    getThemesSupported
+    getThemesSupported,
 };
 </code></pre>
         </article>

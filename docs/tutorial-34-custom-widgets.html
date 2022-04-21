@@ -62,8 +62,10 @@
 <h3 id="3.-add-the-widget-to-the-enketo-express-installation">3. Add the widget to the Enketo Express installation</h3>
 <p>In your config.json <code>&quot;widgets&quot;</code> <a href="https://github.com/kobotoolbox/enketo-express/tree/master/config#widgets">configuration</a> add your widget using the relative (to the public/js/build folder) path, e.g.</p>
 <pre class="prettyprint source lang-json"><code>{
-
-    &quot;widgets&quot;: [ &quot;note&quot;, &quot;../../../node_modules/enketo-image-customization-widget/image-customization&quot;]
+    &quot;widgets&quot;: [
+        &quot;note&quot;,
+        &quot;../../../node_modules/enketo-image-customization-widget/image-customization&quot;
+    ]
 }
 </code></pre>
 <p>Use the filename without its extension in the path.</p>

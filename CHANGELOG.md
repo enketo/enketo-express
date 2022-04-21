@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.1.1 - 2022-04-21
+
+-   Improve errors for missing external instances in preview mode (#400)
+-   Fixed: on mobile devices the dialog heading passed to gui.feedback was ignored and not shown to user (#409)
+-   Code style/formatting: Prettier + Airbnb ESLint preset (#396)
+-   Fix: escape querySelector variables to avoid error. (enketo-core#871)
+-   Fix: improve error messages for missing external instances (enketo-core#873)
+-   Fix: don't randomize unrelated itemsets outside repeat (enketo-core#876)
+-   Update datepicker-extended widget to properly unpack data from paste event (enketo-core#878)
+-   Code style/formatting: Prettier + Airbnb ESLint preset (enketo-core#866)
+-   Fix: unescaped HTML in CHANGELOG (enketo-core#864)
+-   Update format-date to return empty string instead of 'Invalid Date' (openrosa-xpath-evaluator#155)
+
 ## 3.1.0 - 2022-02-18
 
 ### Changed

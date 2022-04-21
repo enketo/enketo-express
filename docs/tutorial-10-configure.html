@@ -75,7 +75,7 @@
 <p>Enable or disable offline functionality. Is either <code>false</code> or <code>true</code>.</p>
 <h4 id="id-length">id length</h4>
 <p>The length of the random enketo ID that is generated for a webform and is part of the webform URL. The default length is 8 characters, the maximum length is 31 characters and the minimum length is 4 characters.</p>
-<p>When this value is  changed on an active server that had already generated webform URLs before the change, those old URLs will remain functional. Only new form launches will use the new ID length.</p>
+<p>When this value is changed on an active server that had already generated webform URLs before the change, those old URLs will remain functional. Only new form launches will use the new ID length.</p>
 <p>If you are tempted to make this setting as short as possible, make sure you understand that the chance of collisions in random ID generation will increase and it may eventually become too slow or impossible to generate a new unique ID.</p>
 <h4 id="linked-form-and-data-server">linked form and data server</h4>
 <ul>
@@ -156,7 +156,7 @@
 <li>timeout: Connection timeout in milliseconds used in headless views that are run on the server, such as for PDF generation API endpoints.</li>
 </ul>
 <h4 id="maps">maps</h4>
-<p>The <code>maps</code> configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a <code>name</code>,  <code>tiles</code> (array) and an <code>attribution</code> property, and optionally <code>maxzoom</code> and <code>minzoom</code>). You can also mix and match Google Maps layers. Below is an example of a mix of two map layers provided by OSM (in TileJSON format) and Google maps.</p>
+<p>The <code>maps</code> configuration can include an array of Mapbox TileJSON objects (or a subset of these with at least a <code>name</code>, <code>tiles</code> (array) and an <code>attribution</code> property, and optionally <code>maxzoom</code> and <code>minzoom</code>). You can also mix and match Google Maps layers. Below is an example of a mix of two map layers provided by OSM (in TileJSON format) and Google maps.</p>
 <pre class="prettyprint source"><code>[ {
         &quot;name&quot;: &quot;street&quot;,
         &quot;tiles&quot;: [ &quot;http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png&quot; ],
