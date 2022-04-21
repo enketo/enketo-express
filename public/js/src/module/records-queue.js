@@ -15,6 +15,7 @@ import formCache from './form-cache';
 import { setLastSavedRecord } from './last-saved';
 
 let $exportButton;
+let $uploadButton;
 let $recordList;
 let $queueNumber;
 let uploadProgress;
@@ -31,6 +32,7 @@ function init() {
     // TODO: Add export feature
 
     $exportButton = $('.record-list__button-bar__button.export');
+    $uploadButton = $('.record-list__button-bar__button.upload');
     $queueNumber = $('.offline-enabled__queue-length');
 
     return _updateRecordList();
@@ -123,27 +125,6 @@ function getAutoSavedRecord() {
 }
 
 /**
- * Updates the disabled/enabled state of the upload button.
- */
-function _updateUploadButtonState() {
-    const uploadButtonEl = document.querySelector(
-        '.record-list__button-bar__button.upload'
-    );
-    if (!uploadButtonEl) {
-        return;
-    }
-    if (!finalRecordPresent || uploadOngoing) {
-        uploadButtonEl.disabled = true;
-    } else {
-        connection.getOnlineStatus().then((appearsOnline) => {
-            const state =
-                !appearsOnline || !finalRecordPresent || uploadOngoing;
-            uploadButtonEl.disabled = state;
-        });
-    }
-}
-
-/**
  * Updates auto-saved record
  *
  * @param { EnketoRecord } record - record object created from the current state of the form
@@ -212,16 +193,14 @@ function _setUploadIntervals() {
     setInterval(() => {
         uploadQueue();
     }, 5 * 60 * 1000);
-    // interval to disable/enable upload button
-    setInterval(_updateUploadButtonState, 0.5 * 60 * 1000);
 }
 
 /**
  * Uploads all final records in the queue
- *
+ * @param {boolean=} byUser Whether user triggered upload by clicking button.
  * @return {Promise<undefined>} a Promise that resolves with undefined
  */
-function uploadQueue() {
+function uploadQueue(byUser = false) {
     let errorMsg;
     const successes = [];
     const fails = [];
@@ -232,12 +211,18 @@ function uploadQueue() {
     }
 
     uploadOngoing = true;
-    _updateUploadButtonState();
-
+    $uploadButton.btnBusyState(true);
     return connection
         .getOnlineStatus()
         .then((appearsOnline) => {
             if (!appearsOnline) {
+                if (byUser) {
+                    gui.alert(
+                        t('submission.http0'),
+                        t('alert.submissionerror.heading')
+                    );
+                }
+                $uploadButton.btnBusyState(false);
                 return;
             }
 
@@ -274,10 +259,7 @@ function uploadQueue() {
                                 });
                                 uploadProgress.update(
                                     record.instanceId,
-                                    'ongoing',
-                                    '',
-                                    successes.length + fails.length,
-                                    records.length
+                                    'ongoing'
                                 );
 
                                 return connection.uploadQueuedRecord(record);
@@ -286,10 +268,7 @@ function uploadQueue() {
                                 successes.push(record.name);
                                 uploadProgress.update(
                                     record.instanceId,
-                                    'success',
-                                    '',
-                                    successes.length + fails.length,
-                                    records.length
+                                    'success'
                                 );
 
                                 return store.record
@@ -313,12 +292,11 @@ function uploadQueue() {
                                 uploadProgress.update(
                                     record.instanceId,
                                     'error',
-                                    errorMsg,
-                                    successes.length + fails.length,
-                                    records.length
+                                    errorMsg
                                 );
                             })
                             .then(() => {
+                                $uploadButton.btnBusyState(false);
                                 if (
                                     successes.length + fails.length ===
                                     records.length
@@ -334,6 +312,7 @@ function uploadQueue() {
                                             )
                                         );
                                     }
+
                                     // update the list by properly removing obsolete records, reactivating button(s)
                                     _updateRecordList();
                                 }
@@ -376,10 +355,12 @@ uploadProgress = {
         return $(`.record-list__records__record[data-id="${instanceId}"]`);
     },
     _reset(instanceId) {
-        const $allLis = $('.record-list__records').find('li');
-        // if the current record, is the first in the list, reset the list
-        if ($allLis.first().attr('data-id') === instanceId) {
-            $allLis
+        const $allFinalizedLis = $('.record-list__records').find(
+            'li:not([data-draft])'
+        );
+        // if the current record, is the first finalized record in the list, reset the list
+        if ($allFinalizedLis.first().attr('data-id') === instanceId) {
+            $allFinalizedLis
                 .removeClass('ongoing success error')
                 .filter(function () {
                     return !$(this).hasClass('record-list__records__record');
@@ -390,34 +371,16 @@ uploadProgress = {
     _updateClass($el, status) {
         $el.removeClass('ongoing success error').addClass(status);
     },
-    _updateProgressBar(index, total) {
-        let $progress;
-
-        $progress = $('.record-list__upload-progress').attr({
-            max: total,
-            value: index,
-        });
-
-        if (index === total || total === 1) {
-            $progress.css('visibility', 'hidden');
-        } else {
-            $progress.css('visibility', 'visible');
-        }
-    },
-    _getMsg(status, msg) {
-        return status === 'error' ? msg : '';
-    },
-    update(instanceId, status, msg, index, total) {
+    update(instanceId, status, msg) {
         let $result;
         const $li = this._getLi(instanceId);
-        const displayMsg = this._getMsg(status, msg);
 
         this._reset(instanceId);
 
         // add display messages (always showing end status)
-        if (displayMsg) {
+        if (msg) {
             $result = $(
-                `<li data-id="${instanceId}" class="record-list__records__msg ${status}">${displayMsg}</li>`
+                `<li data-id="${instanceId}" class="record-list__records__msg ${status}">${msg}</li>`
             ).insertAfter($li);
             window.setTimeout(() => {
                 $result.hide(600);
@@ -427,15 +390,10 @@ uploadProgress = {
         // update the status class
         this._updateClass($li, status);
 
-        // hide succesful submissions from record list in side bar
+        // hide successful submissions from record list in side bar
         // they will be properly removed later in _updateRecordList
         if (status === 'success') {
             $li.hide(1500);
-        }
-
-        // update the submissions progress bar
-        if (index && total) {
-            this._updateProgressBar(index, total);
         }
     },
 };
@@ -470,6 +428,7 @@ function _updateRecordList() {
 
     // reset the list
     $exportButton.prop('disabled', true);
+    $uploadButton.prop('disabled', true);
     $recordList = $('.record-list__records');
     finalRecordPresent = false;
 
@@ -506,6 +465,7 @@ function _updateRecordList() {
             // if there is at least one record not marked as draft
             if (!record.draft) {
                 finalRecordPresent = true;
+                $uploadButton.prop('disabled', false);
             }
             $li = uploadProgress._getLi(record.instanceId);
             // Add the record to the list if it doesn't exist already
@@ -518,7 +478,6 @@ function _updateRecordList() {
             // add or update properties
             $li.text(record.name).attr('data-draft', !!record.draft);
         });
-        _updateUploadButtonState();
     });
 }
 

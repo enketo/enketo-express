@@ -2,10 +2,9 @@ aside.record-list.side-slider
 	button.btn-icon-only.close(type="button", aria-hidden="true") ×
 	h3(data-i18n='record-list.title')= t('record-list.title')
 	p(data-i18n='record-list.msg1')= t('record-list.msg1')
-	progress.record-list__upload-progress
 	ul.record-list__records
 	.record-list__button-bar
-		button.record-list__button-bar__button.upload.btn.btn-primary(type="button", disabled, data-i18n='record-list.upload')= t('record-list.upload') 
+		button.record-list__button-bar__button.upload.btn.btn-primary(type="button", disabled, data-i18n='record-list.upload')= t('record-list.upload')
 		button.record-list__button-bar__button.export.btn.btn-default(type="button", disabled, data-i18n='record-list.export')= t('record-list.export')
 	- var uploadGuidanceKey = draftEnabled ? 'record-list.msg2' : 'record-list.msg2-nodraft';
 		p(data-i18n=uploadGuidanceKey, data-i18n-icon='icon-pencil')!= draftEnabled ? t('record-list.msg2', {icon: '<span class="icon icon-pencil"> </span>', interpolation: {escapeValue: false}}) : t('record-list.msg2-nodraft')
