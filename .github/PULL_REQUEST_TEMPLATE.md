@@ -5,7 +5,7 @@ Closes #
 -   [ ] Online form submission
 -   [ ] Offline form submission
 -   [ ] Saving offline drafts
--   [ ] Submitting offline drafts
+-   [ ] Loading offline drafts
 -   [ ] Editing submissions
 -   [ ] Form preview
 -   [ ] None of the above
