@@ -136,7 +136,7 @@ if (app.get('no sniff') === true) {
 const hsts = app.get('hsts');
 const hstsDirectives = [];
 if (hsts && hsts.seconds !== 0) {
-    hstsDirectives.push('max-age=' + hsts.seconds);
+    hstsDirectives.push(`max-age=${hsts.seconds}`);
     if (hsts.preload) {
         hstsDirectives.push('preload');
     }
@@ -145,10 +145,13 @@ if (hsts && hsts.seconds !== 0) {
     }
     securityHeaders['Strict-Transport-Security'] = hstsDirectives.join('; ');
 }
-const defaultCSP = "default-src 'self'; script-src 'self' 'unsafe-inline' data:; style-src 'self' 'unsafe-inline' data:; img-src 'self' data:"
-const csp = app.get('csp')
+const defaultCSP =
+    "default-src 'self'; script-src 'self' 'unsafe-inline' data:; style-src 'self' 'unsafe-inline' data:; img-src 'self' data:";
+const csp = app.get('csp');
 if (csp && csp.enabled) {
-    const cspHeader = csp['report only'] ? 'Content-Security-Policy-Report-Only' : 'Content-Security-Policy';
+    const cspHeader = csp['report only']
+        ? 'Content-Security-Policy-Report-Only'
+        : 'Content-Security-Policy';
     securityHeaders[cspHeader] = csp.value || defaultCSP;
 }
 // If any security headers are set, apply middleware
@@ -160,7 +163,6 @@ if (Object.keys(securityHeaders).length > 0) {
         next();
     });
 }
-
 
 // load controllers (including their routers)
 fs.readdirSync(controllersPath).forEach((file) => {

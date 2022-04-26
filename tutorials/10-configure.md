@@ -220,7 +220,6 @@ Sets which IPs should be filtered out to prevent SSRF attacks. See more here: ht
 -   `allowIPAddressList`: Default is `[]`. The list of allowed IP addresses. These are preferred over `denyAddressList`.
 -   `denyAddressList`: Default is `[]`. The list of denied IP addresses.
 
-
 ### frameguard deny
 
 Set to `true` to set the X-Frame-Options header to DENY to help you mitigate clickjacking attacks. Default is `false`. See more here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
