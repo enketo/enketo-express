@@ -219,3 +219,27 @@ Sets which IPs should be filtered out to prevent SSRF attacks. See more here: ht
 -   `allowMetaIPAddress`: Default is `false`. Prevents or allows meta IP addresses to make GET and HEAD requests.
 -   `allowIPAddressList`: Default is `[]`. The list of allowed IP addresses. These are preferred over `denyAddressList`.
 -   `denyAddressList`: Default is `[]`. The list of denied IP addresses.
+
+### frameguard deny
+
+Set to `true` to set the X-Frame-Options header to DENY to help you mitigate clickjacking attacks. Default is `false`. See more here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
+
+### no sniff
+
+Set to `true` to set the X-Content-Type-Options header to nosniff. This mitigates MIME type sniffing which can cause security vulnerabilities. Default is `false`. See more here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
+
+#### hsts
+
+Set HTTP Strict Transport Security (HSTS) headers in express. Default is disabled. See more here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
+
+-   `seconds`: Default is `0`. Seconds for HSTS to be enabled. When set to 0, header will not be set and HSTS is disabled. Set to a low number to test. For production, set to 63072000 (2 years).
+-   `preload`: Default is `false`. Submit to HSTS preload service.
+-   `includeSubDomains`: Default is `false`. When set, all subdomains will be subject to same HSTS rules.
+
+#### csp
+
+Set Content Security Policy (CSP) headers in express. Default is disabled. When enabled, a default policy is applied unless the `value` field is provided. See more here: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+
+-   `enabled`: Default is `false`. Set to `true` to enable CSP headers.
+-   `report only`: Default is `false`. Set to `true` to report, but not enforce, CSP.
+-   `value`: Default is `null`. Set to a custom value to override default CSP value.
