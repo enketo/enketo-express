@@ -25,6 +25,10 @@ Just used in home page `"Enketo for [your service name]"`..
 
 The port on which your app is run, e.g. `"8005"`. Any unique assignable port will do. Generally you can leave this alone as you'll use a reverse proxy to map the public port.
 
+#### max processes
+
+The max number of processes Enketo will serve. Enketo will not serve more processes than the number of cpus available. Defaults to `16`.
+
 #### offline enabled
 
 Enable or disable offline functionality. Is either `false` or `true`.

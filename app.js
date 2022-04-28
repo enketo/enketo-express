@@ -2,11 +2,14 @@
 /* eslint no-console: ["error", { allow: ["log", "error"] }] */
 
 const cluster = require('cluster');
+const config = require('./app/models/config-model');
 const numCPUs = require('os').cpus().length;
+
+const numProcesses = Math.min(config.server['max processes'], numCPUs);
 
 if (cluster.isMaster) {
     // Fork workers.
-    for (let i = 0; i < numCPUs; i++) {
+    for (let i = 0; i < numProcesses; i++) {
         cluster.fork();
     }
 
