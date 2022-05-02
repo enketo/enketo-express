@@ -381,7 +381,7 @@
         }
     },
     "submission": {
-        "http0": "Failed (Offline?).",
+        "http0": "The server is not available or you may not be connected to the Internet.",
         "http2xx": "Unexpected response when submitting data.",
         "http400": "Data server did not accept data.",
         "http401": "Authentication problem with data server.",

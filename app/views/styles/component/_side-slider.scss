@@ -30,6 +30,12 @@ $slider-width: 240px;
         right: 15px;
     }
 
+    .btn {
+        progress {
+            margin: 4px;
+        }
+    }
+
     &__button-bar {
         margin: 20px 0 33px 0;
     }
@@ -138,11 +144,6 @@ $slider-width: 240px;
             background: #626262;
             color: white;
         }
-    }
-
-    &__upload-progress {
-        visibility: hidden;
-        width: 100%;
     }
 
     &__records {
