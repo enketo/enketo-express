@@ -80,8 +80,16 @@ function init({ failSilently } = {}) {
                             keyPath: 'instanceId',
                         },
                         indexes: {
-                            // useful to check if name exists
-                            name: {
+                            // https://github.com/enketo/enketo-express/issues/416
+                            // Version 3 of this database schema had a 'name' index that was set to be unique.
+                            // Although this index was removed in version 4, it will not be automatically deleted in
+                            // existing databases. This is a limitation of db.js. It should not cause significant issues
+                            // as the user will be prompted to edit the record name. Eventually, due to device upgrades,
+                            // or manual indexedDb deletion, this index will probably cease to exist in the world.
+                            //
+                            // to prevent showing the same record name in the queue
+                            recordName: {
+                                keyPath: ['name', 'enketoId'],
                                 unique: true,
                             },
                             // the actual key
