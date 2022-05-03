@@ -45,7 +45,7 @@ function init({ failSilently } = {}) {
         .then(() =>
             db.open({
                 server: databaseName,
-                version: 3,
+                version: 4,
                 schema: {
                     // the surveys
                     surveys: {
