@@ -243,3 +243,7 @@ Set Content Security Policy (CSP) headers in express. Default is disabled. When 
 -   `enabled`: Default is `false`. Set to `true` to enable CSP headers.
 -   `report only`: Default is `false`. Set to `true` to report, but not enforce, CSP.
 -   `value`: Default is `null`. Set to a custom value to override default CSP value.
+
+#### csrf cookie name
+
+Default is "\_\_csrf". Set to override the cookie name used for a csrf token. This can be helpful to avoid conflicts with other cookies on a domain.

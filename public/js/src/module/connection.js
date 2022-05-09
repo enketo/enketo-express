@@ -281,10 +281,11 @@ function _prepareFormDataArray(record) {
             'xml_submission_file'
         );
         const csrfToken = (
-            document.cookie.split('; ').find((c) => c.startsWith('__csrf')) ||
-            ''
+            document.cookie
+                .split('; ')
+                .find((c) => c.startsWith(settings.csrfCookieName)) || ''
         ).split('=')[1];
-        if (csrfToken) fd.append('__csrf', csrfToken);
+        if (csrfToken) fd.append(settings.csrfCookieName, csrfToken);
 
         // batch with XML data
         const batchPrepped = {
