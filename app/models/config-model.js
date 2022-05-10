@@ -368,6 +368,7 @@ module.exports = {
         validatePage: config['validate page'],
         swipePage: config['swipe page'],
         textMaxChars: config['text field character limit'],
+        csrfCookieName: config['csrf cookie name'],
     },
     getThemesSupported,
 };
