@@ -476,6 +476,12 @@ function getFormParts(props) {
     return _postData(transformURL, {
         xformUrl: props.xformUrl,
     })
+        .catch((error) => {
+            if (error.status === undefined) {
+                error.message = t('error.formloadfailed');
+            }
+            throw error;
+        })
         .then((data) => {
             const model = parser.parseFromString(data.model, 'text/xml');
 
@@ -541,12 +547,7 @@ function _request(url, method = 'POST', data = {}) {
 
     return fetch(url, options)
         .then(_throwResponseError)
-        .then((response) => response.json())
-        .catch((data) => {
-            const error = new Error(data.message);
-            error.status = data.status;
-            throw error;
-        });
+        .then((response) => response.json());
 }
 
 /**

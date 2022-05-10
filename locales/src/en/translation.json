@@ -217,6 +217,7 @@
         "dataloadfailed": "Failed to load data from __url__",
         "econnrefused": "Could not connect with Form Server",
         "encryptionnotsupported": "This form requires local encryption of records. Unfortunately this is not supported by your browser. We recommend switching to a modern browser.",
+        "formloadfailed": "Failed to load form",
         "instancenotfound": "Record not present. It may have expired.",
         "invalidediturl": "Not a valid edit URL",
         "loadfailed": "Failed to load __resource__",
