@@ -303,13 +303,13 @@ function updateMaxSubmissionSize(survey) {
  * @return { Promise<Survey> }
  */
 function updateMedia(survey) {
-    const targetContainers = [document.querySelector('form.or')];
+    const containers = [document.querySelector('form.or')];
     const formHeader = document.querySelector('.form-header');
     if (formHeader) {
-        targetContainers.push(formHeader);
+        containers.push(formHeader);
     }
 
-    return _loadMedia(survey, targetContainers)
+    return _loadMedia(survey, containers)
         .then((resources) => {
             // if all resources were already in the database, _loadMedia returned undefined
             if (resources) {
@@ -346,6 +346,12 @@ function _reflect(task) {
         }
     );
 }
+
+/**
+ * @typedef Resource
+ * @property {string} url URL to resource
+ * @property {Blob} item resource as Blob
+ */
 
 /**
  * Loads and displays survey resources either from the store or via HTTP.
