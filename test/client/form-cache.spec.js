@@ -284,7 +284,9 @@ describe('Client Form Cache', () => {
 
             beforeEach((done) => {
                 getFileSpy.restore();
-                getFileSpy = sandbox.stub(connection, 'getMediaFile').throws();
+                getFileSpy = sandbox
+                    .stub(connection, 'getMediaFile')
+                    .callsFake(() => Promise.reject(new Error('Fail!')));
 
                 storeSurveyUpdateSpy = sandbox.spy(store.survey, 'update');
 
