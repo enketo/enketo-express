@@ -123,5 +123,6 @@
         "enabled": false,
         "report only": false,
         "value": null
-    }
+    },
+    "exclude non-relevant": false
 }
