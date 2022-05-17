@@ -31,6 +31,9 @@ let blobEncoding;
 let available = false;
 
 const databaseName = 'enketo';
+const version = 4;
+
+const REMOVE_RECORD_NAME_UNIQUENESS_VERSION = 4;
 
 /**
  * @typedef StoreInitOptions
@@ -42,10 +45,60 @@ const databaseName = 'enketo';
  */
 function init({ failSilently } = {}) {
     return _checkSupport()
+        .then(() => {
+            // https://github.com/enketo/enketo-express/issues/416
+            // When upgrading from version 3 to 4, ensure that the unique `name` index on
+            // `records` is replaced with an index on the combination `['enketoId', 'name']`.
+            // For any other version upgrades, defer to `db.js`.
+
+            if (version !== REMOVE_RECORD_NAME_UNIQUENESS_VERSION) {
+                return Promise.resolve();
+            }
+
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(databaseName, version);
+
+                request.addEventListener('blocked', reject);
+                request.addEventListener('success', resolve);
+                request.addEventListener('error', reject);
+
+                request.addEventListener('upgradeneeded', (event) => {
+                    const { transaction } = request;
+                    try {
+                        if (
+                            event.oldVersion !==
+                                REMOVE_RECORD_NAME_UNIQUENESS_VERSION - 1 ||
+                            event.newVersion !==
+                                REMOVE_RECORD_NAME_UNIQUENESS_VERSION
+                        ) {
+                            // If the *previous* verison was not 3 (e.g. for a new DB),
+                            // these changes will *not* produce the same schema as db.js.
+                            // In those cases, we abort this upgrade and defer to db.js.
+                            // This does leave open the much less likely possibility that
+                            // an upgrade from versions 1 or 2 will leave the `name` index.
+                            transaction.abort();
+
+                            return resolve(event);
+                        }
+
+                        const store = transaction.objectStore('records');
+
+                        // This will produce a schema equivalent to the db.js changes specified
+                        // for version 4.
+                        store.createIndex('recordName', ['enketoId', 'name'], {
+                            unique: true,
+                        });
+                        store.deleteIndex('name');
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            });
+        })
         .then(() =>
             db.open({
                 server: databaseName,
-                version: 3,
+                version,
                 schema: {
                     // the surveys
                     surveys: {
@@ -80,8 +133,9 @@ function init({ failSilently } = {}) {
                             keyPath: 'instanceId',
                         },
                         indexes: {
-                            // useful to check if name exists
-                            name: {
+                            // https://github.com/enketo/enketo-express/issues/416
+                            recordName: {
+                                keyPath: ['enketoId', 'name'],
                                 unique: true,
                             },
                             // the actual key

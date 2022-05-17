@@ -465,21 +465,31 @@ function _getRecordName() {
         );
 }
 
-function _confirmRecordName(recordName, errorMsg) {
+/**
+ *
+ * @param {string} recordName - proposed name of the record
+ * @param {boolean} draft - whether the record is a draft
+ * @param {string} [errorMsg] - error message to show
+ */
+function _confirmRecordName(recordName, draft, errorMsg) {
     const texts = {
         msg: '',
-        heading: t('formfooter.savedraft.label'),
+        heading: draft
+            ? t('formfooter.savedraft.label')
+            : t('alert.submissionerror.heading'),
         errorMsg,
     };
     const choices = {
-        posButton: t('confirm.save.posButton'),
+        posButton: draft
+            ? t('confirm.save.posButton')
+            : t('formfooter.submit.btn'),
         negButton: t('confirm.default.negButton'),
     };
     const inputs = `<label><span>${t(
         'confirm.save.name'
-    )}</span><span class="or-hint active">${t(
-        'confirm.save.hint'
-    )}</span><input name="record-name" type="text" value="${recordName}"required /></label>`;
+    )}</span><span class="or-hint active">${
+        draft ? t('confirm.save.hint') : ''
+    }</span><input name="record-name" type="text" value="${recordName}"required /></label>`;
 
     return gui.prompt(texts, choices, inputs).then((values) => {
         if (values) {
@@ -494,12 +504,11 @@ function _confirmRecordName(recordName, errorMsg) {
 
 /**
  * @param {Survey} survey
- * @param {boolean} draft
- * @param {string} [recordName]
- * @param {boolean} [confirmed]
- * @param {string} [errorMsg]
+ * @param {boolean} draft - whether the record is a draft
+ * @param {string} [recordName] - proposed name of the record
+ * @param {boolean} [confirmed] - whether the name of the record has been confirmed by the user
  */
-function _saveRecord(survey, draft, recordName, confirmed, errorMsg) {
+function _saveRecord(survey, draft, recordName, confirmed) {
     const include = { irrelevant: draft };
 
     // triggering "before-save" event to update possible "timeEnd" meta data in form
@@ -508,13 +517,13 @@ function _saveRecord(survey, draft, recordName, confirmed, errorMsg) {
     // check recordName
     if (!recordName) {
         return _getRecordName().then((name) =>
-            _saveRecord(survey, draft, name, false, errorMsg)
+            _saveRecord(survey, draft, name, false)
         );
     }
 
     // check whether record name is confirmed if necessary
     if (draft && !confirmed) {
-        return _confirmRecordName(recordName, errorMsg)
+        return _confirmRecordName(recordName, draft)
             .then((name) => _saveRecord(survey, draft, name, true))
             .catch(() => {});
     }
@@ -589,7 +598,7 @@ function _saveRecord(survey, draft, recordName, confirmed, errorMsg) {
         })
         .catch((error) => {
             console.error('save error', error);
-            errorMsg = error.message;
+            let errorMsg = error.message;
             if (
                 !errorMsg &&
                 error.target &&
@@ -597,8 +606,13 @@ function _saveRecord(survey, draft, recordName, confirmed, errorMsg) {
                 error.target.error.name &&
                 error.target.error.name.toLowerCase() === 'constrainterror'
             ) {
-                errorMsg = t('confirm.save.existingerror');
-            } else if (!errorMsg) {
+                return _confirmRecordName(
+                    recordName,
+                    draft,
+                    t('confirm.save.existingerror')
+                ).then((name) => _saveRecord(survey, draft, name, true));
+            }
+            if (!errorMsg) {
                 errorMsg = t('confirm.save.unkownerror');
             }
             gui.alert(errorMsg, 'Save Error');

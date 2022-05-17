@@ -187,7 +187,7 @@
             "msg": "This action is irreversible. Are you sure you want to proceed?"
         },
         "save": {
-            "existingerror": "This record name or ID already exists.",
+            "existingerror": "This record name or ID already exists. Please change it.",
             "hint": "This name allows you to easily find your draft record to finish it later.",
             "msg": "There are unsaved changes, would you like to continue without saving those?",
             "name": "Record Name",
