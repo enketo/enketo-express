@@ -303,44 +303,32 @@ function updateMaxSubmissionSize(survey) {
  * @return { Promise<Survey> }
  */
 function updateMedia(survey) {
-    const requests = [];
-    // if survey.resources exists, the resources are available in the store
-    if (survey.resources) {
-        return _loadMedia(survey).then(_setRepeatListener);
-    }
     const containers = [document.querySelector('form.or')];
     const formHeader = document.querySelector('.form-header');
     if (formHeader) {
         containers.push(formHeader);
     }
 
-    survey.resources = [];
-
-    _getElementsGroupedBySrc(containers).forEach((elements) => {
-        const src = elements[0].dataset.offlineSrc;
-        requests.push(connection.getMediaFile(src));
-    });
-
-    return (
-        Promise.all(requests.map(_reflect))
-            .then((resources) => {
+    return _loadMedia(survey, containers)
+        .then((resources) => {
+            // if all resources were already in the database, _loadMedia returned undefined
+            if (resources) {
                 // Filter out the failed requests (undefined)
-                resources = resources.filter((resource) => !!resource);
-                survey.resources = resources;
+                survey.resources = resources.filter((resource) => !!resource);
 
-                return survey;
-            })
-            // Store any resources that were successful
-            .then(updateSurveyCache)
-            .then(_loadMedia)
-            .then(_setRepeatListener)
-            .catch((error) => {
-                console.error('loadMedia failed', error);
+                // Store any resources that are now available for this form.
+                console.log('Survey media has been updated. Updating cache.');
+                return updateSurveyCache(survey);
+            }
+            return survey;
+        })
+        .then(_setRepeatListener)
+        .catch((error) => {
+            console.error('updateMedia failed', error);
 
-                // Let the flow continue.
-                return survey;
-            })
-    );
+            // Let the flow continue.
+            return survey;
+        });
 }
 
 /**
@@ -359,43 +347,62 @@ function _reflect(task) {
     );
 }
 
+/**
+ * @typedef Resource
+ * @property {string} url URL to resource
+ * @property {Blob} item resource as Blob
+ */
+
+/**
+ * Loads and displays survey resources either from the store or via HTTP.
+ *
+ * @param { Survey } survey - survey object
+ * @param { [Element]} targetContainers - HTML container elements to load media into
+ * @return { Promise<[Resource] | undefined> }
+ */
 function _loadMedia(survey, targetContainers) {
-    let resourceUrl;
-    const URL = window.URL || window.webkitURL;
+    let updated = false;
 
-    if (!targetContainers) {
-        targetContainers = [document.querySelector('form.or')];
-        const formHeader = document.querySelector('.form-header');
-        if (formHeader) {
-            targetContainers.push(formHeader);
-        }
-    }
-
+    const requests = [];
     _getElementsGroupedBySrc(targetContainers).forEach((elements) => {
         const src = elements[0].dataset.offlineSrc;
 
-        store.survey.resource.get(survey.enketoId, src).then((resource) => {
-            if (!resource || !resource.item) {
-                console.error('resource not found or not complete', src);
-
-                return;
-            }
-            // create a resourceURL
-            resourceUrl = URL.createObjectURL(resource.item);
-            // add this resourceURL as the src for all elements in the group
-            elements.forEach((element) => {
-                element.src = resourceUrl;
+        const request = store.survey.resource
+            .get(survey.enketoId, src)
+            .then(async (resource) => {
+                if (!resource || !resource.item) {
+                    // no need to try/catch here as we don't care about catching failures
+                    const downloaded = await connection.getMediaFile(src);
+                    // only when successful
+                    updated = true;
+                    return downloaded;
+                }
+                return resource;
+            })
+            // render the media
+            .then((resource) => {
+                if (resource.item) {
+                    // create a resourceURL
+                    const resourceUrl = URL.createObjectURL(resource.item);
+                    // add this resourceURL as the src for all elements in the group
+                    elements.forEach((element) => {
+                        element.src = resourceUrl;
+                    });
+                }
+                return resource;
+            })
+            .catch((error) => {
+                console.error(error);
             });
-        });
+
+        requests.push(request);
     });
 
-    // TODO: revoke objectURL if not inside a repeat
-    // add eventhandler to last element in a group?
-    // $( element ).one( 'load', function() {
-    //    console.log( 'revoking object URL to free up memory' );
-    //    URL.revokeObjectURL( resourceUrl );
-    // } );
-    return Promise.resolve(survey);
+    return Promise.all(requests.map(_reflect)).then((resources) => {
+        if (updated) {
+            return resources;
+        }
+    });
 }
 
 function _getElementsGroupedBySrc(containers) {
