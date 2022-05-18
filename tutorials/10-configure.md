@@ -251,3 +251,7 @@ Set Content Security Policy (CSP) headers in express. Default is disabled. When 
 #### csrf cookie name
 
 Default is "\_\_csrf". Set to override the cookie name used for a csrf token. This can be helpful to avoid conflicts with other cookies on a domain.
+
+#### exclude non-relevant
+
+Default is `false`. When set to `true`, questions with non-relevant values and children of non-relevant parents will be treated as blank in computations. If a non-relevant question becomes relevant again, its previous value will be restored. This matches the behavior of ODK Collect.

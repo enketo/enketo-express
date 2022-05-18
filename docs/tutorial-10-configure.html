@@ -71,6 +71,8 @@
 <p>Just used in home page <code>&quot;Enketo for [your service name]&quot;</code>..</p>
 <h4 id="port">port</h4>
 <p>The port on which your app is run, e.g. <code>&quot;8005&quot;</code>. Any unique assignable port will do. Generally you can leave this alone as you'll use a reverse proxy to map the public port.</p>
+<h4 id="max-processes">max processes</h4>
+<p>The max number of processes Enketo will serve. Enketo will not serve more processes than the number of cpus available. Defaults to <code>16</code>.</p>
 <h4 id="offline-enabled">offline enabled</h4>
 <p>Enable or disable offline functionality. Is either <code>false</code> or <code>true</code>.</p>
 <h4 id="id-length">id length</h4>
@@ -206,6 +208,28 @@ The default value is <code>100kb</code>.</p>
 <li><code>allowIPAddressList</code>: Default is <code>[]</code>. The list of allowed IP addresses. These are preferred over <code>denyAddressList</code>.</li>
 <li><code>denyAddressList</code>: Default is <code>[]</code>. The list of denied IP addresses.</li>
 </ul>
+<h3 id="frameguard-deny">frameguard deny</h3>
+<p>Set to <code>true</code> to set the X-Frame-Options header to DENY to help you mitigate clickjacking attacks. Default is <code>false</code>. See more here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options</p>
+<h3 id="no-sniff">no sniff</h3>
+<p>Set to <code>true</code> to set the X-Content-Type-Options header to nosniff. This mitigates MIME type sniffing which can cause security vulnerabilities. Default is <code>false</code>. See more here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options</p>
+<h4 id="hsts">hsts</h4>
+<p>Set HTTP Strict Transport Security (HSTS) headers in express. Default is disabled. See more here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security</p>
+<ul>
+<li><code>seconds</code>: Default is <code>0</code>. Seconds for HSTS to be enabled. When set to 0, header will not be set and HSTS is disabled. Set to a low number to test. For production, set to 63072000 (2 years).</li>
+<li><code>preload</code>: Default is <code>false</code>. Submit to HSTS preload service.</li>
+<li><code>includeSubDomains</code>: Default is <code>false</code>. When set, all subdomains will be subject to same HSTS rules.</li>
+</ul>
+<h4 id="csp">csp</h4>
+<p>Set Content Security Policy (CSP) headers in express. Default is disabled. When enabled, a default policy is applied unless the <code>value</code> field is provided. See more here: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP</p>
+<ul>
+<li><code>enabled</code>: Default is <code>false</code>. Set to <code>true</code> to enable CSP headers.</li>
+<li><code>report only</code>: Default is <code>false</code>. Set to <code>true</code> to report, but not enforce, CSP.</li>
+<li><code>value</code>: Default is <code>null</code>. Set to a custom value to override default CSP value.</li>
+</ul>
+<h4 id="csrf-cookie-name">csrf cookie name</h4>
+<p>Default is &quot;__csrf&quot;. Set to override the cookie name used for a csrf token. This can be helpful to avoid conflicts with other cookies on a domain.</p>
+<h4 id="exclude-non-relevant">exclude non-relevant</h4>
+<p>Default is <code>false</code>. When set to <code>true</code>, questions with non-relevant values and children of non-relevant parents will be treated as blank in computations. If a non-relevant question becomes relevant again, its previous value will be restored. This matches the behavior of ODK Collect.</p>
 </article>
 
 </section>

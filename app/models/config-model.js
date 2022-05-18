@@ -369,6 +369,8 @@ module.exports = {
         swipePage: config['swipe page'],
         textMaxChars: config['text field character limit'],
         csrfCookieName: config['csrf cookie name'],
+        excludeNonRelevant: config['exclude non-relevant'],
+        experimentalOptimizations: config['experimental optimizations'],
     },
     getThemesSupported,
 };

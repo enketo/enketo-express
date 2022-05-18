@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.0.0 - 2022-05-17
+
+### Changed
+
+-   Fixed a duplicate record name issue in offline-capable views if more than 1 form with the same title exist in the local database, closes (#417)
+
+    **Breaking change:** once users visit a form in offline-capable mode, the offline form cache IndexedDB schema will be upgraded, which is irreversible.
+
+-   Add max processes config value (#415)
+
+    **Breaking change:** the previous default was to fork one process for every logical CPU core on the host, the new default is limited to 16 processes by default.
+
+-   Fix: missing media healing offline (#419)
+-   Show a less cryptic error message when form loading fails with missing external instances (#421, #400)
+-   Allow client csrf cookie name to be configurable (#420)
+-   Don't disable the upload button so much (#410)
+-   Add configurable security headers (#402)
+-   Fix: depend on transformer and core releases in lockfile (#413)
+-   Optionally exclude non-relevant values in calculations (enketo-core#870)
+-   Fix map with hidden geo-inputs when "hide-input" class is active (enketo-core#889)
+-   Optionally recompute the evaluation cascade asynchronously (enketo-core#881)
+-   Improve form initialization performance by calculating repeats only once (enketo-core#887)
+-   Fixed mangling of markdown-produced HTML next to top-level text nodes when a mediamap is provided (enketo-transformer#150)
+-   Improve test isolation (enketo-core#885)
+
 ## 3.1.1 - 2022-04-21
 
 -   Improve errors for missing external instances in preview mode (#400)
