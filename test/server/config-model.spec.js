@@ -92,7 +92,7 @@ describe('Config Model', () => {
                 return readFileSync(path, options);
             });
 
-            loadConfig();
+            config = loadConfig();
         });
 
         it('for string values in a top level config item', () => {
