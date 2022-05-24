@@ -653,14 +653,11 @@ function getDataFile(url, languageMap) {
         })
         .catch((error) => {
             const errorMsg =
-                error.message ||
-                t('error.dataloadfailed', {
-                    url,
-                    // switch off escaping just for this known safe value
-                    interpolation: {
-                        escapeValue: false,
-                    },
-                });
+                !error.message || /fetch/.test(error.message)
+                    ? t('error.dataloadfailed', {
+                          filename: url.replace(/.*\//, ''),
+                      })
+                    : error.message;
             throw new Error(errorMsg);
         });
 }

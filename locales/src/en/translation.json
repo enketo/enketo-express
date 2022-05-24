@@ -214,7 +214,7 @@
     },
     "error": {
         "code": "Error Code: __code__",
-        "dataloadfailed": "Failed to load data from __url__",
+        "dataloadfailed": "Failed to load __filename__.",
         "econnrefused": "Could not connect with Form Server",
         "encryptionnotsupported": "This form requires local encryption of records. Unfortunately this is not supported by your browser. We recommend switching to a modern browser.",
         "formloadfailed": "Failed to load form",
