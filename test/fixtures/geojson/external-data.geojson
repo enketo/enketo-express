@@ -1,0 +1,30 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [102, 0.5]
+            },
+            "properties": {
+                "id": "fs87b",
+                "name": "My cool point",
+                "foo": "bar"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [104, 0.5]
+            },
+            "properties": {
+                "id": "67abie",
+                "name": "Your cool point",
+                "foo": "quux",
+                "special-property": "special value"
+            }
+        }
+    ]
+}

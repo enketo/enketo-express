@@ -1,0 +1,17 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [102, 0.5]
+            },
+            "id": "top-level-id",
+            "properties": {
+                "name": "My cool point",
+                "foo": "bar"
+            }
+        }
+    ]
+}

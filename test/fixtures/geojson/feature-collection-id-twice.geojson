@@ -1,0 +1,18 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [104, 0.5]
+            },
+            "id": "top-level-id",
+            "properties": {
+                "id": "property-id",
+                "name": "Your cool point",
+                "foo": "quux"
+            }
+        }
+    ]
+}

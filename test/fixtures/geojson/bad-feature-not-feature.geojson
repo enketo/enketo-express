@@ -1,0 +1,15 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Bad",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [102, 0.5]
+            },
+            "properties": {
+                "id": "fs87b"
+            }
+        }
+    ]
+}

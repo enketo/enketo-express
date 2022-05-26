@@ -5,7 +5,8 @@
         "node": false
     },
     "globals": {
-        "Promise": true
+        "Promise": true,
+        "structuredClone": true
     },
     "extends": ["airbnb", "prettier"],
     "plugins": ["chai-friendly", "jsdoc", "prettier", "unicorn"],
