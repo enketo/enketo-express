@@ -203,7 +203,6 @@ function _setUploadIntervals() {
 function uploadQueue(byUser = false) {
     let errorMsg;
     const successes = [];
-    const fails = [];
     let authRequired;
 
     if (uploadOngoing || !finalRecordPresent) {
@@ -288,38 +287,31 @@ function uploadQueue(byUser = false) {
                                 errorMsg =
                                     result.message ||
                                     gui.getErrorResponseMsg(result.status);
-                                fails.push(record.name);
                                 uploadProgress.update(
                                     record.instanceId,
                                     'error',
                                     errorMsg
                                 );
                             })
-                            .then(() => {
-                                $uploadButton.btnBusyState(false);
-                                if (
-                                    successes.length + fails.length ===
-                                    records.length
-                                ) {
-                                    uploadOngoing = false;
-                                    if (authRequired) {
-                                        gui.confirmLogin();
-                                    } else if (successes.length > 0) {
-                                        // let gui send a feedback message
-                                        document.dispatchEvent(
-                                            events.QueueSubmissionSuccess(
-                                                successes
-                                            )
-                                        );
-                                    }
-
-                                    // update the list by properly removing obsolete records, reactivating button(s)
-                                    _updateRecordList();
-                                }
-                            })
                     ),
                 Promise.resolve()
             );
+        })
+        .then(() => {
+            uploadOngoing = false;
+            $uploadButton.btnBusyState(false);
+
+            if (authRequired) {
+                gui.confirmLogin();
+            } else if (successes.length > 0) {
+                // let gui send a feedback message
+                document.dispatchEvent(
+                    events.QueueSubmissionSuccess(successes)
+                );
+            }
+
+            // update the list by properly removing obsolete records, reactivating button(s)
+            _updateRecordList();
         });
 }
 
