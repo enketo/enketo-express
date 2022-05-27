@@ -1,0 +1,19 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [102, 0.5]
+            },
+
+            "ignored": "ignored",
+
+            "properties": {
+                "id": "fs87b",
+                "title": "My cool point"
+            }
+        }
+    ]
+}

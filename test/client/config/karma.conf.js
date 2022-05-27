@@ -20,6 +20,16 @@ module.exports = (config) => {
                 served: false,
             },
             'test/client/**/*.spec.js',
+            {
+                pattern: 'test/fixtures/**/*.geojson',
+                included: false,
+                served: true,
+            },
+            {
+                pattern: 'test/fixtures/**/*.xml',
+                included: false,
+                served: true,
+            },
         ],
 
         // list of files to exclude
@@ -36,6 +46,9 @@ module.exports = (config) => {
             ...baseESBuildConfig,
             define: {
                 version: 'undefined',
+            },
+            loader: {
+                '.geojson': 'json',
             },
             plugins: [...baseESBuildConfig.plugins, esbuildPluginIstanbul()],
         },

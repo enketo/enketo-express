@@ -12,6 +12,7 @@ import {
     populateLastSavedInstances,
     setLastSavedRecord,
 } from './last-saved';
+import { geoJSONExternalInstance } from './geojson';
 
 /**
  * @typedef {import('../../../../app/models/record-model').EnketoRecord} EnketoRecord
@@ -609,7 +610,8 @@ function getMediaFile(url) {
 /**
  * Obtains a data/text file
  *
- * @param { string } url - URL to data tile
+ * @private
+ * @param {string} url - URL to data tile
  * @param {object } languageMap - language map object with language name properties and IANA subtag values
  * @return {Promise<XMLDocument>} a Promise that resolves with an XML Document
  */
@@ -618,25 +620,43 @@ function getDataFile(url, languageMap) {
 
     return fetch(url)
         .then((response) => {
-            contentType = response.headers.get('Content-Type').split(';')[0];
+            contentType =
+                response.headers.get('Content-Type')?.split(';')[0] ?? '';
+
+            // Currently, when using enketo-express with ODK Central, the Content-Type
+            // header will not be populated for GeoJSON external instances. Central
+            // populates the value based on an upload File's type property, which is
+            // determined by the browser for most common file types, but notably not
+            // for `.geojson` files.
+            if (
+                (contentType === '' || String(contentType) === 'null') &&
+                url.endsWith('.geojson')
+            ) {
+                contentType = 'application/geo+json';
+
+                return response.json();
+            }
 
             return response.text();
         })
-        .then((responseText) => {
+        .then((responseData) => {
             let result;
             switch (contentType) {
+                case 'application/geo+json':
+                    result = geoJSONExternalInstance(responseData);
+                    break;
                 case 'text/csv':
-                    result = utils.csvToXml(responseText, languageMap);
+                    result = utils.csvToXml(responseData, languageMap);
                     break;
                 case 'text/xml':
-                    result = parser.parseFromString(responseText, contentType);
+                    result = parser.parseFromString(responseData, contentType);
                     break;
                 default:
                     console.error(
                         'External data not served with expected Content-Type.',
                         contentType
                     );
-                    result = parser.parseFromString(responseText, 'text/xml');
+                    result = parser.parseFromString(responseData, 'text/xml');
             }
             if (
                 result &&
@@ -646,7 +666,7 @@ function getDataFile(url, languageMap) {
                 console.log(
                     'Failed to parse external data as XML, am going to try as CSV'
                 );
-                result = utils.csvToXml(responseText, languageMap);
+                result = utils.csvToXml(responseData, languageMap);
             }
 
             return result;

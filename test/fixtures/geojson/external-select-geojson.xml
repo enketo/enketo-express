@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+    xmlns:h="http://www.w3.org/1999/xhtml">
+    <h:head>
+        <h:title>GeoJSON External Secondary Instance</h:title>
+        <model>
+            <instance>
+                <data id="external-select-xml">
+                    <q/>
+                </data>
+            </instance>
+
+            <instance id="external-geojson" src="jr://file/external-data.geojson" />
+
+            <bind nodeset="/data/q" type="string"/>
+        </model>
+    </h:head>
+    <h:body>
+        <select1 ref="/data/q">
+            <label>Question</label>
+            <itemset nodeset="instance('external-geojson')/root/item">
+                <value ref="id"/>
+                <label ref="name"/>
+            </itemset>
+        </select1>
+    </h:body>
+</h:html>
