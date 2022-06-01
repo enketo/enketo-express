@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.1.0 - 2022-06-01
+
+-   Added: Support GeoJSON secondary instances (#434)
+-   Fixed: upload button gets enabled before queue is empty, closes #432 (#433)
+-   Fix (test): ensure config-model tests are properly isolated (#430)
+-   Fix/missing media healing offline 419 (#424)
+-   Added missing item to changelog for version 3.0.2 (#427)
+-   Use a more helpful error message if external data is missing in non-preview views (#423)
+-   Fix: rendering unexpected geopoint widget for setvalue actions within an input (enketo-core#896)
+-   Fix: ensure evaluation cascade additions receive form context and update arguments (enketo-core#895)
+
 ## 4.0.1 - 2022-05-18
 
 -   Fix: restore build in Dockerfile
