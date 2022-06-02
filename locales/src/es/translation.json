@@ -187,7 +187,7 @@
             "msg": "Esta acción es irreversible. Esta seguro de proceder?"
         },
         "save": {
-            "existingerror": "Este nombre de registro o ID existe ya.",
+            "existingerror": "Este nombre de registro o ID existe ya. Se debe cambiar.",
             "hint": "Este nombre le permitirá encontrar facilmente su borrador para poderlo finalizar luego.",
             "msg": "Hay cambios sin guardar, desea continuar sin guardarlos?",
             "name": "Nombre del registro",
@@ -214,9 +214,10 @@
     },
     "error": {
         "code": "Código de error: __code__",
-        "dataloadfailed": "Se ha producido un error al cargar los datos de __url__",
+        "dataloadfailed": "Error al cargar __filename__.",
         "econnrefused": "No se pudo conectar con el servidor de formularios",
         "encryptionnotsupported": "Este formulario requiere encriptamiento local de registros. Desafortunadamente su navegador actual no lo soporta. Se recomienda cambiarse a una versión más moderna de su navegador o a otro navegador.",
+        "formloadfailed": "Error al cargar formulario",
         "instancenotfound": "Registro no hallado. Puede haber expirado.",
         "invalidediturl": "Esta URL no es válida",
         "loadfailed": "Error al cargar __resource__",
@@ -381,7 +382,7 @@
         }
     },
     "submission": {
-        "http0": "Fallo (¿Sin conexión a Internet?).",
+        "http0": "El servidor no esta disponible o usted podría no estar conectado a internet",
         "http2xx": "Respuesta errónea al enviar los datos.",
         "http400": "El servidor de datos no acepta datos.",
         "http401": "Ha habido un problema de autenticación con el servidor de datos.",
