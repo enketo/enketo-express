@@ -34,7 +34,7 @@
             },
             "success": {
                 "heading": "Export Erstellt",
-                "msg": "Die Exportdatei für alle nicht übertragene Datensätze, die zu dieser Form gehören, wurden erstellt."
+                "msg": "Die Exportdatei für alle nicht übertragenen, zu diesem Formular gehörenden Datensätze wurden erstellt."
             }
         },
         "formupdated": {
@@ -45,8 +45,8 @@
             "msg": "Frage \"__path__\" in Formular nicht gefunden.  Ist der Verweis auf diese Frage korrekt?"
         },
         "loaderror": {
-            "editadvice": "Es wird empfohlen, diesen Eintrag nicht zu bearbeiten bis dieser Fehler behoben wurde.",
-            "entryadvice": "Es wird empfohlen, dieses Formular nicht für die Dateneingabe verwenden, bis das Problem behoben wurde.",
+            "editadvice": "Wir empfehlen Ihnen, diesen Datensatz nicht zu bearbeiten, bis das Problem gelöst ist.",
+            "entryadvice": "Wir empfehlen Ihnen, diesen Datensatz nicht zu verwenden, bis das Problem gelöst ist.",
             "heading": "Ladefehler",
             "msg1": "Fehler beim Laden des Formulars aufgetreten.",
             "msg2": "Bitte senden Sie eine E-Mail mit der Adresse dieser Seite und die untenstehende Fehlermeldung an __emailLink__.",
@@ -183,11 +183,11 @@
             "reminder": "Denken Sie daran danach die gleichen Druckeinstellungen im Druckmenü des Browsers zu setzen!"
         },
         "repeatremove": {
-            "heading": "Diese Gruppe Antworten löschen?",
+            "heading": "Diese Gruppe von Antworten löschen?",
             "msg": "Diese Aktion ist irreversibel. Sind Sie sicher, dass Sie fortfahren möchten?"
         },
         "save": {
-            "existingerror": "Dieser Datensatz oder die ID sind bereits vorhanden.",
+            "existingerror": "This record name or ID already exists. Please change it.",
             "hint": "Dieser Name hilft Ihnen um später Ihren Entwurf dieses Datensatzes zu finden und fertigzustellen.",
             "msg": "Es gibt ungesicherte Änderungen. Möchten Sie ohne zu speichern fortfahren?",
             "name": "Datensatzname",
@@ -214,14 +214,15 @@
     },
     "error": {
         "code": "Fehlercode: __code__",
-        "dataloadfailed": "Daten konnten nicht aus __url__ laden",
+        "dataloadfailed": "Failed to load __filename__.",
         "econnrefused": "Verbindung zum Form-Server konnte nicht hergestellt werden",
         "encryptionnotsupported": "Dieses Formular erfordert eine lokale Verschlüsselung der Datensätze. Leider wird dies von Ihrem Browser nicht unterstützt. Wir empfehlen den Umstieg auf einen modernen Browser.",
+        "formloadfailed": "Failed to load form",
         "instancenotfound": "Datensatz nicht vorhanden. Er ist wahrscheinlich abgelaufen.",
         "invalidediturl": "Keine gültige Bearbeitungs-URL",
-        "loadfailed": "Fehler beim laden __resource__",
+        "loadfailed": "Fehler beim laden von __resource__",
         "notfoundinformlist": [
-            "Oops, dieses Formular existiert nicht mehr. Wahrscheinlich wurde es von Besitzer gelöscht, archiviert, oder deaktiviert. Bitte kontaktieren sie zur Bestätigung den Besitzer des Formulars.",
+            "Oops, dieses Formular existiert nicht (mehr). Wahrscheinlich wurde es von Besitzer gelöscht, archiviert, oder deaktiviert. Bitte kontaktieren sie zur Bestätigung den Besitzer des Formulars.",
             "Fehlerdetails: Formular mit ID __formId__ wurde nicht in /formList gefunden."
         ],
         "pagenotfound": "Seite nicht gefunden",
@@ -381,7 +382,7 @@
         }
     },
     "submission": {
-        "http0": "Fehlgeschlagen (offline?).",
+        "http0": "The server is not available or you may not be connected to the Internet.",
         "http2xx": "Unerwartete Antwort beim Datenversand.",
         "http400": "Der Datenserver hat keine Daten akzeptiert.",
         "http401": "Authentifizierung Problem mit Datenserver.",

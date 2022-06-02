@@ -45,8 +45,8 @@
             "msg": "Kon vraag \"__path__\" niet vinden. Is de referentie naar deze vraag juist?"
         },
         "loaderror": {
-            "editadvice": "Het is aanbevolen dit record niet te verander totdat dit opgelost it.",
-            "entryadvice": "Het is aanbevolen deze enquete niet te gebruiken voor het invoeren van informatie totdat dit opgelost is.",
+            "editadvice": "We raden u aan dit record niet te veranderen totdat dit is opgelost.",
+            "entryadvice": "We raden u aan dit form niet te gebruiken voor gegevensinvoer totdat dit is opgelost.",
             "heading": "Laad Fout",
             "msg1": "Er is een fout opgetreden tijdens het laden van deze enquete.",
             "msg2": "Contacteer __emailLink__ met de link naar dit form en de fout beschrijving hieronder:",
@@ -187,7 +187,7 @@
             "msg": "Deze actie is onomkeerbaar. Weet je zeker dat je verder wilt gaan?"
         },
         "save": {
-            "existingerror": "Deze record naam of ID bestaat al.",
+            "existingerror": "Deze recordnaam of ID bestaat al. Verander het alstublieft.",
             "hint": "Deze naam dient om makkelijk het opgeslagen bestand te kunnen vinden om het later compleet te maken.",
             "msg": "Er zijn niet-opgeslagen veranderingen gemaakt. Wil je doorgaan zonder deze te bewaren?",
             "name": "Record Naam",
@@ -214,9 +214,10 @@
     },
     "error": {
         "code": "Fout Code: __code__",
-        "dataloadfailed": "Kon data niet laden van __url__",
+        "dataloadfailed": "Kan __filename__ niet laden.",
         "econnrefused": "Kon niet verbinden met de Form Server",
         "encryptionnotsupported": "Voor dit formulier is lokale codering van records vereist. Helaas wordt dit niet ondersteund door uw browser. We raden aan over te schakelen naar een moderne browser.",
+        "formloadfailed": "Kan formulier niet laden",
         "instancenotfound": "Record niet gevonden. Het kan verlopen zijn.",
         "invalidediturl": "Niet een geldig edit URL",
         "loadfailed": "Kon __resource__ niet laden",
@@ -381,7 +382,7 @@
         }
     },
     "submission": {
-        "http0": "Gefaald (Offline?)",
+        "http0": "De server is niet beschikbaar of u bent mogelijk niet verbonden met internet.",
         "http2xx": "Onverwacht antwoord tijdens record verzending.",
         "http400": "Data server wilde het record niet accepteren.",
         "http401": "Autorisatie probleem met de data server.",

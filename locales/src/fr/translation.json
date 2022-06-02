@@ -214,9 +214,10 @@
     },
     "error": {
         "code": "Code d'erreur : __code__",
-        "dataloadfailed": "Les données n'ont pu être chargées depuis __url__",
+        "dataloadfailed": "Impossible de charger __filename__.",
         "econnrefused": "Impossible d'établir une connexion avec le serveur de formulaires",
         "encryptionnotsupported": "Ce formulaire nécessite le chiffrement local des enregistrements. Malheureusement, votre navigateur web ne le prend pas en charge. Nous vous recommandons d'utiliser un navigateur web plus récent.",
+        "formloadfailed": "Impossible de charger le formulaire",
         "instancenotfound": "L'enregistrement n'a pas été trouvé. Il a peut-être expiré.",
         "invalidediturl": "Ceci n'est pas une URL d'édition valide",
         "loadfailed": "Impossible de charger __resource__",
@@ -381,7 +382,7 @@
         }
     },
     "submission": {
-        "http0": "Échec (hors-ligne ?).",
+        "http0": "Le serveur n'est pas disponible ou vous êtes hors-ligne.",
         "http2xx": "Réponse inattendue durant la soumission des données.",
         "http400": "Le serveur n'a pas accepté les données.",
         "http401": "Problème d'authentification avec le serveur.",
