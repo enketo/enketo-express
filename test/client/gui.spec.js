@@ -17,12 +17,28 @@ describe('Alert dialogs', () => {
         }
     });
 
-    it('does not escape HTML entities in translations', () => {
-        gui.alert('&egrave;');
+    const entities = {
+        '&agrave;': 'à',
+        '&eacute;': 'é',
+        '&igrave;': 'ì',
+        '&ograve;': 'ò',
+        '&ugrave;': 'ù',
+        '&Agrave;': 'À',
+        '&Eacute;': 'É',
+        '&Egrave;': 'È',
+        '&Igrave;': 'Ì',
+        '&Ograve;': 'Ò',
+        '&Ugrave;': 'Ù',
+    };
 
-        dialog = document.querySelector('.vex');
+    Object.entries(entities).forEach(([entity, expected]) => {
+        it('does not escape HTML entities in translations', () => {
+            gui.alert(entity);
 
-        expect(dialog.innerText).to.include('è');
-        expect(dialog.innerText).not.to.include('&egrave;');
+            dialog = document.querySelector('.vex');
+
+            expect(dialog.innerText).to.include(expected);
+            expect(dialog.innerText).not.to.include(entity);
+        });
     });
 });
