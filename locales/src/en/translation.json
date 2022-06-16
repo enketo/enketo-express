@@ -63,7 +63,7 @@
             "msg": [
                 "This form can now be loaded and used without an Internet connection on this device. Bookmark it for easy offline access.",
                 "Records are automatically stored and queued in your browser until an Internet connection is available. When the app is online, records will be automatically submitted - one by one.",
-                "Only after a record has been succesfully submitted, it will be removed from the queue. You can safely close down your browser and device with items in the queue. They will still be there next time you load the form."
+                "Only after a record has been successfully submitted, it will be removed from the queue. You can safely close down your browser and device with items in the queue. They will still be there next time you load the form."
             ]
         },
         "offlineunsupported": {
