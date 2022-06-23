@@ -7,13 +7,13 @@ import support from 'enketo-core/src/js/support';
 import * as printHelper from 'enketo-core/src/js/print';
 import vex from 'vex-js';
 import $ from 'jquery';
+import vexEnketoDialog from 'vex-dialog-enketo';
 import feedbackBar from './feedback-bar';
 import settings from './settings';
 import { init as initTranslator, t } from './translator';
 import sniffer from './sniffer';
 import events from './event';
 import './plugin';
-import vexEnketoDialog from 'vex-dialog-enketo';
 
 let pages;
 let homeScreenGuidance;
@@ -208,7 +208,7 @@ function alert(message, heading, level, duration) {
     level = level || 'error';
     vex.closeAll();
     vex.dialog.alert({
-        unsafeMessage: message,
+        unsafeMessage: `<span>${message}</span>`,
         title: heading || t('alert.default.heading'),
         messageClassName: level === 'normal' ? '' : `alert-box ${level}`,
         buttons: [
