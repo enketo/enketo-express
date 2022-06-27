@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.1.1 - 2022-06-26
+
+-   Updated French, German, Dutch and Spanish translations (#438)
+-   fixed: spelling error (#441)
+-   Fix: don't escape HTML entities in alert dialogs (#440)
+-   Update meta selector used when setting deprecatedID (enketo-core#900)
+-   Fix: preserve geopicker zoom, center map on user location on load, no error clicking pin (enketo-core#905)
+-   Fix: don't use removed repeat instance as context for relevance by @eyelidlessness in (enketo-core#909)
+
 ## 4.1.0 - 2022-06-01
 
 -   Added: Support GeoJSON secondary instances (#434)
