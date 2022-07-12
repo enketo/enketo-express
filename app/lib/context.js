@@ -16,6 +16,10 @@ const requestContextMiddleware = (req, res, next) => {
 
         baseContext.set('request', req);
 
+        res.once('finish', () => {
+            baseContext.set('request', null);
+        });
+
         next();
     });
 };
