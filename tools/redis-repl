@@ -1,0 +1,81 @@
+#!/usr/bin/env -S NODE_ENV=development node
+const redis = require('redis');
+const redisVersion = require('../node_modules/redis/package.json').version;
+const config = require('../app/models/config-model').server.redis.main;
+const { REPLServer } = require('repl');
+
+const log = (...args) => console.error('[redis-repl]', ...args);
+
+log(`Connecting to redis at ${config.host}:${config.port}...`);
+const client = redis.createClient(config.port, config.host, { auth_pass: config.password });
+client.on('error', (err) => log('Redis client error:', err));
+client.on('end', () => log('Redis client closed') || process.exit());
+
+client.on('connect', async () => {
+  log('Connected.');
+
+  const predefs = [
+    [ client,     'client',   'client',     'Redis client.' ],
+    [ listKeys,   'listKeys', 'listKeys()', 'Show all keys in the database.' ],
+    [ get,        'get',      'get(id)',    'Get something from the database.' ],
+    [ printUsage, 'help',     'help()',     'Show this message.' ],
+  ];
+
+  printUsage();
+
+  const repl = new REPLServer({ prompt:'redis> ' });
+  repl.on('exit', () => client.end(true));
+
+  await new Promise((resolve, reject) => repl.setupHistory('tools/.redis-repl.history', err => err ? reject(err) : resolve()));
+
+  predefs
+      .forEach(([ value, varName ]) => {
+        repl.context[varName] = value;
+      });
+
+  function printUsage() {
+    console.log(`\nnode-redis docs: https://github.com/redis/node-redis/tree/v${redisVersion}#usage`);
+
+    console.log('\nAvailable globals:\n');
+    const cmdPad = 1 + predefs.reduce((acc, p) => Math.max(acc, p[2].length), 0);
+    predefs
+        .forEach(([ , , cmd, description ]) => {
+          console.log(' ', cmd.padEnd(cmdPad, ' '), description);
+        });
+    console.log();
+  }
+
+  function get(id) {
+    replCmd(
+      wrapper => client.hgetall('ca:localhost:8989/v1/projects/1,withrepeat', wrapper),
+      res => console.log(res),
+    );
+  }
+
+  function listKeys() {
+    replCmd(
+      wrapper => client.multi().keys('*').exec(wrapper),
+      ([ keys ]) => {
+        keys.sort();
+
+        console.log('\n\nKeys in database:\n');
+        keys.forEach(k => console.log(' ', k));
+        console.log();
+      },
+    );
+  }
+
+  function replCmd(fn, resultHandler) {
+    repl.clearBufferedCommand();
+    fn((err, res) => {
+      if(err) {
+        log('Error:', err);
+        repl.displayPrompt();
+        return;
+      }
+
+      resultHandler(res);
+      repl.displayPrompt();
+    });
+  }
+});
