@@ -72,7 +72,7 @@ client.on('connect', async () => {
       return console.log('This is the total count of form submissions to this enketo-express instance.');
     }
     switch(key.split(':')[0]) {
-      case 'ca': return console.log('ca:<open-rosa-server>,<open-rosa-id>  Cached Enketo SurveyObject.');
+      case 'ca': return console.log('ca:<open-rosa-server>,<open-rosa-id>  enketo-transformer result.');
       case 'or': return console.log('or:<open-rosa-server>,<open-rosa-id>  Enketo ID.');
       case 'id': return console.log('id:<enketo-id>  Enketo SurveyObject.');
       case 'su': return console.log('su:<enketo-id>  Submission IDs.');
