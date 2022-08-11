@@ -51,7 +51,7 @@ async function get(url, options = {}) {
     urlObj.searchParams.append('landscape', options.landscape);
     urlObj.searchParams.append('scale', options.scale);
 
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ headless: true, timeout });
     const page = await browser.newPage();
 
     let pdf;
@@ -75,6 +75,7 @@ async function get(url, options = {}) {
             },
             scale: options.scale,
             printBackground: true,
+            timeout,
         });
     } catch (e) {
         e.status = e.status || 400;
