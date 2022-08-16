@@ -20,6 +20,10 @@ events.ApplicationUpdated = function () {
     return new CustomEvent('applicationupdated', { bubbles: true });
 };
 
+events.FormInitialized = function () {
+    return new CustomEvent('forminitialized', { bubbles: true });
+};
+
 events.FormUpdated = function () {
     return new CustomEvent('formupdated', { bubbles: true });
 };
