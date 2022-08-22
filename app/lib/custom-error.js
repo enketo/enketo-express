@@ -18,10 +18,19 @@ function TranslatedError(translationKey, translationObject) {
 TranslatedError.prototype = Object.create(Error.prototype);
 TranslatedError.prototype.name = 'TranslatedError';
 
+class ResponseError extends Error {
+    constructor(status, message) {
+        super(message);
+
+        this.status = status;
+    }
+}
+
 module.exports = {
     /**
      * @type { Error }
      */
     Error,
     TranslatedError,
+    ResponseError,
 };

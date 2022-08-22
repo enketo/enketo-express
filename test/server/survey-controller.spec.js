@@ -5,6 +5,7 @@ const request = require('supertest');
 const config = require('../../app/models/config-model').server;
 
 config['base path'] = '';
+
 const app = require('../../config/express');
 
 describe('Survey Controller', () => {

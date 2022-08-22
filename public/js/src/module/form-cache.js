@@ -13,6 +13,7 @@ import {
     populateLastSavedInstances,
     removeLastSavedRecord,
 } from './last-saved';
+import { replaceMediaSources } from './media';
 
 /**
  * @typedef {import('../../../../app/models/record-model').EnketoRecord} EnketoRecord
@@ -238,6 +239,9 @@ function _addBinaryDefaultsAndUpdateModel(survey) {
     // 2. Filemanager.getFileUrl will determine whether to load from (survey) resources of (record) files
 
     const model = new DOMParser().parseFromString(survey.model, 'text/xml');
+
+    replaceMediaSources(model, survey.media);
+
     const binaryDefaultElements = [
         ...model.querySelectorAll('instance:first-child > * *[src]'),
     ];
@@ -303,7 +307,13 @@ function updateMaxSubmissionSize(survey) {
  * @return { Promise<Survey> }
  */
 function updateMedia(survey) {
-    const containers = [document.querySelector('form.or')];
+    const formElement = document.querySelector('form.or');
+
+    replaceMediaSources(formElement, survey.media, {
+        isOffline: true,
+    });
+
+    const containers = [formElement];
     const formHeader = document.querySelector('.form-header');
     if (formHeader) {
         containers.push(formHeader);

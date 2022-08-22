@@ -20,6 +20,7 @@ import records from './records-queue';
 import encryptor from './encryptor';
 import formCache from './form-cache';
 import { getLastSavedRecord, populateLastSavedInstances } from './last-saved';
+import { replaceMediaSources, replaceModelMediaSources } from './media';
 
 /**
  * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
@@ -56,6 +57,15 @@ const formOptions = {
  * @return {Promise<Form>}
  */
 function init(formEl, data, loadErrors = []) {
+    const media = {
+        ...data.survey.media,
+        ...data.instanceAttachments,
+    };
+
+    replaceMediaSources(formEl, media, {
+        isOffline: settings.offline,
+    });
+
     formData = data;
 
     return _initializeRecords()
@@ -90,6 +100,8 @@ function init(formEl, data, loadErrors = []) {
             }
 
             form = new Form(formEl, data, formOptions);
+            replaceModelMediaSources(form, media);
+
             loadErrors = loadErrors.concat(form.init());
 
             // Determine whether UI language should be attempted to be switched.
@@ -227,6 +239,8 @@ function _resetForm(survey, options = {}) {
                 },
                 formOptions
             );
+
+            replaceModelMediaSources(form, survey.media);
 
             const loadErrors = form.init();
 

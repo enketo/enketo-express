@@ -4,6 +4,8 @@
 
 const request = require('request');
 const express = require('express');
+const errors = require('../lib/custom-error');
+const mediaLib = require('../lib/media');
 const communicator = require('../lib/communicator');
 const surveyModel = require('../models/survey-model');
 const userModel = require('../models/user-model');
@@ -13,7 +15,6 @@ const utils = require('../lib/utils');
 
 const router = express.Router();
 const routerUtils = require('../lib/router-utils');
-const { toLocalMediaUrl } = require('../lib/url');
 // var debug = require( 'debug' )( 'submission-controller' );
 
 module.exports = (app) => {
@@ -158,40 +159,34 @@ function maxSize(req, res, next) {
  * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
-function getInstance(req, res, next) {
-    surveyModel
-        .get(req.enketoId)
-        .then((survey) => {
-            survey.instanceId = req.query.instanceId;
-            instanceModel
-                .get(survey)
-                .then((survey) => {
-                    // check if found instance actually belongs to the form
-                    if (utils.getOpenRosaKey(survey) === survey.openRosaKey) {
-                        // Change URLs of instanceAttachments to local URLs
-                        Object.keys(survey.instanceAttachments).forEach(
-                            (key) =>
-                                (survey.instanceAttachments[key] =
-                                    toLocalMediaUrl(
-                                        survey.instanceAttachments[key]
-                                    ))
-                        );
+async function getInstance(req, res, next) {
+    try {
+        const survey = await surveyModel.get(req.enketoId);
 
-                        res.json({
-                            instance: survey.instance,
-                            instanceAttachments: survey.instanceAttachments,
-                        });
-                    } else {
-                        const error = new Error(
-                            "Instance doesn't belong to this form"
-                        );
-                        error.status = 400;
-                        throw error;
-                    }
-                })
-                .catch(next);
-        })
-        .catch(next);
+        const instance = await instanceModel.get({
+            instanceId: req.query.instanceId,
+        });
+
+        if (utils.getOpenRosaKey(survey) !== instance.openRosaKey) {
+            throw new errors.ResponseError(
+                400,
+                "Instance doesn't belong to this form"
+            );
+        }
+
+        const instanceAttachments = await mediaLib.getMediaMap(
+            instance.instanceId,
+            instance.instanceAttachments,
+            mediaLib.getHostURLOptions(req)
+        );
+
+        res.json({
+            instance: instance.instance,
+            instanceAttachments,
+        });
+    } catch (error) {
+        next(error);
+    }
 }
 
 /**
