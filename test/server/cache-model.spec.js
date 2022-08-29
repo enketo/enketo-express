@@ -5,23 +5,13 @@ const chai = require('chai');
 
 const { expect } = chai;
 const chaiAsPromised = require('chai-as-promised');
-const redis = require('redis');
-const config = require('../../app/models/config-model').server;
+const { client } = require('../../app/lib/db');
 
-const client = redis.createClient(
-    config.redis.cache.port,
-    config.redis.cache.host,
-    {
-        auth_pass: config.redis.cache.password,
-    }
-);
 const model = require('../../app/models/cache-model');
 
 let survey;
 
 chai.use(chaiAsPromised);
-// select database #15 to use as the test database
-client.select(15);
 
 describe('Cache Model', () => {
     beforeEach(() => {
@@ -42,12 +32,6 @@ describe('Cache Model', () => {
             form: '<form>some form</form>',
             model: '<data>some model</data>',
         };
-    });
-
-    afterEach((done) => {
-        model.flushAll().then(() => {
-            done();
-        });
     });
 
     describe('set: when attempting to cache a survey', () => {

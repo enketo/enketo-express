@@ -2,15 +2,9 @@
  * @module submission-model
  */
 
-const config = require('./config-model').server;
-const client = require('redis').createClient(
-    config.redis.main.port,
-    config.redis.main.host,
-    {
-        auth_pass: config.redis.main.password,
-    }
-);
 const path = require('path');
+const { client } = require('../lib/db');
+const config = require('./config-model').server;
 // var debug = require( 'debug' )( 'submission-model' );
 let logger;
 
@@ -40,11 +34,6 @@ if (config.log.submissions) {
             file: path.resolve(__dirname, '../../logs/submissions.log'),
         })
         .withFormatter(_formatter);
-}
-
-// in test environment, switch to different db
-if (process.env.NODE_ENV === 'test') {
-    client.select(15);
 }
 
 /**

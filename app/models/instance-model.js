@@ -4,20 +4,9 @@
 
 const config = require('./config-model').server;
 const TError = require('../lib/custom-error').TranslatedError;
+const { client } = require('../lib/db');
 const utils = require('../lib/utils');
-const client = require('redis').createClient(
-    config.redis.main.port,
-    config.redis.main.host,
-    {
-        auth_pass: config.redis.main.password,
-    }
-);
 // var debug = require( 'debug' )( 'instance-model' );
-
-// in test environment, switch to different db
-if (process.env.NODE_ENV === 'test') {
-    client.select(15);
-}
 
 /**
  * * @param protect

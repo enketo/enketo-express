@@ -2,24 +2,13 @@
  * @module survey-model
  */
 
+const { client } = require('../lib/db');
 const utils = require('../lib/utils');
 const TError = require('../lib/custom-error').TranslatedError;
 const config = require('./config-model').server;
-const client = require('redis').createClient(
-    config.redis.main.port,
-    config.redis.main.host,
-    {
-        auth_pass: config.redis.main.password,
-    }
-);
 
 const pending = {};
 const debug = require('debug')('survey-model');
-
-// in test environment, switch to different db
-if (process.env.NODE_ENV === 'test') {
-    client.select(15);
-}
 
 /**
  * @typedef {import('./account-model').AccountObj} AccountObj

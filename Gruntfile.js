@@ -141,6 +141,19 @@ module.exports = (grunt) => {
             all: {
                 options: {
                     reporter: 'dot',
+
+                    /**
+                     * Note: `grunt-mocha-test` passes `options` directly to
+                     * Mocha's programmable API rather than as CLI options.
+                     * For whatever reason, this means that `require` doesn't
+                     * allow registering root hooks as "Root Hooks".
+                     *
+                     * @see {@link https://mochajs.org/#root-hook-plugins}
+                     *
+                     * This is a workaround to pass the hooks directly.
+                     */
+                    rootHooks: require('./test/server/shared/root-hooks')
+                        .mochaHooks,
                 },
                 src: ['test/server/**/*.spec.js'],
             },
@@ -188,9 +201,11 @@ module.exports = (grunt) => {
         env: {
             develop: {
                 NODE_ENV: 'develop',
+                REDIS_DB: '15',
             },
             test: {
                 NODE_ENV: 'test',
+                REDIS_DB: '15',
             },
             production: {
                 NODE_ENV: 'production',

@@ -2,25 +2,13 @@
  * @module cache-model
  */
 
-const utils = require('../lib/utils');
 const transformer = require('enketo-transformer');
+const { client } = require('../lib/db');
+const utils = require('../lib/utils');
 
 const prefix = 'ca:';
 const expiry = 30 * 24 * 60 * 60;
-const config = require('./config-model').server;
-const client = require('redis').createClient(
-    config.redis.cache.port,
-    config.redis.cache.host,
-    {
-        auth_pass: config.redis.cache.password,
-    }
-);
 const debug = require('debug')('cache-model');
-
-// in test environment, switch to different db
-if (process.env.NODE_ENV === 'test') {
-    client.select(15);
-}
 
 /**
  * Gets an item from the cache.

@@ -7,19 +7,9 @@
 process.env.NODE_ENV = 'test';
 
 const request = require('supertest');
-const redis = require('redis');
 const app = require('../../config/express');
 const surveyModel = require('../../app/models/survey-model');
 const instanceModel = require('../../app/models/instance-model');
-const config = require('../../app/models/config-model').server;
-
-const client = redis.createClient(
-    config.redis.main.port,
-    config.redis.main.host,
-    {
-        auth_pass: config.redis.main.password,
-    }
-);
 
 describe('Submissions', () => {
     let enketoId;
@@ -38,21 +28,6 @@ describe('Submissions', () => {
                 enketoId = id;
                 done();
             });
-    });
-
-    afterEach((done) => {
-        // select test database and flush it
-        client.select(15, (err) => {
-            if (err) {
-                return done(err);
-            }
-            client.flushdb((err) => {
-                if (err) {
-                    return done(err);
-                }
-                done();
-            });
-        });
     });
 
     describe('for active/existing Enketo IDs', () => {
