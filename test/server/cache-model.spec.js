@@ -5,7 +5,7 @@ const chai = require('chai');
 
 const { expect } = chai;
 const chaiAsPromised = require('chai-as-promised');
-const { client } = require('../../app/lib/db');
+const { cacheClient } = require('../../app/lib/db');
 
 const model = require('../../app/models/cache-model');
 
@@ -81,7 +81,7 @@ describe('Cache Model', () => {
         const expiration = 30 * 24 * 60 * 60 * 1000;
         const getTtl = (key) =>
             new Promise((resolve, reject) => {
-                client.pttl(key, (error, ttl) => {
+                cacheClient.pttl(key, (error, ttl) => {
                     if (error) {
                         reject(error);
                     }
@@ -379,7 +379,7 @@ describe('Cache Model', () => {
     describe('flush(ing): when attempting to flush the cache', () => {
         const getCacheCount = () =>
             new Promise((resolve, reject) => {
-                client.keys('ca:*', (error, keys) => {
+                cacheClient.keys('ca:*', (error, keys) => {
                     if (error) {
                         reject(error);
                     }

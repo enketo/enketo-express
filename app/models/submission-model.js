@@ -3,7 +3,7 @@
  */
 
 const path = require('path');
-const { client } = require('../lib/db');
+const { mainClient } = require('../lib/db');
 const config = require('./config-model').server;
 // var debug = require( 'debug' )( 'submission-model' );
 let logger;
@@ -68,12 +68,12 @@ function isNew(id, instanceId) {
         .then((latest) => _alreadyRecorded(instanceId, latest))
         .then((alreadyRecorded) => {
             if (!alreadyRecorded) {
-                client.lpush(key, instanceId, (error) => {
+                mainClient.lpush(key, instanceId, (error) => {
                     if (error) {
                         console.error(`Error pushing instanceID into: ${key}`);
                     } else {
                         // only store last 100 IDs
-                        client.ltrim(key, 0, 99, (error) => {
+                        mainClient.ltrim(key, 0, 99, (error) => {
                             if (error) {
                                 console.error(`Error trimming: ${key}`);
                             }
@@ -119,7 +119,7 @@ function _alreadyRecorded(instanceId, list = []) {
  */
 function _getLatestSubmissionIds(key) {
     return new Promise((resolve, reject) => {
-        client.lrange(key, 0, -1, (error, res) => {
+        mainClient.lrange(key, 0, -1, (error, res) => {
             if (error) {
                 reject(error);
             } else {
