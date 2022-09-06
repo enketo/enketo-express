@@ -158,6 +158,24 @@ describe('Communicator Library', () => {
                 done();
             });
         });
+
+        it('should resolve with submission size when unauthenticated', (done) => {
+            const survey = {
+                info: {
+                    downloadUrl: 'https://testserver.com/foo',
+                },
+                credentials: { bearer: 'qwerty' },
+                cookie: 'abc',
+            };
+            nock('https://testserver.com')
+                .intercept('/foo', 'head')
+                .reply(401, {}, { 'x-openrosa-accept-content-length': '1024' });
+
+            communicator.getMaxSize(survey).then((response) => {
+                expect(response).to.equal('1024');
+                done();
+            });
+        });
     });
 
     describe('authenticate function', () => {

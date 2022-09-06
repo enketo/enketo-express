@@ -345,6 +345,10 @@ function _request(options) {
                 debug(`Error occurred when requesting ${options.url}`, error);
                 reject(error);
             } else if (response.statusCode === 401) {
+                // resolve response if request method is HEAD
+                if (method === 'head') {
+                    resolve(response);
+                }
                 error = new Error('Forbidden. Authorization Required.');
                 error.status = response.statusCode;
                 reject(error);
