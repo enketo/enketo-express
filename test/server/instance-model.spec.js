@@ -7,19 +7,6 @@ const model = require('../../app/models/instance-model');
 chai.use(chaiAsPromised);
 
 describe('Instance Model', () => {
-    afterEach((done) => {
-        model
-            .remove({
-                instanceId: 'someid',
-            })
-            .then(() => {
-                done();
-            })
-            .catch(() => {
-                done();
-            });
-    });
-
     describe('set: when attempting to cache an instance', () => {
         let survey;
 

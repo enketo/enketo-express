@@ -4,20 +4,9 @@
 
 const config = require('./config-model').server;
 const TError = require('../lib/custom-error').TranslatedError;
+const { mainClient } = require('../lib/db');
 const utils = require('../lib/utils');
-const client = require('redis').createClient(
-    config.redis.main.port,
-    config.redis.main.host,
-    {
-        auth_pass: config.redis.main.password,
-    }
-);
 // var debug = require( 'debug' )( 'instance-model' );
-
-// in test environment, switch to different db
-if (process.env.NODE_ENV === 'test') {
-    client.select(15);
-}
 
 /**
  * * @param protect
@@ -50,7 +39,7 @@ function _cacheInstance(survey, protect = true) {
             const instanceAttachments = survey.instanceAttachments || {};
 
             // first check if record exists (i.e. if it is being edited or viewed)
-            client.hgetall(`in:${survey.instanceId}`, (err, obj) => {
+            mainClient.hgetall(`in:${survey.instanceId}`, (err, obj) => {
                 if (err) {
                     reject(err);
                 } else if (obj && protect) {
@@ -60,7 +49,7 @@ function _cacheInstance(survey, protect = true) {
                     error.status = 405;
                     reject(error);
                 } else {
-                    client.hmset(
+                    mainClient.hmset(
                         instanceKey,
                         {
                             returnUrl: survey.returnUrl || '',
@@ -74,7 +63,7 @@ function _cacheInstance(survey, protect = true) {
                                 reject(error);
                             } else {
                                 // expire, no need to wait for result
-                                client.expire(
+                                mainClient.expire(
                                     instanceKey,
                                     config['expiry for record cache'] / 1000
                                 );
@@ -105,7 +94,7 @@ function _getInstance(survey) {
             error.status = 400;
             reject(error);
         } else {
-            client.hgetall(`in:${survey.instanceId}`, (err, obj) => {
+            mainClient.hgetall(`in:${survey.instanceId}`, (err, obj) => {
                 if (err) {
                     reject(err);
                 } else if (!obj) {
@@ -142,7 +131,7 @@ function _removeInstance(survey) {
             error.status = 400;
             reject(error);
         } else {
-            client.del(`in:${survey.instanceId}`, (err) => {
+            mainClient.del(`in:${survey.instanceId}`, (err) => {
                 if (err) {
                     reject(err);
                 } else {

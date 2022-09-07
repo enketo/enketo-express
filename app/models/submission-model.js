@@ -2,15 +2,9 @@
  * @module submission-model
  */
 
-const config = require('./config-model').server;
-const client = require('redis').createClient(
-    config.redis.main.port,
-    config.redis.main.host,
-    {
-        auth_pass: config.redis.main.password,
-    }
-);
 const path = require('path');
+const { mainClient } = require('../lib/db');
+const config = require('./config-model').server;
 // var debug = require( 'debug' )( 'submission-model' );
 let logger;
 
@@ -40,11 +34,6 @@ if (config.log.submissions) {
             file: path.resolve(__dirname, '../../logs/submissions.log'),
         })
         .withFormatter(_formatter);
-}
-
-// in test environment, switch to different db
-if (process.env.NODE_ENV === 'test') {
-    client.select(15);
 }
 
 /**
@@ -79,12 +68,12 @@ function isNew(id, instanceId) {
         .then((latest) => _alreadyRecorded(instanceId, latest))
         .then((alreadyRecorded) => {
             if (!alreadyRecorded) {
-                client.lpush(key, instanceId, (error) => {
+                mainClient.lpush(key, instanceId, (error) => {
                     if (error) {
                         console.error(`Error pushing instanceID into: ${key}`);
                     } else {
                         // only store last 100 IDs
-                        client.ltrim(key, 0, 99, (error) => {
+                        mainClient.ltrim(key, 0, 99, (error) => {
                             if (error) {
                                 console.error(`Error trimming: ${key}`);
                             }
@@ -130,7 +119,7 @@ function _alreadyRecorded(instanceId, list = []) {
  */
 function _getLatestSubmissionIds(key) {
     return new Promise((resolve, reject) => {
-        client.lrange(key, 0, -1, (error, res) => {
+        mainClient.lrange(key, 0, -1, (error, res) => {
             if (error) {
                 reject(error);
             } else {

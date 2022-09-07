@@ -2,24 +2,13 @@
  * @module survey-model
  */
 
+const { mainClient } = require('../lib/db');
 const utils = require('../lib/utils');
 const TError = require('../lib/custom-error').TranslatedError;
 const config = require('./config-model').server;
-const client = require('redis').createClient(
-    config.redis.main.port,
-    config.redis.main.host,
-    {
-        auth_pass: config.redis.main.password,
-    }
-);
 
 const pending = {};
 const debug = require('debug')('survey-model');
-
-// in test environment, switch to different db
-if (process.env.NODE_ENV === 'test') {
-    client.select(15);
-}
 
 /**
  * @typedef {import('./account-model').AccountObj} AccountObj
@@ -113,7 +102,7 @@ function getSurvey(id) {
             reject(error);
         } else {
             // get from db the record with key: "id:"+id
-            client.hgetall(`id:${id}`, (error, obj) => {
+            mainClient.hgetall(`id:${id}`, (error, obj) => {
                 if (error) {
                     reject(error);
                 } else if (
@@ -138,7 +127,7 @@ function getSurvey(id) {
                     // debug( 'object retrieved from database for id "' + id + '"', obj );
                     obj.enketoId = id;
                     // no need to wait for result of updating lastAccessed
-                    client.hset(
+                    mainClient.hset(
                         `id:${id}`,
                         'lastAccessed',
                         new Date().toISOString()
@@ -162,7 +151,7 @@ function getSurvey(id) {
 function setSurvey(survey) {
     return new Promise((resolve, reject) => {
         // Set in db:
-        // a) a record with key "id:"+ _createEnketoId(client.incr('surveys:counter')) and all survey info
+        // a) a record with key "id:"+ _createEnketoId(mainClient.incr('surveys:counter')) and all survey info
         // b) a record with key "or:"+ _createOpenRosaKey(survey.openRosaUrl, survey.openRosaId) and the enketo_id
         let error;
         const openRosaKey = utils.getOpenRosaKey(survey);
@@ -254,7 +243,7 @@ function _updateProperties(id, survey) {
         // avoid storing undefined as string 'undefined'
         update.theme = survey.theme || '';
 
-        client.hmset(`id:${id}`, update, (error) => {
+        mainClient.hmset(`id:${id}`, update, (error) => {
             if (error) {
                 reject(error);
             } else {
@@ -274,7 +263,7 @@ function _addSurvey(openRosaKey, survey) {
     return _createNewEnketoId().then(
         (id) =>
             new Promise((resolve, reject) => {
-                client
+                mainClient
                     .multi()
                     .hmset(`id:${id}`, {
                         // explicitly set the properties that need to be saved
@@ -309,7 +298,7 @@ function _addSurvey(openRosaKey, survey) {
  */
 function incrSubmissions(id) {
     return new Promise((resolve, reject) => {
-        client
+        mainClient
             .multi()
             .incr('submission:counter')
             .hincrby(`id:${id}`, 'submissions', 1)
@@ -341,7 +330,7 @@ function getNumberOfSurveys(server) {
         } else {
             // TODO: "Don't use KEYS in your regular application code"
             // (https://redis.io/commands/keys)
-            client.keys(`or:${cleanServerUrl}[/,]*`, (err, keys) => {
+            mainClient.keys(`or:${cleanServerUrl}[/,]*`, (err, keys) => {
                 if (error) {
                     reject(error);
                 } else if (keys) {
@@ -377,7 +366,7 @@ function getListOfSurveys(server) {
         } else {
             // TODO: "Don't use KEYS in your regular application code"
             // (https://redis.io/commands/keys)
-            client.keys(`or:${cleanServerUrl}[/,]*`, (err, keys) => {
+            mainClient.keys(`or:${cleanServerUrl}[/,]*`, (err, keys) => {
                 if (error) {
                     reject(error);
                 } else if (keys) {
@@ -416,7 +405,7 @@ function _getEnketoId(openRosaKey) {
             reject(error);
         } else {
             // debug( 'getting id for : ' + openRosaKey );
-            client.get(openRosaKey, (error, id) => {
+            mainClient.get(openRosaKey, (error, id) => {
                 // debug( 'result', error, id );
                 if (error) {
                     reject(error);
@@ -482,7 +471,7 @@ function _createNewEnketoId(
     triesRemaining = 10
 ) {
     return new Promise((resolve, reject) => {
-        client.hgetall(`id:${id}`, (error, obj) => {
+        mainClient.hgetall(`id:${id}`, (error, obj) => {
             if (error) {
                 reject(error);
             } else if (obj) {

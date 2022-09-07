@@ -15,6 +15,8 @@ module.exports = (grunt) => {
     require('time-grunt')(grunt);
     require('load-grunt-tasks')(grunt);
 
+    let serverRootHooks;
+
     grunt.config.init({
         concurrent: {
             develop: {
@@ -91,7 +93,7 @@ module.exports = (grunt) => {
             },
             mochaTest: {
                 files: ['app/**/*.js', 'test/server/**/*.js'],
-                tasks: ['mochaTest:all'],
+                tasks: ['test-server:all'],
                 options: {
                     atBegin: true,
                 },
@@ -122,7 +124,7 @@ module.exports = (grunt) => {
             },
             nyc: {
                 command:
-                    'nyc --reporter html --reporter text-summary --reporter json --reporter lcov --report-dir ./test-coverage/server --include "app/**/*.js" grunt mochaTest:all',
+                    'nyc --reporter html --reporter text-summary --reporter json --reporter lcov --report-dir ./test-coverage/server --include "app/**/*.js" grunt test-server:all',
             },
         },
         eslint: {
@@ -141,11 +143,29 @@ module.exports = (grunt) => {
             all: {
                 options: {
                     reporter: 'dot',
+
+                    /**
+                     * Note: `grunt-mocha-test` passes `options` directly to
+                     * Mocha's programmable API rather than as CLI options.
+                     * For whatever reason, this means that `require` doesn't
+                     * allow registering root hooks as "Root Hooks".
+                     *
+                     * @see {@link https://mochajs.org/#root-hook-plugins}
+                     *
+                     * This is a workaround to pass the hooks directly.
+                     */
+                    get rootHooks() {
+                        return serverRootHooks;
+                    },
                 },
                 src: ['test/server/**/*.spec.js'],
             },
             account: {
                 src: ['test/server/account-*.spec.js'],
+
+                get rootHooks() {
+                    return serverRootHooks;
+                },
             },
         },
         // test client JS
@@ -211,6 +231,32 @@ module.exports = (grunt) => {
                 dest: 'locales/build/',
             },
         },
+    });
+
+    grunt.registerTask('test-server:all', function testServerAll() {
+        const done = this.async();
+
+        import('./test/server/shared/root-hooks.mjs').then(
+            ({ default: rootHooks }) => {
+                serverRootHooks = rootHooks;
+
+                grunt.task.run('mochaTest:all');
+                done();
+            }
+        );
+    });
+
+    grunt.registerTask('test-server:account', function testServerAccount() {
+        const done = this.async();
+
+        import('./test/server/shared/root-hooks.mjs').then(
+            ({ default: rootHooks }) => {
+                serverRootHooks = rootHooks;
+
+                grunt.task.run('mochaTest:account');
+                done();
+            }
+        );
     });
 
     grunt.registerTask(
@@ -304,7 +350,7 @@ module.exports = (grunt) => {
     ]);
     grunt.registerTask('test-and-build', [
         'env:test',
-        'mochaTest:all',
+        'test-server:all',
         'karma:headless',
         'env:production',
         'default',

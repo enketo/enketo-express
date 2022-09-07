@@ -13,15 +13,7 @@ const app = require('../../config/express');
 const surveyModel = require('../../app/models/survey-model');
 const instanceModel = require('../../app/models/instance-model');
 const cacheModel = require('../../app/models/cache-model');
-const redis = require('redis');
 
-const client = redis.createClient(
-    config.redis.main.port,
-    config.redis.main.host,
-    {
-        auth_pass: config.redis.main.password,
-    }
-);
 let v1Survey;
 let v1Instance;
 let v1Surveys;
@@ -44,51 +36,30 @@ describe('api', () => {
     const validFormId = 'something';
     const invalidServer = 'https://someotherserver.com/john';
 
-    beforeEach((done) => {
+    beforeEach(async () => {
         const s = {
             openRosaServer: validServer,
             openRosaId: validFormId,
         };
+
         // add survey if it doesn't exist in the db
-        surveyModel
-            .set(s)
-            .then(() => {
-                s.info = {
-                    hash: 'a',
-                };
-                s.form = '<form/>';
-                s.model = '<model/>';
+        await surveyModel.set(s);
 
-                return cacheModel.set(s);
-            })
-            .then(() => {
-                done();
-            });
-    });
+        await cacheModel.set({
+            ...s,
+            info: {
+                hash: 'a',
+            },
+            form: '<form/>',
+            model: '<model/>',
+        });
 
-    afterEach((done) => {
-        /// select test database and flush it
-        client.select(15, (err) => {
-            if (err) {
-                return done(err);
-            }
-            client.flushdb((err) => {
-                if (err) {
-                    return done(err);
-                }
-
-                return instanceModel
-                    .set({
-                        openRosaServer: validServer,
-                        openRosaId: validFormId,
-                        instanceId: beingEdited,
-                        returnUrl: 'https://enketo.org',
-                        instance: '<data></data>',
-                    })
-                    .then(() => {
-                        done();
-                    });
-            });
+        await instanceModel.set({
+            openRosaServer: validServer,
+            openRosaId: validFormId,
+            instanceId: beingEdited,
+            returnUrl: 'https://enketo.org',
+            instance: '<data></data>',
         });
     });
 
@@ -1458,7 +1429,6 @@ describe('api', () => {
     describe('re-activating forms', () => {
         function test(version) {
             it('works if the quota allows it but returns 403 if quota is insufficient', () => {
-                const app = require('../../config/express');
                 const endpoint = `/api/v${version}/survey`;
                 const server = 'https://example.org/enketo';
                 const linkedServer = app.get('linked form and data server');

@@ -81,12 +81,9 @@ describe('Transformation Controller', () => {
     afterEach(async () => {
         sandbox.restore();
 
-        await Promise.all([
-            cacheModel.flushAll(),
-            new Promise((resolve, reject) =>
-                server.close((error) => (error ? reject(error) : resolve()))
-            ),
-        ]);
+        await new Promise((resolve, reject) => {
+            server.close((error) => (error ? reject(error) : resolve()));
+        });
     });
 
     const requests = [
