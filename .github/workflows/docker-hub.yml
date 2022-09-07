@@ -6,6 +6,12 @@ on:
         # usually releases
         tags:
             - '*'
+    workflow_dispatch:
+      inputs:
+          versionTag:
+              description: "Version Tag"
+              required: true
+              default: ''
 
 jobs:
     docker-build-push:
