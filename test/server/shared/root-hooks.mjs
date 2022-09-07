@@ -77,6 +77,12 @@ const redisServerProcesses = await Promise.all([
 
 const sandbox = sinon.createSandbox();
 
+/**
+ * Note on the unusual creation of stubs outside of setup: this ensures
+ * that the test Redis servers started above are used *before* any test
+ * modules or their imports are loaded. Moving these into a `before` or
+ * `beforeEach` will cause the configured server(s) to be used instead.
+ */
 sandbox.stub(config.redis.main, 'port').value(mainPort);
 sandbox.stub(config.redis.cache, 'port').value(cachePort);
 

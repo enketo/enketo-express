@@ -208,11 +208,9 @@ module.exports = (grunt) => {
         env: {
             develop: {
                 NODE_ENV: 'develop',
-                REDIS_DB: '15',
             },
             test: {
                 NODE_ENV: 'test',
-                REDIS_DB: '15',
             },
             production: {
                 NODE_ENV: 'production',
