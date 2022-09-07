@@ -25,7 +25,7 @@ jobs:
                     --health-timeout 5s
                     --health-retries 5
                 ports:
-                    - '${{env.TEST_REDIS_MAIN_PORT}}:6379'
+                    - '6379:6379'
             redis-6380:
                 image: redis
                 options: >-
@@ -34,7 +34,7 @@ jobs:
                     --health-timeout 5s
                     --health-retries 5
                 ports:
-                    - '${{env.TEST_REDIS_CACHE_PORT}}:6379'
+                    - '6380:6379'
         steps:
             - uses: actions/checkout@v2
             - uses: actions/cache@v2
