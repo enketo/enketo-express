@@ -13,7 +13,7 @@ const utils = require('../lib/utils');
 const routerUtils = require('../lib/router-utils');
 const express = require('express');
 const url = require('url');
-const { replaceMediaSources } = require('../lib/url');
+const mediaLib = require('../lib/media');
 
 const router = express.Router();
 
@@ -46,32 +46,40 @@ router
  * @param {module:api-controller~ExpressResponse} res - HTTP response
  * @param {Function} next - Express callback
  */
-function getSurveyParts(req, res, next) {
-    _getSurveyParams(req)
-        .then((survey) => {
-            if (survey.info) {
-                // A request with "xformUrl" body parameter was used (unlaunched form)
-                _getFormDirectly(survey)
-                    .then((survey) => {
-                        _respond(res, survey);
-                    })
-                    .catch(next);
-            } else {
-                _authenticate(survey)
-                    .then(_getFormFromCache)
-                    .then((result) => {
-                        if (result) {
-                            return _updateCache(result);
-                        }
-                        return _updateCache(survey);
-                    })
-                    .then((result) => {
-                        _respond(res, result);
-                    })
-                    .catch(next);
-            }
-        })
-        .catch(next);
+async function getSurveyParts(req, res, next) {
+    try {
+        let survey = await _getSurveyParams(req);
+
+        // A request with "xformUrl" body parameter was used (unlaunched form)
+        if (survey.info != null) {
+            survey = await _getFormDirectly(survey);
+
+            _respond(res, survey);
+
+            return;
+        }
+
+        const authenticated = await _authenticate(survey);
+        const cached = await _getFormFromCache(authenticated);
+
+        survey = await _updateCache(cached ?? survey);
+
+        const { enketoId, manifest, mediaHash } = survey;
+        const mediaOptions = mediaLib.getHostURLOptions(req, mediaHash);
+
+        const media = await mediaLib.getMediaMap(
+            enketoId,
+            manifest,
+            mediaOptions
+        );
+
+        _respond(res, {
+            ...survey,
+            media,
+        });
+    } catch (error) {
+        next(error);
+    }
 }
 
 /**
@@ -104,10 +112,7 @@ function getSurveyHash(req, res, next) {
  *
  */
 function _getFormDirectly(survey) {
-    return communicator
-        .getXForm(survey)
-        .then(communicator.getManifest)
-        .then(transformer.transform);
+    return communicator.getXForm(survey).then(transformer.transform);
 }
 
 /**
@@ -217,11 +222,10 @@ function _checkQuota(survey) {
 function _respond(res, survey) {
     delete survey.credentials;
 
-    survey = replaceMediaSources(survey);
-
     res.status(200);
     res.send({
         form: survey.form,
+        media: survey.media,
         // previously this was JSON.stringified, not sure why
         model: survey.model,
         theme: survey.theme,

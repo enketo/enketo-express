@@ -13,6 +13,7 @@ import {
     setLastSavedRecord,
 } from './last-saved';
 import { geoJSONExternalInstance } from './geojson';
+import { replaceMediaSources } from './media';
 
 /**
  * @typedef {import('../../../../app/models/record-model').EnketoRecord} EnketoRecord
@@ -410,6 +411,8 @@ const getTransformURL = (basePath, enketoId) => {
  * @return {Promise<SurveyExternalData[]>}
  */
 const getExternalData = async (survey, model, options = {}) => {
+    replaceMediaSources(model, survey.media);
+
     /** @type {Array<Promise<SurveyExternalData>>} */
     const tasks = [];
     const externalInstances = [

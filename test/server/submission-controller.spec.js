@@ -6,18 +6,36 @@
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
+const chai = require('chai');
 const request = require('supertest');
+const sinon = require('sinon');
 const app = require('../../config/express');
+const mediaLib = require('../../app/lib/media');
 const surveyModel = require('../../app/models/survey-model');
 const instanceModel = require('../../app/models/instance-model');
 
+const { expect } = chai;
+
 describe('Submissions', () => {
+    /** @type {import('sinon').SinonSandbox} */
+    let sandbox;
+
+    // TODO remove this check and test for escaping/media URL replacement instead
+    /** @type {import('sinon').SinonStub} */
+    let getMediaMapStub;
+
+    /** @type {string} */
     let enketoId;
+
     const nonExistingEnketoId = 'nope';
     const validServer = 'https://testserver.com/bob';
     const validFormId = 'something';
 
     beforeEach((done) => {
+        sandbox = sinon.createSandbox();
+
+        getMediaMapStub = sandbox.stub(mediaLib, 'getMediaMap');
+
         // add survey if it doesn't exist in the db
         surveyModel
             .set({
@@ -28,6 +46,10 @@ describe('Submissions', () => {
                 enketoId = id;
                 done();
             });
+    });
+
+    afterEach(() => {
+        sandbox.restore();
     });
 
     describe('for active/existing Enketo IDs', () => {
@@ -142,12 +164,36 @@ describe('Submissions', () => {
                     .then(() => {
                         done();
                     });
+
+                const mediaOptions = {
+                    deviceId: 'fake',
+                };
+
+                sandbox
+                    .stub(mediaLib, 'getHostURLOptions')
+                    .callsFake(() => mediaOptions);
             });
 
             it('responds with 200', (done) => {
                 request(app)
                     .get(`/submission/${enketoId}?instanceId=c`)
                     .expect(200, done);
+            });
+
+            it('attaches cached mapping of instance attachments', async () => {
+                const cachedAttachments = {
+                    'attached-file.jpg': '/media/get/attached-file.jpg',
+                };
+
+                getMediaMapStub.returns(cachedAttachments);
+
+                const { body } = await request(app)
+                    .get(`/submission/${enketoId}?instanceId=c`)
+                    .expect(200);
+
+                expect(body.instanceAttachments).to.deep.equal(
+                    cachedAttachments
+                );
             });
         });
     });

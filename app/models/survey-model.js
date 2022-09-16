@@ -51,6 +51,13 @@ const debug = require('debug')('survey-model');
  */
 
 /**
+ * @typedef ManifestItem
+ * @property {string} downloadUrl
+ * @property {string} filename
+ * @property {string} hash
+ */
+
+/**
  * @typedef SurveyObject
  * @property { string } openRosaServer
  * @property { string } openRosaId
@@ -70,7 +77,7 @@ const debug = require('debug')('survey-model');
  * @property { string } [instanceId]
  * @property { EnketoRecord } [lastSavedRecord]
  * @property { Record<string, unknown> } [languageMap]
- * @property { Record<string, unknown> } [manifest]
+ * @property { ManifestItem[] } [manifest]
  * @property { string } [model]
  * @property { EnketoTransformerPreprocess } [preprocess]
  * @property { string } [returnUrl]

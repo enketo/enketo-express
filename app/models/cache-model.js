@@ -3,12 +3,17 @@
  */
 
 const transformer = require('enketo-transformer');
+const { promisify } = require('util');
 const { cacheClient } = require('../lib/db');
 const utils = require('../lib/utils');
 
 const prefix = 'ca:';
 const expiry = 30 * 24 * 60 * 60;
 const debug = require('debug')('cache-model');
+
+const clientGet = promisify(cacheClient.get).bind(cacheClient);
+const clientSet = promisify(cacheClient.set).bind(cacheClient);
+const expire = promisify(cacheClient.expire).bind(cacheClient);
 
 /**
  * Gets an item from the cache.
@@ -311,6 +316,25 @@ function _addHashes(survey) {
     survey.xslHash = survey.xslHash || transformer.version;
 }
 
+/**
+ * @param {string} mediaURL
+ * @param {string} hostURL
+ */
+const cacheManifestItem = async (mediaURL, hostURL) => {
+    const key = `${prefix}${mediaURL}`;
+
+    await clientSet(key, hostURL);
+    await expire('GT', 10);
+
+    return [key, hostURL];
+};
+
+const getManifestItem = (mediaURL) => {
+    const key = `${prefix}${mediaURL}`;
+
+    return clientGet(key);
+};
+
 module.exports = {
     get: getSurvey,
     getHashes: getSurveyHashes,
@@ -318,4 +342,6 @@ module.exports = {
     check: isCacheUpToDate,
     flush: flushSurvey,
     flushAll,
+    cacheManifestItem,
+    getManifestItem,
 };
