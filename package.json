@@ -2,7 +2,7 @@
     "name": "enketo-express",
     "description": "Webforms evolved.",
     "homepage": "https://enketo.org",
-    "version": "4.1.1",
+    "version": "4.1.2",
     "main": "./app.js",
     "engines": {
         "node": ">=14.8.0 <17",
@@ -131,7 +131,7 @@
         "markdown-eslint-parser": "^1.2.1",
         "mocha": "^9.2.2",
         "nock": "^13.2.4",
-        "node-sass": "^7.0.1",
+        "node-sass": "^7.0.3",
         "nyc": "^15.1.0",
         "prettier": "^2.6.2",
         "rimraf": "^3.0.2",

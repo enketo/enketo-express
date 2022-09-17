@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.1.2 - 2022-09-16
+
+-   Fix: memory leak with async_hooks request context (#450)
+-   Test isolation: consistently use test Redis database (#456)
+-   Move towards unified handling of media (#459)
+
 ## 4.1.1 - 2022-06-26
 
 -   Updated French, German, Dutch and Spanish translations (#438)
