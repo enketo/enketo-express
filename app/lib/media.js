@@ -8,7 +8,7 @@ const surveyModel = require('../models/survey-model');
 const userModel = require('../models/user-model');
 const communicator = require('./communicator');
 
-/** @enum {typeof ResourceType[keyof typeof ResourceType]} */
+/** @enum {'0' | '1'} */
 const ResourceType = /** @type {const} */ ({
     MANIFEST: '0',
     INSTANCE: '1',
