@@ -8,6 +8,7 @@ const mergeWith = require('lodash/mergeWith');
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
+const crypto = require('crypto');
 
 const themePath = path.join(__dirname, '../../public/css');
 const languagePath = path.join(__dirname, '../../locales/src');
@@ -342,6 +343,21 @@ if (config['id length'] < 4) {
     config['id length'] = 31;
 }
 
+const offlineWorkerScript = fs.readFileSync(
+    path.resolve(config.root, 'public/js/src/module/offline-app-worker.js'),
+    'utf8'
+);
+
+const hashSource = Buffer.from([offlineWorkerScript, JSON.stringify(config)]);
+const hash = crypto
+    .createHash('md5')
+    .update(hashSource)
+    .digest('hex')
+    .substring(0, 7);
+
+config.offlineVersion = [config.version, hash].join('-');
+config.offlineWorkerScript = offlineWorkerScript;
+
 module.exports = {
     /**
      * @type { object }
@@ -371,6 +387,7 @@ module.exports = {
         csrfCookieName: config['csrf cookie name'],
         excludeNonRelevant: config['exclude non-relevant'],
         experimentalOptimizations: config['experimental optimizations'],
+        offlineVersion: config.offlineVersion,
     },
     getThemesSupported,
 };
