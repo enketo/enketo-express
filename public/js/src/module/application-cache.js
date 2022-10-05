@@ -5,68 +5,82 @@
 import events from './event';
 import settings from './settings';
 
-function init(survey) {
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker
-                .register(`${settings.basePath}/x/offline-app-worker.js`)
-                .then(
-                    (registration) => {
-                        // Registration was successful
-                        console.log(
-                            'Offline application service worker registration successful with scope: ',
-                            registration.scope
-                        );
-                        setInterval(() => {
-                            console.log(
-                                'Checking for offline application cache service worker update'
-                            );
-                            registration.update();
-                        }, 60 * 60 * 1000);
+/**
+ * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
+ */
 
-                        if (registration.active) {
-                            _reportOfflineLaunchCapable(true);
-                        }
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
+/**
+ * @param {Survey} survey
+ */
+const init = async (survey) => {
+    try {
+        if ('serviceWorker' in navigator) {
+            const registration = await navigator.serviceWorker.register(
+                `${settings.basePath}/x/offline-app-worker.js`
+            );
 
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'activated') {
-                                    console.log(
-                                        'New offline application service worker activated!'
-                                    );
-                                    document.dispatchEvent(
-                                        events.ApplicationUpdated()
-                                    );
-                                }
-                            });
-                        });
-                    },
-                    (err) => {
-                        // registration failed :(
-                        console.error(
-                            'Offline application service worker registration failed: ',
-                            err
-                        );
-                        _reportOfflineLaunchCapable(true);
+            // Registration was successful
+            console.log(
+                'Offline application service worker registration successful with scope: ',
+                registration.scope
+            );
+            setInterval(() => {
+                console.log(
+                    'Checking for offline application cache service worker update'
+                );
+                registration.update();
+            }, 60 * 60 * 1000);
+
+            const currentActive = registration.active;
+
+            if (currentActive != null) {
+                registration.addEventListener('updatefound', () => {
+                    _reportOfflineLaunchCapable(false);
+                });
+
+                navigator.serviceWorker.addEventListener(
+                    'controllerchange',
+                    () => {
+                        window.location.reload();
                     }
                 );
-        });
-    } else {
-        if (location.protocol.startsWith('http:')) {
-            console.error(
-                'Service workers not supported on this http URL (insecure)'
-            );
+            }
+
+            await registration.update();
+
+            if (currentActive == null) {
+                window.location.reload();
+            } else {
+                _reportOfflineLaunchCapable(true);
+            }
         } else {
-            console.error(
-                'Service workers not supported on this browser. This form cannot launch online'
-            );
+            if (location.protocol.startsWith('http:')) {
+                console.error(
+                    'Service workers not supported on this http URL (insecure)'
+                );
+            } else {
+                console.error(
+                    'Service workers not supported on this browser. This form cannot launch online'
+                );
+            }
+
+            _reportOfflineLaunchCapable(false);
         }
+    } catch (error) {
+        // registration failed :(
+        const registrationError = Error(
+            `Offline application service worker registration failed: ${error.message}`
+        );
+
+        registrationError.stack = error.stack;
+
         _reportOfflineLaunchCapable(false);
+
+        throw registrationError;
     }
 
-    return Promise.resolve(survey);
-}
+    return survey;
+};
 
 function _reportOfflineLaunchCapable(capable = true) {
     document.dispatchEvent(events.OfflineLaunchCapable({ capable }));

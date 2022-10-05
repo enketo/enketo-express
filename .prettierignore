@@ -2,7 +2,6 @@
 
 .nyc*
 public/js/build/*
-*/offline-app-worker-partial.js
 */node_modules/*
 docs/*
 test-coverage/*

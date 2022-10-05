@@ -44,7 +44,6 @@ if (settings.offline) {
 
             return formParts;
         })
-        .then(formCache.updateMedia)
         .then(_setFormCacheEventHandlers)
         .catch(_showErrorOrAuthenticate);
 } else {
@@ -167,7 +166,6 @@ function _setEmergencyHandlers() {
  */
 function _addBranding(survey) {
     const brandImg = document.querySelector('.form-header__branding img');
-    const attribute = settings.offline ? 'data-offline-src' : 'src';
 
     if (
         brandImg &&
@@ -175,9 +173,9 @@ function _addBranding(survey) {
         survey.branding.source &&
         brandImg.src !== survey.branding.source
     ) {
-        brandImg.src = '';
-        brandImg.setAttribute(attribute, survey.branding.source);
+        brandImg.src = survey.branding.source;
     }
+
     brandImg.classList.remove('hide');
 
     return survey;

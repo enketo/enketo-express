@@ -1,31 +1,20 @@
 /**
- * @typedef ReplaceMediaOptions
- * @property {boolean} isOffline
- */
-
-/**
  * @param {Element} rootElement
  * @param {Record<string, string>} [media]
- * @param {ReplaceMediaOptions} [options]
  */
-export const replaceMediaSources = (rootElement, media = {}, options = {}) => {
-    const sourceElements = rootElement.querySelectorAll(
-        '[src^="jr:"], [data-offline-src^="jr:"]'
-    );
+export const replaceMediaSources = (rootElement, media = {}) => {
+    const sourceElements = rootElement.querySelectorAll('[src^="jr:"]');
     const isHTML = rootElement instanceof HTMLElement;
 
     sourceElements.forEach((element) => {
-        const offlineSrc = isHTML ? element.dataset.offlineSrc : null;
         const source = (
-            isHTML ? offlineSrc ?? element.src : element.getAttribute('src')
+            isHTML ? element.src : element.getAttribute('src')
         )?.trim();
         const fileName = source.replace(/.*\/([^/]+)$/, '$1');
         const replacement = media[fileName];
 
         if (replacement != null) {
-            if (offlineSrc != null) {
-                element.dataset.offlineSrc = replacement;
-            } else if (isHTML) {
+            if (isHTML) {
                 element.src = replacement;
             } else {
                 element.setAttribute('src', replacement);
@@ -42,11 +31,7 @@ export const replaceMediaSources = (rootElement, media = {}, options = {}) => {
             if (formLogoContainer.firstElementChild == null) {
                 const formLogoImg = document.createElement('img');
 
-                if (options.isOffline) {
-                    formLogoImg.dataset.offlineSrc = formLogoURL;
-                } else {
-                    formLogoImg.src = formLogoURL;
-                }
+                formLogoImg.src = formLogoURL;
                 formLogoImg.alt = 'form logo';
 
                 formLogoContainer.append(formLogoImg);

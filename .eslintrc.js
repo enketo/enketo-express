@@ -1,0 +1,187 @@
+const eslintConfigAirbnb = require('eslint-config-airbnb-base/rules/variables');
+
+const serviceWorkerGlobals = eslintConfigAirbnb.rules[
+    'no-restricted-globals'
+].filter((item) => item.name !== 'self' && item !== 'self');
+
+module.exports = {
+    env: {
+        es6: true,
+        browser: true,
+        node: false,
+    },
+    globals: {
+        Promise: true,
+        structuredClone: true,
+    },
+    extends: ['airbnb', 'prettier'],
+    plugins: ['chai-friendly', 'jsdoc', 'prettier', 'unicorn'],
+    parserOptions: {
+        sourceType: 'module',
+        ecmaVersion: 2021,
+    },
+    settings: {
+        jsdoc: {
+            tagNamePreference: {
+                returns: 'return',
+            },
+        },
+    },
+    rules: {
+        'prettier/prettier': 'error',
+        'import/no-unresolved': [
+            'error',
+            {
+                ignore: [
+                    'enketo/config',
+                    'enketo/widgets',
+                    'enketo/translator',
+                    'enketo/dialog',
+                    'enketo/file-manager',
+                ],
+            },
+        ],
+
+        'react/destructuring-assignment': 'off',
+
+        'array-callback-return': 'warn',
+        'consistent-return': 'warn',
+        'global-require': 'warn',
+        'import/order': 'warn',
+        'import/extensions': 'warn',
+        'no-param-reassign': 'warn',
+        'no-plusplus': 'warn',
+        'no-promise-executor-return': 'warn',
+        'no-restricted-globals': 'warn',
+        'no-restricted-syntax': 'warn',
+        'no-return-assign': 'warn',
+        'no-shadow': 'warn',
+        'no-underscore-dangle': 'warn',
+        'no-unused-expressions': 'warn',
+        'no-use-before-define': [
+            'warn',
+            {
+                functions: false,
+            },
+        ],
+        'prefer-const': 'warn',
+        'no-cond-assign': 'warn',
+        'no-nested-ternary': 'warn',
+        'prefer-destructuring': 'warn',
+        'import/no-dynamic-require': 'warn',
+        'prefer-promise-reject-errors': 'warn',
+    },
+    overrides: [
+        {
+            files: ['**/*.md'],
+            parser: 'markdown-eslint-parser',
+            rules: {
+                'prettier/prettier': ['error', { parser: 'markdown' }],
+            },
+        },
+
+        {
+            files: [
+                'app.js',
+                'app/**/*.js',
+                '!app/views/**/*.js',
+                'tools/redis-repl',
+            ],
+            env: {
+                browser: false,
+                node: true,
+            },
+            ecmaFeatures: {
+                modules: false,
+            },
+        },
+
+        {
+            files: [
+                'Gruntfile.js',
+                'config/build.js',
+                'scripts/build.js',
+                'test/client/config/karma.conf.js',
+                'test/server/**/*.js',
+                'tools/**/*.js',
+            ],
+            env: {
+                browser: false,
+                node: true,
+            },
+            ecmaFeatures: {
+                modules: false,
+            },
+            rules: {
+                'import/no-extraneous-dependencies': [
+                    'error',
+                    { devDependencies: true },
+                ],
+            },
+        },
+
+        {
+            files: [
+                'app/views/**/*.js',
+                'public/js/src/**/*.js',
+                'test/client/**/*.js',
+            ],
+            env: {
+                browser: true,
+                node: false,
+            },
+        },
+
+        {
+            files: ['public/js/src/module/offline-app-worker.js'],
+            globals: {
+                self: true,
+            },
+            rules: {
+                'no-restricted-globals': serviceWorkerGlobals,
+            },
+        },
+
+        {
+            files: ['test/client/**/*.js'],
+            env: {
+                mocha: true,
+            },
+            globals: {
+                expect: true,
+                sinon: true,
+            },
+            rules: {
+                'no-console': 0,
+                'import/no-extraneous-dependencies': [
+                    'error',
+                    { devDependencies: true },
+                ],
+            },
+        },
+
+        {
+            files: ['test/server/**/*.js'],
+            env: {
+                mocha: true,
+            },
+            globals: {
+                expect: true,
+                sinon: true,
+            },
+            rules: {
+                'no-console': 0,
+            },
+        },
+
+        {
+            files: ['**/*.mjs'],
+            parser: '@babel/eslint-parser',
+            parserOptions: {
+                sourceType: 'module',
+                ecmaVersion: 2021,
+                requireConfigFile: false,
+            },
+        },
+    ],
+};
