@@ -60,9 +60,6 @@ describe('Client Form Cache', () => {
     /** @type {GetFormPartsStubResult} */
     let getFormPartsStubResult;
 
-    /** @type {SinonStub} */
-    let getFileSpy;
-
     /** @type {SinonFakeTimers} */
     let timers;
 
@@ -118,15 +115,6 @@ describe('Client Form Cache', () => {
                     })
             );
 
-        getFileSpy = sandbox.stub(connection, 'getMediaFile').callsFake((url) =>
-            Promise.resolve({
-                url,
-                item: new Blob(['babdf'], {
-                    type: 'image/png',
-                }),
-            })
-        );
-
         store.init().then(done, done);
     });
 
@@ -156,26 +144,6 @@ describe('Client Form Cache', () => {
                 .then(done, done);
         });
 
-        it('will call connection.getMediaFile to obtain form resources', (done) => {
-            survey.enketoId = '20';
-            formCache
-                .init(survey)
-                .then((result) => {
-                    const currentForm = document.querySelector('form.or');
-                    const form = document
-                        .createRange()
-                        .createContextualFragment(result.form);
-
-                    currentForm.parentNode.replaceChild(form, currentForm);
-
-                    return formCache.updateMedia(result);
-                })
-                .then(() => {
-                    expect(getFileSpy).to.have.been.calledWith(url1);
-                })
-                .then(done, done);
-        });
-
         it('will populate the cache upon initialization', (done) => {
             survey.enketoId = '30';
             formCache
@@ -193,18 +161,6 @@ describe('Client Form Cache', () => {
                     expect(result.model).to.equal(model1);
                     expect(result.hash).to.equal(hash1);
                     expect(result.enketoId).to.equal(survey.enketoId);
-                })
-                .then(done, done);
-        });
-
-        it('will empty src attributes and copy the original value to a data-offline-src attribute ', (done) => {
-            survey.enketoId = '40';
-            formCache
-                .init(survey)
-                .then((result) => {
-                    expect(result.form)
-                        .to.contain('src=""')
-                        .and.to.contain(`data-offline-src="${url1}"`);
                 })
                 .then(done, done);
         });
@@ -274,88 +230,6 @@ describe('Client Form Cache', () => {
                     expect(result.model).to.equal(update.model);
                 })
                 .then(done, done);
-        });
-
-        describe('form media (only) cache updates', () => {
-            let resultSurvey;
-
-            /** @type {SinonSpy} */
-            let storeSurveyUpdateSpy;
-
-            beforeEach((done) => {
-                getFileSpy.restore();
-                getFileSpy = sandbox
-                    .stub(connection, 'getMediaFile')
-                    .callsFake(() => Promise.reject(new Error('Fail!')));
-
-                storeSurveyUpdateSpy = sandbox.spy(store.survey, 'update');
-
-                survey.enketoId = '200';
-                formCache
-                    .init(survey)
-                    .then((result) => {
-                        const currentForm = document.querySelector('form.or');
-                        const form = document
-                            .createRange()
-                            .createContextualFragment(result.form);
-
-                        currentForm.parentNode.replaceChild(form, currentForm);
-
-                        resultSurvey = result;
-                        return formCache.updateMedia(result);
-                    })
-                    .then(() => {
-                        getFileSpy.restore();
-                        getFileSpy = sandbox
-                            .stub(connection, 'getMediaFile')
-                            .callsFake((url) =>
-                                Promise.resolve({
-                                    url,
-                                    item: new Blob(['babdf'], {
-                                        type: 'image/png',
-                                    }),
-                                })
-                            );
-                    })
-                    .then(done, done);
-            });
-
-            afterEach(() => {
-                storeSurveyUpdateSpy.restore();
-                getFileSpy.restore();
-            });
-
-            it('will re-attempt to download failed media files (at next load) and update the cache', (done) => {
-                expect(getFileSpy).to.not.have.been.called;
-                expect(storeSurveyUpdateSpy).to.not.have.been.called;
-
-                // simulate re-opening a cached form by calling updateMedia again
-                formCache
-                    .updateMedia(resultSurvey)
-                    .then(() => {
-                        // another attempt is made to download the previously-failed media file
-                        expect(getFileSpy).to.have.been.calledOnce;
-                        expect(getFileSpy).to.have.been.calledWith(url1);
-                        // and to cache it when successful
-                        expect(storeSurveyUpdateSpy).to.have.been.calledOnce;
-                    })
-                    .then(done, done);
-            });
-
-            it('will not re-attempt to download and update again after the cache is complete', (done) => {
-                // simulate re-opening a cached form by calling updateMedia again
-                formCache
-                    .updateMedia(resultSurvey)
-                    .then(formCache.updateMedia)
-                    .then(formCache.updateMedia)
-                    .then(() => {
-                        // Despite 3 calls the media file was only downloaded once,
-                        // and the cache was updated only once.
-                        expect(getFileSpy).to.have.been.calledOnce;
-                        expect(storeSurveyUpdateSpy).to.have.been.calledOnce;
-                    })
-                    .then(done, done);
-            });
         });
     });
 });
