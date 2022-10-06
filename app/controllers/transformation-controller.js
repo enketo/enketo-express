@@ -244,7 +244,7 @@ function _respond(res, survey) {
  * @return { string } - a hash
  */
 function _getCombinedHash(survey) {
-    const FORCE_UPDATE = 2;
+    const FORCE_UPDATE = 1;
     const brandingHash =
         survey.account.branding && survey.account.branding.source
             ? utils.md5(survey.account.branding.source)
