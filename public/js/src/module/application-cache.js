@@ -6,6 +6,28 @@ import events from './event';
 import settings from './settings';
 
 /**
+ * @private
+ *
+ * Used only for mocking `window.reload` in tests.
+ */
+const location = {
+    get protocol() {
+        return window.location.protocol;
+    },
+
+    reload() {
+        window.location.reload();
+    },
+};
+
+/**
+ * @private
+ *
+ * Exported only for testing.
+ */
+const UPDATE_REGISTRATION_INTERVAL = 60 * 60 * 1000;
+
+/**
  * @typedef {import('../../../../app/models/survey-model').SurveyObject} Survey
  */
 
@@ -14,7 +36,7 @@ import settings from './settings';
  */
 const init = async (survey) => {
     try {
-        if ('serviceWorker' in navigator) {
+        if (navigator.serviceWorker != null) {
             const registration = await navigator.serviceWorker.register(
                 `${settings.basePath}/x/offline-app-worker.js`
             );
@@ -29,7 +51,7 @@ const init = async (survey) => {
                     'Checking for offline application cache service worker update'
                 );
                 registration.update();
-            }, 60 * 60 * 1000);
+            }, UPDATE_REGISTRATION_INTERVAL);
 
             const currentActive = registration.active;
 
@@ -41,7 +63,7 @@ const init = async (survey) => {
                 navigator.serviceWorker.addEventListener(
                     'controllerchange',
                     () => {
-                        window.location.reload();
+                        location.reload();
                     }
                 );
             }
@@ -49,7 +71,7 @@ const init = async (survey) => {
             await registration.update();
 
             if (currentActive == null) {
-                window.location.reload();
+                location.reload();
             } else {
                 _reportOfflineLaunchCapable(true);
             }
@@ -88,6 +110,8 @@ function _reportOfflineLaunchCapable(capable = true) {
 
 export default {
     init,
+    location,
+    UPDATE_REGISTRATION_INTERVAL,
     get serviceWorkerScriptUrl() {
         if (
             'serviceWorker' in navigator &&
