@@ -1,7 +1,68 @@
 const CACHE_KEY = 'enketo-common';
 
-self.addEventListener('install', () => {
+/**
+ * @param {RequestInfo} request
+ */
+const tryFetch = async (request) => {
+    try {
+        return await fetch(request, {
+            credentials: 'same-origin',
+            cache: 'reload',
+        });
+    } catch (error) {
+        return new Response(JSON.stringify({ message: error.message }), {
+            status: 500,
+            statusText: 'Internal Server Error',
+            headers: {
+                'content-type': 'application/json',
+            },
+        });
+    }
+};
+
+/**
+ * @param {Request} request
+ * @param {Response} response
+ */
+const cacheResponse = (request, response) => {
+    caches.open(CACHE_KEY).then((cache) => {
+        cache.put(request, response);
+    });
+};
+
+/** @type {string[]} */
+const prefetchURLs = [];
+
+/**
+ * @param {Response} response
+ */
+const setPrefetchURLs = (response) => {
+    const linkHeader = response.headers.get('link');
+
+    if (linkHeader == null) {
+        return;
+    }
+
+    const prefetchLinks = linkHeader.matchAll(/<([^>]+)>;\s*rel="prefetch"/g);
+
+    for (const match of prefetchLinks) {
+        prefetchURLs.push(match[1]);
+    }
+};
+
+const cachePrefetchURLs = () =>
+    Promise.all(
+        prefetchURLs.map(async (url) => {
+            const request = new Request(url);
+            const response = await tryFetch(request);
+
+            cacheResponse(request, response.clone());
+        })
+    );
+
+self.addEventListener('install', (event) => {
     self.skipWaiting();
+    event.waitUntil(cachePrefetchURLs());
 });
 
 const removeStaleCaches = async () => {
@@ -26,32 +87,11 @@ self.addEventListener('activate', (event) => {
 });
 
 /**
- * @param {RequestInfo} request
- * @param {RequestInit} options
- */
-const tryFetch = async (request, options) => {
-    try {
-        return await fetch(request, options);
-    } catch (error) {
-        return new Response(JSON.stringify({ message: error.message }), {
-            status: 500,
-            statusText: 'Internal Server Error',
-            headers: {
-                'content-type': 'application/json',
-            },
-        });
-    }
-};
-
-/**
  * @param {Request} request
  */
 const onFetch = async (request) => {
     const [{ value: response }, { value: cached }] = await Promise.allSettled([
-        tryFetch(request, {
-            credentials: 'same-origin',
-            cache: 'reload',
-        }),
+        tryFetch(request),
         caches.match(request),
     ]);
 
@@ -72,11 +112,13 @@ const onFetch = async (request) => {
         return response;
     }
 
-    const responseToCache = response.clone();
+    const isServiceWorkerScript = request.url === self.location.href;
 
-    caches.open(CACHE_KEY).then((cache) => {
-        cache.put(request, responseToCache);
-    });
+    cacheResponse(request, response.clone());
+
+    if (isServiceWorkerScript) {
+        setPrefetchURLs(response.clone());
+    }
 
     return response;
 };
