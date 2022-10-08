@@ -1,8 +1,18 @@
-const eslintConfigAirbnb = require('eslint-config-airbnb-base/rules/variables');
+const baseVariablesConfig = require('eslint-config-airbnb-base/rules/variables');
+const baseStyleConfig = require('eslint-config-airbnb-base/rules/style');
 
-const serviceWorkerGlobals = eslintConfigAirbnb.rules[
+const serviceWorkerGlobals = baseVariablesConfig.rules[
     'no-restricted-globals'
 ].filter((item) => item.name !== 'self' && item !== 'self');
+
+const baseNoRestrictedSyntax =
+    baseStyleConfig.rules['no-restricted-syntax'].slice(1);
+const noRestrictedSyntax = [
+    'warn',
+    ...baseNoRestrictedSyntax.filter(
+        (rule) => rule.selector !== 'ForOfStatement'
+    ),
+];
 
 module.exports = {
     env: {
@@ -53,7 +63,7 @@ module.exports = {
         'no-plusplus': 'warn',
         'no-promise-executor-return': 'warn',
         'no-restricted-globals': 'warn',
-        'no-restricted-syntax': 'warn',
+        'no-restricted-syntax': noRestrictedSyntax,
         'no-return-assign': 'warn',
         'no-shadow': 'warn',
         'no-underscore-dangle': 'warn',
