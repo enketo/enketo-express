@@ -4,6 +4,7 @@ import settings from '../../public/js/src/module/settings';
 
 describe('Application Cache', () => {
     const basePath = '-';
+    const version = `1.2.3-BADB3D`;
     const offlineLaunchCapableType = events.OfflineLaunchCapable().type;
 
     /** @type {ServiceWorker | null} */
@@ -55,11 +56,10 @@ describe('Application Cache', () => {
             .stub(applicationCache.location, 'reload')
             .callsFake(() => {});
 
-        if (!('basePath' in settings)) {
-            settings.basePath = undefined;
-        }
-
+        settings.basePath ??= undefined;
+        settings.version ??= undefined;
         sandbox.stub(settings, 'basePath').value(basePath);
+        sandbox.stub(settings, 'version').value(version);
     });
 
     afterEach(() => {
@@ -75,7 +75,10 @@ describe('Application Cache', () => {
         await applicationCache.init();
 
         expect(registrationStub).to.have.been.calledWith(
-            `${basePath}/x/offline-app-worker.js`
+            new URL(
+                `${basePath}/x/offline-app-worker.js?version=${version}`,
+                window.location.href
+            )
         );
     });
 

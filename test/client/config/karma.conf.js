@@ -44,9 +44,6 @@ module.exports = (config) => {
 
         esbuild: {
             ...baseESBuildConfig,
-            define: {
-                version: 'undefined',
-            },
             loader: {
                 '.geojson': 'json',
             },

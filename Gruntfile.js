@@ -111,7 +111,7 @@ module.exports = (grunt) => {
                     'find locales -name "translation-combined.json" -delete && rm -fr locales/??',
             },
             'clean-js': {
-                command: 'rm -f public/js/build/* && rm -f public/js/*.js',
+                command: 'rm -rf public/js/build/* && rm -f public/js/*.js',
             },
             translation: {
                 command:
