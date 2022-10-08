@@ -2,6 +2,7 @@
  * @module offline-resources-controller
  */
 
+const fs = require('fs');
 const express = require('express');
 
 const router = express.Router();
@@ -36,7 +37,7 @@ router.get('/x/offline-app-worker.js', (req, res, next) => {
             .map((resource) => `<${resource}>; rel="prefetch"`)
             .join(', ');
 
-        const script = config.offlineWorkerScript;
+        const script = fs.readFileSync(config.offlineWorkerPath, 'utf-8');
 
         res.set('Content-Type', 'text/javascript');
         res.set('Link', link);
