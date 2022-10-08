@@ -343,10 +343,11 @@ if (config['id length'] < 4) {
     config['id length'] = 31;
 }
 
-const offlineWorkerScript = fs.readFileSync(
-    path.resolve(config.root, 'public/js/src/module/offline-app-worker.js'),
-    'utf8'
+config.offlineWorkerPath = path.resolve(
+    config.root,
+    'public/js/src/module/offline-app-worker.js'
 );
+const offlineWorkerScript = fs.readFileSync(config.offlineWorkerPath, 'utf-8');
 
 const hashSource = Buffer.from([offlineWorkerScript, JSON.stringify(config)]);
 const hash = crypto
@@ -356,7 +357,6 @@ const hash = crypto
     .substring(0, 7);
 
 config.offlineVersion = [config.version, hash].join('-');
-config.offlineWorkerScript = offlineWorkerScript;
 
 module.exports = {
     /**
