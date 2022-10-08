@@ -1,7 +1,11 @@
-const CACHES = [`enketo-common`];
+const CACHES = ['enketo-common'];
 
 self.addEventListener('install', () => {
     self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+    event.waitUntil(self.clients.claim());
 });
 
 /**
@@ -43,16 +47,16 @@ const onFetch = async (request) => {
         return cached;
     }
 
-    if (response == null || response.status !== 200) {
+    if (
+        request.method !== 'GET' ||
+        response == null ||
+        response.status !== 200
+    ) {
         return response;
     }
 
-    // Cache any additional loaded languages
     const responseToCache = response.clone();
 
-    // Cache any non-English language files that are requested
-    // Also, if the cache didn't get built correctly using the explicit resources list,
-    // just cache whatever is scoped dynamically to self-heal the cache.
     caches.open(CACHES[0]).then((cache) => {
         cache.put(request, responseToCache);
     });
