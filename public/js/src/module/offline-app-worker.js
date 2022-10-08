@@ -90,9 +90,16 @@ self.addEventListener('activate', (event) => {
  * @param {Request} request
  */
 const onFetch = async (request) => {
+    const { url } = request;
+    const isServiceWorkerScript = url === self.location.href;
+    const isPageRequest = url === request.referrer;
+    const cacheKey = isPageRequest
+        ? new URL('/x/', self.location.href)
+        : request;
+
     const [{ value: response }, { value: cached }] = await Promise.allSettled([
         tryFetch(request),
-        caches.match(request),
+        caches.match(cacheKey),
     ]);
 
     if (
@@ -112,9 +119,7 @@ const onFetch = async (request) => {
         return response;
     }
 
-    const isServiceWorkerScript = request.url === self.location.href;
-
-    cacheResponse(request, response.clone());
+    cacheResponse(cacheKey, response.clone());
 
     if (isServiceWorkerScript) {
         setPrefetchURLs(response.clone());
