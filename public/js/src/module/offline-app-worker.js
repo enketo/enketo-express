@@ -1,11 +1,28 @@
-const CACHES = ['enketo-common'];
+const CACHE_KEY = 'enketo-common';
 
 self.addEventListener('install', () => {
     self.skipWaiting();
 });
 
+const removeStaleCaches = async () => {
+    const keys = await caches.keys();
+
+    await Promise.all(
+        keys.map((key) => {
+            if (key !== CACHE_KEY) {
+                caches.delete(key);
+            }
+        })
+    );
+};
+
+const onActivate = async () => {
+    await self.clients.claim();
+    await removeStaleCaches();
+};
+
 self.addEventListener('activate', (event) => {
-    event.waitUntil(self.clients.claim());
+    event.waitUntil(onActivate());
 });
 
 /**
@@ -57,7 +74,7 @@ const onFetch = async (request) => {
 
     const responseToCache = response.clone();
 
-    caches.open(CACHES[0]).then((cache) => {
+    caches.open(CACHE_KEY).then((cache) => {
         cache.put(request, responseToCache);
     });
 
