@@ -246,8 +246,12 @@ function _throwInvalidXmlNodeName(name) {
 }
 
 /**
+ * @typedef {Record<keyof URL, URL[keyof URL]>} URLLike
+ */
+
+/**
  *
- * @param { string } path - location.pathname in a browser
+ * @param {URLLike | string} url - location.pathname in a browser
  */
 function getEnketoId(path) {
     path = path.endsWith('/') ? path.substring(0, path.length - 1) : path;

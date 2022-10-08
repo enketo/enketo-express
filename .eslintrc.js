@@ -143,6 +143,13 @@ module.exports = {
         },
 
         {
+            files: ['public/js/src/**/*.js'],
+            globals: {
+                ENV: true,
+            },
+        },
+
+        {
             files: ['public/js/src/module/offline-app-worker.js'],
             globals: {
                 self: true,

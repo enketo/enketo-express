@@ -37,8 +37,13 @@ const UPDATE_REGISTRATION_INTERVAL = 60 * 60 * 1000;
 const init = async (survey) => {
     try {
         if (navigator.serviceWorker != null) {
+            const workerPath = `${settings.basePath}/x/offline-app-worker.js`;
+            const workerURL = new URL(workerPath, window.location.href);
+
+            workerURL.searchParams.set('version', settings.version);
+
             const registration = await navigator.serviceWorker.register(
-                `${settings.basePath}/x/offline-app-worker.js`
+                workerURL
             );
 
             // Registration was successful
@@ -68,7 +73,11 @@ const init = async (survey) => {
                 );
             }
 
-            await registration.update();
+            try {
+                registration.update();
+            } catch {
+                // Probably offline
+            }
 
             if (currentActive == null) {
                 location.reload();

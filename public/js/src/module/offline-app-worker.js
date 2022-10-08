@@ -1,80 +1,60 @@
-const CACHE_KEY = 'enketo-common';
+const STATIC_CACHE = 'enketo-common';
+const FORMS_CACHE = 'enketo-forms';
 
 /**
- * @param {RequestInfo} request
+ * @param {string} url
  */
-const tryFetch = async (request) => {
-    try {
-        return await fetch(request, {
-            credentials: 'same-origin',
-            cache: 'reload',
-        });
-    } catch (error) {
-        return new Response(JSON.stringify({ message: error.message }), {
-            status: 500,
-            statusText: 'Internal Server Error',
-            headers: {
-                'content-type': 'application/json',
-            },
-        });
+const cacheName = (url) => {
+    if (
+        url === '/favicon.ico' ||
+        url.endsWith('/x/') ||
+        /\/x\/((css|fonts|images|js|locales)\/|offline-app-worker.js)/.test(url)
+    ) {
+        return STATIC_CACHE;
     }
+
+    return FORMS_CACHE;
 };
 
 /**
- * @param {Request} request
+ * @param {Request | string} key
  * @param {Response} response
  */
-const cacheResponse = (request, response) => {
-    caches.open(CACHE_KEY).then((cache) => {
-        cache.put(request, response);
-    });
-};
+const cacheResponse = async (key, response) => {
+    const clone = response.clone();
+    const cache = await caches.open(cacheName(key.url ?? key));
 
-/** @type {string[]} */
-const prefetchURLs = [];
+    await cache.put(key, clone);
+
+    return response;
+};
 
 /**
  * @param {Response} response
  */
-const setPrefetchURLs = (response) => {
-    const linkHeader = response.headers.get('link');
+const cachePrefetchURLs = async (response) => {
+    const linkHeader = response.headers.get('link') ?? '';
+    const prefetchURLs = [
+        ...linkHeader.matchAll(/<([^>]+)>;\s*rel="prefetch"/g),
+    ].map(([, url]) => url);
 
-    if (linkHeader == null) {
-        return;
-    }
+    const cache = await caches.open(STATIC_CACHE);
 
-    const prefetchLinks = linkHeader.matchAll(/<([^>]+)>;\s*rel="prefetch"/g);
-
-    for (const match of prefetchLinks) {
-        prefetchURLs.push(match[1]);
-    }
+    await Promise.allSettled(prefetchURLs.map((url) => cache.add(url)));
 };
 
-const cachePrefetchURLs = () =>
-    Promise.all(
-        prefetchURLs.map(async (url) => {
-            const request = new Request(url);
-            const response = await tryFetch(request);
-
-            cacheResponse(request, response.clone());
-        })
-    );
-
-self.addEventListener('install', (event) => {
+self.addEventListener('install', () => {
     self.skipWaiting();
-    event.waitUntil(cachePrefetchURLs());
 });
 
 const removeStaleCaches = async () => {
-    const keys = await caches.keys();
+    const cacheStorageKeys = await caches.keys();
 
-    await Promise.all(
-        keys.map((key) => {
-            if (key !== CACHE_KEY) {
-                caches.delete(key);
-            }
-        })
-    );
+    cacheStorageKeys.forEach((key) => {
+        if (key !== FORMS_CACHE) {
+            caches.delete(key);
+        }
+    });
 };
 
 const onActivate = async () => {
@@ -86,48 +66,72 @@ self.addEventListener('activate', (event) => {
     event.waitUntil(onActivate());
 });
 
+const FETCH_OPTIONS = {
+    cache: 'reload',
+    credentials: 'same-origin',
+};
+
 /**
  * @param {Request} request
  */
 const onFetch = async (request) => {
-    const { url } = request;
-    const isServiceWorkerScript = url === self.location.href;
-    const isPageRequest = url === request.referrer;
-    const cacheKey = isPageRequest
-        ? new URL('/x/', self.location.href)
-        : request;
+    const { method, referrer, url } = request;
 
-    const [{ value: response }, { value: cached }] = await Promise.allSettled([
-        tryFetch(request),
-        caches.match(cacheKey),
-    ]);
+    if (method !== 'GET') {
+        return fetch(request, FETCH_OPTIONS);
+    }
 
-    if (
-        cached != null &&
-        (response == null ||
-            response.status !== 200 ||
-            response.type !== 'basic')
-    ) {
-        return cached;
+    const isFormPageRequest =
+        url.includes('/x/') && (referrer === '' || referrer === url);
+    const cacheKey = isFormPageRequest ? url.replace(/\/x\/.*/, '/x/') : url;
+    const cached = await caches.match(cacheKey);
+
+    let response = cached;
+
+    if (response == null || ENV === 'development') {
+        try {
+            response = await fetch(request, FETCH_OPTIONS);
+        } catch {
+            // Probably offline
+        }
     }
 
     if (
-        request.method !== 'GET' ||
         response == null ||
-        response.status !== 200
+        response.status !== 200 ||
+        response.type !== 'basic'
     ) {
         return response;
     }
 
-    cacheResponse(cacheKey, response.clone());
+    if (isFormPageRequest) {
+        const { status } = response.clone();
+
+        if (status === 204) {
+            return caches.match(cacheKey);
+        }
+
+        await cacheResponse(url, new Response(null, { status: 204 }));
+    }
+
+    const isServiceWorkerScript = url === self.location.href;
 
     if (isServiceWorkerScript) {
-        setPrefetchURLs(response.clone());
+        cachePrefetchURLs(response);
     }
+
+    await cacheResponse(cacheKey, response.clone());
 
     return response;
 };
 
+const { origin } = self.location;
+
 self.addEventListener('fetch', (event) => {
-    event.respondWith(onFetch(event.request));
+    const { request } = event;
+    const requestURL = new URL(request.url);
+
+    if (requestURL.origin === origin) {
+        event.respondWith(onFetch(request));
+    }
 });

@@ -5,14 +5,16 @@ const pkg = require('../package.json');
 const cwd = process.cwd();
 
 const entryPoints = pkg.entries.map((entry) => path.resolve(cwd, entry));
-
-const isProduction = process.env.NODE_ENV === 'production';
+const { NODE_ENV } = process.env;
 
 module.exports = {
     bundle: true,
+    define: {
+        ENV: JSON.stringify(NODE_ENV ?? 'production'),
+    },
     entryPoints,
     format: 'iife',
-    minify: isProduction,
+    minify: true,
     outdir: path.resolve(cwd, './public/js/build'),
     plugins: [
         alias(
@@ -24,6 +26,6 @@ module.exports = {
             )
         ),
     ],
-    sourcemap: isProduction ? false : 'inline',
+    sourcemap: NODE_ENV === 'production' ? false : 'inline',
     target: ['chrome89', 'edge89', 'firefox90', 'safari13'],
 };
