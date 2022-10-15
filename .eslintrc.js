@@ -37,6 +37,7 @@ module.exports = {
             },
         },
     },
+    ignorePatterns: ['public/js/build/**/*'],
     rules: {
         'prettier/prettier': 'error',
         'import/no-unresolved': [
