@@ -2,9 +2,11 @@ import applicationCache from '../../public/js/src/module/application-cache';
 import events from '../../public/js/src/module/event';
 import settings from '../../public/js/src/module/settings';
 
-describe('Application Cache', () => {
+describe('Application cache initialization (offline service worker registration)', () => {
     const basePath = '-';
     const version = `1.2.3-BADB3D`;
+    const applicationUpdatedEvent = events.ApplicationUpdated();
+    const applicationUpdatedType = applicationUpdatedEvent.type;
     const offlineLaunchCapableType = events.OfflineLaunchCapable().type;
 
     /** @type {ServiceWorker | null} */
@@ -27,6 +29,9 @@ describe('Application Cache', () => {
 
     /** @type {sinon.SinonFake} */
     let registrationUpdateFake;
+
+    /** @type {Function | null} */
+    let controllerChangeListener;
 
     beforeEach(() => {
         sandbox = sinon.createSandbox();
@@ -60,6 +65,25 @@ describe('Application Cache', () => {
         settings.version ??= undefined;
         sandbox.stub(settings, 'basePath').value(basePath);
         sandbox.stub(settings, 'version').value(version);
+
+        const addControllerChangeListener =
+            navigator.serviceWorker.addEventListener;
+
+        controllerChangeListener = null;
+
+        sandbox
+            .stub(navigator.serviceWorker, 'addEventListener')
+            .callsFake((type, listener) => {
+                if (type === 'controllerchange') {
+                    expect(controllerChangeListener).to.equal(null);
+                    controllerChangeListener = listener;
+                }
+                addControllerChangeListener.call(
+                    navigator.serviceWorker,
+                    type,
+                    listener
+                );
+            });
     });
 
     afterEach(() => {
@@ -67,6 +91,15 @@ describe('Application Cache', () => {
             offlineLaunchCapableType,
             offlineLaunchCapableListener
         );
+
+        if (controllerChangeListener != null) {
+            navigator.serviceWorker.removeEventListener(
+                'controllerchange',
+                controllerChangeListener
+            );
+        }
+
+        timers.reset();
         timers.restore();
         sandbox.restore();
     });
@@ -142,7 +175,7 @@ describe('Application Cache', () => {
         expect(caught.stack).to.equal(error.stack);
     });
 
-    it('reloads when an updated service worker becomes active', async () => {
+    it('reloads when an updated service worker becomes active on load', async () => {
         activeServiceWorker = {};
         await applicationCache.init();
 
@@ -167,5 +200,21 @@ describe('Application Cache', () => {
         timers.tick(applicationCache.UPDATE_REGISTRATION_INTERVAL);
 
         expect(registrationUpdateFake).to.have.been.calledTwice;
+    });
+
+    it('notifies the user, rather than reloading, when the service worker has changed', async () => {
+        activeServiceWorker = {};
+        await applicationCache.init();
+
+        timers.tick(applicationCache.UPDATE_REGISTRATION_INTERVAL);
+
+        const listener = sandbox.fake();
+
+        document.addEventListener(applicationUpdatedType, listener);
+        navigator.serviceWorker.dispatchEvent(new Event('controllerchange'));
+        document.removeEventListener(applicationUpdatedType, listener);
+
+        expect(reloadStub).not.to.have.been.called;
+        expect(listener).to.have.been.calledOnceWith(applicationUpdatedEvent);
     });
 });

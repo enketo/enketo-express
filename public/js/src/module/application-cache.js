@@ -46,12 +46,15 @@ const init = async (survey) => {
                 workerURL
             );
 
+            let isInitialUpdateCheck = true;
+
             // Registration was successful
             console.log(
                 'Offline application service worker registration successful with scope: ',
                 registration.scope
             );
             setInterval(() => {
+                isInitialUpdateCheck = false;
                 console.log(
                     'Checking for offline application cache service worker update'
                 );
@@ -68,7 +71,11 @@ const init = async (survey) => {
                 navigator.serviceWorker.addEventListener(
                     'controllerchange',
                     () => {
-                        location.reload();
+                        if (isInitialUpdateCheck) {
+                            location.reload();
+                        } else {
+                            document.dispatchEvent(events.ApplicationUpdated());
+                        }
                     }
                 );
             }
