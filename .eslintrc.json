@@ -75,7 +75,12 @@
         },
 
         {
-            "files": ["app.js", "app/**/*.js", "!app/views/**/*.js"],
+            "files": [
+                "app.js",
+                "app/**/*.js",
+                "!app/views/**/*.js",
+                "tools/redis-repl"
+            ],
             "env": {
                 "browser": false,
                 "node": true
