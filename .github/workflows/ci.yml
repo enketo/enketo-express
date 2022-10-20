@@ -51,19 +51,3 @@ jobs:
             - if: steps.cache.outputs.cache-hit != 'true'
               run: npm ci
             - run: npm test
-            - uses: codecov/codecov-action@v2
-              with:
-                  token: ${{secrets.CODECOV_TOKEN}}
-                  files: ./test-coverage/server/lcov.info
-                  flags: server
-                  name: codecov-server
-                  fail_ci_if_error: true
-                  verbose: true
-            - uses: codecov/codecov-action@v2
-              with:
-                  token: ${{secrets.CODECOV_TOKEN}}
-                  files: ./test-coverage/client/chrome/lcov.info
-                  flags: client,chrome
-                  name: codecov-client-chrome
-                  fail_ci_if_error: true
-                  verbose: true
