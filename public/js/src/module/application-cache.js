@@ -80,11 +80,7 @@ const init = async (survey) => {
                 );
             }
 
-            try {
-                registration.update();
-            } catch {
-                // Probably offline
-            }
+            registration.update();
 
             if (currentActive == null) {
                 location.reload();
