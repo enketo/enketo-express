@@ -192,7 +192,7 @@ describe('Application cache initialization (offline service worker registration)
         expect(registrationUpdateFake).to.have.been.calledOnce;
     });
 
-    it('checks for updates immediately after registration', async () => {
+    it('checks for updates periodically', async () => {
         await applicationCache.init();
 
         expect(registrationUpdateFake).to.have.been.calledOnce;
@@ -200,13 +200,17 @@ describe('Application cache initialization (offline service worker registration)
         timers.tick(applicationCache.UPDATE_REGISTRATION_INTERVAL);
 
         expect(registrationUpdateFake).to.have.been.calledTwice;
+
+        timers.tick(applicationCache.UPDATE_REGISTRATION_INTERVAL);
+
+        expect(registrationUpdateFake).to.have.been.calledThrice;
     });
 
-    it('notifies the user, rather than reloading, when the service worker has changed', async () => {
+    it('notifies the user, rather than reloading, when a service worker update is detected some time after the page is loaded', async () => {
         activeServiceWorker = {};
         await applicationCache.init();
 
-        timers.tick(applicationCache.UPDATE_REGISTRATION_INTERVAL);
+        timers.tick(applicationCache.RELOAD_ON_UPDATE_TIMEOUT);
 
         const listener = sandbox.fake();
 
