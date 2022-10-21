@@ -107,6 +107,23 @@ describe('Submissions', () => {
         });
     });
 
+    describe('submission content types', () => {
+        it('responds with 400 if content type is not specified', async () => {
+            await request(app)
+                .post(`/submission/${enketoId}`)
+                .send('foo=bar')
+                .expect(400);
+        });
+
+        it('responds with 400 if content type is not multipart/form-data', async () => {
+            await request(app)
+                .post(`/submission/${enketoId}`)
+                .set('Content-Type', 'application/json')
+                .send({ foo: 'bar' })
+                .expect(400);
+        });
+    });
+
     describe('using GET (existing submissions) for an existing/active Enketo IDs', () => {
         it('responds with 400 if no instanceID provided', (done) => {
             request(app).get(`/submission/${enketoId}`).expect(400, done);

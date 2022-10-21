@@ -47,11 +47,25 @@ router
  * Simply pipes well-formed request to the OpenRosa server and
  * copies the response received.
  *
- * @param {module:api-controller~ExpressRequest} req - HTTP request
- * @param {module:api-controller~ExpressResponse} res - HTTP response
+ * @param {express.Request} req - HTTP request
+ * @param {express.Response} res - HTTP response
  * @param {Function} next - Express callback
  */
 async function submit(req, res, next) {
+    if (!req.headers['content-type']?.startsWith('multipart/form-data')) {
+        res.status(400)
+            .set('content-type', 'text/xml')
+            .send(
+                /* xml */ `
+                <OpenRosaResponse xmlns="http://openrosa.org/http/response" items="0">
+                    <message nature="error">Required multipart POST field xml_submission_file missing.</message>
+                </OpenRosaResponse>
+                `.trim()
+            );
+
+        return;
+    }
+
     try {
         const paramName = req.app.get('query parameter to pass to submission');
         const paramValue = req.query[paramName];
