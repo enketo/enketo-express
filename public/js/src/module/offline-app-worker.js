@@ -83,7 +83,17 @@ const onFetch = async (request) => {
 
     const isFormPageRequest =
         url.includes('/x/') && (referrer === '' || referrer === url);
+
+    /**
+     * A response for the form page initial HTML is always cached with the
+     * same key: `https://example.com/basePath/x/`. This ensures that forms
+     * previously cached before a future service worker update will still
+     * be available after that update.
+     *
+     * @see {@link https://github.com/enketo/enketo-express/issues/470}
+     */
     const cacheKey = isFormPageRequest ? url.replace(/\/x\/.*/, '/x/') : url;
+
     const cached = await caches.match(cacheKey);
 
     let response = cached;
@@ -104,6 +114,15 @@ const onFetch = async (request) => {
         return response;
     }
 
+    /**
+     * In addition to storing the form page initial HTML with a single
+     * cache key, we store a sentinel 204 response for each individual
+     * cached form page URL. This ensures we don't load forms cached
+     * prior to introducing this caching strategy, as their attachments
+     * will not yet have been cached.
+     *
+     * @see {cacheKey}
+     */
     if (isFormPageRequest) {
         const { status } = response.clone();
 
