@@ -169,7 +169,7 @@ const setUpdateIntervals = async (survey) => {
     hash = survey.hash;
 
     // Check for form update upon loading.
-    await updateCache(survey);
+    updateCache(survey);
 
     // Note that for large Xforms where the XSL transformation takes more than 30 seconds,
     // the first update make take 20 minutes to propagate to the browser of the very first user(s)
