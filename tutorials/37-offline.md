@@ -6,9 +6,9 @@ Enketo may be [configured](./tutorial-10-configure.html#offline-enabled) to supp
 
 #### Service Worker and Cache Storage
 
-The Enketo app registers a [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API), which intercepts some network requests in order to [cache](https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage) certain resources as they're requested. The following resources are stored in one of two caches:
+The Enketo app registers a [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API), which intercepts some network requests in order to cache certain resources in [CacheStorage](https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage) as they're requested. The following resources are stored in one of two Caches:
 
--   Common static assets used by Enketo to serve and render forms:
+-   `enketo-common`: common static assets used by Enketo to serve and render forms:
 
     -   The Service Worker script itself
     -   The Enketo app's static assests (core JavaScript and CSS)
@@ -16,18 +16,18 @@ The Enketo app registers a [Service Worker](https://developer.mozilla.org/en-US/
     -   The Enketo app icon, which may be displayed if a user bookmarks the app or registers it as a mobile web app
     -   The initial HTML which begins loading the app and the requested form
 
-    This cache is cleared and rebuilt in production, after a brief delay when the user again accesses a form in offline-capable mode _while online_, and when the Enketo service is (re)started with changes to the version specified in `package.json` or the Service Worker script (typically following a new release or during development), or with changes to the configured themes.
+    This Cache is cleared and rebuilt in production, after a brief delay when the user again accesses a form in offline-capable mode _while online_, and when the Enketo service is (re)started with changes to the version specified in `package.json` or the Service Worker script (typically following a new release or during development), or with changes to the configured themes.
 
--   Resources associated with individual forms:
+-   `enketo-forms`: resources associated with individual forms:
 
     -   Media attachments used by the form
     -   [External secondary instances](https://getodk.github.io/xforms-spec/#secondary-instances---external) used by the form
 
-    The resources in this cache will be updated when Enketo detects that they have changed.
+    The resources in this Cache will be updated when Enketo detects that they have changed.
 
-For production Enketo deployments, these resources will always be retrieved from the cache if present, without performing additional network requests other than to determine whether they have been updated. To aid maintenance and improvement of Enketo's offline functionality, the requests _are_ performed in development mode.
+For production Enketo deployments, these resources will always be retrieved from CacheStorage if present, without performing additional network requests other than to determine whether they have been updated. To aid maintenance and improvement of Enketo's offline functionality, the requests _are_ performed in development mode.
 
-**Important note:** forms cached prior to release of [these changes to media and HTML caching](https://github.com/enketo/enketo-express/pull/465) must be requested in offline-capable mode while online to be re-added to the cache. Forms cached after that update will no longer have this issue.
+**Important note:** forms cached prior to release of [these changes to media and HTML caching](https://github.com/enketo/enketo-express/pull/465) must be requested in offline-capable mode while online to be re-added to CacheStorage. Forms cached after that update will no longer have this issue.
 
 #### IndexedDB storage
 
