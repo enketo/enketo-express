@@ -25,6 +25,13 @@ const location = {
  *
  * Exported only for testing.
  */
+const RELOAD_ON_UPDATE_TIMEOUT = 500;
+
+/**
+ * @private
+ *
+ * Exported only for testing.
+ */
 const UPDATE_REGISTRATION_INTERVAL = 60 * 60 * 1000;
 
 /**
@@ -46,7 +53,11 @@ const init = async (survey) => {
                 workerURL
             );
 
-            let isInitialUpdateCheck = true;
+            let reloadOnUpdate = true;
+
+            setTimeout(() => {
+                reloadOnUpdate = false;
+            }, RELOAD_ON_UPDATE_TIMEOUT);
 
             // Registration was successful
             console.log(
@@ -54,7 +65,6 @@ const init = async (survey) => {
                 registration.scope
             );
             setInterval(() => {
-                isInitialUpdateCheck = false;
                 console.log(
                     'Checking for offline application cache service worker update'
                 );
@@ -71,7 +81,7 @@ const init = async (survey) => {
                 navigator.serviceWorker.addEventListener(
                     'controllerchange',
                     () => {
-                        if (isInitialUpdateCheck) {
+                        if (reloadOnUpdate) {
                             location.reload();
                         } else {
                             document.dispatchEvent(events.ApplicationUpdated());
@@ -123,6 +133,7 @@ function _reportOfflineLaunchCapable(capable = true) {
 export default {
     init,
     location,
+    RELOAD_ON_UPDATE_TIMEOUT,
     UPDATE_REGISTRATION_INTERVAL,
     get serviceWorkerScriptUrl() {
         if (
