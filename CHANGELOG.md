@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.1.3 - 2022-11-07
+
+-   Removed: absolute maximum size for file uploads (#461)
+-   Fix: fail early on non-multipart submissions (#476)
+-   Add redis-repl tool (#451)
+-   Fix: ensure `survey.media` is available in view mode (#484)
+-   Fix timepicker in Finnish locales (enketo/enketo-core#916)
+-   Fix special string.replace sequences in Markdown (enketo/enketo-transformer#153)
+-   Fix evaluating absolute nodeset expressions with an attribute context node (enketo/openrosa-xpath-evaluator#166)
+
 ## 4.1.2 - 2022-09-16
 
 -   Fix: memory leak with async_hooks request context (#450)
