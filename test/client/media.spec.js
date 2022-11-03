@@ -36,7 +36,9 @@ describe('Media replacement', () => {
                         <span lang="default" class="question-label active" data-itext-id="/data/an-image:label">
                             an image
                         </span>
-                        <img lang="default" class="active" src="jr://images/an%20image.jpg" data-itext-id="/data/an-image:label" alt="image">
+                        <a class="or-big-image" href="jr://images/an%20image.jpg">
+                            <img lang="default" class="active" src="jr://images/an%20image.jpg" data-itext-id="/data/an-image:label" alt="image">
+                        </a>
                         <input type="text" name="/data/an-image" data-type-xml="string" maxlength="2000">
                     </label>
                     <label class="question non-select ">
@@ -86,9 +88,13 @@ describe('Media replacement', () => {
     it('replaces jr: URLs in a form from a media mapping', () => {
         replaceMediaSources(formRoot, media);
 
+        const a = formRoot.querySelector('a');
         const img = formRoot.querySelector('label img');
         const audio = formRoot.querySelector('audio');
 
+        expect(a.href).to.equal(
+            'https://example.com/-/media/get/0/WXMDbc0H/c0f15ee04dacb1db7cc60797285ff1c8/an%20image.jpg'
+        );
         expect(img.src).to.equal(
             'https://example.com/-/media/get/0/WXMDbc0H/c0f15ee04dacb1db7cc60797285ff1c8/an%20image.jpg'
         );

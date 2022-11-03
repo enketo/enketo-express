@@ -10,15 +10,15 @@
  */
 export const replaceMediaSources = (rootElement, media = {}, options = {}) => {
     const sourceElements = rootElement.querySelectorAll(
-        '[src^="jr:"], [data-offline-src^="jr:"]'
+        '[href^="jr:"], [src^="jr:"], [data-offline-src^="jr:"]'
     );
     const isHTML = rootElement instanceof HTMLElement;
 
     sourceElements.forEach((element) => {
+        const attr = element.hasAttribute('href') ? 'href' : 'src';
         const offlineSrc = isHTML ? element.dataset.offlineSrc : null;
-        const source = (
-            isHTML ? offlineSrc ?? element.src : element.getAttribute('src')
-        )?.trim();
+        const source =
+            offlineSrc ?? element[attr] ?? element.getAttribute(attr);
         const fileName = source.replace(/.*\/([^/]+)$/, '$1');
         const replacement = media[fileName];
 
@@ -26,9 +26,9 @@ export const replaceMediaSources = (rootElement, media = {}, options = {}) => {
             if (offlineSrc != null) {
                 element.dataset.offlineSrc = replacement;
             } else if (isHTML) {
-                element.src = replacement;
+                element[attr] = replacement;
             } else {
-                element.setAttribute('src', replacement);
+                element.setAttribute(attr, replacement);
             }
         }
     });
