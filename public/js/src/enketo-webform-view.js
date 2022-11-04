@@ -102,6 +102,7 @@ function _init(formParts) {
             instanceStr: formParts.instance,
             external: formParts.externalData,
             instanceAttachments: formParts.instanceAttachments,
+            survey: formParts,
         })
         .then((form) => {
             formParts.languages = form.languages;
