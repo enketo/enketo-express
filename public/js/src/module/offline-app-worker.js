@@ -81,8 +81,10 @@ const onFetch = async (request) => {
         return fetch(request, FETCH_OPTIONS);
     }
 
+    const { pathname } = new URL(url);
     const isFormPageRequest =
-        url.includes('/x/') && (referrer === '' || referrer === url);
+        /\/x\/[^/]+\/?$/.test(pathname) &&
+        (referrer === '' || referrer === url);
 
     /**
      * A response for the form page initial HTML is always cached with the
@@ -130,7 +132,10 @@ const onFetch = async (request) => {
             return caches.match(cacheKey);
         }
 
-        await cacheResponse(url, new Response(null, { status: 204 }));
+        await cacheResponse(
+            url,
+            new Response(null, { status: 204, statusText: 'No Content' })
+        );
     }
 
     const isServiceWorkerScript = url === self.location.href;
