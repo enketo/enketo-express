@@ -1,7 +1,6 @@
 /* eslint-env node */
 
 const baseESBuildConfig = require('../../../config/build.js');
-const esbuildPluginIstanbul = require('../../../tools/esbuild-plugin-istanbul.js');
 
 module.exports = (config) => {
     config.set({
@@ -33,7 +32,13 @@ module.exports = (config) => {
         ],
 
         // list of files to exclude
-        exclude: [],
+        exclude: [
+            'public/js/src/module/offline-app-worker-partial.js',
+            'public/js/src/enketo-offline-fallback.js',
+            'public/js/src/enketo-webform-edit.js',
+            'public/js/src/enketo-webform-view.js',
+            'public/js/src/enketo-webform.js',
+        ],
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
@@ -44,13 +49,11 @@ module.exports = (config) => {
 
         esbuild: {
             ...baseESBuildConfig,
-            define: {
-                version: 'undefined',
-            },
             loader: {
                 '.geojson': 'json',
             },
-            plugins: [...baseESBuildConfig.plugins, esbuildPluginIstanbul()],
+            minify: false,
+            plugins: [...baseESBuildConfig.plugins],
         },
 
         browserify: {

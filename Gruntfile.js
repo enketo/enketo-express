@@ -100,9 +100,6 @@ module.exports = (grunt) => {
             },
         },
         shell: {
-            buildReadmeBadge: {
-                command: 'node ./tools/update-readme-with-shield-badge.js',
-            },
             'clean-css': {
                 command: 'rm -f public/css/*',
             },
@@ -335,7 +332,6 @@ module.exports = (grunt) => {
         'css',
         'shell:nyc',
         'karma:headless',
-        'shell:buildReadmeBadge',
         'eslint:check',
     ]);
     grunt.registerTask('test-browser', ['env:test', 'css', 'karma:browsers']);
