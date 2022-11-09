@@ -331,15 +331,28 @@ function confirmLogin(msg) {
 }
 
 /**
+ * @typedef AlertLoadErrorsOptions
+ * @property {boolean} [omitIntro]
+ * @property {boolean} [omitSupportContact]
+ */
+
+/**
  * Shows modal with load errors
  *
- * @param  {Array.<string>} loadErrors -  load error messagesg
- * @param  {string=}        advice -  a string with advice
+ * @param {string[]} loadErrors -  load error messagesg
+ * @param {string} [advice] -  a string with advice
+ * @param {AlertLoadErrorsOptions} [options]
  */
-function alertLoadErrors(loadErrors, advice) {
-    const errorStringHTML = `<ul class="error-list"><li>${loadErrors.join(
-        '</li><li>'
-    )}</li></ul>`;
+function alertLoadErrors(loadErrors, advice, options = {}) {
+    const errors = loadErrors.map(
+        (error) => `<p>${error.split('\n\n').join('</p><p>')}</p>`
+    );
+    const errorStringHTML =
+        loadErrors.length === 1
+            ? `${errors[0]}`
+            : `<ul class="error-list"><li>${errors.join(
+                  '</li><li>'
+              )}</li></ul>`;
     const errorStringEmail = `* ${loadErrors.join('\n* ')}`;
     const email = settings.supportEmail;
     const link = `<a href="mailto:${email}?subject=loading errors for: ${encodeURIComponent(
@@ -358,11 +371,15 @@ function alertLoadErrors(loadErrors, advice) {
 
     advice = advice || '';
 
+    const introMessage = options.omitIntro
+        ? ''
+        : `${t('alert.loaderror.msg1', params)} `;
+    const supportContactMessage = options.omitSupportContact
+        ? ''
+        : `<p>${t('alert.loaderror.msg2', params)}</p>`;
+
     alert(
-        `<p>${t('alert.loaderror.msg1', params)} ${advice}</p><p>${t(
-            'alert.loaderror.msg2',
-            params
-        )}</p>${errorStringHTML}`,
+        `<p>${introMessage}${advice}</p>${supportContactMessage}${errorStringHTML}`,
         t('alert.loaderror.heading', params)
     );
 }

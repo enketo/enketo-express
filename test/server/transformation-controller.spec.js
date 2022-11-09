@@ -41,6 +41,12 @@ describe('Transformation Controller', () => {
     /** @type {string} */
     let hash;
 
+    /** @type {sinon.SinonStub} */
+    let authenticateStub;
+
+    /** @type {sinon.SinonStub} */
+    let getXFormStub;
+
     /** @type {import('sinon').SinonStub} */
     let getManifestStub;
 
@@ -79,9 +85,24 @@ describe('Transformation Controller', () => {
         app = require('../../config/express');
         basePath = app.get('base path');
 
+        // console.log('app?', app);
+
         await new Promise((resolve) => {
             server = app.listen(resolve);
         });
+
+        authenticateStub = sandbox
+            .stub(communicator, 'authenticate')
+            .callsFake((survey) => Promise.resolve(survey));
+
+        getXFormStub = sandbox
+            .stub(communicator, 'getXForm')
+            .callsFake((survey) =>
+                Promise.resolve({
+                    ...survey,
+                    xform,
+                })
+            );
     });
 
     afterEach(async () => {
@@ -111,21 +132,63 @@ describe('Transformation Controller', () => {
     /**
      * @return {import('enketo-transformer/src/transformer').TransformedSurvey}
      */
-    const getTransformResult = async () => {
+    const getTransformResult = async (expectedStatus = 200) => {
         const { body } = await request(app)
             .post(`${basePath}${transformRequestURL}`)
             .send(transformRequestBody)
-            .expect(200);
+            .expect(expectedStatus);
 
         return body;
     };
 
+    describe('authorization', () => {
+        it('responds with 404 for unauthorized requests for cacheable forms', async () => {
+            transformRequestURL = `/transform/xform/${enketoId}`;
+            transformRequestBody = undefined;
+
+            const error = new Error('Unauthorized');
+
+            error.status = 403;
+
+            authenticateStub.rejects(error);
+
+            const message = app.i18next.t('error.notfoundinformlist', {
+                formId: openRosaId,
+            });
+            const actual = await getTransformResult(404);
+
+            expect(actual).to.deep.equal({
+                code: 404,
+                message,
+            });
+        });
+
+        it('responds with 404 for unauthorized direct requests for forms', async () => {
+            transformRequestURL = `/transform/xform`;
+            transformRequestBody = {
+                xformUrl: 'http://example.com/qwerty.xml',
+            };
+
+            const error = new Error('Unauthorized');
+
+            error.status = 403;
+
+            getXFormStub.rejects(error);
+
+            const message = app.i18next.t('error.notfounddirectformurl', {
+                formFileName: 'querty.xml',
+            });
+            const actual = await getTransformResult(404);
+
+            expect(actual).to.deep.equal({
+                code: 404,
+                message,
+            });
+        });
+    });
+
     describe('media attachments', () => {
         beforeEach(async () => {
-            sandbox
-                .stub(communicator, 'authenticate')
-                .callsFake((survey) => Promise.resolve(survey));
-
             sandbox.stub(communicator, 'getXFormInfo').callsFake((survey) =>
                 Promise.resolve({
                     ...survey,
@@ -212,13 +275,6 @@ describe('Transformation Controller', () => {
                     </h:body>
                 </h:html>
             `.trim();
-
-            sandbox.stub(communicator, 'getXForm').callsFake((survey) =>
-                Promise.resolve({
-                    ...survey,
-                    xform,
-                })
-            );
 
             // Stub getManifest
             manifest = [
