@@ -342,6 +342,11 @@ if (config['id length'] < 4) {
     config['id length'] = 31;
 }
 
+config.offlineWorkerPath = path.resolve(
+    config.root,
+    'public/js/build/module/offline-app-worker.js'
+);
+
 module.exports = {
     /**
      * @type { object }
@@ -371,6 +376,7 @@ module.exports = {
         csrfCookieName: config['csrf cookie name'],
         excludeNonRelevant: config['exclude non-relevant'],
         experimentalOptimizations: config['experimental optimizations'],
+        version: config.version,
     },
     getThemesSupported,
 };

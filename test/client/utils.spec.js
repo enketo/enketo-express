@@ -395,6 +395,8 @@ describe('Client Utilities', () => {
             '/edit/i/abcd/',
             '/xform/abcd',
             '/xform/abcd/',
+            '/x/abcd',
+            '/x/abcd/',
         ].forEach((test) => {
             it('extracts the id "abcd" correctly', () => {
                 expect(utils.getEnketoId(test)).to.equal('abcd');

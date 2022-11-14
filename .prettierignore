@@ -1,8 +1,7 @@
 # Ignore artifacts:
 
 .nyc*
-public/js/build/*
-*/offline-app-worker-partial.js
+public/js/build/**/*
 */node_modules/*
 docs/*
 test-coverage/*

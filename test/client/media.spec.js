@@ -97,7 +97,7 @@ describe('Media replacement', () => {
         );
     });
 
-    it('replaces jr: URLs in a form with sources swapped for offline-capable mode', () => {
+    it('replaces jr: URLs in a form with sources previously swapped for offline-capable mode', () => {
         const sourceElements = formRoot.querySelectorAll('[src]');
 
         sourceElements.forEach((element) => {
@@ -109,10 +109,10 @@ describe('Media replacement', () => {
         const img = formRoot.querySelector('label img');
         const audio = formRoot.querySelector('audio');
 
-        expect(img.dataset.offlineSrc).to.equal(
+        expect(img.src).to.equal(
             'https://example.com/-/media/get/0/WXMDbc0H/c0f15ee04dacb1db7cc60797285ff1c8/an%20image.jpg'
         );
-        expect(audio.dataset.offlineSrc).to.equal(
+        expect(audio.src).to.equal(
             'https://example.com/-/media/get/0/WXMDbc0H/c0f15ee04dacb1db7cc60797285ff1c8/a%20song.mp3'
         );
     });
@@ -123,16 +123,6 @@ describe('Media replacement', () => {
         const formLogo = formRoot.querySelector('.form-logo img');
 
         expect(formLogo.src).to.equal(
-            'https://example.com/-/media/get/0/WXMDbc0H/c0f15ee04dacb1db7cc60797285ff1c8/form_logo.png'
-        );
-    });
-
-    it('appends a form logo with an offline source attribute if present in the media mapping', () => {
-        replaceMediaSources(formRoot, media, { isOffline: true });
-
-        const formLogo = formRoot.querySelector('.form-logo img');
-
-        expect(formLogo.dataset.offlineSrc).to.equal(
             'https://example.com/-/media/get/0/WXMDbc0H/c0f15ee04dacb1db7cc60797285ff1c8/form_logo.png'
         );
     });
