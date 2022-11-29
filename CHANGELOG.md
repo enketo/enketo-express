@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.1.4 - 2022-11-28
+
+-   Fix: map linked media URLs to support big-image (#482)
+-   Fix: use simpler selector for geopicker widgets (enketo/enketo-core#922)
+-   fix toggle or-appearance-compact with dynamic nested repeat group (enketo/enketo-core#914)
+-   Fix: validate number input values (enketo/enketo-core#926)
+
 ## 4.1.3 - 2022-11-07
 
 -   Removed: absolute maximum size for file uploads (#461)
