@@ -3,11 +3,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 4.1.5 - 2022-11-28
+## 5.0.0 - 2022-12-06
+
+**BREAKING CHANGE**: widgets for integers and decimal inputs have been made into Enketo Core widgets. If you [specify widgets in your `config.json`](https://enketo.github.io/enketo-express/tutorial-10-configure.html#widgets), you **MUST** add `integer` and `decimal`.
+
+-   Dockerfile: use npm ci by @alxndrsn in (#471)
+-   Improve error messages for revoked forms/public access links (#487)
+-   Fix: validate number input values (enketo/enketo-core#926)
+-   Fix: allow arbitrary precision decimal values (enketo/enketo-core#932)
+-   Add number widgets by default (#493)
+
+## 4.1.5 - 2022-11-28 DO NOT USE: breaks numeric input
 
 -   Fix: use simpler selector for geopicker widgets (enketo/enketo-core#922)
 -   fix toggle or-appearance-compact with dynamic nested repeat group (enketo/enketo-core#914)
--   Fix: validate number input values (enketo/enketo-core#926)
 
 ## 4.1.4 - 2022-11-28
 
