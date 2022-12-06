@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 **BREAKING CHANGE**: widgets for integers and decimal inputs have been made into Enketo Core widgets. If you [specify widgets in your `config.json`](https://enketo.github.io/enketo-express/tutorial-10-configure.html#widgets), you **MUST** add `integer` and `decimal`.
 
--   Dockerfile: use npm ci by @alxndrsn in (#471)
+-   Dockerfile: use npm ci (#471)
 -   Improve error messages for revoked forms/public access links (#487)
 -   Fix: validate number input values (enketo/enketo-core#926)
 -   Fix: allow arbitrary precision decimal values (enketo/enketo-core#932)
