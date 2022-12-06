@@ -62,7 +62,9 @@
         "text-max",
         "text-print",
         "rating",
-        "thousands-sep"
+        "thousands-sep",
+        "integer",
+        "decimal"
     ],
     "analytics": "google",
     "google": {
