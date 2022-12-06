@@ -221,10 +221,8 @@
         "instancenotfound": "Record not present. It may have expired.",
         "invalidediturl": "Not a valid edit URL",
         "loadfailed": "Failed to load __resource__",
-        "notfoundinformlist": [
-            "Oops, this form doesn't exist (anymore). Most likely the owner of the form has deleted it, archived it, or disabled it. Please contact the form's owner to confirm.",
-            "Detailed error: Form with ID __formId__ not found in /formList."
-        ],
+        "notfoundinformlist": "This form does not exist or you no longer have access to it. Please check the URL for any missing characters.\n\nIf the form existed previously, it may have been archived, disabled or deleted. If this is unexpected, please contact the person who asked you to fill the form.\n\n(Attempted to access form with ID: __formId__)",
+        "notfounddirectformurl": "This form does not exist or you no longer have access to it. Please check the URL for any missing characters.\n\nIf the form existed previously, it may have been archived, disabled or deleted. If this is unexpected, please contact the person who asked you to fill the form.\n\n(Attempted to access form: __notfounddirectformurl__)",
         "pagenotfound": "Page not Found",
         "surveyidnotactive": "Survey with this ID no longer active",
         "surveyidnotfound": "Survey with this ID not found",

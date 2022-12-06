@@ -62,6 +62,8 @@ i18next
         },
     });
 
+app.i18next = i18next;
+
 // middleware
 
 app.use(requestContextMiddleware);

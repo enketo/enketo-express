@@ -4,6 +4,7 @@
 
 const transformer = require('enketo-transformer');
 const communicator = require('../lib/communicator');
+const { TranslatedError } = require('../lib/custom-error');
 const surveyModel = require('../models/survey-model');
 const cacheModel = require('../models/cache-model');
 const account = require('../models/account-model');
@@ -47,17 +48,29 @@ router
  * @param {Function} next - Express callback
  */
 async function getSurveyParts(req, res, next) {
+    /** @type {string | null} */
+    let formId = null;
+
+    /** @type {string | null} */
+    let formFileName = null;
+
     try {
         let survey = await _getSurveyParams(req);
 
         // A request with "xformUrl" body parameter was used (unlaunched form)
         if (survey.info != null) {
+            formFileName = survey.info.downloadUrl.replace(
+                /.*\/([^/]+)$/,
+                '$1'
+            );
             survey = await _getFormDirectly(survey);
 
             _respond(res, survey);
 
             return;
         }
+
+        formId = survey.openRosaId;
 
         const authenticated = await _authenticate(survey);
         const cached = await _getFormFromCache(authenticated);
@@ -78,7 +91,22 @@ async function getSurveyParts(req, res, next) {
             media,
         });
     } catch (error) {
-        next(error);
+        if (error.status === 403) {
+            const notFoundError =
+                formId == null
+                    ? new TranslatedError('error.notfounddirectformurl', {
+                          formFileName,
+                      })
+                    : new TranslatedError('error.notfoundinformlist', {
+                          formId,
+                      });
+
+            notFoundError.status = 404;
+
+            next(notFoundError);
+        } else {
+            next(error);
+        }
     }
 }
 
