@@ -47,7 +47,6 @@ jobs:
                   node-version: ${{ matrix.node }}
                   registry-url: https://registry.npmjs.org/
             - run: npm install -g npm@^6
-            - run: npm install -g grunt-cli
             - if: steps.cache.outputs.cache-hit != 'true'
               run: npm ci
             - run: npm test
