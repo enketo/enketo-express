@@ -3,12 +3,9 @@ FROM node:14
 ENV ENKETO_SRC_DIR=/srv/src/enketo_express
 WORKDIR ${ENKETO_SRC_DIR}
 
-# TODO: version pinning
-RUN npm install -g grunt-cli pm2
-
 COPY . ${ENKETO_SRC_DIR}
 
-RUN npm clean-install && grunt && npm prune --production
+RUN npm clean-install && npx grunt && npm prune --production
 
 # Persist the `secrets` directory so the encryption key remains consistent.
 RUN mkdir -p ${ENKETO_SRC_DIR}/setup/docker/secrets
