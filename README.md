@@ -32,12 +32,12 @@ _Send a message if you'd like to contribute! We use an easy web interface provid
     - Check if `node-forge` has been updated and if so, verify encrypted submissions end-to-end
 1. Run `npm audit`
     - Run `npm audit fix --production` to apply most important fixes
-1. Run `npm ci`
+1. Update version in `package.json`
+    - Bump to major version if consumers have to make changes.
+1. Run `npm i`
 1. Run `npm test`
 1. Run `npm run build-docs`
 1. Update `CHANGELOG.md`
-1. Update version in `package.json`
-    - Bump to major version if consumers have to make changes.
 1. Merge PR with all changes
 1. Create GitHub release
 1. Tag and publish the release

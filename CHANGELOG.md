@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.0.1 - 2022-12-19
+
+-   Fix: load offline-enabled.png regardless of base path (#503)
+-   Do not update image file on blur if canvas is empty (enketo/enketo-core#931)
+-   Fix calculation of nested repeat counts in >1 outer repeat instances (enketo/enketo-core#935)
+-   Fix: integer and decimal widgets remain visible when form language changes (enketo/enketo-core#937)
+-   Fix: don't clear decimals when switching French -> English (enketo/enketo-core#941)
+
 ## 5.0.0 - 2022-12-06
 
 **BREAKING CHANGE**: widgets for integers and decimal inputs have been made into Enketo Core widgets. If you [specify widgets in your `config.json`](https://enketo.github.io/enketo-express/tutorial-10-configure.html#widgets), you **MUST** add `integer` and `decimal`.
