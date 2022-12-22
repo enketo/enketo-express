@@ -8,6 +8,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 -   Fix: load offline-enabled.png regardless of base path (#503)
 -   Do not update image file on blur if canvas is empty (enketo/enketo-core#931)
 -   Fix calculation of nested repeat counts in >1 outer repeat instances (enketo/enketo-core#935)
+-   Fix: integer and decimal widgets remain visible when form language changes (enketo/enketo-core#937)
+-   Fix: don't clear decimals when switching French -> English (enketo/enketo-core#941)
 
 ## 5.0.0 - 2022-12-06
 
