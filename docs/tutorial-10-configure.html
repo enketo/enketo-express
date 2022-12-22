@@ -55,16 +55,11 @@
 <article>
     <p>All configuration is done in config/config.json or with equivalent environment variables (see <a href="https://github.com/enketo/enketo-express/blob/master/config/sample.env">sample.env</a>). <strong>Leave config/default-config.json unchanged.</strong> Whichever of these 2 methods you choose, will override the defaults set in config/default-config.json.</p>
 <h3 id="when-to-rebuild">When to rebuild</h3>
-<p>Javascript only needs to be rebuilt when changes to these configuration items are made:</p>
+<p>Javascript and CSS only needs to be rebuilt when changes to these configuration items are made:</p>
 <ul>
 <li><a href="#widgets">widgets</a></li>
 </ul>
-<p>CSS only needs to be rebuilt when changes to these configuration items are made:</p>
-<ul>
-<li><a href="#widgets">widgets</a></li>
-<li><a href="#base-path">base path</a></li>
-</ul>
-<p>In all other case, changes to configuration items, only require restarting the app.</p>
+<p>Changes to any other configuration items only require restarting the app.</p>
 <h3 id="all-items">All items</h3>
 <p>Below is a complete list of all configuration items. The <strong>bold items are important to set</strong>. Others are less important.</p>
 <h4 id="app-name">app name</h4>
@@ -139,7 +134,13 @@
 <li><strong>email: The email address your users can contact when they experience problems with the service.</strong></li>
 </ul>
 <h4 id="widgets">widgets</h4>
-<p>An Array of widgets to enable. Enketo Core widgets are simple strings (&quot;note&quot;, &quot;select-desktop&quot;, &quot;select-mobile&quot;, &quot;autocomplete&quot;, &quot;geo&quot;, &quot;textarea&quot;, &quot;table&quot;, &quot;radio&quot;, &quot;date&quot;, &quot;time&quot;, &quot;datetime&quot;, &quot;compact&quot;, &quot;file&quot;, &quot;draw&quot;, &quot;likert&quot;, &quot;range&quot;, &quot;rank&quot;, &quot;url&quot;, &quot;horizontal&quot;, &quot;image-view&quot;, &quot;comment&quot;, &quot;image-map&quot;, &quot;date-mobile&quot;). See <a href="https://github.com/enketo/enketo-express/blob/master/public/js/src/module/core-widgets.json">this file</a> for an up-to-date list. You can also add custom widgets by adding a local path. More info: <a href="tutorial-34-custom-widgets.html">Custom widgets</a>. Note that any value for <code>&quot;widgets&quot;</code> will completely override the default array in default-config.json, so it's best to start copying the default array value and amend it as desired or leave it out of config.json if you don't need to modify widgets. If this configuration item is present in config.json, you will need to manually add any new widgets that are added to default-config.json in the future.</p>
+<blockquote>
+<p>⚠️ Any value for <code>&quot;widgets&quot;</code> will completely override the default array in default-config.json, so it's best to start copying the default array value and amend it as desired or leave it out of config.json if you don't need to modify widgets. If this configuration item is present in config.json, <strong>you will need to manually add any new widgets that are added to default-config.json in the future</strong>. ⚠️</p>
+</blockquote>
+<p>An Array of widgets to enable. Enketo Core widgets are simple strings (&quot;note&quot;, &quot;select-desktop&quot;, &quot;select-mobile&quot;, &quot;autocomplete&quot;, &quot;geo&quot;, &quot;textarea&quot;, &quot;table&quot;, &quot;radio&quot;, &quot;date&quot;, &quot;time&quot;, &quot;datetime&quot;, &quot;compact&quot;, &quot;file&quot;, &quot;draw&quot;, &quot;likert&quot;, &quot;range&quot;, &quot;rank&quot;, &quot;url&quot;, &quot;horizontal&quot;, &quot;image-view&quot;, &quot;comment&quot;, &quot;image-map&quot;, &quot;date-mobile&quot;). See <a href="https://github.com/enketo/enketo-express/blob/master/public/js/src/module/core-widgets.json">this file</a> for an up-to-date list. You can also add custom widgets by adding a local path. More info: <a href="tutorial-34-custom-widgets.html">Custom widgets</a>.</p>
+<blockquote>
+<p>⚠️ You must rebuild for changes to <code>&quot;widgets&quot;</code> to take effect. ⚠️</p>
+</blockquote>
 <h4 id="analytics">analytics</h4>
 <p>Which analytics service you'd like to use, either <code>&quot;google&quot;</code> or <code>&quot;piwik&quot;</code> or if none is required either <code>&quot;&quot;</code> or <code>false</code>.</p>
 <h4 id="google">google</h4>

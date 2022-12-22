@@ -3,7 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.0.1 - 2022-12-19
+## 5.0.2 - 2022-12-22
+
+-   Fix: global install of pm2 (now with version pinned in package.json) in Dockerfile (#509)
+
+## 5.0.1 - 2022-12-22
 
 -   Fix: load offline-enabled.png regardless of base path (#503)
 -   Do not update image file on blur if canvas is empty (enketo/enketo-core#931)
