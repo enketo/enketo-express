@@ -71,6 +71,7 @@ async function get(url, options = {}) {
          * (though not WebGL-related as some of the commenters suggest)
          */
         await page.evaluate(() => {
+            /* eslint-env browser */
             function canvasToImage(element) {
                 const image = document.createElement('img');
                 image.src = element.toDataURL();
