@@ -1,0 +1,245 @@
+#!/usr/bin/env node
+
+process.env.NODE_ENV = 'development';
+
+const { REPLServer } = require('repl');
+const redisVersion = require('../node_modules/redis/package.json').version;
+const { cacheClient, mainClient } = require('../app/lib/db');
+
+const log = (...args) => console.error('[redis-repl]', ...args);
+
+const clients = [mainClient];
+
+if (
+    cacheClient.options.host !== mainClient.options.host ||
+    cacheClient.options.port !== mainClient.options.port
+) {
+    clients.push(cacheClient);
+}
+
+const init = async () => {
+    await Promise.all(
+        clients.map(
+            (client) =>
+                new Promise((resolve, reject) => {
+                    log(
+                        `Connecting to redis at ${client.options.host}:${client.options.port}...`
+                    );
+
+                    const onConnect = () => {
+                        resolve();
+                        cleanup();
+                    };
+                    const onError = (error) => {
+                        reject(error);
+                        cleanup();
+                    };
+                    const cleanup = () => {
+                        client.removeListener('connect', onConnect);
+                        client.removeListener('error', onError);
+                    };
+
+                    client.on('connect', onConnect);
+                    client.on('error', onError);
+                })
+        )
+    );
+
+    log('Connected.');
+
+    clients.forEach((client) => {
+        client.on('error', (err) => log('Redis client error:', err));
+        client.on('end', () => log('Redis client closed') || process.exit());
+    });
+
+    const clientCommands =
+        clients.length === 1
+            ? [
+                  {
+                      varName: 'client',
+                      value: mainClient,
+                      command: 'client',
+                      description: 'Redis client.',
+                  },
+              ]
+            : [
+                  {
+                      varName: 'mainClient',
+                      value: mainClient,
+                      command: 'mainClient',
+                      description: 'Redis main client.',
+                  },
+                  {
+                      varName: 'cacheClient',
+                      value: cacheClient,
+                      command: 'cacheClient',
+                      description: 'Redis cache client.',
+                  },
+              ];
+
+    const predefs = [
+        ...clientCommands,
+        {
+            varName: 'listKeys',
+            value: listKeys,
+            command: 'await listKeys()',
+            description: 'Show all keys in the database.',
+        },
+        {
+            varName: 'get',
+            value: get,
+            command: 'await get(key)',
+            description: 'Get something from the database.',
+        },
+        {
+            varName: 'describe',
+            value: describeKey,
+            command: 'describe(key)',
+            description: 'Get something from the database.',
+        },
+        {
+            varName: 'help',
+            value: printUsage,
+            command: 'help()',
+            description: 'Show this message.',
+        },
+    ];
+
+    printUsage();
+
+    const repl = new REPLServer({ prompt: 'redis> ' });
+
+    repl.on('exit', () => {
+        clients.forEach((client) => {
+            client.end(true);
+        });
+    });
+
+    function printUsage() {
+        console.log(
+            `\nnode-redis docs: https://github.com/redis/node-redis/tree/v${redisVersion}#usage`
+        );
+
+        console.log('\nAvailable globals:\n');
+
+        const cmdPad =
+            1 + predefs.reduce((acc, p) => Math.max(acc, p.command.length), 0);
+
+        predefs.forEach(({ command, description }) => {
+            console.log(' ', command.padEnd(cmdPad, ' '), description);
+        });
+        console.log();
+    }
+
+    function get(key) {
+        return replCmd(
+            (wrapper) => {
+                if (key === 'submission:counter') {
+                    return mainClient.get(key, wrapper);
+                }
+                switch (key.split(':')[0]) {
+                    case 'ca':
+                        if (key.includes('/media/get/')) {
+                            return cacheClient.get(key, wrapper);
+                        }
+
+                        return cacheClient.hgetall(key, wrapper);
+                    case 'id':
+                    case 'in':
+                        return mainClient.hgetall(key, wrapper);
+                    case 'su':
+                        return mainClient.lrange(key, 0, -1, wrapper);
+                    case 'or':
+                        return mainClient.get(key, wrapper);
+                    default:
+                        throw new Error(
+                            `No handling yet for keys like: '${key}'`
+                        );
+                }
+            },
+            (res) => res
+        );
+    }
+
+    function describeKey(key) {
+        if (key === 'submission:counter') {
+            return console.log(
+                'key: submission:counter  value: total count of form submissions to this enketo-express instance.'
+            );
+        }
+
+        switch (key.split(':')[0]) {
+            case 'ca':
+                return console.log(
+                    'key: ca:<open-rosa-id>  value: enketo-transformer result'
+                );
+            case 'or':
+                return console.log('key: or:<open-rosa-id>  value: Enketo ID');
+            case 'id':
+                return console.log(
+                    'key: id:<enketo-id>     value: Enketo SurveyObject'
+                );
+            case 'in':
+                return console.log('key: in:<submission-id> value: Submission');
+            case 'su':
+                return console.log(
+                    'key: su:<enketo-id>     value: Submission IDs'
+                );
+            default:
+                throw new Error(`No description yet for keys like: '${key}'`);
+        }
+    }
+
+    async function listKeys() {
+        const keys = (
+            await Promise.all(
+                clients.map((client) =>
+                    replCmd(
+                        (wrapper) => client.multi().keys('*').exec(wrapper),
+                        ([results]) => results
+                    )
+                )
+            )
+        ).flat(2);
+
+        keys.sort();
+
+        [
+            '',
+            '',
+            'Keys in database:',
+            '',
+            ...keys.sort().map((key) => ` ${key}`),
+        ].forEach((line) => console.log(line));
+    }
+
+    function replCmd(fn, resultHandler) {
+        return new Promise((resolve, reject) => {
+            repl.clearBufferedCommand();
+            fn((err, res) => {
+                if (err) {
+                    log('Error:', err);
+                    repl.displayPrompt();
+                    return reject(err);
+                }
+
+                resultHandler(res);
+                repl.displayPrompt();
+
+                return resolve(res);
+            });
+        });
+    }
+
+    await new Promise((resolve, reject) =>
+        repl.setupHistory('tools/.redis-repl.history', (err) =>
+            err ? reject(err) : resolve()
+        )
+    );
+
+    predefs.forEach(({ value, varName }) => {
+        repl.context[varName] = value;
+    });
+};
+
+init();

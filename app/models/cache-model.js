@@ -2,25 +2,18 @@
  * @module cache-model
  */
 
-const utils = require('../lib/utils');
 const transformer = require('enketo-transformer');
+const { promisify } = require('util');
+const { cacheClient } = require('../lib/db');
+const utils = require('../lib/utils');
 
 const prefix = 'ca:';
 const expiry = 30 * 24 * 60 * 60;
-const config = require('./config-model').server;
-const client = require('redis').createClient(
-    config.redis.cache.port,
-    config.redis.cache.host,
-    {
-        auth_pass: config.redis.cache.password,
-    }
-);
 const debug = require('debug')('cache-model');
 
-// in test environment, switch to different db
-if (process.env.NODE_ENV === 'test') {
-    client.select(15);
-}
+const clientGet = promisify(cacheClient.get).bind(cacheClient);
+const clientSet = promisify(cacheClient.set).bind(cacheClient);
+const expire = promisify(cacheClient.expire).bind(cacheClient);
 
 /**
  * Gets an item from the cache.
@@ -42,7 +35,7 @@ function getSurvey(survey) {
         } else {
             const key = _getKey(survey);
 
-            client.hgetall(key, (error, cacheObj) => {
+            cacheClient.hgetall(key, (error, cacheObj) => {
                 if (error) {
                     reject(error);
                 } else if (!cacheObj) {
@@ -50,7 +43,7 @@ function getSurvey(survey) {
                 } else {
                     // form is 'actively used' so we're resetting the cache expiry
                     debug('cache is up to date and used, resetting expiry');
-                    client.expire(key, expiry);
+                    cacheClient.expire(key, expiry);
                     survey.form = cacheObj.form;
                     survey.model = cacheObj.model;
                     survey.formHash = cacheObj.formHash;
@@ -85,17 +78,21 @@ function getSurveyHashes(survey) {
         } else {
             const key = _getKey(survey);
 
-            client.hmget(key, ['formHash', 'xslHash'], (error, hashArr) => {
-                if (error) {
-                    reject(error);
-                } else if (!hashArr || !hashArr[0] || !hashArr[1]) {
-                    resolve(survey);
-                } else {
-                    survey.formHash = hashArr[0];
-                    survey.xslHash = hashArr[1];
-                    resolve(survey);
+            cacheClient.hmget(
+                key,
+                ['formHash', 'xslHash'],
+                (error, hashArr) => {
+                    if (error) {
+                        reject(error);
+                    } else if (!hashArr || !hashArr[0] || !hashArr[1]) {
+                        resolve(survey);
+                    } else {
+                        survey.formHash = hashArr[0];
+                        survey.xslHash = hashArr[1];
+                        resolve(survey);
+                    }
                 }
-            });
+            );
         }
     });
 }
@@ -135,7 +132,7 @@ function isCacheUpToDate(survey) {
 
             const key = _getKey(survey);
 
-            client.hgetall(key, (error, cacheObj) => {
+            cacheClient.hgetall(key, (error, cacheObj) => {
                 if (error) {
                     reject(error);
                 } else if (!cacheObj) {
@@ -206,13 +203,13 @@ function setSurvey(survey) {
 
             const key = _getKey(survey);
 
-            client.hmset(key, obj, (error) => {
+            cacheClient.hmset(key, obj, (error) => {
                 if (error) {
                     reject(error);
                 } else {
                     debug('cache has been updated');
                     // expire in 30 days
-                    client.expire(key, expiry);
+                    cacheClient.expire(key, expiry);
                     resolve(survey);
                 }
             });
@@ -240,7 +237,7 @@ function flushSurvey(survey) {
         } else {
             const key = _getKey(survey);
 
-            client.hgetall(key, (error, cacheObj) => {
+            cacheClient.hgetall(key, (error, cacheObj) => {
                 if (error) {
                     reject(error);
                 } else if (!cacheObj) {
@@ -248,7 +245,7 @@ function flushSurvey(survey) {
                     error.status = 404;
                     reject(error);
                 } else {
-                    client.del(key, (error) => {
+                    cacheClient.del(key, (error) => {
                         if (error) {
                             reject(error);
                         } else {
@@ -278,12 +275,12 @@ function flushAll() {
     return new Promise((resolve, reject) => {
         // TODO: "Don't use KEYS in your regular application code"
         // (https://redis.io/commands/keys)
-        client.keys(`${prefix}*`, (error, keys) => {
+        cacheClient.keys(`${prefix}*`, (error, keys) => {
             if (error) {
                 reject(error);
             }
             keys.forEach((key) => {
-                client.del(key, (error) => {
+                cacheClient.del(key, (error) => {
                     if (error) {
                         console.error(error);
                     }
@@ -319,6 +316,25 @@ function _addHashes(survey) {
     survey.xslHash = survey.xslHash || transformer.version;
 }
 
+/**
+ * @param {string} mediaURL
+ * @param {string} hostURL
+ */
+const cacheManifestItem = async (mediaURL, hostURL) => {
+    const key = `${prefix}${mediaURL}`;
+
+    await clientSet(key, hostURL);
+    await expire('GT', 10);
+
+    return [key, hostURL];
+};
+
+const getManifestItem = (mediaURL) => {
+    const key = `${prefix}${mediaURL}`;
+
+    return clientGet(key);
+};
+
 module.exports = {
     get: getSurvey,
     getHashes: getSurveyHashes,
@@ -326,4 +342,6 @@ module.exports = {
     check: isCacheUpToDate,
     flush: flushSurvey,
     flushAll,
+    cacheManifestItem,
+    getManifestItem,
 };

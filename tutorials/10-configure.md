@@ -2,16 +2,11 @@ All configuration is done in config/config.json or with equivalent environment v
 
 ### When to rebuild
 
-Javascript only needs to be rebuilt when changes to these configuration items are made:
+Javascript and CSS only needs to be rebuilt when changes to these configuration items are made:
 
 -   [widgets](#widgets)
 
-CSS only needs to be rebuilt when changes to these configuration items are made:
-
--   [widgets](#widgets)
--   [base path](#base-path)
-
-In all other case, changes to configuration items, only require restarting the app.
+Changes to any other configuration items only require restarting the app.
 
 ### All items
 
@@ -130,7 +125,11 @@ An array of theme names to enable. This can be used to disable certain themes. I
 
 #### widgets
 
-An Array of widgets to enable. Enketo Core widgets are simple strings ("note", "select-desktop", "select-mobile", "autocomplete", "geo", "textarea", "table", "radio", "date", "time", "datetime", "compact", "file", "draw", "likert", "range", "rank", "url", "horizontal", "image-view", "comment", "image-map", "date-mobile"). See [this file](https://github.com/enketo/enketo-express/blob/master/public/js/src/module/core-widgets.json) for an up-to-date list. You can also add custom widgets by adding a local path. More info: {@tutorial 34-custom-widgets}. Note that any value for `"widgets"` will completely override the default array in default-config.json, so it's best to start copying the default array value and amend it as desired or leave it out of config.json if you don't need to modify widgets. If this configuration item is present in config.json, you will need to manually add any new widgets that are added to default-config.json in the future.
+> ⚠️ Any value for `"widgets"` will completely override the default array in default-config.json, so it's best to start copying the default array value and amend it as desired or leave it out of config.json if you don't need to modify widgets. If this configuration item is present in config.json, **you will need to manually add any new widgets that are added to default-config.json in the future**. ⚠️
+
+An Array of widgets to enable. Enketo Core widgets are simple strings ("note", "select-desktop", "select-mobile", "autocomplete", "geo", "textarea", "table", "radio", "date", "time", "datetime", "compact", "file", "draw", "likert", "range", "rank", "url", "horizontal", "image-view", "comment", "image-map", "date-mobile"). See [this file](https://github.com/enketo/enketo-express/blob/master/public/js/src/module/core-widgets.json) for an up-to-date list. You can also add custom widgets by adding a local path. More info: {@tutorial 34-custom-widgets}.
+
+> ⚠️ You must rebuild for changes to `"widgets"` to take effect. ⚠️
 
 #### analytics
 

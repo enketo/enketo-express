@@ -6,28 +6,36 @@
 // safer to ensure this here (in addition to grunt:env:test)
 process.env.NODE_ENV = 'test';
 
+const chai = require('chai');
 const request = require('supertest');
-const redis = require('redis');
+const sinon = require('sinon');
 const app = require('../../config/express');
+const mediaLib = require('../../app/lib/media');
 const surveyModel = require('../../app/models/survey-model');
 const instanceModel = require('../../app/models/instance-model');
-const config = require('../../app/models/config-model').server;
 
-const client = redis.createClient(
-    config.redis.main.port,
-    config.redis.main.host,
-    {
-        auth_pass: config.redis.main.password,
-    }
-);
+const { expect } = chai;
 
 describe('Submissions', () => {
+    /** @type {import('sinon').SinonSandbox} */
+    let sandbox;
+
+    // TODO remove this check and test for escaping/media URL replacement instead
+    /** @type {import('sinon').SinonStub} */
+    let getMediaMapStub;
+
+    /** @type {string} */
     let enketoId;
+
     const nonExistingEnketoId = 'nope';
     const validServer = 'https://testserver.com/bob';
     const validFormId = 'something';
 
     beforeEach((done) => {
+        sandbox = sinon.createSandbox();
+
+        getMediaMapStub = sandbox.stub(mediaLib, 'getMediaMap');
+
         // add survey if it doesn't exist in the db
         surveyModel
             .set({
@@ -40,19 +48,8 @@ describe('Submissions', () => {
             });
     });
 
-    afterEach((done) => {
-        // select test database and flush it
-        client.select(15, (err) => {
-            if (err) {
-                return done(err);
-            }
-            client.flushdb((err) => {
-                if (err) {
-                    return done(err);
-                }
-                done();
-            });
-        });
+    afterEach(() => {
+        sandbox.restore();
     });
 
     describe('for active/existing Enketo IDs', () => {
@@ -107,6 +104,23 @@ describe('Submissions', () => {
                 .post(`/submission/${nonExistingEnketoId}`)
                 .field('xml_submission_file', '<data></data>')
                 .expect(404, done);
+        });
+    });
+
+    describe('submission content types', () => {
+        it('responds with 400 if content type is not specified', async () => {
+            await request(app)
+                .post(`/submission/${enketoId}`)
+                .send('foo=bar')
+                .expect(400);
+        });
+
+        it('responds with 400 if content type is not multipart/form-data', async () => {
+            await request(app)
+                .post(`/submission/${enketoId}`)
+                .set('Content-Type', 'application/json')
+                .send({ foo: 'bar' })
+                .expect(400);
         });
     });
 
@@ -167,12 +181,36 @@ describe('Submissions', () => {
                     .then(() => {
                         done();
                     });
+
+                const mediaOptions = {
+                    deviceId: 'fake',
+                };
+
+                sandbox
+                    .stub(mediaLib, 'getHostURLOptions')
+                    .callsFake(() => mediaOptions);
             });
 
             it('responds with 200', (done) => {
                 request(app)
                     .get(`/submission/${enketoId}?instanceId=c`)
                     .expect(200, done);
+            });
+
+            it('attaches cached mapping of instance attachments', async () => {
+                const cachedAttachments = {
+                    'attached-file.jpg': '/media/get/attached-file.jpg',
+                };
+
+                getMediaMapStub.returns(cachedAttachments);
+
+                const { body } = await request(app)
+                    .get(`/submission/${enketoId}?instanceId=c`)
+                    .expect(200);
+
+                expect(body.instanceAttachments).to.deep.equal(
+                    cachedAttachments
+                );
             });
         });
     });

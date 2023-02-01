@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.0.2 - 2022-12-22
+
+-   Fix: global install of pm2 (now with version pinned in package.json) in Dockerfile (#509)
+
+## 5.0.1 - 2022-12-22
+
+-   Fix: load offline-enabled.png regardless of base path (#503)
+-   Do not update image file on blur if canvas is empty (enketo/enketo-core#931)
+-   Fix calculation of nested repeat counts in >1 outer repeat instances (enketo/enketo-core#935)
+-   Fix: integer and decimal widgets remain visible when form language changes (enketo/enketo-core#937)
+-   Fix: don't clear decimals when switching French -> English (enketo/enketo-core#941)
+
+## 5.0.0 - 2022-12-06
+
+**BREAKING CHANGE**: widgets for integers and decimal inputs have been made into Enketo Core widgets. If you [specify widgets in your `config.json`](https://enketo.github.io/enketo-express/tutorial-10-configure.html#widgets), you **MUST** add `integer` and `decimal`.
+
+-   Dockerfile: use npm ci (#471)
+-   Improve error messages for revoked forms/public access links (#487)
+-   Fix: validate number input values (enketo/enketo-core#926)
+-   Fix: allow arbitrary precision decimal values (enketo/enketo-core#932)
+-   Add number widgets by default (#493)
+
+## 4.1.5 - 2022-11-28 DO NOT USE: breaks numeric input
+
+-   Fix: use simpler selector for geopicker widgets (enketo/enketo-core#922)
+-   fix toggle or-appearance-compact with dynamic nested repeat group (enketo/enketo-core#914)
+
+## 4.1.4 - 2022-11-28
+
+-   Fix: map linked media URLs to support big-image (#482)
+
+## 4.1.3 - 2022-11-07
+
+-   Removed: absolute maximum size for file uploads (#461)
+-   Fix: fail early on non-multipart submissions (#476)
+-   Add redis-repl tool (#451)
+-   Fix: ensure `survey.media` is available in view mode (#484)
+-   Fix timepicker in Finnish locales (enketo/enketo-core#916)
+-   Fix special string.replace sequences in Markdown (enketo/enketo-transformer#153)
+-   Fix evaluating absolute nodeset expressions with an attribute context node (enketo/openrosa-xpath-evaluator#166)
+
+## 4.1.2 - 2022-09-16
+
+-   Fix: memory leak with async_hooks request context (#450)
+-   Test isolation: consistently use test Redis database (#456)
+-   Move towards unified handling of media (#459)
+
 ## 4.1.1 - 2022-06-26
 
 -   Updated French, German, Dutch and Spanish translations (#438)

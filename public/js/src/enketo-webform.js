@@ -83,6 +83,11 @@ function _showErrorOrAuthenticate(error) {
         window.location.href = `${
             settings.loginUrl
         }?return_url=${encodeURIComponent(window.location.href)}`;
+    } else if (error.status === 404) {
+        gui.alertLoadErrors([error.message], null, {
+            omitIntro: true,
+            omitSupportContact: true,
+        });
     } else {
         if (!Array.isArray(error)) {
             error = [error.message || t('error.unknown')];

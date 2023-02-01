@@ -13,6 +13,7 @@ import {
     setLastSavedRecord,
 } from './last-saved';
 import { geoJSONExternalInstance } from './geojson';
+import { replaceMediaSources } from './media';
 
 /**
  * @typedef {import('../../../../app/models/record-model').EnketoRecord} EnketoRecord
@@ -58,7 +59,6 @@ const MAX_SIZE_URL = settings.enketoId
     : `${settings.basePath}/submission/max-size/?xformUrl=${encodeURIComponent(
           settings.xformUrl
       )}`;
-const ABSOLUTE_MAX_SIZE = 100 * 1000 * 1000;
 
 /**
 /**
@@ -372,10 +372,7 @@ function getMaximumSubmissionSize(survey) {
         .then((response) => response.json())
         .then((data) => {
             if (data && data.maxSize && !isNaN(data.maxSize)) {
-                survey.maxSize =
-                    Number(data.maxSize) > ABSOLUTE_MAX_SIZE
-                        ? ABSOLUTE_MAX_SIZE
-                        : Number(data.maxSize);
+                survey.maxSize = Number(data.maxSize);
             } else {
                 console.error(
                     'Error retrieving maximum submission size. Unexpected response: ',
@@ -410,6 +407,8 @@ const getTransformURL = (basePath, enketoId) => {
  * @return {Promise<SurveyExternalData[]>}
  */
 const getExternalData = async (survey, model, options = {}) => {
+    replaceMediaSources(model, survey.media);
+
     /** @type {Array<Promise<SurveyExternalData>>} */
     const tasks = [];
     const externalInstances = [

@@ -12,7 +12,7 @@
     "plugins": ["chai-friendly", "jsdoc", "prettier", "unicorn"],
     "parserOptions": {
         "sourceType": "module",
-        "ecmaVersion": 2020
+        "ecmaVersion": 2021
     },
     "settings": {
         "jsdoc": {
@@ -75,7 +75,12 @@
         },
 
         {
-            "files": ["app.js", "app/**/*.js", "!app/views/**/*.js"],
+            "files": [
+                "app.js",
+                "app/**/*.js",
+                "!app/views/**/*.js",
+                "tools/redis-repl"
+            ],
             "env": {
                 "browser": false,
                 "node": true
@@ -159,6 +164,16 @@
             },
             "rules": {
                 "no-console": 0
+            }
+        },
+
+        {
+            "files": ["**/*.mjs"],
+            "parser": "@babel/eslint-parser",
+            "parserOptions": {
+                "sourceType": "module",
+                "ecmaVersion": 2021,
+                "requireConfigFile": false
             }
         }
     ]
