@@ -632,11 +632,11 @@ function getDataFile(url, languageMap) {
                 url.endsWith('.geojson')
             ) {
                 contentType = 'application/geo+json';
-
-                return response.json();
             }
 
-            return response.text();
+            return contentType === 'application/geo+json'
+                ? response.json()
+                : response.text();
         })
         .then((responseData) => {
             let result;
