@@ -108,11 +108,30 @@ function getTitleFromFormStr(formStr) {
     return matches && matches.length > 1 ? matches[1] : null;
 }
 
+/**
+ * @param {string} csv
+ */
 function csvToArray(csv) {
+    const input = csv.trim();
     const options = {
         skipEmptyLines: true,
     };
-    const result = Papa.parse(csv.trim(), options);
+
+    /** @type {string[]} */
+    let result = Papa.parse(input, options);
+
+    if (
+        result.errors.length === 1 &&
+        result.errors[0].message.includes(
+            'Unable to auto-detect delimiting character'
+        )
+    ) {
+        result = Papa.parse(input, {
+            ...options,
+            delimiter: ',',
+        });
+    }
+
     if (result.errors.length) {
         throw result.errors[0];
     }

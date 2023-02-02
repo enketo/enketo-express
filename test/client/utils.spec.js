@@ -100,6 +100,15 @@ describe('Client Utilities', () => {
                 '<root><item><a>1</a><b>2</b><c>3</c><d lang="en">4</d><d lang="fr">5</d></item></root>'
             );
         });
+
+        it('supports single-column values', () => {
+            const csv = 'a\n1\n2\n3';
+            const xml = utils.csvToXml(csv);
+
+            expect(new XMLSerializer().serializeToString(xml)).to.equal(
+                '<root><item><a>1</a></item><item><a>2</a></item><item><a>3</a></item></root>'
+            );
+        });
     });
 
     describe('blob <-> dataURI conversion', () => {
