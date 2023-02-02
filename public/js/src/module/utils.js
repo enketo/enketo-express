@@ -118,9 +118,8 @@ function csvToArray(csv) {
     };
 
     let result = Papa.parse(input, options);
-    const { errors } = result;
 
-    if (errors[0]?.code === 'UndetectableDelimiter' && errors[1] == null) {
+    if (result.errors.some((error) => error.code === 'UndetectableDelimiter')) {
         const parsed = Papa.parse(input, {
             ...options,
             delimiter: ',',
