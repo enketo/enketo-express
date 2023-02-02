@@ -117,23 +117,31 @@ function csvToArray(csv) {
         skipEmptyLines: true,
     };
 
-    /** @type {string[]} */
     let result = Papa.parse(input, options);
+    const { errors } = result;
 
-    if (
-        result.errors.length === 1 &&
-        result.errors[0].message.includes(
-            'Unable to auto-detect delimiting character'
-        )
-    ) {
-        result = Papa.parse(input, {
+    if (errors[0]?.code === 'UndetectableDelimiter' && errors[1] == null) {
+        const parsed = Papa.parse(input, {
             ...options,
             delimiter: ',',
         });
+
+        if (
+            parsed.errors.length === 0 &&
+            parsed.data.every((line) => line.length === 1)
+        ) {
+            result = parsed;
+        }
     }
 
     if (result.errors.length) {
-        throw result.errors[0];
+        let [error] = result.errors;
+
+        if (!(error instanceof Error)) {
+            error = new Error(error.message ?? String(error));
+        }
+
+        throw error;
     }
 
     return result.data;
