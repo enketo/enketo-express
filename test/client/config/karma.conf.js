@@ -58,7 +58,6 @@ module.exports = (config) => {
 
         browserify: {
             debug: true,
-            transform: ['aliasify'],
         },
 
         // test results reporter to use
