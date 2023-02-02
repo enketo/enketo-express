@@ -110,6 +110,15 @@ describe('Client Utilities', () => {
             );
         });
 
+        it('supports single-column values with quoted commas', () => {
+            const csv = 'a\n1\n"2,3"';
+            const xml = utils.csvToXml(csv);
+
+            expect(new XMLSerializer().serializeToString(xml)).to.equal(
+                '<root><item><a>1</a></item><item><a>2,3</a></item></root>'
+            );
+        });
+
         it('does not mistakenly parse invalid CSV with commas on non-header lines as a single-column', () => {
             const csv = 'a\n1,2';
             const convert = () => {
