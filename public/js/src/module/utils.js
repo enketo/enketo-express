@@ -108,13 +108,39 @@ function getTitleFromFormStr(formStr) {
     return matches && matches.length > 1 ? matches[1] : null;
 }
 
+/**
+ * @param {string} csv
+ */
 function csvToArray(csv) {
+    const input = csv.trim();
     const options = {
         skipEmptyLines: true,
     };
-    const result = Papa.parse(csv.trim(), options);
+
+    let result = Papa.parse(input, options);
+
+    if (result.errors.some((error) => error.code === 'UndetectableDelimiter')) {
+        const parsed = Papa.parse(input, {
+            ...options,
+            delimiter: ',',
+        });
+
+        if (
+            parsed.errors.length === 0 &&
+            parsed.data.every((line) => line.length === 1)
+        ) {
+            result = parsed;
+        }
+    }
+
     if (result.errors.length) {
-        throw result.errors[0];
+        let [error] = result.errors;
+
+        if (!(error instanceof Error)) {
+            error = new Error(error.message ?? String(error));
+        }
+
+        throw error;
     }
 
     return result.data;

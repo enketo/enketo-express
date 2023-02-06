@@ -100,6 +100,36 @@ describe('Client Utilities', () => {
                 '<root><item><a>1</a><b>2</b><c>3</c><d lang="en">4</d><d lang="fr">5</d></item></root>'
             );
         });
+
+        it('supports single-column values', () => {
+            const csv = 'a\n1\n2\n3';
+            const xml = utils.csvToXml(csv);
+
+            expect(new XMLSerializer().serializeToString(xml)).to.equal(
+                '<root><item><a>1</a></item><item><a>2</a></item><item><a>3</a></item></root>'
+            );
+        });
+
+        it('supports single-column values with quoted commas', () => {
+            const csv = 'a\n1\n"2,3"';
+            const xml = utils.csvToXml(csv);
+
+            expect(new XMLSerializer().serializeToString(xml)).to.equal(
+                '<root><item><a>1</a></item><item><a>2,3</a></item></root>'
+            );
+        });
+
+        it('does not mistakenly parse invalid CSV with commas on non-header lines as a single-column', () => {
+            const csv = 'a\n1,2';
+            const convert = () => {
+                utils.csvToXml(csv);
+            };
+
+            expect(convert).to.throw(Error);
+            expect(convert).to.throw(
+                /Unable to auto-detect delimiting character/
+            );
+        });
     });
 
     describe('blob <-> dataURI conversion', () => {
