@@ -45,7 +45,7 @@
             "msg": "Hittar inte fråga \"__path__\" i formuläret. Är referensen till denna fråga korrekt?"
         },
         "loaderror": {
-            "editadvice": "Du rekommenderas att inte redigera denna uppgift förrän detta har löst sig.",
+            "editadvice": "Du rekommenderas att inte redigera detta formlär förrän detta har löst sig.",
             "entryadvice": "Det rekommenderas att inte använda detta formulär för inmatning av data förrän detta har lösts.",
             "heading": "Fel vid inläsning",
             "msg1": "Ett fel uppstod vid inläsning av detta formulär.",
@@ -214,16 +214,15 @@
     },
     "error": {
         "code": "Felkod: __code__",
-        "dataloadfailed": "Misslyckades med att ladda in data från__url__",
+        "dataloadfailed": "Det gick inte att läsa in __resource__",
         "econnrefused": "Det gick inte att ansluta till formulärservern",
         "encryptionnotsupported": "Denna blankett kräver lokal kryptering av poster. Tyvärr stöds detta inte av din webbläsare. Vi rekommenderar att du byter till en modern webbläsare.",
+        "formloadfailed": "Det gick inte att ladda formuläret.",
         "instancenotfound": "Post finns inte. Den kan ha blivit ogiltig.",
         "invalidediturl": "Inte en giltig URL för redigering",
         "loadfailed": "Det gick inte att läsa in __resource__",
-        "notfoundinformlist": [
-            "Oj, det här formuläret finns inte (längre). Mest sannolikt har ägaren av formuläret raderat det, arkiverat det eller inaktiverat det. Vänligen kontakta formulärens ägare för att bekräfta.",
-            "Detaljerat fel: Form med ID __formId__ inte hittat i / formList."
-        ],
+        "notfoundinformlist": "Formuläret finns inte eller så har du inte behörighet till det. Kolla så URL är korrekt.\n\nFanns formuläret tidigare kan det ha blivit arkiverat eller raderat. Kontakta personen som bad dig fylla i formuläret.\n\n(Försök att använda formulär: __formId__)",
+        "notfounddirectformurl": "Formuläret finns inte eller så har du inte behörighet till det. Kolla så URL är korrekt.\n\nFanns formuläret tidigare kan det ha blivit arkiverat eller raderat. Kontakta personen som bad dig fylla i formuläret.\n\n(Försök att använda formulär: __notfounddirectformurl__)",
         "pagenotfound": "Sidan hittades inte",
         "surveyidnotactive": "Undersökning med detta ID är inte längre aktiv",
         "surveyidnotfound": "Undersökning med detta ID hittades inte",
@@ -381,7 +380,7 @@
         }
     },
     "submission": {
-        "http0": "Misslyckades (offline?).",
+        "http0": "Kommer inte åt servern eller så saknas kontakt med internet.",
         "http2xx": "Oväntat svar vid inskickning av data.",
         "http400": "Dataserver accepterar inte data.",
         "http401": "Autentiseringsproblem med dataservern.",
