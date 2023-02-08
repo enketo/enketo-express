@@ -113,6 +113,34 @@ async function get(url, options = {}) {
                 throw e;
             });
 
+        /*
+         * This works around an issue with puppeteer not printing canvas
+         * images that were loaded from a file.
+         * It is likely this issue: https://bugs.chromium.org/p/chromium/issues/detail?id=809065
+         * (though not WebGL-related as some of the commenters suggest)
+         */
+        await page.evaluate(() => {
+            /* eslint-env browser */
+            function canvasToImage(element) {
+                const image = document.createElement('img');
+                image.src = element.toDataURL();
+
+                ['width', 'height', 'position', 'left', 'top'].forEach(
+                    (property) =>
+                        (image.style[property] = element.style[property])
+                );
+                // overriding a general image style
+                image.style['max-width'] = '100%';
+                image.className = element.className;
+
+                element.parentNode &amp;&amp;
+                    element.parentNode.insertBefore(image, element);
+                element.parentNode &amp;&amp; element.parentNode.removeChild(element);
+            }
+
+            document.querySelectorAll('canvas').forEach(canvasToImage);
+        });
+
         pdf = await page.pdf({
             landscape: options.landscape,
             format: options.format,

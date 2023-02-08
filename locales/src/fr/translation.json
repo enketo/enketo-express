@@ -221,10 +221,8 @@
         "instancenotfound": "L'enregistrement n'a pas été trouvé. Il a peut-être expiré.",
         "invalidediturl": "Ceci n'est pas une URL d'édition valide",
         "loadfailed": "Impossible de charger __resource__",
-        "notfoundinformlist": [
-            "Oups, ce formulaire n'existe plus. Le propriétaire du formulaire l'a probablement supprimé, archivé ou désactivé. Veuillez le contacter pour avoir de plus amples informations.",
-            "Erreur détaillée : Le formulaire avec l'ID __formId__ n'a pas été trouvé dans /formList."
-        ],
+        "notfoundinformlist": "Ce formulaire n'existe pas ou vous n'y avez plus accès. Veuillez vérifier l'URL et vous assurer qu'elle ne manque pas de caractères.\n\nSi le formulaire existait précédemment, il a peut-être été archivé, désactivé ou suprimmé. Si ceci est inattendu, veuillez contacter la personne qui vous a demandé de remplir le formulaire.\n\n(Tentative d'accès du formulaire avec ID: __formId__)",
+        "notfounddirectformurl": "Ce formulaire n'existe pas ou vous n'y avez plus accès. Veuillez vérifier l'URL et vous assurer qu'elle ne manque pas de caractères.\n\nSi le formulaire existait précédemment, il a peut-être été archivé, désactivé ou suprimmé. Si ceci est inattendu, veuillez contacter la personne qui vous a demandé de remplir le formulaire.\n\n(Tentative d'accès du formulaire: __notfounddirectformurl__)",
         "pagenotfound": "Page non trouvée",
         "surveyidnotactive": "L'enquête avec cet ID n'est plus active",
         "surveyidnotfound": "L'enquête avec cet ID n'a pas été trouvée",

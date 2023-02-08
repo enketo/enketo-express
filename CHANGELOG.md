@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.0 - 2023-02-08
+
+-   **BREAKING CHANGE**: Removed IE11 support (enketo-core#946)
+-   Fix: include drawings, signatures and annotated images in PDFs (#513)
+-   Fix: support single-column CSV (#520)
+-   fix: load external data when served with 'application/geo+json' Content-Type header (#519)
+-   Fix: rank widget on touch devices (enketo-core#947)
+-   Fix: undesired autocompletion of manually entered incomplete month-year (enketo-core#944)
+-   Optimize expensive XPath expressions in HTML transform (enketo-transformer#165)
+
 ## 5.0.2 - 2022-12-22
 
 -   Fix: global install of pm2 (now with version pinned in package.json) in Dockerfile (#509)
