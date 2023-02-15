@@ -18,7 +18,6 @@
     "rating": "../../../node_modules/enketo-core/src/widget/rating/rating",
     "rank": "../../../node_modules/enketo-core/src/widget/rank/rank-widget",
     "columns": "../../../node_modules/enketo-core/src/widget/columns/columns",
-    "analog-scale": "../../../node_modules/enketo-core/src/widget/analog-scale/analog-scalepicker",
     "image-view": "../../../node_modules/enketo-core/src/widget/big-image/image-viewer",
     "comment": "../../../node_modules/enketo-core/src/widget/comment/commentwidget",
     "image-map": "../../../node_modules/enketo-core/src/widget/image-map/image-map",
