@@ -100,7 +100,7 @@ function init(formEl, data, loadErrors = []) {
             loadErrors = loadErrors.concat(form.init());
 
             // After form widgets have initialized, localize all UI components
-            gui.localizeGUI(form);
+            gui.localizeFormGUI(form);
 
             // Remove loader. This will make the form visible.
             // In order to aggregate regular loadErrors and GoTo loaderrors,
@@ -853,7 +853,7 @@ function _setEventHandlers(survey) {
         formLanguages.addEventListener(events.Change().type, (event) => {
             event.preventDefault();
             console.log('ready to set UI lang', form.currentLanguage);
-            gui.localizeGUI(form);
+            gui.localizeCompleteGUI(form);
         });
     }
 

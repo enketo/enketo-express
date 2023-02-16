@@ -10,7 +10,12 @@ import $ from 'jquery';
 import vexEnketoDialog from 'vex-dialog-enketo';
 import feedbackBar from './feedback-bar';
 import settings from './settings';
-import { init as initTranslator, t, localize } from './translator';
+import {
+    init as initTranslator,
+    t,
+    localize,
+    getCurrentUiLanguage,
+} from './translator';
 import sniffer from './sniffer';
 import events from './event';
 import './plugin';
@@ -180,14 +185,28 @@ function swapTheme(formParts) {
     });
 }
 
-function localizeGUI(form) {
-    localize(document.querySelector('body'), form.currentLanguage).then((dir) =>
-        document.querySelector('html').setAttribute('dir', dir)
-    );
-    // Localize repeat templates too
+function localizeCompleteGUI(form) {
+    if (
+        form.currentLanguage &&
+        form.currentLanguage !== getCurrentUiLanguage() &&
+        /^[a-z]{2,3}/.test(form.currentLanguage)
+    ) {
+        localize(document.querySelector('body'), form.currentLanguage).then(
+            (dir) => document.querySelector('html').setAttribute('dir', dir)
+        );
+        if (form.repeats.templates) {
+            Object.keys(form.repeats.templates).forEach((path) => {
+                localize(form.repeats.templates[path], form.currentLanguage);
+            });
+        }
+    }
+}
+
+function localizeFormGUI(form) {
+    localize(form.view.html);
     if (form.repeats.templates) {
         Object.keys(form.repeats.templates).forEach((path) => {
-            localize(form.repeats.templates[path], form.currentLanguage);
+            localize(form.repeats.templates[path]);
         });
     }
 }
@@ -673,6 +692,7 @@ export default {
     getErrorResponseMsg,
     applyPrintStyle,
     getPrintDialogComponents,
-    localizeGUI,
+    localizeCompleteGUI,
+    localizeFormGUI,
     printForm,
 };
