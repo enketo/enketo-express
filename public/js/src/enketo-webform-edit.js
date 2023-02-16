@@ -2,7 +2,7 @@ import gui from './module/gui';
 import controller from './module/controller-webform';
 import settings from './module/settings';
 import connection from './module/connection';
-import { init as initTranslator, t, localize } from './module/translator';
+import { init as initTranslator, t } from './module/translator';
 import utils from './module/utils';
 
 const loader = document.querySelector('.main-loader');
@@ -78,6 +78,5 @@ function _init(formParts) {
             formParts.languages = form.languages;
             document.querySelector('head>title').textContent =
                 utils.getTitleFromFormStr(formParts.form);
-            localize(formEl);
         });
 }

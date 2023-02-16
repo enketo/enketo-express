@@ -10,7 +10,7 @@ import $ from 'jquery';
 import vexEnketoDialog from 'vex-dialog-enketo';
 import feedbackBar from './feedback-bar';
 import settings from './settings';
-import { init as initTranslator, t } from './translator';
+import { init as initTranslator, t, localize } from './translator';
 import sniffer from './sniffer';
 import events from './event';
 import './plugin';
@@ -178,6 +178,18 @@ function swapTheme(formParts) {
             resolve(formParts);
         }
     });
+}
+
+function localizeGUI(form) {
+    localize(document.querySelector('body'), form.currentLanguage).then((dir) =>
+        document.querySelector('html').setAttribute('dir', dir)
+    );
+    // Localize repeat templates too
+    if (form.repeats.templates) {
+        Object.keys(form.repeats.templates).forEach((path) => {
+            localize(form.repeats.templates[path], form.currentLanguage);
+        });
+    }
 }
 
 /**
@@ -661,5 +673,6 @@ export default {
     getErrorResponseMsg,
     applyPrintStyle,
     getPrintDialogComponents,
+    localizeGUI,
     printForm,
 };

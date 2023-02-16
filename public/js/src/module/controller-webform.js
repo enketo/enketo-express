@@ -10,12 +10,7 @@ import connection from './connection';
 import settings from './settings';
 import events from './event';
 import fileManager from './file-manager';
-import {
-    t,
-    localize,
-    getCurrentUiLanguage,
-    getBrowserLanguage,
-} from './translator';
+import { t, getBrowserLanguage } from './translator';
 import records from './records-queue';
 import encryptor from './encryptor';
 import formCache from './form-cache';
@@ -104,18 +99,8 @@ function init(formEl, data, loadErrors = []) {
 
             loadErrors = loadErrors.concat(form.init());
 
-            // Determine whether UI language should be attempted to be switched.
-            if (
-                getCurrentUiLanguage() !== form.currentLanguage &&
-                /^[a-z]{2,3}/.test(form.currentLanguage)
-            ) {
-                localize(
-                    document.querySelector('body'),
-                    form.currentLanguage
-                ).then((dir) =>
-                    document.querySelector('html').setAttribute('dir', dir)
-                );
-            }
+            // After form widgets have initialized, localize all UI components
+            gui.localizeGUI(form);
 
             // Remove loader. This will make the form visible.
             // In order to aggregate regular loadErrors and GoTo loaderrors,
@@ -868,9 +853,7 @@ function _setEventHandlers(survey) {
         formLanguages.addEventListener(events.Change().type, (event) => {
             event.preventDefault();
             console.log('ready to set UI lang', form.currentLanguage);
-            localize(document.querySelector('body'), form.currentLanguage).then(
-                (dir) => document.querySelector('html').setAttribute('dir', dir)
-            );
+            gui.localizeGUI(form);
         });
     }
 

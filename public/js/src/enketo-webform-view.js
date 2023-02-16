@@ -5,7 +5,7 @@ import gui from './module/gui';
 import controller from './module/controller-webform';
 import settings from './module/settings';
 import connection from './module/connection';
-import { init as initTranslator, t, localize } from './module/translator';
+import { init as initTranslator, t } from './module/translator';
 
 // Completely disable calculations in Enketo Core
 // Completely disable instanceID and deprecatedID population in Enketo Core
@@ -111,7 +111,5 @@ function _init(formParts) {
             if (settings.print) {
                 gui.applyPrintStyle();
             }
-            // after widgets have been initialized, localize all data-i18n elements
-            localize(formEl);
         });
 }

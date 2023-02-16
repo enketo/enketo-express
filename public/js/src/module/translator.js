@@ -67,7 +67,7 @@ const initialize = new Promise((resolve, reject) => {
 const t = (key, options) => i18next.t(key, options);
 
 /**
- * Localizes the descendents of an element based on the data-i18n attribute.
+ * Localizes the descendants of an element based on the data-i18n attribute.
  * Performance-optimized in Chrome (used bench6 form).
  *
  * Note, this does not work if there is translation context (i.e. options for t(key, options) call).

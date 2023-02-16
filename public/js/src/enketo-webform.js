@@ -6,7 +6,6 @@ import connection from './module/connection';
 import {
     init as initTranslator,
     t,
-    localize,
     loadTranslation,
 } from './module/translator';
 import store from './module/store';
@@ -248,9 +247,6 @@ function _init(formParts) {
             if (settings.print) {
                 gui.applyPrintStyle();
             }
-            // after widgets have been initialized, localize all data-i18n elements
-            localize(formEl);
-
             return formParts;
         });
 }
