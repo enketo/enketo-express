@@ -174,7 +174,7 @@ function arrayToXml(rows, langMap) {
     });
 
     // Check if headers are valid XML node names
-    headers.every(_throwInvalidXmlNodeName);
+    headers.every(throwInvalidCSVHeaderToXMLLocalName);
 
     // create an XML Document
     const parser = new DOMParser();
@@ -260,16 +260,74 @@ function _serializeQueryComponent(name, value) {
     return `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
 }
 
-function _throwInvalidXmlNodeName(name) {
+/**
+ * Based on {@link https://www.w3.org/TR/xml/#d0e804}, modified to:
+ *
+ * - Break up sub-patterns for readability
+ * - Use JavaScript Unicode escape sequences
+ * - Build a more efficient `RegExp` by joining some character ranges
+ * - Omit `:`, as this pattern only checks for local names
+ */
+const XML_LOCAL_NAME_PATTERN = (() => {
+    const nameStartCharRanges = [
+        'A-Z',
+        'a-z',
+        '_',
+        '\\u{C0}-\\u{D6}',
+        '\\u{D8}-\\u{F6}',
+        '\\u{F8}-\\u{2FF}',
+        '\\u{370}-\\u{37D}',
+        '\\u{37F}-\\u{1FFF}',
+        '\\u{200C}-\\u{200D}',
+        '\\u{2070}-\\u{218F}',
+        '\\u{2C00}-\\u{2FEF}',
+        '\\u{3001}-\\u{D7FF}',
+        '\\u{F900}-\\u{FDCF}',
+        '\\u{FDF0}-\\u{FFFD}',
+        '\\u{10000}-\\u{EFFFF}',
+    ];
+    const nameCharRanges = [
+        '-', // Must come first or last in a `RegExp` character class
+        ...nameStartCharRanges,
+        '"."',
+        '\\u{B7}',
+        '0-9',
+        '\\u{0300}-\\u{036F}',
+        '\\u{203F}-\\u{2040}',
+    ];
+
+    const nameStartChar = `[${nameStartCharRanges.join('')}]`;
+    const nameChar = `[${nameCharRanges.join('')}]`;
+    const name = `^${nameStartChar}${nameChar}*$`;
+
+    return new RegExp(name, 'u');
+})();
+
+/**
+ * TODO (2023-02-27): Is the below restriction really necessary? It seems we could:
+ *
+ * - Use existing namespace declarations present on the XForm document.
+ * - Generate arbitrary namespace URIs for those which are not present, and add
+ *   them to the XForm.
+ */
+
+/**
+ * @param {string} name
+ * @return {true | never} - Returns true if `name` is a valid XML local name,
+ * throws otherwise. Namespaced CSV headers are not permitted because CSVs do
+ * not have a way to convey namespace declarations.
+ */
+const throwInvalidCSVHeaderToXMLLocalName = (name) => {
     // Note: this is more restrictive than XML spec.
     // We cannot accept namespaces prefixes because there is no way of knowing the namespace uri in CSV.
-    if (/^(?!xml)[A-Za-z._][A-Za-z0-9._]*$/.test(name)) {
+    if (XML_LOCAL_NAME_PATTERN.test(name)) {
         return true;
     }
+
     throw new Error(
         `CSV column heading "${name}" cannot be turned into a valid XML element`
     );
-}
+};
 
 /**
  *
