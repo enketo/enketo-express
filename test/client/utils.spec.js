@@ -2,7 +2,7 @@ import utils from '../../public/js/src/module/utils';
 
 describe('Client Utilities', () => {
     describe('CSV to XML conversion', () => {
-        it('returns an error if the csv contains column headings that are not valid XML nodeNames (start with a number)', () => {
+        it('throws an error if the csv contains column headings that are not valid XML nodeNames (start with a number)', () => {
             const csv = 'a,b,c,3\n1,2,3,4';
             const convert = () => {
                 utils.csvToXml(csv);
@@ -13,7 +13,7 @@ describe('Client Utilities', () => {
             );
         });
 
-        it('returns an error if the csv contains column headings that are not valid XML nodeNames (start with namespace prefix)', () => {
+        it('throws an error if the csv contains column headings that are not valid XML nodeNames (start with namespace prefix)', () => {
             const csv = 'a,b,c,a:d\n1,2,3,4';
             const convert = () => {
                 utils.csvToXml(csv);
@@ -129,6 +129,60 @@ describe('Client Utilities', () => {
             expect(convert).to.throw(
                 /Unable to auto-detect delimiting character/
             );
+        });
+
+        [
+            {
+                reason: 'hyphen as the first character',
+                header: '-a',
+                isValid: false,
+            },
+            {
+                reason: 'hyphens after the first character',
+                header: 'a-a',
+                isValid: true,
+            },
+            {
+                reason: 'underscore as any character',
+                header: '_a_a',
+                isValid: true,
+            },
+            {
+                reason: 'spaces between valid characters',
+                header: 'a a',
+                isValid: false,
+            },
+            {
+                reason: 'unicode characters',
+                header: 'เจมส์',
+                isValid: true,
+            },
+        ].forEach(({ reason, header, isValid }) => {
+            if (isValid) {
+                it(`allows ${reason}`, () => {
+                    const csv = `${header},b,c,d\n1,2,3,4\n5,6,7,8`;
+                    const xml = utils.csvToXml(csv);
+                    const firstItem = `<item><${header}>1</${header}><b>2</b><c>3</c><d>4</d></item>`;
+                    const secondItem = `<item><${header}>5</${header}><b>6</b><c>7</c><d>8</d></item>`;
+
+                    expect(new XMLSerializer().serializeToString(xml)).to.equal(
+                        `<root>${firstItem}${secondItem}</root>`
+                    );
+                });
+            } else {
+                it(`throws for headers with ${reason}`, () => {
+                    const csv = `${header},b,c,d\n1,2,3,4\n5,6,7,8`;
+
+                    const convert = () => {
+                        utils.csvToXml(csv);
+                    };
+
+                    expect(convert).to.throw(Error);
+                    expect(convert).to.throw(
+                        `CSV column heading "${header}" cannot be turned into a valid XML element`
+                    );
+                });
+            }
         });
     });
 
