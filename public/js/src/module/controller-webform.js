@@ -873,6 +873,12 @@ function _setEventHandlers(survey) {
             );
         });
     }
+    // This actually belongs in gui.js but that module doesn't have access to the form object.
+    // This handler is also used in forms that have no translation (and thus no defined language).
+    // See scenario X in https://docs.google.com/spreadsheets/d/1CigMLAQewcXi-OJJHi_JQQ-fJXOam99livM0oYrtbkk/edit#gid=1504432290
+    document.addEventListener(events.AddRepeat().type, (event) => {
+        localize(event.target, form.currentLanguage);
+    });
 
     if (settings.offline) {
         document.addEventListener(
