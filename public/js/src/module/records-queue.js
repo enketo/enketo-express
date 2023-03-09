@@ -13,6 +13,7 @@ import exporter from './exporter';
 import { t } from './translator';
 import formCache from './form-cache';
 import { setLastSavedRecord } from './last-saved';
+import { backoff, cancelBackoff } from './exponential-backoff';
 
 let $exportButton;
 let $uploadButton;
@@ -279,6 +280,7 @@ function uploadQueue(byUser = false) {
                                     );
                             })
                             .catch((result) => {
+                                console.log('catch me');
                                 // catch 401 responses (1 of them)
                                 if (result.status === 401) {
                                     authRequired = true;
@@ -308,6 +310,9 @@ function uploadQueue(byUser = false) {
                 document.dispatchEvent(
                     events.QueueSubmissionSuccess(successes)
                 );
+                cancelBackoff();
+            } else {
+                backoff(); 
             }
 
             // update the list by properly removing obsolete records, reactivating button(s)
