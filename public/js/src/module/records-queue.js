@@ -186,10 +186,10 @@ function setActive(instanceId) {
  * Sets the interval to upload queued records
  */
 function _setUploadIntervals() {
-    // one quick upload attempt soon after page load
+    // one quick upload attempt immediately after page load
     setTimeout(() => {
         uploadQueue();
-    }, 30 * 1000);
+    }, 0);
     // interval to upload queued records
     setInterval(() => {
         uploadQueue();
@@ -280,7 +280,6 @@ function uploadQueue(byUser = false) {
                                     );
                             })
                             .catch((result) => {
-                                console.log('catch me');
                                 // catch 401 responses (1 of them)
                                 if (result.status === 401) {
                                     authRequired = true;
@@ -310,9 +309,12 @@ function uploadQueue(byUser = false) {
                 document.dispatchEvent(
                     events.QueueSubmissionSuccess(successes)
                 );
+
+                // Cancel current backoff if upload is successful
                 cancelBackoff();
             } else {
-                backoff(); 
+                // Start/continue upload retries with exponential backoff if upload is not successful
+                backoff(uploadQueue);
             }
 
             // update the list by properly removing obsolete records, reactivating button(s)
