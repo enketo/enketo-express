@@ -222,31 +222,11 @@ function _setRedisConfigFromEnv() {
     const redisCacheUrl = process.env.ENKETO_REDIS_CACHE_URL;
 
     if (redisMainUrl) {
-        config.redis.main = _extractRedisConfigFromUrl(redisMainUrl);
+        config.redis.main.url = redisMainUrl;
     }
     if (redisCacheUrl) {
-        config.redis.cache = _extractRedisConfigFromUrl(redisCacheUrl);
+        config.redis.cache.url = redisCacheUrl;
     }
-}
-
-/**
- * Parses a redis URL and returns an object with `host`, `port` and `password` properties.
- *
- * @param { string } redisUrl - A compliant redis url
- * @return {{host: string, port: string, password: string|null}} config object
- */
-function _extractRedisConfigFromUrl(redisUrl) {
-    const parsedUrl = url.parse(redisUrl);
-    const password =
-        parsedUrl.auth && parsedUrl.auth.split(':')[1]
-            ? parsedUrl.auth.split(':')[1]
-            : null;
-
-    return {
-        host: parsedUrl.hostname,
-        port: parsedUrl.port,
-        password,
-    };
 }
 
 /**

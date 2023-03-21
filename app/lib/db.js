@@ -1,22 +1,25 @@
 const redis = require('redis');
 const config = require('../models/config-model').server;
+/**
+ * Creates the redis url passed into the client, taking the URL as is if defined, otherwise building the url from
+ * the predefined host, port and option auth token
+ *
+ * @static
+ * @param { object } redisConfig - Local redis configuration settings imported from the config model.
+ * @return { string } Redis url
+ */
 
-const mainClient = redis.createClient(
-    config.redis.main.port,
-    config.redis.main.host,
-    {
-        auth_pass: config.redis.main.password,
+function _getRedisUrl(redisConfig) {
+    if (redisConfig.url) {
+        return redisConfig.url
     }
-);
-
-const cacheClient = redis.createClient(
-    config.redis.cache.port,
-    config.redis.cache.host,
-    {
-        auth_pass: config.redis.cache.password,
+    else {
+        return `redis://:${redisConfig.password}@${redisConfig.host}:${redisConfig.port}`
     }
-);
+}
 
+const mainClient = redis.createClient(_getRedisUrl(config.redis.main))
+const cacheClient = redis.createClient(_getRedisUrl(config.redis.cache))
 module.exports = {
     mainClient,
     cacheClient,
