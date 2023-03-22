@@ -44,9 +44,6 @@ describe('Transformation Controller', () => {
     /** @type {sinon.SinonStub} */
     let authenticateStub;
 
-    /** @type {sinon.SinonStub} */
-    let getXFormStub;
-
     /** @type {import('sinon').SinonStub} */
     let getManifestStub;
 
@@ -95,14 +92,12 @@ describe('Transformation Controller', () => {
             .stub(communicator, 'authenticate')
             .callsFake((survey) => Promise.resolve(survey));
 
-        getXFormStub = sandbox
-            .stub(communicator, 'getXForm')
-            .callsFake((survey) =>
-                Promise.resolve({
-                    ...survey,
-                    xform,
-                })
-            );
+        sandbox.stub(communicator, 'getXForm').callsFake((survey) =>
+            Promise.resolve({
+                ...survey,
+                xform,
+            })
+        );
     });
 
     afterEach(async () => {
@@ -163,26 +158,19 @@ describe('Transformation Controller', () => {
             });
         });
 
-        it('responds with 404 for unauthorized direct requests for forms', async () => {
+        // Direct requests are now performed client side. This failure is now
+        // the same as any other incomplete transformation API request.
+        it('responds with 400 for no longer supported direct requests for forms', async () => {
             transformRequestURL = `/transform/xform`;
             transformRequestBody = {
                 xformUrl: 'http://example.com/qwerty.xml',
             };
 
-            const error = new Error('Unauthorized');
-
-            error.status = 403;
-
-            getXFormStub.rejects(error);
-
-            const message = app.i18next.t('error.notfounddirectformurl', {
-                formFileName: 'querty.xml',
-            });
-            const actual = await getTransformResult(404);
+            const actual = await getTransformResult(400);
 
             expect(actual).to.deep.equal({
-                code: 404,
-                message,
+                code: 400,
+                message: 'Bad Request. Survey information not complete.',
             });
         });
     });
@@ -343,29 +331,6 @@ describe('Transformation Controller', () => {
                 await getTransformResult();
 
                 expect(getMediaMapStub.getCalls().length).to.equal(1);
-            });
-        });
-
-        describe('direct access forms', () => {
-            beforeEach(() => {
-                transformRequestURL = `/transform/xform`;
-                transformRequestBody = {
-                    xformUrl: 'http://example.com/qwerty',
-                };
-            });
-
-            // Note: previously, an attempt was made to request manifests
-            // direct access forms (i.e. `xformUrl` passed from the client).
-            it('gets the manifest', async () => {
-                await getTransformResult();
-
-                expect(getManifestStub.getCalls().length).to.equal(0);
-            });
-
-            it('does not cache media sources', async () => {
-                await getTransformResult();
-
-                expect(getMediaMapStub.getCalls().length).to.equal(0);
             });
         });
     });
