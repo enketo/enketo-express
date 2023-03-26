@@ -391,14 +391,24 @@ describe('Records queue', () => {
         });
 
         describe('Retrying uploads in failure scenarios', () => {
+            /** @type {EnketoRecord[]} */
+            let queue;
+
+            /** @type {sinon.SinonStub} */
+            let storeRecordGetAllStub;
+
             // Stub certain prerequisite methods so they don't throw off async timers
             beforeEach(() => {
-                sandbox
+                queue = [recordA];
+
+                storeRecordGetAllStub = sandbox
                     .stub(store.record, 'getAll')
-                    .callsFake(async () => [recordA]);
+                    .callsFake(async () => queue);
                 sandbox
                     .stub(store.record, 'get')
-                    .callsFake(async () => recordA);
+                    .callsFake(async (instanceId) =>
+                        queue.find((item) => item.instanceId === instanceId)
+                    );
                 sandbox.stub(store.record, 'remove').callsFake(async () => {});
                 sandbox
                     .stub(store.property, 'addSubmittedInstanceId')
@@ -422,9 +432,9 @@ describe('Records queue', () => {
                     reason: 'uploading fails',
                     resolution: 'retrying upload succeeds',
                     setup: () => {
-                        connectionUploadQueuedRecordStub.callsFake(() =>
-                            Promise.reject(new TypeError('Failed to fetch'))
-                        );
+                        connectionUploadQueuedRecordStub.callsFake(async () => {
+                            throw new TypeError('Failed to fetch');
+                        });
 
                         return connectionUploadQueuedRecordStub;
                     },
@@ -432,6 +442,34 @@ describe('Records queue', () => {
                         connectionUploadQueuedRecordStub.callsFake((record) => {
                             uploaded.push(record);
                         });
+                    },
+                },
+                {
+                    reason: 'uploading partially fails',
+                    resolution: 'retrying upload succeeds',
+                    setup: () => {
+                        queue = [recordA, recordB];
+                        connectionUploadQueuedRecordStub.callsFake(
+                            async (record) => {
+                                if (record.instanceId === instanceIdA) {
+                                    storeRecordGetAllStub.callsFake(
+                                        async () => [recordB]
+                                    );
+                                    uploaded.push(record);
+                                } else {
+                                    throw new TypeError('Failed to fetch');
+                                }
+                            }
+                        );
+
+                        return connectionUploadQueuedRecordStub;
+                    },
+                    teardown: () => {
+                        connectionUploadQueuedRecordStub.callsFake(
+                            async (record) => {
+                                uploaded.push(record);
+                            }
+                        );
                     },
                 },
             ];
@@ -481,7 +519,7 @@ describe('Records queue', () => {
 
                         expect(stub.callCount).to.equal(1);
 
-                        expect(uploaded).to.deep.equal([recordA]);
+                        expect(uploaded).to.deep.equal(queue);
                     });
                 }
             );

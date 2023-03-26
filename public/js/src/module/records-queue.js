@@ -308,19 +308,16 @@ const uploadQueue = async (
     uploadOngoing = false;
     $uploadButton.btnBusyState(false);
 
-    let result = false;
+    const success = !authRequired && successes.length === records.length;
 
     if (authRequired) {
         gui.confirmLogin();
-    } else if (successes.length > 0) {
-        // TODO: shouldn't this check that *all* uploads were successful?
+    } else if (success) {
         // let gui send a feedback message
         document.dispatchEvent(events.QueueSubmissionSuccess(successes));
 
         // Cancel current backoff if upload is successful
         cancelBackoff();
-
-        result = true;
     } else {
         // Start/continue upload retries with exponential backoff if upload is not successful
         uploadOngoing = false;
@@ -331,7 +328,7 @@ const uploadQueue = async (
     // update the list by properly removing obsolete records, reactivating button(s)
     _updateRecordList();
 
-    return result;
+    return success;
 };
 
 /**
