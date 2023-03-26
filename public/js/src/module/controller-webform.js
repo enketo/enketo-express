@@ -591,23 +591,26 @@ function _saveRecord(survey, draft, recordName, confirmed) {
             _resetForm(survey, { isOffline: true });
 
             if (draft) {
+                return true;
+            }
+
+            return records.uploadQueue({ isUserTriggered: !draft });
+        })
+        .then((success) => {
+            if (success && draft) {
                 gui.alert(
                     t('alert.recordsavesuccess.draftmsg'),
                     t('alert.savedraftinfo.heading'),
                     'info',
                     5
                 );
-            } else {
+            } else if (!success && !draft) {
                 gui.alert(
                     `${t('record-list.msg2')}`,
                     t('alert.recordsavesuccess.finalmsg'),
                     'info',
                     10
                 );
-                // The timeout simply avoids showing two messages at the same time:
-                // 1. "added to queue"
-                // 2. "successfully submitted"
-                setTimeout(records.uploadQueue, 10 * 1000);
             }
         })
         .catch((error) => {
@@ -770,7 +773,7 @@ function _setEventHandlers(survey) {
     });
 
     $('.record-list__button-bar__button.upload').on('click', () => {
-        records.uploadQueue(true);
+        records.uploadQueue({ isUserTriggered: true });
     });
 
     $('.record-list__button-bar__button.export').on('click', () => {

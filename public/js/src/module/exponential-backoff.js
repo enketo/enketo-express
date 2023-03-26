@@ -5,25 +5,24 @@
  */
 
 const state = {
-    n: 0, // iteration
-    tid: null, // currently running timeout ID
+    iteration: 0,
+    timeoutID: -1,
 };
 
+/**
+ * @param {(options?: { isRetry: boolean }) => Promise<boolean>} uploadQueue '
+ */
 export function backoff(uploadQueue) {
     // Exponentially increases to 5 minutes then relies on existing interval
-    if (state.n < 9) {
-        const offset = Math.min(2 ** state.n - 1, 5 * 60) * 1000;
-        console.log(`Trying to upload again... Next attempt in: ${offset}`);
-        state.n += 1;
-        state.tid = setTimeout(uploadQueue, offset);
-    } else {
-        console.log(`Retried ${state.n} times, deferring to 5 minute interval`);
-    }
+    const delay = Math.min(2 ** state.iteration, 5 * 60) * 1000;
+
+    state.iteration += 1;
+    state.timeoutID = setTimeout(() => {
+        uploadQueue({ isRetry: true });
+    }, delay);
 }
 
 export function cancelBackoff() {
-    if (state.tid) {
-        state.n = 0;
-        clearTimeout(state.tid);
-    }
+    state.iteration = 0;
+    clearTimeout(state.timeoutID);
 }
