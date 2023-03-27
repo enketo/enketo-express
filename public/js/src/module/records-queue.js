@@ -189,7 +189,7 @@ function _setUploadIntervals() {
     // one quick upload attempt immediately after page load
     setTimeout(() => {
         uploadQueue();
-    }, 0);
+    }, 5 * 1000); // 5 second buffer
     // interval to upload queued records
     setInterval(() => {
         uploadQueue();

@@ -12,8 +12,8 @@ const state = {
 export function backoff(uploadQueue) {
     // Exponentially increases to 5 minutes then relies on existing interval
     if (state.n < 9) {
-        const offset = Math.min(2 ** state.n - 1, 5 * 60) * 1000;
-        console.log(`Trying to upload again... Next attempt in: ${offset}`);
+        const offset = Math.min(2 ** state.n + 4, 5 * 60) * 1000;
+        console.log(`Trying to upload again... Next attempt in: ${offset / 1000} seconds`);
         state.n += 1;
         state.tid = setTimeout(uploadQueue, offset);
     } else {
