@@ -20,7 +20,7 @@ block style
 
 block script
   - var suffix = (type && type !== 'preview' && type !== 'single') ? '-' + type : ''
-    script#main-script(defer, module, src=`${basePath}${offlinePath || ''}/js/build/enketo-webform${suffix}.js`)
+    script#main-script(defer, type="module", src=`${basePath}${offlinePath || ''}/js/build/enketo-webform${suffix}.js`)
 
   script.
     var env = !{JSON.stringify(clientConfig).replace(/<\//g, '<\\/')};

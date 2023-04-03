@@ -4,6 +4,7 @@
  * @see {LastSavedFeatureSpec}
  */
 
+import { transform } from 'enketo-transformer/web';
 import utils from '../../public/js/src/module/utils';
 import connection from '../../public/js/src/module/connection';
 import settings from '../../public/js/src/module/settings';
@@ -167,8 +168,7 @@ describe('Connection', () => {
 
         const basePath = '-';
 
-        /** @type {string} */
-        let expectedPostBody;
+        const xformUrl = '/base/test/fixtures/connection/preview.xml';
 
         /** @type {string} */
         let expectedURL;
@@ -188,13 +188,24 @@ describe('Connection', () => {
 
             theme = '';
 
-            expectedPostBody = '';
-
             expectedURL = `${basePath}/transform/xform/${enketoId}`;
 
             resolveExternalInstance = true;
 
+            const nativeFetch = window.fetch;
+
             sandbox.stub(window, 'fetch').callsFake(async (url, options) => {
+                if (url === xformUrl) {
+                    return nativeFetch(url, options);
+                }
+
+                if (expectedURL === xformUrl) {
+                    return {
+                        ok: false,
+                        status: 500,
+                    };
+                }
+
                 if (url === externalInstanceURL) {
                     expect(options).to.equal(undefined);
 
@@ -228,7 +239,7 @@ describe('Connection', () => {
                             Accept: 'application/json',
                             'Content-Type': 'application/x-www-form-urlencoded',
                         },
-                        body: expectedPostBody,
+                        body: '',
                     });
                 } catch (error) {
                     return {
@@ -260,18 +271,39 @@ describe('Connection', () => {
         // so are not redundantly tested here
 
         it('requests the provided xformUrl', async () => {
-            const xformUrl = 'https://example.com/form.xml';
+            expectedURL = xformUrl;
 
-            expectedPostBody = String(
-                new URLSearchParams([['xformUrl', xformUrl]])
-            );
+            const xformResponse = await fetch(xformUrl);
+            const xform = await xformResponse.text();
+            const expected = await transform({ xform });
 
-            const survey = await connection.getFormParts({
-                enketoId,
+            const actual = await connection.getFormParts({
                 xformUrl,
+                isPreview: true,
             });
 
-            expect(survey.enketoId).to.equal(enketoId);
+            expect(typeof actual.form).to.equal('string');
+            expect(typeof actual.model).to.equal('string');
+            expect(actual.form).to.deep.equal(expected.form);
+            expect(actual.model).to.deep.equal(expected.model);
+        });
+
+        it('fails to load XForms by URL outside of preview mode', async () => {
+            expectedURL = xformUrl;
+
+            /** @type {Error | null} */
+            let caught = null;
+
+            try {
+                await connection.getFormParts({
+                    enketoId,
+                    xformUrl,
+                });
+            } catch (error) {
+                caught = error;
+            }
+
+            expect(caught).to.be.an('error');
         });
 
         it('populates the enketoId and theme passed in', async () => {

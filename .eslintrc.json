@@ -9,12 +9,27 @@
         "structuredClone": true
     },
     "extends": ["airbnb", "prettier"],
-    "plugins": ["chai-friendly", "jsdoc", "prettier", "unicorn"],
+    "plugins": [
+        "chai-friendly",
+        "jsdoc",
+        "prettier",
+        "unicorn",
+        "@typescript-eslint"
+    ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "sourceType": "module",
         "ecmaVersion": 2021
     },
     "settings": {
+        "import/parsers": {
+            "@typescript-eslint/parser": [".js", ".ts", ".tsx"]
+        },
+        "import/resolver": {
+            "typescript": {
+                "alwaysTryTypes": true
+            }
+        },
         "jsdoc": {
             "tagNamePreference": {
                 "returns": "return"
@@ -31,7 +46,8 @@
                     "enketo/widgets",
                     "enketo/translator",
                     "enketo/dialog",
-                    "enketo/file-manager"
+                    "enketo/file-manager",
+                    "enketo-transformer/web"
                 ]
             }
         ],
