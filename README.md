@@ -8,7 +8,7 @@ _The [Enketo Smart Paper](https://enketo.org) web application._ It can be used d
 
 Enketo was initiated in 2009 by Martijn van de Rijdt as a web-based alternative or complement to [ODK Collect](https://docs.getodk.org/collect-intro/). It has become a core component of the ODK ecosystem and been adopted by several organizations beyond that ecosystem.
 
-As of 2022, Enketo is maintained by [Trevor Schmidt](https://github.com/eyelidlessness/) and [the ODK team](https://getodk.org/about/team.html). Martijn continues to provide advice and continuity. The ODK project sets priorities in collaboration with its [Technical Advisory Board](https://getodk.org/about/ecosystem.html).
+As of 2022, Enketo is maintained by the [ODK team](https://getodk.org/about/team.html) (primarily [Trevor Schmidt](https://github.com/eyelidlessness/)). Martijn continues to provide advice and continuity. The ODK project sets priorities in collaboration with its [Technical Advisory Board](https://getodk.org/about/ecosystem.html).
 
 Our current primary goals are:
 
