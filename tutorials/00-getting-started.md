@@ -58,3 +58,11 @@ To configure your own custom external authentication also see [this document](ht
 Run with `npm start` from project root.
 
 You can now check that the app is running by going to e.g. http://localhost:8005 (depending on your server and port set in config/config.json or the port forwarding set up in Vagrant (default is 8006))
+
+### How to enable debug logs
+
+Enketo uses the npm `debug` module. All debug statements are prefixed with `enketo:` and will not appear unless the environment variable is set. To enable debugging logs for enketo specifically, set `DEBUG` as follows:
+
+```bash
+export DEBUG=enketo*
+```

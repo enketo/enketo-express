@@ -6,7 +6,7 @@ const request = require('request');
 const { Auth } = require('request/lib/auth');
 const TError = require('./custom-error').TranslatedError;
 const config = require('../models/config-model').server;
-const debug = require('debug')('openrosa-communicator');
+const debug = require('debug')('enketo:openrosa-communicator');
 const Xml2Js = require('xml2js');
 
 const parser = new Xml2Js.Parser();

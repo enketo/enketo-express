@@ -9,7 +9,7 @@ const utils = require('../lib/utils');
 
 const prefix = 'ca:';
 const expiry = 30 * 24 * 60 * 60;
-const debug = require('debug')('cache-model');
+const debug = require('debug')('enketo:cache-model');
 
 const clientGet = promisify(cacheClient.get).bind(cacheClient);
 const clientSet = promisify(cacheClient.set).bind(cacheClient);
