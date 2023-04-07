@@ -176,10 +176,14 @@ Specifies the name of a query parameter that will be copied from an Enketo URL t
 -   main -> host: The IP address of the main redis database instance. If installed on the same server as Enketo Express, the value is `"127.0.0.1"`
 -   **main -> port: The port of the main redis database instance. This is the important persistent database that contains the unique IDs for each forms. The default value is `"6379"`**
 -   main -> password: Password of the main redis database instance. Usually `null`.
+-   main -> tls: Object parameters for TLS options. Set this to empty `{}` to enable TLS. Optionally provide TLS options as listed on the [Node.js TLS docs](https://nodejs.org/api/tls.html#tls_tls_connect_port_host_options_callback)
+-   main -> prefix: If redis is configured in cluster mode, you may configure a prefix for your client. This is configured via prefix, for example: `prefix: '{enk_main}'`. You will know this is necessary if you receive this error: `CROSSSLOT Keys in request don't hash to the same slot`. Prefix must be wrapped in curly braces.
 -   cache -> host: The IP address of the cache redis database instance. If installed on the same server as Enketo Express, the value is `"127.0.0.1"`
 -   **cache -> port: The port of the cache redis database instance. This is the non-persistent database that is just used for caching to greatly improve performance. When testing or developing you could use one redis instance for both 'main' and 'cache' (e.g. both `"6379"`") but do not do this in production.**
 -   cache -> password: Password of the cache redis database instance. Usually `null`.
-
+-   cache -> tls: Object parameters for TLS options. Set this to empty `{}` to enable TLS. Optionally provide TLS options as listed on the [Node.js TLS docs](https://nodejs.org/api/tls.html#tls_tls_connect_port_host_options_callback)
+-   cache -> prefix: If redis is configured in cluster mode, you may configure a prefix for your client. This is configured via prefix, for example: `prefix: '{enk_cache}'`. You will know this is necessary if you receive this error: `CROSSSLOT Keys in request don't hash to the same slot`. Prefix must be wrapped in curly braces.
+-
 #### logo
 
 -   source: The logo at the top of each form. Can be a Data URI or just a path to a image file you place in public/images, e.g. `"/images/mylogo.png"`.
