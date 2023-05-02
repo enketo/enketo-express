@@ -45,8 +45,8 @@
             "msg": "Vo formulári sa nepodarilo nájsť otázku \"__path__\". Je odkaz na túto otázku správny?"
         },
         "loaderror": {
-            "editadvice": "Odporúča sa neupravovať tento záznam kým sa to nevyrieši.",
-            "entryadvice": "Odporúča sa nepoužívať tento formulár pre vkladanie dát kým sa to nevyrieši.",
+            "editadvice": "Neodporúčame Vám upravovať tento záznam pokým sa to nevyrieši.",
+            "entryadvice": "Neodporúčame Vám používať tento formulár pre vkladanie dát pokým sa to nevyrieši.",
             "heading": "Chyba pri Načítaní",
             "msg1": "Počas načítavania tohto formulára došlo k chybe.",
             "msg2": "Prosím kontaktujte __emailLink__ s odkazom na túto stránku a nižšie zobrazenou chybovou správou:",
@@ -187,7 +187,7 @@
             "msg": "Táto akcia je nezvratná. Ste si istý že chcete pokračovať?"
         },
         "save": {
-            "existingerror": "Záznam s rovnakým názvom alebo ID už existuje.",
+            "existingerror": "Záznam s rovnakým názvom alebo ID už existuje. Použite prosím iný identifikátor.",
             "hint": "Tento názov vám umožní ľahko nájsť váš koncept záznamu a dokončiť ho neskôr.",
             "msg": "Existujú neuložené zmeny, chcete pokračovať bez ich uloženia?",
             "name": "Názov Záznamu",
@@ -214,16 +214,15 @@
     },
     "error": {
         "code": "Chybový Kód: __code__",
-        "dataloadfailed": "Nepodarilo sa načítať dáta z __url__",
+        "dataloadfailed": "Nepodarilo sa načítať __filename__.",
         "econnrefused": "Nepodarilo sa nadviazať spojenie s formulárovým serverom",
         "encryptionnotsupported": "Tento formulár vyžaduje lokálne šifrovanie záznamov. Váš prehliadač to bohužiaľ nepodporuje. Odporúčame použitie moderného prehliadača.",
+        "formloadfailed": "Nepodarilo sa načítať formulár",
         "instancenotfound": "Záznam nie je k dispozícii. Môže to byť spôsobené tým že expiroval.",
         "invalidediturl": "Neplatná URL pre úpravu",
         "loadfailed": "Nepodarilo sa načítať __resource__",
-        "notfoundinformlist": [
-            "Oops, tento formulár už neexistuje. S veľkou pravdepodobnosťou ho vlastník formuláru vymazal, archivoval, alebo zakázal. Prosím, kontaktuje vlastníka formuláru pre potvrdenie.",
-            "Detail chyby: Formulár s ID __formId__ nebol nájdený v /formList"
-        ],
+        "notfoundinformlist": "Tento formulár buď neexistuje alebo k nemu už nemáte prístup. Skontrolujte prosím či v adrese URL nechýbajú niektoré znaky.\n\nAk sa jedná o formulár ktorý bol dostupný v minulosti, je možné že bol archivovaný, zneprístupnený alebo zmazaný. V prípade že tento scenár nie je pravdepodobný, prosím kontaktujte osobu ktorá Vás požiadala o vyplnenie daného formulára.\n\n(Pokus o prístup k formuláru s ID: __formId__)",
+        "notfounddirectformurl": "Tento formulár buď neexistuje alebo k nemu už nemáte prístup. Skontrolujte prosím či v adrese URL nechýbajú niektoré znaky.\n\nAk sa jedná o formulár ktorý bol dostupný v minulosti, je možné že bol archivovaný, zneprístupnený alebo zmazaný. V prípade že tento scenár nie je pravdepodobný, prosím kontaktujte osobu ktorá Vás požiadala o vyplnenie daného formulára.\n\n(Pokus o prístup k formuláru: __notfounddirectformurl__)",
         "pagenotfound": "Stránka nebola Nájdená",
         "surveyidnotactive": "Prieskum s týmto ID už nie je aktívny",
         "surveyidnotfound": "Prieskum s týmto ID nebol nájdený",
@@ -381,7 +380,7 @@
         }
     },
     "submission": {
-        "http0": "Nepodarilo sa (Offline?).",
+        "http0": "Server je nedostupný alebo nie ste pripojení k internetu.",
         "http2xx": "Neočakávaná odpoveď pri odosielaní dát.",
         "http400": "Dátový server neakceptoval dáta.",
         "http401": "Nastal prolém pri autentikácii s dátovým serverom.",
