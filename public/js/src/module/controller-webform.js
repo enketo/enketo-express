@@ -591,27 +591,17 @@ function _saveRecord(survey, draft, recordName, confirmed) {
             _resetForm(survey, { isOffline: true });
 
             if (draft) {
-                return true;
-            }
-
-            return records.uploadQueue({ isUserTriggered: !draft });
-        })
-        .then((success) => {
-            if (success && draft) {
                 gui.alert(
                     t('alert.recordsavesuccess.draftmsg'),
                     t('alert.savedraftinfo.heading'),
                     'info',
                     5
                 );
-            } else if (!success && !draft) {
-                gui.alert(
-                    `${t('record-list.msg2')}`,
-                    t('alert.recordsavesuccess.finalmsg'),
-                    'info',
-                    10
-                );
+
+                return true;
             }
+
+            return records.uploadQueue({ isUserTriggered: !draft });
         })
         .catch((error) => {
             console.error('save error', error);
@@ -851,17 +841,6 @@ function _setEventHandlers(survey) {
             postEventAsMessageToParentWindow
         );
     }
-
-    document.addEventListener(events.QueueSubmissionSuccess().type, (event) => {
-        const successes = event.detail;
-        gui.feedback(
-            t('alert.queuesubmissionsuccess.msg', {
-                count: successes.length,
-                recordNames: successes.join(', '),
-            }),
-            7
-        );
-    });
 
     // This actually belongs in gui.js but that module doesn't have access to the form object.
     // Enketo core takes care of language switching of the form itself, i.e. all language strings in the form definition.

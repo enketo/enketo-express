@@ -7,7 +7,6 @@ import store from './store';
 
 import connection from './connection';
 import gui from './gui';
-import events from './event';
 import settings from './settings';
 import exporter from './exporter';
 import { t } from './translator';
@@ -189,6 +188,7 @@ let backoffReason = null;
 /**
  * @typedef UploadQueueOptions
  * @property {boolean} isUserTriggered
+ * @property {boolean} [isLoading]
  * @property {boolean} [isRetry]
  */
 
@@ -202,9 +202,13 @@ const uploadQueue = async (
     options = { isRetry: false, isUserTriggered: false }
 ) => {
     const { isRetry, isUserTriggered } = options;
-    let errorMsg;
     const successes = [];
-    let authRequired;
+
+    /** @type {string | null} */
+    let errorMsg = null;
+
+    /** @type {Error | null} */
+    let authError = null;
 
     if (
         uploadOngoing ||
@@ -229,6 +233,15 @@ const uploadQueue = async (
         backoffReason = 'offline';
 
         $uploadButton.btnBusyState(false);
+
+        if (isUserTriggered) {
+            gui.alert(
+                `${t('record-list.msg2')}`,
+                t('alert.recordsavesuccess.finalmsg'),
+                'info',
+                10
+            );
+        }
 
         return false;
     }
@@ -296,7 +309,7 @@ const uploadQueue = async (
         } catch (error) {
             // catch 401 responses (1 of them)
             if (error.status === 401) {
-                authRequired = true;
+                authError = error;
             }
 
             // if any non HTTP error occurs, output the error.message
@@ -308,21 +321,35 @@ const uploadQueue = async (
     uploadOngoing = false;
     $uploadButton.btnBusyState(false);
 
-    const success = !authRequired && successes.length === records.length;
+    const success = authError == null && successes.length === records.length;
 
-    if (authRequired) {
-        gui.confirmLogin();
-    } else if (success) {
-        // let gui send a feedback message
-        document.dispatchEvent(events.QueueSubmissionSuccess(successes));
-
+    if (success) {
         // Cancel current backoff if upload is successful
         cancelBackoff();
-    } else {
+
+        gui.feedback(
+            t('alert.queuesubmissionsuccess.msg', {
+                count: successes.length,
+                recordNames: successes.join(', '),
+            }),
+            7
+        );
+    } else if (authError == null) {
         // Start/continue upload retries with exponential backoff if upload is not successful
         uploadOngoing = false;
         backoffReason = 'failure';
         backoff(uploadQueue);
+
+        if (isUserTriggered) {
+            gui.alert(
+                `${t('record-list.msg2')}`,
+                t('alert.recordsavesuccess.finalmsg'),
+                'info',
+                10
+            );
+        }
+    } else {
+        gui.confirmLogin(t('confirm.login.queuedMsg'));
     }
 
     // update the list by properly removing obsolete records, reactivating button(s)

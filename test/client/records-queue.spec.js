@@ -8,9 +8,11 @@
  */
 
 import connection from '../../public/js/src/module/connection';
+import gui from '../../public/js/src/module/gui';
 import records from '../../public/js/src/module/records-queue';
 import settings from '../../public/js/src/module/settings';
 import store from '../../public/js/src/module/store';
+import { t } from '../../public/js/src/module/translator';
 import { cancelBackoff } from '../../public/js/src/module/exponential-backoff';
 
 /**
@@ -48,6 +50,15 @@ describe('Records queue', () => {
     /** @type { SinonSandbox } */
     let sandbox;
 
+    /** @type {sinon.SinonStub} */
+    let guiAlertStub;
+
+    /** @type {sinon.SinonStub} */
+    let guiFeedbackStub;
+
+    /** @type {sinon.SinonStub} */
+    let guiConfirmLoginStub;
+
     /** @type {sinon.SinonFakeTimers} */
     let timers;
 
@@ -72,6 +83,10 @@ describe('Records queue', () => {
         sandbox = sinon.createSandbox();
         sandbox.stub(console, 'debug').callsFake(() => {});
         sandbox.stub(settings, 'enketoId').get(() => enketoId);
+
+        guiAlertStub = sandbox.stub(gui, 'alert');
+        guiFeedbackStub = sandbox.stub(gui, 'feedback');
+        guiConfirmLoginStub = sandbox.stub(gui, 'confirmLogin');
 
         timers = sandbox.useFakeTimers();
         autoSavedKey = records.getAutoSavedKey();
@@ -320,6 +335,12 @@ describe('Records queue', () => {
 
             const result = await records.uploadQueue({ isUserTriggered: true });
 
+            expect(guiAlertStub).to.have.been.calledWith(
+                `${t('record-list.msg2')}`,
+                t('alert.recordsavesuccess.finalmsg'),
+                'info',
+                10
+            );
             expect(result).to.equal(false);
         });
 
@@ -335,6 +356,14 @@ describe('Records queue', () => {
                     expect(record[key]).to.deep.equal(value);
                 });
             });
+
+            expect(guiFeedbackStub).to.have.been.calledWith(
+                t('alert.queuesubmissionsuccess.msg', {
+                    count: 2,
+                    recordNames: `${recordA.name}, ${recordB.name}`,
+                }),
+                7
+            );
         });
 
         it('does not upload auto-saved records', async () => {
@@ -388,6 +417,14 @@ describe('Records queue', () => {
                     expect(record[key]).to.deep.equal(value);
                 });
             });
+
+            expect(guiFeedbackStub).to.have.been.calledWith(
+                t('alert.queuesubmissionsuccess.msg', {
+                    count: 2,
+                    recordNames: `${recordA.name}, ${recordB.name}`,
+                }),
+                7
+            );
         });
 
         describe('Retrying uploads in failure scenarios', () => {
@@ -520,6 +557,14 @@ describe('Records queue', () => {
                         expect(stub.callCount).to.equal(1);
 
                         expect(uploaded).to.deep.equal(queue);
+
+                        expect(guiFeedbackStub).to.have.been.calledWith(
+                            t('alert.queuesubmissionsuccess.msg', {
+                                count: 2,
+                                recordNames: `${recordA.name}, ${recordB.name}`,
+                            }),
+                            7
+                        );
                     });
                 }
             );
@@ -534,6 +579,10 @@ describe('Records queue', () => {
                 );
 
                 await records.uploadQueue();
+
+                expect(guiConfirmLoginStub).to.have.been.calledWith(
+                    t('confirm.login.queuedMsg')
+                );
 
                 connectionUploadQueuedRecordStub.resetHistory();
 
