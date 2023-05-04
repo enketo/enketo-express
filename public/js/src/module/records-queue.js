@@ -7,12 +7,12 @@ import store from './store';
 
 import connection from './connection';
 import gui from './gui';
-import events from './event';
 import settings from './settings';
 import exporter from './exporter';
 import { t } from './translator';
 import formCache from './form-cache';
 import { setLastSavedRecord } from './last-saved';
+import { backoff, cancelBackoff } from './exponential-backoff';
 
 let $exportButton;
 let $uploadButton;
@@ -27,15 +27,16 @@ let uploadOngoing = false;
  */
 
 function init() {
-    _setUploadIntervals();
-
     // TODO: Add export feature
 
     $exportButton = $('.record-list__button-bar__button.export');
     $uploadButton = $('.record-list__button-bar__button.upload');
     $queueNumber = $('.offline-enabled__queue-length');
 
-    return _updateRecordList();
+    finalRecordPresent = false;
+    uploadOngoing = false;
+
+    return _updateRecordList().then(uploadQueue);
 }
 
 /**
@@ -181,139 +182,181 @@ function setActive(instanceId) {
         .addClass('active');
 }
 
+/** @type {'offline' | 'failure' | null} */
+let backoffReason = null;
+
 /**
- * Sets the interval to upload queued records
+ * @typedef UploadQueueOptions
+ * @property {boolean} isUserTriggered
+ * @property {boolean} [isLoading]
+ * @property {boolean} [isRetry]
  */
-function _setUploadIntervals() {
-    // one quick upload attempt soon after page load
-    setTimeout(() => {
-        uploadQueue();
-    }, 30 * 1000);
-    // interval to upload queued records
-    setInterval(() => {
-        uploadQueue();
-    }, 5 * 60 * 1000);
-}
 
 /**
  * Uploads all final records in the queue
- * @param {boolean=} byUser Whether user triggered upload by clicking button.
- * @return {Promise<undefined>} a Promise that resolves with undefined
+ *
+ * @param {UploadQueueOptions} [options]
+ * @return {Promise<boolean>} resolves true on success
  */
-function uploadQueue(byUser = false) {
-    let errorMsg;
+const uploadQueue = async (
+    options = { isRetry: false, isUserTriggered: false }
+) => {
+    const { isRetry, isUserTriggered } = options;
     const successes = [];
-    let authRequired;
 
-    if (uploadOngoing || !finalRecordPresent) {
-        return;
+    /** @type {string | null} */
+    let errorMsg = null;
+
+    /** @type {Error | null} */
+    let authError = null;
+
+    if (
+        uploadOngoing ||
+        (!finalRecordPresent && !isUserTriggered && !isRetry)
+    ) {
+        return false;
+    }
+
+    if (isUserTriggered) {
+        cancelBackoff();
+    }
+
+    const appearsOnline = await connection.getOnlineStatus();
+
+    if (appearsOnline && backoffReason === 'offline') {
+        cancelBackoff();
+        backoffReason = null;
+    }
+
+    if (!appearsOnline) {
+        backoff(uploadQueue);
+        backoffReason = 'offline';
+
+        $uploadButton.btnBusyState(false);
+
+        if (isUserTriggered) {
+            gui.alert(
+                `${t('record-list.msg2')}`,
+                t('alert.recordsavesuccess.finalmsg'),
+                'info',
+                10
+            );
+        }
+
+        return false;
     }
 
     uploadOngoing = true;
     $uploadButton.btnBusyState(true);
-    return connection
-        .getOnlineStatus()
-        .then((appearsOnline) => {
-            if (!appearsOnline) {
-                if (byUser) {
-                    gui.alert(
-                        t('submission.http0'),
-                        t('alert.submissionerror.heading')
-                    );
+
+    const displayableRecords = await getDisplayableRecordList(
+        settings.enketoId,
+        {
+            finalOnly: true,
+        }
+    );
+
+    if (!displayableRecords || displayableRecords.length === 0) {
+        uploadOngoing = false;
+
+        return;
+    }
+
+    console.debug(`Uploading queue of ${displayableRecords.length} records.`);
+
+    /**
+     * TODO (and notes about this flow, as it wasn't entirely obvious):
+     * currently, the call above to {@link getDisplayableRecordList} calls
+     * {@link store.record.getAll}, which returns the current queue of
+     * non-uploaded records which are "final" (i.e. explicitly submitted by the
+     * user, therefore excluding drafts and auto-save records). That call does
+     * not, however, resolve file attachments which are in a separate IndexedDB
+     * store. Then below we call {@link store.record.get}, which as the comment
+     * suggests also queries for each record's file attachments. This is a weird
+     * bit of indirection that's doing more work than necessary, and it would
+     * probably make more sense to abstract the resolution of file attachments
+     * (and perhaps make it an option in the `getAll` call).
+     */
+
+    // Get whole records, including files
+    const records = await Promise.all(
+        displayableRecords.map(({ instanceId }) => store.record.get(instanceId))
+    );
+
+    // Perform record uploads sequentially for nicer feedback and to avoid issues when connections are very poor
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const record of records) {
+        try {
+            // convert record.files to a simple <File> array
+            record.files = record.files.map((object) => {
+                // do not add name property if already has one (a File will throw exception)
+                if (typeof object.item.name === 'undefined') {
+                    object.item.name = object.name;
                 }
-                $uploadButton.btnBusyState(false);
-                return;
-            }
 
-            return getDisplayableRecordList(settings.enketoId, {
-                finalOnly: true,
+                return object.item;
             });
-        })
-        .then((records) => {
-            if (!records || records.length === 0) {
-                uploadOngoing = false;
 
-                return;
+            uploadProgress.update(record.instanceId, 'ongoing');
+
+            await connection.uploadQueuedRecord(record);
+
+            successes.push(record.name);
+            uploadProgress.update(record.instanceId, 'success');
+
+            await store.record.remove(record.instanceId);
+            await store.property.addSubmittedInstanceId(record);
+        } catch (error) {
+            // catch 401 responses (1 of them)
+            if (error.status === 401) {
+                authError = error;
             }
-            console.debug(`Uploading queue of ${records.length} records.`);
 
-            // Perform record uploads sequentially for nicer feedback and to avoid issues when connections are very poor
-            return records.reduce(
-                (prevPromise, record) =>
-                    prevPromise.then(() =>
-                        // get the whole record including files
-                        store.record
-                            .get(record.instanceId)
-                            .then((record) => {
-                                // convert record.files to a simple <File> array
-                                record.files = record.files.map((object) => {
-                                    // do not add name property if already has one (a File will throw exception)
-                                    if (
-                                        typeof object.item.name === 'undefined'
-                                    ) {
-                                        object.item.name = object.name;
-                                    }
+            // if any non HTTP error occurs, output the error.message
+            errorMsg = error.message || gui.getErrorResponseMsg(error.status);
+            uploadProgress.update(record.instanceId, 'error', errorMsg);
+        }
+    }
 
-                                    return object.item;
-                                });
-                                uploadProgress.update(
-                                    record.instanceId,
-                                    'ongoing'
-                                );
+    uploadOngoing = false;
+    $uploadButton.btnBusyState(false);
 
-                                return connection.uploadQueuedRecord(record);
-                            })
-                            .then(() => {
-                                successes.push(record.name);
-                                uploadProgress.update(
-                                    record.instanceId,
-                                    'success'
-                                );
+    const success = authError == null && successes.length === records.length;
 
-                                return store.record
-                                    .remove(record.instanceId)
-                                    .then(() =>
-                                        store.property.addSubmittedInstanceId(
-                                            record
-                                        )
-                                    );
-                            })
-                            .catch((result) => {
-                                // catch 401 responses (1 of them)
-                                if (result.status === 401) {
-                                    authRequired = true;
-                                }
-                                // if any non HTTP error occurs, output the error.message
-                                errorMsg =
-                                    result.message ||
-                                    gui.getErrorResponseMsg(result.status);
-                                uploadProgress.update(
-                                    record.instanceId,
-                                    'error',
-                                    errorMsg
-                                );
-                            })
-                    ),
-                Promise.resolve()
+    if (success) {
+        // Cancel current backoff if upload is successful
+        cancelBackoff();
+
+        gui.feedback(
+            t('alert.queuesubmissionsuccess.msg', {
+                count: successes.length,
+                recordNames: successes.join(', '),
+            }),
+            7
+        );
+    } else if (authError == null) {
+        // Start/continue upload retries with exponential backoff if upload is not successful
+        uploadOngoing = false;
+        backoffReason = 'failure';
+        backoff(uploadQueue);
+
+        if (isUserTriggered) {
+            gui.alert(
+                `${t('record-list.msg2')}`,
+                t('alert.recordsavesuccess.finalmsg'),
+                'info',
+                10
             );
-        })
-        .then(() => {
-            uploadOngoing = false;
-            $uploadButton.btnBusyState(false);
+        }
+    } else {
+        gui.confirmLogin(t('confirm.login.queuedMsg'));
+    }
 
-            if (authRequired) {
-                gui.confirmLogin();
-            } else if (successes.length > 0) {
-                // let gui send a feedback message
-                document.dispatchEvent(
-                    events.QueueSubmissionSuccess(successes)
-                );
-            }
+    // update the list by properly removing obsolete records, reactivating button(s)
+    _updateRecordList();
 
-            // update the list by properly removing obsolete records, reactivating button(s)
-            _updateRecordList();
-        });
-}
+    return success;
+};
 
 /**
  * Creates a zip file of all locally-saved records.

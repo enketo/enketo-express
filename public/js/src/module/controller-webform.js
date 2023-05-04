@@ -597,18 +597,11 @@ function _saveRecord(survey, draft, recordName, confirmed) {
                     'info',
                     5
                 );
-            } else {
-                gui.alert(
-                    `${t('record-list.msg2')}`,
-                    t('alert.recordsavesuccess.finalmsg'),
-                    'info',
-                    10
-                );
-                // The timeout simply avoids showing two messages at the same time:
-                // 1. "added to queue"
-                // 2. "successfully submitted"
-                setTimeout(records.uploadQueue, 10 * 1000);
+
+                return true;
             }
+
+            return records.uploadQueue({ isUserTriggered: !draft });
         })
         .catch((error) => {
             console.error('save error', error);
@@ -770,7 +763,7 @@ function _setEventHandlers(survey) {
     });
 
     $('.record-list__button-bar__button.upload').on('click', () => {
-        records.uploadQueue(true);
+        records.uploadQueue({ isUserTriggered: true });
     });
 
     $('.record-list__button-bar__button.export').on('click', () => {
@@ -848,17 +841,6 @@ function _setEventHandlers(survey) {
             postEventAsMessageToParentWindow
         );
     }
-
-    document.addEventListener(events.QueueSubmissionSuccess().type, (event) => {
-        const successes = event.detail;
-        gui.feedback(
-            t('alert.queuesubmissionsuccess.msg', {
-                count: successes.length,
-                recordNames: successes.join(', '),
-            }),
-            7
-        );
-    });
 
     // This actually belongs in gui.js but that module doesn't have access to the form object.
     // Enketo core takes care of language switching of the form itself, i.e. all language strings in the form definition.

@@ -8,9 +8,12 @@
  */
 
 import connection from '../../public/js/src/module/connection';
+import gui from '../../public/js/src/module/gui';
 import records from '../../public/js/src/module/records-queue';
 import settings from '../../public/js/src/module/settings';
 import store from '../../public/js/src/module/store';
+import { t } from '../../public/js/src/module/translator';
+import { cancelBackoff } from '../../public/js/src/module/exponential-backoff';
 
 /**
  * @typedef {import('./feature/last-saved.spec.js')} LastSavedFeatureSpec
@@ -29,12 +32,13 @@ import store from '../../public/js/src/module/store';
  */
 
 /**
- * @typedef SinonSandbox { import('sinon').SinonSandbox }
+ * @typedef {import('sinon').SinonSandbox} SinonSandbox
  */
 
 describe('Records queue', () => {
     const enketoIdA = 'surveyA';
-    const instanceIdA = 'recordA';
+    const instanceIdA = 'a';
+    const instanceIdB = 'b';
     const enketoIdB = 'surveyB';
 
     /** @type {string} */
@@ -45,6 +49,18 @@ describe('Records queue', () => {
 
     /** @type { SinonSandbox } */
     let sandbox;
+
+    /** @type {sinon.SinonStub} */
+    let guiAlertStub;
+
+    /** @type {sinon.SinonStub} */
+    let guiFeedbackStub;
+
+    /** @type {sinon.SinonStub} */
+    let guiConfirmLoginStub;
+
+    /** @type {sinon.SinonFakeTimers} */
+    let timers;
 
     /** @type { Survey } */
     let surveyA;
@@ -65,8 +81,14 @@ describe('Records queue', () => {
         enketoId = enketoIdA;
 
         sandbox = sinon.createSandbox();
+        sandbox.stub(console, 'debug').callsFake(() => {});
         sandbox.stub(settings, 'enketoId').get(() => enketoId);
 
+        guiAlertStub = sandbox.stub(gui, 'alert');
+        guiFeedbackStub = sandbox.stub(gui, 'feedback');
+        guiConfirmLoginStub = sandbox.stub(gui, 'confirmLogin');
+
+        timers = sandbox.useFakeTimers();
         autoSavedKey = records.getAutoSavedKey();
 
         surveyA = {
@@ -102,7 +124,7 @@ describe('Records queue', () => {
             draft: false,
             enketoId,
             files: [],
-            instanceId: 'b',
+            instanceId: instanceIdB,
             name: 'name B',
             xml: '<model><something>b</something></model>',
         };
@@ -141,6 +163,9 @@ describe('Records queue', () => {
     });
 
     afterEach((done) => {
+        cancelBackoff();
+        timers.reset();
+        timers.restore();
         sandbox.restore();
 
         Promise.all([
@@ -271,55 +296,304 @@ describe('Records queue', () => {
     });
 
     describe('Uploading records', () => {
-        it('uploads queued records, excluding auto-saved and draft records', (done) => {
-            const autoSavedKey = records.getAutoSavedKey();
+        /** @type {boolean} */
+        let isOnline;
 
-            const expectedUploadedData = [{ ...recordA }, { ...recordB }];
+        /** @type {EnketoRecord[]} */
+        let uploaded;
 
-            sandbox
+        /** @type {sinon.SinonStub} */
+        let connectionGetOnlineStatusStub;
+
+        /** @type {sinon.SinonStub} */
+        let connectionUploadQueuedRecordStub;
+
+        beforeEach(async () => {
+            isOnline = true;
+
+            connectionGetOnlineStatusStub = sandbox
                 .stub(connection, 'getOnlineStatus')
-                .callsFake(() => Promise.resolve(true));
+                .callsFake(() => Promise.resolve(isOnline));
 
-            /** @type { EnketoRecord[] } */
-            const uploaded = [];
+            uploaded = [];
 
-            sandbox
+            connectionUploadQueuedRecordStub = sandbox
                 .stub(connection, 'uploadQueuedRecord')
                 .callsFake((record) => {
                     uploaded.push(record);
                 });
 
-            records
-                .save('set', recordA)
-                .then(() => records.save('set', recordB))
-                .then(() =>
-                    store.record.set({
-                        draft: true,
-                        enketoId,
-                        instanceId: 'c',
-                        name: 'name C',
-                        xml: '<model><something>c</something></model>',
-                    })
-                )
-                .then(() => records.uploadQueue())
-                .then(() => {
-                    expect(uploaded.length).to.equal(
-                        expectedUploadedData.length
+            await records.save('set', recordA);
+            await records.save('set', recordB);
+        });
+
+        // This (currently, implicitly) allows controller-webform.js to
+        // determine whether to display a message indicating that the submission
+        // is queued, and will be retried
+        it('returns false when upload fails due to being offline', async () => {
+            isOnline = false;
+
+            const result = await records.uploadQueue({ isUserTriggered: true });
+
+            expect(guiAlertStub).to.have.been.calledWith(
+                `${t('record-list.msg2')}`,
+                t('alert.recordsavesuccess.finalmsg'),
+                'info',
+                10
+            );
+            expect(result).to.equal(false);
+        });
+
+        it('uploads queued submissions', async () => {
+            await records.uploadQueue();
+
+            const expectedUploadedData = [{ ...recordA }, { ...recordB }];
+
+            expectedUploadedData.forEach((recordData, index) => {
+                const record = uploaded[index];
+
+                Object.entries(recordData).forEach(([key, value]) => {
+                    expect(record[key]).to.deep.equal(value);
+                });
+            });
+
+            expect(guiFeedbackStub).to.have.been.calledWith(
+                t('alert.queuesubmissionsuccess.msg', {
+                    count: 2,
+                    recordNames: `${recordA.name}, ${recordB.name}`,
+                }),
+                7
+            );
+        });
+
+        it('does not upload auto-saved records', async () => {
+            await records.updateAutoSavedRecord({
+                enketoId,
+                instanceId: 'c',
+                name: 'name C',
+                xml: '<model><something>c</something></model>',
+            });
+
+            await records.uploadQueue();
+
+            uploaded.forEach((record) => {
+                expect(record.instanceId).not.to.equal(autoSavedKey);
+            });
+        });
+
+        it('does not upload draft records', async () => {
+            await store.record.set({
+                draft: true,
+                enketoId,
+                instanceId: 'c',
+                name: 'name C',
+                xml: '<model><something>c</something></model>',
+            });
+
+            await records.uploadQueue();
+
+            uploaded.forEach((record) => {
+                expect(record.draft).not.to.equal(true);
+            });
+        });
+
+        it('uploads submissions which were previously queued before initializing the current session', async () => {
+            const expectedUploadedData = [{ ...recordA }, { ...recordB }];
+
+            await records.init();
+
+            // Flush the async event loop. We can't use `timers.runAllAsync()`
+            // because it will cause an infinite loop waiting for the
+            // `setInterval` to complete
+            while (uploaded.length < expectedUploadedData.length) {
+                // eslint-disable-next-line no-await-in-loop
+                await timers.nextAsync();
+            }
+
+            expectedUploadedData.forEach((recordData, index) => {
+                const record = uploaded[index];
+
+                Object.entries(recordData).forEach(([key, value]) => {
+                    expect(record[key]).to.deep.equal(value);
+                });
+            });
+
+            expect(guiFeedbackStub).to.have.been.calledWith(
+                t('alert.queuesubmissionsuccess.msg', {
+                    count: 2,
+                    recordNames: `${recordA.name}, ${recordB.name}`,
+                }),
+                7
+            );
+        });
+
+        describe('Retrying uploads in failure scenarios', () => {
+            /** @type {EnketoRecord[]} */
+            let queue;
+
+            /** @type {sinon.SinonStub} */
+            let storeRecordGetAllStub;
+
+            // Stub certain prerequisite methods so they don't throw off async timers
+            beforeEach(() => {
+                queue = [recordA];
+
+                storeRecordGetAllStub = sandbox
+                    .stub(store.record, 'getAll')
+                    .callsFake(async () => queue);
+                sandbox
+                    .stub(store.record, 'get')
+                    .callsFake(async (instanceId) =>
+                        queue.find((item) => item.instanceId === instanceId)
                     );
+                sandbox.stub(store.record, 'remove').callsFake(async () => {});
+                sandbox
+                    .stub(store.property, 'addSubmittedInstanceId')
+                    .callsFake(async () => {});
+            });
 
-                    uploaded.forEach((record) => {
-                        expect(record.instanceId).not.to.equal(autoSavedKey);
-                    });
+            const retryConditions = [
+                {
+                    reason: 'offline',
+                    resolution: 'connectivity is restored',
+                    setup: () => {
+                        isOnline = false;
 
-                    expectedUploadedData.forEach((recordData, index) => {
-                        const record = uploaded[index];
-
-                        Object.entries(recordData).forEach(([key, value]) => {
-                            expect(record[key]).to.deep.equal(value);
+                        return connectionGetOnlineStatusStub;
+                    },
+                    teardown: () => {
+                        isOnline = true;
+                    },
+                },
+                {
+                    reason: 'uploading fails',
+                    resolution: 'retrying upload succeeds',
+                    setup: () => {
+                        connectionUploadQueuedRecordStub.callsFake(async () => {
+                            throw new TypeError('Failed to fetch');
                         });
+
+                        return connectionUploadQueuedRecordStub;
+                    },
+                    teardown: () => {
+                        connectionUploadQueuedRecordStub.callsFake((record) => {
+                            uploaded.push(record);
+                        });
+                    },
+                },
+                {
+                    reason: 'uploading partially fails',
+                    resolution: 'retrying upload succeeds',
+                    setup: () => {
+                        queue = [recordA, recordB];
+                        connectionUploadQueuedRecordStub.callsFake(
+                            async (record) => {
+                                if (record.instanceId === instanceIdA) {
+                                    storeRecordGetAllStub.callsFake(
+                                        async () => [recordB]
+                                    );
+                                    uploaded.push(record);
+                                } else {
+                                    throw new TypeError('Failed to fetch');
+                                }
+                            }
+                        );
+
+                        return connectionUploadQueuedRecordStub;
+                    },
+                    teardown: () => {
+                        connectionUploadQueuedRecordStub.callsFake(
+                            async (record) => {
+                                uploaded.push(record);
+                            }
+                        );
+                    },
+                },
+            ];
+
+            const delays = [
+                1_000, 2_000, 4_000, 8_000, 16_000, 32_000, 64_000, 128_000,
+                256_000,
+                // 5 minute maximum
+                300_000, 300_000,
+            ];
+
+            retryConditions.forEach(
+                ({ reason, resolution, setup, teardown }) => {
+                    it(`retries, backing off exponentially up to a five minute maximum, when ${reason}`, async () => {
+                        const stub = setup();
+
+                        await records.uploadQueue();
+
+                        for await (const delay of delays) {
+                            stub.resetHistory();
+
+                            await timers.tickAsync(delay);
+
+                            expect(stub.callCount).to.equal(1);
+                        }
                     });
-                })
-                .then(done, done);
+
+                    it(`stops retrying when ${resolution}`, async () => {
+                        const stub = setup();
+
+                        await records.uploadQueue();
+
+                        stub.resetHistory();
+
+                        const [firstDelay, ...restDelays] = delays;
+
+                        await timers.tickAsync(firstDelay);
+
+                        expect(stub.callCount).to.equal(1);
+
+                        teardown();
+                        stub.resetHistory();
+
+                        for await (const delay of restDelays) {
+                            await timers.tickAsync(delay);
+                        }
+
+                        expect(stub.callCount).to.equal(1);
+
+                        expect(uploaded).to.deep.equal(queue);
+
+                        expect(guiFeedbackStub).to.have.been.calledWith(
+                            t('alert.queuesubmissionsuccess.msg', {
+                                count: 2,
+                                recordNames: `${recordA.name}, ${recordB.name}`,
+                            }),
+                            7
+                        );
+                    });
+                }
+            );
+
+            it('does not retry for authentication failures', async () => {
+                connectionUploadQueuedRecordStub.callsFake(() =>
+                    Promise.reject(
+                        Object.assign(new Error('Unauthorized Access'), {
+                            status: 401,
+                        })
+                    )
+                );
+
+                await records.uploadQueue();
+
+                expect(guiConfirmLoginStub).to.have.been.calledWith(
+                    t('confirm.login.queuedMsg')
+                );
+
+                connectionUploadQueuedRecordStub.resetHistory();
+
+                for await (const delay of delays) {
+                    await timers.tickAsync(delay);
+
+                    expect(connectionUploadQueuedRecordStub.callCount).to.equal(
+                        0
+                    );
+                }
+            });
         });
     });
 });

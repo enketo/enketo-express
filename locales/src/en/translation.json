@@ -163,6 +163,10 @@
         },
         "login": {
             "heading": "Login Required",
+            "queuedMsg": [
+                "Record queued for submission. In order to submit your queued data, you need to login.",
+                "Would you like to login now or later?"
+            ],
             "msg": [
                 "In order to submit your queued data, you need to login. If you want to do this now, you will be redirected, and lose unsaved information.",
                 "Would you like to login now or later?"
