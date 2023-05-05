@@ -8,7 +8,7 @@ const request = require('request');
 const express = require('express');
 
 const router = express.Router();
-const debug = require('debug')('media-controller');
+const debug = require('debug')('enketo:media-controller');
 const {
     RequestFilteringHttpAgent,
     RequestFilteringHttpsAgent,

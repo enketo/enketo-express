@@ -8,7 +8,7 @@ const TError = require('../lib/custom-error').TranslatedError;
 const config = require('./config-model').server;
 
 const pending = {};
-const debug = require('debug')('survey-model');
+const debug = require('debug')('enketo:survey-model');
 
 /**
  * @typedef {import('./account-model').AccountObj} AccountObj

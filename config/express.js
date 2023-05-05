@@ -14,7 +14,7 @@ const errorHandler = require('../app/controllers/error-handler');
 
 const controllersPath = path.join(__dirname, '../app/controllers');
 const app = express();
-const debug = require('debug')('express');
+const debug = require('debug')('enketo:express');
 const config = require('../app/models/config-model');
 
 // general
