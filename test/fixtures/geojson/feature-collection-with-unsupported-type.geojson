@@ -4,7 +4,7 @@
         {
             "type": "Feature",
             "geometry": {
-                "type": "LineString",
+                "type": "Foo",
                 "coordinates": [102, 0.5]
             },
             "properties": {
