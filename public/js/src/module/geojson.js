@@ -1,7 +1,51 @@
+// @ts-check
+
+const FEATURE = 'Feature';
+
 const POINT = 'Point';
+const LINE_STRING = 'LineString';
+const POLYGON = 'Polygon';
+
+const SUPPORTED_TYPES = new Set([POINT, LINE_STRING, POLYGON]);
+const SUPPORTED_TYPES_MESSAGE =
+    'Only Points, LineStrings and Polygons are currently supported';
 
 /**
- * @typedef {import('geojson').Point} Point
+ * @typedef {import('geojson')} GeoJSON
+ */
+
+/**
+ * @typedef {GeoJSON.Geometry} Geometry
+ */
+
+/**
+ * @typedef {GeoJSON.Point & { coordinates: LongLatCoordinates }} Point
+ */
+
+/**
+ * @typedef {GeoJSON.LineString & { coordinates: LongLatCoordinates[] }} LineString
+ */
+
+/**
+ * @typedef {GeoJSON.Polygon & { coordinates: [] | [LongLatCoordinates[]] }} Polygon
+ */
+
+/**
+ * @typedef {Point | LineString | Polygon} SupportedGeometry
+ */
+
+/**
+ * @typedef {Pick<SupportedGeometry, 'type'> & { coordinates: unknown[] }} BaseSupportedGeometry
+ */
+
+/**
+ * @typedef {GeoJSON.GeoJsonProperties} GeoJsonProperties
+ */
+
+/**
+ * @template {Geometry} G
+ * @template [P=GeoJsonProperties]
+ * @typedef {GeoJSON.Feature<G, P>} Feature
  */
 
 /**
@@ -26,14 +70,34 @@ const validateLongLatCoordinates = (data) => {
 };
 
 /**
- * @param {XMLDocument} instance
  * @param {LongLatCoordinates} coordinates
  */
-const geometryElement = (instance, coordinates) => {
+const coordinatesToString = (coordinates) => {
     const [longitude, latitude] = coordinates;
+
+    return `${latitude} ${longitude} 0 0`;
+};
+
+/**
+ * @param {XMLDocument} instance
+ * @param {SupportedGeometry} geometry
+ * @return {Element}
+ */
+const geometryElement = (instance, geometry) => {
     const element = instance.createElement('geometry');
 
-    element.textContent = `${latitude} ${longitude} 0 0`;
+    /** @type {LongLatCoordinates[]} */
+    let points;
+
+    if (geometry.type === POINT) {
+        points = [geometry.coordinates];
+    } else if (geometry.type === LINE_STRING) {
+        points = geometry.coordinates;
+    } else {
+        points = geometry.coordinates[0];
+    }
+
+    element.textContent = points.map(coordinatesToString).join('; ');
 
     return element;
 };
@@ -43,22 +107,41 @@ const geometryElement = (instance, coordinates) => {
  */
 
 /**
- * @typedef {{ [K in keyof BaseLongLatPoint]: BaseLongLatPoint[K]} LongLatPoint
+ * @typedef {{ [K in keyof BaseLongLatPoint]: BaseLongLatPoint[K] }} LongLatPoint
  */
 
 /**
  * @param {unknown} data
- * @returns {asserts data is LongLatPoint}
+ * @returns {asserts data is BaseSupportedGeometry}
  */
-const validateLongLatPoint = (data) => {
-    if (data == null || data.type !== POINT) {
-        throw new TypeError(`Only ${POINT}s are currently supported`);
+const validateGeometryType = (data) => {
+    if (
+        data == null ||
+        typeof data !== 'object' ||
+        // @ts-expect-error
+        !SUPPORTED_TYPES.has(data.type) ||
+        // @ts-expect-error
+        !Array.isArray(data.coordinates)
+    ) {
+        throw new TypeError(SUPPORTED_TYPES_MESSAGE);
     }
-
-    validateLongLatCoordinates(data.coordinates);
 };
 
-const FEATURE = 'Feature';
+/**
+ * @param {unknown} data
+ * @return {asserts data is SupportedGeometry}
+ */
+const validateGeometry = (data) => {
+    validateGeometryType(data);
+
+    if (data.type === POINT) {
+        validateLongLatCoordinates(data.coordinates);
+    } else if (data.type === LINE_STRING) {
+        data.coordinates.forEach(validateLongLatCoordinates);
+    } else if (Array.isArray(data.coordinates[0])) {
+        data.coordinates[0]?.forEach(validateLongLatCoordinates);
+    }
+};
 
 /**
  * @typedef {import('geojson').Feature<LongLatPoint>} LongLatPointFeature
@@ -68,11 +151,12 @@ const FEATURE = 'Feature';
  * @param {unknown} data
  * @return {asserts data is Feature}
  */
-const validateLongLatFeature = (data) => {
+const validateFeature = (data) => {
     if (data == null) {
         throw new TypeError('Feature object expected');
     }
 
+    // @ts-expect-error
     const { geometry, type } = data;
 
     if (type !== FEATURE || geometry == null) {
@@ -81,25 +165,28 @@ const validateLongLatFeature = (data) => {
         );
     }
 
-    validateLongLatPoint(geometry);
+    validateGeometry(geometry);
 };
 
 const FEATURE_COLLECTION = 'FeatureCollection';
 
 /**
- * @typedef {import('geojson').FeatureCollection<LongLatPoint>} LongLatPointFeatureCollection
+ * @typedef {import('geojson').FeatureCollection<SupportedGeometry>} SupportedFeatureCollection
  */
 
 /**
  * @param {unknown} data
- * @return {asserts data is LongLatPointFeatureCollection}
+ * @return {asserts data is SupportedFeatureCollection}
  */
-const validateLongLatFeatureCollection = (data) => {
-    if (data?.type !== FEATURE_COLLECTION || !Array.isArray(data.features)) {
+const validateFeatureCollection = (data) => {
+    // @ts-expect-error
+    const { type, features } = data ?? {};
+
+    if (type !== FEATURE_COLLECTION || !Array.isArray(features)) {
         throw new TypeError('GeoJSON file must be a FeatureCollection');
     }
 
-    data.features.forEach(validateLongLatFeature);
+    features.forEach(validateFeature);
 };
 
 const parser = new DOMParser();
@@ -109,7 +196,7 @@ const parser = new DOMParser();
  */
 // eslint-disable-next-line import/prefer-default-export
 export const geoJSONExternalInstance = (data) => {
-    validateLongLatFeatureCollection(data);
+    validateFeatureCollection(data);
 
     const instance = parser.parseFromString('<root/>', 'text/xml');
     const root = instance.documentElement;
@@ -126,7 +213,7 @@ export const geoJSONExternalInstance = (data) => {
 
         const item = instance.createElement('item');
 
-        item.append(geometryElement(instance, geometry.coordinates));
+        item.append(geometryElement(instance, geometry));
 
         entries.forEach(([key, value]) => {
             const element = instance.createElement(key);
