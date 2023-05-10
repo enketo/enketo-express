@@ -163,6 +163,10 @@
         },
         "login": {
             "heading": "Identification requise",
+            "queuedMsg": [
+                "Enregistrement placé en file d'attente afin d'être soumis. Pour soumettre vos données en attente, vous devez vous identifier.",
+                "Voulez-vous vous identifier maintenant ou plus tard ?"
+            ],
             "msg": [
                 "Vous devez vous identifier pour soumettre votre requête. Si vous le faites maintenant, vous serez redirigé, et vous perdrez toutes les informations non sauvegardées",
                 "Voulez-vous vous identifier maintenant ou plus tard ?"

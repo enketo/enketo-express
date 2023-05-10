@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.0 - 2023-05-10
+
+-   removed: analog-scale widget (#525) _Note: now maintained by OpenClinica (https://github.com/OpenClinica/enketo-express-oc/tree/master/widget/analog-scale). Not considered a breaking change because usage outside of OpenClinica is not known_
+-   fixed: The app UI strings in newly created repeats are not translated (#527)
+-   Fix: validate CSV header names according to XML spec (#530)
+-   Use pm2-runtime on docker/start.sh (#533)
+-   Fix: revert jQuery upgrade (#539)
+-   Use client-side transform for preview-by-URL (#540)
+-   changed: updated Slovak translation (#542)
+-   Use exponential backoff for submission attempts in offline mode (#543)
+-   feat(app): add enketo namespace to all debug statements (#547)
+-   Add support for LineString and Polygon GeoJSON types (#554)
+-   Fix: further simplify geopicker widget selector (#954)
+-   Fix: undesired newlines in print view in select/select1 labels (#957)
+-   Add browser-based transformation (#171)
+-   Reimplement draw/signature/annotate widget to preserve original image size when annotating and improve resize performance (#960)
+-   Fix: focus first active input/widget on load, page navigation, user-added repeat (#969)
+-   Performance improvements: NumberInput widgets, `excludeNonRelevant` (#971)
+-   Fix: localized numeral entry by keyboard in number input widgets (#973)
+
 ## 6.0.0 - 2023-02-08
 
 -   **BREAKING CHANGE**: Removed IE11 support (enketo-core#946)

@@ -163,6 +163,10 @@
         },
         "login": {
             "heading": "Inicio de sesión requerido",
+            "queuedMsg": [
+                "Record queued for submission. In order to submit your queued data, you need to login.",
+                "¿Le gustaría iniciar sesión ahora o más tarde?"
+            ],
             "msg": [
                 "Si quiere enviar los datos que están en la cola tendrá que iniciar sesión. Si quiere hacerlo ahora mismo, lo redireccionaremos pero perderá los datos que no haya guardado.",
                 "¿Le gustaría iniciar sesión ahora o más tarde?"
@@ -221,10 +225,8 @@
         "instancenotfound": "Registro no hallado. Puede haber expirado.",
         "invalidediturl": "Esta URL no es válida",
         "loadfailed": "Error al cargar __resource__",
-        "notfoundinformlist": [
-            "Oops, este formulario no existe (más). Lo más probable es que el propietario del formulario lo haya eliminado, archivado o desactivado. Por favor, póngase en contacto con el propietario del formulario para confirmar.",
-            "Error detallado: Formulario con ID __formId__ no encontrado en /formList."
-        ],
+        "notfoundinformlist": "This form does not exist or you no longer have access to it. Please check the URL for any missing characters.\n\nIf the form existed previously, it may have been archived, disabled or deleted. If this is unexpected, please contact the person who asked you to fill the form.\n\n(Attempted to access form with ID: __formId__)",
+        "notfounddirectformurl": "This form does not exist or you no longer have access to it. Please check the URL for any missing characters.\n\nIf the form existed previously, it may have been archived, disabled or deleted. If this is unexpected, please contact the person who asked you to fill the form.\n\n(Attempted to access form: __notfounddirectformurl__)",
         "pagenotfound": "No hemos encontrado la página",
         "surveyidnotactive": "No hay activa ninguna encuesta con este ID",
         "surveyidnotfound": "No hemos encontrado ninguna encuesta con este ID",
