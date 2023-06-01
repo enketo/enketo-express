@@ -272,7 +272,7 @@ const getHostURLOptions = (request, mediaHash) => ({
     basePath: request.app.get('base path') ?? '',
     cookie: request.headers.cookie,
     mediaHash,
-    requestPath: request.url,
+    requestPath: request.url.replace(/\$/g, '%24'), // express special treatment of $ https://github.com/expressjs/express/issues/2987
 });
 
 /**
