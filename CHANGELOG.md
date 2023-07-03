@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.2.0 - 2023-07-03
+
+-   Make pdf generation timeout configurable (#560)
+-   Added the Ukrainian translation (#569)
+-   Optimizations: do less redundant work, part 2 (enketo-core#976)
+-   Fix: gracefully handle undefined key (enketo-core#978)
+-   Fix: TOC navigation in pages theme (enketo-core#983)
+-   Fix: Respect existing val of type='time' (enketo-core#980)
+
 ## 6.1.0 - 2023-05-10
 
 -   removed: analog-scale widget (#525) _Note: now maintained by OpenClinica (https://github.com/OpenClinica/enketo-express-oc/tree/master/widget/analog-scale). Not considered a breaking change because usage outside of OpenClinica is not known_
