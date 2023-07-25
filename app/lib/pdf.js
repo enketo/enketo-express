@@ -61,12 +61,26 @@ async function get(
     let pdf;
 
     try {
-        await page
+        // To use an eventhandler here and catch a specific error,
+        // we have to return a Promise (in this case one that never resolves).
+        const detect401 = new Promise((resolve, reject) => {
+            page.on('requestfinished', (request) => {
+                if (request.response().status() === 401) {
+                    const e = new Error('Authentication required');
+                    e.status = 401;
+                    reject(e);
+                }
+            });
+        });
+        const goToPage = page
             .goto(urlObj.href, { waitUntil: 'networkidle0', timeout })
             .catch((e) => {
                 e.status = /timeout/i.test(e.message) ? 408 : 400;
                 throw e;
             });
+
+        // Either a 401 error is thrown or goto succeeds (or encounters a real loading error)
+        await Promise.race([detect401, goToPage]);
 
         /*
          * This works around an issue with puppeteer not printing canvas
