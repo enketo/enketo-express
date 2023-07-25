@@ -1,12 +1,12 @@
 /**
  * @module pdf
  */
+const { URL } = require('url');
 const config = require('../models/config-model').server;
 const { BrowserHandler, getBrowser } = require('./headless-browser');
 
 const browserHandler = new BrowserHandler();
 const { timeout } = config.headless;
-const { URL } = require('url');
 
 /**
  * @typedef PdfGetOptions
@@ -36,21 +36,24 @@ const DEFAULTS = {
  * @param {PdfGetOptions} [options] - PDF options
  * @return { Promise } a promise that returns the PDF
  */
-async function get(url, options = {}) {
+async function get(
+    url,
+    {
+        format = DEFAULTS.FORMAT,
+        margin = DEFAULTS.MARGIN,
+        landscape = DEFAULTS.LANDSCAPE,
+        scale = DEFAULTS.SCALE,
+    } = {}
+) {
     if (!url) {
         throw new Error('No url provided');
     }
 
-    options.format = options.format || DEFAULTS.FORMAT;
-    options.margin = options.margin || DEFAULTS.MARGIN;
-    options.landscape = options.landscape || DEFAULTS.LANDSCAPE;
-    options.scale = options.scale || DEFAULTS.SCALE;
-
     const urlObj = new URL(url);
-    urlObj.searchParams.append('format', options.format);
-    urlObj.searchParams.append('margin', options.margin);
-    urlObj.searchParams.append('landscape', options.landscape);
-    urlObj.searchParams.append('scale', options.scale);
+    urlObj.searchParams.append('format', format);
+    urlObj.searchParams.append('margin', margin);
+    urlObj.searchParams.append('landscape', landscape);
+    urlObj.searchParams.append('scale', scale);
 
     const browser = await getBrowser(browserHandler);
     const page = await browser.newPage();
@@ -94,15 +97,15 @@ async function get(url, options = {}) {
         });
 
         pdf = await page.pdf({
-            landscape: options.landscape,
-            format: options.format,
+            landscape,
+            format,
             margin: {
-                top: options.margin,
-                left: options.margin,
-                right: options.margin,
-                bottom: options.margin,
+                top: margin,
+                left: margin,
+                right: margin,
+                bottom: margin,
             },
-            scale: options.scale,
+            scale,
             printBackground: true,
             timeout,
         });
