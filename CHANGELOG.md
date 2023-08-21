@@ -5,7 +5,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 6.3.0 - 2023-08-18
 
--   Override Docker ENTRYPOINT so that PID 1 inside the container is correctly assigned (#571)
 -   Update Docker base image to Node 16 (#578)
 -   Fix: multiple "static" itemset datalists in the same repeat (enketo/enketo-core#995)
 -   Fix: global initialization of widgets where repeat count is zero (enketo/enketo-core#994)
