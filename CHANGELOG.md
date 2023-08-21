@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.3.0 - 2023-08-18
+
+-   Update Docker base image to Node 16 (#578)
+-   Fix: multiple "static" itemset datalists in the same repeat (enketo/enketo-core#995)
+-   Fix: global initialization of widgets where repeat count is zero (enketo/enketo-core#994)
+-   Use map instead of object for cached conversion of XPath expression
+    (enketo/enketo-core#985)
+-   Fix: include widgets with 'form' selector (enketo/enketo-core#993)
+-   Fix: don't display "ghost option" for itemsets with Likert appearance (enketo/enketo-core#992)
+-   Temporarily roll back buggy optimizations of enabling/disabling widget instances (enketo/enketo-core#990)
+-   Fix import error for enketo-transformer/web (enketo/enketo-transformer#184)
+
 ## 6.2.0 - 2023-07-03
 
 -   Make pdf generation timeout configurable (#560)
