@@ -3,7 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.3.0 - 2023-08-18
+## 6.2.2 - 2023-08-22
+
+-   Fix changelog versions
+
+## 6.2.1 - 2023-08-21
 
 -   Update Docker base image to Node 16 (#578)
 -   Fix: multiple "static" itemset datalists in the same repeat (enketo/enketo-core#995)
