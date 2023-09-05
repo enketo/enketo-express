@@ -49,9 +49,9 @@ For development usages, it is helpful to set "linked form and data server" -> "s
 
 If you'd like to run a form server such as KoBoToolbox or ODK Aggregate or ODK Central on a private IP address during development, you need to add that IP address to "ip filtering" -> "allowIPAddressList".
 
-For detailed guidance on each configuration item, see {@tutorial 10-configuration}.
+For detailed guidance on each configuration item, see [the configuration tutorial](https://github.com/enketo/enketo-express/blob/master/tutorials/10-configure.md).
 
-To configure your own custom external authentication also see [this document](https://github.com/enketo/enketo-express/blob/master/tutorials/30-authentication-and-security.md).
+To configure your own custom external authentication also see [this document](https://github.com/enketo/enketo-express/blob/master/tutorials/60-authentication-and-security.md).
 
 ### How to run
 
