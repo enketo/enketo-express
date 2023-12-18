@@ -141,6 +141,22 @@ Which analytics service you'd like to use, either `"google"` or `"piwik"` or if 
 -   analytics -> domain: If you are running Enketo Express on a subdomain, you may need to add the subdomain there (without protocol), e.g. "odk.enke.to" for Google Analytics to pick up the data. When left empty (`""`) the value will be set to "auto" in the GA script.
 -   api key: The Google API key that is used for geocoding (i.e. the search box in the geo widgets). Can be obtained [here](https://console.developers.google.com/project). Make sure to enable the _GeoCoding API_ service. If you are using Google Maps layers, the same API key is used. Make sure to enable the _Google Maps JavaScript API v3_ service as well in that case (see next item).
 
+#### geocoder
+
+Enketo allows configuration of different geocoder providers. This configuration is entirely optional, and by default, Google will be used with the same Google api key provided above. If you prefer to use a different api key or provider, you can also configure this using these parameters.
+
+-   provider: allows you to change the provider used by the backend geocode service. Current options include `google` and `mapbox`.
+-   api key: allows you to set the API key for the geocoder provider. This option is required for mapbox and google.
+
+Example:
+
+```json
+    "geocoder": {
+        "provider": "mapbox",
+        "api key": "pk.12345"
+    },
+```
+
 #### piwik
 
 -   analytics -> tracker url -> URL on which your piwik service is hosted. The protocol can be omitted, e.g. `"//enketo.piwikpro.com/"`. Required if piwik service is selected under [analytics](#analytics).
