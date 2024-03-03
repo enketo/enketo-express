@@ -152,7 +152,7 @@ function init(formEl, data, loadErrors = []) {
             if (loadErrors.length > 0) {
                 throw loadErrors;
             }
-
+            form.view.html.dispatchEvent(events.FormInitialized());
             return form;
         });
 }
@@ -828,17 +828,16 @@ function _setEventHandlers(survey) {
     });
 
     if (inIframe() && settings.parentWindowOrigin) {
-        document.addEventListener(
-            events.SubmissionSuccess().type,
-            postEventAsMessageToParentWindow
-        );
-        document.addEventListener(
-            events.Edited().type,
-            postEventAsMessageToParentWindow
-        );
-        document.addEventListener(
-            events.Close().type,
-            postEventAsMessageToParentWindow
+        Object.keys(events).forEach((eventName) => {
+            document.addEventListener(
+                events[eventName]().type,
+                postEventAsMessageToParentWindow
+            );
+        });
+        window.addEventListener(
+            'message',
+            processMessageFromParentWindow,
+            false
         );
     }
 
@@ -920,9 +919,50 @@ function postEventAsMessageToParentWindow(event) {
     }
 }
 
+/**
+ * Handles messages from parent window when in iframe.
+ * https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage#the_dispatched_event
+ *
+ * @param {Object} event The dispatched event object for the message
+ * @param {String} event.origin The origin of the window that sent the message
+ * @param {Object} event.source The window object that sent the message
+ * @param {Object} event.data The object passed from the other window
+ * @param {String} event.data.type The type (or command) of the message passed. Currently the only supported type is 'setfields'
+ * @param {Object} event.data.content Type specific content of the message.
+ *  For the setfields type, it is expected to be a key / value map of field paths and their URI encoded values that should be set.
+ */
+function processMessageFromParentWindow(event) {
+    const { origin, data: payload } = event;
+
+    if (origin !== settings.parentWindowOrigin) {
+        // bail, if the message is not sent from the expected origin
+        return;
+    }
+
+    const { type, content } = payload;
+
+    switch (type) {
+        case 'setfields':
+            Object.keys(content).forEach((fieldName) => {
+                const inputs = document.getElementsByName(fieldName);
+                inputs.forEach((inputElement) => {
+                    form.input.setVal(
+                        inputElement,
+                        decodeURIComponent(content[fieldName])
+                    );
+                    inputElement.dispatchEvent(events.Change());
+                });
+            });
+            break;
+        default:
+            break;
+    }
+}
+
 export default {
     init,
     setLogoutLinkVisibility,
     inIframe,
     postEventAsMessageToParentWindow,
+    processMessageFromParentWindow,
 };
